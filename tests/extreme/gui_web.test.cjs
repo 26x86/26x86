@@ -29,13 +29,13 @@ const { pathToFileURL } = require('node:url');
       artifact_available: true, stageable: true, boot_verified: false,
       minimum_cpu: 'SSE4.1 + SSE4.2', supported_targets: [26, 27], blockers: ['원본 macOS 부팅 미검증']});
     const methods = {
-      get_app_info: () => ({app_name:'26x86',version:'0.1.0',host_is_mac:true, status_ready:'준비됨'}),
+      get_app_info: () => ({app_name:'26x86',version:'0.1.0',host_is_mac:true, status_ready:'준비됨', execution:{can_native_apply:true}}),
       get_steps: () => ['welcome','detect','build','patch','done'].map((id,i) => ({id,title:['개요','기기 확인','EFI 준비','설치 · 패치','완료'][i],heading:id,desc:''})),
       detect: () => ({ok:true,detect:{model:'MacPro4,1',marketing_name:'Mac Pro (2009)',host_is_mac:true}}),
       get_macos_choices: () => ({choices:[{label:'macOS Tahoe 26',kernel:25}],selected_kernel:25}),
       host_can_build: () => ({can_build:true}), get_status: () => ({build_completed:false}),
       get_sandbox_status: report, get_sandbox_plan: report,
-      get_vmapple_status: () => ({ok:true, configured:true, machine_type:'iBoot(AArch64)', guest_os:'macOS', guest_os_policy:'macOS-only', recovery_scope:{protocol:'DFU/IPSW',default_image_name:'_default.ipsw'}, values:{
+      get_vmapple_status: () => ({ok:true, configured:true, machine_type:'iBoot(AArch64)', guest_os:'macOS', guest_os_policy:'macOS-only', recovery_scope:{protocol:'DFU/IPSW',default_image_name:'_default.ipsw'}, soc_profile:{schema:'26x86.vmapple-apple-silicon/1',profile_id:'vmapple-m1-macos',interrupt_controller:{sandbox_contract:'AIC',current_vmapple_qemu:'GICv3'},reference:{name:'qemu-t8030',machine_type:'t8030',guest_scope:'iPhone 11 / iOS'},device_topology:[{name:'AIC',status:'required-gap',current_vmapple_qemu:'GICv3 baseline'}]}, values:{
         qemu:'/opt/qemu-system-aarch64', qemu_img:'/usr/bin/qemu-img',
         firmware:'/assets/AVPBooter.bin', ibss:'/assets/iBSS.img4',
         ibec:'/assets/iBEC.img4', build_manifest:'/assets/BuildManifest.plist',
@@ -76,6 +76,8 @@ const { pathToFileURL } = require('node:url');
     await page.locator('#vmapple-boot-start').click();
     await page.keyboard.press('Alt');
     await page.locator('[data-boot-entry="recovery"]').click();
+    await page.getByText('Apple Silicon 장치 프로필', {exact:true}).waitFor();
+    await page.getByText(/qemu-t8030의 t8030 장치 구성을/, {exact:false}).waitFor();
     await page.locator('#vmapple-storage-inspect').click();
     await page.getByText(/저장장치 읽기 검사 완료/, {exact:false}).waitFor();
     await page.locator('#vmapple-launch').click();

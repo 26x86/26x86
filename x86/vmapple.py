@@ -13,6 +13,7 @@ forces an iBSS-to-iBEC transition.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from copy import deepcopy
 import hashlib
 import json
 import math
@@ -59,6 +60,156 @@ STAGE2_PROMPT = b"Entering iBootStage2 recovery mode, starting command prompt"
 # an Apple hardware attestation or prove that the guest is running on an M1.
 VIRTUAL_SOC_NAME = "Apple M1 (Virtual)"
 VIRTUAL_MODEL = "VM0001"
+
+# qemu-t8030 is used as a device-topology reference only.  It emulates an
+# iPhone 11/T8030 and therefore its iOS firmware, device tree and restore
+# assumptions must never be presented as a macOS guest implementation.  Keep
+# the reference revision explicit so a report can be reproduced without
+# silently following a moving branch.
+QEMU_T8030_REFERENCE = {
+    "name": "qemu-t8030",
+    "repository": "https://github.com/TrungNguyen1909/qemu-t8030",
+    "wiki": "https://github.com/TrungNguyen1909/qemu-t8030/wiki/Bringing-up-the-emulator",
+    "revision": "fd4b0f790903044d90b8a35fcf03758401252063",
+    "machine_type": "t8030",
+    "guest_scope": "iPhone 11 / iOS",
+    "role": "device-topology-reference-only",
+}
+
+_APPLE_SILICON_PROFILE = {
+    "schema": "26x86.vmapple-apple-silicon/1",
+    "profile_id": "vmapple-m1-macos",
+    "machine_type": IBOOT_MACHINE_TYPE,
+    "guest_os": MACOS_GUEST_OS,
+    "guest_os_policy": "macOS-only",
+    "target_majors": [26, 27],
+    "virtual_identity": {
+        "soc_name": VIRTUAL_SOC_NAME,
+        "model": VIRTUAL_MODEL,
+        "identity_mode": "metadata-only",
+        "hardware_attestation_verified": False,
+    },
+    "interrupt_controller": {
+        "sandbox_contract": "AIC",
+        "qemu_t8030_reference": "AIC",
+        "current_vmapple_qemu": "GICv3",
+        "current_vmapple_qemu_status": "baseline-only; AIC backend work remains",
+        "gic_compatibility": False,
+    },
+    # The entries describe the boundary between the reference model and the
+    # current project.  They are capability facts, not claims that a missing
+    # device is emulated by the current binary.
+    "device_topology": [
+        {
+            "name": "AIC",
+            "reference": "apple.aic",
+            "native_sandbox": "aic_v1 wired model (partial)",
+            "current_vmapple_qemu": "missing; GICv3 baseline",
+            "status": "required-gap",
+        },
+        {
+            "name": "Apple ANS/NVMe",
+            "reference": "apple.ans",
+            "native_sandbox": "not implemented",
+            "current_vmapple_qemu": "VMApple BDIF AUX/root path",
+            "status": "reference-only",
+        },
+        {
+            "name": "DART/SART",
+            "reference": "apple.dart / apple.sart",
+            "native_sandbox": "not implemented",
+            "current_vmapple_qemu": "not exposed in research profile",
+            "status": "required-gap",
+        },
+        {
+            "name": "Apple NVRAM",
+            "reference": "apple-nvram namespace",
+            "native_sandbox": "not implemented",
+            "current_vmapple_qemu": "virtual config/AES path only",
+            "status": "macos-validation-required",
+        },
+        {
+            "name": "Apple UART",
+            "reference": "apple-uart",
+            "native_sandbox": "not implemented",
+            "current_vmapple_qemu": "PL011 compatibility UART",
+            "status": "compatibility-only",
+        },
+        {
+            "name": "SMC / watchdog / GPIO / SPI / I2C",
+            "reference": "Apple-specific peripheral set",
+            "native_sandbox": "not implemented",
+            "current_vmapple_qemu": "generic or absent in research profile",
+            "status": "required-gap",
+        },
+        {
+            "name": "USB OTG / Type-C recovery",
+            "reference": "apple-otg / apple-typec",
+            "native_sandbox": "not implemented",
+            "current_vmapple_qemu": "research chardev recovery transport",
+            "status": "protocol-only",
+        },
+        {
+            "name": "m1_fb / xnu_ramfb",
+            "reference": "display framebuffer helpers",
+            "native_sandbox": "not implemented",
+            "current_vmapple_qemu": "PV graphics omitted in research-headless",
+            "status": "graphics-gap",
+        },
+    ],
+    "storage": {
+        "reference_controller": "Apple ANS/NVMe-like",
+        "project_controller": "VMApple BDIF AUX/root",
+        "namespace_reference": [
+            {"nsid": 1, "nstype": 1, "role": "NVMe data namespace", "status": "reference-only"},
+            {"nsid": 5, "nstype": 5, "role": "Apple NVRAM namespace", "status": "reference-only"},
+        ],
+        "namespace_scope": "T8030/iOS reference command; macOS mapping requires validation",
+        "base_images_immutable": True,
+        "cow_overlay_required": True,
+        "hardware_model_provisioning_receipt_required": True,
+    },
+    "cpu": {
+        "guest_isa": "AArch64",
+        "reference_cpu": "Apple A13 / T8030",
+        "target_identity": VIRTUAL_SOC_NAME,
+        "host_acceleration": "TCG research path",
+        "native_minimum": "x86_64 SSE4.1 + SSE4.2",
+    },
+    "graphics": {
+        "reference_devices": ["m1_fb", "xnu_ramfb"],
+        "current_research_status": "Apple PV graphics unavailable in TCG research-headless",
+        "verified": False,
+    },
+    "reference": QEMU_T8030_REFERENCE,
+    "scope": {
+        "supported_guest_os": [MACOS_GUEST_OS],
+        "unsupported_guest_os": ["iOS", "iPadOS", "tvOS", "watchOS", "visionOS"],
+        "reference_guest_os": ["iOS"],
+        "ios_code_imported": False,
+    },
+    "claims": {
+        "apple_hardware_attestation_verified": False,
+        "macos_boot_verified": False,
+        "installer_ui_verified": False,
+    },
+    "blockers": [
+        "AIC is required by the native Sandbox contract; current VMApple QEMU research mode still exposes GICv3",
+        "Apple ANS/DART/SART/SMC device behavior is not validated for macOS",
+        "Apple PV graphics and Metal are not available in the current TCG research profile",
+        "A hardware-model-matched AUX and an install-target root image are still required",
+    ],
+}
+
+
+def apple_silicon_profile() -> dict[str, object]:
+    """Return an isolated qemu-t8030-derived Apple Silicon capability profile.
+
+    The deep copy prevents GUI/report callers from mutating the process-wide
+    policy.  The profile deliberately records the current GICv3 QEMU gap while
+    keeping the EFI Sandbox contract AIC-only.
+    """
+    return deepcopy(_APPLE_SILICON_PROFILE)
 
 # Storage inspection is deliberately bounded.  It is a read-only diagnostic
 # for the VMApple boot boundary; it is not an APFS parser and it never marks a
@@ -186,6 +337,7 @@ def probe_backend(executable: Executable) -> dict[str, object]:
         "virtual_identity_mode": "metadata-only",
         "hardware_attestation_verified": False,
         "macos_boot_verified": False,
+        "soc_profile": apple_silicon_profile(),
     }
 
 
@@ -1178,6 +1330,7 @@ def run(config: VMappleConfig) -> dict[str, object]:
             "virtual_model": VIRTUAL_MODEL,
             "virtual_identity_mode": "metadata-only",
             "hardware_attestation_verified": False,
+            "soc_profile": apple_silicon_profile(),
             "research_only": True, "developer_host_bypass": True,
             "distribution_status": "NONREDISTRIBUTABLE DEVELOPMENT ARTIFACT",
             "restore_chain_requested": config.restore_chain,
@@ -1528,6 +1681,7 @@ def configured_from_environment() -> dict[str, object]:
         "policy_matrix": default_scope(recovery_enabled=True)["policy_matrix"],
         "recovery_scope": default_scope(recovery_enabled=True)["recovery"],
         "boot_picker": boot_picker,
+        "soc_profile": apple_silicon_profile(),
         # Either an explicitly personalized legacy input or the preferred
         # live-TSS set is usable.  The GUI defaults to live mode and exposes
         # this distinction instead of claiming that a partial path is ready.

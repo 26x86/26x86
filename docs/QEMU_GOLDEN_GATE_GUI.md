@@ -16,6 +16,42 @@ macOS용 DFU/IPSW이고 Local Recovery 기본 파일명은 `_default.ipsw`입니
 XNU를 로드하지 않고, VMApple 테스트는 Apple 복구 프로토콜까지의 관찰만
 기록합니다.
 
+## qemu-t8030에서 가져온 Apple Silicon 장치 프로필
+
+`qemu-t8030`의 [Bringing up the emulator 문서](https://github.com/TrungNguyen1909/qemu-t8030/wiki/Bringing-up-the-emulator)와
+소스는 Apple AIC, Apple ANS/NVMe, DART/SART, Apple UART, NVRAM, SMC,
+USB OTG/Type-C, 그리고 `m1_fb`/`xnu_ramfb` 계열의 장치 토폴로지를
+보여줍니다. 이 저장소는 iPhone 11/T8030 iOS 에뮬레이터이며 현재
+[보관(archived) 상태](https://github.com/TrungNguyen1909/qemu-t8030)이므로,
+26x86은 그 펌웨어·iOS device tree·복구 스크립트를 가져오지 않습니다.
+구성 요소의 이름과 연결 관계만 Apple Silicon Sandbox의 조사 입력으로
+기록하고, 게스트 정책은 계속 `iBoot(AArch64) → macOS`로 고정합니다.
+
+현재 구현의 경계는 다음과 같습니다.
+
+* EFI Sandbox는 AIC 전용 계약을 유지하고, 저장소의 first-party `aic_v1`
+  유선 IRQ 모델만 부분적으로 갖습니다. GIC 호환 경로를 추가하지 않습니다.
+* VMApple QEMU TCG 연구 머신은 아직 GICv3와 VMApple BDIF(AUX/root)를
+  사용합니다. 따라서 qemu-t8030의 AIC/ANS/DART/SART를 지원한다고 표시하지
+  않으며, `macos_boot_verified`를 올리지 않습니다.
+* qemu-t8030 문서에 나온 NVMe namespace 예시는 `nsid=1` 데이터와
+  `nsid=5` Apple NVRAM을 **참조 값**으로만 기록합니다. macOS용 AUX/root
+  레이아웃과 동일하다고 추론하지 않고 hardware-model provisioning 영수증을
+  계속 요구합니다.
+* 현재 TCG 연구 실행에는 Apple PV graphics가 없으므로 `m1_fb` 또는
+  `xnu_ramfb` 이름만으로 설치 화면·Metal을 주장하지 않습니다.
+
+프로필은 입력 파일을 열거나 수정하지 않고 확인할 수 있습니다.
+
+```sh
+python3 -m x86 vmapple capabilities
+```
+
+출력의 `reference` 블록은 qemu-t8030의 고정된 조사 리비전과 iOS 전용
+범위를, `interrupt_controller`, `device_topology`, `storage` 블록은
+현재 26x86 구현과 남은 차이를 각각 보여줍니다. 이 명령은 QEMU를 시작하지
+않으며 부팅 또는 설치 성공을 의미하지 않습니다.
+
 ## OVMF EFI 창
 
 WSL Ubuntu에서 clang, QEMU, OVMF와 테스트 번들이 준비되어 있을 때 다음

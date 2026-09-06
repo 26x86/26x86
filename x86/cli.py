@@ -484,10 +484,19 @@ def cmd_sandbox(args: argparse.Namespace) -> int:
 
 
 def cmd_vmapple(args: argparse.Namespace) -> int:
-    from x86.vmapple import VMappleConfig, configured_from_environment, inspect_storage, run
+    from x86.vmapple import (
+        VMappleConfig,
+        apple_silicon_profile,
+        configured_from_environment,
+        inspect_storage,
+        run,
+    )
 
     if args.vmapple_action == "status":
         _emit_json(configured_from_environment())
+        return 0
+    if args.vmapple_action == "capabilities":
+        _emit_json(apple_silicon_profile())
         return 0
     if args.vmapple_action == "inspect-storage":
         try:
@@ -629,6 +638,11 @@ def build_parser() -> argparse.ArgumentParser:
         "status", help="Show configured VMApple paths without launching a guest"
     )
     vmapple_status.set_defaults(handler=cmd_vmapple)
+    vmapple_capabilities = vmapple_actions.add_parser(
+        "capabilities",
+        help="Show the qemu-t8030-derived Apple Silicon device profile without launching a guest",
+    )
+    vmapple_capabilities.set_defaults(handler=cmd_vmapple)
     vmapple_inspect_storage = vmapple_actions.add_parser(
         "inspect-storage",
         help="Read-only AUX/root readiness inspection; never starts QEMU or writes inputs",

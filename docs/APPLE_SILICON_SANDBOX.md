@@ -24,6 +24,16 @@ Sandbox enablement, target macOS, engine paths, original guest boot assets,
 from virtual guest identity; selecting an identity does not create Apple trust
 material or establish an accepted boot chain.
 
+The VMApple/QEMU comparison profile is derived from the archived
+[qemu-t8030](https://github.com/TrungNguyen1909/qemu-t8030) device model. That
+project targets an iPhone 11/T8030 iOS guest. 26x86 uses its public device
+topology as a research reference (AIC, ANS/NVMe, DART/SART, Apple peripherals
+and framebuffer helpers) and does not import its iOS firmware, device tree or
+restore flow. The current TCG VMApple backend still exposes GICv3 and the
+project's BDIF AUX/root path; this is recorded as a capability gap instead of
+being relabelled as AIC/ANS support. Use `python3 -m x86 vmapple capabilities`
+to inspect the pinned reference and the current implementation boundary.
+
 The iBoot(AArch64) MachineType is a macOS guest personality only. Its supported
 matrix is fixed and enforced before firmware inputs are opened:
 

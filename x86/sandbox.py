@@ -18,6 +18,7 @@ from .iboot_personality import (
     policy_matrix,
 )
 from .boot_picker import default_boot_picker_config
+from .vmapple import apple_silicon_profile
 
 REPO = Path(__file__).resolve().parent.parent
 TARGETS = (26, 27)
@@ -272,6 +273,7 @@ def status(mode: str = "native", *, root: Path = REPO) -> dict[str, Any]:
         "product_platform_policy": "AppleIntelOnly", "product_boot_authorized": False,
         "vsk_spec": "VF-SPEC-001/0.1", "vsk_isolation_implemented": False,
         "interrupt_controller": "AIC", "boot_protocol": "iBoot", "configuration": "config.plist",
+        "soc_profile": apple_silicon_profile(),
         "machine_type": IBOOT_MACHINE_TYPE, "personality": "iBoot",
         "guest_os": MACOS_GUEST_OS, "guest_os_supported": True,
         "guest_os_policy": "macOS-only", "supported_guest_os": [MACOS_GUEST_OS],
@@ -332,7 +334,8 @@ def prepare(target_major: int, output_path: str, *, root: Path = REPO) -> dict[s
                    "boot_picker": default_boot_picker_config(target_major=major),
                    "minimum_cpu": "SSE4.1 + SSE4.2", "boot_verified": False,
                    "macos_boot_ready": False, "sha256": report["sha256"],
-                   "support_policy": SUPPORT_POLICY, "blockers": list(GAPS)}
+                   "support_policy": SUPPORT_POLICY, "soc_profile": apple_silicon_profile(),
+                   "blockers": list(GAPS)}
         (staging / "26x86-sandbox.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         from x86.sandbox_config import default_config
         # A disabled merge fragment, never overwrite the user's OpenCore config.

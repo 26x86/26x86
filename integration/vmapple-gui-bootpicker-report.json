@@ -237,5 +237,160 @@
       "no known APFS marker was found in sampled windows; provisioning remains unverified"
     ],
     "note": "AUX must be initialized for the exact VM hardware model and the root image must contain an install target. Byte markers alone cannot establish either condition."
+  },
+  "soc_profile": {
+    "schema": "26x86.vmapple-apple-silicon/1",
+    "profile_id": "vmapple-m1-macos",
+    "machine_type": "iBoot(AArch64)",
+    "guest_os": "macOS",
+    "guest_os_policy": "macOS-only",
+    "target_majors": [
+      26,
+      27
+    ],
+    "virtual_identity": {
+      "soc_name": "Apple M1 (Virtual)",
+      "model": "VM0001",
+      "identity_mode": "metadata-only",
+      "hardware_attestation_verified": false
+    },
+    "interrupt_controller": {
+      "sandbox_contract": "AIC",
+      "qemu_t8030_reference": "AIC",
+      "current_vmapple_qemu": "GICv3",
+      "current_vmapple_qemu_status": "baseline-only; AIC backend work remains",
+      "gic_compatibility": false
+    },
+    "device_topology": [
+      {
+        "name": "AIC",
+        "reference": "apple.aic",
+        "native_sandbox": "aic_v1 wired model (partial)",
+        "current_vmapple_qemu": "missing; GICv3 baseline",
+        "status": "required-gap"
+      },
+      {
+        "name": "Apple ANS/NVMe",
+        "reference": "apple.ans",
+        "native_sandbox": "not implemented",
+        "current_vmapple_qemu": "VMApple BDIF AUX/root path",
+        "status": "reference-only"
+      },
+      {
+        "name": "DART/SART",
+        "reference": "apple.dart / apple.sart",
+        "native_sandbox": "not implemented",
+        "current_vmapple_qemu": "not exposed in research profile",
+        "status": "required-gap"
+      },
+      {
+        "name": "Apple NVRAM",
+        "reference": "apple-nvram namespace",
+        "native_sandbox": "not implemented",
+        "current_vmapple_qemu": "virtual config/AES path only",
+        "status": "macos-validation-required"
+      },
+      {
+        "name": "Apple UART",
+        "reference": "apple-uart",
+        "native_sandbox": "not implemented",
+        "current_vmapple_qemu": "PL011 compatibility UART",
+        "status": "compatibility-only"
+      },
+      {
+        "name": "SMC / watchdog / GPIO / SPI / I2C",
+        "reference": "Apple-specific peripheral set",
+        "native_sandbox": "not implemented",
+        "current_vmapple_qemu": "generic or absent in research profile",
+        "status": "required-gap"
+      },
+      {
+        "name": "USB OTG / Type-C recovery",
+        "reference": "apple-otg / apple-typec",
+        "native_sandbox": "not implemented",
+        "current_vmapple_qemu": "research chardev recovery transport",
+        "status": "protocol-only"
+      },
+      {
+        "name": "m1_fb / xnu_ramfb",
+        "reference": "display framebuffer helpers",
+        "native_sandbox": "not implemented",
+        "current_vmapple_qemu": "PV graphics omitted in research-headless",
+        "status": "graphics-gap"
+      }
+    ],
+    "storage": {
+      "reference_controller": "Apple ANS/NVMe-like",
+      "project_controller": "VMApple BDIF AUX/root",
+      "namespace_reference": [
+        {
+          "nsid": 1,
+          "nstype": 1,
+          "role": "NVMe data namespace",
+          "status": "reference-only"
+        },
+        {
+          "nsid": 5,
+          "nstype": 5,
+          "role": "Apple NVRAM namespace",
+          "status": "reference-only"
+        }
+      ],
+      "namespace_scope": "T8030/iOS reference command; macOS mapping requires validation",
+      "base_images_immutable": true,
+      "cow_overlay_required": true,
+      "hardware_model_provisioning_receipt_required": true
+    },
+    "cpu": {
+      "guest_isa": "AArch64",
+      "reference_cpu": "Apple A13 / T8030",
+      "target_identity": "Apple M1 (Virtual)",
+      "host_acceleration": "TCG research path",
+      "native_minimum": "x86_64 SSE4.1 + SSE4.2"
+    },
+    "graphics": {
+      "reference_devices": [
+        "m1_fb",
+        "xnu_ramfb"
+      ],
+      "current_research_status": "Apple PV graphics unavailable in TCG research-headless",
+      "verified": false
+    },
+    "reference": {
+      "name": "qemu-t8030",
+      "repository": "https://github.com/TrungNguyen1909/qemu-t8030",
+      "wiki": "https://github.com/TrungNguyen1909/qemu-t8030/wiki/Bringing-up-the-emulator",
+      "revision": "fd4b0f790903044d90b8a35fcf03758401252063",
+      "machine_type": "t8030",
+      "guest_scope": "iPhone 11 / iOS",
+      "role": "device-topology-reference-only"
+    },
+    "scope": {
+      "supported_guest_os": [
+        "macOS"
+      ],
+      "unsupported_guest_os": [
+        "iOS",
+        "iPadOS",
+        "tvOS",
+        "watchOS",
+        "visionOS"
+      ],
+      "reference_guest_os": [
+        "iOS"
+      ],
+      "ios_code_imported": false
+    },
+    "claims": {
+      "apple_hardware_attestation_verified": false,
+      "macos_boot_verified": false,
+      "installer_ui_verified": false
+    },
+    "blockers": [
+      "AIC is required by the native Sandbox contract; current VMApple QEMU research mode still exposes GICv3",
+      "Apple ANS/DART/SART/SMC device behavior is not validated for macOS",
+      "Apple PV graphics and Metal are not available in the current TCG research profile",
+      "A hardware-model-matched AUX and an install-target root image are still required"
+    ]
   }
 }

@@ -68,6 +68,25 @@ No macOS executable, boot-policy file, signed image, PAC instruction, or trust
 decision is rewritten by this patch. Synthetic test firmware is project-owned
 code. The patch contains no Apple firmware or proprietary key material.
 
+## qemu-t8030 comparison boundary
+
+The archived [qemu-t8030 repository](https://github.com/TrungNguyen1909/qemu-t8030)
+is a useful source-level comparison for Apple-specific device topology. Its
+`t8030` machine wires an Apple AIC to Apple ANS/NVMe, DART/SART, Apple UART,
+NVRAM, SMC, USB OTG/Type-C and framebuffer helpers. It is an iPhone 11/iOS
+emulator, however, so its firmware, device tree, namespace layout and restore
+commands are not macOS inputs for 26x86. The pinned comparison data is exposed
+by `python3 -m x86 vmapple capabilities`.
+
+The distinction matters at two separate layers. The EFI Sandbox contract is
+AIC-only and its first-party `aic_v1` model is still partial. The current
+VMApple QEMU TCG patch deliberately retains the upstream GICv3 device and
+uses VMApple BDIF for AUX/root, so it cannot claim the T8030 AIC/ANS behavior.
+No GIC-to-AIC substitution, iOS guest enablement, firmware rewrite or signature
+bypass is introduced by the comparison profile. A macOS boot result still
+requires a validated AIC/Apple-device implementation, provisioned storage,
+graphics and an accepted iBoot-to-XNU chain.
+
 ## Architectural facts used by the synthetic test
 
 These addresses come from the pinned upstream machine, rather than inferred

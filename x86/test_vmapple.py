@@ -163,6 +163,37 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertEqual(parsed.vmapple_action, "inspect-storage")
         self.assertEqual(parsed.aux_offset, 0x200)
 
+    def test_apple_silicon_profile_keeps_t8030_as_macOS_safe_reference(self) -> None:
+        from x86.vmapple import apple_silicon_profile
+
+        profile = apple_silicon_profile()
+        self.assertEqual(profile["schema"], "26x86.vmapple-apple-silicon/1")
+        self.assertEqual(profile["machine_type"], "iBoot(AArch64)")
+        self.assertEqual(profile["guest_os"], "macOS")
+        self.assertEqual(profile["reference"]["name"], "qemu-t8030")
+        self.assertEqual(profile["reference"]["guest_scope"], "iPhone 11 / iOS")
+        self.assertEqual(profile["interrupt_controller"]["sandbox_contract"], "AIC")
+        self.assertEqual(profile["interrupt_controller"]["current_vmapple_qemu"], "GICv3")
+        self.assertFalse(profile["scope"]["ios_code_imported"])
+        self.assertEqual(profile["scope"]["supported_guest_os"], ["macOS"])
+        self.assertIn("iOS", profile["scope"]["unsupported_guest_os"])
+        self.assertFalse(profile["claims"]["macos_boot_verified"])
+
+    def test_apple_silicon_profile_returns_independent_data(self) -> None:
+        from x86.vmapple import apple_silicon_profile
+
+        first = apple_silicon_profile()
+        first["device_topology"][0]["status"] = "mutated"
+        second = apple_silicon_profile()
+        self.assertEqual(second["device_topology"][0]["status"], "required-gap")
+
+    def test_cli_parser_exposes_apple_silicon_capabilities(self) -> None:
+        from x86.cli import build_parser
+
+        parsed = build_parser().parse_args(["vmapple", "capabilities"])
+        self.assertEqual(parsed.command, "vmapple")
+        self.assertEqual(parsed.vmapple_action, "capabilities")
+
     def test_qemu_command_pins_virtual_m1_metadata(self) -> None:
         from x86.vmapple import Executable, VIRTUAL_MODEL, VIRTUAL_SOC_NAME, VMappleConfig, _command_for
 
