@@ -68,8 +68,9 @@ qemu-system-aarch64 \
   -cpu max,pauth=on,cntfrq=24000000 \
   -m 4G -smp 2 \
   -bios /path/to/AVPBooter.vmapple2.bin \
+  -global vmapple-cfg.soc_name='Apple M1 (Virtual)' \
+  -global vmapple-cfg.model=VM0001 \
   -display gtk -monitor none -nic none -no-reboot \
-  -global vmapple-cfg.optional-rpc-unavailable=on \
   -global vmapple-bdif.allow-block-writes=on \
   -blockdev '<COW overlay over an immutable AUX fixture>' \
   -blockdev '<COW overlay over an immutable root fixture>'
@@ -77,15 +78,22 @@ qemu-system-aarch64 \
 
 복구 입력은 반드시 원본 파일을 별도로 해시하고, AUX/root는 빈 raw 기반의
 COW overlay를 사용합니다. 원본 IPSW, 기존 ESP 또는 물리 디스크를 QEMU의
-쓰기 대상으로 지정하지 않습니다. 개발자 host bypass를 사용한 실험은
-로컬 연구 로그에만 남기며 제품 번들·배포 경로에는 포함하지 않습니다.
+쓰기 대상으로 지정하지 않습니다. `Apple M1 (Virtual)` / `VM0001`은
+게스트가 선택한 VMApple 메타데이터이며 Apple 기기 인증이나 호환성 보증이
+아닙니다. 개발자 host bypass를 사용한 실험은 로컬 연구 로그에만 남기며
+제품 번들·배포 경로에는 포함하지 않습니다. `optional-rpc-unavailable`은
+원본 iBEC의 선택 RPC 실패 경계를 확인하는 별도 음성 실험이므로 기본 명령에
+넣지 않습니다.
 
 26x86 GUI의 `Apple Silicon Sandbox` 단계에서 같은 런너를 사용할 수 있습니다.
-`VMApple QEMU`, `qemu-img`, `AVPBooter`, 개인화 iBSS/iBEC, AUX/root 원본과
-새 출력 폴더를 입력하고 `GTK VM 창 열기`를 누르면 로컬 브리지의
-`launch_vmapple`이 실행됩니다. Windows GUI에서 QEMU나 입력이 `/home/...` 같은
-WSL 경로이면 브리지는 셸을 거치지 않고 `wsl.exe --cd ... --exec python3 -m x86
-vmapple run --research-only --json`을 시작하며 WSLg의 GTK 창을 사용합니다.
+`VMApple QEMU`, `qemu-img`, `AVPBooter`, 공식 BuildManifest, TSS 요청 도구,
+변경하지 않은 원본 iBSS/iBEC, AUX/root 원본과 새 출력 폴더를 입력하고
+`GTK VM 창 열기`를 누르면 로컬 브리지의 `launch_vmapple`이 실행됩니다.
+GUI 기본 경로는 현재 USB nonce를 읽어 Apple TSS에 요청하고 새 출력 폴더에만
+개인화 IMG4를 만듭니다. Windows GUI에서 QEMU나 입력이 `/home/...` 같은 WSL
+경로이면 브리지는 셸을 거치지 않고 `wsl.exe --cd ... --exec python3 -m x86
+vmapple run --live-personalize --research-only --json`을 시작하며 WSLg의 GTK
+창을 사용합니다.
 경로는 모두 명시적 인자로 전달되고, 기존 출력 폴더는 런너가 거부합니다.
 실행 결과는 입력 폴더의 `launch.json`에 기록되며, GUI 응답의 PID와 로그 경로로
 프로세스를 추적할 수 있습니다.
@@ -104,19 +112,24 @@ python3 -m x86 vmapple run --target 27 --display gtk \
   --qemu /home/developer/.../qemu-system-aarch64 \
   --qemu-img /usr/bin/qemu-img \
   --firmware /path/to/AVPBooter.vmapple2.bin \
-  --ibss /path/to/iBSS.personalized.img4 \
-  --ibec /path/to/iBEC.personalized.img4 \
+  --build-manifest /path/to/BuildManifest.plist \
+  --tss-helper /path/to/venfire-tss-request-v2 \
+  --original-ibss /path/to/iBSS.vma2.RELEASE.im4p \
+  --original-ibec /path/to/iBEC.vma2.RELEASE.im4p \
   --aux /path/to/aux.raw --root /path/to/root.raw \
   --output /tmp/26x86-vmapple-run --boot-selection recovery \
   --boot-picker-trigger alt-enter --boot-delay 2 \
-  --research-only --json
+  --live-personalize --research-only --json
 ```
 
 `--research-only`는 배포 금지 개발 플래그이며 생략할 수 없습니다. 런너는
-reset 뒤 실제 USB descriptor를 다시 읽어 bulk OUT endpoint 4가 확인될 때만
-iBEC 업로드를 시도합니다. `05ac:1227` iBSS DFU가 유지되면
-`transition_state: transition-blocked`로 종료하고 어떠한 강제 전환도 수행하지
-않습니다.
+원본 BuildManifest의 `Customer Erase Install (IPSW)` identity와 실제 USB
+CPID/BDID/SDOM/nonce를 함께 검증하고, Apple TSS status `0` 및 IM4M을 받은
+뒤에만 새 IMG4를 만듭니다. reset 뒤 실제 USB descriptor를 다시 읽어 bulk
+OUT endpoint 4가 확인될 때만 iBEC 업로드를 시도합니다. `05ac:1227` iBSS
+DFU가 유지되면 `transition_state: transition-blocked`로 종료하고 어떠한
+강제 전환도 수행하지 않습니다. 입력 해시가 실행 중 바뀌면 산출물을
+삭제하고 실패합니다.
 
 CLI/GUI의 `machine_type`, `guest_os`, `recovery_protocol`,
 `recovery_image_name` 값은 동일한 iBoot 정책 검증기를 통과해야 합니다.
@@ -124,17 +137,23 @@ CLI/GUI의 `machine_type`, `guest_os`, `recovery_protocol`,
 `recovery_protocol=Fastboot`를 넣으면 `VF_RECOVERY_SCOPE_VIOLATION`이
 반환되며 QEMU 프로세스와 USB 전송은 시작되지 않습니다.
 
-현재 확인된 VMApple GUI 범위는 원본 27.0 iBSS의 173개 DFU 블록 전송(DFU
-suffix 포함),
-`WAIT_RESET`, USB reset acknowledgement와 재열거입니다. iBSS가 서명을
-수락했다는 응답, iBEC/XNU 실행, 그래픽 로그인 화면은 확인되지 않았습니다.
-따라서 VMApple 창이 열렸거나 DFU 전송이 완료되어도 Golden Gate 부팅
-성공으로 판정하지 않습니다. 재현 실험의 요약은
-[`integration/vmapple-gui-recovery-report.json`](../integration/vmapple-gui-recovery-report.json)에
-고정되어 있습니다. 2초 게이트에서 실제 Alt→Recovery 입력을 포함한 최신
-실행은 [`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json)에
-별도로 기록되어 있으며, 원본 전체 `launch.json`은 보고서의
-`source_report` 경로에서 확인할 수 있습니다.
+최신 확인된 VMApple GUI 범위는 원본 27.0 iBSS의 173개 DFU 블록 전송(DFU
+suffix 포함), `WAIT_RESET`, USB reset acknowledgement, 실제 `05ac:1281`
+재열거와 bulk OUT endpoint 4, LocalPolicy/iBEC 전송 및 `go` acknowledgement
+입니다. Apple TSS status `0`, nonce 일치, 원본 payload 해시 보존과
+`installer_modified: false`도 확인했습니다. 선택적 RPC 비가용성 실험에서
+원본 iBEC의 Stage2 UART command prompt를 관찰했고, 이어서 BuildManifest와
+일치하는 다섯 개 restore role을 전송했습니다. pre-boot 알림에서는 게스트의
+실제 `0200` STALL을 성공으로 바꾸지 않고 기록한 뒤 `bootx` acknowledgement를
+받았지만, iBoot가 XNU 이전에 패닉했습니다. 따라서
+`signature_acceptance_verified`, `xnu_executed`, `macos_boot_verified`와
+Golden Gate 설치 UI는 모두 `false`입니다. Linux QEMU 빌드에는 Apple
+ParavirtualizedGraphics 장치가 없어 `graphics_device_enabled`도 `false`입니다.
+VMApple 창이 열렸거나 DFU/`go`/`bootx`가 완료되어도 Golden Gate 부팅 성공으로
+판정하지 않습니다. 2초 게이트의 실제 Alt→Recovery 입력을 포함한 실행 요약은
+[`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json)에
+고정되어 있으며, 원본 전체 `launch.json`은 보고서의 `source_report` 경로에서
+확인할 수 있습니다.
 
 ## 결과 판정
 

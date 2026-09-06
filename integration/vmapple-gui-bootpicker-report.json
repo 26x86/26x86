@@ -1,13 +1,20 @@
 {
-  "schema": "26x86.vmapple-gui-boot-picker/1",
-  "recorded_at": "2026-09-06T04:35:23.1284901Z",
-  "source_report": "../../work/apple-assets/goldengate-gui-023-bootpicker-live/launch.json",
+  "schema": "26x86.vmapple-gui-boot-picker/3",
+  "recorded_at": "2026-09-06",
+  "source_report": "../../work/apple-assets-27/goldengate-chain-004/launch.json",
+  "normal_probe_source": "../../work/apple-assets-27/goldengate-gui-live-025/launch.json",
+  "stage2_probe_source": "../../work/apple-assets-27/goldengate-gui-live-027-optional/launch.json",
   "validation_level": "RECOVERY-PROTOCOL",
   "target_major": 27,
   "target_name": "Golden Gate",
   "machine_type": "iBoot(AArch64)",
   "guest_os": "macOS",
   "display_backend": "gtk",
+  "graphics_device_enabled": false,
+  "virtual_soc_name": "Apple M1 (Virtual)",
+  "virtual_model": "VM0001",
+  "virtual_identity_mode": "metadata-only",
+  "hardware_attestation_verified": false,
   "visible_window_requested": true,
   "worker": "WSL Linux process with WSLg GTK",
   "qemu_version": "QEMU emulator version 11.1.50",
@@ -16,18 +23,70 @@
   "host": "Linux/x86_64 under WSL; not a physical Apple Intel Mac",
   "research_only": true,
   "developer_host_bypass": true,
+  "distribution_status": "NONREDISTRIBUTABLE DEVELOPMENT ARTIFACT",
   "cow_storage": true,
+  "installer_modified": false,
   "boot_picker": {
     "enabled": true,
     "delay_seconds": 2.0,
     "alt_key": "Alt",
+    "show_picker_on_alt": true,
+    "hotkey_action": "show-picker",
+    "entries": [
+      {
+        "id": "macos",
+        "label": "macOS 27",
+        "kind": "macOS",
+        "target_major": 27,
+        "guest_os": "macOS",
+        "supported": true
+      },
+      {
+        "id": "recovery",
+        "label": "macOS Recovery · _default.ipsw",
+        "kind": "Recovery",
+        "target_major": 27,
+        "guest_os": "macOS",
+        "supported": true,
+        "recovery_protocol": "DFU/IPSW",
+        "recovery_image_name": "_default.ipsw"
+      }
+    ],
+    "recovery_entry_enabled": true,
+    "recovery": {
+      "enabled": true,
+      "scope": "macOS-only",
+      "protocol": "DFU/IPSW",
+      "supported_protocols": [
+        "DFU",
+        "IPSW"
+      ],
+      "default_image_name": "_default.ipsw",
+      "image_name": "_default.ipsw",
+      "dfu_macos_recovery": true,
+      "ipsw_macos_recovery": true
+    },
     "selection": "recovery",
     "selection_source": "alt-enter",
     "hotkey_event_observed": true,
     "delay_enforced": true,
-    "gate_started_monotonic": 2.023,
-    "gate_released_monotonic": 4.023,
+    "gate_started_monotonic": 3.104,
+    "gate_released_monotonic": 5.104,
     "gate_released": true
+  },
+  "personalization": {
+    "mode": "live-tss",
+    "build_manifest_sha256": "4137196616826e4e8eca265eedea52bc59c925113dd96bf2a59460075080a364",
+    "original_ibss_sha256": "149111b580f1e7572348551a31af0001543d4eacdb9b662f620b2710734dbc8c",
+    "original_ibec_sha256": "b872a987ebd1bf46b2a6add8c869d187268bcf1034ae52152759cd8d57726d6d",
+    "tss_status": {
+      "iBSS": "0",
+      "iBEC": "0",
+      "LocalPolicy": "0"
+    },
+    "nonce_bound": true,
+    "payload_preserved": true,
+    "installer_modified": false
   },
   "recovery": {
     "protocol": "DFU/IPSW",
@@ -37,25 +96,94 @@
     "dfu_data_blocks": 173,
     "dfu_final_state": 8,
     "usb_reset_acknowledged": true,
-    "post_reset_usb_identity": "05ac:1227 (iBSS DFU)",
-    "ibec_bulk_endpoint_advertised": false,
-    "transition_state": "transition-blocked",
-    "transition_blocker": "iBSS did not advertise bulk OUT endpoint 4",
-    "ibec_upload_attempted": false,
+    "post_reset_usb_identity": "05ac:1281 (iBEC recovery)",
+    "ibec_bulk_endpoint_advertised": true,
+    "ibec_bulk_endpoint": 4,
+    "transition_state": "ibec-ready",
+    "configuration_selected": true,
+    "local_policy_transfer_complete": true,
+    "ibec_transfer_complete": true,
+    "lpolrestore_acknowledged": true,
+    "go_acknowledged": true,
     "forced_transition": false
   },
+  "stage2": {
+    "execution_observed": true,
+    "marker": "Entering iBootStage2 recovery mode, starting command prompt",
+    "byte_offset": 1956,
+    "ibec_executed": true
+  },
+  "restore_chain": {
+    "requested": true,
+    "transport_completed": true,
+    "roles": [
+      "RestoreDeviceTree",
+      "RestoreKernelCache",
+      "RestoreLogo",
+      "RestoreRamDisk",
+      "RestoreTrustCache"
+    ],
+    "role_uploads": {
+      "RestoreDeviceTree": {
+        "transfer_complete": true,
+        "blocks_acknowledged": 1
+      },
+      "RestoreKernelCache": {
+        "transfer_complete": true,
+        "blocks_acknowledged": 707
+      },
+      "RestoreLogo": {
+        "transfer_complete": true,
+        "blocks_acknowledged": 1
+      },
+      "RestoreRamDisk": {
+        "transfer_complete": true,
+        "blocks_acknowledged": 6721
+      },
+      "RestoreTrustCache": {
+        "transfer_complete": true,
+        "blocks_acknowledged": 1
+      }
+    },
+    "commands_acknowledged": [
+      "setpicture 4",
+      "bgcolor 0 0 0",
+      "firmware",
+      "ramdisk",
+      "devicetree",
+      "setenv boot-args rd=md0 nand-enable-reformat=1 -progress -restore",
+      "bootx"
+    ],
+    "preboot_notification": {
+      "acknowledged": false,
+      "guest_stall_hex": "0200",
+      "handling": "notification result unused by restore protocol"
+    },
+    "sequence_sent": true,
+    "bootx_acknowledged": true,
+    "post_bootx_guest_panic": true,
+    "input_integrity": true,
+    "guest_acceptance_verified": false
+  },
   "golden_gate_installation": {
-    "stage_reached": "DFU",
+    "stage_reached": "bootx acknowledged / iBoot Panic",
     "signature_acceptance_verified": false,
-    "ibec_executed": false,
+    "ibec_executed": true,
+    "stage2_execution_observed": true,
     "xnu_executed": false,
     "macos_boot_verified": false,
     "installer_ui_visible": false,
-    "installation_verified": false
+    "installation_verified": false,
+    "blocker": "After the complete restore-role transport and bootx acknowledgement, iBoot emitted a panic before XNU or any macOS UI."
+  },
+  "guest_panic": {
+    "observed": true,
+    "marker": "iBoot Panic:",
+    "byte_offset": 2292
   },
   "input_integrity": true,
   "physical_mac_verified": false,
   "termination": "time_budget",
   "returncode": 0,
-  "note": "A visible GTK window and a completed iBSS DFU transfer are confirmed. The real post-reset descriptor remained 05ac:1227 without bulk endpoint 4, so iBEC, XNU, macOS Recovery UI and Golden Gate installation UI were not reached. No transition was forced and no installation success is claimed."
+  "note": "The chain uses live Apple TSS status 0, unchanged firmware/iBSS/iBEC/BuildManifest and read-only restore-role sources. It reaches the real Stage2 prompt, sends all five restore roles plus the expected preboot STALL handling and bootx, then the guest panics before XNU. The M1/VM0001 identity is metadata-only; no Apple hardware attestation, PV graphics, macOS Recovery UI or Golden Gate installer UI was observed. No transition was forced and no installation success is claimed."
 }

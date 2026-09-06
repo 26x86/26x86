@@ -33,6 +33,14 @@ executes the authored EFI under GTK OVMF and records QEMU/OVMF hashes in
 `vsk-efi-gui-report.json`, while keeping `boot_authorized`,
 `macos_boot_verified` and `physical_mac_verified` false. The GUI run is a
 reproducibility check for the EFI input boundary, not a Golden Gate or
-physical-Mac boot result. The separate GTK VMApple recovery observation is
-summarized in `vmapple-gui-recovery-report.json`; it ends at iBSS DFU because
-signature acceptance and iBEC transition were not verified.
+physical-Mac boot result.
+
+The current live-TSS GTK VMApple observation is summarized in
+`vmapple-gui-bootpicker-report.json`. It records the real two-second Alt→Recovery
+selection, Apple TSS status `0` for iBSS/iBEC/LocalPolicy, 173 DFU blocks, reset,
+re-enumeration as `05ac:1281` with bulk endpoint 4, LocalPolicy/iBEC uploads and
+`go` acknowledgement. The original iBEC reaches its Stage2 UART prompt; the
+restore chain then uploads all five official roles, records the expected pre-boot
+notification STALL and receives a `bootx` acknowledgement. iBoot subsequently
+panics before XNU, so XNU/macOS/installer success remains unverified. The older
+iBSS-only transition report is retained in `vmapple-gui-recovery-report.json`.

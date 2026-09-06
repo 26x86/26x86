@@ -232,6 +232,16 @@ class WizardBridge:
         boot_delay = config.get("boot_delay_seconds", config.get("boot_delay", 2.0))
         boot_selection = config.get("boot_selection")
         boot_trigger = config.get("boot_picker_trigger")
+        live_personalize = config.get("live_personalize", False)
+        optional_rpc_unavailable = config.get("optional_rpc_unavailable", False)
+        restore_chain = config.get("restore_chain", False)
+        restore_role_dir = config.get("restore_role_dir", "")
+        if type(live_personalize) is not bool:
+            return {"ok": False, "error": "VMApple live_personalize must be a boolean."}
+        if type(optional_rpc_unavailable) is not bool:
+            return {"ok": False, "error": "VMApple optional_rpc_unavailable must be a boolean."}
+        if type(restore_chain) is not bool:
+            return {"ok": False, "error": "VMApple restore_chain must be a boolean."}
         with self._boot_picker_lock:
             active_picker = self._boot_picker
             active_target = getattr(active_picker, "target_major", None)
@@ -291,6 +301,7 @@ class WizardBridge:
         # paths and bounded scalar values, never arbitrary QEMU arguments.
         string_fields = (
             "qemu", "qemu_img", "firmware", "ibss", "ibec", "aux", "root", "output",
+            "build_manifest", "tss_helper", "original_ibss", "original_ibec", "restore_role_dir",
         )
         values: dict[str, Any] = {}
         for name in string_fields:
@@ -300,7 +311,13 @@ class WizardBridge:
             if not isinstance(value, str):
                 return {"ok": False, "error": f"VMApple {name} 경로는 문자열이어야 합니다."}
             values[name] = value.strip()
-        required = ("qemu", "qemu_img", "firmware", "ibss", "aux", "root", "output")
+        required = ("qemu", "qemu_img", "firmware", "aux", "root", "output")
+        if live_personalize:
+            required += ("build_manifest", "tss_helper", "original_ibss", "original_ibec")
+        else:
+            required += ("ibss",)
+        if restore_chain:
+            required += ("restore_role_dir",)
         missing = [name for name in required if not values[name]]
         if missing:
             return {"ok": False, "error": "필수 VMApple 경로가 없습니다: " + ", ".join(missing)}
@@ -323,13 +340,18 @@ class WizardBridge:
             if name == "aux_offset" and value % 512:
                 return {"ok": False, "error": "VMApple aux_offset은 512바이트 배수여야 합니다."}
             values[name] = value
-        for name, lower, upper in (("transition_timeout", 0.001, 300.0), ("duration", 0.001, 86400.0)):
+        for name, lower, upper in (("transition_timeout", 0.001, 3600.0), ("duration", 0.001, 86400.0)):
             value = config.get(name)
             if value is None:
                 continue
             if isinstance(value, bool) or not isinstance(value, (int, float)) or not lower <= float(value) <= upper:
                 return {"ok": False, "error": f"VMApple {name} 값이 범위를 벗어났습니다."}
             values[name] = str(float(value))
+        restore_timeout = config.get("restore_timeout", 900.0)
+        if (isinstance(restore_timeout, bool) or not isinstance(restore_timeout, (int, float))
+                or not 0.001 <= float(restore_timeout) <= 3600.0):
+            return {"ok": False, "error": "VMApple restore_timeout 값이 범위를 벗어났습니다."}
+        values["restore_timeout"] = str(float(restore_timeout))
         if type(boot_picker_enabled) is not bool:
             return {"ok": False, "error": "VMApple boot_picker_enabled must be a boolean."}
         if isinstance(boot_delay, bool) or not isinstance(boot_delay, (int, float)):
@@ -340,11 +362,15 @@ class WizardBridge:
         values["boot_picker_enabled"] = boot_picker_enabled
         values["boot_selection"] = boot_selection
         values["boot_picker_trigger"] = boot_trigger.strip()
+        values["live_personalize"] = live_personalize
+        values["optional_rpc_unavailable"] = optional_rpc_unavailable
 
         from x86.vmapple import _to_wsl_path
+        from x86.vmapple import VIRTUAL_MODEL, VIRTUAL_SOC_NAME
 
         repo = bootstrap.ensure_repo_on_path()
-        input_names = ("qemu", "qemu_img", "firmware", "ibss", "ibec", "aux", "root", "output")
+        input_names = ("qemu", "qemu_img", "firmware", "ibss", "ibec", "aux", "root", "output",
+                       "build_manifest", "tss_helper", "original_ibss", "original_ibec", "restore_role_dir")
         needs_wsl = is_windows() and any(values[name].startswith("/") for name in input_names if values[name])
         if needs_wsl:
             wsl = shutil.which("wsl.exe")
@@ -377,11 +403,17 @@ class WizardBridge:
         add("--aux", "aux")
         add("--root", "root")
         add("--output", "output")
+        add("--build-manifest", "build_manifest")
+        add("--tss-helper", "tss_helper")
+        add("--original-ibss", "original_ibss")
+        add("--original-ibec", "original_ibec")
+        add("--restore-role-dir", "restore_role_dir")
         command.extend(["--display", display, "--uuid", str(values["uuid"]),
                         "--aux-offset", str(values["aux_offset"]),
                         "--memory-mib", str(values["memory_mib"]),
                         "--smp", str(values["smp"]),
-                        "--transition-timeout", str(float(values.get("transition_timeout", 10.0))),
+                        "--transition-timeout", str(float(values.get("transition_timeout", 300.0))),
+                        "--restore-timeout", values["restore_timeout"],
                         "--machine-type", machine_type,
                         "--guest-os", guest_os,
                         "--recovery-protocol", recovery_protocol,
@@ -389,7 +421,13 @@ class WizardBridge:
                         "--boot-selection", boot_selection,
                         "--boot-delay", str(float(boot_delay)),
                         "--boot-picker-trigger", boot_trigger.strip(),
-                        "--research-only", "--json"])
+                         "--research-only", "--json"])
+        if live_personalize:
+            command.append("--live-personalize")
+        if optional_rpc_unavailable:
+            command.append("--optional-rpc-unavailable")
+        if restore_chain:
+            command.append("--restore-chain")
         if "duration" in values:
             command.extend(["--duration", values["duration"]])
 
@@ -428,6 +466,14 @@ class WizardBridge:
             "output": values["output"],
             "log_path": str(log_path),
             "research_only": True,
+            "live_personalize": live_personalize,
+            "optional_rpc_unavailable": optional_rpc_unavailable,
+            "restore_chain": restore_chain,
+            "restore_timeout": float(restore_timeout),
+            "virtual_soc_name": VIRTUAL_SOC_NAME,
+            "virtual_model": VIRTUAL_MODEL,
+            "virtual_identity_mode": "metadata-only",
+            "hardware_attestation_verified": False,
             "forced_transition": False,
             "macos_boot_verified": False,
             "note": "창이 표시되며 결과는 output/launch.json에 기록됩니다. 실제 descriptor가 없으면 iBEC 전환을 강제하지 않습니다.",

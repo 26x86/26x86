@@ -476,6 +476,15 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
         transition_timeout=args.transition_timeout,
         duration=args.duration,
         research_only=args.research_only,
+        build_manifest=args.build_manifest,
+        tss_helper=args.tss_helper,
+        original_ibss=args.original_ibss,
+        original_ibec=args.original_ibec,
+        live_personalize=args.live_personalize,
+        optional_rpc_unavailable=args.optional_rpc_unavailable,
+        restore_chain=args.restore_chain,
+        restore_role_dir=args.restore_role_dir,
+        restore_timeout=args.restore_timeout,
         machine_type=args.machine_type,
         guest_os=args.guest_os,
         recovery_protocol=args.recovery_protocol,
@@ -590,8 +599,44 @@ def build_parser() -> argparse.ArgumentParser:
     vmapple_run.add_argument("--aux-offset", type=lambda value: int(value, 0), default=0)
     vmapple_run.add_argument("--memory-mib", type=int, default=4096)
     vmapple_run.add_argument("--smp", type=int, default=2)
-    vmapple_run.add_argument("--transition-timeout", type=float, default=10.0)
+    vmapple_run.add_argument("--transition-timeout", type=float, default=300.0)
     vmapple_run.add_argument("--duration", type=float)
+    vmapple_run.add_argument(
+        "--build-manifest", default=os.environ.get("X86_VMAPLE_BUILD_MANIFEST"),
+        help="Official BuildManifest.plist; required for --live-personalize",
+    )
+    vmapple_run.add_argument(
+        "--tss-helper", default=os.environ.get("X86_VMAPLE_TSS_HELPER"),
+        help="Local libtatsu-compatible TSS request encoder",
+    )
+    vmapple_run.add_argument(
+        "--original-ibss", default=os.environ.get("X86_VMAPLE_ORIGINAL_IBSS"),
+        help="Unchanged Apple iBSS IM4P; never modified by the runner",
+    )
+    vmapple_run.add_argument(
+        "--original-ibec", default=os.environ.get("X86_VMAPLE_ORIGINAL_IBEC"),
+        help="Unchanged Apple iBEC IM4P; never modified by the runner",
+    )
+    vmapple_run.add_argument(
+        "--live-personalize", action="store_true",
+        help="Request fresh Apple TSS tickets for the live USB nonce",
+    )
+    vmapple_run.add_argument(
+        "--optional-rpc-unavailable", action="store_true",
+        help="Opt into the negative optional-RPC experiment (normally omitted)",
+    )
+    vmapple_run.add_argument(
+        "--restore-chain", action="store_true",
+        help="After a real Stage2 prompt, send the official restore-role sequence",
+    )
+    vmapple_run.add_argument(
+        "--restore-role-dir", default=os.environ.get("X86_VMAPLE_RESTORE_ROLE_DIR"),
+        help="Directory containing unchanged Restore*.im4p role inputs",
+    )
+    vmapple_run.add_argument(
+        "--restore-timeout", type=float, default=900.0,
+        help="Bounded timeout for the Stage2 restore-role sequence",
+    )
     vmapple_run.add_argument("--machine-type", default="iBoot(AArch64)")
     vmapple_run.add_argument("--guest-os", default="macOS",
                              help="iBoot guest scope; only macOS is accepted")

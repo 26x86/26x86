@@ -67,11 +67,18 @@ xnu_executed                  = true
 macos_boot_verified           = true
 ```
 
-현재 확인된 장치는 `05ac:1227` iBSS DFU이며, reset 후 iBEC bulk endpoint가
-광고되지 않습니다. 이 경계에서는 서명 수락, iBEC 실행, XNU 실행, Recovery
-UI와 Golden Gate 설치 UI를 추정하지 않습니다. 보고서의
-`macos_boot_verified`는 계속 `false`이고, `forced_transition`도 계속
-`false`입니다.
+최신 live-TSS 실행에서는 iBSS DFU reset 뒤 실제 장치가 `05ac:1281`로
+재열거되고 bulk OUT endpoint 4를 광고했습니다. LocalPolicy와 원본 iBEC의
+개인화 IMG4를 전송하고 `go` acknowledgement를 받았습니다. 선택적 RPC
+비가용성 실험에서 Stage2 command prompt까지 관찰한 뒤, 다섯 개 공식
+restore role을 전송하고 pre-boot 알림의 실제 `0200` STALL을 기록했으며
+`bootx` acknowledgement까지 받았습니다. 그 직후 iBoot가 패닉했으므로 이
+경계에서는 서명 수락, XNU 실행, Recovery UI와 Golden Gate 설치 UI를
+추정하지 않습니다. 보고서의 `macos_boot_verified`는 계속 `false`이고,
+`forced_transition`도 계속 `false`입니다. Linux QEMU에는 Apple PV graphics
+장치가 없으므로 그래픽 UI도 검증할 수 없습니다. 상세 결과는
+[`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json)에
+고정되어 있습니다.
 
 ## 구성 예시
 

@@ -15,6 +15,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import platform
@@ -50,6 +51,14 @@ DFU_BLOCK_BYTES = 2048
 DFU_SUFFIX = bytes.fromhex("ffffffffac05000155464410")
 MAX_TRANSITION_ATTEMPTS = 240
 MAX_LOG_BYTES = 16 * 1024 * 1024
+STAGE1_PROMPT = b"Entering iBootStage1 recovery mode, starting command prompt"
+STAGE2_PROMPT = b"Entering iBootStage2 recovery mode, starting command prompt"
+# These values are the guest-facing VMApple metadata written by the QEMU
+# config device.  They are deliberately labelled virtual in every report:
+# metadata can make iBoot take the M1 personality path, but it cannot create
+# an Apple hardware attestation or prove that the guest is running on an M1.
+VIRTUAL_SOC_NAME = "Apple M1 (Virtual)"
+VIRTUAL_MODEL = "VM0001"
 
 
 class VMappleError(RuntimeError):
@@ -165,6 +174,10 @@ def probe_backend(executable: Executable) -> dict[str, object]:
         "vmapple": True,
         "tcg": True,
         "research_headless": True,
+        "virtual_soc_name": VIRTUAL_SOC_NAME,
+        "virtual_model": VIRTUAL_MODEL,
+        "virtual_identity_mode": "metadata-only",
+        "hardware_attestation_verified": False,
         "macos_boot_verified": False,
     }
 
@@ -346,7 +359,7 @@ class RecoveryTransport:
         self.socket.sendall(struct.pack("<I", len(packet)) + packet)
 
     def control(self, request_type: int, request: int, value: int = 0, index: int = 0,
-                *, length: int = 0, data: bytes = b"") -> bytes:
+                *, length: int = 0, data: bytes = b"", deadline: float | None = None) -> bytes:
         fields = (request_type, request, value, index, length)
         if not all(type(item) is int for item in fields):
             raise ValueError("USB setup fields must be integers")
@@ -359,6 +372,10 @@ class RecoveryTransport:
             raise ValueError("USB direction and data phase disagree")
         setup = struct.pack("<BBHHH", request_type, request, value, index, length)
         self.deadline = time.monotonic() + self.timeout
+        if deadline is not None:
+            if isinstance(deadline, bool) or not isinstance(deadline, (int, float)):
+                raise ValueError("USB transfer deadline must be a monotonic timestamp")
+            self.deadline = min(self.deadline, float(deadline))
         self._send(1, setup + data)
         payload = self._receive(1)
         if incoming and len(payload) > length:
@@ -367,18 +384,20 @@ class RecoveryTransport:
             raise RecoveryProtocolError("Unexpected payload on USB OUT completion")
         return payload
 
-    def descriptor(self, kind: int, index: int = 0, length: int = 255) -> bytes:
-        return self.control(0x80, 6, kind << 8 | index, 0x409 if kind == 3 else 0,
-                            length=length)
+    def descriptor(self, kind: int, index: int = 0, length: int = 255,
+                   language: int | None = None, *, deadline: float | None = None) -> bytes:
+        language_id = (0x409 if kind == 3 else 0) if language is None else language
+        return self.control(0x80, 6, kind << 8 | index, language_id,
+                            length=length, deadline=deadline)
 
-    def dfu_state(self) -> int:
-        data = self.control(0xA1, 5, length=1)
+    def dfu_state(self, *, deadline: float | None = None) -> int:
+        data = self.control(0xA1, 5, length=1, deadline=deadline)
         if len(data) != 1 or data[0] > 10:
             raise RecoveryProtocolError("DFU GETSTATE did not return one valid byte")
         return data[0]
 
-    def dfu_status(self) -> dict[str, int | str]:
-        data = self.control(0xA1, 3, length=6)
+    def dfu_status(self, *, deadline: float | None = None) -> dict[str, int | str]:
+        data = self.control(0xA1, 3, length=6, deadline=deadline)
         if len(data) != 6 or data[0] > 15 or data[4] > 10:
             raise RecoveryProtocolError("DFU GETSTATUS did not return six valid bytes")
         return {"raw": data.hex(), "status": data[0],
@@ -400,17 +419,76 @@ class RecoveryTransport:
                 raise RecoveryProtocolError(f"Unexpected DFU state {status['state']}; expected {target}")
             time.sleep(min(max(float(status["poll_timeout_ms"]) / 1000, 0.001), 0.25))
 
-    def usb_reset(self) -> None:
+    def usb_reset(self, *, deadline: float | None = None) -> None:
         self.deadline = time.monotonic() + self.timeout
+        if deadline is not None:
+            self.deadline = min(self.deadline, deadline)
         self._send(2, b"")
         if self._receive(4):
             raise RecoveryProtocolError("USB reset acknowledgement contained a payload")
 
-    def bulk_out(self, data: bytes, endpoint: int = 4) -> None:
+    def bulk_out(self, data: bytes, endpoint: int = 4, *, deadline: float | None = None) -> None:
         self.deadline = time.monotonic() + self.timeout
+        if deadline is not None:
+            self.deadline = min(self.deadline, deadline)
         self._send(1, data, endpoint)
         if self._receive(1, endpoint):
             raise RecoveryProtocolError("Bulk OUT acknowledgement contained a payload")
+
+    def bulk_in(self, endpoint: int = 0x81, *, deadline: float | None = None) -> bytes:
+        """Request one queued USB IN transfer without fabricating a response."""
+        if type(endpoint) is not int or not 0x81 <= endpoint <= 0x8F:
+            raise ValueError("USB bulk IN endpoint must be in the 0x81..0x8f range")
+        self.deadline = time.monotonic() + self.timeout
+        if deadline is not None:
+            self.deadline = min(self.deadline, deadline)
+        self._send(1, b"", endpoint)
+        return self._receive(1, endpoint)
+
+    def send_command(self, command: str, *, request: int = 0,
+                     deadline: float | None = None) -> bytes:
+        """Send an iBoot command; the ACK is transport evidence only."""
+        if not isinstance(command, str) or not 0 < len(command) < 256:
+            raise ValueError("iBoot command must contain 1..255 bytes")
+        encoded = command.encode("ascii")
+        if any(value < 32 or value > 126 for value in encoded):
+            raise ValueError("iBoot command must be printable ASCII")
+        return self.control(0x40, request, length=len(encoded) + 1,
+                            data=encoded + b"\0", deadline=deadline)
+
+    def configure_recovery(self, *, deadline: float | None = None) -> dict[str, object]:
+        """Select a genuine Apple recovery configuration and endpoint 4."""
+        device = self.descriptor(1, length=18, deadline=deadline)
+        if (len(device) != 18 or device[:2] != b"\x12\x01"
+                or device[8:10] != b"\xac\x05"
+                or not 0x1280 <= int.from_bytes(device[10:12], "little") <= 0x1283):
+            raise RecoveryProtocolError("Expected an actual Apple iBEC recovery device")
+        header = self.descriptor(2, length=9, deadline=deadline)
+        if len(header) != 9 or header[:2] != b"\x09\x02":
+            raise RecoveryProtocolError("Missing recovery configuration header")
+        length = int.from_bytes(header[2:4], "little")
+        if not 9 <= length <= 4096:
+            raise RecoveryProtocolError("Recovery configuration length is out of bounds")
+        configuration = self.descriptor(2, length=length, deadline=deadline)
+        if len(configuration) != length or configuration[:9] != header:
+            raise RecoveryProtocolError("Recovery configuration descriptor is inconsistent")
+        endpoint: int | None = None
+        offset = 0
+        while offset < length:
+            size = configuration[offset]
+            if size < 2 or offset + size > length:
+                raise RecoveryProtocolError("Invalid recovery USB descriptor structure")
+            item = configuration[offset:offset + size]
+            if item[1] == 5 and size >= 7 and item[2] == 4 and item[3] & 3 == 2:
+                endpoint = item[2]
+            offset += size
+        if endpoint != 4:
+            raise RecoveryProtocolError("Recovery bulk OUT endpoint 4 was not advertised")
+        self.control(0x00, 9, value=configuration[5], deadline=deadline)
+        return {"device_descriptor_hex": device.hex(),
+                "configuration_hex": configuration.hex(),
+                "configuration_value": configuration[5],
+                "bulk_out_endpoint": endpoint}
 
     def send_dfu_file(self, path: Path, *, expected_sha256: str | None = None,
                       total_timeout: float = 300, reset: bool = True) -> dict[str, object]:
@@ -512,11 +590,14 @@ class RecoveryTransport:
             result["dfu_control_error"] = dfu_control_error
         return result
 
-    def send_recovery_file(self, path: Path, *, total_timeout: float = 300) -> dict[str, object]:
+    def send_recovery_file(self, path: Path, *, total_timeout: float = 300,
+                           expected_sha256: str | None = None) -> dict[str, object]:
         image = path.read_bytes()
         if not 0 < len(image) <= MAX_RECOVERY_BYTES:
             raise ValueError("iBEC input must be between 1 byte and 512 MiB")
         digest = hashlib.sha256(image).hexdigest()
+        if expected_sha256 is not None and digest != expected_sha256.lower():
+            raise ValueError("Recovery image SHA-256 does not match the expected generated artifact")
         deadline = time.monotonic() + total_timeout
         report: dict[str, object] = {
             "schema": 1, "image_path": str(path), "image_size": len(image),
@@ -590,7 +671,11 @@ def _probe_transition(socket_path: str, timeout: float) -> dict[str, object]:
     deadline = time.monotonic() + timeout
     attempts: list[dict[str, object]] = []
     last: dict[str, object] | None = None
-    while time.monotonic() < deadline and len(attempts) < MAX_TRANSITION_ATTEMPTS:
+    # The old 240-attempt cap made a nominal five-minute timeout end after
+    # roughly 24 seconds.  Keep the historical minimum for fast tests, but
+    # let a caller-supplied deadline actually bound the observation window.
+    attempt_limit = max(MAX_TRANSITION_ATTEMPTS, int(timeout / 0.1) + 1)
+    while time.monotonic() < deadline and len(attempts) < attempt_limit:
         try:
             with RecoveryTransport(socket_path, timeout=min(2.0, max(deadline - time.monotonic(), 0.1))) as transport:
                 last = transport.probe()
@@ -619,6 +704,42 @@ def _probe_transition(socket_path: str, timeout: float) -> dict[str, object]:
     }
 
 
+def _read_log_tail(path: Path) -> tuple[int, bytes]:
+    """Read a bounded UART tail and return its absolute file offset."""
+    size = path.stat().st_size
+    start = max(0, size - MAX_LOG_BYTES)
+    with path.open("rb") as stream:
+        stream.seek(start)
+        return start, stream.read(MAX_LOG_BYTES)
+
+
+def _wait_serial_marker(path: Path, marker: bytes, timeout: float,
+                        process: subprocess.Popen[bytes] | None = None) -> dict[str, object]:
+    """Observe a real UART marker without treating it as a macOS boot claim."""
+    if not 0 < timeout <= 3600:
+        raise ValueError("UART marker timeout must be between 0 and 3600 seconds")
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        try:
+            # UART logs can grow without bound while a guest is alive.  The
+            # marker is emitted near the transition, so retaining only the
+            # bounded tail gives the same evidence without repeatedly loading
+            # an unbounded file into the runner.
+            start, data = _read_log_tail(path)
+        except OSError:
+            start = 0
+            data = b""
+        position = data.find(marker)
+        if position >= 0:
+            return {"observed": True, "marker": marker.decode("ascii"),
+                    "byte_offset": start + position}
+        if process is not None and process.poll() is not None:
+            break
+        time.sleep(min(0.1, max(0.0, deadline - time.monotonic())))
+    return {"observed": False, "marker": marker.decode("ascii"),
+            "reason": "UART marker was not observed before the guest exited or deadline"}
+
+
 def _command_for(config: "VMappleConfig", executable: Executable, storage: StorageSession,
                  socket_path: str, output: Path) -> list[str]:
     guest_firmware = _guest_path(config.firmware, executable)
@@ -630,16 +751,29 @@ def _command_for(config: "VMappleConfig", executable: Executable, storage: Stora
         "-cpu", "max,pauth=on,pauth-qarma5=on,cntfrq=24000000",
         "-m", f"{config.memory_mib}M", "-smp", str(config.smp),
         "-bios", guest_firmware,
+        # Pin the guest-facing M1 identity explicitly instead of relying only
+        # on QEMU's defaults.  This is a metadata selection for iBoot probing,
+        # not a claim that the host is Apple silicon.
+        "-global", f"vmapple-cfg.soc_name={VIRTUAL_SOC_NAME}",
+        "-global", f"vmapple-cfg.model={VIRTUAL_MODEL}",
         *storage.arguments(executable),
         "-display", config.display, "-monitor", "none",
         "-serial", f"file:{guest_serial}", "-nic", "none", "-no-reboot",
-        "-global", "vmapple-cfg.optional-rpc-unavailable=on",
         "-chardev", f"socket,id=vusb,path={socket_path},server=on,wait=off",
         "-global", "vmapple-bdif.usbdev=vusb",
-        "-trace", f"enable=bdif_*,file={guest_trace}",
-        "-trace", f"enable=vmapple_optional_rpc_*,file={guest_trace}",
         "-d", "guest_errors,unimp",
     ]
+    # This switch is an explicit negative-capability experiment.  It is
+    # deliberately absent from the normal path because the original iBSS
+    # faults when the optional region is advertised as unavailable.
+    args.extend(["-trace", f"enable=bdif_*,file={guest_trace}"])
+    if config.optional_rpc_unavailable:
+        args.extend([
+            "-global", "vmapple-cfg.optional-rpc-unavailable=on",
+            # QEMU's trace parser treats commas as option separators, so the
+            # optional pattern must use its own -trace option.
+            "-trace", f"enable=vmapple_optional_rpc_*,file={guest_trace}",
+        ])
     return executable.command(*args)
 
 
@@ -659,9 +793,18 @@ class VMappleConfig:
     aux_offset: int = 0
     memory_mib: int = 4096
     smp: int = 2
-    transition_timeout: float = 10.0
+    transition_timeout: float = 300.0
     duration: float | None = None
     research_only: bool = False
+    build_manifest: str | None = None
+    tss_helper: str | None = None
+    original_ibss: str | None = None
+    original_ibec: str | None = None
+    live_personalize: bool = False
+    optional_rpc_unavailable: bool = False
+    restore_chain: bool = False
+    restore_role_dir: str | None = None
+    restore_timeout: float = 900.0
     machine_type: str = IBOOT_MACHINE_TYPE
     guest_os: str = MACOS_GUEST_OS
     recovery_protocol: str = "DFU/IPSW"
@@ -715,20 +858,79 @@ class VMappleConfig:
             raise ValueError("VMApple memory must be between 512 MiB and 1 TiB")
         if type(self.smp) is not int or not 1 <= self.smp <= 32:
             raise ValueError("VMApple SMP must be between 1 and 32 CPUs")
-        if not 0 < self.transition_timeout <= 300:
-            raise ValueError("Transition timeout must be between 0 and 300 seconds")
-        if self.duration is not None and not 0 < self.duration <= 86400:
+        if (
+            isinstance(self.transition_timeout, bool)
+            or not isinstance(self.transition_timeout, (int, float))
+            or not math.isfinite(float(self.transition_timeout))
+            or not 0 < self.transition_timeout <= 3600
+        ):
+            raise ValueError("Transition timeout must be between 0 and 3600 seconds")
+        if (
+            self.duration is not None
+            and (
+                isinstance(self.duration, bool)
+                or not isinstance(self.duration, (int, float))
+                or not math.isfinite(float(self.duration))
+                or not 0 < self.duration <= 86400
+            )
+        ):
             raise ValueError("Duration must be between 0 and 86400 seconds")
+        if type(self.live_personalize) is not bool:
+            raise ValueError("VMApple live_personalize must be a boolean")
+        if type(self.optional_rpc_unavailable) is not bool:
+            raise ValueError("VMApple optional_rpc_unavailable must be a boolean")
+        if type(self.restore_chain) is not bool:
+            raise ValueError("VMApple restore_chain must be a boolean")
+        if (
+            isinstance(self.restore_timeout, bool)
+            or not isinstance(self.restore_timeout, (int, float))
+            or not math.isfinite(float(self.restore_timeout))
+            or not 0 < self.restore_timeout <= 3600
+        ):
+            raise ValueError("Restore timeout must be between 0 and 3600 seconds")
         qemu = _resolve_executable(self.qemu, "X86_VMAPLE_QEMU", "qemu-system-aarch64")
         qemu_img = _resolve_executable(self.qemu_img, "X86_VMAPLE_QEMU_IMG", "qemu-img")
         paths = {
             "firmware": _regular(self.firmware, "AVPBooter firmware", limit=MAX_FIRMWARE_BYTES),
-            "ibss": _regular(self.ibss, "personalized iBSS", limit=MAX_DFU_BYTES),
             "aux": _regular(self.aux, "AUX base image"),
             "root": _regular(self.root, "root base image"),
         }
-        if self.ibec:
-            paths["ibec"] = _regular(self.ibec, "personalized iBEC", limit=MAX_RECOVERY_BYTES)
+        if not self.live_personalize:
+            paths["ibss"] = _regular(self.ibss, "personalized iBSS", limit=MAX_DFU_BYTES)
+            if self.ibec:
+                paths["ibec"] = _regular(self.ibec, "personalized iBEC", limit=MAX_RECOVERY_BYTES)
+        elif self.ibss:
+            # An optional legacy path is accepted for diagnostics, but the
+            # live path below always uploads the newly personalized original.
+            paths["legacy_ibss"] = _regular(self.ibss, "legacy iBSS", limit=MAX_DFU_BYTES)
+        if self.ibec and self.live_personalize:
+            paths["legacy_ibec"] = _regular(self.ibec, "legacy iBEC", limit=MAX_RECOVERY_BYTES)
+        if self.live_personalize:
+            if not self.build_manifest or not self.tss_helper:
+                raise ValueError("Live personalization requires BuildManifest and TSS request helper")
+            if not self.original_ibss:
+                raise ValueError("Live personalization requires the unchanged original iBSS IM4P")
+            if not self.original_ibec:
+                raise ValueError("Live personalization requires the unchanged original iBEC IM4P")
+            paths["build_manifest"] = _regular(self.build_manifest, "BuildManifest", limit=32 * 1024 * 1024)
+            paths["tss_helper"] = _regular(self.tss_helper, "TSS request helper", limit=16 * 1024 * 1024)
+            paths["original_ibss"] = _regular(self.original_ibss, "original iBSS", limit=MAX_DFU_BYTES)
+            paths["original_ibec"] = _regular(self.original_ibec, "original iBEC", limit=MAX_RECOVERY_BYTES)
+        if self.restore_chain:
+            if not self.live_personalize:
+                raise ValueError("Restore chain requires --live-personalize so the accepted iBEC ticket is available")
+            if not self.restore_role_dir:
+                raise ValueError("Restore chain requires a restore role directory")
+            role_dir = Path(self.restore_role_dir).expanduser().resolve(strict=True)
+            if not role_dir.is_dir():
+                raise ValueError(f"Restore role path must be a directory: {role_dir}")
+            for role in ("RestoreTrustCache", "RestoreRamDisk", "RestoreDeviceTree", "RestoreKernelCache"):
+                paths["restore_" + role] = _regular(
+                    role_dir / (role + ".im4p"), "restore " + role, limit=MAX_RECOVERY_BYTES
+                )
+            optional_logo = role_dir / "RestoreLogo.im4p"
+            if optional_logo.exists():
+                paths["restore_RestoreLogo"] = _regular(optional_logo, "restore RestoreLogo", limit=MAX_RECOVERY_BYTES)
         if qemu.is_wsl and os.name == "nt":
             raise ValueError("Run the VMApple worker inside WSL; the GUI bridge performs this re-exec")
         return qemu, qemu_img, paths
@@ -762,7 +964,14 @@ class VMappleConfig:
 
 
 def run(config: VMappleConfig) -> dict[str, object]:
-    """Start a visible VMApple instance, upload iBSS, and record the real boundary."""
+    """Start VMApple and drive only the observed macOS recovery protocol.
+
+    In live mode the caller supplies an unchanged BuildManifest/iBSS/iBEC and
+    a request encoder.  Apple TSS tickets are generated into a fresh output
+    directory and the original payload bytes are wrapped without edits.  A
+    Stage2 UART marker is the strongest result this runner can currently
+    report; it is still not a claim that XNU or the installer UI rendered.
+    """
     personality = config.personality_report()
     qemu, qemu_img, paths = config.validate()
     backend = probe_backend(qemu)
@@ -796,14 +1005,23 @@ def run(config: VMappleConfig) -> dict[str, object]:
             "recovery_scope": personality["recovery"],
             "boot_picker": personality["boot_picker"],
             "validation_level": "RECOVERY-PROTOCOL", "display_backend": config.display,
+            "graphics_device_enabled": False,
+            "virtual_soc_name": VIRTUAL_SOC_NAME,
+            "virtual_model": VIRTUAL_MODEL,
+            "virtual_identity_mode": "metadata-only",
+            "hardware_attestation_verified": False,
             "research_only": True, "developer_host_bypass": True,
             "distribution_status": "NONREDISTRIBUTABLE DEVELOPMENT ARTIFACT",
+            "restore_chain_requested": config.restore_chain,
+            "restore_chain_completed": False,
             "host": {"system": platform.system(), "architecture": platform.machine(),
                      "physical_mac_verified": False},
             "backend": backend, "command": command, "inputs": inputs,
             "cow_storage": True, "storage_session": str(storage.directory / "storage"),
             "forced_transition": False, "signature_acceptance_verified": False,
-            "ibec_executed": False, "xnu_executed": False, "macos_boot_verified": False,
+            "personalization_mode": "live-tss" if config.live_personalize else "caller-supplied",
+            "installer_modified": False, "ibec_executed": False,
+            "xnu_executed": False, "macos_boot_verified": False,
             "physical_mac_verified": False, "termination": None, "returncode": None,
             "duration_seconds": None, "input_integrity": False, "error": None,
         }
@@ -834,14 +1052,133 @@ def run(config: VMappleConfig) -> dict[str, object]:
                 "The macOS BootPicker entry was selected, but direct macOS boot is not implemented; "
                 "choose macOS Recovery for the verified DFU/IPSW path."
             )
+        if config.live_personalize:
+            from .vmapple_personalization import personalize_firmware
+
+            personalization = output / "personalization"
+            personalization.mkdir(mode=0o700)
+            ibss_personalization = personalize_firmware(
+                socket_path=socket_path,
+                build_manifest=paths["build_manifest"],
+                firmware=paths["original_ibss"],
+                component="iBSS",
+                helper=paths["tss_helper"],
+                output=personalization / "ibss",
+                developer_host_bypass=True,
+                deadline=time.monotonic() + config.transition_timeout,
+            )
+            report["personalization"] = {"ibss": ibss_personalization}
+            ibss_path = Path(ibss_personalization["output"])
+        else:
+            ibss_path = paths["ibss"]
+
         with RecoveryTransport(socket_path, timeout=10) as transport:
             initial = transport.probe()
             report["initial_device"] = initial
-            dfu = transport.send_dfu_file(paths["ibss"], reset=True)
+            dfu = transport.send_dfu_file(ibss_path, reset=True,
+                                          expected_sha256=(_sha256(ibss_path) if config.live_personalize else None))
         report["dfu_upload"] = dfu
         transition = _probe_transition(socket_path, config.transition_timeout)
         report["transition"] = transition
-        if transition.get("state") == "ibec-ready" and "ibec" in paths:
+        if transition.get("state") == "ibec-ready" and config.live_personalize:
+            from .vmapple_personalization import personalize_firmware
+
+            ibec_personalization = personalize_firmware(
+                socket_path=socket_path,
+                build_manifest=paths["build_manifest"],
+                firmware=paths["original_ibec"],
+                component="iBEC",
+                helper=paths["tss_helper"],
+                output=output / "personalization" / "ibec",
+                developer_host_bypass=True,
+                include_restore_policy=True,
+                deadline=time.monotonic() + config.transition_timeout,
+            )
+            report.setdefault("personalization", {})["ibec"] = ibec_personalization
+            policy = ibec_personalization.get("restore_policy", {})
+            if (ibec_personalization.get("ticket_received") is not True
+                    or ibec_personalization.get("payload_preserved") is not True
+                    or policy.get("ticket_received") is not True):
+                raise VMappleError("Live iBEC or bound LocalPolicy personalization did not complete")
+            recovery_deadline = time.monotonic() + config.transition_timeout
+            with RecoveryTransport(socket_path, timeout=10) as transport:
+                report["ibec_configuration"] = transport.configure_recovery(deadline=recovery_deadline)
+                policy_path = Path(ibec_personalization["output"]).parent / "restore-policy" / "RestoreLocalPolicy.personalized.img4"
+                report["policy_upload"] = transport.send_recovery_file(
+                    policy_path,
+                    total_timeout=max(1.0, recovery_deadline - time.monotonic()),
+                    expected_sha256=policy.get("sha256"),
+                )
+                transport.send_command("lpolrestore", deadline=recovery_deadline)
+                report["lpolrestore_acknowledged"] = True
+                report["ibec_upload"] = transport.send_recovery_file(
+                    Path(ibec_personalization["output"]),
+                    total_timeout=max(1.0, recovery_deadline - time.monotonic()),
+                    expected_sha256=ibec_personalization.get("personalized_sha256"),
+                )
+                transport.send_command("go", request=1, deadline=recovery_deadline)
+                report["go_acknowledged"] = True
+            report["ibec_upload_attempted"] = True
+            stage2 = _wait_serial_marker(output / "serial.log", STAGE2_PROMPT,
+                                         min(config.transition_timeout, 300.0), process)
+            report["stage2"] = stage2
+            report["ibec_executed"] = bool(stage2.get("observed"))
+            report["stage2_execution_observed"] = bool(stage2.get("observed"))
+            if not stage2.get("observed"):
+                report["transition_blocker"] = "iBEC go completed but Stage2 UART marker was not observed"
+                if config.restore_chain:
+                    report["restore_chain"] = {
+                        "schema": "26x86.vmapple-restore/1",
+                        "sequence_sent": False,
+                        "bootx_acknowledged": False,
+                        "input_integrity": True,
+                        "error": "Stage2 UART marker was not observed",
+                    }
+            elif config.restore_chain:
+                # Stage2 is the first point at which the standard macOS
+                # restore-role protocol is available.  The role files are
+                # normalized against BuildManifest and wrapped with the same
+                # accepted iBEC IM4M; no new ticket or installer mutation is
+                # introduced here.
+                from .vmapple_restore import RestoreChainError, run_restore_sequence
+
+                ticket_path = (
+                    Path(report["personalization"]["ibec"]["output"]).parent
+                    / "apple-ticket.private.im4m"
+                )
+                role_sources = {
+                    role: paths["restore_" + role]
+                    for role in ("RestoreTrustCache", "RestoreRamDisk", "RestoreDeviceTree", "RestoreKernelCache")
+                }
+                optional_logo = paths.get("restore_RestoreLogo")
+                if optional_logo is not None:
+                    role_sources["RestoreLogo"] = optional_logo
+                try:
+                    restore_report = run_restore_sequence(
+                        socket_path=socket_path,
+                        build_manifest=paths["build_manifest"],
+                        role_sources=role_sources,
+                        ticket=ticket_path,
+                        output=output / "restore",
+                        total_timeout=config.restore_timeout,
+                    )
+                except RestoreChainError as exc:
+                    # Keep the structured partial report even when a guest
+                    # stalls or panics; this is a bounded evidence boundary,
+                    # not a reason to claim a boot.
+                    restore_report = getattr(exc, "report", None)
+                    if not isinstance(restore_report, dict):
+                        restore_report = {"error": str(exc), "sequence_sent": False}
+                report["restore_chain"] = restore_report
+                report["restore_chain_completed"] = bool(
+                    isinstance(restore_report, dict)
+                    and restore_report.get("sequence_sent") is True
+                    and restore_report.get("input_integrity") is True
+                )
+                report["restore_chain_stage"] = (
+                    "bootx-sent" if report["restore_chain_completed"] else "restore-chain-failed"
+                )
+        elif transition.get("state") == "ibec-ready" and "ibec" in paths:
             report["ibec_upload_attempted"] = True
             with RecoveryTransport(socket_path, timeout=10) as transport:
                 report["ibec_upload"] = transport.send_recovery_file(paths["ibec"])
@@ -852,7 +1189,7 @@ def run(config: VMappleConfig) -> dict[str, object]:
             report["transition_blocker"] = "iBSS did not advertise bulk OUT endpoint 4"
         else:
             report["ibec_upload_attempted"] = False
-            report["transition_blocker"] = "No personalized iBEC input was supplied"
+            report["transition_blocker"] = "No iBEC input was supplied"
         _write_report(output, report)
 
         deadline = time.monotonic() + config.duration if config.duration is not None else None
@@ -875,6 +1212,30 @@ def run(config: VMappleConfig) -> dict[str, object]:
         report["returncode"] = process.returncode
         if report.get("termination") is None:
             report["termination"] = "guest_exit"
+        # A restore transport can acknowledge every role and the bootx command
+        # while iBoot still panics before XNU.  Capture that real UART boundary
+        # after the process has stopped so the report cannot imply that a
+        # successful transport sequence rendered the installer UI.
+        try:
+            log_start, log_data = _read_log_tail(output / "serial.log")
+        except OSError:
+            log_start, log_data = 0, b""
+        panic_position = log_data.rfind(b"iBoot Panic:")
+        if panic_position >= 0:
+            report["guest_panic"] = {
+                "observed": True,
+                "marker": "iBoot Panic:",
+                "byte_offset": log_start + panic_position,
+            }
+            if report.get("restore_chain_completed"):
+                report["restore_chain_stage"] = "post-bootx-panic"
+                restore_report = report.get("restore_chain")
+                if isinstance(restore_report, dict):
+                    restore_report["post_bootx_panic"] = True
+            elif report.get("stage2_execution_observed"):
+                report["transition_blocker"] = "Stage2 guest panic before XNU"
+        else:
+            report["guest_panic"] = {"observed": False, "marker": "iBoot Panic:"}
         report["duration_seconds"] = round(time.monotonic() - started, 3)
         report["input_integrity"] = _inputs_intact(report.get("inputs"))
         if not report["input_integrity"]:
@@ -902,6 +1263,10 @@ def run(config: VMappleConfig) -> dict[str, object]:
                 "recovery_scope": personality["recovery"],
                 "boot_picker": personality["boot_picker"],
                 "validation_level": "RECOVERY-PROTOCOL", "display_backend": config.display,
+                "virtual_soc_name": VIRTUAL_SOC_NAME,
+                "virtual_model": VIRTUAL_MODEL,
+                "virtual_identity_mode": "metadata-only",
+                "hardware_attestation_verified": False,
                 "forced_transition": False, "signature_acceptance_verified": False,
                 "macos_boot_verified": False, "physical_mac_verified": False,
             }
@@ -930,9 +1295,17 @@ def configured_from_environment() -> dict[str, object]:
         "root": os.environ.get("X86_VMAPLE_ROOT", ""),
         "qemu_img": os.environ.get("X86_VMAPLE_QEMU_IMG", ""),
         "output": os.environ.get("X86_VMAPLE_OUTPUT", ""),
+        "build_manifest": os.environ.get("X86_VMAPLE_BUILD_MANIFEST", ""),
+        "tss_helper": os.environ.get("X86_VMAPLE_TSS_HELPER", ""),
+        "original_ibss": os.environ.get("X86_VMAPLE_ORIGINAL_IBSS", ""),
+        "original_ibec": os.environ.get("X86_VMAPLE_ORIGINAL_IBEC", ""),
+        "restore_role_dir": os.environ.get("X86_VMAPLE_RESTORE_ROLE_DIR", ""),
     }
-    required = ("qemu", "firmware", "ibss", "aux", "root", "qemu_img")
+    base_required = ("qemu", "firmware", "aux", "root", "qemu_img")
     present = {name: bool(value) for name, value in values.items()}
+    legacy_configured = all(present[name] for name in (*base_required, "ibss"))
+    live_required = (*base_required, "build_manifest", "tss_helper", "original_ibss", "original_ibec")
+    live_configured = all(present[name] for name in live_required)
     boot_picker = validate_boot_picker_config(target_major=27)
     boot_picker["selection"] = RECOVERY_ENTRY_ID
     boot_picker["selection_source"] = "runner-default-recovery"
@@ -947,7 +1320,13 @@ def configured_from_environment() -> dict[str, object]:
         "policy_matrix": default_scope(recovery_enabled=True)["policy_matrix"],
         "recovery_scope": default_scope(recovery_enabled=True)["recovery"],
         "boot_picker": boot_picker,
-        "configured": all(present[name] for name in required), "fields": present,
+        # Either an explicitly personalized legacy input or the preferred
+        # live-TSS set is usable.  The GUI defaults to live mode and exposes
+        # this distinction instead of claiming that a partial path is ready.
+        "configured": live_configured or legacy_configured, "fields": present,
+        "legacy_configured": legacy_configured,
+        "live_personalization_configured": live_configured,
+        "personalization_default": "live-tss",
         "values": values, "macos_boot_verified": False,
         "note": "Paths are caller-supplied. The GUI never bundles Apple firmware or writes an existing ESP.",
     }

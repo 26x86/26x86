@@ -86,22 +86,33 @@ single-case run. On WSL or a non-default QEMU installation, pass `--qemu`,
 version and SHA-256 hashes of both OVMF inputs so a visible run can be compared
 with a headless run without treating the window itself as boot evidence.
 
-A 26x86 GUI bridge run (Windows to WSLg) also exercised the Apple VMApple
-recovery path with a GTK build of QEMU 11.1.50. It used the unchanged macOS
-27.0 (26A5425a) personalized
-`iBSS` input, a COW overlay over empty AUX/root fixtures, and the developer-only
-host bypass. The GTK window was created and the real firmware completed 173 DFU
-data blocks (including the DFU suffix), reached `WAIT_RESET`, and acknowledged
-the USB reset. The saved
-report recorded `input_integrity: true`, `signature_acceptance_verified: false`,
-and `macos_boot_verified: false`. The host was Linux/x86_64 under WSL rather
-than a physical Apple Intel Mac, so this is recovery-protocol evidence only; it
-does not establish iBoot-to-XNU or Golden Gate user-space execution. A follow-up
-developer-only probe kept the device at the iBSS DFU identity (`05ac:1227`)
-after the reset, so no iBEC bulk endpoint was advertised and no iBEC/XNU claim
-was recorded. The harness intentionally stops there instead of fabricating
-signature acceptance or adding a release bypass.
-The sanitized result is retained in
+A 26x86 GUI bridge run (Windows to WSLg) exercised the Apple VMApple recovery
+path with a GTK build of QEMU 11.1.50. The live path supplied the unchanged
+macOS 27.0 (26A5425a) BuildManifest, original iBSS/iBEC IM4P files and a local
+TSS request helper. Apple returned status `0` for both component tickets and
+the bound LocalPolicy; the original payload hashes were preserved and
+`installer_modified` remained `false`. A COW overlay over empty AUX/root
+fixtures received all guest writes.
+
+The GTK window was created and the real firmware completed 173 DFU data blocks
+(including the DFU suffix), reached `WAIT_RESET`, and acknowledged the USB
+reset. It then re-enumerated as Apple `05ac:1281`, advertised bulk OUT endpoint
+4, accepted the LocalPolicy and iBEC transfers, and acknowledged `go`. With the
+explicit optional-RPC experiment enabled, the original iBEC reached the Stage2
+command prompt. The restore chain sent the five official restore roles, recorded
+the expected pre-boot notification STALL, and received a `bootx` acknowledgement.
+iBoot then emitted a panic before XNU, so `signature_acceptance_verified`,
+`xnu_executed` and `macos_boot_verified` remain `false`; no Recovery or Golden
+Gate installer UI was rendered. The Linux/x86_64 host is not a physical Apple
+Intel Mac, and the Linux QEMU build has no Apple ParavirtualizedGraphics device,
+so this remains recovery-protocol evidence. The runner records this failure
+boundary and never forces a transition or modifies the installer.
+
+The VMApple report records the explicit guest metadata `Apple M1 (Virtual)` /
+`VM0001` as `virtual_identity_mode: metadata-only`; it does not claim Apple
+hardware attestation. The sanitized result is retained in
+[`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json),
+with the earlier iBSS-only report preserved separately at
 [`integration/vmapple-gui-recovery-report.json`](../integration/vmapple-gui-recovery-report.json).
 
 The prior Linux research directory includes useful original-image hashing,

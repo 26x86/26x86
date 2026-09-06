@@ -28,11 +28,24 @@
       qemu: "",
       qemu_img: "",
       firmware: "",
+      build_manifest: "",
+      tss_helper: "",
+      original_ibss: "",
+      original_ibec: "",
       ibss: "",
       ibec: "",
       aux: "",
       root: "",
       output: "",
+      // The safe/default path requests fresh tickets for the live USB nonce
+      // and wraps the untouched Apple IM4P bytes into a new output folder.
+      live_personalize: true,
+      // Golden Gate's current original iBEC needs this explicitly selected
+      // no-service region to reach its Stage2 prompt in the research QEMU.
+      optional_rpc_unavailable: true,
+      restore_chain: false,
+      restore_role_dir: "",
+      restore_timeout: 900,
       machine_type: "iBoot(AArch64)",
       guest_os: "macOS",
       recovery_protocol: "DFU/IPSW",
@@ -350,19 +363,32 @@
     const receipt = state.sandboxReceipt;
     const vm = state.vmapple || {};
     const vmConfig = state.vmappleConfig;
+    const livePersonalize = vmConfig.live_personalize !== false;
+    const optionalRpcUnavailable = vmConfig.optional_rpc_unavailable === true;
+    const restoreChain = vmConfig.restore_chain === true;
     const vmFields = [
       ["qemu", "VMApple QEMU", "/home/developer/.../qemu-system-aarch64"],
       ["qemu_img", "qemu-img", "/usr/bin/qemu-img"],
       ["firmware", "AVPBooter EFI", "원본 AVPBooter.vmapple2.bin 경로"],
-      ["ibss", "개인화 iBSS", "원본 iBSS.personalized.img4 경로"],
-      ["ibec", "개인화 iBEC (선택)", "원본 iBEC.personalized.img4 경로"],
+      ["build_manifest", "공식 BuildManifest.plist", "Golden Gate IPSW의 BuildManifest.plist"],
+      ["tss_helper", "로컬 TSS 요청 도구", "libtatsu 호환 TSS request helper 경로"],
+      ["original_ibss", "원본 iBSS IM4P", "변경하지 않은 iBSS.vma2.RELEASE.im4p"],
+      ["original_ibec", "원본 iBEC IM4P", "변경하지 않은 iBEC.vma2.RELEASE.im4p"],
       ["aux", "AUX 원본 이미지", "읽기 전용 AUX raw 경로"],
       ["root", "Root 원본 이미지", "읽기 전용 root raw 경로"],
       ["output", "새 VM 출력 폴더", "기존 경로가 아닌 새 폴더 경로"],
-    ].map(([key, label, placeholder]) => `<div><label for="vmapple-${key}">${label}</label><input class="field" id="vmapple-${key}" value="${escapeHtml(vmConfig[key])}" placeholder="${escapeHtml(placeholder)}" /></div>`).join("");
-    const requiredVmFields = ["qemu", "qemu_img", "firmware", "ibss", "aux", "root", "output"];
+    ].map(([key, label, placeholder]) => `<div><label for="vmapple-${key}">${label}</label><input class="field" id="vmapple-${key}" value="${escapeHtml(vmConfig[key] || "")}" placeholder="${escapeHtml(placeholder)}" /></div>`).join("");
+    const legacyFields = [
+      ["ibss", "기존 개인화 iBSS (진단용)", "이미 개인화된 iBSS.img4"],
+      ["ibec", "기존 개인화 iBEC (선택)", "이미 개인화된 iBEC.img4"],
+    ].map(([key, label, placeholder]) => `<div><label for="vmapple-${key}">${label}</label><input class="field" id="vmapple-${key}" value="${escapeHtml(vmConfig[key] || "")}" placeholder="${escapeHtml(placeholder)}" /></div>`).join("");
+    const requiredVmFields = ["qemu", "qemu_img", "firmware", "aux", "root", "output"].concat(
+      livePersonalize ? ["build_manifest", "tss_helper", "original_ibss", "original_ibec"] : ["ibss"]
+    ).concat(restoreChain ? ["restore_role_dir"] : []);
     const vmReady = requiredVmFields.every((key) => String(vmConfig[key] || "").trim());
-    const vmConfigured = vm.configured ? "환경 변수 경로 확인됨" : "경로 입력 필요";
+    const vmConfigured = livePersonalize
+      ? (vm.live_personalization_configured ? "실시간 TSS 경로 확인됨" : "공식 원본·TSS 경로 입력 필요")
+      : (vm.legacy_configured ? "기존 개인화 경로 확인됨" : "경로 입력 필요");
     const vmReceipt = state.vmappleReceipt;
     const picker = state.bootPicker || report.boot_picker || {
       state: "idle", delay_seconds: 2, remaining_seconds: 0, alt_key: "Alt",
@@ -376,16 +402,19 @@
       <div class="metric-grid"><div class="metric"><span>실행 계층</span><strong>EFI · AIC · ARM64 JIT</strong></div><div class="metric"><span>최소 CPU</span><strong>SSE4.1 + SSE4.2</strong></div><div class="metric"><span>macOS 실제 부팅</span><strong>미검증</strong></div></div>
       <div class="form-row"><div><label for="sandbox-target">대상 macOS</label><select class="field" id="sandbox-target"><option value="26" ${state.sandboxTarget === 26 ? "selected" : ""}>macOS Tahoe 26</option><option value="27" ${state.sandboxTarget === 27 ? "selected" : ""}>macOS Golden Gate 27</option></select></div><div><label for="sandbox-output">새 출력 폴더 경로</label><input class="field" id="sandbox-output" value="${escapeHtml(state.sandboxOutput)}" placeholder="예: C:/26x86-Sandbox 또는 /Users/me/26x86-Sandbox" /></div></div>
       <div class="policy-grid"><div class="policy-card"><span>MachineType</span><strong>${escapeHtml(vm.machine_type || vmConfig.machine_type || "iBoot(AArch64)")}</strong></div><div class="policy-card"><span>게스트 OS</span><strong class="good-text">${escapeHtml(vm.guest_os || vmConfig.guest_os || "macOS")}</strong></div><div class="policy-card"><span>복구</span><strong>${escapeHtml(vm.recovery_scope?.protocol || vmConfig.recovery_protocol || "DFU/IPSW")} · ${escapeHtml(vm.recovery_scope?.default_image_name || vmConfig.recovery_image_name || "_default.ipsw")}</strong></div></div>
-      <p class="support-note policy-note"><strong>iBoot(AArch64) 범위:</strong> macOS만 지원합니다. iOS · iPadOS · 기타 모바일 Apple OS는 부팅·DFU·<code>_default.ipsw</code> 복구 대상으로 받지 않습니다.</p>
+      <p class="support-note policy-note"><strong>iBoot(AArch64) 범위:</strong> macOS만 지원합니다. iOS · iPadOS · 기타 모바일 Apple OS는 부팅·DFU·<code>_default.ipsw</code> 복구 대상으로 받지 않습니다. VMApple 게스트 메타데이터는 <strong>Apple M1 (Virtual)</strong>로 고정되며 실제 Apple 하드웨어 인증을 뜻하지 않습니다.</p>
       <section class="boot-picker-card" aria-labelledby="boot-picker-heading"><div class="boot-picker-heading"><div><span class="eyebrow">POWER ON / 2.0 SEC WINDOW</span><h3 id="boot-picker-heading">부트 피커 · macOS Recovery</h3></div><span class="badge${picker.state === "picker" || picker.state === "selected" ? " good" : " warning"}">${escapeHtml(pickerStateLabel)}</span></div><p class="support-note">전원 인가 후 정확히 2초 동안 <kbd>Alt</kbd>/<kbd>Option</kbd>을 누르면 피커가 표시됩니다. Recovery를 선택한 뒤에만 DFU/IPSW 복구 VM을 시작합니다.</p><div class="boot-picker-status">${infoRow("선택 항목", picker.selection === "recovery" ? "macOS Recovery · _default.ipsw" : picker.selection === "macos" ? `macOS ${state.sandboxTarget}` : "선택 대기")} ${infoRow("입력 기록", picker.trigger || "—")}</div><div class="boot-entries" ${picker.picker_visible ? "" : "hidden"}>${pickerEntries || '<span class="muted">표시할 부트 항목이 없습니다.</span>'}</div><div class="actions"><button type="button" class="btn secondary" id="vmapple-boot-start" ${state.busy ? "disabled" : ""}>2초 부트 피커 시작</button><button type="button" class="btn primary" id="vmapple-launch" ${vmReady && state.bridgeReady && recoverySelected ? "" : "disabled"}>Recovery VM 창 열기</button></div>${picker.state === "default" ? '<p class="support-note warning-text">시간이 만료되어 macOS 기본 항목이 선택되었습니다. 현재 VMApple 엔진은 직접 macOS 부팅을 인증하지 않으므로 Recovery를 실행하려면 다시 Alt를 누르세요.</p>' : ""}</section>
       <div class="proof-list"><div class="proof-item"><span>EFI 자체 검사 파일</span><span class="badge${report.artifact_available ? " good" : " warning"}">${report.artifact_available ? "파일 존재" : "미생성"}</span></div><div class="proof-item"><span>VSK 생산 EFI · 외부 trust anchor</span><span class="badge${report.vsk_artifact_available ? " good" : " warning"}">${report.vsk_artifact_available ? "생성됨 · EBS 미호출" : "미생성"}</span></div><div class="proof-item"><span>원본 macOS 부팅</span><span class="badge warning">아직 준비되지 않음</span></div><div class="proof-item"><span>실제 Mac USB 부팅</span><span class="badge warning">실기 검증 필요</span></div></div>
       ${blockers.length ? `<div class="note"><strong>남은 구현 항목</strong><ul>${blockers.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
       <p class="support-note">구성: OpenCore config.plist · iBoot 엔진 · SandboxSMBIOS · Hardware/DevProp. 현재 준비 기능은 EFI 자체 검사 패키지를 생성합니다. macOS 설치 또는 부팅을 시작하지 않습니다. 기존 디스크에 자동으로 기록하지 않습니다.</p>
       <div class="actions"><button class="btn secondary" id="sandbox-refresh">준비 상태 다시 확인</button><button class="btn primary" id="sandbox-prepare" ${report.stageable && state.bridgeReady ? "" : "disabled"}>EFI 자체 검사 패키지 준비</button></div>
       ${receipt ? `<pre class="patch-summary" role="status">${escapeHtml(JSON.stringify(receipt, null, 2))}</pre>` : ""}
-      <details class="vm-panel" open><summary>실제 보이는 VMApple 복구 VM · <span class="badge${vmConfigured === "환경 변수 경로 확인됨" ? " good" : " warning"}">${vmConfigured}</span></summary>
-        <p class="support-note">WSLg GTK 창을 표시하는 연구용 실행 경로입니다. 원본 입력은 read-only로 열고 새 COW overlay에만 기록합니다. 실제 USB descriptor가 bulk endpoint 4를 광고할 때만 iBSS→iBEC를 시도하며 전환을 강제하지 않습니다. iBoot Personality는 macOS 전용입니다.</p>
+      <details class="vm-panel" open><summary>실제 보이는 VMApple 복구 VM · <span class="badge${vmConfigured.includes("확인됨") ? " good" : " warning"}">${vmConfigured}</span></summary>
+        <p class="support-note">WSLg GTK 창을 표시하는 연구용 실행 경로입니다. 아래 기본 경로는 공식 BuildManifest와 현재 USB nonce로 Apple TSS 티켓을 요청하고, 변경하지 않은 원본 iBSS/iBEC를 새 출력 폴더에만 IMG4로 감쌉니다. IPSW·설치 파일·기존 ESP는 수정하지 않습니다. 실제 USB descriptor가 bulk endpoint 4를 광고할 때만 iBSS→iBEC를 시도하며 전환을 강제하지 않습니다.</p>
+        <label class="check-row" for="vmapple-live"><input type="checkbox" id="vmapple-live" ${livePersonalize ? "checked" : ""} /> <span><strong>실시간 Apple TSS 개인화</strong><small>현재 USB nonce에 묶인 티켓을 새 폴더에 생성 (권장)</small></span></label>
+        <label class="check-row" for="vmapple-rpc"><input type="checkbox" id="vmapple-rpc" ${optionalRpcUnavailable ? "checked" : ""} /> <span><strong>Golden Gate Stage2 연구 경로</strong><small>원본 iBEC의 선택 RPC 주소를 무서비스 상태로 매핑합니다. 게스트 서비스나 서명 우회가 아니며 연구 산출물로만 남습니다.</small></span></label>
         <div class="vm-fields">${vmFields}</div>
+        <details class="vm-legacy"><summary>iBootStage2 뒤 공식 복구 역할 전송 (선택)</summary><p class="support-note">BuildManifest와 일치하는 원본 RestoreTrustCache/RestoreRamDisk/RestoreDeviceTree/RestoreKernelCache IM4P를 새 폴더에서 정규화하고, 이미 발급된 iBEC 티켓으로 감싼 뒤 <code>bootx</code>까지 보냅니다. XNU나 설치 화면을 증명하지 않습니다.</p><label class="check-row" for="vmapple-restore"><input type="checkbox" id="vmapple-restore" ${restoreChain ? "checked" : ""} /> <span><strong>Stage2 복구 체인 실행</strong><small>대용량 RamDisk/KernelCache 전송이 포함되며 COW 디스크에서만 실행</small></span></label><div class="vm-fields"><div><label for="vmapple-restore_role_dir">원본 Restore 역할 폴더</label><input class="field" id="vmapple-restore_role_dir" value="${escapeHtml(vmConfig.restore_role_dir || "")}" placeholder="RestoreTrustCache.im4p 등이 있는 폴더" /></div><div><label for="vmapple-restore_timeout">복구 체인 제한 시간(초)</label><input class="field" id="vmapple-restore_timeout" value="${escapeHtml(vmConfig.restore_timeout || 900)}" inputmode="numeric" /></div></div></details>
         <div class="actions"><button type="button" class="btn secondary" id="vmapple-refresh">VMApple 경로 다시 읽기</button></div>
         ${vmReceipt ? `<pre class="patch-summary" role="status">${escapeHtml(JSON.stringify(vmReceipt, null, 2))}</pre>` : ""}
       </details>`;
@@ -575,10 +604,29 @@
         state.sandboxTarget = Number(target.value); state.sandboxPlan = null; state.sandboxReceipt = null;
         await refreshSandbox();
       });
-      const vmFieldNames = ["qemu", "qemu_img", "firmware", "ibss", "ibec", "aux", "root", "output"];
+      const vmFieldNames = ["qemu", "qemu_img", "firmware", "build_manifest", "tss_helper", "original_ibss", "original_ibec", "ibss", "ibec", "aux", "root", "output"];
       vmFieldNames.forEach((name) => {
         const field = document.getElementById(`vmapple-${name}`);
         if (field) field.addEventListener("input", () => { state.vmappleConfig[name] = field.value; });
+      });
+      const liveToggle = document.getElementById("vmapple-live");
+      if (liveToggle) liveToggle.addEventListener("change", () => {
+        state.vmappleConfig.live_personalize = liveToggle.checked;
+        renderStepContent();
+      });
+      const rpcToggle = document.getElementById("vmapple-rpc");
+      if (rpcToggle) rpcToggle.addEventListener("change", () => {
+        state.vmappleConfig.optional_rpc_unavailable = rpcToggle.checked;
+      });
+      const restoreToggle = document.getElementById("vmapple-restore");
+      if (restoreToggle) restoreToggle.addEventListener("change", () => {
+        state.vmappleConfig.restore_chain = restoreToggle.checked;
+        renderStepContent();
+      });
+      const restoreTimeout = document.getElementById("vmapple-restore_timeout");
+      if (restoreTimeout) restoreTimeout.addEventListener("input", () => {
+        const numeric = Number(restoreTimeout.value);
+        if (Number.isFinite(numeric)) state.vmappleConfig.restore_timeout = numeric;
       });
       bind("sandbox-refresh", refreshSandbox);
       bind("vmapple-refresh", refreshVmapple);

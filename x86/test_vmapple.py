@@ -36,6 +36,32 @@ class VMappleOfflineTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, r"research[-_]only"):
             config.validate()
 
+    def test_config_rejects_boolean_or_non_finite_timeouts(self) -> None:
+        from x86.vmapple import VMappleConfig
+
+        cases = (
+            {"transition_timeout": True},
+            {"transition_timeout": float("nan")},
+            {"duration": False},
+            {"duration": float("inf")},
+            {"restore_timeout": True},
+            {"restore_timeout": float("nan")},
+        )
+        for overrides in cases:
+            with self.subTest(overrides=overrides):
+                config = VMappleConfig(
+                    target_major=27,
+                    qemu=None,
+                    firmware="missing",
+                    ibss="missing",
+                    aux="missing",
+                    root="missing",
+                    research_only=True,
+                    **overrides,
+                )
+                with self.assertRaisesRegex(ValueError, "timeout|Duration"):
+                    config.validate()
+
     def test_input_integrity_rehashes_files(self) -> None:
         from x86.vmapple import _inputs_intact, _sha256
 
@@ -93,6 +119,50 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertEqual(parsed.boot_delay, 2.0)
         self.assertEqual(parsed.boot_picker_trigger, "alt-enter")
         self.assertTrue(parsed.boot_picker_enabled)
+
+    def test_qemu_command_pins_virtual_m1_metadata(self) -> None:
+        from x86.vmapple import Executable, VIRTUAL_MODEL, VIRTUAL_SOC_NAME, VMappleConfig, _command_for
+
+        class EmptyStorage:
+            def arguments(self, executable):
+                return []
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            firmware = root / "AVPBooter.bin"
+            firmware.write_bytes(b"firmware")
+            output = root / "output"
+            output.mkdir()
+            config = VMappleConfig(
+                target_major=27, qemu="qemu", firmware=str(firmware), ibss="",
+                aux="aux", root="root", output=str(output), research_only=True,
+            )
+            command = _command_for(config, Executable("qemu-system-aarch64"), EmptyStorage(),
+                                   "/tmp/vmapple.sock", output)
+        self.assertIn(f"vmapple-cfg.soc_name={VIRTUAL_SOC_NAME}", command)
+        self.assertIn(f"vmapple-cfg.model={VIRTUAL_MODEL}", command)
+        self.assertNotIn("vmapple-cfg.optional-rpc-unavailable=on", command)
+
+    def test_qemu_command_only_enables_optional_rpc_when_requested(self) -> None:
+        from x86.vmapple import Executable, VMappleConfig, _command_for
+
+        class EmptyStorage:
+            def arguments(self, executable):
+                return []
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            firmware = root / "AVPBooter.bin"
+            firmware.write_bytes(b"firmware")
+            config = VMappleConfig(
+                target_major=27, qemu="qemu", firmware=str(firmware), ibss="",
+                aux="aux", root="root", output=str(root), research_only=True,
+                optional_rpc_unavailable=True,
+            )
+            command = _command_for(config, Executable("qemu-system-aarch64"), EmptyStorage(),
+                                   "/tmp/vmapple.sock", root)
+        self.assertIn("vmapple-cfg.optional-rpc-unavailable=on", command)
+        self.assertTrue(any("enable=vmapple_optional_rpc_*,file=" in item for item in command))
 
     def test_bridge_rejects_native_mode_and_unsafe_launch(self) -> None:
         from x86.gui.bridge import WizardBridge
