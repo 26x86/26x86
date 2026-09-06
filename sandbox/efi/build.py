@@ -125,7 +125,12 @@ def build_native_tests(host_staticlib):
         str(ROOT / "abi_layout.c"), "-o", str(BUILD / "test-abi-layout"),
     ])
     abi = json_output([str(BUILD / "test-abi-layout")])
-    return native, ffi, abi
+    run([
+        "clang", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror",
+        str(ROOT / "test_wx.c"), "-o", str(BUILD / "test-wx"),
+    ])
+    wx = json_output([str(BUILD / "test-wx")])
+    return native, ffi, abi, wx
 
 
 def build_aic_test():
@@ -186,7 +191,7 @@ def source_hashes():
     paths = [
         ROOT / "jit.c", ROOT / "jit.h", ROOT / "main.c", ROOT / "uefi.h", ROOT / "handoff.h",
         ROOT / "preos_abi.h", ROOT / "preos_bridge.h", ROOT / "preos_bridge.c", ROOT / "test_jit.c",
-        ROOT / "preos_host_test.c", ROOT / "abi_layout.c", ROOT / "verify_ovmf.py", ROOT / "build.py",
+        ROOT / "preos_host_test.c", ROOT / "abi_layout.c", ROOT / "test_wx.c", ROOT / "verify_ovmf.py", ROOT / "build.py",
         ROOT / "verify_m1_machine_contract.py", ROOT / "m1-machine-contract.json",
         PREOS / "Cargo.toml", PREOS / "Cargo.lock", PREOS / "src" / "lib.rs",
         PREOS / "src" / "machine.rs",
@@ -198,7 +203,7 @@ def main():
     BUILD.mkdir(exist_ok=True)
     machine_contract = validate_machine_contract()
     host_staticlib, efi_staticlib, rust_layout = build_rust_staticlibs()
-    native, ffi, c_layout = build_native_tests(host_staticlib)
+    native, ffi, c_layout, wx = build_native_tests(host_staticlib)
     aic = build_aic_test()
     abi_layout = compare_abi_layout(c_layout, rust_layout)
     artifacts = build_efi(efi_staticlib)
@@ -221,12 +226,14 @@ def main():
             "rust-no_std-staticlib", "c-owned-uefi-lifecycle", "c-owned-jit-wx",
             "bounded-a64-diagnostic-guest", "m1-diagnostic-policy-seed",
             "phase2-vfmachine", "fixed-ram-region-registry", "static-mmio-registry",
-            "machine-reset-hook", "unsupported-cpu-system-feature-gate",
+            "mmio-access-width-and-alignment-gate", "machine-reset-hook",
+            "machine-result-budget-gate", "unsupported-cpu-system-feature-gate",
         ],
         "native_unit": native,
         "rust_unit": {"passed": True, "runner": "cargo test --manifest-path sandbox/efi/preos/Cargo.toml"},
         "static_abi_unit": abi_layout,
         "c_rust_abi_unit": ffi,
+        "wx_attribute_unit": wx,
         "aic_unit": aic,
         "linked_image_audit": audit,
         "instrumented_image_audit": test_audit,

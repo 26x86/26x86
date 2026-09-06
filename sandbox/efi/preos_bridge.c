@@ -42,6 +42,30 @@ static uint32_t termination_from_status(int status) {
     }
 }
 
+static int status_is_terminal(int status) {
+    /* VF_NEXT is an internal continuation status and is not a valid result
+     * crossing into Rust.  Returning it means the wrapper/JIT contract was
+     * violated, not that the guest halted successfully. */
+    return status >= VF_HALT && status <= VF_PROTECTION;
+}
+
+static int termination_is_valid(uint32_t reason) {
+    return reason >= VF_TERMINATION_HALT && reason <= VF_TERMINATION_UNSUPPORTED;
+}
+
+static int status_and_termination_match(int status, uint32_t reason) {
+    switch (status) {
+    case VF_HALT: return reason == VF_TERMINATION_HALT;
+    case VF_BAD_INSTRUCTION: return reason == VF_TERMINATION_BAD_INSTRUCTION;
+    case VF_FETCH_FAULT: return reason == VF_TERMINATION_FETCH_FAULT;
+    case VF_DATA_FAULT: return reason == VF_TERMINATION_DATA_FAULT;
+    case VF_BUDGET: return reason == VF_TERMINATION_BUDGET_EXHAUSTED;
+    case VF_CODE_FULL: return reason == VF_TERMINATION_CODE_BUFFER_FULL;
+    case VF_PROTECTION: return reason == VF_TERMINATION_PROTECTION_FAILURE;
+    default: return 0;
+    }
+}
+
 static int result_valid(const VF_JIT_RESULT *result) {
     return abi_prefix_valid(result, sizeof(*result)) &&
            result->struct_size == sizeof(*result) && !result->reserved0 &&
@@ -93,6 +117,13 @@ int VF_PREOS_ABI vf_preos_jit_execute(const VF_JIT_REQUEST *request, VF_JIT_RESU
                     execution->protect, execution->protection_opaque);
     result->jit_status = status;
     result->termination_reason = termination_from_status(status);
+    if (!status_is_terminal(status) ||
+        !termination_is_valid(result->termination_reason) ||
+        !status_and_termination_match(status, result->termination_reason)) {
+        result->jit_status = VF_DATA_FAULT;
+        result->termination_reason = VF_TERMINATION_WRAPPER_REJECTED;
+        return VF_PREOS_E_INTERNAL;
+    }
     result->retired_instruction_count = execution->cpu->retired;
     result->guest_pc = execution->cpu->pc;
     result->fault_instruction = execution->cpu->instruction;

@@ -113,8 +113,7 @@ static int protect(void *p,size_t n,int executable,void *opaque) {
         if(m->Clear(m,base,n,EFI_MEMORY_RO))return -1;
     }
     if(m->Get(m,base,n,&attrs))return -1;
-    return executable ? ((attrs&EFI_MEMORY_RO)==0 || (attrs&EFI_MEMORY_XP)!=0) :
-                        ((attrs&EFI_MEMORY_XP)==0 || (attrs&EFI_MEMORY_RO)!=0);
+    return vf_memory_attributes_satisfy(attrs, executable) ? 0 : -1;
 }
 static EFI_STATUS read_guest(EFI_LOADED_IMAGE *image,uint8_t *data,uint64_t *size) {
     EFI_FS *fs=0;EFI_FILE *root=0,*file=0;

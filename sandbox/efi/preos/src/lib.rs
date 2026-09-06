@@ -315,6 +315,39 @@ fn empty_jit_result() -> VfJitResult {
     }
 }
 
+fn jit_status_valid(status: i32) -> bool {
+    // VF_NEXT is an internal continuation value.  It must never cross the
+    // wrapper boundary as a terminal result; vf_run() is expected to consume
+    // it and either continue within the budget or return a terminal status.
+    matches!(status, 1..=7)
+}
+
+fn termination_valid(reason: u32) -> bool {
+    (TERMINATION_HALT..=TERMINATION_UNSUPPORTED).contains(&reason)
+}
+
+fn jit_result_valid(result: &VfJitResult) -> bool {
+    result.abi_version == ABI_VERSION
+        && result.struct_size as usize == size_of::<VfJitResult>()
+        && jit_status_valid(result.jit_status)
+        && termination_valid(result.termination_reason)
+        && result.reserved0 == 0
+        && zero_words(&result.reserved)
+}
+
+fn jit_result_pair_valid(result: &VfJitResult) -> bool {
+    match (result.jit_status, result.termination_reason) {
+        (1, TERMINATION_HALT)
+        | (2, TERMINATION_BAD_INSTRUCTION)
+        | (3, TERMINATION_FETCH_FAULT)
+        | (4, TERMINATION_DATA_FAULT)
+        | (5, TERMINATION_BUDGET_EXHAUSTED)
+        | (6, TERMINATION_CODE_BUFFER_FULL)
+        | (7, TERMINATION_PROTECTION_FAILURE) => true,
+        _ => false,
+    }
+}
+
 unsafe fn trace(context: &VfPreosContext, message: *const u8) {
     if let Some(callback) = context.trace {
         callback(message, context.trace_opaque);
@@ -457,10 +490,26 @@ pub unsafe extern "C" fn vf_preos_run(
     let mut jit_result = empty_jit_result();
     trace(context, b"VF: JIT_ENTER\r\n\0".as_ptr());
     let wrapper_code = vf_preos_jit_execute(&request, &mut jit_result);
+    if wrapper_code == OK && (!jit_result_valid(&jit_result) || !jit_result_pair_valid(&jit_result)) {
+        assign_error(result, E_INTERNAL, TERMINATION_INTERNAL);
+        trace(context, b"VF: GUEST_STOP reason=INTERNAL\r\n\0".as_ptr());
+        trace_failure(context, E_INTERNAL);
+        return E_INTERNAL;
+    }
     copy_jit_result(result, &jit_result);
-    machine.cpu.retired_instruction_count = jit_result.retired_instruction_count;
-    machine.cpu.guest_pc = jit_result.guest_pc;
-    machine.termination_reason.value = jit_result.termination_reason;
+    if wrapper_code == OK
+        && !machine.accept_execution_result(
+            jit_result.retired_instruction_count,
+            jit_result.guest_pc,
+            jit_result.termination_reason,
+            context.guest_size,
+        )
+    {
+        assign_error(result, E_INTERNAL, TERMINATION_INTERNAL);
+        trace(context, b"VF: GUEST_STOP reason=INTERNAL\r\n\0".as_ptr());
+        trace_failure(context, E_INTERNAL);
+        return E_INTERNAL;
+    }
     result.retired_instruction_count = machine.cpu.retired_instruction_count;
     result.guest_pc = machine.cpu.guest_pc;
     result.termination_reason = machine.termination_reason.value;
@@ -469,6 +518,7 @@ pub unsafe extern "C" fn vf_preos_run(
         let code = match wrapper_code {
             E_ABI => E_ABI,
             E_CONTEXT => E_CONTEXT,
+            E_INTERNAL => E_INTERNAL,
             _ if jit_result.termination_reason == TERMINATION_PROTECTION_FAILURE => E_PROTECTION,
             _ => E_JIT,
         };
@@ -623,5 +673,22 @@ mod tests {
         assert_eq!(code_for_termination(TERMINATION_PROTECTION_FAILURE), E_PROTECTION);
         assert_eq!(code_for_termination(TERMINATION_BAD_INSTRUCTION), E_JIT);
         assert_eq!(code_for_termination(TERMINATION_INTERNAL), E_INTERNAL);
+    }
+
+    #[test]
+    fn jit_result_terminal_pair_is_closed() {
+        let mut result = empty_jit_result();
+        result.jit_status = 1;
+        result.termination_reason = TERMINATION_HALT;
+        assert!(jit_result_valid(&result));
+        assert!(jit_result_pair_valid(&result));
+        result.jit_status = 0;
+        assert!(!jit_result_valid(&result));
+        result.jit_status = 1;
+        result.termination_reason = TERMINATION_BUDGET_EXHAUSTED;
+        assert!(jit_result_valid(&result));
+        assert!(!jit_result_pair_valid(&result));
+        result.termination_reason = TERMINATION_NONE;
+        assert!(!jit_result_valid(&result));
     }
 }

@@ -103,6 +103,16 @@ firmware-owned allocations and returns control to firmware after cleanup. A
 post-`ExitBootServices` runtime, if ever needed, is a separate transition
 milestone with a new allocation, return-path, and protocol-ownership review.
 
+The Phase-2 descriptor core is now exercised inside the same Rust call: it
+seeds one fixed RAM region, keeps a bounded static MMIO registry, calls an
+explicit reset hook, and re-validates the JIT result budget before result
+normalization. MMIO entries declare an allowed 1/2/4/8-byte access mask and
+read-only policy; unknown widths, misaligned accesses, overlap with RAM, and
+unknown mask bits fail closed. The diagnostic path still leaves the registry
+empty, while Rust tests attach only a synthetic read-only 4-byte window to
+prove the extension point. This remains a descriptor/validation core, not an
+M1 device graph or Apple register implementation.
+
 ## Stable C/Rust boundary
 
 The public call boundary is deliberately limited to these C ABI entry points:
@@ -161,6 +171,12 @@ normalize the guest outcome: status, termination reason, retired-instruction
 count, guest PC, faulting instruction where applicable, and x0/x1/x3 result
 registers. `VF_PREOS_RESULT` is the Rust-to-C normalized final result, which C
 initializes as ABI v1 and all-zero before the call.
+
+Both sides close the terminal-result enum: `VF_NEXT` is an internal JIT
+continuation value and cannot cross the wrapper, while every terminal status
+must match its corresponding termination reason. Rust additionally rejects an
+over-budget result and an invalid successful halt PC before emitting
+`VF: GUEST_HALT`.
 
 All pointer-backed memory is caller-owned C memory. It remains valid only for
 the synchronous duration of the call that receives it, is not retained by Rust,
@@ -255,6 +271,7 @@ is:
 | Build verification | One PE/COFF EFI image links the Rust `staticlib`; artifact hashes/sizes are recorded | build/package | EFI runtime behaviour or Apple compatibility |
 | Static ABI verification | C/Rust size, offset, alignment, version, reserved-field, null/span, and overflow negatives pass | C/Rust boundary | JIT execution |
 | Existing C JIT regression | Current unit tests preserve supported operations, faults, W^X, and host-code ABI behaviour | JIT | Rust integration |
+| EFI attribute W^X predicate | The protocol-path RO/XP predicate rejects RWX and NX-executable combinations | UEFI memory-protection policy | firmware protocol implementation or hardware page tables |
 | Rust unit tests | Policy, context, request, and result normalization test success and explicit failures | Rust micro-preOS | firmware interaction |
 | C/Rust ABI integration | A C-built context reaches Rust, Rust uses the C wrapper, and C receives a normalized result | boundary integration | OVMF firmware execution |
 | OVMF normal guest | x86-64 OVMF log contains EFI entry, Rust entry, machine-ready, JIT, halt, return, cleanup | EFI + Rust + JIT diagnostic path | M1, iBoot, XNU, macOS, storage, or display |

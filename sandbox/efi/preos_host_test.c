@@ -175,6 +175,16 @@ int main(void) {
     CHECK(result.code == VF_PREOS_E_UNSUPPORTED);
     CHECK(result.termination_reason == VF_TERMINATION_NONE);
 
+    /* The opaque execution capability is part of the C-owned boundary.  A
+     * malformed capability must be rejected before vf_run() is entered. */
+    context = make_context(&execution, golden, sizeof(golden) / sizeof(golden[0]), 100, 0);
+    execution.initial_x2 = 16;
+    execution.reserved = 1;
+    zero_result(&result);
+    CHECK(vf_preos_run(&context, &result) == VF_PREOS_E_CONTEXT);
+    CHECK(result.code == VF_PREOS_E_CONTEXT);
+    execution.reserved = 0;
+
     CHECK(protect_pages(code.bytes, code.capacity, 0, 0) == 0);
     CHECK(munmap(code.bytes, code.capacity) == 0);
     printf("{\"passed\":true,\"assertions\":%u,\"c_rust_abi_executed\":true,"

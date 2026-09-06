@@ -10,12 +10,17 @@
 
 use super::{
     VfPreosContext, FIXED_GUEST_RAM_BYTES, MACHINE_PROFILE_M1_DIAGNOSTIC,
-    MAX_EXECUTION_BUDGET, TERMINATION_NONE,
+    MAX_EXECUTION_BUDGET, TERMINATION_HALT, TERMINATION_INTERNAL, TERMINATION_NONE,
 };
 
 pub(crate) const MAX_RAM_REGIONS: usize = 4;
 pub(crate) const MAX_MMIO_REGIONS: usize = 8;
 pub(crate) const MMIO_KIND_DIAGNOSTIC: u32 = 1;
+pub(crate) const MMIO_WIDTH_1: u32 = 1 << 0;
+pub(crate) const MMIO_WIDTH_2: u32 = 1 << 1;
+pub(crate) const MMIO_WIDTH_4: u32 = 1 << 2;
+pub(crate) const MMIO_WIDTH_8: u32 = 1 << 3;
+const MMIO_WIDTHS_ALL: u32 = MMIO_WIDTH_1 | MMIO_WIDTH_2 | MMIO_WIDTH_4 | MMIO_WIDTH_8;
 
 #[derive(Clone, Copy)]
 pub(crate) struct VfCpuContext {
@@ -52,6 +57,7 @@ pub(crate) struct VfMmioRegion {
     pub(crate) base: u64,
     pub(crate) bytes: u64,
     pub(crate) kind: u32,
+    pub(crate) access_widths: u32,
     pub(crate) read_only: bool,
 }
 
@@ -60,6 +66,7 @@ impl VfMmioRegion {
         base: 0,
         bytes: 0,
         kind: 0,
+        access_widths: 0,
         read_only: false,
     };
 
@@ -141,6 +148,8 @@ impl VfMmioRegistry {
             || region.bytes == 0
             || region.base & 0xfff != 0
             || region.bytes & 0xfff != 0
+            || region.access_widths == 0
+            || region.access_widths & !MMIO_WIDTHS_ALL != 0
             || region.end().is_none()
             || self.region_count as usize >= MAX_MMIO_REGIONS
             || gpa.overlaps(region.base, region.bytes)
@@ -159,18 +168,30 @@ impl VfMmioRegistry {
     }
 
     pub(crate) fn lookup(&self, address: u64, bytes: u64, write: bool) -> Option<VfMmioRegion> {
-        if bytes == 0 {
+        let width_bit = match bytes {
+            1 => MMIO_WIDTH_1,
+            2 => MMIO_WIDTH_2,
+            4 => MMIO_WIDTH_4,
+            8 => MMIO_WIDTH_8,
+            _ => 0,
+        };
+        if width_bit == 0 || address & (bytes - 1) != 0 {
             return None;
         }
         self.regions[..self.region_count as usize]
             .iter()
             .copied()
-            .find(|region| region.contains(address, bytes) && !(write && region.read_only))
+            .find(|region| {
+                region.contains(address, bytes)
+                    && region.access_widths & width_bit != 0
+                    && !(write && region.read_only)
+            })
     }
 }
 
 pub(crate) struct VfExecutionBudget {
     pub(crate) limit: u64,
+    pub(crate) consumed: u64,
 }
 
 pub(crate) struct VfTerminationReason {
@@ -202,6 +223,7 @@ impl VfMachine {
             mmio: VfMmioRegistry::empty(),
             execution_budget: VfExecutionBudget {
                 limit: context.execution_budget,
+                consumed: 0,
             },
             termination_reason: VfTerminationReason {
                 value: TERMINATION_NONE,
@@ -227,6 +249,7 @@ impl VfMachine {
             guest_pc: 0,
         };
         self.execution_budget.limit = self.execution_budget.limit.min(MAX_EXECUTION_BUDGET);
+        self.execution_budget.consumed = 0;
         self.termination_reason.value = TERMINATION_NONE;
         self.reset_generation = self.reset_generation.saturating_add(1);
     }
@@ -237,6 +260,7 @@ impl VfMachine {
                 base: 0x1000_0000,
                 bytes: 0x1000,
                 kind: MMIO_KIND_DIAGNOSTIC,
+                access_widths: MMIO_WIDTH_4,
                 read_only: true,
             },
             &self.guest_physical_address_space,
@@ -249,8 +273,9 @@ impl VfMachine {
             && self.guest_physical_address_space.ram_count == 1
             && self.guest_physical_address_space.ram_regions[0].base == 0
             && self.guest_physical_address_space.ram_regions[0].bytes == FIXED_GUEST_RAM_BYTES
-            && self.mmio.region_count == 0
+            && (self.mmio.region_count as usize) <= MAX_MMIO_REGIONS
             && self.execution_budget.limit != 0
+            && self.execution_budget.consumed == 0
             && self.execution_budget.limit <= MAX_EXECUTION_BUDGET
     }
 
@@ -262,12 +287,39 @@ impl VfMachine {
         }
         for region in self.mmio.regions[..self.mmio.region_count as usize].iter() {
             if region.kind == 0
+                || region.access_widths == 0
+                || region.access_widths & !MMIO_WIDTHS_ALL != 0
                 || region.end().is_none()
                 || self.guest_physical_address_space.overlaps(region.base, region.bytes)
             {
                 return false;
             }
         }
+        true
+    }
+
+    /// Accept the bounded result only after checking the machine-owned
+    /// execution contract.  The C JIT already enforces the same budget, but
+    /// this second check prevents a malformed or future wrapper from turning
+    /// an over-budget result into a successful Rust normalization.
+    pub(crate) fn accept_execution_result(
+        &mut self,
+        retired: u64,
+        guest_pc: u64,
+        termination_reason: u32,
+        guest_size: u64,
+    ) -> bool {
+        if retired > self.execution_budget.limit
+            || (termination_reason == TERMINATION_HALT
+                && (guest_pc & 3 != 0 || guest_pc > guest_size))
+        {
+            self.termination_reason.value = TERMINATION_INTERNAL;
+            return false;
+        }
+        self.cpu.retired_instruction_count = retired;
+        self.cpu.guest_pc = guest_pc;
+        self.execution_budget.consumed = retired;
+        self.termination_reason.value = termination_reason;
         true
     }
 
@@ -335,14 +387,19 @@ mod tests {
         let mut machine = VfMachine::seed(&context());
         machine.reset();
         assert!(machine.register_synthetic_diagnostic_mmio());
+        assert!(machine.valid_seed());
+        assert!(machine.valid_topology());
         assert_eq!(machine.mmio.region_count, 1);
         assert!(machine.mmio.lookup(0x1000_0000, 4, false).is_some());
+        assert!(machine.mmio.lookup(0x1000_0000, 2, false).is_none());
+        assert!(machine.mmio.lookup(0x1000_0002, 4, false).is_none());
         assert!(machine.mmio.lookup(0x1000_0000, 4, true).is_none());
         assert!(!machine.mmio.register(
             VfMmioRegion {
                 base: 0x1000_0000,
                 bytes: 0x1000,
                 kind: MMIO_KIND_DIAGNOSTIC,
+                access_widths: MMIO_WIDTH_4,
                 read_only: true,
             },
             &machine.guest_physical_address_space,
@@ -352,7 +409,18 @@ mod tests {
                 base: 0,
                 bytes: 0x1000,
                 kind: MMIO_KIND_DIAGNOSTIC,
+                access_widths: MMIO_WIDTH_4,
                 read_only: false,
+            },
+            &machine.guest_physical_address_space,
+        ));
+        assert!(!machine.mmio.register(
+            VfMmioRegion {
+                base: 0x2000_0000,
+                bytes: 0x1000,
+                kind: MMIO_KIND_DIAGNOSTIC,
+                access_widths: 1 << 7,
+                read_only: true,
             },
             &machine.guest_physical_address_space,
         ));
@@ -373,5 +441,23 @@ mod tests {
         assert_eq!(machine.termination_reason.value, TERMINATION_NONE);
         assert_eq!(machine.mmio.region_count, 1);
         assert!(machine.reset_generation > generation);
+    }
+
+    #[test]
+    fn execution_result_is_bounded_and_aligned() {
+        let mut machine = VfMachine::seed(&context());
+        machine.reset();
+        assert!(machine.accept_execution_result(35, 32, TERMINATION_HALT, 32));
+        assert_eq!(machine.cpu.retired_instruction_count, 35);
+        assert_eq!(machine.execution_budget.consumed, 35);
+        assert_eq!(machine.cpu.guest_pc, 32);
+        assert_eq!(machine.termination_reason.value, TERMINATION_HALT);
+
+        assert!(!machine.accept_execution_result(101, 32, TERMINATION_HALT, 32));
+        assert_eq!(machine.termination_reason.value, TERMINATION_INTERNAL);
+        machine.reset();
+        assert!(!machine.accept_execution_result(1, 2, TERMINATION_HALT, 32));
+        machine.reset();
+        assert!(!machine.accept_execution_result(1, 36, TERMINATION_HALT, 32));
     }
 }

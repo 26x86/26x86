@@ -14,6 +14,13 @@ typedef struct { uint32_t a;uint16_t b,c;uint8_t d[8]; } EFI_GUID;
 #define EFI_ABORTED (EFI_ERROR_BIT|21)
 #define EFI_MEMORY_XP UINT64_C(0x4000)
 #define EFI_MEMORY_RO UINT64_C(0x20000)
+/* A generated JIT page is executable only when neither read-only nor execute
+ * protection remains; a writable page must be explicitly non-executable and
+ * not read-only. */
+static inline int vf_memory_attributes_satisfy(uint64_t attributes, int executable) {
+    if (executable) return (attributes & (EFI_MEMORY_RO | EFI_MEMORY_XP)) == 0;
+    return (attributes & EFI_MEMORY_XP) != 0 && (attributes & EFI_MEMORY_RO) == 0;
+}
 typedef struct { uint64_t Signature; uint32_t Revision, HeaderSize, CRC32, Reserved; } EFI_TABLE_HEADER;
 typedef struct EFI_TEXT EFI_TEXT;
 struct EFI_TEXT { void *Reset;EFI_STATUS (VF_ABI *OutputString)(EFI_TEXT *,const CHAR16 *); };
