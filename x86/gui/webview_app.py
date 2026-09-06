@@ -46,6 +46,10 @@ class WebviewApi:
     def get_vmapple_status(self):
         return self._bridge.get_vmapple_status()
 
+    def inspect_vmapple_storage(self, config: dict[str, Any]):
+        """Read-only AUX/root readiness inspection for every webview backend."""
+        return self._bridge.inspect_vmapple_storage(config)
+
     def get_boot_picker_status(self):
         return self._bridge.get_boot_picker_status()
 

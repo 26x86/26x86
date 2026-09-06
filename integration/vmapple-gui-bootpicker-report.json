@@ -174,7 +174,13 @@
     "macos_boot_verified": false,
     "installer_ui_visible": false,
     "installation_verified": false,
-    "blocker": "After the complete restore-role transport and bootx acknowledgement, iBoot emitted a panic before XNU or any macOS UI."
+    "blocker": "After the complete restore-role transport and bootx acknowledgement, iBoot emitted a panic before XNU or any macOS UI. Storage preflight found a zero-filled AUX/root fixture; a hardware-model-matched provisioned storage pair is required for installation.",
+    "storage_provisioning_status": "unprovisioned-zero",
+    "storage_blockers": [
+      "AUX view is zero-filled and has no hardware-model initialization",
+      "root view is zero-filled and contains no install target",
+      "no known APFS marker was found in sampled windows; provisioning remains unverified"
+    ]
   },
   "guest_panic": {
     "observed": true,
@@ -185,5 +191,51 @@
   "physical_mac_verified": false,
   "termination": "time_budget",
   "returncode": 0,
-  "note": "The chain uses live Apple TSS status 0, unchanged firmware/iBSS/iBEC/BuildManifest and read-only restore-role sources. It reaches the real Stage2 prompt, sends all five restore roles plus the expected preboot STALL handling and bootx, then the guest panics before XNU. The M1/VM0001 identity is metadata-only; no Apple hardware attestation, PV graphics, macOS Recovery UI or Golden Gate installer UI was observed. No transition was forced and no installation success is claimed."
+  "note": "The chain uses live Apple TSS status 0, unchanged firmware/iBSS/iBEC/BuildManifest and read-only restore-role sources. It reaches the real Stage2 prompt, sends all five restore roles plus the expected preboot STALL handling and bootx, then the guest panics before XNU. The M1/VM0001 identity is metadata-only; no Apple hardware attestation, PV graphics, macOS Recovery UI or Golden Gate installer UI was observed. No transition was forced and no installation success is claimed.",
+  "storage_diagnostics": {
+    "schema": "26x86.vmapple-storage/1",
+    "source": {
+      "aux": "external-work/apple-assets/unprovisioned-fixture/aux-empty.raw",
+      "root": "external-work/apple-assets/unprovisioned-fixture/root-empty.raw"
+    },
+    "aux": {
+      "size_bytes": 67108864,
+      "view_offset": 0,
+      "view_bytes": 67108864,
+      "zero_scan_bytes": 67108864,
+      "zero_scan_complete": true,
+      "zero_scan_nonzero_bytes": 0,
+      "all_zero": true,
+      "markers": {},
+      "read_only": true
+    },
+    "root": {
+      "size_bytes": 134217728,
+      "view_offset": 0,
+      "view_bytes": 134217728,
+      "zero_scan_bytes": 134217728,
+      "zero_scan_complete": true,
+      "zero_scan_nonzero_bytes": 0,
+      "all_zero": true,
+      "markers": {},
+      "read_only": true
+    },
+    "markers": [],
+    "zero_roles": [
+      "aux",
+      "root"
+    ],
+    "bounded_scan_roles": [],
+    "provisioned": false,
+    "provisioning_status": "unprovisioned-zero",
+    "installer_ui_possible": false,
+    "installer_ui_verified": false,
+    "base_images_read_only": true,
+    "blockers": [
+      "AUX view is zero-filled and has no hardware-model initialization",
+      "root view is zero-filled and contains no install target",
+      "no known APFS marker was found in sampled windows; provisioning remains unverified"
+    ],
+    "note": "AUX must be initialized for the exact VM hardware model and the root image must contain an install target. Byte markers alone cannot establish either condition."
+  }
 }

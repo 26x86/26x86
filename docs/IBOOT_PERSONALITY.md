@@ -83,6 +83,9 @@ python3 -m x86 personality validate --guest-os iPadOS
 ```
 
 실제 VMApple 결과의 `machine_type`, `guest_os_policy`, `recovery_scope`도
-같은 정책 결과를 기록한다. 현재 Golden Gate GUI 실험은 DFU 전송과 reset
-후 `05ac:1227` iBSS 상태까지만 확인했으며 `signature_acceptance_verified`와
-`macos_boot_verified`는 계속 `false`다.
+같은 정책 결과를 기록한다. 현재 Golden Gate GUI 실험은 iBSS DFU 전송,
+reset 뒤 실제 `05ac:1281` iBEC recovery 재열거, bulk endpoint 4,
+LocalPolicy/iBEC 전송과 `go` acknowledgement, Stage2 prompt 및 restore-role
+전송까지 확인했다. 이후 iBoot가 XNU 이전에 패닉했으므로
+`signature_acceptance_verified`, `xnu_executed`, `macos_boot_verified`와
+설치 UI 증거는 계속 `false`다. 이 경계에서 전환을 강제하지 않는다.

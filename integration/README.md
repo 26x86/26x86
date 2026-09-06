@@ -42,5 +42,13 @@ re-enumeration as `05ac:1281` with bulk endpoint 4, LocalPolicy/iBEC uploads and
 `go` acknowledgement. The original iBEC reaches its Stage2 UART prompt; the
 restore chain then uploads all five official roles, records the expected pre-boot
 notification STALL and receives a `bootx` acknowledgement. iBoot subsequently
-panics before XNU, so XNU/macOS/installer success remains unverified. The older
+panics before XNU, so XNU/macOS/installer success remains unverified. The chain's
+AUX and root bases are also explicitly inspected before QEMU starts. Definite
+zero-filled bases are reported as `unprovisioned-zero` (or
+`partially-unprovisioned` when only one view is empty); they are useful for
+transport tests but cannot be an install target. Run
+`python -m x86 vmapple inspect-storage --aux <AUX> --root <ROOT>` for the same
+read-only check. The older
 iBSS-only transition report is retained in `vmapple-gui-recovery-report.json`.
+The corresponding sanitized read-only fixture result is in
+`vmapple-storage-preflight-report.json`.

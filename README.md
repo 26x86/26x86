@@ -104,3 +104,12 @@ the five official restore roles, records the expected pre-boot notification
 STALL, and receives a `bootx` acknowledgement before iBoot emits a panic. XNU,
 graphics and the Golden Gate installer UI remain unverified. No transition is
 forced and installation verification remains false.
+
+Before launching the recovery worker, the GUI and CLI can perform a bounded,
+read-only AUX/root inspection:
+`python3 -m x86 vmapple inspect-storage --aux <AUX> --root <ROOT>`. A
+zero-filled base is reported as `unprovisioned-zero` (or
+`partially-unprovisioned`) and is blocked by the GUI because it cannot reach an
+installer. Non-zero bytes or an APFS marker remain `unverified` until a
+hardware-model-matched auxiliary-storage provisioning receipt exists; the
+inspection never edits the IPSW, installer, ESP or source images.

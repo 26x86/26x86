@@ -56,6 +56,7 @@
       boot_picker_trigger: null,
     },
     vmappleReceipt: null,
+    vmappleStorage: null,
     bootPicker: null,
     bootPickerPoll: null,
     activity: [],
@@ -94,6 +95,7 @@
     "get_sandbox_plan",
     "prepare_sandbox",
     "get_vmapple_status",
+    "inspect_vmapple_storage",
     "get_boot_picker_status",
     "start_boot_picker",
     "tick_boot_picker",
@@ -400,12 +402,30 @@
       ? (vm.live_personalization_configured ? "실시간 TSS 경로 확인됨" : "공식 원본·TSS 경로 입력 필요")
       : (vm.legacy_configured ? "기존 개인화 경로 확인됨" : "경로 입력 필요");
     const vmReceipt = state.vmappleReceipt;
+    const storage = state.vmappleStorage;
+    const storageStatus = storage
+      ? (storage.provisioning_status === "unprovisioned-zero"
+        ? "빈 AUX/root · 설치 차단"
+        : storage.provisioning_status === "partially-unprovisioned"
+          ? "일부 저장장치 비어 있음 · 설치 차단"
+        : storage.provisioning_status === "unverified-bounded-scan"
+          ? "범위 검사 완료 · 확인 필요"
+          : "읽기 검사 완료 · 프로비저닝 미확인")
+      : "검사 대기";
+    const storageStatusClass = ["unprovisioned-zero", "partially-unprovisioned"].includes(storage?.provisioning_status) ? " warning" : "";
+    const storageBlockers = Array.isArray(storage?.blockers) ? storage.blockers : [];
     const picker = state.bootPicker || report.boot_picker || {
       state: "idle", delay_seconds: 2, remaining_seconds: 0, alt_key: "Alt",
       picker_visible: false, selected_entry: null, selection: null, entries: [],
     };
     const pickerEntries = (picker.entries || []).map((entry) => `<button type="button" class="boot-entry${picker.selected_entry === entry.id ? " selected" : ""}" data-boot-entry="${escapeHtml(entry.id)}"><span><strong>${escapeHtml(entry.label)}</strong><small>${escapeHtml(entry.kind)} · macOS ${escapeHtml(entry.target_major)}</small></span><span class="badge${entry.id === "recovery" ? " warning" : ""}">${entry.id === "recovery" ? "복구" : "일반"}</span></button>`).join("");
     const recoverySelected = picker.selection === "recovery" || vmConfig.boot_selection === "recovery";
+    // Require an explicit read-only inspection before the launch control is
+    // enabled.  A non-zero file is still only ``unverified``; this gate keeps
+    // an uninspected or known-empty fixture from being mistaken for an
+    // install target while preserving the protocol runner's evidence path.
+    const storageLaunchAllowed = Boolean(storage)
+      && !["unprovisioned-zero", "partially-unprovisioned"].includes(storage?.provisioning_status);
     const pickerStateLabel = picker.state === "armed" ? `Alt/Option 대기 · ${Number(picker.remaining_seconds || 0).toFixed(2)}초` : picker.state === "picker" ? "부트 피커 표시 중" : picker.state === "selected" && recoverySelected ? "macOS Recovery 선택됨" : picker.state === "default" ? "시간 만료 · macOS 기본 항목" : "대기하지 않음";
     return `<span class="eyebrow">EFI NATIVE / APPLE SILICON SANDBOX</span><h2>${stage === "patch" ? "EFI 준비 결과" : "Sandbox 준비"}</h2>
       <p class="lead">macOS 게스트 부팅에 필요한 구성 요소와 현재 구현 상태를 확인합니다.</p>
@@ -413,7 +433,7 @@
       <div class="form-row"><div><label for="sandbox-target">대상 macOS</label><select class="field" id="sandbox-target"><option value="26" ${state.sandboxTarget === 26 ? "selected" : ""}>macOS Tahoe 26</option><option value="27" ${state.sandboxTarget === 27 ? "selected" : ""}>macOS Golden Gate 27</option></select></div><div><label for="sandbox-output">새 출력 폴더 경로</label><input class="field" id="sandbox-output" value="${escapeHtml(state.sandboxOutput)}" placeholder="예: C:/26x86-Sandbox 또는 /Users/me/26x86-Sandbox" /></div></div>
       <div class="policy-grid"><div class="policy-card"><span>MachineType</span><strong>${escapeHtml(vm.machine_type || vmConfig.machine_type || "iBoot(AArch64)")}</strong></div><div class="policy-card"><span>게스트 OS</span><strong class="good-text">${escapeHtml(vm.guest_os || vmConfig.guest_os || "macOS")}</strong></div><div class="policy-card"><span>복구</span><strong>${escapeHtml(vm.recovery_scope?.protocol || vmConfig.recovery_protocol || "DFU/IPSW")} · ${escapeHtml(vm.recovery_scope?.default_image_name || vmConfig.recovery_image_name || "_default.ipsw")}</strong></div></div>
       <p class="support-note policy-note"><strong>iBoot(AArch64) 범위:</strong> macOS만 지원합니다. iOS · iPadOS · 기타 모바일 Apple OS는 부팅·DFU·<code>_default.ipsw</code> 복구 대상으로 받지 않습니다. VMApple 게스트 메타데이터는 <strong>Apple M1 (Virtual)</strong>로 고정되며 실제 Apple 하드웨어 인증을 뜻하지 않습니다.</p>
-      <section class="boot-picker-card" aria-labelledby="boot-picker-heading"><div class="boot-picker-heading"><div><span class="eyebrow">POWER ON / 2.0 SEC WINDOW</span><h3 id="boot-picker-heading">부트 피커 · macOS Recovery</h3></div><span class="badge${picker.state === "picker" || picker.state === "selected" ? " good" : " warning"}">${escapeHtml(pickerStateLabel)}</span></div><p class="support-note">전원 인가 후 정확히 2초 동안 <kbd>Alt</kbd>/<kbd>Option</kbd>을 누르면 피커가 표시됩니다. Recovery를 선택한 뒤에만 DFU/IPSW 복구 VM을 시작합니다.</p><div class="boot-picker-status">${infoRow("선택 항목", picker.selection === "recovery" ? "macOS Recovery · _default.ipsw" : picker.selection === "macos" ? `macOS ${state.sandboxTarget}` : "선택 대기")} ${infoRow("입력 기록", picker.trigger || "—")}</div><div class="boot-entries" ${picker.picker_visible ? "" : "hidden"}>${pickerEntries || '<span class="muted">표시할 부트 항목이 없습니다.</span>'}</div><div class="actions"><button type="button" class="btn secondary" id="vmapple-boot-start" ${state.busy ? "disabled" : ""}>2초 부트 피커 시작</button><button type="button" class="btn primary" id="vmapple-launch" ${vmReady && state.bridgeReady && recoverySelected ? "" : "disabled"}>Recovery VM 창 열기</button></div>${picker.state === "default" ? '<p class="support-note warning-text">시간이 만료되어 macOS 기본 항목이 선택되었습니다. 현재 VMApple 엔진은 직접 macOS 부팅을 인증하지 않으므로 Recovery를 실행하려면 다시 Alt를 누르세요.</p>' : ""}</section>
+      <section class="boot-picker-card" aria-labelledby="boot-picker-heading"><div class="boot-picker-heading"><div><span class="eyebrow">POWER ON / 2.0 SEC WINDOW</span><h3 id="boot-picker-heading">부트 피커 · macOS Recovery</h3></div><span class="badge${picker.state === "picker" || picker.state === "selected" ? " good" : " warning"}">${escapeHtml(pickerStateLabel)}</span></div><p class="support-note">전원 인가 후 정확히 2초 동안 <kbd>Alt</kbd>/<kbd>Option</kbd>을 누르면 피커가 표시됩니다. Recovery를 선택한 뒤에만 DFU/IPSW 복구 VM을 시작합니다.</p><div class="boot-picker-status">${infoRow("선택 항목", picker.selection === "recovery" ? "macOS Recovery · _default.ipsw" : picker.selection === "macos" ? `macOS ${state.sandboxTarget}` : "선택 대기")} ${infoRow("입력 기록", picker.trigger || "—")}</div><div class="boot-entries" ${picker.picker_visible ? "" : "hidden"}>${pickerEntries || '<span class="muted">표시할 부트 항목이 없습니다.</span>'}</div><div class="actions"><button type="button" class="btn secondary" id="vmapple-boot-start" ${state.busy ? "disabled" : ""}>2초 부트 피커 시작</button><button type="button" class="btn primary" id="vmapple-launch" ${vmReady && state.bridgeReady && recoverySelected && storageLaunchAllowed ? "" : "disabled"}>Recovery VM 창 열기</button></div>${picker.state === "default" ? '<p class="support-note warning-text">시간이 만료되어 macOS 기본 항목이 선택되었습니다. 현재 VMApple 엔진은 직접 macOS 부팅을 인증하지 않으므로 Recovery를 실행하려면 다시 Alt를 누르세요.</p>' : ""}</section>
       <div class="proof-list"><div class="proof-item"><span>EFI 자체 검사 파일</span><span class="badge${report.artifact_available ? " good" : " warning"}">${report.artifact_available ? "파일 존재" : "미생성"}</span></div><div class="proof-item"><span>VSK 생산 EFI · 외부 trust anchor</span><span class="badge${report.vsk_artifact_available ? " good" : " warning"}">${report.vsk_artifact_available ? "생성됨 · EBS 미호출" : "미생성"}</span></div><div class="proof-item"><span>원본 macOS 부팅</span><span class="badge warning">아직 준비되지 않음</span></div><div class="proof-item"><span>실제 Mac USB 부팅</span><span class="badge warning">실기 검증 필요</span></div></div>
       ${blockers.length ? `<div class="note"><strong>남은 구현 항목</strong><ul>${blockers.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
       <p class="support-note">구성: OpenCore config.plist · iBoot 엔진 · SandboxSMBIOS · Hardware/DevProp. 현재 준비 기능은 EFI 자체 검사 패키지를 생성합니다. macOS 설치 또는 부팅을 시작하지 않습니다. 기존 디스크에 자동으로 기록하지 않습니다.</p>
@@ -425,7 +445,7 @@
         <label class="check-row" for="vmapple-rpc"><input type="checkbox" id="vmapple-rpc" ${optionalRpcUnavailable ? "checked" : ""} /> <span><strong>Golden Gate Stage2 연구 경로</strong><small>원본 iBEC의 선택 RPC 주소를 무서비스 상태로 매핑합니다. 게스트 서비스나 서명 우회가 아니며 연구 산출물로만 남습니다.</small></span></label>
         <div class="vm-fields">${vmFields}</div>
         <details class="vm-legacy"><summary>iBootStage2 뒤 공식 복구 역할 전송 (선택)</summary><p class="support-note">BuildManifest와 일치하는 원본 RestoreTrustCache/RestoreRamDisk/RestoreDeviceTree/RestoreKernelCache IM4P를 새 폴더에서 정규화하고, 이미 발급된 iBEC 티켓으로 감싼 뒤 <code>bootx</code>까지 보냅니다. XNU나 설치 화면을 증명하지 않습니다.</p><label class="check-row" for="vmapple-restore"><input type="checkbox" id="vmapple-restore" ${restoreChain ? "checked" : ""} /> <span><strong>Stage2 복구 체인 실행</strong><small>대용량 RamDisk/KernelCache 전송이 포함되며 COW 디스크에서만 실행</small></span></label><div class="vm-fields"><div><label for="vmapple-restore_role_dir">원본 Restore 역할 폴더</label><input class="field" id="vmapple-restore_role_dir" value="${escapeHtml(vmConfig.restore_role_dir || "")}" placeholder="RestoreTrustCache.im4p 등이 있는 폴더" /></div><div><label for="vmapple-restore_timeout">복구 체인 제한 시간(초)</label><input class="field" id="vmapple-restore_timeout" value="${escapeHtml(vmConfig.restore_timeout || 900)}" inputmode="numeric" /></div></div></details>
-        <div class="actions"><button type="button" class="btn secondary" id="vmapple-refresh">VMApple 경로 다시 읽기</button></div>
+        <section class="storage-preflight" aria-labelledby="storage-preflight-heading"><div class="boot-picker-heading"><div><span class="eyebrow">READ ONLY / STORAGE GATE</span><h3 id="storage-preflight-heading">AUX · root 설치 대상 검사</h3></div><span class="badge${storageStatusClass}">${escapeHtml(storageStatus)}</span></div><p class="support-note">원본 파일을 열어 쓰지 않고, 빈 fixture 여부와 일부 APFS 표식만 확인합니다. Apple Silicon의 정확한 hardware model로 생성된 AUX와 설치 대상이 있는 root라는 사실은 별도 영수증 없이는 인증하지 않습니다.</p><div class="boot-picker-status">${infoRow("프로비저닝", storage?.provisioning_status || "검사하지 않음")} ${infoRow("설치 UI 가능성", storage ? (storage.installer_ui_possible === false ? "차단됨" : "확인되지 않음") : "검사 대기")}</div>${storageBlockers.length ? `<ul class="support-note warning-text">${storageBlockers.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : ""}<div class="actions"><button type="button" class="btn secondary" id="vmapple-storage-inspect" ${state.busy ? "disabled" : ""}>저장장치 읽기 검사</button><button type="button" class="btn secondary" id="vmapple-refresh">VMApple 경로 다시 읽기</button></div></section>
         ${vmReceipt ? `<pre class="patch-summary" role="status">${escapeHtml(JSON.stringify(vmReceipt, null, 2))}</pre>` : ""}
       </details>`;
   }
@@ -638,13 +658,16 @@
       const output = document.getElementById("sandbox-output");
       output.addEventListener("input", () => { state.sandboxOutput = output.value; });
       target.addEventListener("change", async () => {
-        state.sandboxTarget = Number(target.value); state.sandboxPlan = null; state.sandboxReceipt = null;
+        state.sandboxTarget = Number(target.value); state.sandboxPlan = null; state.sandboxReceipt = null; state.vmappleStorage = null;
         await refreshSandbox();
       });
       const vmFieldNames = ["qemu", "qemu_img", "firmware", "build_manifest", "tss_helper", "original_ibss", "original_ibec", "ibss", "ibec", "aux", "root", "output"];
       vmFieldNames.forEach((name) => {
         const field = document.getElementById(`vmapple-${name}`);
-        if (field) field.addEventListener("input", () => { state.vmappleConfig[name] = field.value; });
+        if (field) field.addEventListener("input", () => {
+          state.vmappleConfig[name] = field.value;
+          if (name === "aux" || name === "root") state.vmappleStorage = null;
+        });
       });
       const liveToggle = document.getElementById("vmapple-live");
       if (liveToggle) liveToggle.addEventListener("change", () => {
@@ -667,6 +690,21 @@
       });
       bind("sandbox-refresh", refreshSandbox);
       bind("vmapple-refresh", refreshVmapple);
+      bind("vmapple-storage-inspect", async () => {
+        const result = await api("inspect_vmapple_storage", {
+          aux: state.vmappleConfig.aux,
+          root: state.vmappleConfig.root,
+          aux_offset: Number(state.vmappleConfig.aux_offset || 0),
+        });
+        if (!result.ok) throw new Error(result.error || "저장장치 읽기 검사를 완료하지 못했습니다.");
+        state.vmappleStorage = result;
+        renderStepContent();
+        if (["unprovisioned-zero", "partially-unprovisioned"].includes(result.provisioning_status)) {
+          toast("빈 AUX/root fixture가 확인되어 설치 VM 실행을 막았습니다.", "error");
+        } else {
+          toast("저장장치 읽기 검사 완료 · 프로비저닝은 별도 확인이 필요합니다.");
+        }
+      });
       bind("vmapple-boot-start", async () => {
         const result = await api("start_boot_picker", state.sandboxTarget, state.vmappleConfig.recovery_protocol, state.vmappleConfig.recovery_image_name);
         if (!result.ok) throw new Error(result.error || "부트 피커를 시작하지 못했습니다.");
@@ -695,6 +733,12 @@
       bind("vmapple-launch", async () => {
         if (state.vmappleConfig.boot_selection !== "recovery") {
           throw new Error("먼저 Alt/Option으로 부트 피커를 열고 macOS Recovery를 선택하세요.");
+        }
+        if (!state.vmappleStorage) {
+          throw new Error("먼저 AUX/root 저장장치 읽기 검사를 실행하세요.");
+        }
+        if (["unprovisioned-zero", "partially-unprovisioned"].includes(state.vmappleStorage?.provisioning_status)) {
+          throw new Error("AUX/root가 빈 fixture입니다. hardware-model이 일치하는 프로비저닝 저장장치를 먼저 지정하세요.");
         }
         const config = {
           ...state.vmappleConfig,
@@ -857,6 +901,7 @@
     try {
       const result = await api("get_vmapple_status");
       state.vmapple = result;
+      state.vmappleStorage = null;
       const values = result.values || {};
       Object.keys(state.vmappleConfig).forEach((name) => {
         if (!state.vmappleConfig[name] && typeof values[name] === "string") {

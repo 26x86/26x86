@@ -62,6 +62,39 @@ class VMappleOfflineTest(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "timeout|Duration"):
                     config.validate()
 
+    def test_storage_inspection_identifies_zero_fixture_without_writing(self) -> None:
+        from x86.vmapple import inspect_storage
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            aux = root / "aux.raw"
+            disk = root / "root.raw"
+            aux.write_bytes(b"\0" * 4096)
+            disk.write_bytes(b"\0" * 8192)
+            before = (aux.read_bytes(), disk.read_bytes())
+            report = inspect_storage(aux=aux, root=disk)
+            self.assertEqual(report["provisioning_status"], "unprovisioned-zero")
+            self.assertFalse(report["provisioned"])
+            self.assertFalse(report["installer_ui_possible"])
+            self.assertTrue(report["installer_ui_verified"] is False)
+            self.assertEqual((aux.read_bytes(), disk.read_bytes()), before)
+            self.assertIn("AUX", report["blockers"][0])
+
+    def test_storage_inspection_keeps_nonzero_storage_unverified(self) -> None:
+        from x86.vmapple import inspect_storage
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            aux = root / "aux.raw"
+            disk = root / "root.raw"
+            aux.write_bytes(b"A" * 4096)
+            disk.write_bytes(b"\0" * 32 + b"NXSB" + b"B" * 4060)
+            report = inspect_storage(aux=aux, root=disk)
+            self.assertIsNone(report["provisioned"])
+            self.assertEqual(report["provisioning_status"], "unverified")
+            self.assertIn("NXSB", report["markers"])
+            self.assertIsNone(report["installer_ui_possible"])
+
     def test_input_integrity_rehashes_files(self) -> None:
         from x86.vmapple import _inputs_intact, _sha256
 
@@ -120,6 +153,16 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertEqual(parsed.boot_picker_trigger, "alt-enter")
         self.assertTrue(parsed.boot_picker_enabled)
 
+    def test_cli_parser_exposes_read_only_storage_inspection(self) -> None:
+        from x86.cli import build_parser
+
+        parsed = build_parser().parse_args([
+            "vmapple", "inspect-storage", "--aux", "aux.raw", "--root", "root.raw",
+            "--aux-offset", "0x200",
+        ])
+        self.assertEqual(parsed.vmapple_action, "inspect-storage")
+        self.assertEqual(parsed.aux_offset, 0x200)
+
     def test_qemu_command_pins_virtual_m1_metadata(self) -> None:
         from x86.vmapple import Executable, VIRTUAL_MODEL, VIRTUAL_SOC_NAME, VMappleConfig, _command_for
 
@@ -172,6 +215,20 @@ class VMappleOfflineTest(unittest.TestCase):
         result = bridge.launch_vmapple({"research_only": True})
         self.assertFalse(result["ok"])
         self.assertIn("Sandbox", result["error"])
+
+    def test_bridge_storage_preflight_is_read_only(self) -> None:
+        from x86.gui.bridge import WizardBridge
+
+        bridge = WizardBridge()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            aux = root / "aux.raw"
+            disk = root / "root.raw"
+            aux.write_bytes(b"\0" * 4096)
+            disk.write_bytes(b"\0" * 4096)
+            result = bridge.inspect_vmapple_storage({"aux": str(aux), "root": str(disk)})
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["provisioning_status"], "unprovisioned-zero")
 
     def test_bridge_spawns_shell_free_native_worker(self) -> None:
         from x86.gui.bridge import WizardBridge

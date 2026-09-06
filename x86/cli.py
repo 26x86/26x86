@@ -484,11 +484,26 @@ def cmd_sandbox(args: argparse.Namespace) -> int:
 
 
 def cmd_vmapple(args: argparse.Namespace) -> int:
-    from x86.vmapple import VMappleConfig, configured_from_environment, run
+    from x86.vmapple import VMappleConfig, configured_from_environment, inspect_storage, run
 
     if args.vmapple_action == "status":
         _emit_json(configured_from_environment())
         return 0
+    if args.vmapple_action == "inspect-storage":
+        try:
+            result = inspect_storage(
+                aux=args.aux,
+                root=args.root,
+                aux_offset=args.aux_offset,
+            )
+        except (ValueError, OSError) as exc:
+            _emit_json({"ok": False, "error": str(exc), "installer_ui_verified": False})
+            return 2
+        _emit_json(result)
+        # A definite zero fixture is a known blocker.  A non-zero image still
+        # needs a hardware-model provisioning receipt, so it is reported as
+        # unverified rather than being advertised as bootable.
+        return 2 if result.get("provisioned") is False else 0
 
     config = VMappleConfig(
         target_major=args.target,
@@ -614,6 +629,24 @@ def build_parser() -> argparse.ArgumentParser:
         "status", help="Show configured VMApple paths without launching a guest"
     )
     vmapple_status.set_defaults(handler=cmd_vmapple)
+    vmapple_inspect_storage = vmapple_actions.add_parser(
+        "inspect-storage",
+        help="Read-only AUX/root readiness inspection; never starts QEMU or writes inputs",
+    )
+    vmapple_inspect_storage.add_argument(
+        "--aux", default=os.environ.get("X86_VMAPLE_AUX", ""), required=False,
+        help="AUX raw image (the optional --aux-offset view is inspected)",
+    )
+    vmapple_inspect_storage.add_argument(
+        "--root", default=os.environ.get("X86_VMAPLE_ROOT", ""), required=False,
+        help="root raw image",
+    )
+    vmapple_inspect_storage.add_argument(
+        "--aux-offset", type=lambda value: int(value, 0), default=0,
+        help="AUX metadata offset in bytes (512-byte aligned)",
+    )
+    vmapple_inspect_storage.add_argument("--json", action="store_true")
+    vmapple_inspect_storage.set_defaults(handler=cmd_vmapple)
     vmapple_run = vmapple_actions.add_parser(
         "run", help="Launch VMApple, upload iBSS, and record the real DFU boundary"
     )

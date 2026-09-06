@@ -137,6 +137,23 @@ CLI/GUI의 `machine_type`, `guest_os`, `recovery_protocol`,
 `recovery_protocol=Fastboot`를 넣으면 `VF_RECOVERY_SCOPE_VIOLATION`이
 반환되며 QEMU 프로세스와 USB 전송은 시작되지 않습니다.
 
+실행 전에는 GUI의 `AUX · root 설치 대상 검사`를 사용하거나 CLI의 읽기 전용
+검사를 먼저 실행할 수 있습니다.
+
+```sh
+python3 -m x86 vmapple inspect-storage \
+  --aux /path/to/aux.raw --root /path/to/root.raw --aux-offset 0
+```
+
+검사는 원본 파일을 열어 쓰지 않고, 512바이트 정렬 뷰의 크기와 제한된
+zero-content 범위, 일부 APFS 표식만 기록합니다. `provisioning_status`가
+`unprovisioned-zero` 또는 `partially-unprovisioned`이면 해당 파일은 프로토콜
+경계 실험용일 뿐 설치 대상이 아닙니다. 0이 아닌 바이트나 `NXSB` 표식만으로는 Apple Silicon
+hardware-model과 일치하는 `VZMacAuxiliaryStorage`, APFS 설치 대상, 서명된
+부팅 가능성을 증명할 수 없으므로 상태는 `unverified`로 남습니다. 이 검사는
+IPSW/설치 파일을 추출·복호화·변조하지 않으며, 입력 파일을 별도 출력 폴더에
+복사하지도 않습니다.
+
 최신 확인된 VMApple GUI 범위는 원본 27.0 iBSS의 173개 DFU 블록 전송(DFU
 suffix 포함), `WAIT_RESET`, USB reset acknowledgement, 실제 `05ac:1281`
 재열거와 bulk OUT endpoint 4, LocalPolicy/iBEC 전송 및 `go` acknowledgement

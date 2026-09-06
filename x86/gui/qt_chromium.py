@@ -137,6 +137,46 @@ def launch_qt_chromium_wizard(*, advanced: bool = False) -> None:
             return api.prepare_sandbox(target_major, output_path)
 
         @Slot(result="QVariant")
+        def get_vmapple_status(self):
+            return api.get_vmapple_status()
+
+        @Slot("QVariantMap", result="QVariant")
+        def inspect_vmapple_storage(self, config):
+            return api.inspect_vmapple_storage(dict(config) if config is not None else {})
+
+        @Slot(result="QVariant")
+        def get_boot_picker_status(self):
+            return api.get_boot_picker_status()
+
+        @Slot(int, str, str, result="QVariant")
+        def start_boot_picker(self, target_major, recovery_protocol, recovery_image_name):
+            return api.start_boot_picker(target_major, recovery_protocol, recovery_image_name)
+
+        @Slot(result="QVariant")
+        def tick_boot_picker(self):
+            return api.tick_boot_picker()
+
+        @Slot("QVariant", bool, result="QVariant")
+        def boot_picker_key(self, key, pressed=True):
+            return api.boot_picker_key(key, pressed)
+
+        @Slot("QVariant", result="QVariant")
+        def select_boot_entry(self, entry_id):
+            return api.select_boot_entry(entry_id)
+
+        @Slot("QVariantMap", result="QVariant")
+        def launch_vmapple(self, config):
+            return api.launch_vmapple(dict(config) if config is not None else {})
+
+        @Slot("QVariant", result="QVariant")
+        def set_hardware_profile(self, profile=None):
+            return api.set_hardware_profile(profile)
+
+        @Slot(str, result="QVariant")
+        def validate_surface_efi(self, path):
+            return api.validate_surface_efi(path)
+
+        @Slot(result="QVariant")
         def get_steps(self):
             return api.get_steps()
 
@@ -274,7 +314,11 @@ _BRIDGE_INJECT_JS = """
   function promisifyBridge(bridge) {
     var names = [
       "get_app_info", "get_steps", "detect", "get_macos_choices", "set_target_os",
-      "get_patch_status", "get_silicon_sandbox_demo", "get_status", "get_settings", "save_settings", "prepare_mellow_efi", "prepare_mellow_root_efi",
+      "get_patch_status", "get_silicon_sandbox_demo", "get_status", "get_settings", "save_settings",
+      "get_sandbox_status", "set_execution_mode", "get_sandbox_plan", "prepare_sandbox",
+      "get_vmapple_status", "inspect_vmapple_storage", "get_boot_picker_status", "start_boot_picker",
+      "tick_boot_picker", "boot_picker_key", "select_boot_entry", "launch_vmapple",
+      "set_hardware_profile", "validate_surface_efi", "prepare_mellow_efi", "prepare_mellow_root_efi",
       "host_can_build", "launch_wx_action", "reveal_log", "open_guide"
     ];
     var wrapped = { __qtWrapped: true };

@@ -25,6 +25,7 @@ API_METHODS = frozenset(
         "get_sandbox_plan",
         "prepare_sandbox",
         "get_vmapple_status",
+        "inspect_vmapple_storage",
         "get_boot_picker_status",
         "start_boot_picker",
         "tick_boot_picker",

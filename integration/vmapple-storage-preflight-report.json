@@ -1,0 +1,55 @@
+{
+  "schema": "26x86.vmapple-storage/1",
+  "aux": {
+    "path": "external-work/apple-assets/unprovisioned-fixture/aux-empty.raw",
+    "size_bytes": 67108864,
+    "view_offset": 0,
+    "view_bytes": 67108864,
+    "sample_bytes": 1048576,
+    "sample_prefix_nonzero_bytes": 0,
+    "sample_suffix_nonzero_bytes": 0,
+    "zero_scan_bytes": 67108864,
+    "zero_scan_complete": true,
+    "zero_scan_nonzero_bytes": 0,
+    "all_zero": true,
+    "markers": {},
+    "read_only": true
+  },
+  "root": {
+    "path": "external-work/apple-assets/unprovisioned-fixture/root-empty.raw",
+    "size_bytes": 134217728,
+    "view_offset": 0,
+    "view_bytes": 134217728,
+    "sample_bytes": 1048576,
+    "sample_prefix_nonzero_bytes": 0,
+    "sample_suffix_nonzero_bytes": 0,
+    "zero_scan_bytes": 134217728,
+    "zero_scan_complete": true,
+    "zero_scan_nonzero_bytes": 0,
+    "all_zero": true,
+    "markers": {},
+    "read_only": true
+  },
+  "markers": [],
+  "zero_roles": [
+    "aux",
+    "root"
+  ],
+  "bounded_scan_roles": [],
+  "provisioned": false,
+  "provisioning_status": "unprovisioned-zero",
+  "installer_ui_possible": false,
+  "installer_ui_verified": false,
+  "base_images_read_only": true,
+  "blockers": [
+    "AUX view is zero-filled and has no hardware-model initialization",
+    "root view is zero-filled and contains no install target",
+    "no known APFS marker was found in sampled windows; provisioning remains unverified"
+  ],
+  "note": "AUX must be initialized for the exact VM hardware model and the root image must contain an install target. Byte markers alone cannot establish either condition.",
+  "recorded_at": "2026-09-06",
+  "source": {
+    "aux": "external-work/apple-assets/unprovisioned-fixture/aux-empty.raw",
+    "root": "external-work/apple-assets/unprovisioned-fixture/root-empty.raw"
+  }
+}

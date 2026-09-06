@@ -14,6 +14,17 @@ const { pathToFileURL } = require('node:url');
   await page.addInitScript(() => {
     window.testCalls = [];
     let mode = 'native';
+    let pickerState = 'idle';
+    let pickerSelection = null;
+    const pickerEntries = [
+      {id:'macos', label:'macOS Golden Gate 27', kind:'macOS', target_major:27},
+      {id:'recovery', label:'macOS Recovery · _default.ipsw', kind:'Recovery', target_major:27}
+    ];
+    const pickerSnapshot = () => ({ok:true, state:pickerState, delay_seconds:2,
+      remaining_seconds: pickerState === 'armed' ? 1.5 : 0, alt_key:'Alt',
+      picker_visible: pickerState === 'picker', selected_entry:pickerSelection,
+      selection: pickerState === 'selected' ? pickerSelection : null,
+      trigger: pickerSelection === 'recovery' ? 'alt-enter' : null, entries:pickerEntries});
     const report = () => ({ok: true, execution_mode: mode, efi_native: true,
       artifact_available: true, stageable: true, boot_verified: false,
       minimum_cpu: 'SSE4.1 + SSE4.2', supported_targets: [26, 27], blockers: ['원본 macOS 부팅 미검증']});
@@ -27,9 +38,19 @@ const { pathToFileURL } = require('node:url');
       get_vmapple_status: () => ({ok:true, configured:true, machine_type:'iBoot(AArch64)', guest_os:'macOS', guest_os_policy:'macOS-only', recovery_scope:{protocol:'DFU/IPSW',default_image_name:'_default.ipsw'}, values:{
         qemu:'/opt/qemu-system-aarch64', qemu_img:'/usr/bin/qemu-img',
         firmware:'/assets/AVPBooter.bin', ibss:'/assets/iBSS.img4',
-        ibec:'/assets/iBEC.img4', aux:'/assets/aux.raw', root:'/assets/root.raw',
+        ibec:'/assets/iBEC.img4', build_manifest:'/assets/BuildManifest.plist',
+        tss_helper:'/assets/tss-request', original_ibss:'/assets/iBSS.im4p',
+        original_ibec:'/assets/iBEC.im4p', aux:'/assets/aux.raw', root:'/assets/root.raw',
         output:'/tmp/26x86-vmapple-test'
       }}),
+      inspect_vmapple_storage: () => ({ok:true, provisioning_status:'unverified',
+        provisioned:null, installer_ui_possible:null, installer_ui_verified:false,
+        blockers:[], markers:['NXSB'], base_images_read_only:true}),
+      get_boot_picker_status: () => pickerSnapshot(),
+      start_boot_picker: () => {pickerState='armed'; pickerSelection=null; return pickerSnapshot();},
+      tick_boot_picker: () => pickerSnapshot(),
+      boot_picker_key: key => {if (key === 'Alt' && pickerState === 'armed') pickerState='picker'; return pickerSnapshot();},
+      select_boot_entry: id => {pickerSelection=id; pickerState='selected'; return pickerSnapshot();},
       launch_vmapple: config => ({ok:true, spawned:true, pid:42, target_major:config.target_major,
         machine_type:config.machine_type, guest_os:config.guest_os, recovery_protocol:config.recovery_protocol,
         display_backend:config.display, forced_transition:false, macos_boot_verified:false}),
@@ -52,6 +73,11 @@ const { pathToFileURL } = require('node:url');
     await page.locator('#sandbox-prepare').waitFor({state:'visible'});
     await page.selectOption('#sandbox-target','27');
     await page.locator('#sandbox-output').fill('C:/26x86-output');
+    await page.locator('#vmapple-boot-start').click();
+    await page.keyboard.press('Alt');
+    await page.locator('[data-boot-entry="recovery"]').click();
+    await page.locator('#vmapple-storage-inspect').click();
+    await page.getByText(/저장장치 읽기 검사 완료/, {exact:false}).waitFor();
     await page.locator('#vmapple-launch').click();
     await page.getByText(/VMApple GTK 창을 열었습니다/, {exact:false}).waitFor();
     await page.locator('#sandbox-prepare').click();

@@ -60,6 +60,13 @@ STAGE2_PROMPT = b"Entering iBootStage2 recovery mode, starting command prompt"
 VIRTUAL_SOC_NAME = "Apple M1 (Virtual)"
 VIRTUAL_MODEL = "VM0001"
 
+# Storage inspection is deliberately bounded.  It is a read-only diagnostic
+# for the VMApple boot boundary; it is not an APFS parser and it never marks a
+# file as provisioned merely because it contains non-zero bytes.
+STORAGE_SAMPLE_BYTES = 1024 * 1024
+STORAGE_ZERO_SCAN_BYTES = 256 * 1024 * 1024
+STORAGE_MARKERS = (b"NXSB", b"APSB", b"APFS")
+
 
 class VMappleError(RuntimeError):
     """A bounded launch or recovery-protocol failure."""
@@ -194,6 +201,160 @@ def _qcow_size(path: Path) -> int:
             or virtual_size <= 0 or virtual_size % 512):
         raise ValueError("Overlay must be qcow2 v3, unencrypted, and have no external backing path")
     return virtual_size
+
+
+def _storage_window(stream, offset: int, length: int) -> bytes:
+    stream.seek(offset)
+    data = stream.read(length)
+    if len(data) != length:
+        raise ValueError("Storage input ended while reading a diagnostic window")
+    return data
+
+
+def _inspect_storage_file(value: str | Path, label: str, *, offset: int = 0) -> dict[str, object]:
+    """Inspect a raw AUX/root view without writing or trusting its contents.
+
+    A zero-filled fixture is a useful protocol test, but it cannot provide the
+    hardware-model-bound AUX metadata or an APFS install target that iBoot
+    expects.  The marker scan below is only a hint; an APFS marker does not
+    establish Apple provenance, a matching VM hardware model, or bootability.
+    """
+    path = _regular(value, label)
+    if type(offset) is not int or offset < 0 or offset % 512:
+        raise ValueError("Storage view offset must be a nonnegative 512-byte multiple")
+    before = path.stat()
+    view_size = before.st_size - offset
+    if view_size <= 0 or view_size % 512:
+        raise ValueError(f"{label} must expose a nonempty 512-byte view")
+
+    sample_size = min(view_size, STORAGE_SAMPLE_BYTES)
+    suffix_offset = offset + max(0, view_size - sample_size)
+    zero_scan_size = min(view_size, STORAGE_ZERO_SCAN_BYTES)
+    zero_scanned = 0
+    zero_nonzero_bytes = 0
+    prefix = b""
+    suffix = b""
+    with path.open("rb") as stream:
+        prefix = _storage_window(stream, offset, sample_size)
+        if suffix_offset != offset:
+            suffix = _storage_window(stream, suffix_offset, sample_size)
+        stream.seek(offset)
+        while zero_scanned < zero_scan_size:
+            chunk = stream.read(min(1024 * 1024, zero_scan_size - zero_scanned))
+            if not chunk:
+                raise ValueError(f"{label} ended during the zero-content scan")
+            zero_scanned += len(chunk)
+            # ``bytes.count`` runs in the C implementation and keeps the
+            # bounded preflight cheap even for the largest scan window.
+            zero_nonzero_bytes += len(chunk) - chunk.count(0)
+    after = path.stat()
+    if (before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (
+        after.st_size, after.st_mtime_ns, after.st_ctime_ns
+    ):
+        raise ValueError(f"{label} changed during read-only inspection")
+
+    marker_offsets: dict[str, list[int]] = {}
+    windows = ((offset, prefix), (suffix_offset, suffix))
+    for marker in STORAGE_MARKERS:
+        locations: list[int] = []
+        for base, window in windows:
+            start = 0
+            while len(locations) < 8:
+                found = window.find(marker, start)
+                if found < 0:
+                    break
+                absolute = base + found
+                if absolute not in locations:
+                    locations.append(absolute)
+                start = found + 1
+        if locations:
+            marker_offsets[marker.decode("ascii")] = sorted(locations)
+
+    scan_complete = zero_scanned == view_size
+    all_zero: bool | None = None
+    if scan_complete:
+        all_zero = zero_nonzero_bytes == 0
+    return {
+        "path": str(path),
+        "size_bytes": before.st_size,
+        "view_offset": offset,
+        "view_bytes": view_size,
+        "sample_bytes": sample_size,
+        "sample_prefix_nonzero_bytes": len(prefix) - prefix.count(0),
+        "sample_suffix_nonzero_bytes": len(suffix) - suffix.count(0),
+        "zero_scan_bytes": zero_scanned,
+        "zero_scan_complete": scan_complete,
+        "zero_scan_nonzero_bytes": zero_nonzero_bytes,
+        "all_zero": all_zero,
+        "markers": marker_offsets,
+        "read_only": True,
+    }
+
+
+def inspect_storage(*, aux: str | Path, root: str | Path, aux_offset: int = 0) -> dict[str, object]:
+    """Return a bounded, read-only readiness report for AUX and root images.
+
+    ``provisioned`` is never inferred from a byte signature.  It is false for
+    a definite zero fixture and otherwise remains ``None`` until a
+    hardware-model-matched provisioning receipt is supplied by a supported
+    Apple virtualization host.  This keeps the report useful without turning
+    a heuristic into an installer or boot claim.
+    """
+    aux_report = _inspect_storage_file(aux, "AUX base image", offset=aux_offset)
+    root_report = _inspect_storage_file(root, "root base image")
+    reports = (aux_report, root_report)
+    zero_roles = [
+        role for role, report in (("aux", aux_report), ("root", root_report))
+        if report.get("all_zero") is True
+    ]
+    incomplete_roles = [
+        role for role, report in (("aux", aux_report), ("root", root_report))
+        if report.get("all_zero") is None
+    ]
+    markers = sorted({marker for report in reports for marker in report["markers"]})
+    blockers: list[str] = []
+    if "aux" in zero_roles:
+        blockers.append("AUX view is zero-filled and has no hardware-model initialization")
+    if "root" in zero_roles:
+        blockers.append("root view is zero-filled and contains no install target")
+    if incomplete_roles:
+        blockers.append("zero scan is bounded for: " + ", ".join(incomplete_roles))
+    if not markers:
+        blockers.append("no known APFS marker was found in sampled windows; provisioning remains unverified")
+    if len(zero_roles) == 2:
+        provisioning_status = "unprovisioned-zero"
+        provisioned: bool | None = False
+        installer_possible: bool | None = False
+    elif zero_roles:
+        provisioning_status = "partially-unprovisioned"
+        provisioned: bool | None = False
+        installer_possible: bool | None = False
+    elif incomplete_roles:
+        provisioning_status = "unverified-bounded-scan"
+        provisioned = None
+        installer_possible = None
+    else:
+        provisioning_status = "unverified"
+        provisioned = None
+        installer_possible = None
+    return {
+        "schema": "26x86.vmapple-storage/1",
+        "aux": aux_report,
+        "root": root_report,
+        "markers": markers,
+        "zero_roles": zero_roles,
+        "bounded_scan_roles": incomplete_roles,
+        "provisioned": provisioned,
+        "provisioning_status": provisioning_status,
+        "installer_ui_possible": installer_possible,
+        "installer_ui_verified": False,
+        "base_images_read_only": True,
+        "blockers": blockers,
+        "note": (
+            "AUX must be initialized for the exact VM hardware model and the root image must contain "
+            "an install target. Byte markers alone cannot establish either condition."
+        ),
+    }
 
 
 @dataclass(frozen=True)
@@ -975,6 +1136,13 @@ def run(config: VMappleConfig) -> dict[str, object]:
     personality = config.personality_report()
     qemu, qemu_img, paths = config.validate()
     backend = probe_backend(qemu)
+    # Inspect the caller-supplied bases before QEMU starts.  This is a
+    # read-only diagnostic: the runner still permits a zero fixture for a
+    # recovery-protocol experiment, but records that it cannot be an install
+    # target so a later iBoot panic is not misread as an installer failure.
+    storage_diagnostics = inspect_storage(
+        aux=paths["aux"], root=paths["root"], aux_offset=config.aux_offset
+    )
     output = _new_directory(config.output)
     storage: StorageSession | None = None
     process: subprocess.Popen[bytes] | None = None
@@ -1018,10 +1186,12 @@ def run(config: VMappleConfig) -> dict[str, object]:
                      "physical_mac_verified": False},
             "backend": backend, "command": command, "inputs": inputs,
             "cow_storage": True, "storage_session": str(storage.directory / "storage"),
+            "storage_diagnostics": storage_diagnostics,
             "forced_transition": False, "signature_acceptance_verified": False,
             "personalization_mode": "live-tss" if config.live_personalize else "caller-supplied",
             "installer_modified": False, "ibec_executed": False,
             "xnu_executed": False, "macos_boot_verified": False,
+            "installer_ui_visible": False, "installation_verified": False,
             "physical_mac_verified": False, "termination": None, "returncode": None,
             "duration_seconds": None, "input_integrity": False, "error": None,
         }
@@ -1236,6 +1406,44 @@ def run(config: VMappleConfig) -> dict[str, object]:
                 report["transition_blocker"] = "Stage2 guest panic before XNU"
         else:
             report["guest_panic"] = {"observed": False, "marker": "iBoot Panic:"}
+        storage_blockers = storage_diagnostics.get("blockers", [])
+        if not isinstance(storage_blockers, list):
+            storage_blockers = []
+        if report.get("guest_panic", {}).get("observed"):
+            stage_reached = "bootx acknowledged / iBoot Panic"
+            blocker = (
+                "After the complete restore-role transport and bootx acknowledgement, "
+                "iBoot emitted a panic before XNU or any macOS UI."
+            )
+        elif report.get("stage2_execution_observed"):
+            stage_reached = "iBootStage2 prompt"
+            blocker = "The guest did not reach XNU or a macOS UI within the observed run."
+        elif report.get("ibec_executed"):
+            stage_reached = "iBEC executed"
+            blocker = "Stage2/XNU and the macOS UI were not observed."
+        elif report.get("transition", {}).get("state") == "ibec-ready":
+            stage_reached = "iBEC endpoint advertised"
+            blocker = "iBEC execution and the macOS UI were not observed."
+        else:
+            stage_reached = "iBSS/DFU boundary"
+            blocker = "The iBEC endpoint or a later guest stage was not observed."
+        if storage_diagnostics.get("provisioning_status") in (
+            "unprovisioned-zero", "partially-unprovisioned"
+        ):
+            blocker += " Storage preflight found a zero-filled AUX/root fixture; a hardware-model-matched provisioned storage pair is required for installation."
+        report["golden_gate_installation"] = {
+            "stage_reached": stage_reached,
+            "signature_acceptance_verified": False,
+            "ibec_executed": bool(report.get("ibec_executed")),
+            "stage2_execution_observed": bool(report.get("stage2_execution_observed")),
+            "xnu_executed": False,
+            "macos_boot_verified": False,
+            "installer_ui_visible": False,
+            "installation_verified": False,
+            "blocker": blocker,
+            "storage_provisioning_status": storage_diagnostics.get("provisioning_status"),
+            "storage_blockers": storage_blockers,
+        }
         report["duration_seconds"] = round(time.monotonic() - started, 3)
         report["input_integrity"] = _inputs_intact(report.get("inputs"))
         if not report["input_integrity"]:

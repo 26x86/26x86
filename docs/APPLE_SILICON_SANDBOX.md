@@ -94,6 +94,13 @@ the bound LocalPolicy; the original payload hashes were preserved and
 `installer_modified` remained `false`. A COW overlay over empty AUX/root
 fixtures received all guest writes.
 
+The GUI and CLI now run a bounded, read-only storage preflight before the
+visible recovery launch. A zero-filled AUX or root view is labelled
+`unprovisioned-zero` (or `partially-unprovisioned`) and the GUI launch control
+remains disabled. Non-zero data is still `unverified` until a supported Apple
+Silicon host supplies a hardware-model-matched auxiliary-storage provisioning
+receipt; byte markers do not establish an install target.
+
 The GTK window was created and the real firmware completed 173 DFU data blocks
 (including the DFU suffix), reached `WAIT_RESET`, and acknowledged the USB
 reset. It then re-enumerated as Apple `05ac:1281`, advertised bulk OUT endpoint

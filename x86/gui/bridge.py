@@ -126,6 +126,30 @@ class WizardBridge:
 
         return configured_from_environment()
 
+    def inspect_vmapple_storage(self, config: dict[str, Any]) -> dict[str, Any]:
+        """Inspect AUX/root inputs without starting QEMU or opening a writer.
+
+        This is a user-space preflight.  It can identify the zero-filled
+        fixtures used by protocol tests, but it deliberately cannot certify a
+        hardware-model-matched VZMacAuxiliaryStorage image.
+        """
+        if not isinstance(config, dict):
+            return {"ok": False, "error": "VMApple 저장장치 설정은 JSON 객체여야 합니다."}
+        aux = config.get("aux", "")
+        root = config.get("root", "")
+        if not isinstance(aux, str) or not isinstance(root, str) or not aux.strip() or not root.strip():
+            return {"ok": False, "error": "AUX와 root 원본 경로를 모두 입력하세요."}
+        offset = config.get("aux_offset", config.get("aux-offset", 0))
+        if isinstance(offset, bool) or not isinstance(offset, int):
+            return {"ok": False, "error": "VMApple aux_offset은 정수여야 합니다."}
+        from x86.vmapple import inspect_storage
+        try:
+            result = inspect_storage(aux=aux.strip(), root=root.strip(), aux_offset=offset)
+        except (ValueError, OSError) as exc:
+            return {"ok": False, "error": str(exc), "installer_ui_verified": False}
+        result["ok"] = True
+        return result
+
     def get_boot_picker_status(self) -> dict[str, Any]:
         """Return the current two-second picker session without starting QEMU."""
         from x86.boot_picker import BootPickerSession
