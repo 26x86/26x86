@@ -2009,6 +2009,11 @@ def run(config: VMappleConfig) -> dict[str, object]:
             report["input_integrity"] = _inputs_intact(report.get("inputs"))
             if not report["input_integrity"]:
                 report["error"] = "One or more caller-supplied inputs changed during the run"
+            elif not direct["macos_boot_verified"]:
+                report["error"] = (
+                    "Direct macOS boot evidence was not verified: "
+                    + (blocker or "XNU and macOS userspace UART markers were incomplete")
+                )
             _write_report(output, report)
             return report
         if config.live_personalize:
