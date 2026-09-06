@@ -10,5 +10,5 @@
 *.command text eol=lf
 
 # Exported patches and historical evidence have byte-identity receipts.
-*.patch -text -whitespace
+integration/patches/*.patch -text -whitespace
 research/venfire/** -text -whitespace
