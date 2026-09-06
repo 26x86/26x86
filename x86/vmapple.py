@@ -90,6 +90,7 @@ STAGE2_PROMPT = b"Entering iBootStage2 recovery mode, starting command prompt"
 DIRECT_XNU_MARKERS = (b"Darwin Kernel Version", b"Darwin Kernel")
 DIRECT_USERSPACE_MARKERS = (b"launchd:", b"launchd ", b"loginwindow", b"WindowServer")
 DIRECT_INSTALLER_MARKERS = (b"macOS Utilities", b"Install macOS", b"RecoveryOS")
+_DARWIN_KERNEL_VERSION_RE = re.compile(rb"Darwin Kernel Version\s+([0-9]+)(?:\.[0-9]+)*")
 # These values are the guest-facing VMApple metadata written by the QEMU
 # config device.  They are deliberately labelled virtual in every report:
 # metadata can make iBoot take the M1 personality path, but it cannot create
@@ -984,6 +985,13 @@ def native_macosvm_host_report() -> dict[str, object]:
     """
     system = platform.system()
     machine = platform.machine().lower()
+    macos_version = platform.mac_ver()[0] if system == "Darwin" else None
+    macos_major: int | None = None
+    if isinstance(macos_version, str) and macos_version:
+        try:
+            macos_major = int(macos_version.split(".", 1)[0])
+        except (TypeError, ValueError):
+            macos_major = None
     native = _direct_macos_hvf_host()
     blockers: list[str] = []
     if not native:
@@ -994,6 +1002,8 @@ def native_macosvm_host_report() -> dict[str, object]:
     return {
         "system": system,
         "architecture": machine,
+        "macos_version": macos_version,
+        "macos_major": macos_major,
         "apple_silicon_macos": native,
         "virtualization_framework_required": True,
         "native_virtualization_selected": native,
@@ -1078,6 +1088,14 @@ def run_macosvm_native(
             "native macosvm requires an Apple-Silicon macOS host; "
             "the current host cannot provide Virtualization.framework"
         )
+    host_major = host.get("macos_major")
+    if isinstance(host_major, bool):
+        host_major = None
+    if isinstance(host_major, int) and host_major < target_major:
+        raise ValueError(
+            f"native macosvm requires a host macOS major >= {target_major}; "
+            f"detected {host_major}"
+        )
     if type(gui) is not bool:
         raise ValueError("native macosvm gui must be a boolean")
     if (
@@ -1135,6 +1153,8 @@ def run_macosvm_native(
         "native_runtime_started": False,
         "xnu_executed": False,
         "macos_userspace_reached": False,
+        "guest_kernel_major": None,
+        "guest_target_match": False,
         "macos_boot_verified": False,
         "installer_ui_visible": False,
         "installation_verified": False,
@@ -1180,7 +1200,12 @@ def run_macosvm_native(
             time.sleep(0.05)
 
         remaining = max(0.1, min(float(observation_timeout), run_timeout - (time.monotonic() - started)))
-        observation = _observe_direct_macos_boot(log_path, remaining, process)
+        observation = _observe_direct_macos_boot(
+            log_path,
+            remaining,
+            process,
+            expected_kernel_major=target_major,
+        )
         report.update({
             "direct_boot": {
                 "requested": True,
@@ -1191,6 +1216,8 @@ def run_macosvm_native(
             },
             "xnu_executed": bool(observation["xnu_executed"]),
             "macos_userspace_reached": bool(observation["macos_userspace_reached"]),
+            "guest_kernel_major": observation["guest_kernel_major"],
+            "guest_target_match": bool(observation["guest_target_match"]),
             "macos_boot_verified": bool(observation["macos_boot_verified"]),
             "installer_ui_visible": bool(observation["installer_ui_visible"]),
             "installation_verified": False,
@@ -1807,6 +1834,7 @@ def _observe_direct_macos_boot(
     path: Path,
     timeout: float,
     process: subprocess.Popen[bytes] | None = None,
+    expected_kernel_major: int | None = None,
 ) -> dict[str, object]:
     """Observe the direct AVPBooter -> XNU -> macOS userspace boundary.
 
@@ -1817,8 +1845,20 @@ def _observe_direct_macos_boot(
     raises ``macos_boot_verified`` after both an XNU and a userspace marker are
     present in the same run.
     """
-    if not 0 < timeout <= 3600:
-        raise ValueError("Direct macOS observation timeout must be between 0 and 3600 seconds")
+    if not 0 < timeout <= MACOSVM_MAX_RUN_TIMEOUT:
+        raise ValueError(
+            "Direct macOS observation timeout must be between 0 and "
+            f"{int(MACOSVM_MAX_RUN_TIMEOUT)} seconds"
+        )
+    if (
+        expected_kernel_major is not None
+        and (
+            isinstance(expected_kernel_major, bool)
+            or not isinstance(expected_kernel_major, int)
+            or not 1 <= expected_kernel_major <= 99
+        )
+    ):
+        raise ValueError("expected Darwin kernel major must be between 1 and 99")
     categories = (
         ("xnu", DIRECT_XNU_MARKERS),
         ("userspace", DIRECT_USERSPACE_MARKERS),
@@ -1842,30 +1882,56 @@ def _observe_direct_macos_boot(
                 if key in seen_offsets:
                     continue
                 seen_offsets.add(key)
-                observed[category].append({
+                evidence: dict[str, object] = {
                     "marker": marker.decode("ascii"),
                     "byte_offset": absolute,
-                })
+                }
+                if category == "xnu":
+                    version = _DARWIN_KERNEL_VERSION_RE.search(data[position:position + 256])
+                    if version is not None:
+                        evidence["kernel_major"] = int(version.group(1))
+                observed[category].append(evidence)
         if observed["xnu"] and observed["userspace"]:
             break
         if process is not None and process.poll() is not None:
             break
         time.sleep(min(0.1, max(0.0, deadline - time.monotonic())))
 
+    kernel_majors = sorted({
+        int(item["kernel_major"])
+        for item in observed["xnu"]
+        if isinstance(item, dict) and isinstance(item.get("kernel_major"), int)
+    })
+    guest_kernel_major = kernel_majors[0] if len(kernel_majors) == 1 else None
+    if expected_kernel_major is None:
+        guest_target_match = True
+    else:
+        guest_target_match = expected_kernel_major in kernel_majors
     xnu_executed = bool(observed["xnu"])
     userspace_reached = bool(observed["userspace"])
-    macos_boot_verified = xnu_executed and userspace_reached
+    macos_boot_verified = xnu_executed and userspace_reached and guest_target_match
     if macos_boot_verified:
         blocker = None
     elif not xnu_executed:
         blocker = "Direct macOS path did not emit a Darwin/XNU UART marker"
     elif not userspace_reached:
         blocker = "XNU UART evidence was observed, but macOS userspace did not reach launchd/loginwindow/WindowServer"
+    elif expected_kernel_major is not None and not kernel_majors:
+        blocker = "Darwin/XNU UART evidence lacked a version matching the requested macOS target"
+    elif expected_kernel_major is not None:
+        blocker = (
+            "Darwin/XNU kernel major does not match the requested macOS target "
+            f"(observed={kernel_majors}, expected={expected_kernel_major})"
+        )
     else:  # defensive branch for future marker policy changes
         blocker = "Direct macOS boot evidence was incomplete"
     return {
         "xnu_executed": xnu_executed,
         "macos_userspace_reached": userspace_reached,
+        "expected_kernel_major": expected_kernel_major,
+        "guest_kernel_major": guest_kernel_major,
+        "guest_kernel_majors": kernel_majors,
+        "guest_target_match": guest_target_match,
         "macos_boot_verified": macos_boot_verified,
         "installer_ui_visible": bool(observed["installer"]),
         # Reaching userspace is not proof that a Golden Gate installation was
@@ -2308,7 +2374,8 @@ def run(config: VMappleConfig) -> dict[str, object]:
             "forced_transition": False, "signature_acceptance_verified": False,
             "personalization_mode": "live-tss" if config.live_personalize else "caller-supplied",
             "installer_modified": False, "ibec_executed": False,
-            "xnu_executed": False, "macos_boot_verified": False,
+            "xnu_executed": False, "guest_kernel_major": None,
+            "guest_target_match": False, "macos_boot_verified": False,
             "installer_ui_visible": False, "installation_verified": False,
             "physical_mac_verified": False, "termination": None, "returncode": None,
             "duration_seconds": None, "input_integrity": False, "error": None,
@@ -2356,7 +2423,10 @@ def run(config: VMappleConfig) -> dict[str, object]:
                 config.duration if config.duration is not None else config.transition_timeout,
             )
             direct = _observe_direct_macos_boot(
-                output / "serial.log", observation_timeout, process
+                output / "serial.log",
+                observation_timeout,
+                process,
+                expected_kernel_major=config.target_major,
             )
             report.update({
                 "direct_boot": {
@@ -2367,6 +2437,8 @@ def run(config: VMappleConfig) -> dict[str, object]:
                     "observation": direct,
                 },
                 "xnu_executed": bool(direct["xnu_executed"]),
+                "guest_kernel_major": direct["guest_kernel_major"],
+                "guest_target_match": bool(direct["guest_target_match"]),
                 "macos_boot_verified": bool(direct["macos_boot_verified"]),
                 "installer_ui_visible": bool(direct["installer_ui_visible"]),
                 "installation_verified": bool(direct["installation_verified"]),
@@ -2399,6 +2471,8 @@ def run(config: VMappleConfig) -> dict[str, object]:
                 "ibec_executed": False,
                 "stage2_execution_observed": False,
                 "xnu_executed": bool(direct["xnu_executed"]),
+                "guest_kernel_major": direct["guest_kernel_major"],
+                "guest_target_match": bool(direct["guest_target_match"]),
                 "macos_boot_verified": bool(direct["macos_boot_verified"]),
                 "installer_ui_visible": bool(direct["installer_ui_visible"]),
                 "installation_verified": False,

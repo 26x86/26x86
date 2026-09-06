@@ -347,6 +347,28 @@ class VMappleOfflineTest(unittest.TestCase):
                     )
             self.assertFalse((root / "native-run").exists())
 
+    def test_native_macosvm_rejects_guest_newer_than_host(self) -> None:
+        from x86.vmapple import run_macosvm_native
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with patch(
+                "x86.vmapple.native_macosvm_host_report",
+                return_value={
+                    "apple_silicon_macos": True,
+                    "macos_major": 26,
+                },
+            ):
+                with self.assertRaisesRegex(ValueError, "host macOS major >= 27"):
+                    run_macosvm_native(
+                        macosvm="/usr/local/bin/macosvm",
+                        vm_json=root / "macosvm.json",
+                        output=root / "native-run",
+                        target_major=27,
+                        research_only=True,
+                    )
+            self.assertFalse((root / "native-run").exists())
+
     def test_native_macosvm_launch_records_boot_markers_and_input_integrity(self) -> None:
         from x86.vmapple import run_macosvm_native
 
@@ -398,6 +420,8 @@ class VMappleOfflineTest(unittest.TestCase):
             self.assertTrue(report["pid_file_observed"])
             self.assertTrue(report["xnu_executed"])
             self.assertTrue(report["macos_userspace_reached"])
+            self.assertEqual(report["guest_kernel_major"], 27)
+            self.assertTrue(report["guest_target_match"])
             self.assertTrue(report["macos_boot_verified"])
             self.assertTrue(report["input_integrity"])
             self.assertIsNone(report["error"])
@@ -676,6 +700,45 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertIsNone(result["direct_boot_blocker"])
         self.assertGreaterEqual(len(result["observed_markers"]["xnu"]), 1)
         self.assertGreaterEqual(len(result["observed_markers"]["userspace"]), 1)
+
+    def test_direct_macos_observer_requires_requested_kernel_major(self) -> None:
+        from x86.vmapple import _observe_direct_macos_boot
+
+        class ExitedProcess:
+            def poll(self):
+                return 0
+
+        with tempfile.TemporaryDirectory() as directory:
+            serial = Path(directory) / "serial.log"
+            serial.write_bytes(
+                b"Darwin Kernel Version 26.0: root device\n"
+                b"launchd: completed\n"
+            )
+            result = _observe_direct_macos_boot(
+                serial, 1.0, ExitedProcess(), expected_kernel_major=27
+            )
+        self.assertTrue(result["xnu_executed"])
+        self.assertTrue(result["macos_userspace_reached"])
+        self.assertFalse(result["guest_target_match"])
+        self.assertFalse(result["macos_boot_verified"])
+        self.assertEqual(result["guest_kernel_majors"], [26])
+        self.assertIn("does not match", result["direct_boot_blocker"])
+
+    def test_direct_macos_observer_accepts_long_native_timeout_bound(self) -> None:
+        from x86.vmapple import _observe_direct_macos_boot
+
+        class ExitedProcess:
+            def poll(self):
+                return 0
+
+        with tempfile.TemporaryDirectory() as directory:
+            serial = Path(directory) / "serial.log"
+            serial.write_bytes(b"AVPBooter started\n")
+            result = _observe_direct_macos_boot(
+                serial, 3601.0, ExitedProcess(), expected_kernel_major=27
+            )
+        self.assertFalse(result["macos_boot_verified"])
+        self.assertIn("Darwin/XNU", result["direct_boot_blocker"])
 
     def test_direct_macos_observer_keeps_missing_xnu_fail_closed(self) -> None:
         from x86.vmapple import _observe_direct_macos_boot

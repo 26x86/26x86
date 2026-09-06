@@ -235,7 +235,10 @@ python3 -m x86 vmapple run-native \
 `--research-only` acknowledgement. The report distinguishes
 `native_runtime_started`, `xnu_executed`, `macos_userspace_reached`,
 `macos_boot_verified`, and `installation_verified`. Only the first two boot
-layers are observable from serial evidence; a successful process exit,
+layers are observable from serial evidence; the Darwin kernel major must also
+match the requested target (26 or 27). The host macOS major must be at least
+the guest major because Virtualization.framework does not run a newer guest on
+an older host. A successful process exit,
 Virtualization.framework configuration, or installer marker does not by itself
 prove a completed Golden Gate installation. Use `native`, `native-run`, and
 `run-native` as equivalent CLI spellings.
