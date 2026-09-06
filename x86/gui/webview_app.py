@@ -31,6 +31,18 @@ class WebviewApi:
     def get_app_info(self) -> dict[str, Any]:
         return self._bridge.get_app_info()
 
+    def get_sandbox_status(self):
+        return self._bridge.get_sandbox_status()
+
+    def set_execution_mode(self, mode: str):
+        return self._bridge.set_execution_mode(mode)
+
+    def get_sandbox_plan(self, target_major: int):
+        return self._bridge.get_sandbox_plan(target_major)
+
+    def prepare_sandbox(self, target_major: int, output_path: str):
+        return self._bridge.prepare_sandbox(target_major, output_path)
+
     def set_hardware_profile(self, profile=None) -> dict[str, Any]:
         return self._bridge.set_hardware_profile(profile)
 
@@ -201,8 +213,8 @@ def _launch_pywebview_wizard(*, advanced: bool, requested: str, smoke_report=Non
                 title,
                 url=url,
                 js_api=api,
-                width=960,
-                height=720,
+                width=1180,
+                height=820,
                 min_size=(760, 560),
                 resizable=True,
                 text_select=True,

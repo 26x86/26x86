@@ -1,0 +1,20 @@
+[
+  {
+    "repository": "26x86-PatcherSupportPkg",
+    "patch": "integration/patches/26x86-PatcherSupportPkg.patch",
+    "sha256": "cc524db3ad05e598d15154c7d189de6648dc89cbb7c7174c7aef4bfd6063be29",
+    "reverse_apply_check": true
+  },
+  {
+    "repository": "26x86-MetallibSupportPkg",
+    "patch": "integration/patches/26x86-MetallibSupportPkg.patch",
+    "sha256": "2e7731c670bedb1bdadab4958efd058fce882b89099843d24a16275d54a9748f",
+    "reverse_apply_check": true
+  },
+  {
+    "repository": "26x86-OpenCorePkg",
+    "patch": "integration/patches/26x86-OpenCorePkg.patch",
+    "sha256": "ac1504093822ddfc47e2b2d132eee97c0c6e0d073cff527485e675746691112f",
+    "reverse_apply_check": true
+  }
+]

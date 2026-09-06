@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "passed": true,
+  "production_opencore": true,
+  "production_engine": true,
+  "cpu_model": "Nehalem",
+  "regular_bootstrap_used": true,
+  "caller_return_required": true,
+  "caller_return_verified": true,
+  "handoff_storage_released_marker": true,
+  "input_hashes": {
+    "EFI/26x86/Sandbox.efi": "dd6729e38f4d25870085caabaed547d9a419371d7f77714ed6550dab4ff4bce8",
+    "EFI/BOOT/BOOTX64.EFI": "608a1c956a5926a28d3e64e908aba1077680a5da75192e971c8bb160aa8206a7",
+    "EFI/OC/config.plist": "bfcbc4b44a4f2d7111575dd3d4a64fb665322f27e3450e7f076a2209d1cb0ebf",
+    "EFI/OC/OpenCore.efi": "f11e80f702f60d954d4e9fc429d073f751a0f19eab3b830e011441db2545d84e",
+    "EFI/26x86/Fixtures/iboot.fixture": "1bde9980eafa5dbca56ae8c6fcd6abd4264903d5c5e4be75cb541c219ec1bbc9"
+  },
+  "inputs_unchanged": true,
+  "markers": {
+    "OCSB: StartImage ABI v1 size=64 target=26 AIC iBoot": true,
+    "26x86 Apple Silicon Sandbox - native EFI JIT": true,
+    "AIC WIRED IRQ SELFTEST PASS": true,
+    "AIC/iBoot handoff validated": true,
+    "OCSB: StartImage returned - Unsupported": true,
+    "OC: Sandbox engine returned - Unsupported": true,
+    "OCSB: Handoff storage released": true
+  },
+  "expected_engine_status": "EFI_UNSUPPORTED",
+  "macos_boot_verified": false,
+  "apple_boot_input_used": false,
+  "physical_mac_verified": false,
+  "stderr": "",
+  "qmp": [
+    {
+      "QMP": {
+        "version": {
+          "qemu": {
+            "micro": 2,
+            "minor": 2,
+            "major": 8
+          },
+          "package": "Debian 1:8.2.2+ds-0ubuntu1.18"
+        },
+        "capabilities": [
+          "oob"
+        ]
+      }
+    },
+    {
+      "return": {}
+    },
+    {
+      "return": {}
+    },
+    {
+      "timestamp": {
+        "seconds": 1788654440,
+        "microseconds": 899669
+      },
+      "event": "SHUTDOWN",
+      "data": {
+        "guest": false,
+        "reason": "host-qmp-quit"
+      }
+    },
+    {
+      "return": {}
+    }
+  ],
+  "screenshot": "screen.png"
+}

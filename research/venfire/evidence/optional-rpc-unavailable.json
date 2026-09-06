@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "layer": "QEMU optional RPC MMIO and bounded read-only DMA",
+  "passed": true,
+  "cases": [
+    {
+      "enabled": false,
+      "checks": [
+        {
+          "name": "request and adjacent guards unchanged",
+          "passed": true
+        },
+        {
+          "name": "payload unchanged",
+          "passed": true
+        },
+        {
+          "name": "completion remains original zero",
+          "passed": true
+        },
+        {
+          "name": "default off invokes no optional RPC callbacks",
+          "passed": true
+        }
+      ],
+      "qtest_commands": 6,
+      "request_trace": [],
+      "rejection_trace": [],
+      "generated_inputs_unchanged": true
+    },
+    {
+      "enabled": true,
+      "checks": [
+        {
+          "name": "request and adjacent guards unchanged",
+          "passed": true
+        },
+        {
+          "name": "payload unchanged",
+          "passed": true
+        },
+        {
+          "name": "completion remains original zero",
+          "passed": true
+        },
+        {
+          "name": "unknown opcode request preserved",
+          "passed": true
+        },
+        {
+          "name": "unknown version request preserved",
+          "passed": true
+        },
+        {
+          "name": "already completed request preserved",
+          "passed": true
+        },
+        {
+          "name": "MMIO self pointer preserves owned data",
+          "passed": true
+        },
+        {
+          "name": "firmware RAM pointer preserves owned data",
+          "passed": true
+        },
+        {
+          "name": "legacy config RAM pointer preserves owned data",
+          "passed": true
+        },
+        {
+          "name": "unmapped pointer preserves owned data",
+          "passed": true
+        },
+        {
+          "name": "overflow pointer preserves owned data",
+          "passed": true
+        },
+        {
+          "name": "partial RAM range preserves owned data",
+          "passed": true
+        },
+        {
+          "name": "wrong offset preserves request",
+          "passed": true
+        },
+        {
+          "name": "narrow store preserves request",
+          "passed": true
+        },
+        {
+          "name": "unaligned store preserves request",
+          "passed": true
+        },
+        {
+          "name": "unsupported read preserves request",
+          "passed": true
+        },
+        {
+          "name": "retry remains unavailable",
+          "passed": true
+        },
+        {
+          "name": "five exact bounded request snapshots",
+          "passed": true
+        },
+        {
+          "name": "all snapshots explicitly preserve completion",
+          "passed": true
+        },
+        {
+          "name": "unknown-request rejected in device trace",
+          "passed": true
+        },
+        {
+          "name": "not-ram rejected in device trace",
+          "passed": true
+        },
+        {
+          "name": "unmapped rejected in device trace",
+          "passed": true
+        },
+        {
+          "name": "access rejected in device trace",
+          "passed": true
+        },
+        {
+          "name": "read rejected in device trace",
+          "passed": true
+        }
+      ],
+      "qtest_commands": 44,
+      "request_trace": [
+        "vmapple_optional_rpc_request addr=0x70001000 header=0x10001 opcode=0x2 arg0=0x70002000 arg1=0x500000 completion=unchanged",
+        "vmapple_optional_rpc_request addr=0x70001000 header=0x10001 opcode=0x3 arg0=0x70002000 arg1=0x500000 completion=unchanged",
+        "vmapple_optional_rpc_request addr=0x70001000 header=0x10002 opcode=0x2 arg0=0x70002000 arg1=0x500000 completion=unchanged",
+        "vmapple_optional_rpc_request addr=0x70001000 header=0x1010001 opcode=0x2 arg0=0x70002000 arg1=0x500000 completion=unchanged",
+        "vmapple_optional_rpc_request addr=0x70001000 header=0x10001 opcode=0x2 arg0=0x70002000 arg1=0x500000 completion=unchanged"
+      ],
+      "rejection_trace": [
+        "vmapple_optional_rpc_reject offset=0x3ff8 addr=0x70001000 size=8 reason=unknown-request",
+        "vmapple_optional_rpc_reject offset=0x3ff8 addr=0x70001000 size=8 reason=unknown-request",
+        "vmapple_optional_rpc_reject offset=0x3ff8 addr=0x70001000 size=8 reason=unknown-request",
+        "vmapple_optional_rpc_reject offset=0x3ff8 addr=0x4ffff8 size=8 reason=not-ram",
+        "vmapple_optional_rpc_reject offset=0x3ff8 addr=0x100000 size=8 reason=not-ram",
+        "vmapple_optional_rpc_reject offset=0x3ff8 addr=0x400000 size=8 reason=not-ram",
+        "vmapple_optional_rpc_reject offset=0x3ff8 addr=0x600000 size=8 reason=unmapped",
+        "vmapple_optional_rpc_reject offset=0x3ff8 addr=0xfffffffffffffff8 size=8 reason=access",
+        "vmapple_optional_rpc_reject offset=0x3ff8 addr=0x16ffffff8 size=8 reason=not-ram",
+        "vmapple_optional_rpc_reject offset=0x3ff0 addr=0x70001000 size=8 reason=access",
+        "vmapple_optional_rpc_reject offset=0x3ff8 addr=0x0 size=8 reason=read"
+      ],
+      "generated_inputs_unchanged": true
+    }
+  ],
+  "guest_code_executed": false,
+  "apple_assets_used": false,
+  "request_completed": false,
+  "qemu_sha256": "9e701afb6cd7051d48d43c752b7f50c535ca82e4b4f80208a77250d44371c42d",
+  "not_established": [
+    "Apple exact optional RPC device fidelity",
+    "Apple firmware fallback",
+    "macOS boot"
+  ]
+}

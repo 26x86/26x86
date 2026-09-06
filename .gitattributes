@@ -1,14 +1,14 @@
-# Auto detect text files and perform LF normalization
+# Normalize first-party text, retaining upstream binary and shell policies.
 * text=auto
-
-# Ensure these are always treated as binary so they don't corrupt
 *.kext binary
 *.dmg binary
 *.pkg binary
 *.icns binary
 *.png binary
 *.jpg binary
-
-# Ensure shell scripts always have Unix line endings so they run on macOS
 *.sh text eol=lf
 *.command text eol=lf
+
+# Exported patches and historical evidence have byte-identity receipts.
+*.patch -text -whitespace
+research/venfire/** -text -whitespace

@@ -1,0 +1,123 @@
+--- a/hw/display/Kconfig
++++ b/hw/display/Kconfig
+@@ -153,3 +153,7 @@
+     bool
+     depends on MAC_PVG && PCI
+     default y if PCI_DEVICES
++
++config REIMS_VGPU
++    bool
++    default y
+--- a/hw/display/meson.build
++++ b/hw/display/meson.build
+@@ -143,3 +143,18 @@
+ system_ss.add(when: 'CONFIG_OMAP', if_true: files('omap_lcdc.c'))
+ 
+ modules += { 'hw-display': hw_display_modules }
++
++# Optional Venfire graphics integration. The builder supplies the pinned Rust
++# static library and C ABI header through Meson options, never absolute patches.
++reims_library = get_option('reims_vgpu_library')
++reims_include = get_option('reims_vgpu_include')
++if not fs.is_file(reims_library) or not fs.is_file(reims_include / 'reims_vgpu_qemu_abi.h')
++  error('Reims requires -Dreims_vgpu_library and -Dreims_vgpu_include')
++endif
++reims_dep = declare_dependency(
++  link_args: [reims_library],
++  include_directories: include_directories(reims_include),
++  dependencies: [cc.find_library('m'), cc.find_library('dl'), dependency('threads')])
++system_ss.add(when: 'CONFIG_REIMS_VGPU',
++  if_true: [files('reims-vgpu-mmio.c', 'reims-vgpu-pci.c',
++                 'reims-vgpu-dirty.c', 'reims-vgpu-shim.c'), reims_dep])
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -480,3 +480,8 @@
+        description: 'cc for xtensaeb tcg tests')
+ option('tcg_tests_cross_cflags_xtensaeb', type: 'string',
+        description: 'cflags for xtensaeb tcg tests')
++
++option('reims_vgpu_library', type: 'string', value: '',
++       description: 'Pinned Reims host static library (optional graphics tree)')
++option('reims_vgpu_include', type: 'string', value: '',
++       description: 'Pinned Reims C ABI include directory (optional graphics tree)')
+--- a/scripts/meson-buildoptions.py
++++ b/scripts/meson-buildoptions.py
+@@ -28,6 +28,8 @@
+ # Options with nonstandard names (e.g. --with/--without) or OS-dependent
+ # defaults.  Try not to add any.
+ SKIP_OPTIONS = {
++    "reims_vgpu_library",
++    "reims_vgpu_include",
+     "default_devices",
+     "fuzzing_engine",
+ }
+--- a/hw/vmapple/vmapple.c
++++ b/hw/vmapple/vmapple.c
+@@ -70,6 +70,7 @@
+     MemoryRegion ecam_alias;
+     uint64_t uuid;
+     bool research_headless;
++    bool research_graphics;
+ };
+ 
+ #define TYPE_VMAPPLE_MACHINE   MACHINE_TYPE_NAME("vmapple")
+@@ -211,7 +212,7 @@
+     int irq_iosfc = vms->irqmap[VMAPPLE_APV_IOSFC];
+     SysBusDevice *gfx;
+ 
+-    gfx = SYS_BUS_DEVICE(qdev_new("apple-gfx-mmio"));
++    gfx = SYS_BUS_DEVICE(qdev_new(vms->research_graphics ? "reims-vgpu-mmio" : "apple-gfx-mmio"));
+     sysbus_mmio_map(gfx, 0, vms->memmap[VMAPPLE_APV_GFX].base);
+     sysbus_mmio_map(gfx, 1, vms->memmap[VMAPPLE_APV_IOSFC].base);
+     sysbus_connect_irq(gfx, 0, qdev_get_gpio_in(vms->gic, irq_gfx));
+@@ -464,7 +465,11 @@
+         error_report("vmapple requires apple-gfx-mmio in this mode");
+         exit(1);
+     }
+-    if (vms->research_headless) {
++    if (vms->research_graphics && !vms->research_headless) {
++        error_report("research-graphics requires research-headless=on");
++        exit(1);
++    }
++    if (vms->research_headless && !vms->research_graphics) {
+         warn_report("vmapple research mode: no Apple PV graphics; "
+                     "macOS boot is unverified");
+     }
+@@ -519,7 +524,7 @@
+     create_bdif(vms, sysmem);
+     create_pvpanic(vms, sysmem);
+     create_aes(vms, sysmem);
+-    if (!vms->research_headless) {
++    if (!vms->research_headless || vms->research_graphics) {
+         create_gfx(vms, sysmem);
+     }
+     create_uart(vms, VMAPPLE_UART, sysmem, serial_hd(0));
+@@ -602,6 +607,16 @@
+ static void vmapple_set_research_headless(Object *obj, bool value, Error **errp)
+ {
+     VMAPPLE_MACHINE(obj)->research_headless = value;
++}
++
++static bool vmapple_get_research_graphics(Object *obj, Error **errp)
++{
++    return VMAPPLE_MACHINE(obj)->research_graphics;
++}
++
++static void vmapple_set_research_graphics(Object *obj, bool value, Error **errp)
++{
++    VMAPPLE_MACHINE(obj)->research_graphics = value;
+ }
+ 
+ static void vmapple_machine_class_init(ObjectClass *oc, const void *data)
+@@ -623,6 +638,11 @@
+ 
+     compat_props_add(mc->compat_props, vmapple_compat_defaults,
+                      G_N_ELEMENTS(vmapple_compat_defaults));
++    object_class_property_add_bool(oc, "research-graphics",
++                                   vmapple_get_research_graphics,
++                                   vmapple_set_research_graphics);
++    object_class_property_set_description(oc, "research-graphics",
++                                         "Experimental Reims MMIO/Vulkan host device");
+     object_class_property_add_bool(oc, "research-headless",
+                                    vmapple_get_research_headless,
+                                    vmapple_set_research_headless);

@@ -30,7 +30,7 @@ def _context(profile=None, payload_dir=None):
     return c
 
 
-def preflight(profile=None, payload_dir=None, *, constants=None):
+def preflight(profile=None, payload_dir=None, *, constants=None, abstraction_manifest=None):
     """No root writes, payload mounts, or privileges requested by this entry."""
     if not is_macos():
         return {"ok": False, "status": "unsupported_platform", "can_patch": False, "error": MACOS_ONLY_MESSAGE}
@@ -38,6 +38,14 @@ def preflight(profile=None, payload_dir=None, *, constants=None):
         return {"ok": False, "status": "invalid_profile", "can_patch": False, "error": "Unknown root patch profile"}
     try:
         c = constants or _context(profile, payload_dir)
+        abstraction = None
+        if c.detected_os >= 26 or abstraction_manifest is not None:
+            from x86.patch.abstraction import deployment_gate
+            abstraction = deployment_gate(c, abstraction_manifest)
+            if not abstraction["ok"]:
+                return {"ok": False, "status": "abstraction_blocked", "can_patch": False,
+                        "blockers": abstraction["errors"], "abstraction": abstraction,
+                        "os_build": c.detected_os_build, "hardware_verified": False}
         if profile == PROFILE_ID:
             configure_surface_constants(c)
             if c.detected_os != 25:
@@ -80,12 +88,12 @@ def preflight(profile=None, payload_dir=None, *, constants=None):
         return {"ok": False, "status": "preflight_failed", "can_patch": False, "error": str(exc)}
 
 
-def apply(profile=None, payload_dir=None):
+def apply(profile=None, payload_dir=None, *, abstraction_manifest=None):
     if not is_macos():
-        return preflight(profile, payload_dir)
+        return preflight(profile, payload_dir, abstraction_manifest=abstraction_manifest)
     try:
         c = _context(profile, payload_dir)
-        report = preflight(profile, payload_dir, constants=c)
+        report = preflight(profile, payload_dir, constants=c, abstraction_manifest=abstraction_manifest)
         if not report.get("can_patch"):
             return report
         if os.geteuid() != 0:

@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "layer": "QEMU PCI virtio-blk device model",
+  "apple_opcode": "0x10000",
+  "synthetic_disks_only": true,
+  "guest_code_executed": false,
+  "qemu": {
+    "schema_version": 1,
+    "algorithm": "sha256",
+    "created_at": "2026-09-05T19:57:57.602861+00:00",
+    "artifacts": [
+      {
+        "path": "/home/developer/work/venfire-20260906/qemu-build/qemu-system-aarch64",
+        "size_bytes": 121082232,
+        "sha256": "0798b6d00154a5cc3497bdef4519c9e346cdc4f10138ccb2c4421baf71612548",
+        "kind": "input"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "apple_flush",
+      "passed": true,
+      "pci_id": "0x1a00106b",
+      "offered_features": "0x10130026e54",
+      "injected_flush_errno": 0,
+      "injected_delay_ns": 0,
+      "requests": [
+        {
+          "opcode": "0x1",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.00037594000059471,
+          "used_index": 1,
+          "used_length": 1
+        },
+        {
+          "opcode": "0x10000",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.0072795380001480225,
+          "used_index": 2,
+          "used_length": 1
+        },
+        {
+          "opcode": "0x0",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.00040147799973055953,
+          "used_index": 3,
+          "used_length": 513
+        },
+        {
+          "opcode": "0x20000",
+          "status": 2,
+          "initial_status": 2,
+          "completion_seconds": 0.0005674799995176727,
+          "used_index": 4,
+          "used_length": 1
+        }
+      ],
+      "qtest_commands": 115,
+      "synthetic_disk_sha256": "20799b83bb13ca7040405fe148796c8a2933d03a389c5c3ac614d7dcb1ba8d9f"
+    },
+    {
+      "name": "apple_delayed_flush",
+      "passed": true,
+      "pci_id": "0x1a00106b",
+      "offered_features": "0x10130026e54",
+      "injected_flush_errno": 0,
+      "injected_delay_ns": 200000000,
+      "requests": [
+        {
+          "opcode": "0x1",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.00042826799926842796,
+          "used_index": 1,
+          "used_length": 1
+        },
+        {
+          "opcode": "0x10000",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.20871705500030657,
+          "used_index": 2,
+          "used_length": 1
+        },
+        {
+          "opcode": "0x0",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.0014224250007828232,
+          "used_index": 3,
+          "used_length": 513
+        },
+        {
+          "opcode": "0x20000",
+          "status": 2,
+          "initial_status": 2,
+          "completion_seconds": 0.00013767900054517668,
+          "used_index": 4,
+          "used_length": 1
+        }
+      ],
+      "qtest_commands": 270,
+      "synthetic_disk_sha256": "20799b83bb13ca7040405fe148796c8a2933d03a389c5c3ac614d7dcb1ba8d9f"
+    },
+    {
+      "name": "apple_flush_eio",
+      "passed": true,
+      "pci_id": "0x1a00106b",
+      "offered_features": "0x10130026e54",
+      "injected_flush_errno": 5,
+      "injected_delay_ns": 200000000,
+      "requests": [
+        {
+          "opcode": "0x1",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.0014210409999577678,
+          "used_index": 1,
+          "used_length": 1
+        },
+        {
+          "opcode": "0x10000",
+          "status": 1,
+          "initial_status": 255,
+          "completion_seconds": 0.2018256930005009,
+          "used_index": 2,
+          "used_length": 1
+        },
+        {
+          "opcode": "0x0",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.00041334700017614523,
+          "used_index": 3,
+          "used_length": 513
+        },
+        {
+          "opcode": "0x20000",
+          "status": 2,
+          "initial_status": 2,
+          "completion_seconds": 0.000377046000721748,
+          "used_index": 4,
+          "used_length": 1
+        }
+      ],
+      "qtest_commands": 261,
+      "synthetic_disk_sha256": "20799b83bb13ca7040405fe148796c8a2933d03a389c5c3ac614d7dcb1ba8d9f"
+    },
+    {
+      "name": "standard_flush_control",
+      "passed": true,
+      "pci_id": "0x1a00106b",
+      "offered_features": "0x10130026e54",
+      "injected_flush_errno": 0,
+      "injected_delay_ns": 200000000,
+      "requests": [
+        {
+          "opcode": "0x1",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.0006222160000106669,
+          "used_index": 1,
+          "used_length": 1
+        },
+        {
+          "opcode": "0x4",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.2053098090000276,
+          "used_index": 2,
+          "used_length": 1
+        },
+        {
+          "opcode": "0x0",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.0008076500007518916,
+          "used_index": 3,
+          "used_length": 513
+        },
+        {
+          "opcode": "0x20000",
+          "status": 2,
+          "initial_status": 2,
+          "completion_seconds": 0.00022154599992063595,
+          "used_index": 4,
+          "used_length": 1
+        }
+      ],
+      "qtest_commands": 266,
+      "synthetic_disk_sha256": "20799b83bb13ca7040405fe148796c8a2933d03a389c5c3ac614d7dcb1ba8d9f"
+    },
+    {
+      "name": "standard_flush_eio_control",
+      "passed": true,
+      "pci_id": "0x1a00106b",
+      "offered_features": "0x10130026e54",
+      "injected_flush_errno": 5,
+      "injected_delay_ns": 200000000,
+      "requests": [
+        {
+          "opcode": "0x1",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.0003884230000039679,
+          "used_index": 1,
+          "used_length": 1
+        },
+        {
+          "opcode": "0x4",
+          "status": 1,
+          "initial_status": 255,
+          "completion_seconds": 0.20139738800025953,
+          "used_index": 2,
+          "used_length": 1
+        },
+        {
+          "opcode": "0x0",
+          "status": 0,
+          "initial_status": 255,
+          "completion_seconds": 0.0005452039995361702,
+          "used_index": 3,
+          "used_length": 513
+        },
+        {
+          "opcode": "0x20000",
+          "status": 2,
+          "initial_status": 2,
+          "completion_seconds": 0.0006630289999520755,
+          "used_index": 4,
+          "used_length": 1
+        }
+      ],
+      "qtest_commands": 262,
+      "synthetic_disk_sha256": "20799b83bb13ca7040405fe148796c8a2933d03a389c5c3ac614d7dcb1ba8d9f"
+    }
+  ],
+  "passed": true,
+  "not_established": [
+    "Apple driver ABI interoperability",
+    "full or multiqueue ordering fence",
+    "host power-loss persistence",
+    "macOS boot"
+  ]
+}

@@ -6,7 +6,7 @@
     { id: "detect", title: "1. 내 Mac 확인", heading: "내 Mac 확인", desc: "하드웨어 정보를 확인합니다." },
     { id: "build", title: "2. 패치 생성", heading: "패치 생성", desc: "OpenCore EFI를 만듭니다." },
     { id: "patch", title: "3. 설치·패치", heading: "설치·패치", desc: "EFI 설치와 루트 패치를 진행합니다." },
-    { id: "done", title: "4. 완료", heading: "설정이 완료되었습니다", desc: "필요하면 루트 패치를 적용하세요." },
+    { id: "done", title: "검증 · 활동", heading: "작업과 검증 기록", desc: "생성 결과와 실제 기기 검증을 따로 확인합니다." },
   ];
 
   const state = {
@@ -16,7 +16,15 @@
     detect: null,
     macos: null,
     patchSummary: "패치 정보를 불러오는 중…",
-    canBuild: true,
+    canBuild: false,
+    mode: "native",
+    sandbox: null,
+    sandboxPlan: null,
+    sandboxTarget: 26,
+    sandboxOutput: "",
+    sandboxReceipt: null,
+    activity: [],
+    globalActionsBound: false,
     buildCompleted: false,
     busy: false,
     bridgeReady: false,
@@ -42,6 +50,10 @@
   };
 
   const QT_BRIDGE_METHODS = [
+    "get_sandbox_status",
+    "set_execution_mode",
+    "get_sandbox_plan",
+    "prepare_sandbox",
     "get_app_info",
     "set_hardware_profile",
     "validate_surface_efi",
@@ -203,10 +215,10 @@
           window.clearInterval(timer);
           const banner = document.getElementById("boot-banner");
           if (banner) {
-            banner.innerHTML = "Python 브릿지에 아직 연결되지 않았습니다. 창은 정상입니다.";
+            banner.innerHTML = "로컬 작업 엔진에 연결하지 못했습니다. 앱을 다시 실행하고 로그를 확인하세요.";
           }
           setStatus("브릿지 대기 시간 초과");
-          toast("Python bridge API 연결 실패 — UI는 표시됩니다", "error");
+          toast("로컬 작업 엔진 연결 실패", "error");
           try { bindGlobalActions(); renderStepContent(); } catch (_) {}
           settled = true;
         }
@@ -228,6 +240,8 @@
   }
 
   function toast(message, kind = "info") {
+    state.activity.unshift({time: new Date().toLocaleTimeString(), message: String(message), kind});
+    state.activity = state.activity.slice(0, 100);
     const node = document.createElement("div");
     node.className = `toast${kind === "error" ? " error" : ""}`;
     node.textContent = message;
@@ -251,7 +265,7 @@
     els.stepper.innerHTML = state.steps
       .map(
         (step, index) =>
-          `<button type="button" class="step-btn${index === state.currentStep ? " active" : ""}${index < state.currentStep ? " done" : ""}" data-step="${index}">${escapeHtml(step.title)}</button>`
+          `<button type="button" class="step-btn${index === state.currentStep ? " active" : ""}" aria-current="${index === state.currentStep ? "step" : "false"}" data-step="${index}" ${state.busy ? "disabled" : ""}><span class="step-number">${String(index + 1).padStart(2, "0")}</span>${escapeHtml(step.title.replace(/^\d+\.\s*/, ""))}</button>`
       )
       .join("");
 
@@ -268,6 +282,8 @@
     els.stepCounter.textContent = `${state.currentStep + 1} / ${total}`;
     els.btnPrev.disabled = state.currentStep <= 0 || state.busy;
     els.btnNext.disabled = state.currentStep >= total - 1 || state.busy;
+    document.getElementById("sidebar-mode").textContent = state.mode === "sandbox" ? "Apple Silicon Sandbox" : "Native Patch";
+    document.getElementById("sidebar-host").textContent = isSurface() ? "Surface Pro 6" : (state.detect?.model || "확인 대기");
   }
 
   function isSurface() {
@@ -284,22 +300,34 @@
       <pre id="surface-validation" class="patch-summary"></pre>`;
   }
 
-  function renderWelcome(step) {
-    return `
-      <div class="welcome-hero">
-        <div class="hero-icon">26</div>
-        <h2>${escapeHtml(step.heading)}</h2>
-        <p class="lead">${escapeHtml(step.desc)}</p>
-        <p class="lead">버전 ${escapeHtml(state.appInfo?.version || "")} · ${escapeHtml(state.appInfo?.bundle_id || "")}</p>
+  function renderWelcome() {
+    const sandbox = state.mode === "sandbox";
+    return `<div class="welcome-hero"><span class="eyebrow">26x86 / CONTROL CENTER</span>
+      <h2>당신의 Mac, 다음 장으로.</h2><p class="lead">기기를 확인하고, 실행 방식을 선택하세요.<br>모든 작업의 준비 상태와 검증 결과를 한곳에서 확인합니다.</p>
+      <div class="overview-meta"><span class="badge">macOS Tahoe 26</span><span class="badge">Golden Gate 27 · 개발 대상</span><span class="badge warning">실험적 프로젝트</span></div></div>
+      <div class="section-label"><h3>실행 방식</h3><span>선택 시 디스크를 변경하지 않습니다</span></div>
+      <div class="mode-grid" role="group" aria-label="실행 방식">
+        <button class="mode-card${!sandbox ? " selected" : ""}" id="mode-native" aria-pressed="${!sandbox}"><span class="mode-kicker">01 / NATIVE</span><span class="mode-selected" aria-hidden="true"></span><strong>Native Patch</strong><p>OpenCore EFI와 기기별 루트 패치.<br>현재 하드웨어에서 실행할 구성을 준비합니다.</p><span class="badge">OpenCore · Root patches</span></button>
+        <button class="mode-card${sandbox ? " selected" : ""}" id="mode-sandbox" aria-pressed="${sandbox}"><span class="mode-kicker">02 / VIRTUAL APPLE SILICON</span><span class="mode-selected" aria-hidden="true"></span><strong>Apple Silicon Sandbox</strong><p>EFI에서 직접 실행하는 가상 Apple Silicon.<br>macOS 26 이상을 위한 실험적 실행 경로입니다.</p><span class="badge warning">개발 중 · macOS 부팅 미검증</span></button>
       </div>
-      <div class="actions">
-        <button type="button" class="btn primary" id="action-start">시작하기</button>
-        <button type="button" class="btn secondary" id="action-surface">Surface Pro 6 · Tahoe</button>
-        <button type="button" class="btn ghost" id="action-mac">일반 Mac 모드</button>
-        <p>${isSurface() ? "선택: Surface Pro 6 (Mac EFI 빌더 사용 안 함)" : "선택: 일반 Mac"}</p>
-        <button type="button" class="btn secondary" id="action-guide">사용 설명서</button>
-      </div>
-    `;
+      <p class="support-note">Sandbox 최소 대상: Mac Pro 2009 · SSE4.1 + SSE4.2. 비 Apple 기기는 동작을 보증하지 않으며 관련 이슈를 받지 않습니다.</p>
+      <div class="actions"><button class="btn primary" id="action-start">기기 확인하기 →</button><button class="btn secondary" id="action-guide">사용 설명서</button></div>
+      <details><summary>기존 하드웨어 프로필</summary><div class="actions"><button class="btn secondary" id="action-surface">Surface Pro 6 · Tahoe</button><button class="btn ghost" id="action-mac">일반 Mac 프로필</button></div><p class="support-note">${isSurface() ? "선택: Surface Pro 6" : "선택: 일반 Mac"} · 이 프로필은 Native Patch에서 사용됩니다.</p></details>`;
+  }
+
+  function renderSandbox(stage) {
+    const report = state.sandboxPlan || state.sandbox || {};
+    const blockers = report.blockers || ["EFI 실행 엔진의 상태를 아직 확인하지 못했습니다."];
+    const receipt = state.sandboxReceipt;
+    return `<span class="eyebrow">EFI NATIVE / APPLE SILICON SANDBOX</span><h2>${stage === "patch" ? "EFI 준비 결과" : "Sandbox 준비"}</h2>
+      <p class="lead">macOS 게스트 부팅에 필요한 구성 요소와 현재 구현 상태를 확인합니다.</p>
+      <div class="metric-grid"><div class="metric"><span>실행 계층</span><strong>EFI · AIC · ARM64 JIT</strong></div><div class="metric"><span>최소 CPU</span><strong>SSE4.1 + SSE4.2</strong></div><div class="metric"><span>macOS 실제 부팅</span><strong>미검증</strong></div></div>
+      <div class="form-row"><div><label for="sandbox-target">대상 macOS</label><select class="field" id="sandbox-target"><option value="26" ${state.sandboxTarget === 26 ? "selected" : ""}>macOS Tahoe 26</option><option value="27" ${state.sandboxTarget === 27 ? "selected" : ""}>macOS Golden Gate 27</option></select></div><div><label for="sandbox-output">새 출력 폴더 경로</label><input class="field" id="sandbox-output" value="${escapeHtml(state.sandboxOutput)}" placeholder="예: C:/26x86-Sandbox 또는 /Users/me/26x86-Sandbox" /></div></div>
+      <div class="proof-list"><div class="proof-item"><span>EFI 자체 검사 파일</span><span class="badge${report.artifact_available ? " good" : " warning"}">${report.artifact_available ? "파일 존재" : "미생성"}</span></div><div class="proof-item"><span>원본 macOS 부팅</span><span class="badge warning">아직 준비되지 않음</span></div><div class="proof-item"><span>실제 Mac USB 부팅</span><span class="badge warning">실기 검증 필요</span></div></div>
+      ${blockers.length ? `<div class="note"><strong>남은 구현 항목</strong><ul>${blockers.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
+      <p class="support-note">구성: OpenCore config.plist · iBoot 엔진 · SandboxSMBIOS · Hardware/DevProp. 현재 준비 기능은 EFI 자체 검사 패키지를 생성합니다. macOS 설치 또는 부팅을 시작하지 않습니다. 기존 디스크에 자동으로 기록하지 않습니다.</p>
+      <div class="actions"><button class="btn secondary" id="sandbox-refresh">준비 상태 다시 확인</button><button class="btn primary" id="sandbox-prepare" ${report.stageable && state.bridgeReady ? "" : "disabled"}>EFI 자체 검사 패키지 준비</button></div>
+      ${receipt ? `<pre class="patch-summary" role="status">${escapeHtml(JSON.stringify(receipt, null, 2))}</pre>` : ""}`;
   }
 
   function renderDetect(step) {
@@ -325,7 +353,7 @@
       <div class="info-grid">
         ${infoRow(modelLabel, d.model)}
         ${infoRow("제품명", d.marketing_name)}
-        ${infoRow("프로세서", d.cpu || "확인됨")}
+        ${infoRow("프로세서", d.cpu || "정보 없음")}
         ${infoRow(osLabel, `${d.os_version || "—"} (${d.os_build || "—"})`)}
       </div>
       <div class="actions">
@@ -336,6 +364,7 @@
   }
 
   function renderBuild(step) {
+    if (state.mode === "sandbox") return renderSandbox("build");
     if (isSurface()) return renderSurfacePreparation();
     const macos = state.macos || { choices: [], selected_kernel: null };
     const selected = macos.choices.find((c) => c.kernel === macos.selected_kernel) || macos.choices[0];
@@ -372,6 +401,7 @@
   }
 
   function renderPatch(step) {
+    if (state.mode === "sandbox") return renderSandbox("patch");
     if (isSurface()) return `<h2>Surface Pro 6 루트 패치</h2>
       <p>설치된 Tahoe에서 AppleHDA와 KDK 조건을 검사한 뒤 기존 26x86 패치 엔진을 실행합니다. 먼저 USB EFI로 macOS를 부팅하세요.</p>
       <div class="patch-summary" id="patch-summary">${escapeHtml(state.patchSummary)}</div>
@@ -395,23 +425,12 @@
     `;
   }
 
-  function renderDone(step) {
-    return `
-      <div class="welcome-hero">
-        <div class="done-check">✓</div>
-        <h2>${escapeHtml(step.heading)}</h2>
-        <p class="lead">${escapeHtml(step.desc)}</p>
-      </div>
-      <div class="info-grid">
-        ${infoRow("Mac 모델", state.detect?.model)}
-        ${infoRow("macOS", state.detect?.os_version)}
-      </div>
-      <div class="actions">
-        <button type="button" class="btn secondary" id="action-log">로그 파일 보기</button>
-        <button type="button" class="btn secondary" id="action-advanced" ${state.appInfo?.advanced_enabled ? "" : "disabled"}>고급 모드</button>
-        <button type="button" class="btn primary" id="action-finish">종료</button>
-      </div>
-    `;
+  function renderDone() {
+    return `<span class="eyebrow">EVIDENCE / ACTIVITY</span><h2>작업과 검증 기록</h2><p class="lead">창을 열거나 단계를 이동한 사실은 생성·설치·부팅 성공을 의미하지 않습니다.</p>
+      <div class="proof-list"><div class="proof-item"><span>Native EFI 생성</span><span class="badge${state.buildCompleted ? " good" : " warning"}">${state.buildCompleted ? "백엔드 생성 완료 보고" : "완료 보고 없음"}</span></div><div class="proof-item"><span>Sandbox EFI 패키지</span><span class="badge">${state.sandboxReceipt?.ok ? "준비 완료 · 자체 검사용" : "준비 기록 없음"}</span></div><div class="proof-item"><span>실제 macOS / Mac USB 부팅</span><span class="badge warning">미검증</span></div></div>
+      <div class="section-label"><h3>이번 세션의 활동</h3><span>최근 100개</span></div>
+      ${state.activity.length ? `<ol class="activity-list">${state.activity.map(x => `<li class="${x.kind === "error" ? "error" : ""}"><time>${escapeHtml(x.time)}</time><span>${escapeHtml(x.message)}</span></li>`).join("")}</ol>` : '<p class="empty-state">아직 실행한 작업이 없습니다.</p>'}
+      <div class="actions"><button class="btn secondary" id="action-log">로그 파일 열기</button><button class="btn secondary" id="action-advanced" ${state.appInfo?.advanced_enabled ? "" : "disabled"}>고급 모드</button><button class="btn ghost" id="action-finish">창 닫기</button></div>`;
   }
 
   function renderStepContent() {
@@ -436,10 +455,41 @@
   async function bindStepActions(stepId) {
     const bind = (id, handler) => {
       const node = document.getElementById(id);
-      if (node) node.addEventListener("click", handler);
+      if (node) node.addEventListener("click", async () => {
+        if (state.busy) return;
+        state.busy = true; renderStepper(); node.disabled = true;
+        try { await handler(); } catch (err) { toast(String(err.message || err), "error"); }
+        finally { state.busy = false; if (node.isConnected) node.disabled = false; renderStepper(); }
+      });
     };
 
+    if ((stepId === "build" || stepId === "patch") && state.mode === "sandbox") {
+      const target = document.getElementById("sandbox-target");
+      const output = document.getElementById("sandbox-output");
+      output.addEventListener("input", () => { state.sandboxOutput = output.value; });
+      target.addEventListener("change", async () => {
+        state.sandboxTarget = Number(target.value); state.sandboxPlan = null; state.sandboxReceipt = null;
+        await refreshSandbox();
+      });
+      bind("sandbox-refresh", refreshSandbox);
+      bind("sandbox-prepare", async () => {
+        state.sandboxOutput = output.value.trim();
+        if (!state.sandboxOutput) throw new Error("새 출력 폴더의 전체 경로를 입력하세요.");
+        const result = await api("prepare_sandbox", state.sandboxTarget, state.sandboxOutput);
+        if (!result.ok) throw new Error(result.error || "EFI 패키지를 준비하지 못했습니다.");
+        state.sandboxReceipt = result; toast("EFI 자체 검사 패키지 준비 완료 · macOS 부팅 미검증"); renderStepContent();
+      });
+      return;
+    }
     if (stepId === "welcome") {
+      const chooseMode = async (mode) => {
+        const result = await api("set_execution_mode", mode);
+        if (!result.ok) throw new Error(result.error || "실행 방식을 변경하지 못했습니다.");
+        state.mode = mode; state.sandboxPlan = null; renderStepContent();
+        toast(mode === "sandbox" ? "Apple Silicon Sandbox 선택 · EFI 개발 경로" : "Native Patch 선택");
+      };
+      bind("mode-native", () => chooseMode("native"));
+      bind("mode-sandbox", () => chooseMode("sandbox"));
       const selectProfile = async (profile) => {
         const result = await api("set_hardware_profile", profile);
         if (!result.ok) return toast(result.error, "error");
@@ -448,7 +498,7 @@
       };
       bind("action-surface", () => selectProfile("surface-pro6-i5-tahoe"));
       bind("action-mac", () => selectProfile(null));
-      bind("action-start", () => goToStep(1));
+      bind("action-start", () => { state.busy = false; goToStep(1); });
       bind("action-guide", () => api("open_guide").catch(() => toast("도움말을 열 수 없습니다.", "error")));
     }
 
@@ -537,12 +587,26 @@
   }
 
   function goToStep(index) {
-    if (index < 0 || index >= state.steps.length) return;
+    if (state.busy || index < 0 || index >= state.steps.length) return;
     state.currentStep = index;
     renderStepContent();
-    if (state.steps[index]?.id === "patch") {
+    els.stepContent.focus({preventScroll: true});
+    if (state.mode === "sandbox" && ["build", "patch"].includes(state.steps[index]?.id)) {
+      refreshSandbox();
+    } else if (state.steps[index]?.id === "patch") {
       refreshPatchStatus();
     }
+  }
+
+  async function refreshSandbox() {
+    try {
+      const target = state.sandboxTarget;
+      const result = await api("get_sandbox_plan", target);
+      if (!result.ok) throw new Error(result.error || "Sandbox 준비 상태를 불러오지 못했습니다.");
+      if (state.sandboxTarget !== target) return;
+      state.sandboxPlan = result;
+      if (["build", "patch"].includes(state.steps[state.currentStep]?.id) && state.mode === "sandbox") renderStepContent();
+    } catch (err) { toast(String(err.message || err), "error"); }
   }
 
   async function refreshPatchStatus() {
@@ -569,7 +633,7 @@
     ]);
 
     state.appInfo = appInfo;
-    state.steps = steps;
+    state.steps = steps.map(step => ({...step, title: ({welcome: "개요", detect: "기기 확인", build: "EFI 준비", patch: "설치 · 패치", done: "검증 · 활동"})[step.id] || step.title}));
     state.detect = detectResult.detect;
     state.macos = macos;
     state.canBuild = !!buildCheck.can_build;
@@ -586,7 +650,13 @@
       els.logoFallback.hidden = true;
     }
 
+    try {
+      const report = await api("get_sandbox_status");
+      if (report.ok) { state.sandbox = report; state.mode = report.execution_mode === "sandbox" ? "sandbox" : "native"; }
+    } catch (err) { state.sandbox = {blockers: ["Sandbox API 연결 실패: " + String(err.message || err)]}; }
     state.bridgeReady = true;
+    const connection = document.getElementById("connection-badge");
+    connection.textContent = "로컬 엔진 연결됨"; connection.className = "badge good";
     const banner = document.getElementById("boot-banner");
     if (banner) banner.remove();
     renderStepContent();
@@ -621,10 +691,12 @@
   }
 
   function bindGlobalActions() {
+    if (state.globalActionsBound) return;
+    state.globalActionsBound = true;
     els.btnPrev.addEventListener("click", () => goToStep(state.currentStep - 1));
     els.btnNext.addEventListener("click", () => goToStep(state.currentStep + 1));
     document.getElementById("btn-settings").addEventListener("click", openSettings);
-    document.getElementById("btn-help").addEventListener("click", () => api("open_guide"));
+    document.getElementById("btn-help").addEventListener("click", () => api("open_guide").catch(err => toast(String(err.message || err), "error")));
     document.getElementById("settings-cancel").addEventListener("click", () => els.settingsDialog.close());
     document.getElementById("settings-save").addEventListener("click", saveSettings);
 
@@ -639,7 +711,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    try { renderStepper(); setStatus("UI 로딩 중…"); } catch (_) {}
+    try { renderStepper(); if (!state.bridgeReady) setStatus("로컬 엔진 연결 중…"); } catch (_) {}
   });
 
   whenBridgeReady(() => {
@@ -647,7 +719,7 @@
     loadInitialData().catch((err) => {
       toast(String(err.message || err), "error");
       const banner = document.getElementById("boot-banner");
-      if (banner) banner.textContent = "Python 데이터를 불러오지 못했습니다. UI 골격은 표시됩니다.";
+      if (banner) banner.textContent = "기기 정보를 불러오지 못했습니다. 연결 상태와 로그를 확인하세요.";
       setStatus("데이터 로드 실패");
       renderStepContent();
     });

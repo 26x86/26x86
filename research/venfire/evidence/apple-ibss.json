@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "layer": "Apple AVPBooter -> original iBSS -> iBootStage1 recovery",
+  "experiment": "021",
+  "host": "Authorized Windows Intel AVX2 developer host; WSL x86_64 TCG",
+  "qemu_sha256": "d3735b9c16699be006f746062618adb70d2c6dc995ce154620ddada0957ce651",
+  "patch_0003_sha256": "29faaa21e284e82fb3e7848574730627c9c7d55f60a5a2e8bdb3310bad4acd0c",
+  "rom_sha256": "bff6e4dd750f206aa06dc8f2510ff7484b0be8412754bd1c2558dbccbe26ba5a",
+  "original_ibss_im4p_sha256": "c063245ed47e3026e48fb93a1b3b2cfd320d1e8acf9373c046d65ed2c853a4c5",
+  "official_tss_status": "0",
+  "verified_https": true,
+  "actual_session_nonce_used": true,
+  "original_payload_preserved": true,
+  "image_bytes": 318720,
+  "personalized_image_sha256": "571507d6ea808454500e07e5f0542cd44c36df6155b716c7bda5b822ecf5c452",
+  "dfu_blocks": 156,
+  "all_dfu_blocks_reached_state5": true,
+  "manifest_statuses": [
+    {
+      "raw": "003200000600",
+      "status": 0,
+      "poll_timeout_ms": 50,
+      "state": 6,
+      "string_index": 0
+    },
+    {
+      "raw": "00b80b000700",
+      "status": 0,
+      "poll_timeout_ms": 3000,
+      "state": 7,
+      "string_index": 0
+    },
+    {
+      "raw": "003200000800",
+      "status": 0,
+      "poll_timeout_ms": 50,
+      "state": 8,
+      "string_index": 0
+    }
+  ],
+  "usb_bus_reset_acknowledged": true,
+  "uart_markers": [
+    ":: Supervisor iBootStage1 for vma2, Copyright 2007-2022, Apple Inc.",
+    "::\tBUILD_TAG: iBoot-7459.141.1",
+    "::\tBUILD_STYLE: RELEASE",
+    "aborting autoboot due to remote boot.",
+    "Entering iBootStage1 recovery mode, starting command prompt"
+  ],
+  "next_device_descriptor_hex": "1201000200000040ac058112000002030401",
+  "next_usb_vid": "05ac",
+  "next_usb_pid": "1281",
+  "new_nonce_queried": true,
+  "new_nonce_length": 32,
+  "sep_nonce_length": 20,
+  "ibss_boot_verified": true,
+  "macos_boot_verified": false,
+  "xnu_boot_verified": false,
+  "transfer_input_integrity": {
+    "valid": true,
+    "checked_count": 5,
+    "issues": []
+  },
+  "fixture": "Unprovisioned read-only zero AUX/root; diagnostic uuid=0. No initialized VM assumed.",
+  "not_established": [
+    "iBEC execution",
+    "LocalPolicy guest acceptance",
+    "initialized AUX or restored macOS disk",
+    "XNU/macOS boot",
+    "physical Mac validation"
+  ],
+  "note": "The generic DFU uploader intentionally reports no signature or boot success. This report adds separate actual UART and USB recovery observations. DFU GETSTATE after switching to PID1281 correctly fails; recovery uses a different protocol."
+}

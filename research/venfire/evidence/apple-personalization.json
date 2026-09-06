@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "tss_url": "https://gs.apple.com/TSS/controller?action=2",
+  "ticket_received": true,
+  "payload_preserved": true,
+  "macos_boot_verified": false,
+  "tss_status": "0",
+  "component_sha256": "c063245ed47e3026e48fb93a1b3b2cfd320d1e8acf9373c046d65ed2c853a4c5",
+  "personalized_sha256": "160c7bd9195b9744e6f8dcfb68937df34796cda2a931ebb907f96625c76419bb",
+  "bytes": 318720,
+  "input_integrity": {
+    "valid": true,
+    "checked_count": 3,
+    "issues": []
+  },
+  "verified_date": "2026-09-06",
+  "version": "12.6.1",
+  "build": "21G217",
+  "scope": "Live virtual ROM; host userspace TLS/DFU; physical USB and macOS boot unverified",
+  "original_manifest_sha256": "683af93fdf68efc0af4a3720e31f3ae30c3c899ab600dd1294c54ca3a0e4fac7",
+  "apple_public_root_sha256": "b0b1730ecbc7ff4505142c49f1295e6eda6bcaed7e2c68c5be91b5a11001f024",
+  "dfu": {
+    "image_size": 318720,
+    "image_sha256": "160c7bd9195b9744e6f8dcfb68937df34796cda2a931ebb907f96625c76419bb",
+    "bytes_sent": 318736,
+    "image_bytes_sent": 318720,
+    "transfer_complete": true,
+    "usb_reset_acknowledged": true,
+    "signature_acceptance_verified": false,
+    "macos_boot_verified": false,
+    "input_integrity": true,
+    "final_state": 8,
+    "manifest_statuses": [
+      {
+        "raw": "003200000600",
+        "status": 0,
+        "poll_timeout_ms": 50,
+        "state": 6,
+        "string_index": 0
+      },
+      {
+        "raw": "00b80b000700",
+        "status": 0,
+        "poll_timeout_ms": 3000,
+        "state": 7,
+        "string_index": 0
+      },
+      {
+        "raw": "003200000800",
+        "status": 0,
+        "poll_timeout_ms": 50,
+        "state": 8,
+        "string_index": 0
+      }
+    ],
+    "blocks": 156
+  },
+  "after_reset": "Next USB descriptor request timed out; no UART output; QEMU process remained running.",
+  "upload_input_integrity": {
+    "valid": true,
+    "checked_count": 5,
+    "issues": []
+  }
+}

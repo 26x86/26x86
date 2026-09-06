@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "passed": true,
+  "checks": [
+    {
+      "name": "disabled rejects root write",
+      "passed": true
+    },
+    {
+      "name": "disabled retains root data",
+      "passed": true
+    },
+    {
+      "name": "disabled rejects aux write",
+      "passed": true
+    },
+    {
+      "name": "disabled retains aux data",
+      "passed": true
+    },
+    {
+      "name": "readonly rejects root write",
+      "passed": true
+    },
+    {
+      "name": "readonly retains root data",
+      "passed": true
+    },
+    {
+      "name": "readonly rejects aux write",
+      "passed": true
+    },
+    {
+      "name": "readonly retains aux data",
+      "passed": true
+    },
+    {
+      "name": "root write completes",
+      "passed": true
+    },
+    {
+      "name": "root guest readback",
+      "passed": true
+    },
+    {
+      "name": "aux write completes",
+      "passed": true
+    },
+    {
+      "name": "aux guest readback",
+      "passed": true
+    },
+    {
+      "name": "out-of-range write fails",
+      "passed": true
+    },
+    {
+      "name": "unmapped DMA fails",
+      "passed": true
+    },
+    {
+      "name": "unknown flags fail",
+      "passed": true
+    },
+    {
+      "name": "oversized length fails",
+      "passed": true
+    },
+    {
+      "name": "invalid status descriptor is not written",
+      "passed": true
+    },
+    {
+      "name": "root persists across restart",
+      "passed": true
+    },
+    {
+      "name": "aux persists across restart",
+      "passed": true
+    },
+    {
+      "name": "root flush EIO returns failure",
+      "passed": true
+    },
+    {
+      "name": "aux flush EIO returns failure",
+      "passed": true
+    },
+    {
+      "name": "all original base bytes preserved",
+      "passed": true
+    }
+  ],
+  "backend_sha256": "f2488db869b71ed910c9804bdc68cb64315628e242e530714e4f5a47ce1772e7",
+  "macos_boot_verified": false,
+  "physical_usb_boot_verified": false
+}

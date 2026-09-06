@@ -24,6 +24,11 @@ datas = [
    (str(SPEC_DIR / 'resources/branding'), 'resources/branding'),
 ]
 
+if (SPEC_DIR / "sandbox/efi/build/BOOTX64.EFI").exists():
+   from x86.sandbox import _artifact
+   engine, _ = _artifact(SPEC_DIR)
+   datas.extend((str(file), "sandbox/efi/build") for file in (engine, engine.parent / "build-report.json"))
+
 if (SPEC_DIR / "DortaniaInternalResources.dmg").exists():
    datas.append((str(SPEC_DIR / 'DortaniaInternalResources.dmg'), '.'))
 

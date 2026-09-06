@@ -121,6 +121,22 @@ def launch_qt_chromium_wizard(*, advanced: bool = False) -> None:
             return api.get_app_info()
 
         @Slot(result="QVariant")
+        def get_sandbox_status(self):
+            return api.get_sandbox_status()
+
+        @Slot(str, result="QVariant")
+        def set_execution_mode(self, mode):
+            return api.set_execution_mode(mode)
+
+        @Slot(int, result="QVariant")
+        def get_sandbox_plan(self, target_major):
+            return api.get_sandbox_plan(target_major)
+
+        @Slot(int, str, result="QVariant")
+        def prepare_sandbox(self, target_major, output_path):
+            return api.prepare_sandbox(target_major, output_path)
+
+        @Slot(result="QVariant")
         def get_steps(self):
             return api.get_steps()
 
@@ -183,7 +199,7 @@ def launch_qt_chromium_wizard(*, advanced: bool = False) -> None:
             super().__init__()
             self._httpd = httpd
             self.setWindowTitle(title)
-            self.resize(960, 720)
+            self.resize(1180, 820)
             self.setMinimumSize(760, 560)
 
             view = QWebEngineView(self)

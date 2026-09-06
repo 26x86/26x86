@@ -1,0 +1,40 @@
+diff --git a/hw/block/virtio-blk.c b/hw/block/virtio-blk.c
+--- a/hw/block/virtio-blk.c
++++ b/hw/block/virtio-blk.c
+@@ -340,7 +340,7 @@
+     mrb->num_reqs = 0;
+ }
+ 
+-static void virtio_blk_handle_flush(VirtIOBlockReq *req, MultiReqBuffer *mrb)
++void virtio_blk_handle_flush(VirtIOBlockReq *req, MultiReqBuffer *mrb)
+ {
+     VirtIOBlock *s = req->dev;
+ 
+diff --git a/hw/vmapple/virtio-blk.c b/hw/vmapple/virtio-blk.c
+--- a/hw/vmapple/virtio-blk.c
++++ b/hw/vmapple/virtio-blk.c
+@@ -51,10 +51,8 @@
+ {
+     switch (type) {
+     case VIRTIO_BLK_T_APPLE_BARRIER:
+-        qemu_log_mask(LOG_UNIMP, "%s: Barrier requests are currently no-ops\n",
+-                      __func__);
+-        virtio_blk_req_complete(req, VIRTIO_BLK_S_OK);
+-        g_free(req);
++        /* Reuse normal flush submission, completion and error handling. */
++        virtio_blk_handle_flush(req, mrb);
+         return true;
+     default:
+         return false;
+diff --git a/include/hw/virtio/virtio-blk.h b/include/hw/virtio/virtio-blk.h
+--- a/include/hw/virtio/virtio-blk.h
++++ b/include/hw/virtio/virtio-blk.h
+@@ -109,6 +109,8 @@
+ } VirtIOBlkClass;
+ 
+ void virtio_blk_handle_vq(VirtIOBlock *s, VirtQueue *vq);
++/* Submits pending writes and takes ownership of req until completion. */
++void virtio_blk_handle_flush(VirtIOBlockReq *req, MultiReqBuffer *mrb);
+ void virtio_blk_req_complete(VirtIOBlockReq *req, unsigned char status);
+ 
+ #endif

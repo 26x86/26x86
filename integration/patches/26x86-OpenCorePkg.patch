@@ -1,0 +1,3760 @@
+diff --git a/Application/OpenCore/OpenCore.c b/Application/OpenCore/OpenCore.c
+index da2fa1b..5a91283 100644
+--- a/Application/OpenCore/OpenCore.c
++++ b/Application/OpenCore/OpenCore.c
+@@ -35,6 +35,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+ #include <Library/OcCpuLib.h>
+ #include <Library/OcDevicePathLib.h>
+ #include <Library/OcStorageLib.h>
++#include <Library/OcSandboxBoot.h>
+ #include <Library/OcVariableLib.h>
+ #include <Library/PrintLib.h>
+ #include <Library/UefiBootServicesTableLib.h>
+@@ -112,7 +113,7 @@ OcStartImage (
+ }
+ 
+ STATIC
+-VOID
++EFI_STATUS
+ OcMain (
+   IN OC_STORAGE_CONTEXT        *Storage,
+   IN EFI_DEVICE_PATH_PROTOCOL  *LoadPath
+@@ -129,7 +130,14 @@ OcMain (
+              );
+ 
+   if (EFI_ERROR (Status)) {
+-    return;
++    return Status;
++  }
++
++  if (mOpenCoreConfiguration.AppleSiliconSandbox.Enabled) {
++    // Guest configuration must not reach host ACPI, SMBIOS or kernel hooks.
++    Status = OcSandboxBoot (Storage, &mOpenCoreConfiguration);
++    DEBUG ((DEBUG_WARN, "OC: Sandbox engine returned - %r\n", Status));
++    return Status;
+   }
+ 
+   OcCpuScanProcessor (&mOpenCoreCpuInfo);
+@@ -183,6 +191,8 @@ OcMain (
+     mOpenCoreConfiguration.Uefi.Quirks.RequestBootVarRouting,
+     mStorageHandle
+     );
++
++  return EFI_ABORTED;
+ }
+ 
+ STATIC
+@@ -246,7 +256,7 @@ OcBootstrap (
+              );
+ 
+   if (!EFI_ERROR (Status)) {
+-    OcMain (&mOpenCoreStorage, LoadPath);
++    Status = OcMain (&mOpenCoreStorage, LoadPath);
+     OcStorageFree (&mOpenCoreStorage);
+   } else {
+     DEBUG ((DEBUG_ERROR, "OC: Failed to open root FS - %r!\n", Status));
+diff --git a/Docs/Sample.plist b/Docs/Sample.plist
+index 5079c27..75638d0 100644
+--- a/Docs/Sample.plist
++++ b/Docs/Sample.plist
+@@ -283,6 +283,30 @@
+ 			<false/>
+ 		</dict>
+ 	</dict>
++	<key>AppleSiliconSandbox</key>
++	<dict>
++		<key>BootProtocol</key>
++		<string>iBoot</string>
++		<key>Enabled</key>
++		<false/>
++		<key>EnginePath</key>
++		<string>\EFI\26x86\Sandbox.efi</string>
++		<key>Hardware</key>
++		<dict>
++			<key>CPUCount</key>
++			<integer>2</integer>
++			<key>DeviceProperties</key>
++			<dict/>
++			<key>MemorySizeMiB</key>
++			<integer>4096</integer>
++		</dict>
++		<key>IBootPath</key>
++		<string></string>
++		<key>InterruptController</key>
++		<string>AIC</string>
++		<key>TargetMajor</key>
++		<integer>26</integer>
++	</dict>
+ 	<key>Booter</key>
+ 	<dict>
+ 		<key>MmioWhitelist</key>
+@@ -1572,6 +1596,17 @@
+ 		<key>UseRawUuidEncoding</key>
+ 		<false/>
+ 	</dict>
++	<key>SandboxSMBIOS</key>
++	<dict>
++		<key>BoardProduct</key>
++		<string></string>
++		<key>SystemProductName</key>
++		<string></string>
++		<key>SystemSerialNumber</key>
++		<string></string>
++		<key>SystemUUID</key>
++		<string></string>
++	</dict>
+ 	<key>UEFI</key>
+ 	<dict>
+ 		<key>APFS</key>
+diff --git a/Docs/SampleCustom.plist b/Docs/SampleCustom.plist
+index 09f3a3a..034cbda 100644
+--- a/Docs/SampleCustom.plist
++++ b/Docs/SampleCustom.plist
+@@ -283,6 +283,30 @@
+ 			<false/>
+ 		</dict>
+ 	</dict>
++	<key>AppleSiliconSandbox</key>
++	<dict>
++		<key>BootProtocol</key>
++		<string>iBoot</string>
++		<key>Enabled</key>
++		<false/>
++		<key>EnginePath</key>
++		<string>\EFI\26x86\Sandbox.efi</string>
++		<key>Hardware</key>
++		<dict>
++			<key>CPUCount</key>
++			<integer>2</integer>
++			<key>DeviceProperties</key>
++			<dict/>
++			<key>MemorySizeMiB</key>
++			<integer>4096</integer>
++		</dict>
++		<key>IBootPath</key>
++		<string></string>
++		<key>InterruptController</key>
++		<string>AIC</string>
++		<key>TargetMajor</key>
++		<integer>26</integer>
++	</dict>
+ 	<key>Booter</key>
+ 	<dict>
+ 		<key>MmioWhitelist</key>
+@@ -1940,6 +1964,17 @@
+ 		<key>UseRawUuidEncoding</key>
+ 		<false/>
+ 	</dict>
++	<key>SandboxSMBIOS</key>
++	<dict>
++		<key>BoardProduct</key>
++		<string></string>
++		<key>SystemProductName</key>
++		<string></string>
++		<key>SystemSerialNumber</key>
++		<string></string>
++		<key>SystemUUID</key>
++		<string></string>
++	</dict>
+ 	<key>UEFI</key>
+ 	<dict>
+ 		<key>APFS</key>
+diff --git a/Docs/Sandbox.md b/Docs/Sandbox.md
+new file mode 100644
+index 0000000..64e60ad
+--- /dev/null
++++ b/Docs/Sandbox.md
+@@ -0,0 +1,176 @@
++# Native Apple Silicon Sandbox integration
++
++This change belongs to the EFI loader and configuration layers. It selects a
++compiled x86-64 EFI engine with `LoadImage` and `StartImage`; it does not invoke
++Linux or QEMU as its runtime. AIC and iBoot are invariants of handoff version 1.
++GIC, an ARM UEFI guest, or a different boot protocol are rejected.
++
++## Configuration
++
++`Docs/Sample.plist` and `Docs/SampleCustom.plist` contain disabled defaults. The
++two new root dictionaries are optional for existing OpenCore configurations.
++An exported fragment must be merged into a complete OpenCore configuration.
++
++`AppleSiliconSandbox` has these fields:
++
++- `Enabled`: boolean, default `false`.
++- `TargetMajor`: integer, `26` or `27`, default `26`. This is a requested target,
++  not a statement that either macOS version has booted in the native engine.
++- `InterruptController`: string, exactly `AIC`.
++- `BootProtocol`: string, exactly `iBoot`.
++- `EnginePath`: absolute EFI path, default `\EFI\26x86\Sandbox.efi`.
++- `IBootPath`: absolute EFI path to the user's original iBoot input; empty by
++  default and required when enabled. The loader opens it only in read mode,
++  rejects an empty file or directory, and leaves payload verification to the
++  engine. File availability is not Apple signature verification.
++- `Hardware.MemorySizeMiB`: integer, `4096..1048576`, default `4096`.
++- `Hardware.CPUCount`: integer, `1..64`, default `2`.
++- `Hardware.DeviceProperties`: device-key dictionaries containing property-key
++  scalar values (`data`, UTF-8 `string`, unsigned 64-bit `integer`, `boolean`).
++  This is guest device configuration, separate from host `DeviceProperties`.
++
++`SandboxSMBIOS` contains `SystemProductName`, `SystemSerialNumber`, `SystemUUID`,
++and `BoardProduct`. Defaults are empty; enabled mode requires all four and a
++canonical `8-4-4-4-12` hexadecimal UUID. No Apple identity is invented. These
++fields describe the requested guest identity; they neither attest the host nor
++cause the loader to rewrite host SMBIOS tables.
++
++Paths are printable ASCII, at most 191 characters, on the **same EFI volume as
++OpenCore**. Relative paths, empty path components, slash/colon, and `.`/`..`
++components are rejected. Identity strings and device/property keys are printable
++ASCII, at most 255 characters. Maps have at most 4096 entries each; each data
++value is at most 1 MiB. Each serialized XML document, including its trailing NUL,
++is at most 1 MiB. The runtime serializer rejects an oversized combined document.
++
++DeviceProperties is serialized to `<data>` using OpenCore's usual representation:
++strings include a trailing NUL; booleans occupy one byte; integers through
++`UINT32_MAX` occupy four little-endian bytes, and larger unsigned integers occupy
++eight. Sandbox-specific parsing prevents the original generic OC 32-bit integer
++truncation and decodes XML's five named entities before serialization. Numeric
++or unknown entity references in manually authored Sandbox XML are rejected.
++As in OpenCore maps, keys beginning with `#` are comments.
++
++## Selection and ABI
++
++After reading the config and applying existing vault requirements, enabled mode
++enters `OcSandboxBoot` before the host NVRAM, UEFI quirks, ACPI, PlatformInfo,
++DeviceProperties, kernel hooks, or normal boot picker. Early configured drivers,
++Shim retain, and forced NVRAM initialization are also skipped in this mode.
++Logging/serial setup and configured firmware watchdog behavior remain available.
++All parse errors now stop firmware startup, including malformed `Enabled`; they
++cannot fall through to legacy boot using a default false value.
++
++The loader uses the firmware's normal `LoadImage` path, so it does not install an
++image-authentication bypass. This does not claim that external engine files are
++covered by an OpenCore vault rooted under a different path; the configured vault
++and firmware image authentication remain their existing, distinct mechanisms.
++
++`Include/Acidanthera/Library/OcSandboxBoot.h` defines a 64-byte, version 1 ABI,
++matching `sandbox/efi/handoff.h` in 26x86. The wire fields, in order, are:
++
++1. `UINT64 Magic = 0x3149424146583632` at offset 0.
++2. `UINT32 Version = 1`, `UINT32 Size = 64` at offsets 8 and 12.
++3. `UINT64 Flags = 0`, `UINT64 MemoryBytes` at offsets 16 and 24.
++4. `UINT32 CpuCount`, `UINT32 TargetMajor` at offsets 32 and 36.
++5. `UINT64 IBootPath`, `SmbiosXml`, `DevicePropertiesXml` at offsets 40, 48, 56.
++
++`EFI_LOADED_IMAGE_PROTOCOL.LoadOptions` points to this record, and
++`LoadOptionsSize` is exactly 64. The first pointer is a NUL-terminated CHAR16
++absolute iBoot path; the other pointers are NUL-terminated UTF-8 plist documents.
++OpenCore owns the record and pointed-to storage through `StartImage` return.
++It requires an EFI application (`EfiLoaderCode`). Firmware unloads an application
++when its entry point returns. The loader then frees allocated storage without
++dereferencing the old loaded-image protocol or unloading that image again.
++Load failures before `StartImage` still clean up the created image. Return-status
++logs occur after cleanup because OpenCore's configured `HaltLevel` may stop
++inside the logger. X86-32 handoff is rejected.
++
++The API contract is based on the UEFI specification's
++[Loaded Image protocol](https://uefi.org/specs/UEFI/2.9_A/09_Protocols_EFI_Loaded_Image.html)
++and [image services](https://uefi.org/specs/UEFI/2.10_A/07_Services_Boot_Services.html).
++
++The current engine returns **EFI_UNSUPPORTED** for the configured iBoot/AIC
++platform runtime. CPU subset/JIT or AIC model tests are separate acceptance
++results. An image load or return does not establish original iBoot execution,
++macOS boot, a supported device tree, display acceleration, or native Mac support.
++Failure stays in the selected mode; it does not select a different OS silently.
++
++## Reproduce the build and parser tests
++
++Validated source baselines:
++
++- 26x86 OpenCore fork: `6a65d9bd39bbb5d843b1f2d42b0f16e8d3a44e0e`, plus this diff.
++- [Acidanthera audk](https://github.com/acidanthera/audk):
++  `0672a009e9ca85753d240324d761341adf0291b3`, recursively pinned submodules.
++- Ubuntu 24.04, GCC 13, NASM, Python 3; X64 DEBUG GCC EFI build.
++
++Initialize audk submodules and build its BaseTools. **audk itself includes an
++OpenCorePkg submodule**: do not build that unchanged package accidentally. Use a
++separate workspace with the modified package at its `OpenCorePkg` path:
++
++```sh
++set -eu
++git -C "$AUDK" submodule update --init
++make -C "$AUDK/BaseTools" -j8
++mkdir -p "$NATIVE_WORKSPACE"
++ln -s "$MODIFIED_OPENCORE" "$NATIVE_WORKSPACE/OpenCorePkg"
++export WORKSPACE="$NATIVE_WORKSPACE"
++export PACKAGES_PATH="$AUDK"
++export EDK_TOOLS_PATH="$AUDK/BaseTools"
++cd "$WORKSPACE"
++. "$AUDK/edksetup.sh" BaseTools
++test "$(readlink -f OpenCorePkg)" = "$(readlink -f "$MODIFIED_OPENCORE")"
++build -p OpenCorePkg/OpenCorePkg.dsc \
++  -m OpenCorePkg/Application/OpenCore/OpenCore.inf -a X64 -b DEBUG -t GCC -n 8
++build -p OpenCorePkg/OpenCorePkg.dsc \
++  -m OpenCorePkg/Application/Bootstrap/Bootstrap.inf -a X64 -b DEBUG -t GCC -n 8
++strings Build/OpenCorePkg/DEBUG_GCC/X64/OpenCore.efi | grep 'AppleSiliconSandbox'
++strings Build/OpenCorePkg/DEBUG_GCC/X64/OpenCore.efi | grep 'OCSB: StartImage ABI'
++```
++
++The EFI outputs are `Build/OpenCorePkg/DEBUG_GCC/X64/OpenCore.efi` and
++`Bootstrap.efi`. Place Bootstrap at `EFI/BOOT/BOOTX64.EFI`, OpenCore at
++`EFI/OC/OpenCore.efi`, and the full config at `EFI/OC/config.plist`. Copying
++OpenCore itself to the fallback path instead requires its config alongside that
++copy. In the modified
++OpenCore checkout, set `AUDK` to the absolute audk path and run:
++
++```sh
++make -C Utilities/ocvalidate -j8 UDK_PATH="$AUDK" WERROR=1
++make -C Utilities/SandboxConfigTest -j8 UDK_PATH="$AUDK" WERROR=1
++python3 Tests/SandboxConfig.py
++python3 Library/OcConfigurationLib/CheckSchema.py \
++  Library/OcConfigurationLib/OcConfigurationLib.c
++Utilities/ocvalidate/ocvalidate Tests/SandboxHandoff.plist
++```
++
++The parser regression executes actual C code, checks the disabled and legacy
++defaults, exercises all supported scalar representations and XML/base64
++round-trips, and rejects unsupported protocols, wrapped integers, missing
++identity/path, invalid resource bounds, and oversized serialized XML.
++`Tests/SandboxHandoff.plist` is a **synthetic test configuration**, with explicitly
++synthetic identity and a `.fixture` input. It is not an Apple boot profile. It is
++used only to check the OpenCore-to-engine handoff and expected unsupported status
++under an x86 EFI firmware test environment.
++
++`Tests/NativeSourceAudit.py` verifies the resolved native package path against
++this checkout, hashes every C/header/assembly/build-description source (including
++untracked new files), requires compiler-log entries for the four critical C
++files, and checks four Sandbox markers in the EFI. Run it before a runtime test:
++
++```sh
++python3 OpenCorePkg/Tests/NativeSourceAudit.py \
++  --native-package "$WORKSPACE/OpenCorePkg" \
++  --build-log /path/to/full-native-build.log \
++  --binary Build/OpenCorePkg/DEBUG_GCC/X64/OpenCore.efi \
++  --output /path/to/native-source-audit.json
++```
++
++The initial `4aa8f56d3b3323cd517d26d84b0127ab5a36b3f14bca241e8d9b8c2de235d07e`
++candidate mistakenly compiled audk's unchanged OpenCore 1.0.7 submodule. Its
++runtime reported missing Sandbox schema. That binary and failure evidence are
++retained for provenance, and are not Sandbox build or boot evidence. The
++corrected independent workspace build resolves the modified package explicitly.
++
++Original upstream license notices are retained. New native integration files use
++BSD-3-Clause; this does not relicense other components.
+diff --git a/Include/Acidanthera/Library/OcConfigurationLib.h b/Include/Acidanthera/Library/OcConfigurationLib.h
+index 699dc8e..05914d2 100644
+--- a/Include/Acidanthera/Library/OcConfigurationLib.h
++++ b/Include/Acidanthera/Library/OcConfigurationLib.h
+@@ -795,11 +795,37 @@ OC_DECLARE (OC_UEFI_RSVD_ARRAY)
+   _(OC_UEFI_UNLOAD_ARRAY        , Unload            ,     , OC_CONSTR2 (OC_UEFI_UNLOAD_ARRAY, _, __)       , OC_DESTR (OC_UEFI_UNLOAD_ARRAY))
+ OC_DECLARE (OC_UEFI_CONFIG)
+ 
++/// Guest-only configuration. These fields never alter host PlatformInfo or ACPI.
++#define OC_SANDBOX_HARDWARE_FIELDS(_, __) \
++  _(UINT32               , MemorySizeMiB    , , 4096, ()) \
++  _(UINT32               , CPUCount         , , 2, ()) \
++  _(OC_DEV_PROP_ADD_MAP  , DeviceProperties , , OC_CONSTR3 (OC_DEV_PROP_ADD_MAP, _, __), OC_DESTR (OC_DEV_PROP_ADD_MAP))
++OC_DECLARE (OC_SANDBOX_HARDWARE)
++
++#define OC_SANDBOX_CONFIG_FIELDS(_, __) \
++  _(BOOLEAN              , Enabled             , , FALSE, ()) \
++  _(UINT32               , TargetMajor         , , 26, ()) \
++  _(OC_STRING            , InterruptController , , OC_STRING_CONSTR ("AIC", _, __), OC_DESTR (OC_STRING)) \
++  _(OC_STRING            , BootProtocol        , , OC_STRING_CONSTR ("iBoot", _, __), OC_DESTR (OC_STRING)) \
++  _(OC_STRING            , EnginePath          , , OC_STRING_CONSTR ("\\EFI\\26x86\\Sandbox.efi", _, __), OC_DESTR (OC_STRING)) \
++  _(OC_STRING            , IBootPath           , , OC_STRING_CONSTR ("", _, __), OC_DESTR (OC_STRING)) \
++  _(OC_SANDBOX_HARDWARE  , Hardware            , , OC_CONSTR2 (OC_SANDBOX_HARDWARE, _, __), OC_DESTR (OC_SANDBOX_HARDWARE))
++OC_DECLARE (OC_SANDBOX_CONFIG)
++
++#define OC_SANDBOX_SMBIOS_FIELDS(_, __) \
++  _(OC_STRING , SystemProductName  , , OC_STRING_CONSTR ("", _, __), OC_DESTR (OC_STRING)) \
++  _(OC_STRING , SystemSerialNumber , , OC_STRING_CONSTR ("", _, __), OC_DESTR (OC_STRING)) \
++  _(OC_STRING , SystemUUID         , , OC_STRING_CONSTR ("", _, __), OC_DESTR (OC_STRING)) \
++  _(OC_STRING , BoardProduct       , , OC_STRING_CONSTR ("", _, __), OC_DESTR (OC_STRING))
++OC_DECLARE (OC_SANDBOX_SMBIOS)
++
+ /**
+   Root configuration
+ **/
+ 
+ #define OC_GLOBAL_CONFIG_FIELDS(_, __) \
++  _(OC_SANDBOX_CONFIG           , AppleSiliconSandbox,    , OC_CONSTR1 (OC_SANDBOX_CONFIG, _, __)  , OC_DESTR (OC_SANDBOX_CONFIG)) \
++  _(OC_SANDBOX_SMBIOS           , SandboxSMBIOS     ,     , OC_CONSTR1 (OC_SANDBOX_SMBIOS, _, __)  , OC_DESTR (OC_SANDBOX_SMBIOS)) \
+   _(OC_ACPI_CONFIG              , Acpi              ,     , OC_CONSTR1 (OC_ACPI_CONFIG, _, __)      , OC_DESTR (OC_ACPI_CONFIG)) \
+   _(OC_BOOTER_CONFIG            , Booter            ,     , OC_CONSTR1 (OC_BOOTER_CONFIG, _, __)    , OC_DESTR (OC_BOOTER_CONFIG)) \
+   _(OC_DEV_PROP_CONFIG          , DeviceProperties  ,     , OC_CONSTR1 (OC_DEV_PROP_CONFIG, _, __)  , OC_DESTR (OC_DEV_PROP_CONFIG)) \
+@@ -838,4 +864,20 @@ OcConfigurationFree (
+   IN OUT OC_GLOBAL_CONFIG  *Config
+   );
+ 
++// Both the firmware loader and ocvalidate use the same semantic validation.
++EFI_STATUS
++OcSandboxConfigValidate (
++  IN  OC_GLOBAL_CONFIG  *Config,
++  OUT CONST CHAR8       **Reason
++  );
++
++// Allocate two NUL-terminated plist documents, at most 1 MiB each including NUL.
++// DeviceProperties scalar values use the standard OpenCore byte representation.
++EFI_STATUS
++OcSandboxConfigSerialize (
++  IN  OC_GLOBAL_CONFIG  *Config,
++  OUT CHAR8             **SmbiosXml,
++  OUT CHAR8             **DevicePropertiesXml
++  );
++
+ #endif // OC_CONFIGURATION_LIB_H
+diff --git a/Include/Acidanthera/Library/OcSandboxBoot.h b/Include/Acidanthera/Library/OcSandboxBoot.h
+new file mode 100644
+index 0000000..9402da8
+--- /dev/null
++++ b/Include/Acidanthera/Library/OcSandboxBoot.h
+@@ -0,0 +1,45 @@
++/** @file
++  26x86 native Sandbox handoff. SPDX-License-Identifier: BSD-3-Clause
++**/
++#ifndef OC_SANDBOX_BOOT_H
++#define OC_SANDBOX_BOOT_H
++
++#include <Uefi.h>
++#include <Library/OcConfigurationLib.h>
++#include <Library/OcStorageLib.h>
++
++#define OC_SANDBOX_HANDOFF_MAGIC    0x3149424146583632ULL
++#define OC_SANDBOX_HANDOFF_VERSION  1U
++#define OC_SANDBOX_XML_MAX          1048576U
++#define OC_SANDBOX_PATH_MAX         192U
++
++// Wire-compatible with sandbox/efi/handoff.h. Pointers remain valid until
++// StartImage returns. Version 1 requires AIC and iBoot, with no alternative.
++typedef struct {
++  UINT64  Magic;
++  UINT32  Version;
++  UINT32  Size;
++  UINT64  Flags;
++  UINT64  MemoryBytes;
++  UINT32  CpuCount;
++  UINT32  TargetMajor;
++  UINT64  IBootPath;
++  UINT64  SmbiosXml;
++  UINT64  DevicePropertiesXml;
++} OC_SANDBOX_HANDOFF;
++
++STATIC_ASSERT (sizeof (OC_SANDBOX_HANDOFF) == 64, "Sandbox ABI size");
++STATIC_ASSERT (OFFSET_OF (OC_SANDBOX_HANDOFF, Flags) == 16, "Sandbox flags offset");
++STATIC_ASSERT (OFFSET_OF (OC_SANDBOX_HANDOFF, MemoryBytes) == 24, "Sandbox memory offset");
++STATIC_ASSERT (OFFSET_OF (OC_SANDBOX_HANDOFF, CpuCount) == 32, "Sandbox CPU offset");
++STATIC_ASSERT (OFFSET_OF (OC_SANDBOX_HANDOFF, IBootPath) == 40, "Sandbox path offset");
++STATIC_ASSERT (OFFSET_OF (OC_SANDBOX_HANDOFF, SmbiosXml) == 48, "Sandbox SMBIOS offset");
++STATIC_ASSERT (OFFSET_OF (OC_SANDBOX_HANDOFF, DevicePropertiesXml) == 56, "Sandbox DevProp offset");
++
++EFI_STATUS
++OcSandboxBoot (
++  IN OC_STORAGE_CONTEXT  *Storage,
++  IN OC_GLOBAL_CONFIG    *Config
++  );
++
++#endif
+diff --git a/Library/OcConfigurationLib/OcConfigurationLib.c b/Library/OcConfigurationLib/OcConfigurationLib.c
+index bd3c199..b55c208 100644
+--- a/Library/OcConfigurationLib/OcConfigurationLib.c
++++ b/Library/OcConfigurationLib/OcConfigurationLib.c
+@@ -13,6 +13,7 @@
+ **/
+ 
+ #include <Library/OcConfigurationLib.h>
++#include "SandboxConfig.h"
+ 
+ OC_STRUCTORS (OC_ACPI_ADD_ENTRY, ())
+ OC_ARRAY_STRUCTORS (OC_ACPI_ADD_ARRAY)
+@@ -87,6 +88,10 @@ OC_ARRAY_STRUCTORS (OC_UEFI_RSVD_ARRAY)
+ OC_STRUCTORS (OC_UEFI_QUIRKS, ())
+ OC_STRUCTORS (OC_UEFI_CONFIG, ())
+ 
++OC_STRUCTORS (OC_SANDBOX_HARDWARE, ())
++OC_STRUCTORS (OC_SANDBOX_CONFIG, ())
++OC_STRUCTORS (OC_SANDBOX_SMBIOS, ())
++
+ OC_STRUCTORS (OC_GLOBAL_CONFIG, ())
+ 
+ //
+@@ -879,16 +884,55 @@ OC_SCHEMA
+ // Root configuration
+ //
+ 
++STATIC
++OC_SCHEMA
++  mSandboxPropertySchema = {NULL, PLIST_NODE_TYPE_ANY, FALSE, OcSandboxParseBlob, {.Blob = {0, OC_SCHEMA_BLOB_MDATA}}};
++
++STATIC
++OC_SCHEMA
++  mSandboxDeviceSchema = SB_MAP (NULL, 0, &mSandboxPropertySchema);
++
++STATIC
++OC_SCHEMA
++  mSandboxHardwareSchema[] = {
++  SB_INTEGER ("CPUCount", AppleSiliconSandbox.Hardware.CPUCount),
++  SB_MAP ("DeviceProperties", OFFSET_OF (OC_GLOBAL_CONFIG, AppleSiliconSandbox.Hardware.DeviceProperties), &mSandboxDeviceSchema),
++  SB_INTEGER ("MemorySizeMiB", AppleSiliconSandbox.Hardware.MemorySizeMiB),
++};
++
++STATIC
++OC_SCHEMA
++  mSandboxConfigurationSchema[] = {
++  SB_STRING ("BootProtocol", AppleSiliconSandbox.BootProtocol),
++  OC_SCHEMA_BOOLEAN_IN ("Enabled", OC_GLOBAL_CONFIG, AppleSiliconSandbox.Enabled),
++  SB_STRING ("EnginePath", AppleSiliconSandbox.EnginePath),
++  OC_SCHEMA_DICT ("Hardware", mSandboxHardwareSchema),
++  SB_STRING ("IBootPath", AppleSiliconSandbox.IBootPath),
++  SB_STRING ("InterruptController", AppleSiliconSandbox.InterruptController),
++  SB_INTEGER ("TargetMajor", AppleSiliconSandbox.TargetMajor),
++};
++
++STATIC
++OC_SCHEMA
++  mSandboxSmbiosSchema[] = {
++  SB_STRING ("BoardProduct", SandboxSMBIOS.BoardProduct),
++  SB_STRING ("SystemProductName", SandboxSMBIOS.SystemProductName),
++  SB_STRING ("SystemSerialNumber", SandboxSMBIOS.SystemSerialNumber),
++  SB_STRING ("SystemUUID", SandboxSMBIOS.SystemUUID),
++};
++
+ STATIC
+ OC_SCHEMA
+   mRootConfigurationNodes[] = {
+   OC_SCHEMA_DICT ("ACPI",             mAcpiConfigurationSchema),
++  OC_SCHEMA_DICT_OPT ("AppleSiliconSandbox", mSandboxConfigurationSchema),
+   OC_SCHEMA_DICT ("Booter",           mBooterConfigurationSchema),
+   OC_SCHEMA_DICT ("DeviceProperties", mDevicePropertiesSchema),
+   OC_SCHEMA_DICT ("Kernel",           mKernelConfigurationSchema),
+   OC_SCHEMA_DICT ("Misc",             mMiscConfigurationSchema),
+   OC_SCHEMA_DICT ("NVRAM",            mNvramConfigurationSchema),
+   OC_SCHEMA_DICT ("PlatformInfo",     mPlatformConfigurationSchema),
++  OC_SCHEMA_DICT_OPT ("SandboxSMBIOS", mSandboxSmbiosSchema),
+   OC_SCHEMA_DICT ("UEFI",             mUefiConfigurationSchema)
+ };
+ 
+diff --git a/Library/OcConfigurationLib/OcConfigurationLib.inf b/Library/OcConfigurationLib/OcConfigurationLib.inf
+index 9d24be4..3040a86 100755
+--- a/Library/OcConfigurationLib/OcConfigurationLib.inf
++++ b/Library/OcConfigurationLib/OcConfigurationLib.inf
+@@ -30,6 +30,7 @@
+ 
+ [Sources]
+   OcConfigurationLib.c
++  SandboxConfig.c
+ 
+ [Packages]
+   MdePkg/MdePkg.dec
+@@ -37,6 +38,8 @@
+ 
+ [LibraryClasses]
+   BaseLib
++  BaseMemoryLib
++  MemoryAllocationLib
+   DebugLib
+   OcSerializeLib
+   OcTemplateLib
+diff --git a/Library/OcConfigurationLib/SandboxConfig.c b/Library/OcConfigurationLib/SandboxConfig.c
+new file mode 100644
+index 0000000..de83622
+--- /dev/null
++++ b/Library/OcConfigurationLib/SandboxConfig.c
+@@ -0,0 +1,590 @@
++/** @file
++  Guest-only Sandbox validation and bounded serialization.
++  SPDX-License-Identifier: BSD-3-Clause
++**/
++#include <Library/OcSandboxBoot.h>
++#include <Library/BaseLib.h>
++#include <Library/BaseMemoryLib.h>
++#include <Library/MemoryAllocationLib.h>
++#include "SandboxConfig.h"
++
++STATIC
++BOOLEAN
++UnsignedDecimal (
++  IN  CONST CHAR8  *Text,
++  OUT UINT64       *Value
++  )
++{
++  UINT64  Number;
++  UINT32  Digit;
++
++  if ((Text == NULL) || (*Text == '\0')) {
++    return FALSE;
++  }
++
++  Number = 0;
++  while (*Text != '\0') {
++    if ((*Text < '0') || (*Text > '9')) {
++      return FALSE;
++    }
++
++    Digit = (UINT32)(*Text++ - '0');
++    if (Number > DivU64x32 (MAX_UINT64 - Digit, 10)) {
++      return FALSE;
++    }
++
++    Number = MultU64x32 (Number, 10) + Digit;
++  }
++
++  *Value = Number;
++  return TRUE;
++}
++
++// OpenCore's generic strings retain XML entities. Decode only Sandbox values;
++// never reinterpret a <data> payload as text. Unsupported entities fail closed.
++STATIC
++CONST CHAR8 *
++DecodeText (
++  IN CONST CHAR8  *Text
++  )
++{
++  CONST CHAR8  *Cursor;
++
++  if (Text == NULL) {
++    Text = "";
++  }
++
++  for (Cursor = Text; *Cursor != '\0'; ++Cursor) {
++    if ((*Cursor == '&')
++      && (AsciiStrnCmp (Cursor, "&amp;", 5) != 0)
++      && (AsciiStrnCmp (Cursor, "&lt;", 4) != 0)
++      && (AsciiStrnCmp (Cursor, "&gt;", 4) != 0)
++      && (AsciiStrnCmp (Cursor, "&quot;", 6) != 0)
++      && (AsciiStrnCmp (Cursor, "&apos;", 6) != 0))
++    {
++      return NULL;
++    }
++  }
++
++  return XmlUnescapeString (Text);
++}
++
++VOID
++OcSandboxParseBlob (
++  VOID            *Serialized,
++  XML_NODE        *Node,
++  OC_SCHEMA_INFO  *Info,
++  CONST CHAR8     *Context,
++  UINT32          *ErrorCount
++  )
++{
++  CONST CHAR8  *Decoded;
++  VOID         *Field;
++  VOID         *Buffer;
++  UINT32       *BlobSize;
++  UINT32       Size;
++  UINT64       Number;
++
++  Field = OC_SCHEMA_FIELD (Serialized, VOID, Info->Blob.Field);
++  if (PlistNodeCast (Node, PLIST_NODE_TYPE_STRING) != NULL) {
++    Decoded = DecodeText (XmlNodeContent (Node));
++    if (Decoded == NULL) {
++      goto Failure;
++    }
++
++    Size = (UINT32)AsciiStrSize (Decoded);
++    Buffer = OcBlobAllocate (Field, Size, &BlobSize);
++    if (Buffer != NULL) {
++      CopyMem (Buffer, Decoded, Size);
++      *BlobSize = Size;
++    }
++
++    FreePool ((VOID *)Decoded);
++    if (Buffer == NULL) {
++      goto Failure;
++    }
++
++    return;
++  }
++
++  if ((Info->Blob.Type == OC_SCHEMA_BLOB_MDATA) && (PlistNodeCast (Node, PLIST_NODE_TYPE_INTEGER) != NULL)) {
++    if (!UnsignedDecimal (XmlNodeContent (Node), &Number)) {
++      goto Failure;
++    }
++
++    Size = Number <= MAX_UINT32 ? sizeof (UINT32) : sizeof (UINT64);
++    Buffer = OcBlobAllocate (Field, Size, &BlobSize);
++    if (Buffer == NULL) {
++      goto Failure;
++    }
++
++    CopyMem (Buffer, &Number, Size);
++    *BlobSize = Size;
++    return;
++  }
++
++  ParseSerializedBlob (Serialized, Node, Info, Context, ErrorCount);
++  return;
++
++Failure:
++  if (ErrorCount != NULL) {
++    ++*ErrorCount;
++  }
++}
++
++VOID
++OcSandboxParseInteger (
++  VOID            *Serialized,
++  XML_NODE        *Node,
++  OC_SCHEMA_INFO  *Info,
++  CONST CHAR8     *Context,
++  UINT32          *ErrorCount
++  )
++{
++  UINT64  Number;
++
++  if ((PlistNodeCast (Node, PLIST_NODE_TYPE_INTEGER) == NULL)
++    || !UnsignedDecimal (XmlNodeContent (Node), &Number) || (Number > MAX_UINT32))
++  {
++    if (ErrorCount != NULL) {
++      ++*ErrorCount;
++    }
++
++    return;
++  }
++
++  *OC_SCHEMA_FIELD (Serialized, UINT32, Info->Value.Field) = (UINT32)Number;
++}
++
++VOID
++OcSandboxParseMap (
++  VOID            *Serialized,
++  XML_NODE        *Node,
++  OC_SCHEMA_INFO  *Info,
++  CONST CHAR8     *Context,
++  UINT32          *ErrorCount
++  )
++{
++  OC_ASSOC     *Map;
++  UINT32       Index;
++  UINT32       Other;
++  UINT32       Size;
++  UINT32       *BlobSize;
++  VOID         *Buffer;
++  CONST CHAR8  *Decoded;
++
++  if (PlistDictChildren (Node) > 4096) {
++    if (ErrorCount != NULL) {
++      ++*ErrorCount;
++    }
++
++    return;
++  }
++
++  ParseSerializedMap (Serialized, Node, Info, Context, ErrorCount);
++  Map = OC_SCHEMA_FIELD (Serialized, OC_ASSOC, Info->List.Field);
++  for (Index = 0; Index < Map->Count; ++Index) {
++    Decoded = DecodeText (OC_BLOB_GET (Map->Keys[Index]));
++    if (Decoded == NULL) {
++      if (ErrorCount != NULL) {
++        ++*ErrorCount;
++      }
++
++      continue;
++    }
++
++    Size = (UINT32)AsciiStrSize (Decoded);
++    Buffer = OcBlobAllocate (Map->Keys[Index], Size, &BlobSize);
++    if (Buffer != NULL) {
++      CopyMem (Buffer, Decoded, Size);
++      *BlobSize = Size;
++    } else if (ErrorCount != NULL) {
++      ++*ErrorCount;
++    }
++
++    FreePool ((VOID *)Decoded);
++    for (Other = 0; Other < Index; ++Other) {
++      if ((AsciiStrCmp (OC_BLOB_GET (Map->Keys[Index]), OC_BLOB_GET (Map->Keys[Other])) == 0) && (ErrorCount != NULL)) {
++        ++*ErrorCount;
++      }
++    }
++  }
++}
++
++STATIC
++BOOLEAN
++SafeText (
++  IN OC_STRING  *String,
++  IN UINTN      Maximum,
++  IN BOOLEAN    Required
++  )
++{
++  CONST CHAR8  *Text;
++  UINTN        Length;
++  UINTN        Index;
++
++  Text   = OC_BLOB_GET (String);
++  Length = AsciiStrLen (Text);
++  if ((Length > Maximum) || (Required && (Length == 0))) {
++    return FALSE;
++  }
++
++  for (Index = 0; Index < Length; ++Index) {
++    if (((UINT8)Text[Index] < 0x20) || ((UINT8)Text[Index] > 0x7E)) {
++      return FALSE;
++    }
++  }
++
++  return TRUE;
++}
++
++STATIC
++BOOLEAN
++SafePath (
++  IN OC_STRING  *String,
++  IN BOOLEAN    Required
++  )
++{
++  CONST CHAR8  *Text;
++  CONST CHAR8  *Part;
++  UINTN        Index;
++
++  if (!SafeText (String, OC_SANDBOX_PATH_MAX - 1, Required)) {
++    return FALSE;
++  }
++
++  Text = OC_BLOB_GET (String);
++  if (Text[0] == '\0') {
++    return !Required;
++  }
++
++  if ((Text[0] != '\\') || (Text[1] == '\0')) {
++    return FALSE;
++  }
++
++  Part = Text + 1;
++  for (Index = 1; ; ++Index) {
++    if ((Text[Index] == '/') || (Text[Index] == ':')) {
++      return FALSE;
++    }
++
++    if ((Text[Index] == '\\') || (Text[Index] == '\0')) {
++      if ((Text + Index == Part)
++        || ((Text + Index - Part == 1) && (Part[0] == '.'))
++        || ((Text + Index - Part == 2) && (Part[0] == '.') && (Part[1] == '.')))
++      {
++        return FALSE;
++      }
++
++      Part = Text + Index + 1;
++    }
++
++    if (Text[Index] == '\0') {
++      break;
++    }
++  }
++
++  return TRUE;
++}
++
++STATIC
++BOOLEAN
++ValidUuid (
++  IN CONST CHAR8  *Text
++  )
++{
++  UINTN  Index;
++  CHAR8  Ch;
++
++  if (AsciiStrLen (Text) != 36) {
++    return FALSE;
++  }
++
++  for (Index = 0; Index < 36; ++Index) {
++    Ch = Text[Index];
++    if ((Index == 8) || (Index == 13) || (Index == 18) || (Index == 23)) {
++      if (Ch != '-') {
++        return FALSE;
++      }
++    } else if (!(((Ch >= '0') && (Ch <= '9')) || ((Ch >= 'a') && (Ch <= 'f')) || ((Ch >= 'A') && (Ch <= 'F')))) {
++      return FALSE;
++    }
++  }
++
++  return TRUE;
++}
++
++EFI_STATUS
++OcSandboxConfigValidate (
++  IN  OC_GLOBAL_CONFIG  *Config,
++  OUT CONST CHAR8       **Reason
++  )
++{
++  OC_SANDBOX_CONFIG    *Sandbox;
++  OC_SANDBOX_SMBIOS    *Smbios;
++  OC_DEV_PROP_ADD_MAP  *Devices;
++  OC_ASSOC            *Properties;
++  UINT32              Device;
++  UINT32              Property;
++
++  if ((Config == NULL) || (Reason == NULL)) {
++    return EFI_INVALID_PARAMETER;
++  }
++
++  Sandbox = &Config->AppleSiliconSandbox;
++  Smbios  = &Config->SandboxSMBIOS;
++  *Reason = "AIC and iBoot are the only supported version 1 protocols";
++  if ((AsciiStrCmp (OC_BLOB_GET (&Sandbox->InterruptController), "AIC") != 0)
++    || (AsciiStrCmp (OC_BLOB_GET (&Sandbox->BootProtocol), "iBoot") != 0))
++  {
++    return EFI_UNSUPPORTED;
++  }
++
++  *Reason = "TargetMajor must be 26 or 27";
++  if ((Sandbox->TargetMajor != 26) && (Sandbox->TargetMajor != 27)) {
++    return EFI_UNSUPPORTED;
++  }
++
++  *Reason = "MemorySizeMiB must be 4096..1048576 and CPUCount must be 1..64";
++  if ((Sandbox->Hardware.MemorySizeMiB < 4096) || (Sandbox->Hardware.MemorySizeMiB > 1048576)
++    || (Sandbox->Hardware.CPUCount < 1) || (Sandbox->Hardware.CPUCount > 64))
++  {
++    return EFI_UNSUPPORTED;
++  }
++
++  *Reason = "EnginePath and enabled IBootPath require canonical absolute ASCII EFI paths, at most 191 characters";
++  if (!SafePath (&Sandbox->EnginePath, TRUE) || !SafePath (&Sandbox->IBootPath, Sandbox->Enabled)) {
++    return EFI_UNSUPPORTED;
++  }
++
++  *Reason = "SandboxSMBIOS strings must be printable ASCII, at most 255 characters, and nonempty when enabled";
++  if (!SafeText (&Smbios->SystemProductName, 255, Sandbox->Enabled)
++    || !SafeText (&Smbios->SystemSerialNumber, 255, Sandbox->Enabled)
++    || !SafeText (&Smbios->BoardProduct, 255, Sandbox->Enabled)
++    || !SafeText (&Smbios->SystemUUID, 36, Sandbox->Enabled))
++  {
++    return EFI_UNSUPPORTED;
++  }
++
++  *Reason = "SandboxSMBIOS SystemUUID must use the canonical 8-4-4-4-12 hexadecimal format";
++  if ((OC_BLOB_GET (&Smbios->SystemUUID)[0] != '\0') && !ValidUuid (OC_BLOB_GET (&Smbios->SystemUUID))) {
++    return EFI_UNSUPPORTED;
++  }
++
++  *Reason = "DeviceProperties requires nonempty ASCII keys (at most 255 characters), at most 4096 entries per map and at most 1 MiB per data value";
++  Devices = &Sandbox->Hardware.DeviceProperties;
++  if (Devices->Count > 4096) {
++    return EFI_UNSUPPORTED;
++  }
++
++  for (Device = 0; Device < Devices->Count; ++Device) {
++    Properties = Devices->Values[Device];
++    if (!SafeText (Devices->Keys[Device], 255, TRUE) || (Properties->Count > 4096)) {
++      return EFI_UNSUPPORTED;
++    }
++
++    for (Property = 0; Property < Properties->Count; ++Property) {
++      if (!SafeText (Properties->Keys[Property], 255, TRUE) || (Properties->Values[Property]->Size > OC_SANDBOX_XML_MAX)) {
++        return EFI_UNSUPPORTED;
++      }
++    }
++  }
++
++  *Reason = "valid";
++  return EFI_SUCCESS;
++}
++
++typedef struct {
++  CHAR8    *Buffer;
++  UINTN    Length;
++  BOOLEAN  Failed;
++} XML_WRITER;
++
++STATIC
++VOID
++Append (
++  IN OUT XML_WRITER  *Writer,
++  IN     CONST CHAR8 *Text
++  )
++{
++  UINTN  Size;
++
++  Size = AsciiStrLen (Text);
++  if (Writer->Failed || (Size >= OC_SANDBOX_XML_MAX - Writer->Length)) {
++    Writer->Failed = TRUE;
++    return;
++  }
++
++  CopyMem (Writer->Buffer + Writer->Length, Text, Size + 1);
++  Writer->Length += Size;
++}
++
++STATIC
++VOID
++Escape (
++  IN OUT XML_WRITER  *Writer,
++  IN     CONST CHAR8 *Text
++  )
++{
++  CHAR8  Single[2];
++
++  Single[1] = '\0';
++  while (*Text != '\0') {
++    switch (*Text) {
++      case '&': Append (Writer, "&amp;"); break;
++      case '<': Append (Writer, "&lt;"); break;
++      case '>': Append (Writer, "&gt;"); break;
++      case '"': Append (Writer, "&quot;"); break;
++      case '\'': Append (Writer, "&apos;"); break;
++      default:
++        Single[0] = *Text;
++        Append (Writer, Single);
++        break;
++    }
++
++    ++Text;
++  }
++}
++
++STATIC
++VOID
++Key (
++  IN OUT XML_WRITER  *Writer,
++  IN     CONST CHAR8 *Text
++  )
++{
++  Append (Writer, "<key>");
++  Escape (Writer, Text);
++  Append (Writer, "</key>");
++}
++
++STATIC
++VOID
++StringPair (
++  IN OUT XML_WRITER  *Writer,
++  IN     CONST CHAR8 *Name,
++  IN     OC_STRING   *Value
++  )
++{
++  Key (Writer, Name);
++  Append (Writer, "<string>");
++  Escape (Writer, OC_BLOB_GET (Value));
++  Append (Writer, "</string>");
++}
++
++STATIC
++VOID
++Data (
++  IN OUT XML_WRITER  *Writer,
++  IN     OC_DATA     *Value
++  )
++{
++  STATIC CONST CHAR8  Alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
++  CONST UINT8        *Bytes;
++  UINT32             Index;
++  UINT32             Bits;
++  UINT32             Remaining;
++  CHAR8              Encoded[5];
++
++  Bytes      = OC_BLOB_GET (Value);
++  Encoded[4] = '\0';
++  Append (Writer, "<data>");
++  for (Index = 0; (Index < Value->Size) && !Writer->Failed; Index += 3) {
++    Remaining = Value->Size - Index;
++    Bits      = ((UINT32)Bytes[Index]) << 16;
++    if (Remaining > 1) {
++      Bits |= ((UINT32)Bytes[Index + 1]) << 8;
++    }
++
++    if (Remaining > 2) {
++      Bits |= Bytes[Index + 2];
++    }
++
++    Encoded[0] = Alphabet[(Bits >> 18) & 63];
++    Encoded[1] = Alphabet[(Bits >> 12) & 63];
++    Encoded[2] = Remaining > 1 ? Alphabet[(Bits >> 6) & 63] : '=';
++    Encoded[3] = Remaining > 2 ? Alphabet[Bits & 63] : '=';
++    Append (Writer, Encoded);
++  }
++
++  Append (Writer, "</data>");
++}
++
++EFI_STATUS
++OcSandboxConfigSerialize (
++  IN  OC_GLOBAL_CONFIG  *Config,
++  OUT CHAR8             **SmbiosXml,
++  OUT CHAR8             **DevicePropertiesXml
++  )
++{
++  EFI_STATUS          Status;
++  CONST CHAR8         *Reason;
++  XML_WRITER          Smbios;
++  XML_WRITER          Devices;
++  OC_DEV_PROP_ADD_MAP  *Map;
++  OC_ASSOC            *Properties;
++  UINT32              Device;
++  UINT32              Property;
++
++  if ((SmbiosXml == NULL) || (DevicePropertiesXml == NULL)) {
++    return EFI_INVALID_PARAMETER;
++  }
++
++  *SmbiosXml           = NULL;
++  *DevicePropertiesXml = NULL;
++  Status = OcSandboxConfigValidate (Config, &Reason);
++  if (EFI_ERROR (Status)) {
++    return Status;
++  }
++
++  ZeroMem (&Smbios, sizeof (Smbios));
++  ZeroMem (&Devices, sizeof (Devices));
++  Smbios.Buffer  = AllocateZeroPool (OC_SANDBOX_XML_MAX);
++  Devices.Buffer = AllocateZeroPool (OC_SANDBOX_XML_MAX);
++  if ((Smbios.Buffer == NULL) || (Devices.Buffer == NULL)) {
++    Status = EFI_OUT_OF_RESOURCES;
++    goto Cleanup;
++  }
++
++  Append (&Smbios, "<?xml version=\"1.0\"?><plist version=\"1.0\"><dict>");
++  StringPair (&Smbios, "BoardProduct", &Config->SandboxSMBIOS.BoardProduct);
++  StringPair (&Smbios, "SystemProductName", &Config->SandboxSMBIOS.SystemProductName);
++  StringPair (&Smbios, "SystemSerialNumber", &Config->SandboxSMBIOS.SystemSerialNumber);
++  StringPair (&Smbios, "SystemUUID", &Config->SandboxSMBIOS.SystemUUID);
++  Append (&Smbios, "</dict></plist>");
++
++  Append (&Devices, "<?xml version=\"1.0\"?><plist version=\"1.0\"><dict>");
++  Map = &Config->AppleSiliconSandbox.Hardware.DeviceProperties;
++  for (Device = 0; (Device < Map->Count) && !Devices.Failed; ++Device) {
++    Key (&Devices, OC_BLOB_GET (Map->Keys[Device]));
++    Append (&Devices, "<dict>");
++    Properties = Map->Values[Device];
++    for (Property = 0; (Property < Properties->Count) && !Devices.Failed; ++Property) {
++      Key (&Devices, OC_BLOB_GET (Properties->Keys[Property]));
++      Data (&Devices, Properties->Values[Property]);
++    }
++
++    Append (&Devices, "</dict>");
++  }
++
++  Append (&Devices, "</dict></plist>");
++  if (Smbios.Failed || Devices.Failed) {
++    Status = EFI_BAD_BUFFER_SIZE;
++    goto Cleanup;
++  }
++
++  *SmbiosXml           = Smbios.Buffer;
++  *DevicePropertiesXml = Devices.Buffer;
++  return EFI_SUCCESS;
++
++Cleanup:
++  if (Smbios.Buffer != NULL) {
++    FreePool (Smbios.Buffer);
++  }
++
++  if (Devices.Buffer != NULL) {
++    FreePool (Devices.Buffer);
++  }
++
++  return Status;
++}
+diff --git a/Library/OcConfigurationLib/SandboxConfig.h b/Library/OcConfigurationLib/SandboxConfig.h
+new file mode 100644
+index 0000000..457366c
+--- /dev/null
++++ b/Library/OcConfigurationLib/SandboxConfig.h
+@@ -0,0 +1,16 @@
++/** SPDX-License-Identifier: BSD-3-Clause */
++#ifndef OC_SANDBOX_CONFIG_INTERNAL_H
++#define OC_SANDBOX_CONFIG_INTERNAL_H
++#include <Library/OcConfigurationLib.h>
++
++VOID OcSandboxParseBlob (VOID *Serialized, XML_NODE *Node, OC_SCHEMA_INFO *Info, CONST CHAR8 *Context, UINT32 *ErrorCount);
++VOID OcSandboxParseInteger (VOID *Serialized, XML_NODE *Node, OC_SCHEMA_INFO *Info, CONST CHAR8 *Context, UINT32 *ErrorCount);
++VOID OcSandboxParseMap (VOID *Serialized, XML_NODE *Node, OC_SCHEMA_INFO *Info, CONST CHAR8 *Context, UINT32 *ErrorCount);
++
++#define SB_STRING(Name, Member) \
++  {Name, PLIST_NODE_TYPE_STRING, FALSE, OcSandboxParseBlob, {.Blob = {OFFSET_OF (OC_GLOBAL_CONFIG, Member), OC_SCHEMA_BLOB_STRING}}}
++#define SB_INTEGER(Name, Member) \
++  {Name, PLIST_NODE_TYPE_INTEGER, FALSE, OcSandboxParseInteger, {.Value = {OFFSET_OF (OC_GLOBAL_CONFIG, Member), sizeof (UINT32), OC_SCHEMA_VALUE_INTEGER}}}
++#define SB_MAP(Name, Offset, Child) \
++  {Name, PLIST_NODE_TYPE_DICT, FALSE, OcSandboxParseMap, {.List = {Offset, Child}}}
++#endif
+diff --git a/Library/OcMainLib/OcMainLib.inf b/Library/OcMainLib/OcMainLib.inf
+index b3f770b..65d20b7 100644
+--- a/Library/OcMainLib/OcMainLib.inf
++++ b/Library/OcMainLib/OcMainLib.inf
+@@ -28,6 +28,7 @@
+   OpenCoreMisc.c
+   OpenCoreNvram.c
+   OpenCorePlatform.c
++  OpenCoreSandbox.c
+   OpenCoreUefi.c
+   OpenCoreUefiAudio.c
+   OpenCoreUefiInOut.c
+@@ -41,6 +42,7 @@
+   UefiCpuPkg/UefiCpuPkg.dec
+ 
+ [Guids]
++  gEfiFileInfoGuid
+   gEfiMdeModulePkgTokenSpaceGuid
+   gOcVendorVariableGuid
+ 
+diff --git a/Library/OcMainLib/OpenCoreMisc.c b/Library/OcMainLib/OpenCoreMisc.c
+index 999f44d..b0ddd04 100644
+--- a/Library/OcMainLib/OpenCoreMisc.c
++++ b/Library/OcMainLib/OpenCoreMisc.c
+@@ -449,6 +449,7 @@ OcMiscEarlyInit (
+   CONST CHAR8     *AsciiVault;
+   OCS_VAULT_MODE  Vault;
+   UINTN           PciDeviceInfoSize;
++  UINT32          ParseErrors;
+ 
+   ConfigData = OcStorageReadFileUnicode (
+                  Storage,
+@@ -459,8 +460,9 @@ OcMiscEarlyInit (
+   if (ConfigData != NULL) {
+     DEBUG ((DEBUG_INFO, "OC: Loaded configuration of %u bytes\n", ConfigDataSize));
+ 
+-    Status = OcConfigurationInit (Config, ConfigData, ConfigDataSize, NULL);
+-    if (EFI_ERROR (Status)) {
++    ParseErrors = 0;
++    Status = OcConfigurationInit (Config, ConfigData, ConfigDataSize, &ParseErrors);
++    if (EFI_ERROR (Status) || (ParseErrors != 0)) {
+       DEBUG ((DEBUG_ERROR, "OC: Failed to parse configuration!\n"));
+       CpuDeadLoop ();
+       return EFI_UNSUPPORTED; ///< Should be unreachable.
+@@ -473,14 +475,15 @@ OcMiscEarlyInit (
+     return EFI_UNSUPPORTED; ///< Should be unreachable.
+   }
+ 
+-  Status = OcShimRetainProtocol (Config->Uefi.Quirks.ShimRetainProtocol);
+-  if (EFI_ERROR (Status)) {
+-    DEBUG ((DEBUG_WARN, "OC: Failed to set %g:%s\n", &gShimLockGuid, SHIM_RETAIN_PROTOCOL));
+-  }
+-
+-  OcLoadDrivers (Storage, Config, NULL, TRUE);
++  if (!Config->AppleSiliconSandbox.Enabled) {
++    Status = OcShimRetainProtocol (Config->Uefi.Quirks.ShimRetainProtocol);
++    if (EFI_ERROR (Status)) {
++      DEBUG ((DEBUG_WARN, "OC: Failed to set %g:%s\n", &gShimLockGuid, SHIM_RETAIN_PROTOCOL));
++    }
+ 
+-  OcVariableInit (Config->Uefi.Quirks.ForceOcWriteFlash);
++    OcLoadDrivers (Storage, Config, NULL, TRUE);
++    OcVariableInit (Config->Uefi.Quirks.ForceOcWriteFlash);
++  }
+ 
+   AsciiVault = OC_BLOB_GET (&Config->Misc.Security.Vault);
+   if (AsciiStrCmp (AsciiVault, "Secure") == 0) {
+diff --git a/Library/OcMainLib/OpenCoreSandbox.c b/Library/OcMainLib/OpenCoreSandbox.c
+new file mode 100644
+index 0000000..ef50420
+--- /dev/null
++++ b/Library/OcMainLib/OpenCoreSandbox.c
+@@ -0,0 +1,212 @@
++/** @file
++  Native EFI Sandbox selection and versioned engine handoff.
++  SPDX-License-Identifier: BSD-3-Clause
++**/
++#include <Guid/FileInfo.h>
++#include <Protocol/LoadedImage.h>
++#include <Library/BaseLib.h>
++#include <Library/BaseMemoryLib.h>
++#include <Library/DebugLib.h>
++#include <Library/DevicePathLib.h>
++#include <Library/MemoryAllocationLib.h>
++#include <Library/OcSandboxBoot.h>
++#include <Library/UefiBootServicesTableLib.h>
++
++STATIC
++EFI_STATUS
++CheckIBootFile (
++  IN EFI_SIMPLE_FILE_SYSTEM_PROTOCOL  *FileSystem,
++  IN CHAR16                          *Path
++  )
++{
++  EFI_STATUS         Status;
++  EFI_FILE_PROTOCOL  *Root;
++  EFI_FILE_PROTOCOL  *File;
++  EFI_FILE_INFO      *Info;
++  UINTN              InfoSize;
++
++  Root = NULL;
++  File = NULL;
++  Info = NULL;
++  Status = FileSystem->OpenVolume (FileSystem, &Root);
++  if (EFI_ERROR (Status)) {
++    goto Cleanup;
++  }
++
++  Status = Root->Open (Root, &File, Path, EFI_FILE_MODE_READ, 0);
++  if (EFI_ERROR (Status)) {
++    goto Cleanup;
++  }
++
++  InfoSize = 0;
++  Status = File->GetInfo (File, &gEfiFileInfoGuid, &InfoSize, NULL);
++  if ((Status != EFI_BUFFER_TOO_SMALL) || (InfoSize < SIZE_OF_EFI_FILE_INFO) || (InfoSize > 4096)) {
++    Status = EFI_UNSUPPORTED;
++    goto Cleanup;
++  }
++
++  Info = AllocatePool (InfoSize);
++  if (Info == NULL) {
++    Status = EFI_OUT_OF_RESOURCES;
++    goto Cleanup;
++  }
++
++  Status = File->GetInfo (File, &gEfiFileInfoGuid, &InfoSize, Info);
++  if (!EFI_ERROR (Status) && (((Info->Attribute & EFI_FILE_DIRECTORY) != 0) || (Info->FileSize == 0))) {
++    Status = EFI_UNSUPPORTED;
++  }
++
++Cleanup:
++  if (Info != NULL) {
++    FreePool (Info);
++  }
++
++  if (File != NULL) {
++    File->Close (File);
++  }
++
++  if (Root != NULL) {
++    Root->Close (Root);
++  }
++
++  return Status;
++}
++
++EFI_STATUS
++OcSandboxBoot (
++  IN OC_STORAGE_CONTEXT  *Storage,
++  IN OC_GLOBAL_CONFIG    *Config
++  )
++{
++  EFI_STATUS                 Status;
++  CONST CHAR8                *Reason;
++  CHAR16                     EnginePath[OC_SANDBOX_PATH_MAX];
++  CHAR16                     IBootPath[OC_SANDBOX_PATH_MAX];
++  CHAR8                      *SmbiosXml;
++  CHAR8                      *DevicePropertiesXml;
++  EFI_DEVICE_PATH_PROTOCOL   *DevicePath;
++  EFI_LOADED_IMAGE_PROTOCOL  *LoadedImage;
++  EFI_HANDLE                 EngineImage;
++  OC_SANDBOX_HANDOFF         Handoff;
++  UINTN                      ExitDataSize;
++  CHAR16                     *ExitData;
++  BOOLEAN                    Started;
++  CONST CHAR8                *FailureAction;
++
++  if ((Storage == NULL) || (Config == NULL) || !Config->AppleSiliconSandbox.Enabled) {
++    return EFI_INVALID_PARAMETER;
++  }
++
++  if (sizeof (UINTN) != sizeof (UINT64)) {
++    return EFI_UNSUPPORTED;
++  }
++
++  Status = OcSandboxConfigValidate (Config, &Reason);
++  if (EFI_ERROR (Status)) {
++    DEBUG ((DEBUG_WARN, "OCSB: Invalid configuration: %a\n", Reason));
++    return Status;
++  }
++
++  if ((Storage->FileSystem == NULL) || (Storage->StorageHandle == NULL)) {
++    return EFI_UNSUPPORTED;
++  }
++
++  SmbiosXml           = NULL;
++  DevicePropertiesXml = NULL;
++  DevicePath          = NULL;
++  EngineImage         = NULL;
++  ExitData            = NULL;
++  ExitDataSize        = 0;
++  Started             = FALSE;
++  FailureAction       = "initialization";
++  ZeroMem (&Handoff, sizeof (Handoff));
++
++  AsciiStrToUnicodeStrS (OC_BLOB_GET (&Config->AppleSiliconSandbox.EnginePath), EnginePath, ARRAY_SIZE (EnginePath));
++  AsciiStrToUnicodeStrS (OC_BLOB_GET (&Config->AppleSiliconSandbox.IBootPath), IBootPath, ARRAY_SIZE (IBootPath));
++  Status = CheckIBootFile (Storage->FileSystem, IBootPath);
++  if (EFI_ERROR (Status)) {
++    FailureAction = "Original iBoot input unavailable";
++    goto Cleanup;
++  }
++
++  Status = OcSandboxConfigSerialize (Config, &SmbiosXml, &DevicePropertiesXml);
++  if (EFI_ERROR (Status)) {
++    FailureAction = "Configuration serialization failed";
++    goto Cleanup;
++  }
++
++  DevicePath = FileDevicePath (Storage->StorageHandle, EnginePath);
++  if (DevicePath == NULL) {
++    Status = EFI_OUT_OF_RESOURCES;
++    goto Cleanup;
++  }
++
++  // Firmware image authentication remains on the normal LoadImage path.
++  Status = gBS->LoadImage (FALSE, gImageHandle, DevicePath, NULL, 0, &EngineImage);
++  if (EFI_ERROR (Status)) {
++    FailureAction = "LoadImage failed";
++    goto Cleanup;
++  }
++
++  Status = gBS->HandleProtocol (EngineImage, &gEfiLoadedImageProtocolGuid, (VOID **)&LoadedImage);
++  if (EFI_ERROR (Status)) {
++    goto Cleanup;
++  }
++
++  // Only an application has the lifetime required by this ABI. UEFI unloads
++  // applications when their entry point returns, including error returns.
++  if (LoadedImage->ImageCodeType != EfiLoaderCode) {
++    Status = EFI_UNSUPPORTED;
++    FailureAction = "Engine must be an EFI application";
++    goto Cleanup;
++  }
++
++  Handoff.Magic               = OC_SANDBOX_HANDOFF_MAGIC;
++  Handoff.Version             = OC_SANDBOX_HANDOFF_VERSION;
++  Handoff.Size                = sizeof (Handoff);
++  Handoff.MemoryBytes         = LShiftU64 (Config->AppleSiliconSandbox.Hardware.MemorySizeMiB, 20);
++  Handoff.CpuCount             = Config->AppleSiliconSandbox.Hardware.CPUCount;
++  Handoff.TargetMajor          = Config->AppleSiliconSandbox.TargetMajor;
++  Handoff.IBootPath            = (UINT64)(UINTN)IBootPath;
++  Handoff.SmbiosXml            = (UINT64)(UINTN)SmbiosXml;
++  Handoff.DevicePropertiesXml  = (UINT64)(UINTN)DevicePropertiesXml;
++  LoadedImage->LoadOptions     = &Handoff;
++  LoadedImage->LoadOptionsSize = sizeof (Handoff);
++
++  DEBUG ((DEBUG_INFO, "OCSB: StartImage ABI v1 size=64 target=%u AIC iBoot\n", Handoff.TargetMajor));
++  Started = TRUE;
++  Status = gBS->StartImage (EngineImage, &ExitDataSize, &ExitData);
++  // StartImage may have unloaded the image; do not dereference LoadedImage here.
++  EngineImage = NULL;
++
++Cleanup:
++  if (EngineImage != NULL) {
++    gBS->UnloadImage (EngineImage);
++  }
++
++  if (ExitData != NULL) {
++    FreePool (ExitData);
++  }
++
++  if (DevicePath != NULL) {
++    FreePool (DevicePath);
++  }
++
++  if (SmbiosXml != NULL) {
++    FreePool (SmbiosXml);
++  }
++
++  if (DevicePropertiesXml != NULL) {
++    FreePool (DevicePropertiesXml);
++  }
++
++  // Logging can halt under a configured HaltLevel. Release storage first.
++  DEBUG ((DEBUG_INFO, "OCSB: Handoff storage released\n"));
++  if (Started) {
++    DEBUG ((DEBUG_WARN, "OCSB: StartImage returned - %r (no guest boot completion claimed)\n", Status));
++  } else {
++    DEBUG ((DEBUG_WARN, "OCSB: %a - %r\n", FailureAction, Status));
++  }
++
++  return Status;
++}
+diff --git a/Tests/NativeSourceAudit.py b/Tests/NativeSourceAudit.py
+new file mode 100644
+index 0000000..d70271d
+--- /dev/null
++++ b/Tests/NativeSourceAudit.py
+@@ -0,0 +1,71 @@
++#!/usr/bin/env python3
++"""Bind an actual native build to this modified source tree before handoff tests.
++SPDX-License-Identifier: BSD-3-Clause
++"""
++import argparse
++import hashlib
++import json
++import pathlib
++import subprocess
++
++CRITICAL = (
++    "Application/OpenCore/OpenCore.c",
++    "Library/OcConfigurationLib/OcConfigurationLib.c",
++    "Library/OcConfigurationLib/SandboxConfig.c",
++    "Library/OcMainLib/OpenCoreSandbox.c",
++    "Include/Acidanthera/Library/OcConfigurationLib.h",
++    "Include/Acidanthera/Library/OcSandboxBoot.h",
++)
++MARKERS = (b"AppleSiliconSandbox", b"SandboxSMBIOS", b"OCSB: StartImage ABI v1 size=64", b"OCSB: Handoff storage released")
++
++
++def sha256(path):
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--native-package", type=pathlib.Path, required=True)
++    parser.add_argument("--build-log", type=pathlib.Path, required=True)
++    parser.add_argument("--binary", type=pathlib.Path, required=True)
++    parser.add_argument("--output", type=pathlib.Path, required=True)
++    args = parser.parse_args()
++    source = pathlib.Path(__file__).resolve().parents[1]
++    native = args.native_package
++    log = args.build_log.read_text()
++    assert native.resolve() == source, (native.resolve(), source)
++    critical = {}
++    for relative in CRITICAL:
++        expected = source / relative
++        compiled = native / relative
++        assert compiled.resolve() == expected.resolve(), relative
++        assert sha256(compiled) == sha256(expected), relative
++        if relative.endswith(".c"):
++            assert str(compiled) in log, f"Compiler command missing for {relative}"
++        critical[relative] = sha256(expected)
++
++    binary = args.binary.read_bytes()
++    found = {marker.decode(): marker in binary for marker in MARKERS}
++    assert all(found.values()), f"Wrong EFI or missing Sandbox code: {found}"
++    files = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"], cwd=source).decode().split("\0")
++    suffixes = {".c", ".h", ".inf", ".dsc", ".dec", ".nasm", ".asm", ".S", ".inc", ".fdf"}
++    sources = {relative: sha256(source / relative) for relative in sorted(set(files)) if relative and (source / relative).suffix in suffixes}
++    report = {
++        "schema": 1,
++        "source_baseline": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=source, text=True).strip(),
++        "source_root": str(source), "native_package": str(native),
++        "native_package_resolved": str(native.resolve()),
++        "critical_source_sha256": critical,
++        "source_manifest_sha256": hashlib.sha256(json.dumps(sources, sort_keys=True).encode()).hexdigest(),
++        "source_files": sources,
++        "binary": {"size": len(binary), "sha256": hashlib.sha256(binary).hexdigest(), "markers": found},
++        "build_log_sha256": sha256(args.build_log),
++        "runtime_verified": False,
++    }
++    args.output.parent.mkdir(parents=True, exist_ok=True)
++    args.output.write_text(json.dumps(report, indent=2) + "\n")
++    print(f"PASS {len(sources)} source hashes, 6 critical resolved paths, 4 EFI markers; binary {report['binary']['sha256']}")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/Tests/SandboxConfig.py b/Tests/SandboxConfig.py
+new file mode 100644
+index 0000000..42462b3
+--- /dev/null
++++ b/Tests/SandboxConfig.py
+@@ -0,0 +1,101 @@
++#!/usr/bin/env python3
++"""Exercise actual native OC schema/validation/serialization. Synthetic data only.
++
++Build Utilities/ocvalidate and Utilities/SandboxConfigTest first; then run this
++script on a host capable of executing the resulting userspace tools.
++SPDX-License-Identifier: BSD-3-Clause
++"""
++import copy
++import pathlib
++import plistlib
++import subprocess
++import tempfile
++
++ROOT = pathlib.Path(__file__).resolve().parents[1]
++VALIDATOR = ROOT / "Utilities/ocvalidate/ocvalidate"
++SERIALIZER = ROOT / "Utilities/SandboxConfigTest/SandboxConfigTest"
++
++
++def main():
++    sample = plistlib.loads((ROOT / "Docs/Sample.plist").read_bytes())
++    reports = []
++    with tempfile.TemporaryDirectory(prefix="26x86-oc-config-") as directory:
++        path = pathlib.Path(directory) / "config.plist"
++
++        def run(name, config, expected=True, executable=VALIDATOR):
++            path.write_bytes(plistlib.dumps(config, sort_keys=False))
++            result = subprocess.run([str(executable), str(path)], capture_output=True, timeout=30)
++            assert (result.returncode == 0) == expected, (name, result.returncode, result.stdout, result.stderr)
++            reports.append(name)
++            return result.stdout
++
++        run("disabled defaults", sample)
++        legacy = copy.deepcopy(sample)
++        del legacy["AppleSiliconSandbox"]
++        del legacy["SandboxSMBIOS"]
++        run("legacy configuration remains valid", legacy)
++        custom = plistlib.loads((ROOT / "Docs/SampleCustom.plist").read_bytes())
++        run("custom sample", custom)
++        enabled = copy.deepcopy(sample)
++        enabled["AppleSiliconSandbox"].update(Enabled=True, IBootPath="\\EFI\\26x86\\fixtures\\iboot.img4")
++        enabled["SandboxSMBIOS"] = {
++            "SystemProductName": "Synthetic&<Model>",
++            "SystemSerialNumber": "TEST-ONLY",
++            "SystemUUID": "00112233-4455-6677-8899-aabbccddeeff",
++            "BoardProduct": "Synthetic'\"Board",
++        }
++        values = {"zero": b"", "one": b"\xff", "two": b"\x00\xff", "three": b"\x00\x80\xff", "four": b"abcd", "truth": True, "false": False, "text": "abc&<tag>", "small": 7, "large": (1 << 64) - 1}
++        enabled["AppleSiliconSandbox"]["Hardware"]["DeviceProperties"] = {"synthetic&device": values}
++        run("enabled schema", enabled)
++        output = run("native serialization", enabled, executable=SERIALIZER)
++        start = output.index(b"<?xml")
++        documents = output[start:].splitlines()
++        assert len(documents) == 2, documents
++        assert plistlib.loads(documents[0]) == enabled["SandboxSMBIOS"]
++        props = plistlib.loads(documents[1])["synthetic&device"]
++        for name, value in values.items():
++            if isinstance(value, bool):
++                assert props[name] == bytes([value])
++            elif isinstance(value, int):
++                assert int.from_bytes(props[name], "little") == value
++            elif isinstance(value, str):
++                assert props[name] == value.encode() + b"\0"
++            else:
++                assert props[name] == value
++
++        cases = [
++            ("GIC rejected", ("AppleSiliconSandbox", "InterruptController"), "GIC"),
++            ("UEFI guest rejected", ("AppleSiliconSandbox", "BootProtocol"), "UEFI"),
++            ("unknown target rejected", ("AppleSiliconSandbox", "TargetMajor"), 28),
++            ("wrapped uint32 target rejected", ("AppleSiliconSandbox", "TargetMajor"), (1 << 32) + 26),
++            ("small RAM rejected", ("AppleSiliconSandbox", "Hardware", "MemorySizeMiB"), 4095),
++            ("large RAM rejected", ("AppleSiliconSandbox", "Hardware", "MemorySizeMiB"), 1048577),
++            ("zero CPU rejected", ("AppleSiliconSandbox", "Hardware", "CPUCount"), 0),
++            ("large CPU rejected", ("AppleSiliconSandbox", "Hardware", "CPUCount"), 65),
++            ("wrong type rejected", ("AppleSiliconSandbox", "Enabled"), "true"),
++            ("absent original path rejected", ("AppleSiliconSandbox", "IBootPath"), ""),
++            ("path traversal rejected", ("AppleSiliconSandbox", "IBootPath"), "\\EFI\\..\\iboot"),
++            ("path drive rejected", ("AppleSiliconSandbox", "IBootPath"), "C:\\iboot"),
++            ("long path rejected", ("AppleSiliconSandbox", "IBootPath"), "\\" + "x" * 191),
++            ("empty identity rejected", ("SandboxSMBIOS", "BoardProduct"), ""),
++            ("malformed UUID rejected", ("SandboxSMBIOS", "SystemUUID"), "0" * 36),
++            ("negative device integer rejected", ("AppleSiliconSandbox", "Hardware", "DeviceProperties", "synthetic&device", "small"), -1),
++        ]
++        for name, keys, value in cases:
++            invalid = copy.deepcopy(enabled)
++            current = invalid
++            for key in keys[:-1]:
++                current = current[key]
++            current[keys[-1]] = value
++            run(name, invalid, False)
++        huge = copy.deepcopy(enabled)
++        huge["AppleSiliconSandbox"]["Hardware"]["DeviceProperties"] = {"device": {"blob": b"a" * 800000}}
++        run("serialized XML limit rejected", huge, False, SERIALIZER)
++        excessive = copy.deepcopy(enabled)
++        excessive["AppleSiliconSandbox"]["Hardware"]["DeviceProperties"] = {"device": {f"property-{index}": b"x" for index in range(4097)}}
++        run("map allocation count limit rejected", excessive, False)
++    print(f"PASS {len(reports)} native configuration cases; XML/base64 round-trip and ABI static assertions verified")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/Tests/SandboxHandoff.plist b/Tests/SandboxHandoff.plist
+new file mode 100644
+index 0000000..c8dc839
+--- /dev/null
++++ b/Tests/SandboxHandoff.plist
+@@ -0,0 +1,1990 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
++<plist version="1.0">
++<dict>
++	<key>#WARNING - 1</key>
++	<string>This is just a sample. Do NOT try loading it.</string>
++	<key>#WARNING - 2</key>
++	<string>Ensure you understand EVERY field before booting.</string>
++	<key>#WARNING - 3</key>
++	<string>In most cases recommended to use Sample.plist</string>
++	<key>#WARNING - 4</key>
++	<string>Use SampleCustom.plist only for special cases.</string>
++	<key>ACPI</key>
++	<dict>
++		<key>Add</key>
++		<array>
++			<dict>
++				<key>Comment</key>
++				<string>My custom DSDT</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>DSDT.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>My custom SSDT</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-1.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-ALS0.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-AWAC-DISABLE.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-BRG0.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-EC-USBX.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-EC.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-EHCx-DISABLE.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-IMEI.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-PLUG.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-PMC.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-PNLF.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-RTC0-RANGE.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-RTC0.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-SBUS-MCHC.aml</string>
++			</dict>
++			<dict>
++				<key>Comment</key>
++				<string>Read the comment in dsl sample</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Path</key>
++				<string>SSDT-UNC.aml</string>
++			</dict>
++		</array>
++		<key>Delete</key>
++		<array>
++			<dict>
++				<key>All</key>
++				<false/>
++				<key>Comment</key>
++				<string>Delete CpuPm</string>
++				<key>Enabled</key>
++				<false/>
++				<key>OemTableId</key>
++				<data>
++				Q3B1UG0AAAA=
++				</data>
++				<key>TableLength</key>
++				<integer>0</integer>
++				<key>TableSignature</key>
++				<data>
++				U1NEVA==
++				</data>
++			</dict>
++			<dict>
++				<key>All</key>
++				<false/>
++				<key>Comment</key>
++				<string>Delete Cpu0Ist</string>
++				<key>Enabled</key>
++				<false/>
++				<key>OemTableId</key>
++				<data>
++				Q3B1MElzdAA=
++				</data>
++				<key>TableLength</key>
++				<integer>0</integer>
++				<key>TableSignature</key>
++				<data>
++				U1NEVA==
++				</data>
++			</dict>
++		</array>
++		<key>Patch</key>
++		<array>
++			<dict>
++				<key>Base</key>
++				<string></string>
++				<key>BaseSkip</key>
++				<integer>0</integer>
++				<key>Comment</key>
++				<string>Replace one byte sequence with another</string>
++				<key>Count</key>
++				<integer>0</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				ESIzRA==
++				</data>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>OemTableId</key>
++				<data>
++				</data>
++				<key>Replace</key>
++				<data>
++				RDMiEQ==
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++				<key>TableLength</key>
++				<integer>0</integer>
++				<key>TableSignature</key>
++				<data>
++				</data>
++			</dict>
++			<dict>
++				<key>Base</key>
++				<string>\_SB.PCI0.LPCB.HPET</string>
++				<key>BaseSkip</key>
++				<integer>0</integer>
++				<key>Comment</key>
++				<string>HPET _CRS to XCRS</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				X0NSUw==
++				</data>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>OemTableId</key>
++				<data>
++				</data>
++				<key>Replace</key>
++				<data>
++				WENSUw==
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++				<key>TableLength</key>
++				<integer>0</integer>
++				<key>TableSignature</key>
++				<data>
++				</data>
++			</dict>
++			<dict>
++				<key>Base</key>
++				<string></string>
++				<key>BaseSkip</key>
++				<integer>0</integer>
++				<key>Comment</key>
++				<string>RTC 0x70,1,8 to 0x70,1,2</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				AXAAcAABCA==
++				</data>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>OemTableId</key>
++				<data>
++				</data>
++				<key>Replace</key>
++				<data>
++				AXAAcAABAg==
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++				<key>TableLength</key>
++				<integer>0</integer>
++				<key>TableSignature</key>
++				<data>
++				RFNEVA==
++				</data>
++			</dict>
++		</array>
++		<key>Quirks</key>
++		<dict>
++			<key>FadtEnableReset</key>
++			<false/>
++			<key>NormalizeHeaders</key>
++			<false/>
++			<key>RebaseRegions</key>
++			<false/>
++			<key>ResetHwSig</key>
++			<false/>
++			<key>ResetLogoStatus</key>
++			<true/>
++			<key>SyncTableIds</key>
++			<false/>
++		</dict>
++	</dict>
++	<key>AppleSiliconSandbox</key>
++	<dict>
++		<key>BootProtocol</key>
++		<string>iBoot</string>
++		<key>Enabled</key>
++		<true/>
++		<key>EnginePath</key>
++		<string>\EFI\26x86\Sandbox.efi</string>
++		<key>Hardware</key>
++		<dict>
++			<key>CPUCount</key>
++			<integer>2</integer>
++			<key>DeviceProperties</key>
++			<dict>
++				<key>synthetic-device</key>
++				<dict>
++					<key>test-property</key>
++					<data>
++					EjQ=
++					</data>
++					<key>uint64-property</key>
++					<integer>18446744073709551615</integer>
++				</dict>
++			</dict>
++			<key>MemorySizeMiB</key>
++			<integer>4096</integer>
++		</dict>
++		<key>IBootPath</key>
++		<string>\EFI\26x86\Fixtures\iboot.fixture</string>
++		<key>InterruptController</key>
++		<string>AIC</string>
++		<key>TargetMajor</key>
++		<integer>26</integer>
++	</dict>
++	<key>Booter</key>
++	<dict>
++		<key>MmioWhitelist</key>
++		<array>
++			<dict>
++				<key>Address</key>
++				<integer>4275159040</integer>
++				<key>Comment</key>
++				<string>Haswell: SB_RCBA is a 0x4 page memory region, containing SPI_BASE at 0x3800 (SPI_BASE_ADDRESS)</string>
++				<key>Enabled</key>
++				<false/>
++			</dict>
++			<dict>
++				<key>Address</key>
++				<integer>4278190080</integer>
++				<key>Comment</key>
++				<string>Generic: PCI root is a 0x1000 page memory region used by some types of firmware</string>
++				<key>Enabled</key>
++				<false/>
++			</dict>
++		</array>
++		<key>Patch</key>
++		<array>
++			<dict>
++				<key>Arch</key>
++				<string>Any</string>
++				<key>Comment</key>
++				<string>macOS to hacOS</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				bWFjT1M=
++				</data>
++				<key>Identifier</key>
++				<string>Apple</string>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>Replace</key>
++				<data>
++				aGFjT1M=
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++		</array>
++		<key>Quirks</key>
++		<dict>
++			<key>AllowRelocationBlock</key>
++			<false/>
++			<key>AvoidRuntimeDefrag</key>
++			<true/>
++			<key>ClearTaskSwitchBit</key>
++			<false/>
++			<key>DevirtualiseMmio</key>
++			<false/>
++			<key>DisableSingleUser</key>
++			<false/>
++			<key>DisableVariableWrite</key>
++			<false/>
++			<key>DiscardHibernateMap</key>
++			<false/>
++			<key>EnableSafeModeSlide</key>
++			<false/>
++			<key>EnableWriteUnprotector</key>
++			<false/>
++			<key>FixupAppleEfiImages</key>
++			<true/>
++			<key>ForceBooterSignature</key>
++			<false/>
++			<key>ForceExitBootServices</key>
++			<false/>
++			<key>ProtectMemoryRegions</key>
++			<false/>
++			<key>ProtectSecureBoot</key>
++			<false/>
++			<key>ProtectUefiServices</key>
++			<false/>
++			<key>ProvideCustomSlide</key>
++			<false/>
++			<key>ProvideMaxSlide</key>
++			<integer>0</integer>
++			<key>RebuildAppleMemoryMap</key>
++			<false/>
++			<key>ResizeAppleGpuBars</key>
++			<integer>-1</integer>
++			<key>SetupVirtualMap</key>
++			<true/>
++			<key>SignalAppleOS</key>
++			<false/>
++			<key>SyncRuntimePermissions</key>
++			<false/>
++		</dict>
++	</dict>
++	<key>DeviceProperties</key>
++	<dict>
++		<key>Add</key>
++		<dict>
++			<key>PciRoot(0x0)/Pci(0x1b,0x0)</key>
++			<dict>
++				<key>layout-id</key>
++				<data>
++				AQAAAA==
++				</data>
++			</dict>
++		</dict>
++		<key>Delete</key>
++		<dict/>
++	</dict>
++	<key>Kernel</key>
++	<dict>
++		<key>Add</key>
++		<array>
++			<dict>
++				<key>Arch</key>
++				<string>Any</string>
++				<key>BundlePath</key>
++				<string>Lilu.kext</string>
++				<key>Comment</key>
++				<string>Patch engine</string>
++				<key>Enabled</key>
++				<true/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/Lilu</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>8.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>Any</string>
++				<key>BundlePath</key>
++				<string>VirtualSMC.kext</string>
++				<key>Comment</key>
++				<string>SMC emulator</string>
++				<key>Enabled</key>
++				<true/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/VirtualSMC</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>8.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>WhateverGreen.kext</string>
++				<key>Comment</key>
++				<string>Video patches</string>
++				<key>Enabled</key>
++				<true/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/WhateverGreen</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>10.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>Any</string>
++				<key>BundlePath</key>
++				<string>AppleALC.kext</string>
++				<key>Comment</key>
++				<string>Audio patches</string>
++				<key>Enabled</key>
++				<true/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/AppleALC</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>8.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>IntelMausi.kext</string>
++				<key>Comment</key>
++				<string>Intel Ethernet LAN</string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/IntelMausi</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>13.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>Legacy_USB3.kext</string>
++				<key>Comment</key>
++				<string>XHC ports configuration</string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string></string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>15.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>AppleMCEReporterDisabler.kext</string>
++				<key>Comment</key>
++				<string>AppleMCEReporter disabler</string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string></string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>19.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>VoodooPS2Controller.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/VoodooPS2Controller</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>15.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>VoodooPS2Controller.kext/Contents/PlugIns/VoodooPS2Keyboard.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/VoodooPS2Keyboard</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>15.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>VoodooPS2Controller.kext/Contents/PlugIns/VoodooPS2Mouse.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/VoodooPS2Mouse</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>15.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>VoodooPS2Controller.kext/Contents/PlugIns/VoodooPS2Trackpad.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/VoodooPS2Trackpad</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>15.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>VoodooPS2Controller.kext/Contents/PlugIns/VoodooInput.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/VoodooInput</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>15.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>AirportBrcmFixup.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/AirportBrcmFixup</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>12.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>AirportBrcmFixup.kext/Contents/PlugIns/AirPortBrcm4360_Injector.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string></string>
++				<key>MaxKernel</key>
++				<string>19.9.9</string>
++				<key>MinKernel</key>
++				<string>12.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>AirportBrcmFixup.kext/Contents/PlugIns/AirPortBrcmNIC_Injector.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string></string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>17.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>IOSkywalkFamily.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/IOSkywalkFamily</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>23.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>IO80211FamilyLegacy.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/IO80211FamilyLegacy</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>23.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>BundlePath</key>
++				<string>IO80211FamilyLegacy.kext/Contents/PlugIns/AirPortBrcmNIC.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/AirPortBrcmNIC</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>23.0.0</string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++		</array>
++		<key>Block</key>
++		<array>
++			<dict>
++				<key>Arch</key>
++				<string>Any</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>Identifier</key>
++				<string>com.apple.driver.AppleTyMCEDriver</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string></string>
++				<key>Strategy</key>
++				<string>Disable</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>Identifier</key>
++				<string>com.apple.iokit.IOSkywalkFamily</string>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>23.0.0</string>
++				<key>Strategy</key>
++				<string>Exclude</string>
++			</dict>
++		</array>
++		<key>Emulate</key>
++		<dict>
++			<key>Cpuid1Data</key>
++			<data>
++			</data>
++			<key>Cpuid1Mask</key>
++			<data>
++			</data>
++			<key>DummyPowerManagement</key>
++			<false/>
++			<key>MaxKernel</key>
++			<string></string>
++			<key>MinKernel</key>
++			<string></string>
++		</dict>
++		<key>Force</key>
++		<array>
++			<dict>
++				<key>Arch</key>
++				<string>Any</string>
++				<key>BundlePath</key>
++				<string>System/Library/Extensions/IONetworkingFamily.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/IONetworkingFamily</string>
++				<key>Identifier</key>
++				<string>com.apple.iokit.IONetworkingFamily</string>
++				<key>MaxKernel</key>
++				<string>13.99.99</string>
++				<key>MinKernel</key>
++				<string></string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>Any</string>
++				<key>BundlePath</key>
++				<string>System/Library/Extensions/IONetworkingFamily.kext/Contents/PlugIns/AppleIntel8254XEthernet.kext</string>
++				<key>Comment</key>
++				<string></string>
++				<key>Enabled</key>
++				<false/>
++				<key>ExecutablePath</key>
++				<string>Contents/MacOS/AppleIntel8254XEthernet</string>
++				<key>Identifier</key>
++				<string>com.apple.driver.AppleIntel8254XEthernet</string>
++				<key>MaxKernel</key>
++				<string>12.99.99</string>
++				<key>MinKernel</key>
++				<string></string>
++				<key>PlistPath</key>
++				<string>Contents/Info.plist</string>
++			</dict>
++		</array>
++		<key>Patch</key>
++		<array>
++			<dict>
++				<key>Arch</key>
++				<string>Any</string>
++				<key>Base</key>
++				<string>__ZN8AppleRTC18setupDateTimeAlarmEPK11RTCDateTime</string>
++				<key>Comment</key>
++				<string>Disable RTC wake scheduling</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				</data>
++				<key>Identifier</key>
++				<string>com.apple.driver.AppleRTC</string>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string>19.0.0</string>
++				<key>Replace</key>
++				<data>
++				ww==
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>Any</string>
++				<key>Base</key>
++				<string>_AcpiOsVprintf</string>
++				<key>Comment</key>
++				<string>Disable ACPI logging</string>
++				<key>Count</key>
++				<integer>0</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				</data>
++				<key>Identifier</key>
++				<string>com.apple.driver.AppleACPIPlatform</string>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>MaxKernel</key>
++				<string>18.5.0</string>
++				<key>MinKernel</key>
++				<string>18.5.0</string>
++				<key>Replace</key>
++				<data>
++				ww==
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>Base</key>
++				<string>__ZN11BCM5701Enet14getAdapterInfoEv</string>
++				<key>Comment</key>
++				<string>Broadcom BCM57785 patch</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				6AAA//9miYMABQAA
++				</data>
++				<key>Identifier</key>
++				<string>com.apple.iokit.AppleBCM5701Ethernet</string>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				/wAA////////////
++				</data>
++				<key>MaxKernel</key>
++				<string>19.9.9</string>
++				<key>MinKernel</key>
++				<string></string>
++				<key>Replace</key>
++				<data>
++				uLQWAABmiYMABQAA
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>i386</string>
++				<key>Base</key>
++				<string></string>
++				<key>Comment</key>
++				<string>Fix Intel e1000 NIC link detection in QEMU</string>
++				<key>Count</key>
++				<integer>0</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				x0QkBBEAAAAAAADoAAAAAA==
++				</data>
++				<key>Identifier</key>
++				<string>com.apple.driver.AppleIntel8254XEthernet</string>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				//////////8AAAD/AAAAAA==
++				</data>
++				<key>MaxKernel</key>
++				<string>8.99.99</string>
++				<key>MinKernel</key>
++				<string>8.0.0</string>
++				<key>Replace</key>
++				<data>
++				i0QkCMcACKwAADHAkJCQkA==
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>Base</key>
++				<string>__ZN24IOBluetoothHCIController5startEP9IOService</string>
++				<key>Comment</key>
++				<string>Disable Bluetooth entirely</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				</data>
++				<key>Identifier</key>
++				<string>com.apple.iokit.IOBluetoothFamily</string>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string></string>
++				<key>Replace</key>
++				<data>
++				ww==
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>Base</key>
++				<string>_panic</string>
++				<key>Comment</key>
++				<string>Send panic string to serial port</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				</data>
++				<key>Identifier</key>
++				<string>kernel</string>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string></string>
++				<key>Replace</key>
++				<data>
++				MfaKD4TJdQT/xrEKZrr9A+yoIHT7Zrr4A4jI7kj/x4X2
++				dN/r/g==
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>Base</key>
++				<string>_kernel_debug_string_early</string>
++				<key>Comment</key>
++				<string>Send early prints to serial port</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				</data>
++				<key>Identifier</key>
++				<string>kernel</string>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string></string>
++				<key>Replace</key>
++				<data>
++				MfaKD4TJdQT/xrEKZrr9A+yoIHT7Zrr4A4jI7kj/x4X2
++				dN/D
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>Any</string>
++				<key>Base</key>
++				<string>_disable_serial_output</string>
++				<key>Comment</key>
++				<string>Enable early serial output on RELEASE kernel</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				</data>
++				<key>Identifier</key>
++				<string>kernel</string>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string></string>
++				<key>Replace</key>
++				<data>
++				AA==
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>Any</string>
++				<key>Base</key>
++				<string>_vstart</string>
++				<key>Comment</key>
++				<string>Print K and dead loop</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				</data>
++				<key>Identifier</key>
++				<string>kernel</string>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string></string>
++				<key>Replace</key>
++				<data>
++				sUtmuv0D7KggdPtmuvgDiMjusQpmuv0D7KggdPtmuvgD
++				iMju6/4=
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>Any</string>
++				<key>Base</key>
++				<string>_vstart</string>
++				<key>Comment</key>
++				<string>Early reboot</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				</data>
++				<key>Identifier</key>
++				<string>kernel</string>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>MaxKernel</key>
++				<string></string>
++				<key>MinKernel</key>
++				<string></string>
++				<key>Replace</key>
++				<data>
++				McCwBrr5DAAA7uv+
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>Base</key>
++				<string>_early_random</string>
++				<key>Comment</key>
++				<string>SurPlus v1 - PART 1 of 2 - Patch read_erandom (inlined in _early_random)</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				AHQjSIs=
++				</data>
++				<key>Identifier</key>
++				<string>kernel</string>
++				<key>Limit</key>
++				<integer>800</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>MaxKernel</key>
++				<string>21.1.0</string>
++				<key>MinKernel</key>
++				<string>20.4.0</string>
++				<key>Replace</key>
++				<data>
++				AOsjSIs=
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>x86_64</string>
++				<key>Base</key>
++				<string>_register_and_init_prng</string>
++				<key>Comment</key>
++				<string>SurPlus v1 - PART 2 of 2 - Patch register_and_init_prng</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				ukgBAAAx9g==
++				</data>
++				<key>Identifier</key>
++				<string>kernel</string>
++				<key>Limit</key>
++				<integer>256</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>MaxKernel</key>
++				<string>21.1.0</string>
++				<key>MinKernel</key>
++				<string>20.4.0</string>
++				<key>Replace</key>
++				<data>
++				ukgBAADrBQ==
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++			<dict>
++				<key>Arch</key>
++				<string>i386</string>
++				<key>Base</key>
++				<string>_machine_idle_cstate</string>
++				<key>Comment</key>
++				<string>Fix CPU usage in QEMU by halting on idle</string>
++				<key>Count</key>
++				<integer>1</integer>
++				<key>Enabled</key>
++				<false/>
++				<key>Find</key>
++				<data>
++				</data>
++				<key>Identifier</key>
++				<string>kernel</string>
++				<key>Limit</key>
++				<integer>0</integer>
++				<key>Mask</key>
++				<data>
++				</data>
++				<key>MaxKernel</key>
++				<string>8.99.99</string>
++				<key>MinKernel</key>
++				<string>8.0.0</string>
++				<key>Replace</key>
++				<data>
++				+/TD
++				</data>
++				<key>ReplaceMask</key>
++				<data>
++				</data>
++				<key>Skip</key>
++				<integer>0</integer>
++			</dict>
++		</array>
++		<key>Quirks</key>
++		<dict>
++			<key>AppleCpuPmCfgLock</key>
++			<false/>
++			<key>AppleXcpmCfgLock</key>
++			<false/>
++			<key>AppleXcpmExtraMsrs</key>
++			<false/>
++			<key>AppleXcpmForceBoost</key>
++			<false/>
++			<key>CustomPciSerialDevice</key>
++			<false/>
++			<key>CustomSMBIOSGuid</key>
++			<false/>
++			<key>DisableIoMapper</key>
++			<false/>
++			<key>DisableIoMapperMapping</key>
++			<false/>
++			<key>DisableLinkeditJettison</key>
++			<true/>
++			<key>DisableRtcChecksum</key>
++			<false/>
++			<key>ExtendBTFeatureFlags</key>
++			<false/>
++			<key>ExternalDiskIcons</key>
++			<false/>
++			<key>ForceAquantiaEthernet</key>
++			<false/>
++			<key>ForceSecureBootScheme</key>
++			<false/>
++			<key>IncreasePciBarSize</key>
++			<false/>
++			<key>LapicKernelPanic</key>
++			<false/>
++			<key>LegacyCommpage</key>
++			<false/>
++			<key>PanicNoKextDump</key>
++			<false/>
++			<key>PowerTimeoutKernelPanic</key>
++			<false/>
++			<key>ProvideCurrentCpuInfo</key>
++			<false/>
++			<key>SetApfsTrimTimeout</key>
++			<integer>-1</integer>
++			<key>ThirdPartyDrives</key>
++			<false/>
++			<key>XhciPortLimit</key>
++			<false/>
++		</dict>
++		<key>Scheme</key>
++		<dict>
++			<key>CustomKernel</key>
++			<false/>
++			<key>FuzzyMatch</key>
++			<true/>
++			<key>KernelArch</key>
++			<string>Auto</string>
++			<key>KernelCache</key>
++			<string>Auto</string>
++		</dict>
++	</dict>
++	<key>Misc</key>
++	<dict>
++		<key>BlessOverride</key>
++		<array/>
++		<key>Boot</key>
++		<dict>
++			<key>ConsoleAttributes</key>
++			<integer>0</integer>
++			<key>HibernateMode</key>
++			<string>None</string>
++			<key>HibernateSkipsPicker</key>
++			<false/>
++			<key>HideAuxiliary</key>
++			<true/>
++			<key>InstanceIdentifier</key>
++			<string></string>
++			<key>LauncherOption</key>
++			<string>Disabled</string>
++			<key>LauncherPath</key>
++			<string>Default</string>
++			<key>PickerAttributes</key>
++			<integer>17</integer>
++			<key>PickerAudioAssist</key>
++			<false/>
++			<key>PickerMode</key>
++			<string>Builtin</string>
++			<key>PickerVariant</key>
++			<string>Auto</string>
++			<key>PollAppleHotKeys</key>
++			<false/>
++			<key>ShowPicker</key>
++			<true/>
++			<key>TakeoffDelay</key>
++			<integer>0</integer>
++			<key>Timeout</key>
++			<integer>5</integer>
++		</dict>
++		<key>Debug</key>
++		<dict>
++			<key>AppleDebug</key>
++			<false/>
++			<key>ApplePanic</key>
++			<false/>
++			<key>DisableWatchDog</key>
++			<false/>
++			<key>DisplayDelay</key>
++			<integer>0</integer>
++			<key>DisplayLevel</key>
++			<integer>2147483714</integer>
++			<key>LogModules</key>
++			<string>*</string>
++			<key>SysReport</key>
++			<false/>
++			<key>Target</key>
++			<integer>11</integer>
++		</dict>
++		<key>Entries</key>
++		<array>
++			<dict>
++				<key>Arguments</key>
++				<string></string>
++				<key>Auxiliary</key>
++				<false/>
++				<key>Comment</key>
++				<string>Not signed for security reasons</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Flavour</key>
++				<string>Auto</string>
++				<key>Name</key>
++				<string>CustomOS</string>
++				<key>Path</key>
++				<string>PciRoot(0x0)/Pci(0x1,0x1)/Pci(0x0,0x0)/NVMe(0x1,11-22-33-44-55-66-77-88)/HD(1,GPT,00000000-0000-0000-0000-000000000000,0x800,0x64000)/\EFI\BOOT\BOOTX64.EFI</string>
++				<key>TextMode</key>
++				<false/>
++			</dict>
++		</array>
++		<key>Security</key>
++		<dict>
++			<key>AllowSetDefault</key>
++			<false/>
++			<key>ApECID</key>
++			<integer>0</integer>
++			<key>AuthRestart</key>
++			<false/>
++			<key>BlacklistAppleUpdate</key>
++			<true/>
++			<key>DmgLoading</key>
++			<string>Signed</string>
++			<key>EnablePassword</key>
++			<false/>
++			<key>ExposeSensitiveData</key>
++			<integer>6</integer>
++			<key>HaltLevel</key>
++			<integer>2147483648</integer>
++			<key>PasswordHash</key>
++			<data>
++			</data>
++			<key>PasswordSalt</key>
++			<data>
++			</data>
++			<key>ScanPolicy</key>
++			<integer>17760515</integer>
++			<key>SecureBootModel</key>
++			<string>Default</string>
++			<key>Vault</key>
++			<string>Optional</string>
++		</dict>
++		<key>Serial</key>
++		<dict>
++			<key>Init</key>
++			<true/>
++			<key>Override</key>
++			<false/>
++		</dict>
++		<key>Tools</key>
++		<array>
++			<dict>
++				<key>Arguments</key>
++				<string></string>
++				<key>Auxiliary</key>
++				<true/>
++				<key>Comment</key>
++				<string>Not signed for security reasons</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Flavour</key>
++				<string>OpenShell:UEFIShell:Shell</string>
++				<key>FullNvramAccess</key>
++				<false/>
++				<key>Name</key>
++				<string>UEFI Shell</string>
++				<key>Path</key>
++				<string>OpenShell.efi</string>
++				<key>RealPath</key>
++				<false/>
++				<key>TextMode</key>
++				<false/>
++			</dict>
++			<dict>
++				<key>Arguments</key>
++				<string></string>
++				<key>Auxiliary</key>
++				<true/>
++				<key>Comment</key>
++				<string>Memory testing utility</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Flavour</key>
++				<string>MemTest</string>
++				<key>FullNvramAccess</key>
++				<false/>
++				<key>Name</key>
++				<string>memtest86</string>
++				<key>Path</key>
++				<string>memtest86/BOOTX64.efi</string>
++				<key>RealPath</key>
++				<true/>
++				<key>TextMode</key>
++				<false/>
++			</dict>
++			<dict>
++				<key>Arguments</key>
++				<string>Shutdown</string>
++				<key>Auxiliary</key>
++				<true/>
++				<key>Comment</key>
++				<string>Perform shutdown</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Flavour</key>
++				<string>Auto</string>
++				<key>FullNvramAccess</key>
++				<false/>
++				<key>Name</key>
++				<string>Shutdown</string>
++				<key>Path</key>
++				<string>ResetSystem.efi</string>
++				<key>RealPath</key>
++				<false/>
++				<key>TextMode</key>
++				<false/>
++			</dict>
++		</array>
++	</dict>
++	<key>NVRAM</key>
++	<dict>
++		<key>Add</key>
++		<dict>
++			<key>4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14</key>
++			<dict>
++				<key>DefaultBackgroundColor</key>
++				<data>
++				AAAAAA==
++				</data>
++			</dict>
++			<key>4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102</key>
++			<dict>
++				<key>rtc-blacklist</key>
++				<data>
++				</data>
++			</dict>
++			<key>7C436110-AB2A-4BBB-A880-FE41995C9F82</key>
++			<dict>
++				<key>#INFO (prev-lang:kbd)</key>
++				<string>en:252 (ABC), set 656e3a323532</string>
++				<key>ForceDisplayRotationInEFI</key>
++				<integer>0</integer>
++				<key>SystemAudioVolume</key>
++				<data>
++				Rg==
++				</data>
++				<key>boot-args</key>
++				<string>-v keepsyms=1</string>
++				<key>csr-active-config</key>
++				<data>
++				AAAAAA==
++				</data>
++				<key>prev-lang:kbd</key>
++				<data>
++				cnUtUlU6MjUy
++				</data>
++				<key>run-efi-updater</key>
++				<string>No</string>
++			</dict>
++		</dict>
++		<key>Delete</key>
++		<dict>
++			<key>4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14</key>
++			<array>
++				<string>DefaultBackgroundColor</string>
++			</array>
++			<key>4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102</key>
++			<array>
++				<string>rtc-blacklist</string>
++			</array>
++			<key>7C436110-AB2A-4BBB-A880-FE41995C9F82</key>
++			<array>
++				<string>boot-args</string>
++				<string>ForceDisplayRotationInEFI</string>
++			</array>
++		</dict>
++		<key>LegacyOverwrite</key>
++		<false/>
++		<key>LegacySchema</key>
++		<dict>
++			<key>7C436110-AB2A-4BBB-A880-FE41995C9F82</key>
++			<array>
++				<string>EFILoginHiDPI</string>
++				<string>EFIBluetoothDelay</string>
++				<string>LocationServicesEnabled</string>
++				<string>SystemAudioVolume</string>
++				<string>SystemAudioVolumeDB</string>
++				<string>SystemAudioVolumeSaved</string>
++				<string>bluetoothActiveControllerInfo</string>
++				<string>bluetoothInternalControllerInfo</string>
++				<string>flagstate</string>
++				<string>fmm-computer-name</string>
++				<string>fmm-mobileme-token-FMM</string>
++				<string>fmm-mobileme-token-FMM-BridgeHasAccount</string>
++				<string>nvda_drv</string>
++				<string>prev-lang:kbd</string>
++				<string>backlight-level</string>
++				<string>BootCampHD</string>
++			</array>
++			<key>8BE4DF61-93CA-11D2-AA0D-00E098032B8C</key>
++			<array>
++				<string>Boot0080</string>
++				<string>Boot0081</string>
++				<string>Boot0082</string>
++				<string>BootNext</string>
++				<string>BootOrder</string>
++			</array>
++		</dict>
++		<key>WriteFlash</key>
++		<true/>
++	</dict>
++	<key>PlatformInfo</key>
++	<dict>
++		<key>Automatic</key>
++		<true/>
++		<key>CustomMemory</key>
++		<false/>
++		<key>Generic</key>
++		<dict>
++			<key>AdviseFeatures</key>
++			<false/>
++			<key>MLB</key>
++			<string>M0000000000000001</string>
++			<key>MaxBIOSVersion</key>
++			<false/>
++			<key>ProcessorType</key>
++			<integer>0</integer>
++			<key>ROM</key>
++			<data>
++			ESIzRFVm
++			</data>
++			<key>SpoofVendor</key>
++			<true/>
++			<key>SystemMemoryStatus</key>
++			<string>Auto</string>
++			<key>SystemProductName</key>
++			<string>iMac19,1</string>
++			<key>SystemSerialNumber</key>
++			<string>W00000000001</string>
++			<key>SystemUUID</key>
++			<string>00000000-0000-0000-0000-000000000000</string>
++		</dict>
++		<key>UpdateDataHub</key>
++		<true/>
++		<key>UpdateNVRAM</key>
++		<true/>
++		<key>UpdateSMBIOS</key>
++		<true/>
++		<key>UpdateSMBIOSMode</key>
++		<string>Create</string>
++		<key>UseRawUuidEncoding</key>
++		<false/>
++	</dict>
++	<key>SandboxSMBIOS</key>
++	<dict>
++		<key>SystemProductName</key>
++		<string>SyntheticModel</string>
++		<key>SystemSerialNumber</key>
++		<string>TEST-ONLY</string>
++		<key>SystemUUID</key>
++		<string>00112233-4455-6677-8899-aabbccddeeff</string>
++		<key>BoardProduct</key>
++		<string>SyntheticBoard</string>
++	</dict>
++	<key>UEFI</key>
++	<dict>
++		<key>APFS</key>
++		<dict>
++			<key>EnableJumpstart</key>
++			<true/>
++			<key>GlobalConnect</key>
++			<false/>
++			<key>HideVerbose</key>
++			<true/>
++			<key>JumpstartHotPlug</key>
++			<false/>
++			<key>MinDate</key>
++			<integer>0</integer>
++			<key>MinVersion</key>
++			<integer>0</integer>
++		</dict>
++		<key>AppleInput</key>
++		<dict>
++			<key>AppleEvent</key>
++			<string>Builtin</string>
++			<key>CustomDelays</key>
++			<false/>
++			<key>GraphicsInputMirroring</key>
++			<true/>
++			<key>KeyInitialDelay</key>
++			<integer>50</integer>
++			<key>KeySubsequentDelay</key>
++			<integer>5</integer>
++			<key>PointerDwellClickTimeout</key>
++			<integer>0</integer>
++			<key>PointerDwellDoubleClickTimeout</key>
++			<integer>0</integer>
++			<key>PointerDwellRadius</key>
++			<integer>0</integer>
++			<key>PointerPollMask</key>
++			<integer>-1</integer>
++			<key>PointerPollMax</key>
++			<integer>80</integer>
++			<key>PointerPollMin</key>
++			<integer>10</integer>
++			<key>PointerSpeedDiv</key>
++			<integer>1</integer>
++			<key>PointerSpeedMul</key>
++			<integer>1</integer>
++		</dict>
++		<key>Audio</key>
++		<dict>
++			<key>AudioCodec</key>
++			<integer>0</integer>
++			<key>AudioDevice</key>
++			<string>PciRoot(0x0)/Pci(0x1b,0x0)</string>
++			<key>AudioOutMask</key>
++			<integer>1</integer>
++			<key>AudioSupport</key>
++			<false/>
++			<key>DisconnectHda</key>
++			<false/>
++			<key>MaximumGain</key>
++			<integer>-15</integer>
++			<key>MinimumAssistGain</key>
++			<integer>-30</integer>
++			<key>MinimumAudibleGain</key>
++			<integer>-55</integer>
++			<key>PlayChime</key>
++			<string>Auto</string>
++			<key>ResetTrafficClass</key>
++			<false/>
++			<key>SetupDelay</key>
++			<integer>0</integer>
++		</dict>
++		<key>ConnectDrivers</key>
++		<true/>
++		<key>Drivers</key>
++		<array/>
++		<key>Input</key>
++		<dict>
++			<key>KeyFiltering</key>
++			<false/>
++			<key>KeyForgetThreshold</key>
++			<integer>5</integer>
++			<key>KeySupport</key>
++			<true/>
++			<key>KeySupportMode</key>
++			<string>Auto</string>
++			<key>KeySwap</key>
++			<false/>
++			<key>PointerSupport</key>
++			<false/>
++			<key>PointerSupportMode</key>
++			<string>ASUS</string>
++			<key>TimerResolution</key>
++			<integer>50000</integer>
++		</dict>
++		<key>Output</key>
++		<dict>
++			<key>ClearScreenOnModeSwitch</key>
++			<false/>
++			<key>ConsoleFont</key>
++			<string></string>
++			<key>ConsoleMode</key>
++			<string></string>
++			<key>DirectGopRendering</key>
++			<false/>
++			<key>ForceResolution</key>
++			<false/>
++			<key>GopBurstMode</key>
++			<false/>
++			<key>GopPassThrough</key>
++			<string>Disabled</string>
++			<key>IgnoreTextInGraphics</key>
++			<false/>
++			<key>InitialMode</key>
++			<string>Auto</string>
++			<key>ProvideConsoleGop</key>
++			<true/>
++			<key>ReconnectGraphicsOnConnect</key>
++			<false/>
++			<key>ReconnectOnResChange</key>
++			<false/>
++			<key>ReplaceTabWithSpace</key>
++			<false/>
++			<key>Resolution</key>
++			<string>Max</string>
++			<key>SanitiseClearScreen</key>
++			<false/>
++			<key>TextRenderer</key>
++			<string>BuiltinGraphics</string>
++			<key>UIScale</key>
++			<integer>0</integer>
++			<key>UgaPassThrough</key>
++			<false/>
++		</dict>
++		<key>ProtocolOverrides</key>
++		<dict>
++			<key>AppleAudio</key>
++			<false/>
++			<key>AppleBootPolicy</key>
++			<false/>
++			<key>AppleDebugLog</key>
++			<false/>
++			<key>AppleEg2Info</key>
++			<false/>
++			<key>AppleFramebufferInfo</key>
++			<false/>
++			<key>AppleImageConversion</key>
++			<false/>
++			<key>AppleImg4Verification</key>
++			<false/>
++			<key>AppleKeyMap</key>
++			<false/>
++			<key>AppleRtcRam</key>
++			<false/>
++			<key>AppleSecureBoot</key>
++			<false/>
++			<key>AppleSmcIo</key>
++			<false/>
++			<key>AppleUserInterfaceTheme</key>
++			<false/>
++			<key>DataHub</key>
++			<false/>
++			<key>DeviceProperties</key>
++			<false/>
++			<key>FirmwareVolume</key>
++			<true/>
++			<key>HashServices</key>
++			<false/>
++			<key>OSInfo</key>
++			<false/>
++			<key>PciIo</key>
++			<false/>
++			<key>UnicodeCollation</key>
++			<false/>
++		</dict>
++		<key>Quirks</key>
++		<dict>
++			<key>ActivateHpetSupport</key>
++			<false/>
++			<key>DisableSecurityPolicy</key>
++			<false/>
++			<key>EnableVectorAcceleration</key>
++			<true/>
++			<key>EnableVmx</key>
++			<false/>
++			<key>ExitBootServicesDelay</key>
++			<integer>0</integer>
++			<key>ForceOcWriteFlash</key>
++			<false/>
++			<key>ForgeUefiSupport</key>
++			<false/>
++			<key>IgnoreInvalidFlexRatio</key>
++			<false/>
++			<key>ReleaseUsbOwnership</key>
++			<false/>
++			<key>ReloadOptionRoms</key>
++			<false/>
++			<key>RequestBootVarRouting</key>
++			<false/>
++			<key>ResizeGpuBars</key>
++			<integer>-1</integer>
++			<key>ResizeUsePciRbIo</key>
++			<false/>
++			<key>ShimRetainProtocol</key>
++			<false/>
++			<key>TscSyncTimeout</key>
++			<integer>0</integer>
++			<key>UnblockFsConnect</key>
++			<false/>
++		</dict>
++		<key>ReservedMemory</key>
++		<array>
++			<dict>
++				<key>Address</key>
++				<integer>268435456</integer>
++				<key>Comment</key>
++				<string>HD3000: IGPU memory corruption errata</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Size</key>
++				<integer>268435456</integer>
++				<key>Type</key>
++				<string>Reserved</string>
++			</dict>
++			<dict>
++				<key>Address</key>
++				<integer>569344</integer>
++				<key>Comment</key>
++				<string>Fix black screen on wake from hibernation for Lenovo Thinkpad T490</string>
++				<key>Enabled</key>
++				<false/>
++				<key>Size</key>
++				<integer>4096</integer>
++				<key>Type</key>
++				<string>RuntimeCode</string>
++			</dict>
++		</array>
++		<key>Unload</key>
++		<array/>
++	</dict>
++</dict>
++</plist>
+diff --git a/Utilities/SandboxConfigTest/.gitignore b/Utilities/SandboxConfigTest/.gitignore
+new file mode 100644
+index 0000000..02701bd
+--- /dev/null
++++ b/Utilities/SandboxConfigTest/.gitignore
+@@ -0,0 +1,5 @@
++/SandboxConfigTest
++/SandboxConfigTest.exe
++/Linux_*/
++/Windows_*/
++/Darwin_*/
+diff --git a/Utilities/SandboxConfigTest/Makefile b/Utilities/SandboxConfigTest/Makefile
+new file mode 100644
+index 0000000..6051327
+--- /dev/null
++++ b/Utilities/SandboxConfigTest/Makefile
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: BSD-3-Clause
++PROJECT = SandboxConfigTest
++PRODUCT = $(PROJECT)$(INFIX)$(SUFFIX)
++OBJS = SandboxConfigTest.o OcConfigurationLib.o SandboxConfig.o
++VPATH = ../../Library/OcConfigurationLib
++include ../../User/Makefile
+diff --git a/Utilities/SandboxConfigTest/SandboxConfigTest.c b/Utilities/SandboxConfigTest/SandboxConfigTest.c
+new file mode 100644
+index 0000000..3b4d4ed
+--- /dev/null
++++ b/Utilities/SandboxConfigTest/SandboxConfigTest.c
+@@ -0,0 +1,54 @@
++/** SPDX-License-Identifier: BSD-3-Clause
++  Exercise the firmware parser and serializer using synthetic configuration.
++**/
++#include <Library/OcSandboxBoot.h>
++#include <Library/MemoryAllocationLib.h>
++#include <UserFile.h>
++#include <stdio.h>
++
++int
++ENTRY_POINT (
++  int   Argc,
++  char  *Argv[]
++  )
++{
++  UINT8             *Buffer;
++  UINT32            Size;
++  UINT32            Errors;
++  OC_GLOBAL_CONFIG  Config;
++  EFI_STATUS        Status;
++  CHAR8             *Smbios;
++  CHAR8             *Devices;
++
++  if (Argc != 2) {
++    return 2;
++  }
++
++  Buffer = UserReadFile (Argv[1], &Size);
++  if (Buffer == NULL) {
++    return 2;
++  }
++
++  Errors = 0;
++  Status = OcConfigurationInit (&Config, Buffer, Size, &Errors);
++  FreePool (Buffer);
++  if (EFI_ERROR (Status)) {
++    return 3;
++  }
++
++  if (Errors != 0) {
++    OcConfigurationFree (&Config);
++    return 3;
++  }
++
++  Status = OcSandboxConfigSerialize (&Config, &Smbios, &Devices);
++  OcConfigurationFree (&Config);
++  if (EFI_ERROR (Status)) {
++    return 4;
++  }
++
++  printf ("%s\n%s\n", Smbios, Devices);
++  FreePool (Smbios);
++  FreePool (Devices);
++  return 0;
++}
+diff --git a/Utilities/ocvalidate/Makefile b/Utilities/ocvalidate/Makefile
+index d78ef71..469aa63 100644
+--- a/Utilities/ocvalidate/Makefile
++++ b/Utilities/ocvalidate/Makefile
+@@ -20,7 +20,7 @@ OBJS    = $(PROJECT).o \
+ #
+ # OcConfigurationLib targets.
+ #
+-OBJS   += OcConfigurationLib.o
++OBJS   += OcConfigurationLib.o SandboxConfig.o
+ #
+ # OcConsoleLib targets.
+ #
+diff --git a/Utilities/ocvalidate/ocvalidate.c b/Utilities/ocvalidate/ocvalidate.c
+index 72b5bd3..1f5d462 100644
+--- a/Utilities/ocvalidate/ocvalidate.c
++++ b/Utilities/ocvalidate/ocvalidate.c
+@@ -28,6 +28,7 @@ CheckConfig (
+   UINT32               ErrorCount;
+   UINT32               CurrErrorCount;
+   UINTN                Index;
++  CONST CHAR8          *SandboxReason;
+   STATIC CONFIG_CHECK  ConfigCheckers[] = {
+     &CheckACPI,
+     &CheckBooter,
+@@ -57,6 +58,11 @@ CheckConfig (
+     }
+   }
+ 
++  if (EFI_ERROR (OcSandboxConfigValidate (Config, &SandboxReason))) {
++    DEBUG ((DEBUG_WARN, "AppleSiliconSandbox: %a\n", SandboxReason));
++    ++ErrorCount;
++  }
++
+   return ErrorCount;
+ }
+ 

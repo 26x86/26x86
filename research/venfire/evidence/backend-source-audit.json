@@ -1,0 +1,108 @@
+{
+  "schema": "venfire.backend-source-audit.v1",
+  "status": "source_verified",
+  "verification_layer": "host emulator source; no guest execution",
+  "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+  "patch_state": "applied",
+  "patch_sha256": "da55f660a551e66e6e5ae9affd8410f72b17cf0b633d09db2816700b7d131897",
+  "upstream_source_sha256": {
+    "configs/devices/aarch64-softmmu/default.mak": "16c4a9e12081911634685f48eb23a65844c3398e55968ed6d4ec9bd1cb030461",
+    "hw/vmapple/Kconfig": "a80707b7bf9208b6f403555717274c82f87f794fbed8da24c90b1ac17912c1d7",
+    "hw/vmapple/vmapple.c": "2e7f872746da5183e745dcb7b2bb2137b76716f4abeae0a0b78921402a05384a",
+    "hw/vmapple/aes.c": "e66ebd40cde0eef3b98e15deecd46de00aa6043cb0e15af383949e9d82303845",
+    "hw/vmapple/cfg.c": "f53649f35878743cf4a60ac080bf956230885da819f23535c0474ff4baf68a76",
+    "hw/vmapple/bdif.c": "a8d52e6db23b024fc2ef975b127344440350c53220695cbece5a481d4242b7d9",
+    "hw/display/Kconfig": "e76462a4178c640b9dc6cb56b90f7364014ede7e80963303db930da534c966c3",
+    "hw/display/meson.build": "36fb16a74d50369756313baaecee09b687139effa5bfa3aed03e2e61025e6abd",
+    "hw/intc/arm_gicv3_common.c": "c0a1bd75fe8f07b047b04a5d6e38ad131dc027b065bbbf8a75a265166241587a",
+    "target/arm/cpu64.c": "e284420c403b9bd6cd49f8816a51379fc5e491228464170a59260188fb97a3a0",
+    "target/arm/tcg/pauth_helper.c": "3848687fe9bfca20c7907f600f917d1d96e12dd210e88316891cf913b8067a60",
+    "docs/system/arm/vmapple.rst": "698198c5bab827f4d42c3c6a035d840bb19340c0f074f71e2ff020525c231386"
+  },
+  "findings": [
+    {
+      "id": "default-build-disabled",
+      "finding": "Upstream default aarch64 device configuration explicitly disables VMApple.",
+      "path": "configs/devices/aarch64-softmmu/default.mak",
+      "line": 12,
+      "source_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/configs/devices/aarch64-softmmu/default.mak#L12"
+    },
+    {
+      "id": "hvf-build-gate",
+      "finding": "Upstream VMApple is excluded from a TCG-only build.",
+      "path": "hw/vmapple/Kconfig",
+      "line": 18,
+      "source_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/Kconfig#L18"
+    },
+    {
+      "id": "apple-graphics-build-gate",
+      "finding": "VMApple unconditionally selects the Apple PV graphics device.",
+      "path": "hw/vmapple/Kconfig",
+      "line": 33,
+      "source_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/Kconfig#L33"
+    },
+    {
+      "id": "apple-graphics-framework",
+      "finding": "The graphics implementation depends on the host PVG framework.",
+      "path": "hw/display/meson.build",
+      "line": 66,
+      "source_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/display/meson.build#L66"
+    },
+    {
+      "id": "host-cpu-default",
+      "finding": "Cross-ISA TCG requires an explicit emulated -cpu; host is the default.",
+      "path": "hw/vmapple/vmapple.c",
+      "line": 586,
+      "source_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/vmapple.c#L586"
+    },
+    {
+      "id": "graphics-realization",
+      "finding": "Upstream always realizes apple-gfx-mmio during machine initialization.",
+      "path": "hw/vmapple/vmapple.c",
+      "line": 501,
+      "source_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/vmapple.c#L501"
+    },
+    {
+      "id": "firmware-entry",
+      "finding": "Firmware starts at 0x00100000 and has a 1 MiB aperture.",
+      "path": "hw/vmapple/vmapple.c",
+      "line": 101,
+      "source_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/vmapple.c#L101"
+    },
+    {
+      "id": "gic-tcg-implementation",
+      "finding": "TCG selects the existing userspace GICv3 implementation.",
+      "path": "hw/intc/arm_gicv3_common.c",
+      "line": 670,
+      "source_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/intc/arm_gicv3_common.c#L670"
+    },
+    {
+      "id": "aes-builtin-slots",
+      "finding": "Upstream fixed AES slot keys implement documented virtual NVRAM semantics; they are not physical UID/GID/SEP keys.",
+      "path": "hw/vmapple/aes.c",
+      "line": 101,
+      "source_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/aes.c#L101"
+    },
+    {
+      "id": "architectural-pac",
+      "finding": "Upstream implements architectural PAC algorithms; this is not proof of Apple arm64e equivalence.",
+      "path": "target/arm/tcg/pauth_helper.c",
+      "line": 227,
+      "source_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/target/arm/tcg/pauth_helper.c#L227"
+    },
+    {
+      "id": "upstream-guest-limit",
+      "finding": "Pinned upstream documentation supports macOS 12.x guests on Apple Silicon/HVF only.",
+      "path": "docs/system/arm/vmapple.rst",
+      "line": 18,
+      "source_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/docs/system/arm/vmapple.rst#L18"
+    }
+  ],
+  "aes_provenance_url": "https://lists.nongnu.org/archive/html/qemu-riscv/2024-11/msg00129.html",
+  "limits": [
+    "This audit does not compile QEMU or execute guest firmware.",
+    "It proves neither macOS boot, Metal acceleration, nor real-Mac execution.",
+    "QARMA5 is an architectural test algorithm, not a claim about Apple's implementation.",
+    "Apple boot assets must be supplied separately and remain unmodified."
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "26x86.vsk-unit/1",
+  "spec": "VF-SPEC-001/0.1",
+  "passed": true,
+  "validation_level": "UNIT",
+  "boot_authorized": false,
+  "hardware_verified": false,
+  "macos_boot_verified": false,
+  "efi_image_built": false,
+  "root_general_registers_only": true,
+  "undefined_symbols": [],
+  "sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "tests": [
+    {
+      "test": "boot",
+      "level": "UNIT",
+      "passed": true,
+      "checks": 131,
+      "hardware_verified": false
+    },
+    {
+      "test": "cpu",
+      "level": "UNIT",
+      "passed": true,
+      "checks": 47,
+      "hardware_verified": false
+    },
+    {
+      "test": "dmar",
+      "level": "UNIT",
+      "passed": true,
+      "checks": 2677,
+      "hardware_verified": false
+    },
+    {
+      "test": "vsk-policy",
+      "level": "UNIT",
+      "passed": true,
+      "checks": 3835,
+      "hardware_verified": false
+    }
+  ],
+  "compiler": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+  "source_sha256": {
+    "build.py": "ab2cdc203ba93a6b41be563e02b76d90276756a87212388532e31d083bf12b0e",
+    "include/vf_abi.h": "5064f990dfe6da50f06da7fd1e4a9ff642fcf9d69141e39babea680bcdaf0de8",
+    "include/vf_boot.h": "805aa256b06299410084ca4c03cb0a5072373d3d784434783f24c4b52f43c5a5",
+    "include/vf_dmar.h": "61c69715bf98ec679bd04724f80a1b6c072a7229f809fa36cd09314b45fbc348",
+    "include/vf_policy.h": "5cb31c463726fed67b3b155a7c8bc31a112434ccd2b38b2f6c0c647ab1183cce",
+    "src/vf_boot.c": "2f2b3f042c4f75c022274aaa6a085c52e69f5ebba3c69d6df76b49cd5cb773a5",
+    "src/vf_dmar.c": "f58861aafc34938c8165e7350876858f688acc44b51266a9b61b960443c18f39",
+    "src/vf_policy.c": "3dd7aab6b20d0127cabc7eec1f4c6ddb1146a4427e591db81da1f6b7c126e8db",
+    "tests/test_boot.c": "f098e4e191422cea18f0cc1e9b10c8c979c90074d38238d085b1324bd770b2b4",
+    "tests/test_cpu.c": "270b73dd8a4b7f1d69e3038dda9f0d515f46df0e987291a50afca323fa40cea3",
+    "tests/test_dmar.c": "c73b332a94800fe4864c94c29fa38d62a41174d0a21a8013efd1f62b8d6f6d0c",
+    "tests/test_policy.c": "4690c10f7f450424c953bfa0a2a9dff26aca4e0e9e1dada3c103980da423388d"
+  },
+  "root_policy_object_bytes": 14944,
+  "root_policy_object_sha256": "f079eaebd3dd5ed553da7cf73c04124e7bbcc2b341f7ed50f16d9027adbda790",
+  "note": "Relocatable policy object size is not a linked kernel or resident-memory measurement."
+}

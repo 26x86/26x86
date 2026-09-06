@@ -1,0 +1,383 @@
+From: Anees Iqbal <hello@aneesiqbal.ai>
+Subject: [PATCH] vmapple: add opt-in recovery USB byte transport
+
+Adapt the published host-side USB transport (reference revision
+657bb2423ec8d572b22a97dd33563dbba1680e6a, original patch e8714ab84bc76b89091fb2ccb41c34e69e4ae9a2).
+Keep it opt-in through the usbdev chardev; bound complete frames including
+headers, validate the supported descriptor form, check both DMA and host
+writes before reporting completion, and clear framing state on disconnect.
+No USB reply, DFU status, IMG4 validation outcome, identity, or Apple image
+is generated or modified by this device. A caller still needs legitimate
+restore components and the actual guest must accept them.
+
+Based-on: https://github.com/steelbrain/experiment-macOS-arm64-on-asahi-linux-arm64/blob/657bb2423ec8d572b22a97dd33563dbba1680e6a/patches/vmapple-usb-chardev.patch
+Base: QEMU ff1d2d19d7e24893e2012d879f8e73077e17b9bd
+
+diff --git a/hw/vmapple/bdif.c b/hw/vmapple/bdif.c
+index 4dc10c151d28245b07df2110b892534fda2471d6..2c138ac81d45aa3e0007987762fa82ae857b949e 100644
+--- a/hw/vmapple/bdif.c
++++ b/hw/vmapple/bdif.c
+@@ -20,6 +20,7 @@
+ #include "qapi/error.h"
+ #include "system/block-backend.h"
+ #include "system/dma.h"
++#include "chardev/char-fe.h"
+ 
+ OBJECT_DECLARE_SIMPLE_TYPE(VMAppleBdifState, VMAPPLE_BDIF)
+ 
+@@ -29,6 +30,15 @@ struct VMAppleBdifState {
+     BlockBackend *aux;
+     BlockBackend *root;
+     MemoryRegion mmio;
++    CharFrontend usbdev;
++    GByteArray *usb_input;
++    uint32_t usb_control;
++    uint32_t usb_queue;
++    bool usb_rx_ready;
++    bool usb_tx_ready;
++    bool usb_rx_posted;
++    uint64_t usb_rx_addr;
++    uint32_t usb_rx_len;
+ };
+ 
+ #define VMAPPLE_BDIF_SIZE   0x00200000
+@@ -42,11 +52,14 @@ struct VMAppleBdifState {
+ #define REG_STATUS_ACTIVE     BIT(0)
+ #define REG_CFG             0x4
+ #define REG_CFG_ACTIVE        BIT(1)
++#define REG_CFG_USB           0x1a01
+ #define REG_UNK1            0x8
+ #define REG_BUSY            0x10
+ #define REG_BUSY_READY        BIT(0)
+ #define REG_UNK2            0x400
++#define REG_CONTROL         0x404
+ #define REG_CMD             0x408
++#define REG_QUEUE           0x410
+ #define REG_NEXT_DEVICE     0x420
+ #define REG_UNK3            0x434
+ 
+@@ -77,6 +90,7 @@ typedef struct VblkReq {
+ 
+ static uint64_t bdif_read(void *opaque, hwaddr offset, unsigned size)
+ {
++    VMAppleBdifState *s = opaque;
+     uint64_t ret = -1;
+     uint64_t devid = offset & REG_DEVID_MASK;
+ 
+@@ -85,17 +99,42 @@ static uint64_t bdif_read(void *opaque, hwaddr offset, unsigned size)
+         ret = REG_STATUS_ACTIVE;
+         break;
+     case REG_CFG:
+-        ret = REG_CFG_ACTIVE;
++        ret = devid == DEVID_USB &&
++              qemu_chr_fe_backend_connected(&s->usbdev) ?
++              REG_CFG_USB : REG_CFG_ACTIVE;
+         break;
+     case REG_UNK1:
+         ret = 0x420;
+         break;
+     case REG_BUSY:
+-        ret = REG_BUSY_READY;
++        if (devid == DEVID_USB &&
++            qemu_chr_fe_backend_connected(&s->usbdev)) {
++            if (!s->usb_control) {
++                ret = 0;
++            } else if (s->usb_queue == 0) {
++                ret = s->usb_rx_ready ? REG_BUSY_READY : 0;
++                if (s->usb_rx_ready) {
++                    s->usb_rx_posted = false;
++                }
++                s->usb_rx_ready = false;
++            } else if (s->usb_queue == 1) {
++                ret = s->usb_tx_ready ? REG_BUSY_READY : 0;
++            } else {
++                ret = 0;
++            }
++        } else {
++            ret = REG_BUSY_READY;
++        }
+         break;
+     case REG_UNK2:
+         ret = 0x1;
+         break;
++    case REG_CONTROL:
++        if (devid == DEVID_USB &&
++            qemu_chr_fe_backend_connected(&s->usbdev)) {
++            ret = s->usb_control;
++        }
++        break;
+     case REG_UNK3:
+         ret = 0x0;
+         break;
+@@ -200,6 +239,171 @@ out:
+                      MEMTXATTRS_UNSPECIFIED);
+ }
+ 
++/*
++ * Recovery transport ABI independently exercised by Anees Iqbal, 2026-08-17:
++ * https://github.com/steelbrain/experiment-macOS-arm64-on-asahi-linux-arm64
++ * The socket's LE32 length framing is a host transport convention. Apple ROM
++ * interprets the payload; this device does not synthesize USB/DFU replies.
++ */
++typedef struct VUsbDesc {
++    uint64_t addr;
++    uint32_t len;
++    uint16_t next;
++    uint16_t flags;
++} QEMU_PACKED VUsbDesc;
++
++/* iBSS 7459.141.1 recovery posts a 1 MiB payload plus its six-byte header. */
++#define VUSB_MAX_PACKET  (1 * MiB + 6)
++#define VUSB_FRAME_MAX   (VUSB_MAX_PACKET + sizeof(uint32_t))
++#define VUSB_DESC_WRITE  2
++
++static void vusb_stop(VMAppleBdifState *s)
++{
++    /*
++     * All DMA and TX are synchronous. Cancel posted RX and partial framing
++     * before reporting control=0; never DMA into the driver's freed buffer.
++     * A new stream epoch prevents an old frame tail becoming a new header.
++     */
++    s->usb_control = 0;
++    qemu_chr_fe_disconnect(&s->usbdev);
++    g_byte_array_set_size(s->usb_input, 0);
++    s->usb_queue = 0;
++    s->usb_rx_ready = false;
++    s->usb_tx_ready = false;
++    s->usb_rx_posted = false;
++    s->usb_rx_addr = 0;
++    s->usb_rx_len = 0;
++}
++
++static void vusb_reset(DeviceState *dev)
++{
++    vusb_stop(VMAPPLE_BDIF(dev));
++}
++
++static void vusb_try_deliver(VMAppleBdifState *s)
++{
++    uint32_t len;
++    MemTxResult result;
++
++    if (!s->usb_control || !s->usb_rx_posted || s->usb_rx_ready ||
++        s->usb_input->len < 4) {
++        return;
++    }
++    len = ldl_le_p(s->usb_input->data);
++    if (len > VUSB_MAX_PACKET) {
++        qemu_log_mask(LOG_GUEST_ERROR,
++                      "vmapple-bdif: oversized USB frame: %u\n", len);
++        qemu_chr_fe_disconnect(&s->usbdev);
++        return;
++    }
++    if (s->usb_input->len < sizeof(len) + len) {
++        return;
++    }
++    if (len > s->usb_rx_len) {
++        qemu_log_mask(LOG_GUEST_ERROR,
++                      "vmapple-bdif: USB frame exceeds posted buffer\n");
++        qemu_chr_fe_disconnect(&s->usbdev);
++        return;
++    }
++    result = dma_memory_write(&address_space_memory, s->usb_rx_addr,
++                              s->usb_input->data + sizeof(len), len,
++                              MEMTXATTRS_UNSPECIFIED);
++    trace_bdif_usb_transfer(0, s->usb_rx_addr, len, result == MEMTX_OK);
++    if (result == MEMTX_OK) {
++        s->usb_rx_ready = true;
++    }
++    g_byte_array_remove_range(s->usb_input, 0, sizeof(len) + len);
++    qemu_chr_fe_accept_input(&s->usbdev);
++}
++
++static int vusb_can_receive(void *opaque)
++{
++    VMAppleBdifState *s = opaque;
++
++    return s->usb_control ?
++           VUSB_FRAME_MAX - MIN(s->usb_input->len, VUSB_FRAME_MAX) : 0;
++}
++
++static void vusb_receive(void *opaque, const uint8_t *buf, int size)
++{
++    VMAppleBdifState *s = opaque;
++
++    if (size < 0 || size > vusb_can_receive(s)) {
++        qemu_chr_fe_disconnect(&s->usbdev);
++        return;
++    }
++    g_byte_array_append(s->usb_input, buf, size);
++    vusb_try_deliver(s);
++}
++
++static void vusb_event(void *opaque, QEMUChrEvent event)
++{
++    VMAppleBdifState *s = opaque;
++
++    if (event == CHR_EVENT_OPENED) {
++        /* Synchronous TX has no outstanding host write on a new stream. */
++        s->usb_tx_ready = s->usb_control != 0;
++    } else if (event == CHR_EVENT_CLOSED) {
++        /* Never combine a partial frame from two different connections. */
++        g_byte_array_set_size(s->usb_input, 0);
++        s->usb_tx_ready = false;
++    }
++}
++
++static void vusb_cmd(VMAppleBdifState *s, uint64_t gp_addr)
++{
++    VUsbDesc desc;
++    uint16_t flags;
++    MemTxResult result;
++
++    if (!s->usb_control || !qemu_chr_fe_backend_connected(&s->usbdev)) {
++        return;
++    }
++    result = dma_memory_read(&address_space_memory, gp_addr, &desc,
++                             sizeof(desc), MEMTXATTRS_UNSPECIFIED);
++    if (result != MEMTX_OK) {
++        return;
++    }
++    desc.addr = le64_to_cpu(desc.addr);
++    desc.len = le32_to_cpu(desc.len);
++    flags = le16_to_cpu(desc.flags);
++    trace_bdif_usb_descriptor(s->usb_queue, gp_addr, desc.addr,
++                              desc.len, flags);
++    /* Only the observed single-descriptor queues are implemented. */
++    if (desc.len > VUSB_MAX_PACKET || desc.addr > UINT64_MAX - desc.len ||
++        flags != (s->usb_queue == 0 ? VUSB_DESC_WRITE : 0)) {
++        qemu_log_mask(LOG_UNIMP,
++                      "vmapple-bdif: unsupported USB descriptor\n");
++        return;
++    }
++    if (s->usb_queue == 0) {
++        if (s->usb_rx_posted) {
++            qemu_log_mask(LOG_GUEST_ERROR,
++                          "vmapple-bdif: USB receive already pending\n");
++            return;
++        }
++        s->usb_rx_addr = desc.addr;
++        s->usb_rx_len = desc.len;
++        s->usb_rx_posted = true;
++        vusb_try_deliver(s);
++    } else if (s->usb_queue == 1) {
++        g_autofree uint8_t *frame = g_malloc(desc.len + sizeof(uint32_t));
++        int written = -1;
++
++        s->usb_tx_ready = false;
++        stl_le_p(frame, desc.len);
++        result = dma_memory_read(&address_space_memory, desc.addr,
++                                 frame + sizeof(uint32_t), desc.len,
++                                 MEMTXATTRS_UNSPECIFIED);
++        if (result == MEMTX_OK && qemu_chr_fe_backend_open(&s->usbdev)) {
++            written = qemu_chr_fe_write_all(&s->usbdev, frame,
++                                           desc.len + sizeof(uint32_t));
++        }
++        s->usb_tx_ready = written == desc.len + sizeof(uint32_t);
++        trace_bdif_usb_transfer(1, desc.addr, desc.len, s->usb_tx_ready);
++    }
++}
++
+ static void bdif_write(void *opaque, hwaddr offset,
+                        uint64_t value, unsigned size)
+ {
+@@ -209,6 +413,30 @@ static void bdif_write(void *opaque, hwaddr offset,
+     trace_bdif_write(offset, size, value);
+ 
+     switch (offset & ~REG_DEVID_MASK) {
++    case REG_CONTROL:
++        if (devid == DEVID_USB &&
++            qemu_chr_fe_backend_connected(&s->usbdev)) {
++            /*
++             * AVPBooter 7459.141.1 enables with 1/3 at 0x106afc;
++             * teardown 0x106c00 writes 0 and waits for readback 0.
++             */
++            if (value == 0) {
++                vusb_stop(s);
++            } else if (value == 1 || value == 3) {
++                s->usb_control = value;
++                s->usb_tx_ready = qemu_chr_fe_backend_open(&s->usbdev);
++                qemu_chr_fe_accept_input(&s->usbdev);
++            } else {
++                qemu_log_mask(LOG_UNIMP,
++                              "vmapple-bdif: unsupported USB control value\n");
++            }
++        }
++        break;
++    case REG_QUEUE:
++        if (devid == DEVID_USB) {
++            s->usb_queue = value;
++        }
++        break;
+     case REG_CMD:
+         switch (devid) {
+         case DEVID_ROOT:
+@@ -217,6 +445,9 @@ static void bdif_write(void *opaque, hwaddr offset,
+         case DEVID_AUX:
+             vblk_cmd(devid, s->aux, value, 0x0);
+             break;
++        case DEVID_USB:
++            vusb_cmd(s, value);
++            break;
+         }
+         break;
+     }
+@@ -243,11 +474,31 @@ static void bdif_init(Object *obj)
+     memory_region_init_io(&s->mmio, obj, &bdif_ops, obj,
+                          "VMApple Backdoor Interface", VMAPPLE_BDIF_SIZE);
+     sysbus_init_mmio(SYS_BUS_DEVICE(obj), &s->mmio);
++    s->usb_input = g_byte_array_new();
++}
++
++static void bdif_realize(DeviceState *dev, Error **errp)
++{
++    VMAppleBdifState *s = VMAPPLE_BDIF(dev);
++
++    if (qemu_chr_fe_backend_connected(&s->usbdev)) {
++        qemu_chr_fe_set_handlers(&s->usbdev, vusb_can_receive, vusb_receive,
++                                 vusb_event, NULL, s, NULL, true);
++    }
++}
++
++static void bdif_finalize(Object *obj)
++{
++    VMAppleBdifState *s = VMAPPLE_BDIF(obj);
++
++    qemu_chr_fe_deinit(&s->usbdev, false);
++    g_clear_pointer(&s->usb_input, g_byte_array_unref);
+ }
+ 
+ static const Property bdif_properties[] = {
+     DEFINE_PROP_DRIVE("aux", VMAppleBdifState, aux),
+     DEFINE_PROP_DRIVE("root", VMAppleBdifState, root),
++    DEFINE_PROP_CHR("usbdev", VMAppleBdifState, usbdev),
+ };
+ 
+ static void bdif_class_init(ObjectClass *klass, const void *data)
+@@ -255,6 +506,8 @@ static void bdif_class_init(ObjectClass *klass, const void *data)
+     DeviceClass *dc = DEVICE_CLASS(klass);
+ 
+     dc->desc = "VMApple Backdoor Interface";
++    dc->realize = bdif_realize;
++    device_class_set_legacy_reset(dc, vusb_reset);
+     device_class_set_props(dc, bdif_properties);
+ }
+ 
+@@ -263,6 +516,7 @@ static const TypeInfo bdif_info = {
+     .parent        = TYPE_SYS_BUS_DEVICE,
+     .instance_size = sizeof(VMAppleBdifState),
+     .instance_init = bdif_init,
++    .instance_finalize = bdif_finalize,
+     .class_init    = bdif_class_init,
+ };
+ 
+diff --git a/hw/vmapple/trace-events b/hw/vmapple/trace-events
+index 93380ede1451dcc269ed35a8b5f676954945915e..8c0906b5863c593d8c076cd1c704889fcf422ee4 100644
+--- a/hw/vmapple/trace-events
++++ b/hw/vmapple/trace-events
+@@ -19,3 +19,5 @@ aes_dump_data(const char *desc, const char *hex) "%s%s"
+ bdif_read(uint64_t offset, uint32_t size, uint64_t value) "offset=0x%"PRIx64" size=0x%x value=0x%"PRIx64
+ bdif_write(uint64_t offset, uint32_t size, uint64_t value) "offset=0x%"PRIx64" size=0x%x value=0x%"PRIx64
+ bdif_vblk_read(const char *dev, uint64_t addr, uint64_t offset, uint32_t len, int r) "dev=%s addr=0x%"PRIx64" off=0x%"PRIx64" size=0x%x r=%d"
++bdif_usb_descriptor(uint32_t queue, uint64_t descriptor, uint64_t addr, uint32_t len, uint16_t flags) "queue=%u desc=0x%"PRIx64" addr=0x%"PRIx64" len=0x%x flags=0x%x"
++bdif_usb_transfer(uint32_t queue, uint64_t addr, uint32_t len, bool complete) "queue=%u addr=0x%"PRIx64" len=0x%x complete=%d"

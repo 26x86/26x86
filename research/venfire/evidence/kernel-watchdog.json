@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "experiment": "021",
+  "layer": "Virtual ARM timer -> original XNU clock conversion -> IOKit PM watchdog",
+  "guest_kernel": "xnu-8020.240.7~1/RELEASE_ARM64_VMAPPLE",
+  "public_source_version": "8020.140.41 (related, not exact guest build)",
+  "original_kernel_sha256": "1f02d37eb5c897f77bed075b33b14924feabdd6143fb69864bf073d5ac05c8de",
+  "guest_code_modified": false,
+  "guest_memory_written": false,
+  "watchdog_disabled": false,
+  "confirmed_timer_mismatch": {
+    "qemu_cpu0_cntfrq_hz": 1000000000,
+    "qemu_cpu1_cntfrq_hz": 1000000000,
+    "xnu_frequency_global_address": "0xfffffe0024b30000",
+    "xnu_frequency_hz": 24000000,
+    "clock_timebase_numer": 125,
+    "clock_timebase_denom": 3,
+    "original_conversion_code_runtime": "0xfffffe00224ef178",
+    "guest_time_rate_relative_to_qemu_virtual_time": 41.666666666666664,
+    "counter_reader": "Original watchdog callback reads CNTVCT_EL0 plus per-CPU offset; no scaling occurs before comparison."
+  },
+  "original_devicetree": {
+    "source": "DeviceTree.vma2macosap.im4p",
+    "official_manifest_role": "DeviceTree",
+    "official_manifest_digest_matches": true,
+    "container_sha256": "0df01591588df3d75029837a66e9892f97d5d053d5e314195b6d7a90f01a86ec",
+    "compressed_payload_sha256": "9db43cff2893fe14c9a77906ce995310610515dfed48d984987138d03ffad5f1",
+    "decompressed_sha256": "01c07ac12b45086e351fa1933ec554c3d5ca961e0ef5bfc3b452f4709acdac5e",
+    "decoded_size": 58476,
+    "cpu_template_node_count": 32,
+    "cpu0_timebase_frequency_hz": 24000000,
+    "cpu1_timebase_frequency_hz": 24000000,
+    "cpu0_clock_frequency_hz": 24000000,
+    "restore_role_octets_preserved": "See restore-role-metadata.json; dtre/rdtr role metadata only.",
+    "live_bootargs_device_tree_pointer_not_captured": true,
+    "standard_restore_command_line": "rd=md0 nand-enable-reformat=1 -progress -restore",
+    "command_line_frequency_override": false
+  },
+  "watchdog_state": {
+    "original_callback_runtime": "0xfffffe0022ab583c",
+    "original_code_bytes_verified": 248,
+    "original_code_sha256": "89ebae0961dc5f7b664aaf366d7086f4c5053a84be4123fe35c6ece8f4ac9e57",
+    "owner": "IOPMrootDomain",
+    "vtable_matches_original_symbol_plus_16": true,
+    "owner_address": "0xfffffe24e3558400",
+    "pm_address": "0xfffffe2016d9c300",
+    "deadline_ticks": "0x21e7cf116f1",
+    "callback_current_ticks": "0x21e80cfff99",
+    "deadline_expired": true,
+    "blocked_array_count": 0,
+    "pm_machine_state": 0,
+    "pm_machine_state_related_source_name": "kIOPM_Finished",
+    "active_request_type": 5,
+    "active_request_related_source_name": "RegisterPowerDriver",
+    "request_field_layout_validation": "Owner, timer/lock/deadline and OSArray count offsets cross-checked in original instructions; other PM/request fields match related public layout.",
+    "pm_workloop_thread_stack_preserved": true,
+    "pm_workloop_interrupted_pc": "0xfffffe0022ac5ef0",
+    "pm_workloop_interrupted_function": "Original exported IOService::requestPowerDomainState + 0x180",
+    "preemption_path": "Saved stack passes ARM exception/AST scheduling path before thread switch; no identified device-ack wait at the top."
+  },
+  "other_observations": {
+    "cpu1_pc_zero_and_reset_registers": true,
+    "cpu1_causality_not_established": true,
+    "ioresources_early_registration_errors": 2,
+    "platform_pointer_nonzero_at_panic": true,
+    "ioresources_error_does_not_identify_missing_gpu": true,
+    "apple_pv_gpu_absent_in_this_fixture": true,
+    "gpu_causality_not_established": true,
+    "old_fixture_missing_runtime_virtio_root_aux_devices": true
+  },
+  "next_experiment": {
+    "cpu_option": "max,pauth-qarma5=on,cntfrq=24000000",
+    "changes": "Virtual hardware counter frequency only, keeping original guest payloads and trust checks.",
+    "verify": [
+      "Record QOM CPU frequency and original XNU clock conversion globals again.",
+      "Measure CNTVCT progression against QEMU virtual time.",
+      "Observe root power-driver request completion and compare watchdog/console progress.",
+      "Only then isolate CPU1 startup, runtime block devices, and GPU presence one at a time."
+    ],
+    "qemu_integer_period_limitation": "Pinned QEMU uses floor(1e9 / cntfrq) ns periods; 24MHz gives 41ns, about24.390244MHz and1.626016% residual rate error.",
+    "subsequent_boot_success_not_proved_by_this_report": true
+  },
+  "sources": {
+    "apple_ipsw": "https://updates.cdn-apple.com/2022FallFCS/fullrestores/012-66032/8D8D90C6-A876-4FFF-BBF4-D158939B3841/UniversalMac_12.6.1_21G217_Restore.ipsw",
+    "pm_watchdog": "https://github.com/apple-oss-distributions/xnu/blob/27b03b360a988dfd3dfdf34262bb0042026747cc/iokit/Kernel/IOServicePM.cpp#L5740",
+    "panic": "https://github.com/apple-oss-distributions/xnu/blob/27b03b360a988dfd3dfdf34262bb0042026747cc/iokit/Kernel/IOPMrootDomain.cpp#L12563",
+    "devicetree_clock": "https://github.com/apple-oss-distributions/xnu/blob/27b03b360a988dfd3dfdf34262bb0042026747cc/pexpert/arm/pe_identify_machine.c",
+    "bootargs_devicetree": "https://github.com/apple-oss-distributions/xnu/blob/27b03b360a988dfd3dfdf34262bb0042026747cc/pexpert/arm/pe_init.c",
+    "qemu_timer": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/target/arm/cpu.c#L1430"
+  },
+  "private_capture_hashes": [
+    {
+      "name": "capture-021.private.json",
+      "sha256": "33623b96ab1835e9b2418af6194c45dc0aed6f4c5bae10c1a4ca230a19a21d5b"
+    },
+    {
+      "name": "timer-021.private.json",
+      "sha256": "0cb26f31c9869bf11e78aef42c1b1701db91c4f0c6c43503c193613d58933031"
+    },
+    {
+      "name": "pm-frames.private.json",
+      "sha256": "e33d44a00e24d83fdac03b73dbfb5e796571fda28c6717f300813aa1d304f276"
+    },
+    {
+      "name": "pm-stacks.private.json",
+      "sha256": "f3f40b9f2e2137a59eef6b97f6c088a6659aa250dc5cceca06bbd766f715dcda"
+    },
+    {
+      "name": "qmp-1788644849461212482.json",
+      "sha256": "87bf575a5108cdb1061124d4ef82007618d869511b83220e981738778a6f8435"
+    }
+  ],
+  "live_session_stop_sentinel_created": true,
+  "macos_boot_verified": false
+}

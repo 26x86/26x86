@@ -221,7 +221,8 @@ def cmd_build(args: argparse.Namespace) -> int:
 
 def cmd_patch(args: argparse.Namespace) -> int:
     from x86.patch.root import apply, preflight
-    result = (apply if args.apply else preflight)(args.profile, args.payload_dir)
+    result = (apply if args.apply else preflight)(args.profile, args.payload_dir,
+                                                 abstraction_manifest=args.abstraction_manifest)
     _emit_json(result)
     return 0 if result.get("ok") else 2
 
@@ -394,6 +395,57 @@ def cmd_wizard(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_assets(args: argparse.Namespace) -> int:
+    # Keep the proven internal namespace while exposing the 26x86 command.
+    from research.venfire.venfire.artifacts import create_manifest, write_manifest, load_manifest, verify_manifest
+    from research.venfire.venfire.media import inspect_restore
+    try:
+        if args.asset_action == "inspect-restore":
+            result = inspect_restore(args.path, hash_archive=args.sha256)
+        elif args.asset_action == "manifest":
+            manifest = create_manifest(args.files)
+            write_manifest(manifest, args.output)
+            result = manifest.to_dict()
+        else:
+            result = verify_manifest(load_manifest(args.path)).to_dict()
+        _emit_json(result)
+        return 0 if result.get("valid", True) else 2
+    except (ValueError, OSError) as exc:
+        _emit_json({"ok": False, "error": str(exc)})
+        return 2
+
+
+def cmd_vsk(args: argparse.Namespace) -> int:
+    from x86.vsk_config import load_config
+    # ASCII JSON is valid UTF-8 on Windows pipes regardless of the console code
+    # page; JSON decoding restores Unicode config strings without data loss.
+    def emit(result):
+        print(json.dumps(result, ensure_ascii=True, indent=2))
+    try:
+        result = load_config(args.config)
+        emit({"ok": True, **result})
+        return 0
+    except (ValueError, OSError) as exc:
+        emit({"ok": False, "error": str(exc), "boot_authorized": False,
+              "validation_level": "UNIT"})
+        return 2
+
+
+def cmd_sandbox(args: argparse.Namespace) -> int:
+    from x86.sandbox import plan, prepare
+    try:
+        if args.config:
+            from x86.sandbox_config import read
+            result = read(args.config)
+        else:
+            result = prepare(args.target, args.output) if args.output else plan(args.target)
+    except (ValueError, OSError) as exc:
+        _emit_json({"ok": False, "error": str(exc)})
+        return 1
+    _emit_json(result)
+    return 0 if result.get("ok") else 2
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="x86",
@@ -406,6 +458,32 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    vsk = subparsers.add_parser("vsk", help="Validate VSK configuration offline; never authorize boot")
+    vsk.add_argument("--config", required=True, help="Strict UTF-8 XML VSK config.plist")
+    vsk.set_defaults(handler=cmd_vsk)
+
+    assets = subparsers.add_parser("assets", help="Read-only original guest asset inspection and integrity")
+    asset_commands = assets.add_subparsers(dest="asset_action", required=True)
+    inspect = asset_commands.add_parser("inspect-restore", help="Inspect original IPSW BuildManifest in place")
+    inspect.add_argument("path")
+    inspect.add_argument("--sha256", action="store_true")
+    inspect.set_defaults(handler=cmd_assets)
+    manifest = asset_commands.add_parser("manifest", help="Record immutable input hashes")
+    manifest.add_argument("--output", required=True)
+    manifest.add_argument("files", nargs="+")
+    manifest.set_defaults(handler=cmd_assets)
+    verify = asset_commands.add_parser("verify", help="Verify recorded inputs")
+    verify.add_argument("path")
+    verify.set_defaults(handler=cmd_assets)
+
+    sandbox = subparsers.add_parser("sandbox", help="Apple Silicon Sandbox EFI status and self-test staging")
+    sandbox.add_argument("--target", type=int, choices=[26, 27], default=26)
+    sandbox_mode = sandbox.add_mutually_exclusive_group()
+    sandbox_mode.add_argument("--output", help="Stage EFI self-test into a new folder")
+    sandbox_mode.add_argument("--config", help="Validate OpenCore Sandbox config.plist without writes")
+    sandbox.add_argument("--json", action="store_true")
+    sandbox.set_defaults(handler=cmd_sandbox)
 
     detect = subparsers.add_parser("detect", help="Mac 모델 및 하드웨어 정보 확인")
     detect.add_argument("--json", action="store_true", help="JSON 형식으로 결과 출력")
@@ -424,6 +502,7 @@ def build_parser() -> argparse.ArgumentParser:
     mode.add_argument("--preflight", action="store_true", help="읽기 전용 사전 검사 (기본)")
     patch.add_argument("--profile", choices=["surface-pro6-i5-tahoe"])
     patch.add_argument("--payload-dir", help="Universal-Binaries.dmg를 포함한 payloads 디렉터리")
+    patch.add_argument("--abstraction-manifest", help="Exact OS build / architecture abstraction-binary manifest")
     patch.add_argument("--json", action="store_true", help="JSON 형식으로 결과 출력")
     patch.set_defaults(handler=cmd_patch)
 

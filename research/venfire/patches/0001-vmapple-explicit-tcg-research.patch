@@ -1,0 +1,140 @@
+diff --git a/configs/devices/aarch64-softmmu/default.mak b/configs/devices/aarch64-softmmu/default.mak
+index ad8028c..0d94b67 100644
+--- a/configs/devices/aarch64-softmmu/default.mak
++++ b/configs/devices/aarch64-softmmu/default.mak
+@@ -9,4 +9,4 @@ include ../arm-softmmu/default.mak
+ # CONFIG_XLNX_VERSAL=n
+ # CONFIG_SBSA_REF=n
+ # CONFIG_NPCM8XX=n
+-CONFIG_VMAPPLE=n
++# CONFIG_VMAPPLE=n
+diff --git a/hw/vmapple/Kconfig b/hw/vmapple/Kconfig
+index 2382b29..fab0f40 100644
+--- a/hw/vmapple/Kconfig
++++ b/hw/vmapple/Kconfig
+@@ -14,9 +14,9 @@ config VMAPPLE_VIRTIO_BLK
+ 
+ config VMAPPLE
+     bool
+-    depends on ARM
+-    depends on HVF
+-    default y if ARM
++    depends on AARCH64
++    depends on HVF || TCG
++    default y if AARCH64
+     imply PCI_DEVICES
+     select ARM_GICV3
+     select PLATFORM_BUS
+@@ -30,5 +30,5 @@ config VMAPPLE
+     select VMAPPLE_AES
+     select VMAPPLE_BDIF
+     select VMAPPLE_CFG
+-    select MAC_PVG_MMIO
++    select MAC_PVG_MMIO if MAC_PVG
+     select VMAPPLE_VIRTIO_BLK
+diff --git a/hw/vmapple/aes.c b/hw/vmapple/aes.c
+index 553e688..2839ee1 100644
+--- a/hw/vmapple/aes.c
++++ b/hw/vmapple/aes.c
+@@ -253,7 +253,7 @@ static bool cmd_iv(AESState *s)
+ 
+ static void dump_data(const char *desc, const void *p, size_t len)
+ {
+-    static const size_t MAX_LEN = 0x1000;
++    enum { MAX_LEN = 0x1000 };
+     char hex[MAX_LEN * 2 + 1] = "";
+ 
+     if (len > MAX_LEN) {
+diff --git a/hw/vmapple/vmapple.c b/hw/vmapple/vmapple.c
+index 607181f..9030dbb 100644
+--- a/hw/vmapple/vmapple.c
++++ b/hw/vmapple/vmapple.c
+@@ -50,6 +50,7 @@
+ #include "system/reset.h"
+ #include "system/runstate.h"
+ #include "system/system.h"
++#include "system/tcg.h"
+ #include "target/arm/gtimer.h"
+ #include "target/arm/cpu.h"
+ 
+@@ -68,6 +69,7 @@ struct VMAppleMachineState {
+     MemoryRegion fw_mr;
+     MemoryRegion ecam_alias;
+     uint64_t uuid;
++    bool research_headless;
+ };
+ 
+ #define TYPE_VMAPPLE_MACHINE   MACHINE_TYPE_NAME("vmapple")
+@@ -448,6 +450,25 @@ static void mach_vmapple_init(MachineState *machine)
+     unsigned int smp_cpus = machine->smp.cpus;
+     unsigned int max_cpus = machine->smp.max_cpus;
+ 
++    if (tcg_enabled() && !vms->research_headless) {
++        error_report("vmapple TCG requires research-headless=on; "
++                     "macOS support is not established");
++        exit(1);
++    }
++    if (vms->research_headless && !tcg_enabled()) {
++        error_report("vmapple research-headless requires -accel tcg");
++        exit(1);
++    }
++    if (!vms->research_headless &&
++        !object_class_by_name("apple-gfx-mmio")) {
++        error_report("vmapple requires apple-gfx-mmio in this mode");
++        exit(1);
++    }
++    if (vms->research_headless) {
++        warn_report("vmapple research mode: no Apple PV graphics; "
++                    "macOS boot is unverified");
++    }
++
+     vms->memmap = memmap;
+     machine->usb = true;
+ 
+@@ -498,7 +519,9 @@ static void mach_vmapple_init(MachineState *machine)
+     create_bdif(vms, sysmem);
+     create_pvpanic(vms, sysmem);
+     create_aes(vms, sysmem);
+-    create_gfx(vms, sysmem);
++    if (!vms->research_headless) {
++        create_gfx(vms, sysmem);
++    }
+     create_uart(vms, VMAPPLE_UART, sysmem, serial_hd(0));
+     create_rtc(vms);
+     create_pcie(vms);
+@@ -571,6 +594,16 @@ static GlobalProperty vmapple_compat_defaults[] = {
+     { TYPE_XHCI_PCI, "conditional-intr-mapping", "on" },
+ };
+ 
++static bool vmapple_get_research_headless(Object *obj, Error **errp)
++{
++    return VMAPPLE_MACHINE(obj)->research_headless;
++}
++
++static void vmapple_set_research_headless(Object *obj, bool value, Error **errp)
++{
++    VMAPPLE_MACHINE(obj)->research_headless = value;
++}
++
+ static void vmapple_machine_class_init(ObjectClass *oc, const void *data)
+ {
+     MachineClass *mc = MACHINE_CLASS(oc);
+@@ -590,6 +623,13 @@ static void vmapple_machine_class_init(ObjectClass *oc, const void *data)
+ 
+     compat_props_add(mc->compat_props, vmapple_compat_defaults,
+                      G_N_ELEMENTS(vmapple_compat_defaults));
++    object_class_property_add_bool(oc, "research-headless",
++                                   vmapple_get_research_headless,
++                                   vmapple_set_research_headless);
++    object_class_property_set_description(oc, "research-headless",
++                                         "Opt in to TCG research without "
++                                         "PV graphics; requires an explicit "
++                                         "emulated -cpu");
+ }
+ 
+ static void vmapple_instance_init(Object *obj)
+@@ -616,4 +656,3 @@ static void machvmapple_machine_init(void)
+     type_register_static(&vmapple_machine_info);
+ }
+ type_init(machvmapple_machine_init);
+-

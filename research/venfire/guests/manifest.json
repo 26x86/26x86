@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "producer": "self-authored Venfire conformance guest",
+  "assembler": "GNU assembler (GNU Binutils for Ubuntu) 2.42",
+  "sources": {
+    "conformance.S": "484379768788a88892ed0ee9bb61a87abb3ee00186f76a9f0cc6f7ddc23acda7",
+    "virt.ld": "b07373501929df8d56c431579d509361a12c327e9961009cd66ae5471e52bfe7",
+    "vmapple.ld": "5df1482adaeea47986bfac28baa3fd96f8fb757197a2bba667175c525523f6d6"
+  },
+  "artifacts": {
+    "virt.elf": "28695ce852b286260617a3846ae66973f73bd5d12c086b1bb388f9a770bd954b",
+    "vmapple.elf": "4ba9e111b8afb64cf352e2312b0a7850e7a0d70c9d500d0139f584fb619f6b90",
+    "vmapple.bin": "2aafe4392c9b30b04d0509efb0f3a15cca09278153b69e934a862de035eed594"
+  }
+}

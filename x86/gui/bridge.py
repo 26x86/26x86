@@ -85,6 +85,33 @@ class WizardBridge:
     def _hardware_profile(self):
         return os.environ.get("X86_TARGET_PROFILE") or self._settings.read("hardware_profile")
 
+    def get_sandbox_status(self) -> dict[str, Any]:
+        from x86.sandbox import status
+        return status(self._settings.read("execution_mode", "native"))
+
+    def set_execution_mode(self, mode: str) -> dict[str, Any]:
+        if mode not in ("native", "sandbox"):
+            return {"ok": False, "error": "Unknown execution mode"}
+        self._settings.write("execution_mode", mode)
+        self._build_completed = False
+        return self.get_sandbox_status()
+
+    def get_sandbox_plan(self, target_major: int) -> dict[str, Any]:
+        from x86.sandbox import plan
+        try:
+            return plan(target_major)
+        except (ValueError, OSError) as exc:
+            return {"ok": False, "error": str(exc)}
+
+    def prepare_sandbox(self, target_major: int, output_path: str) -> dict[str, Any]:
+        from x86.sandbox import prepare
+        if self._settings.read("execution_mode", "native") != "sandbox":
+            return {"ok": False, "error": "Select Apple Silicon Sandbox first"}
+        try:
+            return prepare(target_major, output_path)
+        except (ValueError, OSError) as exc:
+            return {"ok": False, "error": str(exc)}
+
     def _constants(self):
         return bootstrap.get_constants(start_unpack=True)
 
@@ -309,6 +336,8 @@ class WizardBridge:
 
     def launch_wx_action(self, action: str) -> dict[str, Any]:
         """Spawn legacy wx UI for build/install/patch flows (separate process)."""
+        if self._settings.read("execution_mode", "native") == "sandbox" and action != "help":
+            return {"ok": False, "error": "Native patch actions are disabled in Apple Silicon Sandbox mode"}
         allowed = {
             "build",
             "install",
@@ -328,9 +357,9 @@ class WizardBridge:
         surface = self._hardware_profile() == PROFILE_ID
         if surface and action in ("build", "install", "model_change", "advanced"):
             return {"ok": False, "error": "Surface 전용 EFI를 사용하세요. Mac용 EFI 빌더로 덮어쓰지 않습니다."}
-        if surface and action == "patch":
+        if action == "patch":
             from x86.patch.root import preflight
-            report = preflight(PROFILE_ID)
+            report = preflight(PROFILE_ID if surface else None)
             if not report.get("can_patch"):
                 return {"ok": False, "error": report.get("error") or "\n".join(report.get("blockers") or [report["status"]])}
 

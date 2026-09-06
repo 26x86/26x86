@@ -20,6 +20,10 @@ from x86.gui.bridge import WizardBridge
 API_METHODS = frozenset(
     {
         "get_app_info",
+        "get_sandbox_status",
+        "set_execution_mode",
+        "get_sandbox_plan",
+        "prepare_sandbox",
         "set_hardware_profile",
         "validate_surface_efi",
         "get_steps",

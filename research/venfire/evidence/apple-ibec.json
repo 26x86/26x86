@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "experiment": "021",
+  "layer": "Original iBSS -> Apple-signed restore LocalPolicy -> original iBEC / iBootStage2",
+  "qemu_sha256": "d3735b9c16699be006f746062618adb70d2c6dc995ce154620ddada0957ce651",
+  "original_ibec_im4p_sha256": "2c263f33c435ec502d2327b18c2dfe09bbe04469bee9d514abcb7a7f4025a796",
+  "official_tss_ibec_status": "0",
+  "official_tss_local_policy_status": "0",
+  "verified_https": true,
+  "actual_live_nonce_used": true,
+  "ticket_bound_to_next_stage": true,
+  "original_payload_preserved": true,
+  "lpol_transfer": {
+    "schema": 1,
+    "image_size": 3039,
+    "image_sha256": "3d473426336135f19ee779da80359e782262131ba11d5b5ff08109bb221a9971",
+    "bytes_sent": 3039,
+    "blocks": [
+      {
+        "offset": 0,
+        "size": 3039,
+        "acknowledged": true
+      }
+    ],
+    "zero_length_packet": false,
+    "transfer_complete": true,
+    "input_integrity": true,
+    "signature_acceptance_verified": false,
+    "macos_boot_verified": false,
+    "error": null,
+    "input_integrity_report": {
+      "valid": true,
+      "checked_count": 1,
+      "issues": []
+    }
+  },
+  "lpolrestore_command_acknowledged": true,
+  "ibec_transfer": {
+    "schema": 1,
+    "image_size": 351614,
+    "image_sha256": "9724a14d13e9d2332e4fc21ac970d399ceb8bbfcf474a80e6474bd5ddf6a9acd",
+    "bytes_sent": 351614,
+    "blocks": [
+      {
+        "offset": 0,
+        "size": 32768,
+        "acknowledged": true
+      },
+      {
+        "offset": 32768,
+        "size": 32768,
+        "acknowledged": true
+      },
+      {
+        "offset": 65536,
+        "size": 32768,
+        "acknowledged": true
+      },
+      {
+        "offset": 98304,
+        "size": 32768,
+        "acknowledged": true
+      },
+      {
+        "offset": 131072,
+        "size": 32768,
+        "acknowledged": true
+      },
+      {
+        "offset": 163840,
+        "size": 32768,
+        "acknowledged": true
+      },
+      {
+        "offset": 196608,
+        "size": 32768,
+        "acknowledged": true
+      },
+      {
+        "offset": 229376,
+        "size": 32768,
+        "acknowledged": true
+      },
+      {
+        "offset": 262144,
+        "size": 32768,
+        "acknowledged": true
+      },
+      {
+        "offset": 294912,
+        "size": 32768,
+        "acknowledged": true
+      },
+      {
+        "offset": 327680,
+        "size": 23934,
+        "acknowledged": true
+      }
+    ],
+    "zero_length_packet": false,
+    "transfer_complete": true,
+    "input_integrity": true,
+    "signature_acceptance_verified": false,
+    "macos_boot_verified": false,
+    "error": null,
+    "input_integrity_report": {
+      "valid": true,
+      "checked_count": 1,
+      "issues": []
+    }
+  },
+  "go_request": 1,
+  "go_command_acknowledged": true,
+  "uart_markers": [
+    "======== End of iBootStage1 serial output. ========",
+    ":: Supervisor iBootStage2 for vma2, Copyright 2007-2022, Apple Inc.",
+    "aborting autoboot due to tethered restore.",
+    "Entering iBootStage2 recovery mode, starting command prompt"
+  ],
+  "ibec_boot_verified": true,
+  "iboot_stage2_recovery_verified": true,
+  "post_ibec_nonce_observed": true,
+  "new_nonce_length": 32,
+  "macos_boot_verified": false,
+  "xnu_boot_verified": false,
+  "input_integrity": {
+    "valid": true,
+    "checked_count": 1,
+    "issues": []
+  },
+  "not_established": [
+    "standalone return value of LocalPolicy verification routine",
+    "initialized AUX or restored macOS disk",
+    "XNU/macOS boot",
+    "physical Mac validation"
+  ]
+}

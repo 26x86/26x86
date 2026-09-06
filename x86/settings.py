@@ -20,6 +20,7 @@ from .paths import Paths
 
 DEFAULT_SETTINGS: dict[str, Any] = {
     "version": 1,
+    "execution_mode": "native",
     "auto_patch": False,
     "verbose_logging": False,
     "last_detect": None,

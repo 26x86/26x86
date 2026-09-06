@@ -1015,6 +1015,15 @@ class PatchSysVolume:
         5. Executes patching
         """
         logging.info("- Starting Patch Process")
+        # All callers, including advanced wx and direct legacy entry points,
+        # share the abstraction gate before payload or writable root mounts.
+        from x86.patch.abstraction import deployment_gate
+        abstraction = deployment_gate(self.constants)
+        if not abstraction["ok"]:
+            self.constants.root_patcher_succeeded = False
+            for error in abstraction["errors"]:
+                logging.error("- 26x86 abstraction: %s", error)
+            return False
         logging.info(f"- Determining Required Patch set for Darwin {self.constants.detected_os}")
         
         patchset_obj = HardwarePatchsetDetection(self.constants)

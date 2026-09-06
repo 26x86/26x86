@@ -14,13 +14,13 @@
       {
         "label": "main",
         "title": "26x86",
-        "width": 960,
-        "height": 720,
+        "width": 1180,
+        "height": 820,
         "minWidth": 760,
         "minHeight": 560,
         "resizable": true,
         "fullscreen": false,
-        "backgroundColor": "#e8edf3"
+        "backgroundColor": "#eef2f3"
       }
     ],
     "security": {
@@ -30,7 +30,9 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["app"],
+    "targets": [
+      "app"
+    ],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -48,7 +50,7 @@
       }
     },
     "shortDescription": "26x86 wizard GUI (Tauri / WKWebView)",
-    "longDescription": "Native WebView shell for the 26x86 HTML wizard. Uses WKWebView on macOS and WebView2 on Windows — not Qt WebEngine/Chromium."
+    "longDescription": "Native WebView shell for the 26x86 HTML wizard. Uses WKWebView on macOS and WebView2 on Windows \u2014 not Qt WebEngine/Chromium."
   },
   "plugins": {}
 }
