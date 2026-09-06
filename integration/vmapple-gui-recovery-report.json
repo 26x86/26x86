@@ -4,22 +4,80 @@
   "validation_level": "RECOVERY-PROTOCOL",
   "target_major": 27,
   "target_name": "Golden Gate",
+  "machine_type": "iBoot(AArch64)",
+  "personality": "iBoot",
+  "guest_os": "macOS",
+  "guest_os_supported": true,
+  "guest_os_policy": "macOS-only",
+  "supported_guest_os": [
+    "macOS"
+  ],
+  "unsupported_guest_os": [
+    "iOS",
+    "iPadOS",
+    "tvOS",
+    "watchOS",
+    "visionOS"
+  ],
+  "policy_matrix": [
+    {
+      "machine_type": "iBoot(AArch64)",
+      "guest_os": "macOS",
+      "supported": true
+    },
+    {
+      "machine_type": "iBoot(AArch64)",
+      "guest_os": "iOS",
+      "supported": false
+    },
+    {
+      "machine_type": "iBoot(AArch64)",
+      "guest_os": "iPadOS",
+      "supported": false
+    }
+  ],
+  "recovery_scope": {
+    "scope": "macOS-only",
+    "protocol": "DFU/IPSW",
+    "supported_protocols": [
+      "DFU",
+      "IPSW"
+    ],
+    "default_image_name": "_default.ipsw",
+    "dfu_macos_recovery": true,
+    "ipsw_macos_recovery": true
+  },
   "qemu_version": "QEMU emulator version 11.1.50",
   "qemu_binary_sha256": "158df2cf162774306f03cb50d2de83f4169e5e1fc4caf79892f3ae7d47ff3fe0",
   "machine": "vmapple",
   "acceleration": "tcg",
   "display_backend": "gtk",
+  "visible_window_requested": true,
+  "runner": "x86.vmapple.run via 26x86 GUI/CLI bridge",
+  "worker": "WSL Linux process with WSLg GTK",
+  "gui_bridge_invocation": {
+    "method": "launch_vmapple",
+    "spawned": true,
+    "worker_reexec": "wsl.exe --cd ... --exec python3 -m x86 vmapple run",
+    "research_only": true
+  },
   "host": "Linux/x86_64 under WSL; not a physical Apple Intel Mac",
   "developer_host_bypass": true,
   "distribution_status": "NONREDISTRIBUTABLE DEVELOPMENT ARTIFACT",
   "original_guest_input": "macOS 27.0 (26A5425a) personalized iBSS; unchanged",
   "cow_storage": true,
-  "dfu_data_blocks": 172,
+  "dfu_data_blocks": 173,
+  "run_termination": "time_budget",
+  "run_returncode": 0,
+  "run_duration_seconds": 12.917,
   "wait_reset_reached": true,
   "usb_reset_acknowledged": true,
   "reconnect_verified": true,
   "post_reset_usb_identity": "05ac:1227 (iBSS DFU)",
   "ibec_bulk_endpoint_advertised": false,
+  "transition_attempts": 34,
+  "transition_state": "transition-blocked",
+  "ibec_upload_attempted": false,
   "signature_acceptance_verified": false,
   "ibec_executed": false,
   "xnu_executed": false,

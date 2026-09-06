@@ -24,6 +24,15 @@ const { pathToFileURL } = require('node:url');
       get_macos_choices: () => ({choices:[{label:'macOS Tahoe 26',kernel:25}],selected_kernel:25}),
       host_can_build: () => ({can_build:true}), get_status: () => ({build_completed:false}),
       get_sandbox_status: report, get_sandbox_plan: report,
+      get_vmapple_status: () => ({ok:true, configured:true, machine_type:'iBoot(AArch64)', guest_os:'macOS', guest_os_policy:'macOS-only', recovery_scope:{protocol:'DFU/IPSW',default_image_name:'_default.ipsw'}, values:{
+        qemu:'/opt/qemu-system-aarch64', qemu_img:'/usr/bin/qemu-img',
+        firmware:'/assets/AVPBooter.bin', ibss:'/assets/iBSS.img4',
+        ibec:'/assets/iBEC.img4', aux:'/assets/aux.raw', root:'/assets/root.raw',
+        output:'/tmp/26x86-vmapple-test'
+      }}),
+      launch_vmapple: config => ({ok:true, spawned:true, pid:42, target_major:config.target_major,
+        machine_type:config.machine_type, guest_os:config.guest_os, recovery_protocol:config.recovery_protocol,
+        display_backend:config.display, forced_transition:false, macos_boot_verified:false}),
       set_execution_mode: value => {mode=value;return {ok:true};},
       prepare_sandbox: (major, output) => ({ok:true,target_major:major,output_path:output,boot_verified:false}),
       launch_wx_action: () => ({ok:true}), get_patch_status: () => ({ok:true,summary:'패치 없음'}),
@@ -43,10 +52,14 @@ const { pathToFileURL } = require('node:url');
     await page.locator('#sandbox-prepare').waitFor({state:'visible'});
     await page.selectOption('#sandbox-target','27');
     await page.locator('#sandbox-output').fill('C:/26x86-output');
+    await page.locator('#vmapple-launch').click();
+    await page.getByText(/VMApple GTK 창을 열었습니다/, {exact:false}).waitFor();
     await page.locator('#sandbox-prepare').click();
     await page.getByText('EFI 자체 검사 패키지 준비 완료 · macOS 부팅 미검증', {exact:true}).waitFor();
     const calls = await page.evaluate(() => window.testCalls);
     assert(calls.some(c => c[0] === 'prepare_sandbox' && c[1] === 27 && c[2] === 'C:/26x86-output'));
+    assert(calls.some(c => c[0] === 'launch_vmapple' && c[1].target_major === 27 && c[1].research_only === true));
+    assert(calls.some(c => c[0] === 'launch_vmapple' && c[1].machine_type === 'iBoot(AArch64)' && c[1].guest_os === 'macOS' && c[1].recovery_protocol === 'DFU/IPSW'));
     assert(!calls.some(c => c[0] === 'launch_wx_action'), 'Sandbox must never dispatch native patch actions');
     await page.locator('[data-step="4"]').click();
     assert.equal(await page.locator('.done-check').count(), 0, 'Navigation is not completion proof');

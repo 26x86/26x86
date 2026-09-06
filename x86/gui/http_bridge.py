@@ -24,6 +24,8 @@ API_METHODS = frozenset(
         "set_execution_mode",
         "get_sandbox_plan",
         "prepare_sandbox",
+        "get_vmapple_status",
+        "launch_vmapple",
         "set_hardware_profile",
         "validate_surface_efi",
         "get_steps",

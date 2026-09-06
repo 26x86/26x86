@@ -43,6 +43,12 @@ class WebviewApi:
     def prepare_sandbox(self, target_major: int, output_path: str):
         return self._bridge.prepare_sandbox(target_major, output_path)
 
+    def get_vmapple_status(self):
+        return self._bridge.get_vmapple_status()
+
+    def launch_vmapple(self, config: dict[str, Any]):
+        return self._bridge.launch_vmapple(config)
+
     def set_hardware_profile(self, profile=None) -> dict[str, Any]:
         return self._bridge.set_hardware_profile(profile)
 

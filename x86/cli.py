@@ -451,6 +451,73 @@ def cmd_sandbox(args: argparse.Namespace) -> int:
     return 0 if result.get("ok") else 2
 
 
+def cmd_vmapple(args: argparse.Namespace) -> int:
+    from x86.vmapple import VMappleConfig, configured_from_environment, run
+
+    if args.vmapple_action == "status":
+        _emit_json(configured_from_environment())
+        return 0
+
+    config = VMappleConfig(
+        target_major=args.target,
+        qemu=args.qemu,
+        firmware=args.firmware,
+        ibss=args.ibss,
+        ibec=args.ibec,
+        aux=args.aux,
+        root=args.root,
+        output=args.output,
+        qemu_img=args.qemu_img,
+        display=args.display,
+        uuid=args.uuid,
+        aux_offset=args.aux_offset,
+        memory_mib=args.memory_mib,
+        smp=args.smp,
+        transition_timeout=args.transition_timeout,
+        duration=args.duration,
+        research_only=args.research_only,
+        machine_type=args.machine_type,
+        guest_os=args.guest_os,
+        recovery_protocol=args.recovery_protocol,
+        recovery_image_name=args.recovery_image_name,
+    )
+    try:
+        result = run(config)
+    except (ValueError, OSError, TimeoutError, RuntimeError) as exc:
+        if args.json:
+            payload: dict[str, Any] = {"ok": False, "error": str(exc), "macos_boot_verified": False}
+            policy = getattr(exc, "to_dict", None)
+            if callable(policy):
+                payload["policy_error"] = policy()
+            _emit_json(payload)
+        else:
+            logging.error("VMApple launch failed: %s", exc)
+        return 2
+    _emit_json(result)
+    return 0 if result.get("error") is None else 2
+
+
+def cmd_personality(args: argparse.Namespace) -> int:
+    """Validate the iBoot guest/recovery scope without touching any inputs."""
+    from x86.iboot_personality import IbootScopeError, policy_matrix, validate_iboot_scope
+
+    try:
+        report = validate_iboot_scope(
+            args.machine_type,
+            args.guest_os,
+            recovery_protocol=args.recovery_protocol,
+            recovery_image_name=args.recovery_image_name,
+            recovery_enabled=args.recovery_enabled,
+            target_major=args.target,
+        )
+    except IbootScopeError as exc:
+        _emit_json({"ok": False, "error": str(exc), "policy_error": exc.to_dict(),
+                    "policy_matrix": policy_matrix()})
+        return 2
+    _emit_json({"ok": True, **report, "policy_matrix": policy_matrix()})
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="x86",
@@ -492,6 +559,63 @@ def build_parser() -> argparse.ArgumentParser:
     sandbox.add_argument("--vsk-efi", help="Production VSKBOOT.EFI path (defaults to the local build receipt)")
     sandbox.add_argument("--json", action="store_true")
     sandbox.set_defaults(handler=cmd_sandbox)
+
+    vmapple = subparsers.add_parser(
+        "vmapple",
+        help="Run the caller-supplied VMApple research VM with a visible GTK/SDL window",
+    )
+    vmapple_actions = vmapple.add_subparsers(dest="vmapple_action", required=True)
+    vmapple_status = vmapple_actions.add_parser(
+        "status", help="Show configured VMApple paths without launching a guest"
+    )
+    vmapple_status.set_defaults(handler=cmd_vmapple)
+    vmapple_run = vmapple_actions.add_parser(
+        "run", help="Launch VMApple, upload iBSS, and record the real DFU boundary"
+    )
+    vmapple_run.add_argument("--target", type=int, choices=[26, 27], default=27)
+    vmapple_run.add_argument("--qemu", default=os.environ.get("X86_VMAPLE_QEMU"))
+    vmapple_run.add_argument("--qemu-img", default=os.environ.get("X86_VMAPLE_QEMU_IMG"))
+    vmapple_run.add_argument("--firmware", default=os.environ.get("X86_VMAPLE_AVPBOOTER", ""))
+    vmapple_run.add_argument("--ibss", default=os.environ.get("X86_VMAPLE_IBSS", ""))
+    vmapple_run.add_argument("--ibec", default=os.environ.get("X86_VMAPLE_IBEC"))
+    vmapple_run.add_argument("--aux", default=os.environ.get("X86_VMAPLE_AUX", ""))
+    vmapple_run.add_argument("--root", default=os.environ.get("X86_VMAPLE_ROOT", ""))
+    vmapple_run.add_argument("--output", default=os.environ.get("X86_VMAPLE_OUTPUT"))
+    vmapple_run.add_argument("--display", choices=["gtk", "sdl"], default="gtk")
+    vmapple_run.add_argument("--uuid", type=lambda value: int(value, 0), default=0)
+    vmapple_run.add_argument("--aux-offset", type=lambda value: int(value, 0), default=0)
+    vmapple_run.add_argument("--memory-mib", type=int, default=4096)
+    vmapple_run.add_argument("--smp", type=int, default=2)
+    vmapple_run.add_argument("--transition-timeout", type=float, default=10.0)
+    vmapple_run.add_argument("--duration", type=float)
+    vmapple_run.add_argument("--machine-type", default="iBoot(AArch64)")
+    vmapple_run.add_argument("--guest-os", default="macOS",
+                             help="iBoot guest scope; only macOS is accepted")
+    vmapple_run.add_argument("--recovery-protocol", default="DFU/IPSW",
+                             help="iBoot recovery scope: Auto, DFU, IPSW or DFU/IPSW")
+    vmapple_run.add_argument("--recovery-image-name", default="_default.ipsw",
+                             help="macOS Local Recovery image name")
+    vmapple_run.add_argument(
+        "--research-only", action="store_true", required=True,
+        help="Required acknowledgement that this is a non-redistributable research run",
+    )
+    vmapple_run.add_argument("--json", action="store_true")
+    vmapple_run.set_defaults(handler=cmd_vmapple)
+
+    personality = subparsers.add_parser(
+        "personality", help="Validate the iBoot(AArch64) macOS-only guest policy"
+    )
+    personality_action = personality.add_subparsers(dest="personality_action", required=True)
+    personality_validate = personality_action.add_parser(
+        "validate", help="Check guest and DFU/IPSW recovery scope without I/O"
+    )
+    personality_validate.add_argument("--machine-type", default="iBoot(AArch64)")
+    personality_validate.add_argument("--guest-os", default="macOS")
+    personality_validate.add_argument("--recovery-protocol", default="Auto")
+    personality_validate.add_argument("--recovery-image-name", default="_default.ipsw")
+    personality_validate.add_argument("--target", type=int, choices=[26, 27], default=27)
+    personality_validate.add_argument("--recovery-enabled", action="store_true")
+    personality_validate.set_defaults(handler=cmd_personality)
 
     detect = subparsers.add_parser("detect", help="Mac 모델 및 하드웨어 정보 확인")
     detect.add_argument("--json", action="store_true", help="JSON 형식으로 결과 출력")

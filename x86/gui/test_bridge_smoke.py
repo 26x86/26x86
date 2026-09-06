@@ -44,6 +44,13 @@ class BridgeSmokeTest(unittest.TestCase):
         status = bridge.get_status()
         self.assertTrue(status["ok"])
 
+        vmapple = bridge.get_vmapple_status()
+        self.assertTrue(vmapple["ok"])
+        self.assertIn("configured", vmapple)
+        self.assertEqual(vmapple["machine_type"], "iBoot(AArch64)")
+        self.assertEqual(vmapple["guest_os_policy"], "macOS-only")
+        self.assertEqual(vmapple["recovery_scope"]["default_image_name"], "_default.ipsw")
+
     def test_webview_smoke_helper(self) -> None:
         from x86.gui.webview_app import smoke_test_bridge
         from x86.platform import is_macos
@@ -93,6 +100,10 @@ class BridgeSmokeTest(unittest.TestCase):
                 payload = json.loads(resp.read().decode("utf-8"))
             self.assertTrue(payload["ok"])
             self.assertEqual(payload["result"]["bundle_id"], "com.niseullent.26x86")
+            with urlopen(f"{base}/api/get_vmapple_status", timeout=30) as resp:
+                vm_payload = json.loads(resp.read().decode("utf-8"))
+            self.assertTrue(vm_payload["ok"])
+            self.assertIn("configured", vm_payload["result"])
         finally:
             httpd.shutdown()
 

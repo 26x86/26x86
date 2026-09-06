@@ -24,6 +24,24 @@ Sandbox enablement, target macOS, engine paths, original guest boot assets,
 from virtual guest identity; selecting an identity does not create Apple trust
 material or establish an accepted boot chain.
 
+The iBoot(AArch64) MachineType is a macOS guest personality only. Its supported
+matrix is fixed and enforced before firmware inputs are opened:
+
+```text
+iBoot(AArch64)
+ ├─ macOS     → Supported
+ ├─ iOS       → Unsupported
+ └─ iPadOS    → Unsupported
+```
+
+Other mobile Apple operating systems are rejected by the same scope validator.
+The personality implements only the interfaces needed by macOS boot and
+recovery. DFU and Local IPSW Recovery are macOS recovery paths; the local image
+name is `_default.ipsw`. A request for iOS/iPadOS, Fastboot, or another recovery
+image is stopped with a policy error before any DFU transfer. The broader
+Venfire MachineType catalogue in the attached design remains a reference for
+future personalities and does not expand this iBoot scope.
+
 The minimum CPU is x86_64 with **SSE4.1 and SSE4.2**, corresponding to the requested
 Mac Pro 2009 baseline. AVX and AVX2 are not required by the native engine.
 Diagnostic EFI CPUID checks the actual boot CPU. VSK additionally requires
@@ -68,11 +86,13 @@ single-case run. On WSL or a non-default QEMU installation, pass `--qemu`,
 version and SHA-256 hashes of both OVMF inputs so a visible run can be compared
 with a headless run without treating the window itself as boot evidence.
 
-An external lab run also exercised the Apple VMApple recovery path with a GTK
-build of QEMU 11.1.50. It used the unchanged macOS 27.0 (26A5425a) personalized
+A 26x86 GUI bridge run (Windows to WSLg) also exercised the Apple VMApple
+recovery path with a GTK build of QEMU 11.1.50. It used the unchanged macOS
+27.0 (26A5425a) personalized
 `iBSS` input, a COW overlay over empty AUX/root fixtures, and the developer-only
-host bypass. The GTK window was created and the real firmware completed 172 DFU
-data blocks, reached `WAIT_RESET`, and acknowledged the USB reset. The saved
+host bypass. The GTK window was created and the real firmware completed 173 DFU
+data blocks (including the DFU suffix), reached `WAIT_RESET`, and acknowledged
+the USB reset. The saved
 report recorded `input_integrity: true`, `signature_acceptance_verified: false`,
 and `macos_boot_verified: false`. The host was Linux/x86_64 under WSL rather
 than a physical Apple Intel Mac, so this is recovery-protocol evidence only; it

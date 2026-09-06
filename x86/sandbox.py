@@ -10,6 +10,14 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from .iboot_personality import (
+    IBOOT_MACHINE_TYPE,
+    MACOS_GUEST_OS,
+    UNSUPPORTED_GUEST_OSES,
+    default_scope,
+    policy_matrix,
+)
+
 REPO = Path(__file__).resolve().parent.parent
 TARGETS = (26, 27)
 SUPPORT_POLICY = "VSK 제품 정책은 AppleIntelOnly입니다. 승인된 Intel Mac만 허용하며 일반 PC·상위 VM 허용 설정은 제공하지 않습니다. 현재 EFI 자체 시험은 제품 부팅 인증이 아닙니다."
@@ -215,6 +223,9 @@ def prepare_vsk(target_major: int, output_path: str, bundle_path: str,
         payload = {
             "schema": 1, "product": "26x86", "feature": "Apple Silicon Sandbox",
             "artifact_kind": "vsk-authenticated-bootstrap", "target_major": major,
+            "machine_type": IBOOT_MACHINE_TYPE, "personality": "iBoot",
+            "guest_os": MACOS_GUEST_OS, "guest_os_policy": "macOS-only",
+            "recovery_scope": default_scope(target_major=major, recovery_enabled=True)["recovery"],
             "efi_sha256": efi_report["sha256"],
             "trusted_public_key_sha256": public_hash,
             "release_epoch_floor": efi_report["minimum_release_epoch"],
@@ -259,6 +270,12 @@ def status(mode: str = "native", *, root: Path = REPO) -> dict[str, Any]:
         "product_platform_policy": "AppleIntelOnly", "product_boot_authorized": False,
         "vsk_spec": "VF-SPEC-001/0.1", "vsk_isolation_implemented": False,
         "interrupt_controller": "AIC", "boot_protocol": "iBoot", "configuration": "config.plist",
+        "machine_type": IBOOT_MACHINE_TYPE, "personality": "iBoot",
+        "guest_os": MACOS_GUEST_OS, "guest_os_supported": True,
+        "guest_os_policy": "macOS-only", "supported_guest_os": [MACOS_GUEST_OS],
+        "unsupported_guest_os": list(UNSUPPORTED_GUEST_OSES),
+        "recovery_scope": default_scope(recovery_enabled=True)["recovery"],
+        "policy_matrix": policy_matrix(),
         "aic_v1_model_max_cpus": 32,
         "supported_targets": list(TARGETS), "artifact_available": available,
         "stageable": available, "artifact_kind": "efi-jit-self-test",
@@ -282,7 +299,7 @@ def plan(target_major: int, *, root: Path = REPO) -> dict[str, Any]:
     result.update(target_major=major, target_name="Tahoe" if major == 26 else "Golden Gate",
                   components=["OpenCore UEFI x86_64 loader", "AArch64 to x86_64 JIT EFI engine",
                               "AIC Apple SoC devices (incomplete)", "Original iBoot (not bundled)",
-                              "config.plist: SandboxSMBIOS / Hardware / DeviceProperties"])
+                              "config.plist: Venfire iBoot/macOS scope / SandboxSMBIOS / Hardware / DeviceProperties"])
     return result
 
 
@@ -305,6 +322,9 @@ def prepare(target_major: int, output_path: str, *, root: Path = REPO) -> dict[s
             raise ValueError("Staged EFI verification failed")
         payload = {"schema": 1, "product": "26x86", "feature": "Apple Silicon Sandbox",
                    "artifact_kind": "efi-jit-self-test", "target_major": major,
+                   "machine_type": IBOOT_MACHINE_TYPE, "personality": "iBoot",
+                   "guest_os": MACOS_GUEST_OS, "guest_os_policy": "macOS-only",
+                   "recovery_scope": default_scope(target_major=major, recovery_enabled=True)["recovery"],
                    "minimum_cpu": "SSE4.1 + SSE4.2", "boot_verified": False,
                    "macos_boot_ready": False, "sha256": report["sha256"],
                    "support_policy": SUPPORT_POLICY, "blockers": list(GAPS)}

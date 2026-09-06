@@ -8,8 +8,11 @@ import base64
 import logging
 import mimetypes
 import os
+import shutil
 import subprocess
 import sys
+import tempfile
+import time
 import webbrowser
 from pathlib import Path
 from typing import Any, Optional
@@ -29,7 +32,7 @@ from x86.gui.branding import (
 )
 from x86.gui.wizard import errors, strings
 from x86.manifest import APP_NAME, BUNDLE_ID, COPYRIGHT, PATCHER_VERSION, URL_GUIDE
-from x86.platform import MACOS_ONLY_MESSAGE, is_macos, reveal_in_file_manager
+from x86.platform import MACOS_ONLY_MESSAGE, is_macos, is_windows, reveal_in_file_manager
 from x86.settings import SettingsStore
 
 
@@ -111,6 +114,179 @@ class WizardBridge:
             return prepare(target_major, output_path)
         except (ValueError, OSError) as exc:
             return {"ok": False, "error": str(exc)}
+
+    def get_vmapple_status(self) -> dict[str, Any]:
+        """Return caller-supplied VMApple path state without starting QEMU."""
+        from x86.vmapple import configured_from_environment
+
+        return configured_from_environment()
+
+    def launch_vmapple(self, config: dict[str, Any]) -> dict[str, Any]:
+        """Spawn the visible VMApple worker and leave all recovery evidence on disk.
+
+        The GUI is a user-space controller. The worker performs the actual
+        VMApple/DFU protocol in WSL when a Linux QEMU binary is supplied.
+        """
+        if self._settings.read("execution_mode", "native") != "sandbox":
+            return {"ok": False, "error": "Apple Silicon Sandbox 모드에서만 VMApple을 실행할 수 있습니다."}
+        if not isinstance(config, dict):
+            return {"ok": False, "error": "VMApple 설정은 JSON 객체여야 합니다."}
+        if config.get("research_only") is not True:
+            return {"ok": False, "error": "VMApple 실행에는 research_only 확인이 필요합니다."}
+
+        # Validate the fixed iBoot personality before resolving paths or
+        # spawning a worker.  Mobile Apple guests never reach DFU upload.
+        from x86.iboot_personality import IbootScopeError, validate_iboot_scope
+
+        machine_type = config.get("machine_type", "iBoot(AArch64)")
+        guest_os = config.get("guest_os", "macOS")
+        recovery_protocol = config.get("recovery_protocol", "DFU/IPSW")
+        recovery_image_name = config.get("recovery_image_name", "_default.ipsw")
+        try:
+            personality = validate_iboot_scope(
+                machine_type,
+                guest_os,
+                recovery_protocol=recovery_protocol,
+                recovery_image_name=recovery_image_name,
+                recovery_enabled=True,
+                target_major=config.get("target_major", config.get("target", 27)),
+            )
+        except IbootScopeError as exc:
+            return {"ok": False, "error": str(exc), "policy_error": exc.to_dict(),
+                    "macos_boot_verified": False}
+        if not isinstance(machine_type, str) or not isinstance(guest_os, str):
+            return {"ok": False, "error": "VMApple personality fields must be strings."}
+
+        # Keep the bridge surface deliberately narrow: callers can provide
+        # paths and bounded scalar values, never arbitrary QEMU arguments.
+        string_fields = (
+            "qemu", "qemu_img", "firmware", "ibss", "ibec", "aux", "root", "output",
+        )
+        values: dict[str, Any] = {}
+        for name in string_fields:
+            value = config.get(name)
+            if value is None:
+                value = ""
+            if not isinstance(value, str):
+                return {"ok": False, "error": f"VMApple {name} 경로는 문자열이어야 합니다."}
+            values[name] = value.strip()
+        required = ("qemu", "qemu_img", "firmware", "ibss", "aux", "root", "output")
+        missing = [name for name in required if not values[name]]
+        if missing:
+            return {"ok": False, "error": "필수 VMApple 경로가 없습니다: " + ", ".join(missing)}
+
+        target = config.get("target_major", config.get("target", 27))
+        if isinstance(target, bool) or not isinstance(target, int) or target not in (26, 27):
+            return {"ok": False, "error": "VMApple 대상은 macOS 26 또는 27이어야 합니다."}
+        display = config.get("display", "gtk")
+        if display not in ("gtk", "sdl"):
+            return {"ok": False, "error": "VMApple 표시 방식은 GTK 또는 SDL이어야 합니다."}
+
+        numeric = {
+            "uuid": (config.get("uuid", 0), 0, 2**64 - 1),
+            "aux_offset": (config.get("aux_offset", config.get("aux-offset", 0)), 0, 2**63 - 512),
+            "memory_mib": (config.get("memory_mib", 4096), 512, 1024 * 1024),
+            "smp": (config.get("smp", 2), 1, 32),
+        }
+        for name, (value, lower, upper) in numeric.items():
+            if isinstance(value, bool) or not isinstance(value, int) or not lower <= value <= upper:
+                return {"ok": False, "error": f"VMApple {name} 값이 범위를 벗어났습니다."}
+            if name == "aux_offset" and value % 512:
+                return {"ok": False, "error": "VMApple aux_offset은 512바이트 배수여야 합니다."}
+            values[name] = value
+        for name, lower, upper in (("transition_timeout", 0.001, 300.0), ("duration", 0.001, 86400.0)):
+            value = config.get(name)
+            if value is None:
+                continue
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not lower <= float(value) <= upper:
+                return {"ok": False, "error": f"VMApple {name} 값이 범위를 벗어났습니다."}
+            values[name] = str(float(value))
+
+        from x86.vmapple import _to_wsl_path
+
+        repo = bootstrap.ensure_repo_on_path()
+        input_names = ("qemu", "qemu_img", "firmware", "ibss", "ibec", "aux", "root", "output")
+        needs_wsl = is_windows() and any(values[name].startswith("/") for name in input_names if values[name])
+        if needs_wsl:
+            wsl = shutil.which("wsl.exe")
+            if wsl is None:
+                return {"ok": False, "error": "Linux VMApple QEMU에는 wsl.exe와 WSLg가 필요합니다."}
+            # `--exec` bypasses the distribution's shell.  This is required
+            # for the literal MachineType `iBoot(AArch64)` and keeps every
+            # caller-supplied path an argv element rather than shell syntax.
+            command = [wsl, "--cd", _to_wsl_path(repo), "--exec", "python3", "-m", "x86", "vmapple", "run"]
+            worker = "wsl"
+            converted = {name: _to_wsl_path(Path(values[name])) if values[name] else "" for name in input_names}
+        else:
+            command = [sys.executable, "-m", "x86", "vmapple", "run"]
+            worker = "native"
+            converted = values
+
+        def add(flag: str, name: str, *, required_value: bool = True) -> None:
+            value = converted.get(name, "")
+            if required_value and not value:
+                return
+            command.extend([flag, str(value)])
+
+        # The CLI uses --target as a scalar, while path options are explicit.
+        command.extend(["--target", str(target)])
+        add("--qemu", "qemu")
+        add("--qemu-img", "qemu_img")
+        add("--firmware", "firmware")
+        add("--ibss", "ibss")
+        add("--ibec", "ibec")
+        add("--aux", "aux")
+        add("--root", "root")
+        add("--output", "output")
+        command.extend(["--display", display, "--uuid", str(values["uuid"]),
+                        "--aux-offset", str(values["aux_offset"]),
+                        "--memory-mib", str(values["memory_mib"]),
+                        "--smp", str(values["smp"]),
+                        "--transition-timeout", str(float(values.get("transition_timeout", 10.0))),
+                        "--machine-type", machine_type,
+                        "--guest-os", guest_os,
+                        "--recovery-protocol", recovery_protocol,
+                        "--recovery-image-name", recovery_image_name,
+                        "--research-only", "--json"])
+        if "duration" in values:
+            command.extend(["--duration", values["duration"]])
+
+        log_path = Path(tempfile.gettempdir()) / f"26x86-vmapple-launch-{int(time.time() * 1000)}.log"
+        try:
+            with log_path.open("ab") as log:
+                process = subprocess.Popen(
+                    command,
+                    cwd=str(repo),
+                    env=os.environ.copy(),
+                    stdin=subprocess.DEVNULL,
+                    stdout=log,
+                    stderr=subprocess.STDOUT,
+                    start_new_session=True,
+                )
+        except OSError as exc:
+            logging.exception("VMApple worker spawn failed")
+            return {"ok": False, "error": str(exc), "log_path": str(log_path)}
+        return {
+            "ok": True,
+            "spawned": True,
+            "pid": process.pid,
+            "worker": worker,
+            "display_backend": display,
+            "target_major": target,
+            "machine_type": personality["machine_type"],
+            "personality": personality["personality"],
+            "guest_os": personality["guest_os"],
+            "guest_os_supported": personality["guest_os_supported"],
+            "guest_os_policy": personality["guest_os_policy"],
+            "policy_matrix": personality["policy_matrix"],
+            "recovery_scope": personality["recovery"],
+            "output": values["output"],
+            "log_path": str(log_path),
+            "research_only": True,
+            "forced_transition": False,
+            "macos_boot_verified": False,
+            "note": "창이 표시되며 결과는 output/launch.json에 기록됩니다. 실제 descriptor가 없으면 iBEC 전환을 강제하지 않습니다.",
+        }
 
     def _constants(self):
         return bootstrap.get_constants(start_unpack=True)

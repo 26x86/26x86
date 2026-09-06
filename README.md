@@ -15,6 +15,7 @@
 | **[위키 홈](docs/wiki/Home.md)** | 주의사항, 설치, 설정, 이전 패처에서 전환 |
 | [Releases](https://github.com/NiSeullent/26x86/releases) | 안정 빌드 |
 | [SOURCE.md](SOURCE.md) | 소스 실행·빌드 |
+| [iBoot Personality 범위](docs/IBOOT_PERSONALITY.md) | macOS 전용 게스트·DFU/IPSW 정책 |
 
 영문: [docs/README.en.md](docs/README.en.md)
 
@@ -60,3 +61,16 @@ The reproducible QEMU GUI commands and their result boundaries are documented
 in [QEMU Golden Gate GUI validation](docs/QEMU_GOLDEN_GATE_GUI.md). A visible
 QEMU window is diagnostic evidence only; it does not certify iBoot, XNU or
 physical-Mac boot.
+
+The Sandbox screen in the 26x86 GUI now exposes the caller-supplied VMApple
+inputs and a `GTK VM 창 열기` action. On Windows, a Linux VMApple QEMU path is
+re-executed in WSLg with a shell-free `wsl.exe` command; the CLI equivalent is
+`python3 -m x86 vmapple run --research-only`. Both paths preserve immutable
+firmware/iBSS inputs, use COW overlays, and stop at a real post-reset
+descriptor boundary instead of forcing iBEC admission.
+
+The iBoot(AArch64) personality is deliberately macOS-only: macOS is supported,
+while iOS, iPadOS and other mobile Apple OS requests are rejected before DFU.
+Its DFU/IPSW recovery scope uses `_default.ipsw` for Local Recovery. Inspect the
+enforced matrix without starting a VM with
+`python3 -m x86 personality validate --guest-os macOS`.

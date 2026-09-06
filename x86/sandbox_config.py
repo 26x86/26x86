@@ -7,11 +7,29 @@ from pathlib import Path
 from typing import Any
 from xml.sax.saxutils import escape
 
+from .iboot_personality import (
+    DEFAULT_RECOVERY_IMAGE,
+    IBOOT_MACHINE_TYPE,
+    MACOS_GUEST_OS,
+    default_scope,
+    policy_matrix,
+    validate_iboot_scope,
+)
+
 
 def default_config(target_major: int = 26) -> dict[str, Any]:
     if type(target_major) is not int or target_major not in (26, 27):
         raise ValueError("TargetMajor must be 26 or 27")
     return {
+        "Venfire": {
+            "MachineType": IBOOT_MACHINE_TYPE,
+            "GuestOS": MACOS_GUEST_OS,
+            "Recovery": {
+                "Enabled": False,
+                "Protocol": "Auto",
+                "LocalRecovery": {"ImageName": DEFAULT_RECOVERY_IMAGE},
+            },
+        },
         "AppleSiliconSandbox": {
             "Enabled": False, "TargetMajor": target_major,
             "InterruptController": "AIC", "BootProtocol": "iBoot",
@@ -38,6 +56,70 @@ def validate(config: dict[str, Any]) -> dict[str, Any]:
     identity = config.get("SandboxSMBIOS")
     if not isinstance(sandbox, dict) or not isinstance(identity, dict):
         return {"ok": False, "errors": ["AppleSiliconSandbox and SandboxSMBIOS dictionaries are required"]}
+    # The OpenCore-compatible tree may contain other Venfire personalities,
+    # but this Apple Silicon Sandbox config is wired to iBoot(AArch64).  Keep
+    # the scope decision in one pure policy function so it runs before any
+    # EFI/USB/guest input is opened by a later layer.
+    enabled = sandbox.get("Enabled")
+    policy = default_scope(
+        target_major=sandbox.get("TargetMajor") if type(sandbox.get("TargetMajor")) is int else None,
+        recovery_enabled=False,
+    )
+    venfire = config.get("Venfire")
+    if venfire is not None and not isinstance(venfire, dict):
+        errors.append("Venfire must be a dictionary")
+    elif isinstance(venfire, dict):
+        machine_type = venfire.get("MachineType", IBOOT_MACHINE_TYPE)
+        guest_os = venfire.get(
+            "GuestOS",
+            sandbox.get("GuestOS", MACOS_GUEST_OS),
+        )
+        recovery = venfire.get("Recovery", {})
+        if not isinstance(recovery, dict):
+            errors.append("Venfire.Recovery must be a dictionary")
+            recovery = {}
+        local_recovery = recovery.get("LocalRecovery", {})
+        if not isinstance(local_recovery, dict):
+            errors.append("Venfire.Recovery.LocalRecovery must be a dictionary")
+            local_recovery = {}
+        recovery_enabled = recovery.get("Enabled", False)
+        if type(recovery_enabled) is not bool:
+            errors.append("VF_RECOVERY_CONFIG_INVALID: Venfire.Recovery.Enabled must be a boolean")
+        if not isinstance(machine_type, str) or not machine_type.strip():
+            errors.append("VF_MACHINE_PERSONALITY_MISMATCH: Venfire.MachineType must be a nonempty string")
+            machine_type = IBOOT_MACHINE_TYPE
+        if machine_type != IBOOT_MACHINE_TYPE:
+            # config.d is also a carrier for future Venfire personalities.  A
+            # different personality may remain disabled here, while the
+            # Apple Silicon Sandbox itself can only activate iBoot.
+            if enabled is True:
+                errors.append(
+                    "VF_CONFIG_SCOPE_VIOLATION: AppleSiliconSandbox requires iBoot(AArch64)"
+                )
+            policy = default_scope(
+                target_major=sandbox.get("TargetMajor") if type(sandbox.get("TargetMajor")) is int else None,
+                recovery_enabled=recovery_enabled is True,
+            )
+            policy["machine_type"] = machine_type
+            policy["personality"] = str(machine_type).split("(", 1)[0] if isinstance(machine_type, str) else "unknown"
+            policy["scope_evaluated"] = False
+        else:
+            try:
+                policy = validate_iboot_scope(
+                    machine_type,
+                    guest_os,
+                    recovery_protocol=recovery.get("Protocol", "Auto"),
+                    recovery_image_name=local_recovery.get("ImageName", DEFAULT_RECOVERY_IMAGE),
+                    recovery_enabled=recovery_enabled,
+                    target_major=sandbox.get("TargetMajor"),
+                )
+            except ValueError as exc:
+                code = getattr(exc, "code", "VF_CONFIG_SCOPE_VIOLATION")
+                errors.append(f"{code}: {exc}")
+    elif enabled is True:
+        # No Venfire root is a legacy fragment.  Enabling this Sandbox still
+        # implies the fixed iBoot/macOS policy and keeps the result auditable.
+        policy = default_scope(target_major=sandbox.get("TargetMajor"), recovery_enabled=False)
     enabled = sandbox.get("Enabled")
     if type(enabled) is not bool:
         errors.append("AppleSiliconSandbox.Enabled must be a boolean")
@@ -98,7 +180,13 @@ def validate(config: dict[str, Any]) -> dict[str, Any]:
             except ValueError:
                 errors.append("SandboxSMBIOS.SystemUUID is invalid")
     return {"ok": not errors, "errors": errors, "enabled": enabled is True,
-            "interrupt_controller": "AIC", "boot_protocol": "iBoot", "boot_verified": False}
+            "interrupt_controller": "AIC", "boot_protocol": "iBoot", "boot_verified": False,
+            "machine_type": policy["machine_type"], "personality": policy["personality"],
+            "guest_os": policy["guest_os"], "guest_os_supported": policy["guest_os_supported"],
+            "guest_os_policy": policy["guest_os_policy"],
+            "supported_guest_os": policy["supported_guest_os"],
+            "unsupported_guest_os": policy["unsupported_guest_os"],
+            "recovery": policy["recovery"], "policy_matrix": policy_matrix()}
 
 
 def read(path: str | Path) -> dict[str, Any]:

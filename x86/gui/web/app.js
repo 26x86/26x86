@@ -23,6 +23,22 @@
     sandboxTarget: 26,
     sandboxOutput: "",
     sandboxReceipt: null,
+    vmapple: null,
+    vmappleConfig: {
+      qemu: "",
+      qemu_img: "",
+      firmware: "",
+      ibss: "",
+      ibec: "",
+      aux: "",
+      root: "",
+      output: "",
+      machine_type: "iBoot(AArch64)",
+      guest_os: "macOS",
+      recovery_protocol: "DFU/IPSW",
+      recovery_image_name: "_default.ipsw",
+    },
+    vmappleReceipt: null,
     activity: [],
     globalActionsBound: false,
     buildCompleted: false,
@@ -54,6 +70,8 @@
     "set_execution_mode",
     "get_sandbox_plan",
     "prepare_sandbox",
+    "get_vmapple_status",
+    "launch_vmapple",
     "get_app_info",
     "set_hardware_profile",
     "validate_surface_efi",
@@ -319,15 +337,39 @@
     const report = state.sandboxPlan || state.sandbox || {};
     const blockers = report.blockers || ["EFI 실행 엔진의 상태를 아직 확인하지 못했습니다."];
     const receipt = state.sandboxReceipt;
+    const vm = state.vmapple || {};
+    const vmConfig = state.vmappleConfig;
+    const vmFields = [
+      ["qemu", "VMApple QEMU", "/home/developer/.../qemu-system-aarch64"],
+      ["qemu_img", "qemu-img", "/usr/bin/qemu-img"],
+      ["firmware", "AVPBooter EFI", "원본 AVPBooter.vmapple2.bin 경로"],
+      ["ibss", "개인화 iBSS", "원본 iBSS.personalized.img4 경로"],
+      ["ibec", "개인화 iBEC (선택)", "원본 iBEC.personalized.img4 경로"],
+      ["aux", "AUX 원본 이미지", "읽기 전용 AUX raw 경로"],
+      ["root", "Root 원본 이미지", "읽기 전용 root raw 경로"],
+      ["output", "새 VM 출력 폴더", "기존 경로가 아닌 새 폴더 경로"],
+    ].map(([key, label, placeholder]) => `<div><label for="vmapple-${key}">${label}</label><input class="field" id="vmapple-${key}" value="${escapeHtml(vmConfig[key])}" placeholder="${escapeHtml(placeholder)}" /></div>`).join("");
+    const requiredVmFields = ["qemu", "qemu_img", "firmware", "ibss", "aux", "root", "output"];
+    const vmReady = requiredVmFields.every((key) => String(vmConfig[key] || "").trim());
+    const vmConfigured = vm.configured ? "환경 변수 경로 확인됨" : "경로 입력 필요";
+    const vmReceipt = state.vmappleReceipt;
     return `<span class="eyebrow">EFI NATIVE / APPLE SILICON SANDBOX</span><h2>${stage === "patch" ? "EFI 준비 결과" : "Sandbox 준비"}</h2>
       <p class="lead">macOS 게스트 부팅에 필요한 구성 요소와 현재 구현 상태를 확인합니다.</p>
       <div class="metric-grid"><div class="metric"><span>실행 계층</span><strong>EFI · AIC · ARM64 JIT</strong></div><div class="metric"><span>최소 CPU</span><strong>SSE4.1 + SSE4.2</strong></div><div class="metric"><span>macOS 실제 부팅</span><strong>미검증</strong></div></div>
       <div class="form-row"><div><label for="sandbox-target">대상 macOS</label><select class="field" id="sandbox-target"><option value="26" ${state.sandboxTarget === 26 ? "selected" : ""}>macOS Tahoe 26</option><option value="27" ${state.sandboxTarget === 27 ? "selected" : ""}>macOS Golden Gate 27</option></select></div><div><label for="sandbox-output">새 출력 폴더 경로</label><input class="field" id="sandbox-output" value="${escapeHtml(state.sandboxOutput)}" placeholder="예: C:/26x86-Sandbox 또는 /Users/me/26x86-Sandbox" /></div></div>
+      <div class="policy-grid"><div class="policy-card"><span>MachineType</span><strong>${escapeHtml(vm.machine_type || vmConfig.machine_type || "iBoot(AArch64)")}</strong></div><div class="policy-card"><span>게스트 OS</span><strong class="good-text">${escapeHtml(vm.guest_os || vmConfig.guest_os || "macOS")}</strong></div><div class="policy-card"><span>복구</span><strong>${escapeHtml(vm.recovery_scope?.protocol || vmConfig.recovery_protocol || "DFU/IPSW")} · ${escapeHtml(vm.recovery_scope?.default_image_name || vmConfig.recovery_image_name || "_default.ipsw")}</strong></div></div>
+      <p class="support-note policy-note"><strong>iBoot(AArch64) 범위:</strong> macOS만 지원합니다. iOS · iPadOS · 기타 모바일 Apple OS는 부팅·DFU·<code>_default.ipsw</code> 복구 대상으로 받지 않습니다.</p>
       <div class="proof-list"><div class="proof-item"><span>EFI 자체 검사 파일</span><span class="badge${report.artifact_available ? " good" : " warning"}">${report.artifact_available ? "파일 존재" : "미생성"}</span></div><div class="proof-item"><span>VSK 생산 EFI · 외부 trust anchor</span><span class="badge${report.vsk_artifact_available ? " good" : " warning"}">${report.vsk_artifact_available ? "생성됨 · EBS 미호출" : "미생성"}</span></div><div class="proof-item"><span>원본 macOS 부팅</span><span class="badge warning">아직 준비되지 않음</span></div><div class="proof-item"><span>실제 Mac USB 부팅</span><span class="badge warning">실기 검증 필요</span></div></div>
       ${blockers.length ? `<div class="note"><strong>남은 구현 항목</strong><ul>${blockers.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
       <p class="support-note">구성: OpenCore config.plist · iBoot 엔진 · SandboxSMBIOS · Hardware/DevProp. 현재 준비 기능은 EFI 자체 검사 패키지를 생성합니다. macOS 설치 또는 부팅을 시작하지 않습니다. 기존 디스크에 자동으로 기록하지 않습니다.</p>
       <div class="actions"><button class="btn secondary" id="sandbox-refresh">준비 상태 다시 확인</button><button class="btn primary" id="sandbox-prepare" ${report.stageable && state.bridgeReady ? "" : "disabled"}>EFI 자체 검사 패키지 준비</button></div>
-      ${receipt ? `<pre class="patch-summary" role="status">${escapeHtml(JSON.stringify(receipt, null, 2))}</pre>` : ""}`;
+      ${receipt ? `<pre class="patch-summary" role="status">${escapeHtml(JSON.stringify(receipt, null, 2))}</pre>` : ""}
+      <details class="vm-panel" open><summary>실제 보이는 VMApple 복구 VM · <span class="badge${vmConfigured === "환경 변수 경로 확인됨" ? " good" : " warning"}">${vmConfigured}</span></summary>
+        <p class="support-note">WSLg GTK 창을 표시하는 연구용 실행 경로입니다. 원본 입력은 read-only로 열고 새 COW overlay에만 기록합니다. 실제 USB descriptor가 bulk endpoint 4를 광고할 때만 iBSS→iBEC를 시도하며 전환을 강제하지 않습니다. iBoot Personality는 macOS 전용입니다.</p>
+        <div class="vm-fields">${vmFields}</div>
+        <div class="actions"><button class="btn secondary" id="vmapple-refresh">VMApple 경로 다시 읽기</button><button class="btn primary" id="vmapple-launch" ${vmReady && state.bridgeReady ? "" : "disabled"}>GTK VM 창 열기</button></div>
+        ${vmReceipt ? `<pre class="patch-summary" role="status">${escapeHtml(JSON.stringify(vmReceipt, null, 2))}</pre>` : ""}
+      </details>`;
   }
 
   function renderDetect(step) {
@@ -475,7 +517,26 @@
         state.sandboxTarget = Number(target.value); state.sandboxPlan = null; state.sandboxReceipt = null;
         await refreshSandbox();
       });
+      const vmFieldNames = ["qemu", "qemu_img", "firmware", "ibss", "ibec", "aux", "root", "output"];
+      vmFieldNames.forEach((name) => {
+        const field = document.getElementById(`vmapple-${name}`);
+        if (field) field.addEventListener("input", () => { state.vmappleConfig[name] = field.value; });
+      });
       bind("sandbox-refresh", refreshSandbox);
+      bind("vmapple-refresh", refreshVmapple);
+      bind("vmapple-launch", async () => {
+        const config = {
+          ...state.vmappleConfig,
+          target_major: state.sandboxTarget,
+          display: "gtk",
+          research_only: true,
+        };
+        const result = await api("launch_vmapple", config);
+        if (!result.ok) throw new Error(result.error || "VMApple 창을 시작하지 못했습니다.");
+        state.vmappleReceipt = result;
+        toast(`VMApple GTK 창을 열었습니다 · PID ${result.pid} · macOS 부팅 미검증`);
+        renderStepContent();
+      });
       bind("sandbox-prepare", async () => {
         state.sandboxOutput = output.value.trim();
         if (!state.sandboxOutput) throw new Error("새 출력 폴더의 전체 경로를 입력하세요.");
@@ -613,6 +674,25 @@
     } catch (err) { toast(String(err.message || err), "error"); }
   }
 
+  async function refreshVmapple() {
+    try {
+      const result = await api("get_vmapple_status");
+      state.vmapple = result;
+      const values = result.values || {};
+      Object.keys(state.vmappleConfig).forEach((name) => {
+        if (!state.vmappleConfig[name] && typeof values[name] === "string") {
+          state.vmappleConfig[name] = values[name];
+        }
+      });
+      if (["build", "patch"].includes(state.steps[state.currentStep]?.id) && state.mode === "sandbox") {
+        renderStepContent();
+      }
+      toast(result.configured ? "VMApple 경로 구성이 확인되었습니다." : "VMApple에 필요한 경로를 입력하세요.");
+    } catch (err) {
+      toast(String(err.message || err), "error");
+    }
+  }
+
   async function refreshPatchStatus() {
     const summaryEl = document.getElementById("patch-summary");
     if (summaryEl) summaryEl.innerHTML = `<span class="spinner"></span>불러오는 중…`;
@@ -627,13 +707,14 @@
   }
 
   async function loadInitialData() {
-    const [appInfo, steps, detectResult, macos, buildCheck, status] = await Promise.all([
+    const [appInfo, steps, detectResult, macos, buildCheck, status, vmappleStatus] = await Promise.all([
       api("get_app_info"),
       api("get_steps"),
       api("detect", false),
       api("get_macos_choices"),
       api("host_can_build"),
       api("get_status"),
+      api("get_vmapple_status").catch(() => ({ok: false, configured: false, values: {}})),
     ]);
 
     state.appInfo = appInfo;
@@ -643,6 +724,11 @@
     state.canBuild = !!buildCheck.can_build;
     state.buildMessage = buildCheck.message || null;
     state.buildCompleted = !!status.build_completed;
+    state.vmapple = vmappleStatus;
+    const vmValues = vmappleStatus.values || {};
+    Object.keys(state.vmappleConfig).forEach((name) => {
+      if (typeof vmValues[name] === "string") state.vmappleConfig[name] = vmValues[name];
+    });
 
     els.appTitle.textContent = appInfo.app_name;
     els.appSubtitle.textContent = appInfo.bundle_id;

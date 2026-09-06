@@ -6,6 +6,11 @@
     "passed": 35,
     "skipped": 1
   },
+  "iboot_personality_policy": {
+    "tests": 8,
+    "passed": 8,
+    "scope": "iBoot(AArch64) macOS-only; iOS/iPadOS rejected before DFU"
+  },
   "surface_regression": {
     "tests": 9,
     "passed": 9
@@ -96,8 +101,37 @@
       "passed": true,
       "validation_level": "RECOVERY-PROTOCOL",
       "target_major": 27,
+      "machine_type": "iBoot(AArch64)",
+      "guest_os": "macOS",
+      "guest_os_policy": "macOS-only",
+      "policy_matrix": [
+        {
+          "machine_type": "iBoot(AArch64)",
+          "guest_os": "macOS",
+          "supported": true
+        },
+        {
+          "machine_type": "iBoot(AArch64)",
+          "guest_os": "iOS",
+          "supported": false
+        },
+        {
+          "machine_type": "iBoot(AArch64)",
+          "guest_os": "iPadOS",
+          "supported": false
+        }
+      ],
+      "recovery_protocol": "DFU/IPSW",
+      "recovery_image_name": "_default.ipsw",
+      "unsupported_guest_os": [
+        "iOS",
+        "iPadOS",
+        "tvOS",
+        "watchOS",
+        "visionOS"
+      ],
       "display_backend": "gtk",
-      "dfu_data_blocks": 172,
+      "dfu_data_blocks": 173,
       "signature_acceptance_verified": false,
       "macos_boot_verified": false
     }
