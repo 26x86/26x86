@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "browser": "151.0.7922.34",
+  "backend": "real local HTTP bridge",
+  "viewport": [
+    960,
+    720
+  ],
+  "sandbox_settings_disabled": true,
+  "sandbox_native_controls_absent": true,
+  "x86_efi_prepared_and_file_readback": true,
+  "root_efi_prepared_lilu_disabled_no_mellow_injection": true,
+  "simulated_apple_silicon_stale_native_settings_repaired": true,
+  "page_errors": [],
+  "native_tahoe_tested": false,
+  "native_metal_verified": false
+}

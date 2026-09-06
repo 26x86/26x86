@@ -1,0 +1,819 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D1A625064D41470000000002 /* TahoeDiagnosticProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1A625064D414700000000A2 /* TahoeDiagnosticProtocol.cpp */; };
+		D1A625064D41470000000001 /* TahoeDiagnostic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1A625064D414700000000A1 /* TahoeDiagnostic.cpp */; };
+		C42F5B82067D421096F10001 /* PortedXeBindings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C42F5B82067D421096F10002 /* PortedXeBindings.cpp */; };
+		2E1301D52CD9026F00CFD021 /* libkmod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E1301D42CD9026F00CFD021 /* libkmod.a */; };
+		2E1CC3E22BA5DBD9004EC8F6 /* DisplayMergeNub.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1CC3E02BA5DBD9004EC8F6 /* DisplayMergeNub.h */; };
+		2E1CC3E32BA5DBD9004EC8F6 /* DisplayMergeNub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E1CC3E12BA5DBD9004EC8F6 /* DisplayMergeNub.cpp */; };
+		2E315A612BC6EA4D008411AA /* DYLDPatches.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2E315A5F2BC6EA4D008411AA /* DYLDPatches.hpp */; };
+		2E315A622BC6EA4D008411AA /* DYLDPatches.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E315A602BC6EA4D008411AA /* DYLDPatches.cpp */; };
+		2E5BF5832BCC212F0095BDCF /* HDMI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E5BF5812BCC212F0095BDCF /* HDMI.cpp */; };
+		2E5BF5842BCC212F0095BDCF /* HDMI.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2E5BF5822BCC212F0095BDCF /* HDMI.hpp */; };
+		2EA343FE2C93C07700160F43 /* kern_genx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA343FC2C93C07700160F43 /* kern_genx.cpp */; };
+		2EA343FF2C93C07700160F43 /* kern_genx.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2EA343FD2C93C07700160F43 /* kern_genx.hpp */; };
+			A1B2C3D4E5F601020304A001 /* IntelDPLinkTraining.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F601020304B001 /* IntelDPLinkTraining.cpp */; };
+			A1B2C3D4E5F601020304A002 /* IntelDPLinkTraining.hpp in Headers */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F601020304B002 /* IntelDPLinkTraining.hpp */; };		CE405ED91E4A080700AA0B3D /* plugin_start.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE405ED81E4A080700AA0B3D /* plugin_start.cpp */; };
+		F009B7A129E4EE3C00786AFF /* kern_start.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F009B7A029E4EE3C00786AFF /* kern_start.cpp */; };
+		F009B7A329E4EEBA00786AFF /* kern_mellow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F009B7A229E4EEBA00786AFF /* kern_mellow.cpp */; };
+		F0A4BE592A1996E40031D569 /* kern_model.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F0A4BE572A1996E40031D569 /* kern_model.hpp */; };
+		F0AF08BB2A0F373F00B63C2B /* kern_gen11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0AF08B92A0F373F00B63C2B /* kern_gen11.cpp */; };
+		F0AF08BC2A0F373F00B63C2B /* kern_gen11.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F0AF08BA2A0F373F00B63C2B /* kern_gen11.hpp */; };
+		F0BB9E552A57A0340081F5FA /* kern_patcherplus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0BB9E532A57A0340081F5FA /* kern_patcherplus.cpp */; };
+		F0BB9E562A57A0340081F5FA /* kern_patcherplus.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F0BB9E542A57A0340081F5FA /* kern_patcherplus.hpp */; };
+		D7E3FC856D41563B7C195633 /* XeMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC2ACB31EAD2B281A5670870 /* XeMemory.cpp */; };
+		741D27048E48401FE89C645B /* XeMemoryIOKit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B519F7CEFC54673C9F5E06AD /* XeMemoryIOKit.cpp */; };
+		6BAA099D720FB9649F70EDBB /* XeFirmware.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31F37188FB01B3122DA9BCA6 /* XeFirmware.cpp */; };
+		69B708220100C5C36B6D6A6B /* XeSubmission.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE8EA7A9249B9F9861A34B88 /* XeSubmission.cpp */; };
+		0E050B36E88990EA64578883 /* XePageTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D85C60D70F269A329A38496 /* XePageTable.cpp */; };
+		531B7D344341807DA7814736 /* XeMmioAccess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32A78B1D1FE9FC78DD5A04B3 /* XeMmioAccess.cpp */; };
+		99833C7F725E9ED1B13361B9 /* XeMmioIOKit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C53207933471BE57D832C559 /* XeMmioIOKit.cpp */; };
+		D34C13604F628450230474E9 /* XePageTableIOKit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BE2EE8B7036F0808F8803EE /* XePageTableIOKit.cpp */; };
+		504CBFCF814831DE2F1C5CCD /* XeGuCTransport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E334D0A1D72FD9824AA349CF /* XeGuCTransport.cpp */; };
+		1612B9BD160818EF65265682 /* XeGuCTransportIOKit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A5EC69B7701AB508DBC0A7F2 /* XeGuCTransportIOKit.cpp */; };
+		958942B747C41BD313B134F0 /* XeZebin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FEA06EFB6A1FA4C706E7AEED /* XeZebin.cpp */; };
+		F0EDFC58B1C04818A187BD4D /* XeGuCFirmware.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C08783D431EFF2D805D7E02 /* XeGuCFirmware.cpp */; };
+		F15AC567811442834E48303E /* XeGuCFirmwareIOKit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 08C80C1179A55FA889D654C2 /* XeGuCFirmwareIOKit.cpp */; };
+		07105C39D3A806F8F8C3B7ED /* XeContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3663BEC9A333E8DC291412A5 /* XeContext.cpp */; };
+		4482DE84BBE2324C2704B8E2 /* XeDispatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CFF5ECDCFAF198ED4CA8FFE2 /* XeDispatch.cpp */; };
+		A290787A326504737791D351 /* XeContextExecution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80166389A3ED9AE910BEA57A /* XeContextExecution.cpp */; };
+		EE676FAA3C9C021313BC9EEA /* XeInterrupt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C803E328629BC3EC39AB6BF /* XeInterrupt.cpp */; };
+		B02CB2CE5CDC4EA7B014B3E1 /* XeInterruptIOKit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E36C97DAE2064EEA93829A32 /* XeInterruptIOKit.cpp */; };
+		6917E8E070924738955C0AA5 /* XeFence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FFBEC22E0300F59B84AFD28A /* XeFence.cpp */; };
+		FC34DA409FA2A57D7A7669A9 /* XeFenceIOKit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13548A8BEAE916DD0BE6B027 /* XeFenceIOKit.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1C642F521C8F157A006B4C51 /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		D1A625064D414700000000A2 /* TahoeDiagnosticProtocol.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TahoeDiagnosticProtocol.cpp; sourceTree = "<group>"; };
+		D1A625064D414700000000A1 /* TahoeDiagnostic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TahoeDiagnostic.cpp; sourceTree = "<group>"; };
+		C42F5B82067D421096F10002 /* PortedXeBindings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PortedXeBindings.cpp; sourceTree = "<group>"; };
+		1C748C271C21952C0024EED2 /* Mellow.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Mellow.kext; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C748C2E1C21952C0024EED2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2E1301D42CD9026F00CFD021 /* libkmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkmod.a; path = MacKernelSDK/Library/x86_64/libkmod.a; sourceTree = "<group>"; };
+		2E1CC3E02BA5DBD9004EC8F6 /* DisplayMergeNub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayMergeNub.h; sourceTree = "<group>"; };
+		2E1CC3E12BA5DBD9004EC8F6 /* DisplayMergeNub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DisplayMergeNub.cpp; sourceTree = "<group>"; };
+		2E315A5F2BC6EA4D008411AA /* DYLDPatches.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DYLDPatches.hpp; sourceTree = "<group>"; };
+		2E315A602BC6EA4D008411AA /* DYLDPatches.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DYLDPatches.cpp; sourceTree = "<group>"; };
+		2E5BF5812BCC212F0095BDCF /* HDMI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HDMI.cpp; sourceTree = "<group>"; };
+		2E5BF5822BCC212F0095BDCF /* HDMI.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HDMI.hpp; sourceTree = "<group>"; };
+		2EA343FC2C93C07700160F43 /* kern_genx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kern_genx.cpp; sourceTree = "<group>"; };
+		2EA343FD2C93C07700160F43 /* kern_genx.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = kern_genx.hpp; sourceTree = "<group>"; };
+			A1B2C3D4E5F601020304B001 /* IntelDPLinkTraining.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IntelDPLinkTraining.cpp; sourceTree = "<group>"; };
+			A1B2C3D4E5F601020304B002 /* IntelDPLinkTraining.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IntelDPLinkTraining.hpp; sourceTree = "<group>"; };		CE405EBA1E49DD7100AA0B3D /* kern_compression.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_compression.hpp; sourceTree = "<group>"; };
+		CE405EBB1E49DD7100AA0B3D /* kern_disasm.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_disasm.hpp; sourceTree = "<group>"; };
+		CE405EBC1E49DD7100AA0B3D /* kern_file.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_file.hpp; sourceTree = "<group>"; };
+		CE405EBD1E49DD7100AA0B3D /* kern_iokit.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_iokit.hpp; sourceTree = "<group>"; };
+		CE405EBE1E49DD7100AA0B3D /* kern_mach.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_mach.hpp; sourceTree = "<group>"; };
+		CE405EBF1E49DD7100AA0B3D /* kern_patcher.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_patcher.hpp; sourceTree = "<group>"; };
+		CE405EC01E49DD7100AA0B3D /* kern_policy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_policy.hpp; sourceTree = "<group>"; };
+		CE405EC31E49DD7100AA0B3D /* kern_user.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_user.hpp; sourceTree = "<group>"; };
+		CE405EC41E49DD7100AA0B3D /* kern_util.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_util.hpp; sourceTree = "<group>"; };
+		CE405ECF1E49EC9100AA0B3D /* kern_config.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = kern_config.hpp; sourceTree = "<group>"; };
+		CE405ED21E49F9FC00AA0B3D /* kern_api.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_api.hpp; sourceTree = "<group>"; };
+		CE405ED81E4A080700AA0B3D /* plugin_start.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = plugin_start.cpp; sourceTree = "<group>"; };
+		CE405EDA1E4A080F00AA0B3D /* plugin_start.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = plugin_start.hpp; sourceTree = "<group>"; };
+		F009B7A029E4EE3C00786AFF /* kern_start.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = kern_start.cpp; sourceTree = "<group>"; };
+		F009B7A229E4EEBA00786AFF /* kern_mellow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kern_mellow.cpp; sourceTree = "<group>"; };
+		F067C20329D82E57004BB52E /* kern_mellow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = kern_mellow.hpp; sourceTree = "<group>"; };
+		F0A4BE572A1996E40031D569 /* kern_model.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_model.hpp; sourceTree = "<group>"; };
+		F0AF08B92A0F373F00B63C2B /* kern_gen11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kern_gen11.cpp; sourceTree = "<group>"; };
+		F0AF08BA2A0F373F00B63C2B /* kern_gen11.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = kern_gen11.hpp; sourceTree = "<group>"; };
+		F0BB9E532A57A0340081F5FA /* kern_patcherplus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kern_patcherplus.cpp; sourceTree = "<group>"; };
+		F0BB9E542A57A0340081F5FA /* kern_patcherplus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = kern_patcherplus.hpp; sourceTree = "<group>"; };
+		CC2ACB31EAD2B281A5670870 /* XeMemory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeMemory.cpp; sourceTree = "<group>"; };
+		BD5B09B0268702FD1A852B9F /* XeMemory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeMemory.hpp; sourceTree = "<group>"; };
+		B519F7CEFC54673C9F5E06AD /* XeMemoryIOKit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeMemoryIOKit.cpp; sourceTree = "<group>"; };
+		AE17C5555949878388957E01 /* XeMemoryIOKit.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeMemoryIOKit.hpp; sourceTree = "<group>"; };
+		31F37188FB01B3122DA9BCA6 /* XeFirmware.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeFirmware.cpp; sourceTree = "<group>"; };
+		417064C21A74C817C85897B5 /* XeFirmware.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeFirmware.hpp; sourceTree = "<group>"; };
+		AE8EA7A9249B9F9861A34B88 /* XeSubmission.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeSubmission.cpp; sourceTree = "<group>"; };
+		82263A0770B42EE376FC2D73 /* XeSubmission.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeSubmission.hpp; sourceTree = "<group>"; };
+		7D85C60D70F269A329A38496 /* XePageTable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XePageTable.cpp; sourceTree = "<group>"; };
+		4FD20F0F74A918BCB04704B3 /* XePageTable.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XePageTable.hpp; sourceTree = "<group>"; };
+		32A78B1D1FE9FC78DD5A04B3 /* XeMmioAccess.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeMmioAccess.cpp; sourceTree = "<group>"; };
+		E58F6EE65D1F50F0D6183F6F /* XeMmioAccess.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeMmioAccess.hpp; sourceTree = "<group>"; };
+		C53207933471BE57D832C559 /* XeMmioIOKit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeMmioIOKit.cpp; sourceTree = "<group>"; };
+		37A746DB5A1D4DA6C86F542D /* XeMmioIOKit.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeMmioIOKit.hpp; sourceTree = "<group>"; };
+		1BE2EE8B7036F0808F8803EE /* XePageTableIOKit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XePageTableIOKit.cpp; sourceTree = "<group>"; };
+		83C651A4C1446172AA81E568 /* XePageTableIOKit.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XePageTableIOKit.hpp; sourceTree = "<group>"; };
+		E334D0A1D72FD9824AA349CF /* XeGuCTransport.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeGuCTransport.cpp; sourceTree = "<group>"; };
+		80A9F2F40A5CE3F674137C4B /* XeGuCTransport.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeGuCTransport.hpp; sourceTree = "<group>"; };
+		A5EC69B7701AB508DBC0A7F2 /* XeGuCTransportIOKit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeGuCTransportIOKit.cpp; sourceTree = "<group>"; };
+		78ABFDBF78EA3BD272ACA36B /* XeGuCTransportIOKit.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeGuCTransportIOKit.hpp; sourceTree = "<group>"; };
+		FEA06EFB6A1FA4C706E7AEED /* XeZebin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeZebin.cpp; sourceTree = "<group>"; };
+		E6D80DFA1E4BA5DE2289DD93 /* XeZebin.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeZebin.hpp; sourceTree = "<group>"; };
+		8C08783D431EFF2D805D7E02 /* XeGuCFirmware.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeGuCFirmware.cpp; sourceTree = "<group>"; };
+		AA9EBAD50983BE81A8D4C209 /* XeGuCFirmware.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeGuCFirmware.hpp; sourceTree = "<group>"; };
+		08C80C1179A55FA889D654C2 /* XeGuCFirmwareIOKit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeGuCFirmwareIOKit.cpp; sourceTree = "<group>"; };
+		39F8A57FECCF0553393B6EE3 /* XeGuCFirmwareIOKit.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeGuCFirmwareIOKit.hpp; sourceTree = "<group>"; };
+		3663BEC9A333E8DC291412A5 /* XeContext.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeContext.cpp; sourceTree = "<group>"; };
+		D846C44E33EA672DBCA714FC /* XeContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeContext.hpp; sourceTree = "<group>"; };
+		CFF5ECDCFAF198ED4CA8FFE2 /* XeDispatch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeDispatch.cpp; sourceTree = "<group>"; };
+		673F8735B34435F96099A191 /* XeDispatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeDispatch.hpp; sourceTree = "<group>"; };
+		80166389A3ED9AE910BEA57A /* XeContextExecution.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeContextExecution.cpp; sourceTree = "<group>"; };
+		BC3A14FC5C73EE1EB27BCEE0 /* XeContextExecution.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeContextExecution.hpp; sourceTree = "<group>"; };
+		5C803E328629BC3EC39AB6BF /* XeInterrupt.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeInterrupt.cpp; sourceTree = "<group>"; };
+		4EF7BBFF478065B295662BC3 /* XeInterrupt.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeInterrupt.hpp; sourceTree = "<group>"; };
+		E36C97DAE2064EEA93829A32 /* XeInterruptIOKit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeInterruptIOKit.cpp; sourceTree = "<group>"; };
+		C6E6CB1BFB9A809B1FE2F9A2 /* XeInterruptIOKit.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeInterruptIOKit.hpp; sourceTree = "<group>"; };
+		FFBEC22E0300F59B84AFD28A /* XeFence.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeFence.cpp; sourceTree = "<group>"; };
+		C1BA198E9B5CE423BCC07280 /* XeFence.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeFence.hpp; sourceTree = "<group>"; };
+		13548A8BEAE916DD0BE6B027 /* XeFenceIOKit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XeFenceIOKit.cpp; sourceTree = "<group>"; };
+		4CECBDE676DAB2A8E9BACAE3 /* XeFenceIOKit.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = XeFenceIOKit.hpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1C748C231C21952C0024EED2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E1301D52CD9026F00CFD021 /* libkmod.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1C748C1D1C21952C0024EED2 = {
+			isa = PBXGroup;
+			children = (
+				1C748C291C21952C0024EED2 /* Mellow */,
+				CE405EC81E49DD7B00AA0B3D /* SDK */,
+				1C748C281C21952C0024EED2 /* Products */,
+				CE8DA0812517C41A008C44E8 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+			usesTabs = 1;
+		};
+		1C748C281C21952C0024EED2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C748C271C21952C0024EED2 /* Mellow.kext */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C748C291C21952C0024EED2 /* Mellow */ = {
+			isa = PBXGroup;
+			children = (
+				D1A625064D414700000000A1 /* TahoeDiagnostic.cpp */,
+				D1A625064D414700000000A2 /* TahoeDiagnosticProtocol.cpp */,
+				C42F5B82067D421096F10002 /* PortedXeBindings.cpp */,
+				1C748C2E1C21952C0024EED2 /* Info.plist */,
+				8C08783D431EFF2D805D7E02 /* XeGuCFirmware.cpp */,
+				AA9EBAD50983BE81A8D4C209 /* XeGuCFirmware.hpp */,
+				08C80C1179A55FA889D654C2 /* XeGuCFirmwareIOKit.cpp */,
+				39F8A57FECCF0553393B6EE3 /* XeGuCFirmwareIOKit.hpp */,
+				3663BEC9A333E8DC291412A5 /* XeContext.cpp */,
+				D846C44E33EA672DBCA714FC /* XeContext.hpp */,
+				CFF5ECDCFAF198ED4CA8FFE2 /* XeDispatch.cpp */,
+				673F8735B34435F96099A191 /* XeDispatch.hpp */,
+				80166389A3ED9AE910BEA57A /* XeContextExecution.cpp */,
+				BC3A14FC5C73EE1EB27BCEE0 /* XeContextExecution.hpp */,
+				5C803E328629BC3EC39AB6BF /* XeInterrupt.cpp */,
+				4EF7BBFF478065B295662BC3 /* XeInterrupt.hpp */,
+				E36C97DAE2064EEA93829A32 /* XeInterruptIOKit.cpp */,
+				C6E6CB1BFB9A809B1FE2F9A2 /* XeInterruptIOKit.hpp */,
+				FFBEC22E0300F59B84AFD28A /* XeFence.cpp */,
+				C1BA198E9B5CE423BCC07280 /* XeFence.hpp */,
+				13548A8BEAE916DD0BE6B027 /* XeFenceIOKit.cpp */,
+				4CECBDE676DAB2A8E9BACAE3 /* XeFenceIOKit.hpp */,
+				32A78B1D1FE9FC78DD5A04B3 /* XeMmioAccess.cpp */,
+				E58F6EE65D1F50F0D6183F6F /* XeMmioAccess.hpp */,
+				C53207933471BE57D832C559 /* XeMmioIOKit.cpp */,
+				37A746DB5A1D4DA6C86F542D /* XeMmioIOKit.hpp */,
+				1BE2EE8B7036F0808F8803EE /* XePageTableIOKit.cpp */,
+				83C651A4C1446172AA81E568 /* XePageTableIOKit.hpp */,
+				E334D0A1D72FD9824AA349CF /* XeGuCTransport.cpp */,
+				80A9F2F40A5CE3F674137C4B /* XeGuCTransport.hpp */,
+				A5EC69B7701AB508DBC0A7F2 /* XeGuCTransportIOKit.cpp */,
+				78ABFDBF78EA3BD272ACA36B /* XeGuCTransportIOKit.hpp */,
+				FEA06EFB6A1FA4C706E7AEED /* XeZebin.cpp */,
+				E6D80DFA1E4BA5DE2289DD93 /* XeZebin.hpp */,
+				CC2ACB31EAD2B281A5670870 /* XeMemory.cpp */,
+				BD5B09B0268702FD1A852B9F /* XeMemory.hpp */,
+				B519F7CEFC54673C9F5E06AD /* XeMemoryIOKit.cpp */,
+				AE17C5555949878388957E01 /* XeMemoryIOKit.hpp */,
+				31F37188FB01B3122DA9BCA6 /* XeFirmware.cpp */,
+				417064C21A74C817C85897B5 /* XeFirmware.hpp */,
+				AE8EA7A9249B9F9861A34B88 /* XeSubmission.cpp */,
+				82263A0770B42EE376FC2D73 /* XeSubmission.hpp */,
+				7D85C60D70F269A329A38496 /* XePageTable.cpp */,
+				4FD20F0F74A918BCB04704B3 /* XePageTable.hpp */,
+					A1B2C3D4E5F601020304B001 /* IntelDPLinkTraining.cpp */,
+					A1B2C3D4E5F601020304B002 /* IntelDPLinkTraining.hpp */,
+				2E5BF5812BCC212F0095BDCF /* HDMI.cpp */,
+				2E5BF5822BCC212F0095BDCF /* HDMI.hpp */,
+				2E315A602BC6EA4D008411AA /* DYLDPatches.cpp */,
+				2E315A5F2BC6EA4D008411AA /* DYLDPatches.hpp */,
+				2E1CC3E12BA5DBD9004EC8F6 /* DisplayMergeNub.cpp */,
+				2E1CC3E02BA5DBD9004EC8F6 /* DisplayMergeNub.h */,
+				F0AF08B92A0F373F00B63C2B /* kern_gen11.cpp */,
+				F0AF08BA2A0F373F00B63C2B /* kern_gen11.hpp */,
+				2EA343FC2C93C07700160F43 /* kern_genx.cpp */,
+				2EA343FD2C93C07700160F43 /* kern_genx.hpp */,
+				F0A4BE572A1996E40031D569 /* kern_model.hpp */,
+				F009B7A229E4EEBA00786AFF /* kern_mellow.cpp */,
+				F067C20329D82E57004BB52E /* kern_mellow.hpp */,
+				F0BB9E532A57A0340081F5FA /* kern_patcherplus.cpp */,
+				F0BB9E542A57A0340081F5FA /* kern_patcherplus.hpp */,
+				F009B7A029E4EE3C00786AFF /* kern_start.cpp */,
+			);
+			path = Mellow;
+			sourceTree = "<group>";
+		};
+		CE405EB91E49DD7100AA0B3D /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				CE405ED21E49F9FC00AA0B3D /* kern_api.hpp */,
+				CE405ECF1E49EC9100AA0B3D /* kern_config.hpp */,
+				CE405EBA1E49DD7100AA0B3D /* kern_compression.hpp */,
+				CE405EBB1E49DD7100AA0B3D /* kern_disasm.hpp */,
+				CE405EBC1E49DD7100AA0B3D /* kern_file.hpp */,
+				CE405EBD1E49DD7100AA0B3D /* kern_iokit.hpp */,
+				CE405EBE1E49DD7100AA0B3D /* kern_mach.hpp */,
+				CE405EBF1E49DD7100AA0B3D /* kern_patcher.hpp */,
+				CE405EC01E49DD7100AA0B3D /* kern_policy.hpp */,
+				CE405EC31E49DD7100AA0B3D /* kern_user.hpp */,
+				CE405EC41E49DD7100AA0B3D /* kern_util.hpp */,
+				CE405EDA1E4A080F00AA0B3D /* plugin_start.hpp */,
+			);
+			name = Headers;
+			path = Lilu.kext/Contents/Resources/Headers;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE405EC51E49DD7100AA0B3D /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				CE405ED81E4A080700AA0B3D /* plugin_start.cpp */,
+			);
+			name = Library;
+			path = Lilu.kext/Contents/Resources/Library;
+			sourceTree = SOURCE_ROOT;
+		};
+		CE405EC81E49DD7B00AA0B3D /* SDK */ = {
+			isa = PBXGroup;
+			children = (
+				CE405EB91E49DD7100AA0B3D /* Headers */,
+				CE405EC51E49DD7100AA0B3D /* Library */,
+			);
+			name = SDK;
+			sourceTree = "<group>";
+		};
+		CE8DA0812517C41A008C44E8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2E1301D42CD9026F00CFD021 /* libkmod.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		1C748C241C21952C0024EED2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0AF08BC2A0F373F00B63C2B /* kern_gen11.hpp in Headers */,
+				2E315A612BC6EA4D008411AA /* DYLDPatches.hpp in Headers */,
+				2E1CC3E22BA5DBD9004EC8F6 /* DisplayMergeNub.h in Headers */,
+				2E5BF5842BCC212F0095BDCF /* HDMI.hpp in Headers */,
+				F0A4BE592A1996E40031D569 /* kern_model.hpp in Headers */,
+				2EA343FF2C93C07700160F43 /* kern_genx.hpp in Headers */,
+				F0BB9E562A57A0340081F5FA /* kern_patcherplus.hpp in Headers */,
+					A1B2C3D4E5F601020304A002 /* IntelDPLinkTraining.hpp in Headers */,			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		1C748C261C21952C0024EED2 /* Mellow */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C748C311C21952C0024EED2 /* Build configuration list for PBXNativeTarget "Mellow" */;
+			buildPhases = (
+				408F2028288ACCC6002EEC15 /* ShellScript */,
+				1C748C221C21952C0024EED2 /* Sources */,
+				1C748C231C21952C0024EED2 /* Frameworks */,
+				1C748C241C21952C0024EED2 /* Headers */,
+				1C642F521C8F157A006B4C51 /* Copy Files */,
+				CE131D6A1FB728990036C3A0 /* Archive */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Mellow;
+			productName = Mellow;
+			productReference = 1C748C271C21952C0024EED2 /* Mellow.kext */;
+			productType = "com.apple.product-type.kernel-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1C748C1E1C21952C0024EED2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1330;
+				ORGANIZATIONNAME = "Zorm Industries";
+				TargetAttributes = {
+					1C748C261C21952C0024EED2 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+				};
+			};
+			buildConfigurationList = 1C748C211C21952C0024EED2 /* Build configuration list for PBXProject "Mellow" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1C748C1D1C21952C0024EED2;
+			productRefGroup = 1C748C281C21952C0024EED2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1C748C261C21952C0024EED2 /* Mellow */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		408F2028288ACCC6002EEC15 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(PROJECT_DIR)/Mellow/kern_fw.cpp",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "
+";
+		};
+		CE131D6A1FB728990036C3A0 /* Archive */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Archive;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "cd \"${TARGET_BUILD_DIR}\"\n\ndist=(\"$FULL_PRODUCT_NAME\")\nif [ -d \"$DWARF_DSYM_FILE_NAME\" ]; then dist+=(\"$DWARF_DSYM_FILE_NAME\"); fi\n\narchive=\"${PRODUCT_NAME}-${MODULE_VERSION}-$(echo $CONFIGURATION | tr /a-z/ /A-Z/).zip\"\nrm -rf *.zip\nif [ \"$CONFIGURATION\" == \"Release\" ]; then\n  strip -x -T \"${EXECUTABLE_PATH}\" &>/dev/null || strip -x \"${EXECUTABLE_PATH}\"\nfi\nzip -qry -FS \"${archive}\" \"${dist[@]}\"\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1C748C221C21952C0024EED2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1A625064D41470000000001 /* TahoeDiagnostic.cpp in Sources */,
+				D1A625064D41470000000002 /* TahoeDiagnosticProtocol.cpp in Sources */,
+				C42F5B82067D421096F10001 /* PortedXeBindings.cpp in Sources */,
+				F0EDFC58B1C04818A187BD4D /* XeGuCFirmware.cpp in Sources */,
+				F15AC567811442834E48303E /* XeGuCFirmwareIOKit.cpp in Sources */,
+				07105C39D3A806F8F8C3B7ED /* XeContext.cpp in Sources */,
+				4482DE84BBE2324C2704B8E2 /* XeDispatch.cpp in Sources */,
+				A290787A326504737791D351 /* XeContextExecution.cpp in Sources */,
+				EE676FAA3C9C021313BC9EEA /* XeInterrupt.cpp in Sources */,
+				B02CB2CE5CDC4EA7B014B3E1 /* XeInterruptIOKit.cpp in Sources */,
+				6917E8E070924738955C0AA5 /* XeFence.cpp in Sources */,
+				FC34DA409FA2A57D7A7669A9 /* XeFenceIOKit.cpp in Sources */,
+				531B7D344341807DA7814736 /* XeMmioAccess.cpp in Sources */,
+				99833C7F725E9ED1B13361B9 /* XeMmioIOKit.cpp in Sources */,
+				D34C13604F628450230474E9 /* XePageTableIOKit.cpp in Sources */,
+				504CBFCF814831DE2F1C5CCD /* XeGuCTransport.cpp in Sources */,
+				1612B9BD160818EF65265682 /* XeGuCTransportIOKit.cpp in Sources */,
+				958942B747C41BD313B134F0 /* XeZebin.cpp in Sources */,
+				D7E3FC856D41563B7C195633 /* XeMemory.cpp in Sources */,
+				741D27048E48401FE89C645B /* XeMemoryIOKit.cpp in Sources */,
+				6BAA099D720FB9649F70EDBB /* XeFirmware.cpp in Sources */,
+				69B708220100C5C36B6D6A6B /* XeSubmission.cpp in Sources */,
+				0E050B36E88990EA64578883 /* XePageTable.cpp in Sources */,
+				F009B7A129E4EE3C00786AFF /* kern_start.cpp in Sources */,
+				F009B7A329E4EEBA00786AFF /* kern_mellow.cpp in Sources */,
+				F0BB9E552A57A0340081F5FA /* kern_patcherplus.cpp in Sources */,
+				2E5BF5832BCC212F0095BDCF /* HDMI.cpp in Sources */,
+				2EA343FE2C93C07700160F43 /* kern_genx.cpp in Sources */,
+				F0AF08BB2A0F373F00B63C2B /* kern_gen11.cpp in Sources */,
+				CE405ED91E4A080700AA0B3D /* plugin_start.cpp in Sources */,
+				2E1CC3E32BA5DBD9004EC8F6 /* DisplayMergeNub.cpp in Sources */,
+					A1B2C3D4E5F601020304A001 /* IntelDPLinkTraining.cpp in Sources */,				2E315A622BC6EA4D008411AA /* DYLDPatches.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1C748C2F1C21952C0024EED2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++1y";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Lilu.kext/Contents/Resources",
+					"$(PROJECT_DIR)/MacKernelSDK/Headers",
+				);
+				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/MacKernelSDK/Headers";
+				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/MacKernelSDK/Headers";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/MacKernelSDK/Library/x86_64";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = (
+					"-Wextra",
+					"-Wall",
+				);
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1C748C301C21952C0024EED2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++1y";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Lilu.kext/Contents/Resources",
+					"$(PROJECT_DIR)/MacKernelSDK/Headers",
+				);
+				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/MacKernelSDK/Headers";
+				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/MacKernelSDK/Headers";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/MacKernelSDK/Library/x86_64";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				OTHER_CFLAGS = (
+					"-Wextra",
+					"-Wall",
+				);
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1C748C321C21952C0024EED2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_DEADCODE_DEADSTORES = NO;
+				CLANG_ANALYZER_DIVIDE_BY_ZERO = NO;
+				CLANG_ANALYZER_NULL_DEREFERENCE = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = "$(MODULE_VERSION)";
+				DEAD_CODE_STRIPPING = NO;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_ENABLE_FLOATING_POINT_LIBRARY_CALLS = NO;
+				GCC_ENABLE_KERNEL_DEVELOPMENT = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"MODULE_VERSION=$(MODULE_VERSION)",
+					"PRODUCT_NAME=$(PRODUCT_NAME)",
+					"APPLE_KEXT_ASSERTIONS=1",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Mellow/Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/MacKernelSDK/Library/x86_64",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MODULE_NAME = com.NiSeullent.Mellow;
+				MODULE_START = "$(PRODUCT_NAME)_kern_start";
+				MODULE_STOP = "$(PRODUCT_NAME)_kern_stop";
+				MODULE_VERSION = 0.4.3;
+				OTHER_CFLAGS = (
+					"-mmmx",
+					"-msse",
+					"-msse2",
+					"-msse3",
+					"-mfpmath=sse",
+					"-mssse3",
+					"-ftree-vectorize",
+					"-fno-non-call-exceptions",
+					"-fno-builtin",
+					"-fno-asynchronous-unwind-tables",
+					"-Wno-unknown-warning-option",
+					"-Wno-ossharedptr-misuse",
+					"-Wno-vla",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = "-static";
+				PRODUCT_BUNDLE_IDENTIFIER = com.NiSeullent.Mellow;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				STRIP_INSTALLED_PRODUCT = YES;
+				WRAPPER_EXTENSION = kext;
+			};
+			name = Debug;
+		};
+		1C748C331C21952C0024EED2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = YES;
+				CURRENT_PROJECT_VERSION = "$(MODULE_VERSION)";
+				DEAD_CODE_STRIPPING = NO;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_ENABLE_FLOATING_POINT_LIBRARY_CALLS = NO;
+				GCC_ENABLE_KERNEL_DEVELOPMENT = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"MODULE_VERSION=$(MODULE_VERSION)",
+					"PRODUCT_NAME=$(PRODUCT_NAME)",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Mellow/Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/MacKernelSDK/Library/x86_64",
+				);
+				LLVM_LTO = NO;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MODULE_NAME = com.NiSeullent.Mellow;
+				MODULE_START = "$(PRODUCT_NAME)_kern_start";
+				MODULE_STOP = "$(PRODUCT_NAME)_kern_stop";
+				MODULE_VERSION = 0.4.3;
+				OTHER_CFLAGS = (
+					"-mmmx",
+					"-msse",
+					"-msse2",
+					"-msse3",
+					"-mfpmath=sse",
+					"-mssse3",
+					"-ftree-vectorize",
+					"-fno-non-call-exceptions",
+					"-fno-builtin",
+					"-fno-asynchronous-unwind-tables",
+					"-Wno-unknown-warning-option",
+					"-Wno-ossharedptr-misuse",
+					"-Wno-vla",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = "-static";
+				PRODUCT_BUNDLE_IDENTIFIER = com.NiSeullent.Mellow;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = "non-global";
+				WRAPPER_EXTENSION = kext;
+			};
+			name = Release;
+		};
+		CE9901CA21456F6C006E5CF5 /* Sanitize */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++1y";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/MacKernelSDK/Headers";
+				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/MacKernelSDK/Headers";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = (
+					"-Wextra",
+					"-Wall",
+				);
+				SDKROOT = macosx;
+			};
+			name = Sanitize;
+		};
+		CE9901CB21456F6C006E5CF5 /* Sanitize */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = "$(MODULE_VERSION)";
+				DEAD_CODE_STRIPPING = NO;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_ENABLE_FLOATING_POINT_LIBRARY_CALLS = NO;
+				GCC_ENABLE_KERNEL_DEVELOPMENT = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"MODULE_VERSION=$(MODULE_VERSION)",
+					"APPLE_KEXT_ASSERTIONS=1",
+					"PRODUCT_NAME=$(PRODUCT_NAME)",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Mellow/Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/MacKernelSDK/Library/x86_64",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MODULE_NAME = com.NiSeullent.Mellow;
+				MODULE_START = "$(PRODUCT_NAME)_kern_start";
+				MODULE_STOP = "$(PRODUCT_NAME)_kern_stop";
+				MODULE_VERSION = 0.4.3;
+				OTHER_CFLAGS = (
+					"-mmmx",
+					"-msse",
+					"-msse2",
+					"-msse3",
+					"-mfpmath=sse",
+					"-mssse3",
+					"-ftree-vectorize",
+					"-fno-non-call-exceptions",
+					"-fno-builtin",
+					"-fno-asynchronous-unwind-tables",
+					"-fsanitize=undefined,nullability",
+					"-fno-sanitize=function",
+					"-Wno-unknown-warning-option",
+					"-Wno-ossharedptr-misuse",
+					"-Wno-vla",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = "-static";
+				PRODUCT_BUNDLE_IDENTIFIER = com.NiSeullent.Mellow;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
+				WRAPPER_EXTENSION = kext;
+			};
+			name = Sanitize;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C748C211C21952C0024EED2 /* Build configuration list for PBXProject "Mellow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C748C2F1C21952C0024EED2 /* Debug */,
+				CE9901CA21456F6C006E5CF5 /* Sanitize */,
+				1C748C301C21952C0024EED2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1C748C311C21952C0024EED2 /* Build configuration list for PBXNativeTarget "Mellow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C748C321C21952C0024EED2 /* Debug */,
+				CE9901CB21456F6C006E5CF5 /* Sanitize */,
+				1C748C331C21952C0024EED2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1C748C1E1C21952C0024EED2 /* Project object */;
+}

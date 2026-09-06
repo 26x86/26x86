@@ -7,24 +7,20 @@ from __future__ import annotations
 import logging
 import sys
 
-import wx
-
-from opencore_legacy_patcher.sys_patch.patchsets import HardwarePatchsetDetection
-from opencore_legacy_patcher.wx_gui import (
-    gui_build,
-    gui_help,
-    gui_install_oc,
-    gui_main_menu,
-    gui_model_change,
-    gui_support,
-    gui_sys_patch_display,
-    gui_sys_patch_start,
-)
-from x86.gui import bootstrap, theme
+from x86.gui import bootstrap
 from x86.gui.branding import window_title
 
 
 def _run_app(frame_factory) -> int:
+    from x86.mellow.integration import configuration
+    configuration()[0].require_native_apply("Native wx wizard")
+    global wx, HardwarePatchsetDetection, gui_build, gui_help, gui_install_oc
+    global gui_main_menu, gui_model_change, gui_support, gui_sys_patch_display, gui_sys_patch_start
+    import wx
+    from opencore_legacy_patcher.sys_patch.patchsets import HardwarePatchsetDetection
+    from opencore_legacy_patcher.wx_gui import (gui_build, gui_help, gui_install_oc,
+        gui_main_menu, gui_model_change, gui_support, gui_sys_patch_display, gui_sys_patch_start)
+    from x86.gui import theme
     bootstrap.ensure_repo_on_path()
     constants = bootstrap.get_constants(start_unpack=True)
     app = wx.App(False)

@@ -79,12 +79,15 @@ class KernelDebugKitMerge:
         Merge Kernel Debug Kit (KDK) with the root volume
         """
         logging.info(f"- Merging KDK with Root Volume: {Path(kdk_path).name}")
-        subprocess_wrapper.run_as_root(
+        result = subprocess_wrapper.run_as_root(
             # Only merge '/System/Library/Extensions'
             # 'Kernels' and 'KernelSupport' is wasted space for root patching (we don't care above dev kernels)
             ["/usr/bin/rsync", "-r", "-i", "-a", f"{kdk_path}/System/Library/Extensions/", f"{self.mount_location}/System/Library/Extensions"],
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )
+        if result.returncode != 0:
+            subprocess_wrapper.log(result)
+            raise RuntimeError("KDK rsync failed; refusing partial kernel collection inputs")
 
         if not (Path(self.mount_location) / Path("System/Library/Extensions/System.kext/PlugIns/Libkern.kext/Libkern")).exists():
             logging.info("- Failed to merge KDK with Root Volume")

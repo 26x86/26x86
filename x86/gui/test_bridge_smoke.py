@@ -95,6 +95,7 @@ class BridgeSmokeTest(unittest.TestCase):
             self.assertEqual(payload["result"]["bundle_id"], "com.niseullent.26x86")
         finally:
             httpd.shutdown()
+            httpd.server_close()
 
     def test_html_bootstraps_http_and_legacy_bridges(self) -> None:
         from x86.gui.bridge import WizardBridge

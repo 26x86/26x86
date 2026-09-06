@@ -1,0 +1,5355 @@
+{
+  "scope": "static dependency/version/export eligibility only",
+  "matches": [
+    {
+      "symbol": "_IODelay",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_IODelay",
+          "target_defined": true,
+          "target_address": 18446743523964770736,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_IOFree",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_IOFree",
+          "target_defined": true,
+          "target_address": 18446743523964764688,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_IOMalloc",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_IOMalloc_external",
+          "target_defined": true,
+          "target_address": 18446743523964764576,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_IOMappedRead32",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_IOMappedRead32",
+          "target_defined": true,
+          "target_address": 18446743523965098256,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_IOPause",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_IOPause",
+          "target_defined": true,
+          "target_address": 18446743523964770752,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_OSReportWithBacktrace",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_OSReportWithBacktrace",
+          "target_defined": true,
+          "target_address": 18446743523964325920,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_PE_parse_boot_argn",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_PE_parse_boot_argn",
+          "target_defined": true,
+          "target_address": 18446743523965683792,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__Z6strstrPKcS0_m",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 83296,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN10DeviceInfo16processSwitchOffEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 50688,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN10DeviceInfo6createEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 46096,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN10DeviceInfo7deleterEPS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 50608,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11IOCatalogue10addDriversEP7OSArrayb",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN11IOCatalogue10addDriversEP7OSArrayb",
+          "target_defined": true,
+          "target_address": 18446743523965011888,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11IOPCIDevice19extendedConfigRead8Ey",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.iokit.IOPCIFamily",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 18446743523997787574,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11IOPCIDevice20extendedConfigRead16Ey",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.iokit.IOPCIFamily",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 18446743523997770690,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11IOPCIDevice9metaClassE",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.iokit.IOPCIFamily",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 18446743523998026832,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass0Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass0Ev",
+          "target_defined": true,
+          "target_address": 18446743523966008480,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass1Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass1Ev",
+          "target_defined": true,
+          "target_address": 18446743523966008512,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass2Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass2Ev",
+          "target_defined": true,
+          "target_address": 18446743523966008560,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass3Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass3Ev",
+          "target_defined": true,
+          "target_address": 18446743523966008608,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass4Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass4Ev",
+          "target_defined": true,
+          "target_address": 18446743523966008656,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass5Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass5Ev",
+          "target_defined": true,
+          "target_address": 18446743523966008704,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass6Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass6Ev",
+          "target_defined": true,
+          "target_address": 18446743523966008752,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass7Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass7Ev",
+          "target_defined": true,
+          "target_address": 18446743523966008800,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClassC2EPKcPKS_j",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN11OSMetaClassC2EPKcPKS_j",
+          "target_defined": true,
+          "target_address": 18446743523964328064,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClassD2Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN11OSMetaClassD2Ev",
+          "target_defined": true,
+          "target_address": 18446743523964329840,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11UserPatcher20matchSharedCachePathEPKc",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 81888,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12Disassembler9hdeDisasmEyP6hde64s",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 39648,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IODMACommand12OutputHost64EPS_NS_9Segment64EPvj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN12IODMACommand12OutputHost64EPS_NS_9Segment64EPvj",
+          "target_defined": true,
+          "target_address": 18446743523965091392,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IODMACommand17withSpecificationEPFbPS_NS_9Segment64EPvjEhyNS_14MappingOptionsEyjP8IOMapperS2_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN12IODMACommand17withSpecificationEPFbPS_NS_9Segment64EPvjEhyNS_14MappingOptionsEyjP8IOMapperS2_",
+          "target_defined": true,
+          "target_address": 18446743523965091008,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12OSDictionary12withCapacityEj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN12OSDictionary12withCapacityEj",
+          "target_defined": true,
+          "target_address": 18446743523964360192,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12OSDictionary14withDictionaryEPKS_j",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN12OSDictionary14withDictionaryEPKS_j",
+          "target_defined": true,
+          "target_address": 18446743523964360528,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12OSDictionary9metaClassE",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN12OSDictionary9metaClassE",
+          "target_defined": true,
+          "target_address": 18446743523956546896,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN13KernelPatcher10clearErrorEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 3760,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN13KernelPatcher11solveSymbolEmPKc",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 7056,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN13KernelPatcher13routeFunctionEyybbb",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 14368,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN13KernelPatcher13routeMultipleEmPNS_12RouteRequestEmymbb",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 13408,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN13KernelPatcher15kernelWriteLockE",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 133424,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN13KernelPatcher16applyLookupPatchEPKNS_11LookupPatchEPhm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 13680,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN13KernelPatcher17routeMultipleLongEmPNS_12RouteRequestEmymbb",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 14960,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN13KernelPatcher22findAndReplaceWithMaskEPvmPKvmS2_mS2_mS2_mmm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 15216,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN13KernelPatcher8getErrorEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 3744,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN14BaseDeviceInfo3getEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 45776,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11detachAboveEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry11detachAboveEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964803104,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setLocationEPK8OSSymbolPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry11setLocationEPK8OSSymbolPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964804896,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setLocationEPKcPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry11setLocationEPKcPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964805008,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPK8OSStringP8OSObject",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPK8OSStringP8OSObject",
+          "target_defined": true,
+          "target_address": 18446743523964795616,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPK8OSSymbolP8OSObject",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPK8OSSymbolP8OSObject",
+          "target_defined": true,
+          "target_address": 18446743523964795328,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPKcP8OSObject",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPKcP8OSObject",
+          "target_defined": true,
+          "target_address": 18446743523964795696,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPKcPvj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPKcPvj",
+          "target_defined": true,
+          "target_address": 18446743523964796160,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPKcS1_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPKcS1_",
+          "target_defined": true,
+          "target_address": 18446743523964795776,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPKcb",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPKcb",
+          "target_defined": true,
+          "target_address": 18446743523964795888,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPKcyj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPKcyj",
+          "target_defined": true,
+          "target_address": 18446743523964796000,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry13attachToChildEPS_PK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry13attachToChildEPS_PK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964802336,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry13childFromPathEPKcPK15IORegistryPlanePcPi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry13childFromPathEPKcPK15IORegistryPlanePcPi",
+          "target_defined": true,
+          "target_address": 18446743523964806784,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry13setPropertiesEP8OSObject",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry13setPropertiesEP8OSObject",
+          "target_defined": true,
+          "target_address": 18446743523964798672,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry14attachToParentEPS_PK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry14attachToParentEPS_PK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964801072,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry14removePropertyEPK8OSString",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry14removePropertyEPK8OSString",
+          "target_defined": true,
+          "target_address": 18446743523964796448,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry14removePropertyEPK8OSSymbol",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry14removePropertyEPK8OSSymbol",
+          "target_defined": true,
+          "target_address": 18446743523964796320,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry14removePropertyEPKc",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry14removePropertyEPKc",
+          "target_defined": true,
+          "target_address": 18446743523964796512,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry15detachFromChildEPS_PK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry15detachFromChildEPS_PK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964802608,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry16detachFromParentEPS_PK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry16detachFromParentEPS_PK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964801824,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry16setPropertyTableEP12OSDictionary",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry16setPropertyTableEP12OSDictionary",
+          "target_defined": true,
+          "target_address": 18446743523964795168,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry17runPropertyActionEPFiP8OSObjectPvS2_S2_S2_ES1_S2_S2_S2_S2_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry17runPropertyActionEPFiP8OSObjectPvS2_S2_S2_ES1_S2_S2_S2_S2_",
+          "target_defined": true,
+          "target_address": 18446743523964794496,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry0Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry0Ev",
+          "target_defined": true,
+          "target_address": 18446743523966014928,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry1Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry1Ev",
+          "target_defined": true,
+          "target_address": 18446743523966014960,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry2Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry2Ev",
+          "target_defined": true,
+          "target_address": 18446743523966014992,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry3Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry3Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015024,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry4Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry4Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015056,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry5Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry5Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015088,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry6Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry6Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015120,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry7Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry7Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015152,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry8Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry8Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015184,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry9Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry9Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015216,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry10Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry10Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015248,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry11Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry11Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015280,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry12Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry12Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015312,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry13Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry13Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015344,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry14Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry14Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015376,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry15Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry15Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015408,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry16Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry16Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015440,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry17Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry17Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015472,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry18Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry18Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015504,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry19Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry19Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015536,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry20Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry20Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015568,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry21Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry21Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015600,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry22Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry22Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015632,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry23Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry23Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015664,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry24Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry24Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015696,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry25Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry25Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015728,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry26Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry26Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015760,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry27Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry27Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015792,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry28Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry28Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015824,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry29Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry29Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015856,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry30Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry30Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015888,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry31Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry31Ev",
+          "target_defined": true,
+          "target_address": 18446743523966015920,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry7setNameEPK8OSSymbolPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry7setNameEPK8OSSymbolPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964804400,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry7setNameEPKcPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry7setNameEPKcPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964804624,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry8fromPathEPKcPK15IORegistryPlanePcPiPS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry8fromPathEPKcPK15IORegistryPlanePcPiPS_",
+          "target_defined": true,
+          "target_address": 18446743523964808352,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry9detachAllEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15IORegistryEntry9detachAllEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964803232,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15OSMetaClassBase12safeMetaCastEPKS_PK11OSMetaClass",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15OSMetaClassBase12safeMetaCastEPKS_PK11OSMetaClass",
+          "target_defined": true,
+          "target_address": 18446743523964328416,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase4Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase4Ev",
+          "target_defined": true,
+          "target_address": 18446743523966008256,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase5Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase5Ev",
+          "target_defined": true,
+          "target_address": 18446743523966008304,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase6Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase6Ev",
+          "target_defined": true,
+          "target_address": 18446743523966008352,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase7Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase7Ev",
+          "target_defined": true,
+          "target_address": 18446743523966008400,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15OSMetaClassBase8DispatchE5IORPC",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN15OSMetaClassBase8DispatchE5IORPC",
+          "target_defined": true,
+          "target_address": 18446743523965386880,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18IOMemoryDescriptor18getPhysicalAddressEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN18IOMemoryDescriptor18getPhysicalAddressEv",
+          "target_defined": true,
+          "target_address": 18446743523965153424,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18IOMemoryDescriptor19createMappingInTaskEP4taskyjyy",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN18IOMemoryDescriptor19createMappingInTaskEP4taskyjyy",
+          "target_defined": true,
+          "target_address": 18446743523965112944,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18IOMemoryDescriptor19withPhysicalAddressEyyj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN18IOMemoryDescriptor19withPhysicalAddressEyyj",
+          "target_defined": true,
+          "target_address": 18446743523965147808,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20OSCollectionIterator14withCollectionEPK12OSCollection",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN20OSCollectionIterator14withCollectionEPK12OSCollection",
+          "target_defined": true,
+          "target_address": 18446743523964348752,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN24IOBufferMemoryDescriptor17inTaskWithOptionsEP4taskjmm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN24IOBufferMemoryDescriptor17inTaskWithOptionsEP4taskjmm",
+          "target_defined": true,
+          "target_address": 18446743523965078944,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN24IOBufferMemoryDescriptor22inTaskWithPhysicalMaskEP4taskjyy",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN24IOBufferMemoryDescriptor22inTaskWithPhysicalMaskEP4taskjyy",
+          "target_defined": true,
+          "target_address": 18446743523965079216,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN28IOFilterInterruptEventSource26filterInterruptEventSourceEP8OSObjectPFvS1_P22IOInterruptEventSourceiEPFbS1_PS_EP9IOServicei",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN28IOFilterInterruptEventSource26filterInterruptEventSourceEP8OSObjectPFvS1_P22IOInterruptEventSourceiEPFbS1_PS_EP9IOServicei",
+          "target_defined": true,
+          "target_address": 18446743523965068800,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN6OSData9metaClassE",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN6OSData9metaClassE",
+          "target_defined": true,
+          "target_address": 18446743523956546952,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN6OSData9withBytesEPKvj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN6OSData9withBytesEPKvj",
+          "target_defined": true,
+          "target_address": 18446743523964352784,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN6WIOKit12renameDeviceEP15IORegistryEntryPKcb",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 100320,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN6WIOKit15awaitPublishingEP15IORegistryEntry",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 97920,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN6WIOKit18readPCIConfigValueEP15IORegistryEntryjjj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 98096,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN7LiluAPI10onKextLoadEPN13KernelPatcher8KextInfoEmPFvPvRS0_mymES3_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 43536,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN7LiluAPI10shouldLoadEPKcmjPS1_mS2_mS2_m13KernelVersionS3_Rb",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 42672,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN7LiluAPI13onPatcherLoadEPFvPvR13KernelPatcherES0_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 43328,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN7LiluAPI13releaseAccessEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 42656,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN7LiluAPI13requestAccessEmb",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 42560,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN7OSArray12withCapacityEj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN7OSArray12withCapacityEj",
+          "target_defined": true,
+          "target_address": 18446743523964342144,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8MachInfo16setKernelWritingEbP13_IOSimpleLock",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 91488,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSNumber10withNumberEyj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSNumber10withNumberEyj",
+          "target_defined": true,
+          "target_address": 18446743523964499296,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSNumber9metaClassE",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSNumber9metaClassE",
+          "target_defined": true,
+          "target_address": 18446743523956546912,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject10gMetaClassE",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject10gMetaClassE",
+          "target_defined": true,
+          "target_address": 18446743523974341608,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject0Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject0Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009024,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject1Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject1Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009056,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject2Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject2Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009088,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject3Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject3Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009120,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject4Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject4Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009152,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject5Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject5Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009184,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject6Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject6Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009216,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject7Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject7Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009248,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject8Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject8Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009280,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject9Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject9Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009312,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject19_RESERVEDOSObject10Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject19_RESERVEDOSObject10Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009344,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject19_RESERVEDOSObject11Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject19_RESERVEDOSObject11Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009376,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject19_RESERVEDOSObject12Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject19_RESERVEDOSObject12Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009408,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject19_RESERVEDOSObject13Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject19_RESERVEDOSObject13Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009440,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject19_RESERVEDOSObject14Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject19_RESERVEDOSObject14Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009472,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject19_RESERVEDOSObject15Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject19_RESERVEDOSObject15Ev",
+          "target_defined": true,
+          "target_address": 18446743523966009504,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject4initEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject4initEv",
+          "target_defined": true,
+          "target_address": 18446743523964335824,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject8DispatchE5IORPC",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObject8DispatchE5IORPC",
+          "target_defined": true,
+          "target_address": 18446743523964640336,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObjectC2EPK11OSMetaClass",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObjectC2EPK11OSMetaClass",
+          "target_defined": true,
+          "target_address": 18446743523964337248,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObjectD2Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObjectD2Ev",
+          "target_defined": true,
+          "target_address": 18446743523964336592,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObjectdlEPvm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObjectdlEPvm",
+          "target_defined": true,
+          "target_address": 18446743523964336608,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObjectnwEm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSObjectnwEm",
+          "target_defined": true,
+          "target_address": 18446743523964336832,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSString11withCStringEPKc",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSString11withCStringEPKc",
+          "target_defined": true,
+          "target_address": 18446743523964518816,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSString9metaClassE",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSString9metaClassE",
+          "target_defined": true,
+          "target_address": 18446743523956546920,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSSymbol9metaClassE",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN8OSSymbol9metaClassE",
+          "target_defined": true,
+          "target_address": 18446743523956546968,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService10adjustBusyEi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService10adjustBusyEi",
+          "target_defined": true,
+          "target_address": 18446743523964825296,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService10gMetaClassE",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService10gMetaClassE",
+          "target_defined": true,
+          "target_address": 18446743523974341768,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService10handleOpenEPS_jPv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService10handleOpenEPS_jPv",
+          "target_defined": true,
+          "target_address": 18446743523964822912,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService10joinPMtreeEPS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService10joinPMtreeEPS_",
+          "target_defined": true,
+          "target_address": 18446743523964979312,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService11handleCloseEPS_j",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService11handleCloseEPS_j",
+          "target_defined": true,
+          "target_address": 18446743523964823008,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService12didTerminateEPS_jPb",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService12didTerminateEPS_jPb",
+          "target_defined": true,
+          "target_address": 18446743523964820192,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService12getBusyStateEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService12getBusyStateEv",
+          "target_defined": true,
+          "target_address": 18446743523964825280,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService12getResourcesEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService12getResourcesEv",
+          "target_defined": true,
+          "target_address": 18446743523964828896,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService12requestProbeEj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService12requestProbeEj",
+          "target_defined": true,
+          "target_address": 18446743523964830128,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService12tellChangeUpEm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService12tellChangeUpEm",
+          "target_defined": true,
+          "target_address": 18446743523964995008,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService12updateReportEP19IOReportChannelListjPvS2_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService12updateReportEP19IOReportChannelListjPvS2_",
+          "target_defined": true,
+          "target_address": 18446743523964821152,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13addPowerChildEPS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService13addPowerChildEPS_",
+          "target_defined": true,
+          "target_address": 18446743523964980144,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13askChangeDownEm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService13askChangeDownEm",
+          "target_defined": true,
+          "target_address": 18446743523964992576,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13matchLocationEPS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService13matchLocationEPS_",
+          "target_defined": true,
+          "target_address": 18446743523964825408,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13messageClientEjP8OSObjectPvm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService13messageClientEjP8OSObjectPvm",
+          "target_defined": true,
+          "target_address": 18446743523964830160,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13newUserClientEP4taskPvjP12OSDictionaryPP12IOUserClient",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService13newUserClientEP4taskPvjP12OSDictionaryPP12IOUserClient",
+          "target_defined": true,
+          "target_address": 18446743523964831344,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13newUserClientEP4taskPvjPP12IOUserClient",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService13newUserClientEP4taskPvjPP12IOUserClient",
+          "target_defined": true,
+          "target_address": 18446743523964831872,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13setPowerStateEmPS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService13setPowerStateEmPS_",
+          "target_defined": true,
+          "target_address": 18446743523964997952,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13willTerminateEPS_j",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService13willTerminateEPS_j",
+          "target_defined": true,
+          "target_address": 18446743523964820096,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService14activityTickleEmm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService14activityTickleEmm",
+          "target_defined": true,
+          "target_address": 18446743523964989360,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService14applyToClientsEPFvPS_PvES1_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService14applyToClientsEPFvPS_PvES1_",
+          "target_defined": true,
+          "target_address": 18446743523964831216,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService14causeInterruptEi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService14causeInterruptEi",
+          "target_defined": true,
+          "target_address": 18446743523964830016,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService14messageClientsEjPvm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService14messageClientsEjPvm",
+          "target_defined": true,
+          "target_address": 18446743523964830880,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService14tellChangeDownEm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService14tellChangeDownEm",
+          "target_defined": true,
+          "target_address": 18446743523964992592,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15comparePropertyEP12OSDictionaryPK8OSString",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService15comparePropertyEP12OSDictionaryPK8OSString",
+          "target_defined": true,
+          "target_address": 18446743523964825904,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15comparePropertyEP12OSDictionaryPKc",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService15comparePropertyEP12OSDictionaryPKc",
+          "target_defined": true,
+          "target_address": 18446743523964825792,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15configureReportEP19IOReportChannelListjPvS2_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService15configureReportEP19IOReportChannelListjPvS2_",
+          "target_defined": true,
+          "target_address": 18446743523964820592,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15enableInterruptEi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService15enableInterruptEi",
+          "target_defined": true,
+          "target_address": 18446743523964829792,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15errnoFromReturnEi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService15errnoFromReturnEi",
+          "target_defined": true,
+          "target_address": 18446743523964832032,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15getDeviceMemoryEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService15getDeviceMemoryEv",
+          "target_defined": true,
+          "target_address": 18446743523964829184,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15nextIdleTimeoutEyyj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService15nextIdleTimeoutEyyj",
+          "target_defined": true,
+          "target_address": 18446743523964989920,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15powerChangeDoneEm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService15powerChangeDoneEm",
+          "target_defined": true,
+          "target_address": 18446743523964998400,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15registerServiceEj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService15registerServiceEj",
+          "target_defined": true,
+          "target_address": 18446743523964821696,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15setDeviceMemoryEP7OSArray",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService15setDeviceMemoryEP7OSArray",
+          "target_defined": true,
+          "target_address": 18446743523964829264,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15terminateClientEPS_j",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService15terminateClientEPS_j",
+          "target_defined": true,
+          "target_address": 18446743523964825200,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16allowPowerChangeEm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService16allowPowerChangeEm",
+          "target_defined": true,
+          "target_address": 18446743523964995328,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16applyToProvidersEPFvPS_PvES1_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService16applyToProvidersEPFvPS_PvES1_",
+          "target_defined": true,
+          "target_address": 18446743523964831184,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16disableInterruptEi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService16disableInterruptEi",
+          "target_defined": true,
+          "target_address": 18446743523964829904,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16getInterruptTypeEiPi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService16getInterruptTypeEiPi",
+          "target_defined": true,
+          "target_address": 18446743523964829632,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16registerInterestEPK8OSSymbolPFiPvS3_jPS_S3_mES3_S3_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService16registerInterestEPK8OSSymbolPFiPvS3_jPS_S3_mES3_S3_",
+          "target_defined": true,
+          "target_address": 18446743523964830960,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16removePowerChildEP17IOPowerConnection",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService16removePowerChildEP17IOPowerConnection",
+          "target_defined": true,
+          "target_address": 18446743523964982960,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16requestTerminateEPS_j",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService16requestTerminateEPS_j",
+          "target_defined": true,
+          "target_address": 18446743523964820000,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16stringFromReturnEi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService16stringFromReturnEi",
+          "target_defined": true,
+          "target_address": 18446743523964831888,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16tellNoChangeDownEm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService16tellNoChangeDownEm",
+          "target_defined": true,
+          "target_address": 18446743523964993440,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17addNeededResourceEPKc",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService17addNeededResourceEPKc",
+          "target_defined": true,
+          "target_address": 18446743523964825472,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17applyToInterestedEPK8OSSymbolPFvP8OSObjectPvES5_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService17applyToInterestedEPK8OSSymbolPFvP8OSObjectPvES5_",
+          "target_defined": true,
+          "target_address": 18446743523964831248,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17cancelPowerChangeEm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService17cancelPowerChangeEm",
+          "target_defined": true,
+          "target_address": 18446743523964995456,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17comparePropertiesEP12OSDictionaryP12OSCollection",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService17comparePropertiesEP12OSDictionaryP12OSCollection",
+          "target_defined": true,
+          "target_address": 18446743523964826016,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17getAggressivenessEmPm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService17getAggressivenessEmPm",
+          "target_defined": true,
+          "target_address": 18446743523964990000,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17registerInterruptEiP8OSObjectPFvS1_PvPS_iES2_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService17registerInterruptEiP8OSObjectPFvS1_PvPS_iES2_",
+          "target_defined": true,
+          "target_address": 18446743523964829296,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17setAggressivenessEmm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService17setAggressivenessEmm",
+          "target_defined": true,
+          "target_address": 18446743523964989984,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService18lockForArbitrationEb",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService18lockForArbitrationEb",
+          "target_defined": true,
+          "target_address": 18446743523964823616,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService18matchPropertyTableEP12OSDictionary",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService18matchPropertyTableEP12OSDictionary",
+          "target_defined": true,
+          "target_address": 18446743523964825392,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService18matchPropertyTableEP12OSDictionaryPi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService18matchPropertyTableEP12OSDictionaryPi",
+          "target_defined": true,
+          "target_address": 18446743523964825360,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService18setIdleTimerPeriodEm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService18setIdleTimerPeriodEm",
+          "target_defined": true,
+          "target_address": 18446743523964989520,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService18systemWillShutdownEj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService18systemWillShutdownEj",
+          "target_defined": true,
+          "target_address": 18446743523964998416,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService2Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService2Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016000,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService3Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService3Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016032,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService4Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService4Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016064,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService5Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService5Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016096,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService6Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService6Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016128,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService7Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService7Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016160,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService8Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService8Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016192,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService9Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService9Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016224,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19registerPowerDriverEPS_P14IOPMPowerStatem",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService19registerPowerDriverEPS_P14IOPMPowerStatem",
+          "target_defined": true,
+          "target_address": 18446743523964983392,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19unregisterInterruptEi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService19unregisterInterruptEi",
+          "target_defined": true,
+          "target_address": 18446743523964829488,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService10Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService10Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016256,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService11Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService11Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016288,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService12Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService12Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016320,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService13Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService13Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016352,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService14Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService14Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016384,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService15Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService15Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016416,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService16Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService16Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016448,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService17Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService17Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016480,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService18Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService18Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016512,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService19Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService19Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016544,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService20Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService20Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016576,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService21Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService21Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016608,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService22Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService22Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016640,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService23Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService23Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016672,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService24Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService24Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016704,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService25Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService25Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016736,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService26Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService26Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016768,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService27Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService27Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016800,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService28Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService28Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016832,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService29Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService29Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016864,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService30Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService30Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016896,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService31Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService31Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016928,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService32Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService32Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016960,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService33Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService33Ev",
+          "target_defined": true,
+          "target_address": 18446743523966016992,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService34Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService34Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017024,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService35Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService35Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017056,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService36Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService36Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017088,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService37Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService37Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017120,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService38Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService38Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017152,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService39Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService39Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017184,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService40Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService40Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017216,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService41Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService41Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017248,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService42Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService42Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017280,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService43Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService43Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017312,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService44Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService44Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017344,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService45Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService45Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017376,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService46Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService46Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017408,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService47Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService47Ev",
+          "target_defined": true,
+          "target_address": 18446743523966017440,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20callPlatformFunctionEPK8OSSymbolbPvS3_S3_S3_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20callPlatformFunctionEPK8OSSymbolbPvS3_S3_S3_",
+          "target_defined": true,
+          "target_address": 18446743523964828480,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20callPlatformFunctionEPKcbPvS2_S2_S2_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20callPlatformFunctionEPKcbPvS2_S2_S2_",
+          "target_defined": true,
+          "target_address": 18446743523964828768,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20getDeviceMemoryCountEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20getDeviceMemoryCountEv",
+          "target_defined": true,
+          "target_address": 18446743523964828912,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20unlockForArbitrationEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService20unlockForArbitrationEv",
+          "target_defined": true,
+          "target_address": 18446743523964824672,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService21powerStateDidChangeToEmmPS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService21powerStateDidChangeToEmmPS_",
+          "target_defined": true,
+          "target_address": 18446743523964998384,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService22copyClientWithCategoryEPK8OSSymbol",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService22copyClientWithCategoryEPK8OSSymbol",
+          "target_defined": true,
+          "target_address": 18446743523964820368,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService22powerStateWillChangeToEmmPS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService22powerStateWillChangeToEmmPS_",
+          "target_defined": true,
+          "target_address": 18446743523964998368,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService23acknowledgeNotificationEPvj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService23acknowledgeNotificationEPvj",
+          "target_defined": true,
+          "target_address": 18446743523964831328,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService23requestPowerDomainStateEmP17IOPowerConnectionm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService23requestPowerDomainStateEmP17IOPowerConnectionm",
+          "target_defined": true,
+          "target_address": 18446743523964985952,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService24getDeviceMemoryWithIndexEj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService24getDeviceMemoryWithIndexEj",
+          "target_defined": true,
+          "target_address": 18446743523964829008,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService24mapDeviceMemoryWithIndexEjj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService24mapDeviceMemoryWithIndexEjj",
+          "target_defined": true,
+          "target_address": 18446743523964829120,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService24powerStateForDomainStateEm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService24powerStateForDomainStateEm",
+          "target_defined": true,
+          "target_address": 18446743523964998272,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService27maxCapabilityForDomainStateEm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService27maxCapabilityForDomainStateEm",
+          "target_defined": true,
+          "target_address": 18446743523964998064,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService31initialPowerStateForDomainStateEm",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService31initialPowerStateForDomainStateEm",
+          "target_defined": true,
+          "target_address": 18446743523964998160,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService4freeEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService4freeEv",
+          "target_defined": true,
+          "target_address": 18446743523964819296,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService4initEP12OSDictionary",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService4initEP12OSDictionary",
+          "target_defined": true,
+          "target_address": 18446743523964819792,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService4initEP15IORegistryEntryPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService4initEP15IORegistryEntryPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964819904,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService4openEPS_jPv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService4openEPS_jPv",
+          "target_defined": true,
+          "target_address": 18446743523964822288,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService4stopEPS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService4stopEPS_",
+          "target_defined": true,
+          "target_address": 18446743523964822240,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService5closeEPS_j",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService5closeEPS_j",
+          "target_defined": true,
+          "target_address": 18446743523964822576,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService6PMinitEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService6PMinitEv",
+          "target_defined": true,
+          "target_address": 18446743523964921792,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService6PMstopEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService6PMstopEv",
+          "target_defined": true,
+          "target_address": 18446743523964979344,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService6attachEPS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService6attachEPS_",
+          "target_defined": true,
+          "target_address": 18446743523964826256,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService6detachEPS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService6detachEPS_",
+          "target_defined": true,
+          "target_address": 18446743523964826848,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService7messageEjPS_Pv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService7messageEjPS_Pv",
+          "target_defined": true,
+          "target_address": 18446743523964830144,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService8DispatchE5IORPC",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService8DispatchE5IORPC",
+          "target_defined": true,
+          "target_address": 18446743523964645664,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService8finalizeEj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService8finalizeEj",
+          "target_defined": true,
+          "target_address": 18446743523964823088,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService9metaClassE",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService9metaClassE",
+          "target_defined": true,
+          "target_address": 18446743523956546936,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService9terminateEj",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOService9terminateEj",
+          "target_defined": true,
+          "target_address": 18446743523964823072,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOServiceC2EPK11OSMetaClass",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOServiceC2EPK11OSMetaClass",
+          "target_defined": true,
+          "target_address": 18446743523964886352,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOServiceD2Ev",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZN9IOServiceD2Ev",
+          "target_defined": true,
+          "target_address": 18446743523964886416,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass12getClassNameEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK11OSMetaClass12getClassNameEv",
+          "target_defined": true,
+          "target_address": 18446743523964330112,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass12getMetaClassEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK11OSMetaClass12getMetaClassEv",
+          "target_defined": true,
+          "target_address": 18446743523964327936,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass12taggedRetainEPKv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK11OSMetaClass12taggedRetainEPKv",
+          "target_defined": true,
+          "target_address": 18446743523964327952,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass13taggedReleaseEPKv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK11OSMetaClass13taggedReleaseEPKv",
+          "target_defined": true,
+          "target_address": 18446743523964327968,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass13taggedReleaseEPKvi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK11OSMetaClass13taggedReleaseEPKvi",
+          "target_defined": true,
+          "target_address": 18446743523964327984,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass14getRetainCountEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK11OSMetaClass14getRetainCountEv",
+          "target_defined": true,
+          "target_address": 18446743523964327888,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass19instanceConstructedEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK11OSMetaClass19instanceConstructedEv",
+          "target_defined": true,
+          "target_address": 18446743523964331584,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass6retainEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK11OSMetaClass6retainEv",
+          "target_defined": true,
+          "target_address": 18446743523964327904,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass7releaseEi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK11OSMetaClass7releaseEi",
+          "target_defined": true,
+          "target_address": 18446743523964327872,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass7releaseEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK11OSMetaClass7releaseEv",
+          "target_defined": true,
+          "target_address": 18446743523964327920,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass9serializeEP11OSSerialize",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK11OSMetaClass9serializeEP11OSSerialize",
+          "target_defined": true,
+          "target_address": 18446743523966008448,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11compareNameEP8OSStringPS1_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry11compareNameEP8OSStringPS1_",
+          "target_defined": true,
+          "target_address": 18446743523964804304,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getLocationEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry11getLocationEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964804704,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getPropertyEPK8OSString",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry11getPropertyEPK8OSString",
+          "target_defined": true,
+          "target_address": 18446743523964796704,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getPropertyEPK8OSStringPK15IORegistryPlanej",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry11getPropertyEPK8OSStringPK15IORegistryPlanej",
+          "target_defined": true,
+          "target_address": 18446743523964797184,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getPropertyEPK8OSSymbol",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry11getPropertyEPK8OSSymbol",
+          "target_defined": true,
+          "target_address": 18446743523964796576,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getPropertyEPK8OSSymbolPK15IORegistryPlanej",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry11getPropertyEPK8OSSymbolPK15IORegistryPlanej",
+          "target_defined": true,
+          "target_address": 18446743523964796832,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getPropertyEPKc",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry11getPropertyEPKc",
+          "target_defined": true,
+          "target_address": 18446743523964796768,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getPropertyEPKcPK15IORegistryPlanej",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry11getPropertyEPKcPK15IORegistryPlanej",
+          "target_defined": true,
+          "target_address": 18446743523964797536,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12compareNamesEP8OSObjectPP8OSString",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry12compareNamesEP8OSObjectPP8OSString",
+          "target_defined": true,
+          "target_address": 18446743523964803968,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyLocationEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry12copyLocationEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964804768,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyPropertyEPK8OSString",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry12copyPropertyEPK8OSString",
+          "target_defined": true,
+          "target_address": 18446743523964798032,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyPropertyEPK8OSStringPK15IORegistryPlanej",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry12copyPropertyEPK8OSStringPK15IORegistryPlanej",
+          "target_defined": true,
+          "target_address": 18446743523964793568,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyPropertyEPK8OSSymbol",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry12copyPropertyEPK8OSSymbol",
+          "target_defined": true,
+          "target_address": 18446743523964797888,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyPropertyEPK8OSSymbolPK15IORegistryPlanej",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry12copyPropertyEPK8OSSymbolPK15IORegistryPlanej",
+          "target_defined": true,
+          "target_address": 18446743523964793920,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyPropertyEPKc",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry12copyPropertyEPKc",
+          "target_defined": true,
+          "target_address": 18446743523964798176,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyPropertyEPKcPK15IORegistryPlanej",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry12copyPropertyEPKcPK15IORegistryPlanej",
+          "target_defined": true,
+          "target_address": 18446743523964793216,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry13getChildEntryEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry13getChildEntryEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964799856,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry14applyToParentsEPFvPS_PvES1_PK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry14applyToParentsEPFvPS_PvES1_PK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964798992,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry14copyChildEntryEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry14copyChildEntryEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964794384,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry14getParentEntryEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry14getParentEntryEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964799248,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry15applyToChildrenEPFvPS_PvES1_PK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry15applyToChildrenEPFvPS_PvES1_PK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964799600,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry15copyParentEntryEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry15copyParentEntryEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964794272,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry16getChildIteratorEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry16getChildIteratorEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964799296,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry16getPathComponentEPcPiPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry16getPathComponentEPcPiPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964806544,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry17getParentIteratorEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry17getParentIteratorEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964798688,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry24dictionaryWithPropertiesEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry24dictionaryWithPropertiesEv",
+          "target_defined": true,
+          "target_address": 18446743523964798320,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry7getNameEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry7getNameEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964803632,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry7getPathEPcPiPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry7getPathEPcPiPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964805088,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry7inPlaneEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry7inPlaneEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964800512,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry7isChildEPS_PK15IORegistryPlaneb",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry7isChildEPS_PK15IORegistryPlaneb",
+          "target_defined": true,
+          "target_address": 18446743523964799904,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry8copyNameEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry8copyNameEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964803792,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry8getDepthEPK15IORegistryPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry8getDepthEPK15IORegistryPlane",
+          "target_defined": true,
+          "target_address": 18446743523964800816,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry8isParentEPS_PK15IORegistryPlaneb",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15IORegistryEntry8isParentEPS_PK15IORegistryPlaneb",
+          "target_defined": true,
+          "target_address": 18446743523964800208,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15OSMetaClassBase8metaCastEPKc",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15OSMetaClassBase8metaCastEPKc",
+          "target_defined": true,
+          "target_address": 18446743523964329328,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15OSMetaClassBase9isEqualToEPKS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK15OSMetaClassBase9isEqualToEPKS_",
+          "target_defined": true,
+          "target_address": 18446743523964327568,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject12taggedRetainEPKv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK8OSObject12taggedRetainEPKv",
+          "target_defined": true,
+          "target_address": 18446743523964335520,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject13taggedReleaseEPKv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK8OSObject13taggedReleaseEPKv",
+          "target_defined": true,
+          "target_address": 18446743523964335632,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject13taggedReleaseEPKvi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK8OSObject13taggedReleaseEPKvi",
+          "target_defined": true,
+          "target_address": 18446743523964335664,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject14getRetainCountEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK8OSObject14getRetainCountEv",
+          "target_defined": true,
+          "target_address": 18446743523964335088,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject6retainEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK8OSObject6retainEv",
+          "target_defined": true,
+          "target_address": 18446743523964335104,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject7releaseEi",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK8OSObject7releaseEi",
+          "target_defined": true,
+          "target_address": 18446743523964335056,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject7releaseEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK8OSObject7releaseEv",
+          "target_defined": true,
+          "target_address": 18446743523964335120,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject9serializeEP11OSSerialize",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK8OSObject9serializeEP11OSSerialize",
+          "target_defined": true,
+          "target_address": 18446743523964335136,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService11getProviderEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK9IOService11getProviderEv",
+          "target_defined": true,
+          "target_address": 18446743523964827776,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService11getWorkLoopEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK9IOService11getWorkLoopEv",
+          "target_defined": true,
+          "target_address": 18446743523964827856,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService12handleIsOpenEPKS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK9IOService12handleIsOpenEPKS_",
+          "target_defined": true,
+          "target_address": 18446743523964823040,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService17getClientIteratorEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK9IOService17getClientIteratorEv",
+          "target_defined": true,
+          "target_address": 18446743523964828208,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService19getProviderIteratorEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK9IOService19getProviderIteratorEv",
+          "target_defined": true,
+          "target_address": 18446743523964827904,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService19serializePropertiesEP11OSSerialize",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK9IOService19serializePropertiesEP11OSSerialize",
+          "target_defined": true,
+          "target_address": 18446743523964819888,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService21getOpenClientIteratorEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK9IOService21getOpenClientIteratorEv",
+          "target_defined": true,
+          "target_address": 18446743523964828240,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService23getOpenProviderIteratorEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK9IOService23getOpenProviderIteratorEv",
+          "target_defined": true,
+          "target_address": 18446743523964827936,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService6isOpenEPKS_",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK9IOService6isOpenEPKS_",
+          "target_defined": true,
+          "target_address": 18446743523964822848,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService8getStateEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK9IOService8getStateEv",
+          "target_defined": true,
+          "target_address": 18446743523964821680,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService9getClientEv",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZNK9IOService9getClientEv",
+          "target_defined": true,
+          "target_address": 18446743523964828176,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZTV8OSObject",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZTV8OSObject",
+          "target_defined": true,
+          "target_address": 18446743523956548320,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "__ZTV9IOService",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "__ZTV9IOService",
+          "target_defined": true,
+          "target_address": 18446743523956544736,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "___bzero",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "___bzero",
+          "target_defined": true,
+          "target_address": 18446743523954790656,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "___stack_chk_fail",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "___stack_chk_fail",
+          "target_defined": true,
+          "target_address": 18446743523965926032,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "___stack_chk_guard",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "___stack_chk_guard",
+          "target_defined": true,
+          "target_address": 18446743523972522048,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_absolutetime_to_nanoseconds",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.mach",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_absolutetime_to_nanoseconds",
+          "target_defined": true,
+          "target_address": 18446743523958798464,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_bzero",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_bzero",
+          "target_defined": true,
+          "target_address": 18446743523954790656,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_clock_get_uptime",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.mach",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_clock_get_uptime",
+          "target_defined": true,
+          "target_address": 18446743523957221296,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_clock_interval_to_deadline",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.mach",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_clock_interval_to_deadline",
+          "target_defined": true,
+          "target_address": 18446743523957220960,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_gIOCatalogue",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_gIOCatalogue",
+          "target_defined": true,
+          "target_address": 18446743523974340536,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_gIODTPlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_gIODTPlane",
+          "target_defined": true,
+          "target_address": 18446743523974341920,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_gIOServicePlane",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.iokit",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_gIOServicePlane",
+          "target_defined": true,
+          "target_address": 18446743523974342080,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_kernel_task",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.mach",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_kernel_task",
+          "target_defined": true,
+          "target_address": 18446743523956552304,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_lilu",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 133232,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_lilu_os_free",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 83456,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_lilu_os_log",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "as.vit9696.Lilu",
+          "evidence": "external non-private nlist definition",
+          "target_defined": true,
+          "target_address": 82976,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_memcpy",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_memcpy",
+          "target_defined": true,
+          "target_address": 18446743523954790480,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_panic",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_panic",
+          "target_defined": true,
+          "target_address": 18446743523965930204,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_strcmp",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_strcmp",
+          "target_defined": true,
+          "target_address": 18446743523958495744,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_strlen",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_strlen",
+          "target_defined": true,
+          "target_address": 18446743523958495648,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_strncmp",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_strncmp",
+          "target_defined": true,
+          "target_address": 18446743523958495792,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_call_allocate",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.mach",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_thread_call_allocate",
+          "target_defined": true,
+          "target_address": 18446743523957664240,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_call_enter1_delayed",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.mach",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_thread_call_enter1_delayed",
+          "target_defined": true,
+          "target_address": 18446743523957666048,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_call_enter_delayed",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.mach",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_thread_call_enter_delayed",
+          "target_defined": true,
+          "target_address": 18446743523957665968,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_version_major",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.libkern",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_version_major",
+          "target_defined": true,
+          "target_address": 18446743523966307156,
+          "version_range_satisfied": true
+        }
+      ]
+    },
+    {
+      "symbol": "_vn_getpath",
+      "static_declared_provider_match": true,
+      "candidates": [
+        {
+          "provider": "com.apple.kpi.bsd",
+          "evidence": "kernel __LINKINFO,__symbolsets whitelist plus nlist definition",
+          "alias_target": "_vn_getpath",
+          "target_defined": true,
+          "target_address": 18446743523959400608,
+          "version_range_satisfied": true
+        }
+      ]
+    }
+  ],
+  "import_count": 378,
+  "matched_count": 378,
+  "unmatched": [],
+  "dependencies": [
+    {
+      "identifier": "as.vit9696.Lilu",
+      "requested": "1.6.4",
+      "available_version": "1.7.2",
+      "oldest_compatible_version": "1.2.0",
+      "declared_version_range_satisfied": true
+    },
+    {
+      "identifier": "com.apple.iokit.IOPCIFamily",
+      "requested": "1.0.0b1",
+      "available_version": "2.9",
+      "oldest_compatible_version": "1.0.0b1",
+      "declared_version_range_satisfied": true
+    },
+    {
+      "identifier": "com.apple.kpi.bsd",
+      "requested": "10.0.0",
+      "available_version": "25.6.0",
+      "oldest_compatible_version": "8.0.0b1",
+      "declared_version_range_satisfied": true
+    },
+    {
+      "identifier": "com.apple.kpi.dsep",
+      "requested": "10.0.0",
+      "available_version": "25.6.0",
+      "oldest_compatible_version": "8.0.0b1",
+      "declared_version_range_satisfied": true
+    },
+    {
+      "identifier": "com.apple.kpi.iokit",
+      "requested": "10.0.0",
+      "available_version": "25.6.0",
+      "oldest_compatible_version": "7.0",
+      "declared_version_range_satisfied": true
+    },
+    {
+      "identifier": "com.apple.kpi.libkern",
+      "requested": "10.0.0",
+      "available_version": "25.6.0",
+      "oldest_compatible_version": "8.0.0d0",
+      "declared_version_range_satisfied": true
+    },
+    {
+      "identifier": "com.apple.kpi.mach",
+      "requested": "10.0.0",
+      "available_version": "25.6.0",
+      "oldest_compatible_version": "8.0.0d0",
+      "declared_version_range_satisfied": true
+    },
+    {
+      "identifier": "com.apple.kpi.unsupported",
+      "requested": "10.0.0",
+      "available_version": "25.6.0",
+      "oldest_compatible_version": "8.0.0b1",
+      "declared_version_range_satisfied": true
+    }
+  ],
+  "all_imports_statically_eligible": true,
+  "kernel_linker_executed": false,
+  "runtime_loaded": false,
+  "private_abi_verified": false,
+  "metal_verified": false,
+  "source_kmod_version": "0.4.1",
+  "inputs": {
+    "mellow": {
+      "path": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow041-build\\Mellow.kext\\Contents\\MacOS\\Mellow",
+      "sha256": "cee0482b2d858856c0696e0d8d6f18e6e12f87bb81bb0a0e1330984e1329eb36"
+    },
+    "lilu": {
+      "path": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\GalaxyBook-Tahoe-USB\\EFI\\OC\\Kexts\\Lilu.kext\\Contents\\MacOS\\Lilu",
+      "sha256": "ff98508b40a1eb5fb477029db8886412520f8e39965279ea331c99e3d2e3b274"
+    },
+    "collections": [
+      {
+        "path": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\tahoe-abi\\extracted\\macOS Base System\\System\\Library\\KernelCollections\\BootKernelExtensions.kc",
+        "sha256": "c80161fa3065883753fc285339281361a8469cbb6fb27653c88e2a22eb4807a4",
+        "uuid": "721186a74a968910192193ea8e8e169f"
+      },
+      {
+        "path": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\tahoe-abi\\extracted\\macOS Base System\\System\\Library\\KernelCollections\\BaseSystemKernelExtensions.kc",
+        "sha256": "60d3f43f1a23847aa8b60b7c57153fd93d20d0653c116d14da4875f09e5d2f04",
+        "uuid": "3104f133efa3e77d3d05d750c3330406"
+      }
+    ]
+  }
+}

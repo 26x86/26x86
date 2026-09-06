@@ -52,6 +52,7 @@ from .hardware.misc import (
     keyboard_backlight,
     legacy_audio,
     modern_audio,
+    mellow,
     pcie_webcam,
     t1_security,
     t1_login_experimental,
@@ -152,6 +153,8 @@ class HardwarePatchsetDetection:
         self._hardware_variants.append(legacy_audio.LegacyAudio)
 
         self._hardware_variants.append(modern_audio.ModernAudio)
+        if getattr(self._constants, "mellow_deployment", "disabled") == "root-patch":
+            self._hardware_variants.append(mellow.Mellow)
 
         self._hardware_variants += [
             display_backlight.DisplayBacklight,

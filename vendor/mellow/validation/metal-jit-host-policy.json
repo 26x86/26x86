@@ -1,0 +1,31 @@
+{
+  "utc": "2026-09-05T19:54:15.610882+00:00",
+  "host": "Windows-10-10.0.28000-SP0",
+  "compiler": "g++.exe (Rev3, Built by MSYS2 project) 16.2.0",
+  "scope": "Portable driver helpers and contracts; no IOKit loader, firmware, GPU or Metal execution",
+  "hardware_execution": false,
+  "passed": true,
+  "results": [
+    {
+      "source": "tests/HardwareAccessTests.cpp",
+      "compile_exit": 0,
+      "compile_output": "",
+      "run_exit": 0,
+      "output": "PASS HardwareAccess: MMIO side effects/boundaries/overflow; PCI scope/alignment/failure; 1024 GMS/GGMS combinations\n"
+    },
+    {
+      "source": "tests/modelTests.cpp",
+      "compile_exit": 0,
+      "compile_output": "",
+      "run_exit": 0,
+      "output": "PASS model: exact B5/7D41 pair across all 65536 GPU IDs and 256 CPU models; spoof rejected\n"
+    },
+    {
+      "source": "tests/patcher_policy_tests.cpp",
+      "compile_exit": 0,
+      "compile_output": "",
+      "run_exit": 0,
+      "output": "PASS: pattern fallback boundaries, ambiguity, masks, overflow and kernel admission\nassertions=4151; no GPU/hardware execution\n"
+    }
+  ]
+}

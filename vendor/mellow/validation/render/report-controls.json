@@ -1,0 +1,18 @@
+[
+  {
+    "script": "tests/opengl_provider_report_tests.py",
+    "source_sha256": "312b5258f67009846193bd56e767cc122723991cb59b44e6587f4c004b17c401",
+    "tests": 6,
+    "exit_code": 0,
+    "output": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.584s\n\nOK\n",
+    "gpu_executed": false
+  },
+  {
+    "script": "tests/render_objects_report_tests.py",
+    "source_sha256": "2b5db81402258744f4e8b4198d9ae2d8f22c084b51673037242681d695b2753a",
+    "tests": 7,
+    "exit_code": 0,
+    "output": ".......\n----------------------------------------------------------------------\nRan 7 tests in 0.072s\n\nOK\n",
+    "gpu_executed": false
+  }
+]

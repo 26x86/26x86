@@ -1,0 +1,29 @@
+{
+  "target": {"pci_vendor": "8086", "pci_device": "7D41", "linux_family": "ARL-U", "linux_descriptor": "mtl_desc", "graphics_ip_source": "must read GMD_ID; not inferred from PCI ID"},
+  "linux_commit": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+  "primary_sources": [
+    "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/include/drm/intel/pciids.h",
+    "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/xe_pci.c",
+    "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/xe_uc_fw.c",
+    "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/abi/uc_fw_abi.h",
+    "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/xe_hw_fence.c",
+    "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/instructions/xe_mi_commands.h"
+  ],
+  "firmware": {
+    "path": "i915/mtl_guc_70.bin",
+    "source_commit": "2f2bf38a3d030a083d8b2b1fea2aa0e9b29a48bd",
+    "url": "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/2f2bf38a3d030a083d8b2b1fea2aa0e9b29a48bd/i915/mtl_guc_70.bin",
+    "sha256": "7794f0b6abe5fcd9c6f47035dafe2199f30a6e7d230bd5a53fbf8005a60e5911",
+    "bytes": 320320,
+    "release": "70.53.0",
+    "linux_minimum": "70.29.2",
+    "linux_recommended": "70.53.0",
+    "submission_abi_parsed": "1.26.0",
+    "license_url": "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/2f2bf38a3d030a083d8b2b1fea2aa0e9b29a48bd/LICENSES/LICENSE.i915",
+    "hardware_authenticated": false,
+    "redistributed_binary": false
+  },
+  "platform_companions_not_downloaded": ["i915/mtl_huc_gsc.bin", "i915/mtl_gsc_1.bin"],
+  "implemented": ["CSS metadata validation", "bootstrap MI allowlist", "immutable submission snapshots", "resource ownership lifecycle", "queue generation and fence state", "timeout and reset contracts"],
+  "not_implemented": ["firmware DMA upload/authentication", "GuC CTB/context transport", "real hardware interrupt adapter", "GPU batch submission", "Metal shader/runtime backend"]
+}

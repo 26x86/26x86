@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "scope": "Independent actual LLVM 20.1.8 C API decoder/lowering tests. Positive compute artifact deliberately synthetic. SDL vertex/fragment real upstream artifacts rejected. No GPU execution.",
+  "binary_sha256_before": "77d2dbf0f34683bdd7adb45a0d49c09c2592df053207b3053363ed19e9c9c766",
+  "binary_sha256_after": "77d2dbf0f34683bdd7adb45a0d49c09c2592df053207b3053363ed19e9c9c766",
+  "library_sha256_before": "b84e81d2ffa8fb030b58f1d9ad75ef3ab37f63cd094993c302d9efb34242eaf1",
+  "library_sha256_after": "b84e81d2ffa8fb030b58f1d9ad75ef3ab37f63cd094993c302d9efb34242eaf1",
+  "control_count": 13,
+  "controls_passed": 13,
+  "runs": [
+    {
+      "name": "synthetic-original-wrapper",
+      "expected_success": true,
+      "input_sha256": "6545f969698e98a1a4e09746df0beba0c18fb3136de4ccbadadc2c0ece8022b3",
+      "returncode": 0,
+      "result": {
+        "schema_version": 1,
+        "status": "LOWERED_OPENCL_C_ONLY",
+        "gpu_executed": false,
+        "input": "air",
+        "entry": "air_affine",
+        "opencl_source": "// Mellow AIR 2.7 SSA subset; host must enforce exact 1D dispatch.\n__kernel void air_affine(__global uint *mellow_buffer0) {\n  const uint mellow_gid = (uint)get_global_id(0);\n  const uint mellow_ssa4 = mellow_buffer0[mellow_gid];\n  const uint mellow_ssa5 = (mellow_ssa4 * 7u);\n  const uint mellow_ssa6 = (mellow_ssa5 + 3u);\n  mellow_buffer0[mellow_gid] = mellow_ssa6;\n}\n",
+        "diagnostics": []
+      },
+      "stderr": "",
+      "control_passed": true
+    },
+    {
+      "name": "synthetic-extracted-raw",
+      "expected_success": true,
+      "input_sha256": "8d22fb7f865b3031cfdb9c5a72d4afa8b427d542a6651813f1c3a71236b9b068",
+      "returncode": 0,
+      "result": {
+        "schema_version": 1,
+        "status": "LOWERED_OPENCL_C_ONLY",
+        "gpu_executed": false,
+        "input": "air",
+        "entry": "air_affine",
+        "opencl_source": "// Mellow AIR 2.7 SSA subset; host must enforce exact 1D dispatch.\n__kernel void air_affine(__global uint *mellow_buffer0) {\n  const uint mellow_gid = (uint)get_global_id(0);\n  const uint mellow_ssa4 = mellow_buffer0[mellow_gid];\n  const uint mellow_ssa5 = (mellow_ssa4 * 7u);\n  const uint mellow_ssa6 = (mellow_ssa5 + 3u);\n  mellow_buffer0[mellow_gid] = mellow_ssa6;\n}\n",
+        "diagnostics": []
+      },
+      "stderr": "",
+      "control_passed": true
+    },
+    {
+      "name": "magic-only",
+      "expected_success": false,
+      "input_sha256": "f41aab480756711edcd2fb00add18f7b553cff9f09cbe93a23e421f0386139e0",
+      "returncode": 2,
+      "result": {
+        "schema_version": 1,
+        "status": "REJECTED",
+        "gpu_executed": false,
+        "input": "air",
+        "entry": "",
+        "opencl_source": "",
+        "diagnostics": [
+          "LLVM rejected bitcode input (invalid or unsupported format)"
+        ]
+      },
+      "stderr": "",
+      "control_passed": true
+    },
+    {
+      "name": "raw-truncated-half",
+      "expected_success": false,
+      "input_sha256": "91951f911c8c01ebde23cccbd7108343b924b1800d0dde53b8168064db27c525",
+      "returncode": 2,
+      "result": {
+        "schema_version": 1,
+        "status": "REJECTED",
+        "gpu_executed": false,
+        "input": "air",
+        "entry": "",
+        "opencl_source": "",
+        "diagnostics": [
+          "LLVM rejected bitcode input (invalid or unsupported format)"
+        ]
+      },
+      "stderr": "",
+      "control_passed": true
+    },
+    {
+      "name": "wrapper-truncated-half",
+      "expected_success": false,
+      "input_sha256": "bd258ec40f6306de8aa71bced38826ee83b4dab83365eed1284523c626c72b69",
+      "returncode": 2,
+      "result": {
+        "schema_version": 1,
+        "status": "REJECTED",
+        "gpu_executed": false,
+        "input": "air",
+        "entry": "",
+        "opencl_source": "",
+        "diagnostics": [
+          "LLVM wrapper payload outside input"
+        ]
+      },
+      "stderr": "",
+      "control_passed": true
+    },
+    {
+      "name": "wrapper-bad-offset",
+      "expected_success": false,
+      "input_sha256": "67d08b7e607ca2bd3d2f8dd15213a6b505477ca37b5bd06d9b7b38363e5e2cdf",
+      "returncode": 2,
+      "result": {
+        "schema_version": 1,
+        "status": "REJECTED",
+        "gpu_executed": false,
+        "input": "air",
+        "entry": "",
+        "opencl_source": "",
+        "diagnostics": [
+          "LLVM wrapper payload outside input"
+        ]
+      },
+      "stderr": "",
+      "control_passed": true
+    },
+    {
+      "name": "wrapper-nonzero-suffix",
+      "expected_success": false,
+      "input_sha256": "21f3bec9f1d8a978168faabd11eea80b119977cc95b05d96232517858ab01e1e",
+      "returncode": 2,
+      "result": {
+        "schema_version": 1,
+        "status": "REJECTED",
+        "gpu_executed": false,
+        "input": "air",
+        "entry": "",
+        "opencl_source": "",
+        "diagnostics": [
+          "Nonzero LLVM wrapper padding"
+        ]
+      },
+      "stderr": "",
+      "control_passed": true
+    },
+    {
+      "name": "oversized",
+      "expected_success": false,
+      "input_sha256": "0503ccf851ecb8919ae370579c582348e30a3b5880cfd4351422d0622630784c",
+      "returncode": 2,
+      "result": null,
+      "stderr": "Shader input exceeds byte limit\n",
+      "control_passed": true
+    },
+    {
+      "name": "sdl-fullscreen-vertex-extracted-raw",
+      "expected_success": false,
+      "input_sha256": "d57de46697dd9a7955e92d8687e329b668d54e54f414a8ecdf04a0ddabc0f163",
+      "returncode": 2,
+      "result": {
+        "schema_version": 1,
+        "status": "REJECTED",
+        "gpu_executed": false,
+        "input": "air",
+        "entry": "",
+        "opencl_source": "",
+        "diagnostics": [
+          "7:1: Only AIR 2.7 macOS target triples are supported"
+        ]
+      },
+      "stderr": "",
+      "control_passed": true
+    },
+    {
+      "name": "sdl-blit-fragment-extracted-raw",
+      "expected_success": false,
+      "input_sha256": "0f72299b133c413c87ecabe9d6b11767eb3ecf04f5d76376f43788ae70297b71",
+      "returncode": 2,
+      "result": {
+        "schema_version": 1,
+        "status": "REJECTED",
+        "gpu_executed": false,
+        "input": "air",
+        "entry": "",
+        "opencl_source": "",
+        "diagnostics": [
+          "6:1: Only AIR 2.7 macOS target triples are supported"
+        ]
+      },
+      "stderr": "",
+      "control_passed": true
+    },
+    {
+      "name": "relative-library",
+      "expected_success": false,
+      "returncode": 2,
+      "result": {
+        "schema_version": 1,
+        "status": "REJECTED",
+        "gpu_executed": false,
+        "input": "air",
+        "entry": "",
+        "opencl_source": "",
+        "diagnostics": [
+          "Explicit absolute LLVM DLL path required"
+        ]
+      },
+      "stderr": "",
+      "control_passed": true
+    },
+    {
+      "name": "missing-library",
+      "expected_success": false,
+      "returncode": 2,
+      "result": {
+        "schema_version": 1,
+        "status": "REJECTED",
+        "gpu_executed": false,
+        "input": "air",
+        "entry": "",
+        "opencl_source": "",
+        "diagnostics": [
+          "Cannot load the specified LLVM C API library"
+        ]
+      },
+      "stderr": "",
+      "control_passed": true
+    },
+    {
+      "name": "entry-mismatch",
+      "expected_success": false,
+      "returncode": 2,
+      "result": {
+        "schema_version": 1,
+        "status": "REJECTED",
+        "gpu_executed": false,
+        "input": "air",
+        "entry": "",
+        "opencl_source": "",
+        "diagnostics": [
+          "6:33: AIR requested entry mismatch"
+        ]
+      },
+      "stderr": "",
+      "control_passed": true
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "test_methods": 15,
+  "subcases": 28,
+  "runtime_link_load_or_metal_tested": false,
+  "real_report_static_import_count": 378,
+  "real_report_static_matched_count": 378,
+  "real_report_no_runtime_claim": true
+}

@@ -152,6 +152,14 @@ def launch_qt_chromium_wizard(*, advanced: bool = False) -> None:
         def save_settings(self, data):
             return api.save_settings(dict(data) if data is not None else {})
 
+        @Slot(str, result="QVariant")
+        def prepare_mellow_efi(self, output):
+            return api.prepare_mellow_efi(output)
+
+        @Slot(str, str, str, result="QVariant")
+        def prepare_mellow_root_efi(self, source, output, payload):
+            return api.prepare_mellow_root_efi(source, output, payload)
+
         @Slot(result="QVariant")
         def host_can_build(self):
             return api.host_can_build()
@@ -246,7 +254,7 @@ _BRIDGE_INJECT_JS = """
   function promisifyBridge(bridge) {
     var names = [
       "get_app_info", "get_steps", "detect", "get_macos_choices", "set_target_os",
-      "get_patch_status", "get_status", "get_settings", "save_settings",
+      "get_patch_status", "get_status", "get_settings", "save_settings", "prepare_mellow_efi", "prepare_mellow_root_efi",
       "host_can_build", "launch_wx_action", "reveal_log", "open_guide"
     ];
     var wrapped = { __qtWrapped: true };

@@ -1,0 +1,18 @@
+{
+  "linux_commit": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+  "hardware_execution": false,
+  "source_base": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/",
+  "source_license": "MIT (Intel Xe files)",
+  "sha256": {
+    "drivers_gpu_drm_xe_abi_guc_klvs_abi.h": "b52b164a997275d3a9e99189844fea6d25913c060260a21ee8b6252615c86613",
+    "drivers_gpu_drm_xe_xe_guc_ct.c": "5fc970b97de4743940a00006f6353c3899ec5bffa8c756512248e1c8df8e217f",
+    "drivers_gpu_drm_xe_abi_guc_actions_abi.h": "9e4bb5eb7fdbd1db2ee4b52448a9bc08d78666e90821f41e631842b2298aa709",
+    "drivers_gpu_drm_xe_abi_guc_scheduler_abi.h": "050c734e92f6ee0c9892bf6138f2d734b1147d3d4e1b4acdaa5552e8dca127e8",
+    "drivers_gpu_drm_xe_xe_guc.c": "efed6c9767c85bf8693132b7209df6b971b74abb07966c34a3f658daee41360a",
+    "drivers_gpu_drm_xe_regs_xe_guc_regs.h": "d35e363c0f521daf9a44db2a8a827c2e5905d736408e0ded5042c597cfc1d9a7",
+    "drivers_gpu_drm_xe_abi_guc_errors_abi.h": "5e06a4ff64ebf32a0ba36fbe45774a22862e2b58308de0a32f1fda24520cf144",
+    "drivers_gpu_drm_xe_xe_guc_submit.c": "dcfa03600434e9065935eca92a8086825e880853dfc639c7f15cd0898b3342c1",
+    "drivers_gpu_drm_xe_abi_guc_messages_abi.h": "c7101af4fc6458f1917cfb1bb1cc94a365fb14a68d7efdf5fd0ea7dbbe116995",
+    "drivers_gpu_drm_xe_abi_guc_communication_ctb_abi.h": "f62c93e2930f600c3a5d62d56253766d3987fa04abf3b6ad2eaa4034e123ecbb"
+  }
+}

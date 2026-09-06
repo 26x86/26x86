@@ -114,6 +114,10 @@ class PatchSysVolume:
     def __init__(self, model: str, global_constants: constants.Constants, hardware_details: list = None) -> None:
         self.model = model
         self.constants: constants.Constants = global_constants
+        from x86.mellow.integration import configure_constants, execution_for
+        if not hasattr(self.constants, "execution_mode"):
+            configure_constants(self.constants)
+        execution_for(self.constants).require_native_apply()
         self.computer = self.constants.computer
         self.root_supports_snapshot = utilities.check_if_root_is_apfs_snapshot()
         self.constants.root_patcher_succeeded = False  # Reset Variable each time we start
@@ -248,10 +252,14 @@ class PatchSysVolume:
                 self.mount_location,
                 self.skip_root_kmutil_requirement
             ).merge(save_hid_cs)
+            if getattr(self.constants, "mellow_deployment", "disabled") == "root-patch":
+                build = Path(self.kdk_path).stem.rsplit("_", 1)[-1] if self.kdk_path else None
+                if build != self.constants.detected_os_build:
+                    raise RuntimeError("Mellow requires the exact-build KDK to be successfully merged")
         except Exception as e:
             logging.error("Merging KDK with root volume failed")
             logging.exception("Stack Trace:")
-            return
+            raise
 
 
     def _unpatch_root_vol(self):
@@ -279,6 +287,12 @@ class PatchSysVolume:
             logging.exception("Stack Trace:")
             return
 
+        from x86.mellow.transaction import restore_installed, finalize_restore
+        if restore_installed(data_root=self.mount_location_data or "/", defer_finalize=True):
+            self.needs_kmutil_exemptions = True
+            if not self._rebuild_kernel_cache():
+                raise RuntimeError("Mellow files restored, but kernel collection rebuild failed")
+            finalize_restore(data_root=self.mount_location_data or "/")
         self.constants.root_patcher_succeeded = True
         logging.info("- Unpatching complete")
         logging.info("\nPlease reboot the machine for patches to take effect")
@@ -503,9 +517,12 @@ class PatchSysVolume:
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT
                 )
+            else:
+                raise RuntimeError("Failed to generate root patch metadata")
         except Exception as e:
             logging.error(f"- Failed to write patchset: {e}")
             logging.exception("Stack Trace:")
+            raise
 
 
     def _patch_root_vol(self):
@@ -518,6 +535,9 @@ class PatchSysVolume:
         try:
             patches = self.patch_set_dictionary if self.patch_set_dictionary else HardwarePatchsetDetection(self.constants).patches
             self._execute_patchset(patches)
+            transaction = getattr(self, "_mellow_transaction", None)
+            if transaction is not None:
+                transaction.installed()
     
             if self.constants.wxpython_variant and self.constants.detected_os >= os_data.os_data.big_sur:
                 needs_daemon = self.requires_kdk_caching or self.requires_metallib_caching
@@ -525,11 +545,12 @@ class PatchSysVolume:
                     kdk_caching_needed=needs_daemon
                 )
     
-            self._rebuild_root_volume()
+            if not self._rebuild_root_volume():
+                raise RuntimeError("Kernel collection or APFS snapshot rebuild failed")
         except Exception as e:
             logging.error("We have a problem to execute patches and rebuild the Kernel Cache.")
             logging.exception("Stack Trace:")
-            return
+            raise
 
 
     def _get_destination_path(self, method_type: PatchType, patch_directory: str) -> str:
@@ -1015,6 +1036,16 @@ class PatchSysVolume:
         5. Executes patching
         """
         logging.info("- Starting Patch Process")
+        from x86.mellow.integration import validate_live, selected_payload
+        validate_live(self.constants)
+        from x86.mellow.integration import require_journal_privileges
+        require_journal_privileges(self.mount_location_data or "/")
+        mellow_payload = selected_payload(self.constants)
+        self._mellow_transaction = None
+        if mellow_payload is not None:
+            import os
+            if os.geteuid() != 0:
+                raise PermissionError("Mellow root patch requires the complete worker to run through sudo")
         logging.info(f"- Determining Required Patch set for Darwin {self.constants.detected_os}")
         
         patchset_obj = HardwarePatchsetDetection(self.constants)
@@ -1031,7 +1062,7 @@ class PatchSysVolume:
             return
 
         logging.info("- Patcher is capable of patching")
-        if not PayloadManager(self.constants).mount():
+        if set(self.patch_set_dictionary) != {"Mellow"} and not PayloadManager(self.constants).mount():
             logging.error("- Critical resources missing, cannot continue with patching!!!")
             logging.exception("Stack Trace:")
             return
@@ -1061,6 +1092,16 @@ class PatchSysVolume:
             else:
                 logging.info("User declined update. Exiting the Install drivers and patches menu.")
                 sys.exit(1)
+        # Journal preparation failure must not revert a previous installation.
+        if mellow_payload is not None:
+            from x86.mellow.transaction import MellowTransaction
+            transaction = MellowTransaction(mellow_payload, data_root=self.mount_location_data or "/")
+            try:
+                transaction.prepare()
+            except Exception:
+                self._unmount_root_vol()
+                raise
+            self._mellow_transaction = transaction
         try:
             logging.info("Patchen des Root-Volumes")
             logging.info("Patching the root volume")
@@ -1072,9 +1113,17 @@ class PatchSysVolume:
             logging.exception("Stack Trace:")
             logging.info("Damit wir sicherstellen, dass Ihr System trotz fehlgeschlagener Root-Volumes-Patch noch überhaupt startet, wir werden alle Patches widerrufen.")
             logging.info("To ensure that your system continues to boot even after the root volume patches have failed to apply, we'll undo the patches that were applied until now.")
-            self._unpatch_root_vol()
-            # A successful rollback is not a successful patch operation.
-            self.constants.root_patcher_succeeded = False
+            try:
+                self._unpatch_root_vol()
+            finally:
+                # Snapshot revert does not restore Data-volume driver files.
+                # Even when APFS revert fails, restore the owned Mellow files.
+                try:
+                    if self._mellow_transaction is not None:
+                        from x86.mellow.transaction import restore_installed
+                        restore_installed(data_root=self.mount_location_data or "/", defer_finalize=True)
+                finally:
+                    self.constants.root_patcher_succeeded = False
             return False
 
 
@@ -1085,6 +1134,13 @@ class PatchSysVolume:
         Reverts APFS snapshot to undo patches.
         """
         logging.info("- Starting Unpatch Process")
+        from x86.mellow.integration import execution_for
+        execution_for(self.constants).require_native_apply()
+        from x86.mellow.integration import require_journal_privileges
+        if require_journal_privileges(self.mount_location_data or "/"):
+            from x86.mellow.integration import validate_kdk
+            validate_kdk(self.constants)
+            self.skip_root_kmutil_requirement = False
         patchset_obj = HardwarePatchsetDetection(self.constants)
         
         if not patchset_obj.can_unpatch:

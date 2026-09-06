@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "scope": "read-only artifact inventory",
+  "components": {
+    "framebuffer": {
+      "name": "AppleIntelTGLGraphicsFramebuffer.kext",
+      "required": true,
+      "matches": []
+    },
+    "accelerator": {
+      "name": "AppleIntelTGLGraphics.kext",
+      "required": true,
+      "matches": []
+    },
+    "metal_plugin": {
+      "name": "AppleIntelTGLGraphicsMTLDriver.bundle",
+      "required": true,
+      "matches": []
+    },
+    "ioaccelerator_family": {
+      "name": "IOAcceleratorFamily2.kext",
+      "required": true,
+      "matches": []
+    },
+    "metal_framework": {
+      "name": "Metal.framework",
+      "required": true,
+      "matches": []
+    },
+    "gl_plugin": {
+      "name": "AppleIntelTGLGraphicsGLDriver.bundle",
+      "required": false,
+      "matches": []
+    },
+    "video_plugin": {
+      "name": "AppleIntelTGLGraphicsVADriver.bundle",
+      "required": false,
+      "matches": []
+    }
+  },
+  "metal_available": false,
+  "private_abi_verified": false,
+  "load_authorized": false,
+  "gate": "BLOCKED",
+  "blockers": [
+    "framebuffer: required x86_64 executable unavailable",
+    "accelerator: required x86_64 executable unavailable",
+    "metal_plugin: required x86_64 executable unavailable",
+    "ioaccelerator_family: required x86_64 executable unavailable",
+    "metal_framework: required x86_64 executable unavailable",
+    "IOAccelerator/Metal private ABI has not been validated against exact Tahoe binaries",
+    "No target-correlated completed compute/render evidence in this inventory"
+  ],
+  "runtime_tests_run": false,
+  "required_artifacts_present": false,
+  "bundle_dependency_evidence": [],
+  "target_kernel_kpi_exports_checked": false,
+  "lilu_exports_checked": false,
+  "search_roots": [
+    {
+      "path": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-integration",
+      "exists": true
+    },
+    {
+      "path": "D:\\",
+      "exists": true
+    }
+  ]
+}

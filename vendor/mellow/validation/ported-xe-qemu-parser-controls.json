@@ -1,0 +1,120 @@
+{
+  "scope": "guest parser protocol negative controls; no hardware",
+  "cases": [
+    {
+      "name": "valid",
+      "expected_accepted": true,
+      "accepted": true,
+      "passed": true
+    },
+    {
+      "name": "kernel_prelude",
+      "expected_accepted": true,
+      "accepted": true,
+      "passed": true
+    },
+    {
+      "name": "zero_checks",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "bool_checks",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "wrong_function_count",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "physical_claim",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "darwin_claim",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "metal_claim",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "non_simulated",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "missing_init",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "failure_json_after",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "failure_json_before",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "trailing_garbage",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "failed_debug_exit",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "timeout",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "duplicate_json_key",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "nonfinite",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "unknown_field",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    },
+    {
+      "name": "duplicate_result",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

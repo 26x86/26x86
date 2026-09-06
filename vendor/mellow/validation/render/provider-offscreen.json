@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-05T20:46:11.789079+00:00",
+  "scope": "native-Windows-WGL-GLSL-driver-offscreen-render-and-optional-swap",
+  "os": {
+    "system": "Windows",
+    "release": "10",
+    "version": "10.0.28000"
+  },
+  "source_sha256": {
+    "Runtime/OpenGLProvider.hpp": "0a77bcb3b3da00ced84358123f3173d0cddc644fb0b153c9c336e4c39f589071",
+    "Runtime/OpenGLProvider.cpp": "3fb92c197063170d6b49c4f975cb0822c24168f963a6d137a10293621edbb5e5",
+    "tests/opengl_provider_tests.cpp": "2bc6ea4a8946e84104a50aeda436ff48ce6f5105e4e0f7a4303fb292b5c2ad92",
+    "tests/opencl_runtime_sha256.hpp": "c5a42c0d06992a7bf20b433e6448a26866651090b35b6ba438074c6c7a31038c",
+    "Tools/run-opengl-provider.py": "8bead8dd49fa1c6ecb5092a646af472a5d36fdaaab9594975d7fcf7168ce3c10"
+  },
+  "native_macos_execution": false,
+  "windowserver_acceleration_verified": false,
+  "display_scanout_verified": false,
+  "physical_pci_identity_verified": false,
+  "gpu_work_executed": true,
+  "passed": true,
+  "status": "PASS_NATIVE_OPENGL_RENDER_SUBSTRATE",
+  "requested_frames": 1000,
+  "visible_window_requested": false,
+  "compiler_version": "g++.exe (Rev3, Built by MSYS2 project) 16.2.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "build": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "binary_sha256": "7194ed5ad6aaabf441ef43f178dcdd1a1b16b8599cb8a870e653d68dc50d1dff",
+  "worker": {
+    "exit_code": 0,
+    "stdout": "PASS: actual WGL/OpenGL triangle, fence, RGBA8 readback; visible swap requested=0\n",
+    "stderr": ""
+  },
+  "native": {
+    "schema_version": 1,
+    "passed": true,
+    "requested_frames": 1000,
+    "visible_window_requested": false,
+    "checks": 6026,
+    "negative_checks": 11,
+    "width": 64,
+    "height": 48,
+    "row_origin": "bottom-left",
+    "native_macos_execution": false,
+    "windowserver_acceleration_verified": false,
+    "display_scanout_verified": false,
+    "physical_pci_identity_verified": false,
+    "device": {
+      "vendor": "Intel",
+      "renderer": "Intel(R) Graphics",
+      "version": "3.3.0 - Build 32.0.101.6737",
+      "glsl_version": "3.30 - Build 32.0.101.6737",
+      "major": 3,
+      "minor": 3,
+      "pixel_format": 5,
+      "accelerated_pixel_format": true,
+      "software_renderer_rejected": true,
+      "core_profile": true
+    },
+    "seed": 3431076219,
+    "frames_completed": 1000,
+    "pipeline_build_count": 1,
+    "first_sequence": 1,
+    "last_sequence": 1000,
+    "epoch": 1,
+    "expected_stream_sha256": "7616a269a046f5c3d732100310a122c7ae124a0f2d2086a2b5c7f4dbe8860a3c",
+    "readback_stream_sha256": "7616a269a046f5c3d732100310a122c7ae124a0f2d2086a2b5c7f4dbe8860a3c",
+    "samples": [
+      {
+        "iteration": 0,
+        "epoch": 1,
+        "sequence": 1,
+        "render_submitted": true,
+        "fence_signaled": true,
+        "readback_completed": true,
+        "resources_released": true,
+        "swap_completed": false,
+        "scanout_verified": false,
+        "swap_interval_known": false,
+        "swap_interval": 0,
+        "rgba_sha256": "f6e0782d3c1fedb793a3711a12596ef75dfaf4894ebd94dde07f4b79f6acd735"
+      },
+      {
+        "iteration": 999,
+        "epoch": 1,
+        "sequence": 1000,
+        "render_submitted": true,
+        "fence_signaled": true,
+        "readback_completed": true,
+        "resources_released": true,
+        "swap_completed": false,
+        "scanout_verified": false,
+        "swap_interval_known": false,
+        "swap_interval": 0,
+        "rgba_sha256": "951c079a08e51f0fd5ad73c3e92c133de0dff508e3e88bcecbdbb4ed11cd1089"
+      }
+    ],
+    "all_frames_correlated": true,
+    "all_rgba_patterns_verified": true,
+    "elapsed_seconds": 1.72015
+  },
+  "validation_errors": [],
+  "source_changed_during_run": []
+}

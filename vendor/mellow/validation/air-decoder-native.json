@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "status": "PASS_LLVM_C_DECODER_LIFETIME",
+  "gpu_executed": false,
+  "shader_lowered": false,
+  "apple_compiler_origin_authenticated": false,
+  "fixture_origin": "synthetic",
+  "inputs_sha256_before": {
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Runtime\\AirDecoder.cpp": "75df73ea70176a6f64328bc00295644d6ef1540d17cee3be90963685478208ae",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Runtime\\AirDecoder.hpp": "6210c453f5c7a791f5f426ed1b7a3b049f140260def11a13dfe66b3147b4b34f",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\air_decoder_native_tests.cpp": "8c58b0e8eb43b92dcb09e8c2bdf06a5a4f266baf73df91562c4aa12af2743063",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Tools\\run-air-decoder-native-tests.py": "50b8e75936d2a77a2039cc8fd2e75ef0102c637707ac46784a3a04d655704c3e",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\fixtures\\air\\synthetic-uint-affine.bc": "6545f969698e98a1a4e09746df0beba0c18fb3136de4ccbadadc2c0ece8022b3",
+    "C:\\msys64\\mingw64\\bin\\g++.exe": "fe03455c28ab0c69f1adb0ccde202124091f01d02b0c0ede8578f606063cc894",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\llvm-c-windows\\bin\\LLVM-C.dll": "b84e81d2ffa8fb030b58f1d9ad75ef3ab37f63cd094993c302d9efb34242eaf1"
+  },
+  "build_command": [
+    "C:\\msys64\\mingw64\\bin\\g++.exe",
+    "-std=c++17",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-pthread",
+    "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Runtime",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Runtime\\AirDecoder.cpp",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\air_decoder_native_tests.cpp",
+    "-o",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\work\\air-readonly-review\\production-runner-final\\air-decoder-native-tests.exe"
+  ],
+  "build_returncode": 0,
+  "run_command": [
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\work\\air-readonly-review\\production-runner-final\\air-decoder-native-tests.exe",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\fixtures\\air\\synthetic-uint-affine.bc",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\llvm-c-windows\\bin\\LLVM-C.dll"
+  ],
+  "run_returncode": 0,
+  "inputs_sha256_after": {
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Runtime\\AirDecoder.cpp": "75df73ea70176a6f64328bc00295644d6ef1540d17cee3be90963685478208ae",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Runtime\\AirDecoder.hpp": "6210c453f5c7a791f5f426ed1b7a3b049f140260def11a13dfe66b3147b4b34f",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\air_decoder_native_tests.cpp": "8c58b0e8eb43b92dcb09e8c2bdf06a5a4f266baf73df91562c4aa12af2743063",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Tools\\run-air-decoder-native-tests.py": "50b8e75936d2a77a2039cc8fd2e75ef0102c637707ac46784a3a04d655704c3e",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\fixtures\\air\\synthetic-uint-affine.bc": "6545f969698e98a1a4e09746df0beba0c18fb3136de4ccbadadc2c0ece8022b3",
+    "C:\\msys64\\mingw64\\bin\\g++.exe": "fe03455c28ab0c69f1adb0ccde202124091f01d02b0c0ede8578f606063cc894",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\llvm-c-windows\\bin\\LLVM-C.dll": "b84e81d2ffa8fb030b58f1d9ad75ef3ab37f63cd094993c302d9efb34242eaf1"
+  },
+  "binary_sha256_before": "5f4939eca976d6c4e0b9e812c5ee2482210afe5b0206d0083e83d2c1ecd406e4",
+  "binary_sha256_after": "5f4939eca976d6c4e0b9e812c5ee2482210afe5b0206d0083e83d2c1ecd406e4",
+  "native_result": {
+    "status": "PASS_LLVM_C_DECODER_LIFETIME",
+    "threads": 4,
+    "checks": 256,
+    "failures": 0,
+    "gpu_executed": false,
+    "shader_lowered": false,
+    "apple_compiler_origin_authenticated": false
+  }
+}

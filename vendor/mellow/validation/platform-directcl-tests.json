@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "evidence_scope": "software-policy-only-synthetic-adapters",
+  "created_utc": "2026-09-05T18:52:55.375619+00:00",
+  "physical_gpu_executed": false,
+  "metal_conformance_tested": false,
+  "compiler": "g++",
+  "source_sha256": {
+    "Runtime/PlatformRuntime.hpp": "b1e0ac06ea3bf74b25f39369968491039ef2c62396f2b4c3f86e0f60cf6e7b52",
+    "Runtime/PlatformRuntime.cpp": "20d3209308a48afc143fd3c1432c8442d6fb04f0a4d947a2ea00347e5ad3634f",
+    "tests/platform_runtime_test.cpp": "01a0d9b78f2854f7c5465ed6485ef90c75aa4cd8f4fc6e9dd4cd3894edbcbf97",
+    "Tools/run-platform-tests.py": "53155655075755cbd702c77b352546c6d1b375313006f78021db8f622d8b37e5"
+  },
+  "sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "build": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "test": {
+    "exit_code": 0,
+    "stdout": "PASS: 108 policy checks (synthetic adapters; no GPU execution or Metal conformance)\n",
+    "stderr": ""
+  },
+  "status": "PASS_SOFTWARE_POLICY_ONLY",
+  "compiler_version": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+}

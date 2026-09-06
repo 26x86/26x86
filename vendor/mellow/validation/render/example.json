@@ -1,0 +1,29 @@
+{
+  "scope": "Ordinary explicit Mellow C++ render client -> typed MSL vertex/fragment -> Windows GL GPU; no runtime oracle",
+  "results": [
+    {
+      "mode": "offscreen",
+      "exit_code": 0,
+      "stdout": "Intel(R) Graphics: 1 MSL-rendered frames, 1 retained pipeline compilation; RGBA readback exported\n",
+      "stderr": "",
+      "output_sha256": "9704ef8f58498cd95f422aff80af9aa1b85fa386680d5a07cea2ed6896da50ea"
+    },
+    {
+      "mode": "visible",
+      "exit_code": 0,
+      "stdout": "Intel(R) Graphics: 180 MSL-rendered frames, 1 retained pipeline compilation; RGBA readback exported\n",
+      "stderr": "",
+      "output_sha256": "be7d04eb619584794fc99b1479ed8216c30a75aecc0117d059f080fdd34d7646"
+    }
+  ],
+  "source_sha256": {
+    "Examples\\render-msl.cpp": "77a6c799199adf1164461711ab08783075cc6ca56bb6f6763f72fcffc3f3a9e4",
+    "Runtime\\RenderObjects.cpp": "01ed091395b769ab4c953621eb869c0c30951c93fef2e525153e6645d9e9e24f",
+    "Runtime\\RenderShaderJit.cpp": "642dca070cfc7e602cc7c9ed606b0ee30fec158e22f3915e38cb0216323e9669",
+    "Runtime\\OpenGLProvider.cpp": "3fb92c197063170d6b49c4f975cb0822c24168f963a6d137a10293621edbb5e5"
+  },
+  "binary_sha256": "c1b1f39a31d218ccb201653b04321526c489f85205e798e49092628624ede43c",
+  "native_macos_execution": false,
+  "display_scanout_verified": false,
+  "apple_metal_abi_registered": false
+}

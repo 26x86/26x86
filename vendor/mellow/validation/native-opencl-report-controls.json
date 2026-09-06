@@ -1,0 +1,10 @@
+{
+  "scope": "mock-child native runtime report and checkpoint controls; no GPU execution",
+  "passed": true,
+  "returncode": 0,
+  "output": "......\n----------------------------------------------------------------------\nRan 6 tests in 9.706s\n\nOK\n",
+  "source_sha256": {
+    "Tools/run-opencl-runtime.py": "98601f6dca944659d642945e89c0fdf8c03067f1f9a9e2b59a591402edf19a0a",
+    "tests/opencl_runtime_stress_report_tests.py": "b629dc78faca70cc93db28231ea2b35f252579cf1ef787cc2665a4cfc0d6aa24"
+  }
+}

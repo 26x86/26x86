@@ -5,10 +5,26 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 from pathlib import Path
 
 
+def dispatch_cli(argv):
+    """Frozen GUI binaries expose CLI before any GUI/native imports or help."""
+    # A windowed PyInstaller binary can start without standard streams. Match
+    # the GUI's stdio fallback without importing its webview stack here.
+    if getattr(sys, "frozen", False):
+        if sys.stdout is None:
+            sys.stdout = open(os.devnull, "w")
+        if sys.stderr is None:
+            sys.stderr = open(os.devnull, "w")
+    from x86.cli import main as cli_main
+    return cli_main(argv)
+
+
 def main():
+    if sys.argv[1:2] == ["--x86-cli"]:
+        return dispatch_cli(sys.argv[2:])
     parser = argparse.ArgumentParser()
     parser.add_argument("--smoke-report", type=Path, help="Write a backend smoke report without opening a window")
     parser.add_argument("--gui-smoke-report", type=Path, help="Open the native window, verify its DOM and close it")

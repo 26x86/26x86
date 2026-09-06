@@ -1,0 +1,8 @@
+{
+  "native_assertion_groups": 112,
+  "decoder": "upstream HDE64",
+  "integration_guards": 5,
+  "scope": "host mocks; not GPU or macOS execution",
+  "compiler": "C:\\msys64\\mingw64\\bin\\g++.EXE",
+  "status": "passed"
+}

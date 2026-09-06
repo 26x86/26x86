@@ -1,0 +1,61 @@
+name: Build and validate Mellow
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Native Intel build and host tests
+    runs-on: macos-15-intel
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check pinned dependencies
+        run: |
+          test -f MacKernelSDK/Library/x86_64/libkmod.a
+          test -f Lilu.kext/Contents/Resources/Headers/plugin_start.hpp
+          plutil -lint Mellow/Info.plist
+      - name: Host policy and Metal evidence tests
+        run: |
+          python3 Tools/run-host-tests.py --cxx clang++ --out build/host-tests
+          python3 tests/metal_session_tests.py
+          python3 tests/acceptance_cli_tests.py
+          sh -n Tools/collect-boot-evidence.sh
+      - name: Build actual kext with Xcode
+        run: |
+          bash Tools/cross-build-native.sh Release
+      - name: Test evidence parser against the newly built kext
+        run: |
+          bundle=$(python3 -c 'import json,pathlib; a=json.load(open("build/native-Release/build-settings.json")); s=next(x["buildSettings"] for x in a if x.get("target")=="Mellow"); print(pathlib.Path(s["TARGET_BUILD_DIR"])/s["FULL_PRODUCT_NAME"])')
+          MELLOW_KEXT_BINARY="$bundle/Contents/MacOS/Mellow" python3 tests/metal_evidence_tests.py
+      - name: Compile Intel Metal probe
+        run: |
+          xcrun swiftc -swift-version 5 -O -target x86_64-apple-macos13.0 Tools/metal-probe.swift -o build/metal-probe -framework Metal -framework IOKit -framework CryptoKit
+      - name: Compile public IOKit diagnostic client
+        run: |
+          xcrun clang -std=c11 -Wall -Wextra -Werror Userspace/tahoe_diag_client.c -framework IOKit -framework CoreFoundation -o build/tahoe-diag-client
+      - name: Package native artifacts
+        run: |
+          mkdir -p build/package
+          bundle=$(python3 -c 'import json,pathlib; a=json.load(open("build/native-Release/build-settings.json")); s=next(x["buildSettings"] for x in a if x.get("target")=="Mellow"); print(pathlib.Path(s["TARGET_BUILD_DIR"])/s["FULL_PRODUCT_NAME"])')
+          cp -R "$bundle" build/package/Mellow.kext
+          cp build/metal-probe build/package/
+          cp build/tahoe-diag-client build/package/
+          cp build/native-Release/macho-validation.json build/package/
+          printf '%s\n' 'Native build and host tests only. GPU execution on 8086:7D41, Tahoe installation, and Metal acceleration are NOT verified by CI.' > build/package/VALIDATION-SCOPE.txt
+          (cd build/package && zip -r ../Mellow-native-development.zip .)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Mellow-native-development
+          path: |
+            build/Mellow-native-development.zip
+            build/native-Release/*.log
+            build/native-Release/*.json
+            build/host-tests/host-tests.json
+          if-no-files-found: error

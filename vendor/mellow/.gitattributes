@@ -1,0 +1,8 @@
+# Preserve exact source and evidence bytes for the published SHA256 manifests.
+* -text
+*.efi binary
+*.aml binary
+*.bin binary
+*.a binary
+*.png binary
+*.pdf binary

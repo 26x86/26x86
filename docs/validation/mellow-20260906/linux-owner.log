@@ -1,0 +1,6 @@
+test_posix_original_owner_is_restored (test_mellow_transaction.MellowTransactionTests.test_posix_original_owner_is_restored) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.537s
+
+OK

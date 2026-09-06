@@ -104,7 +104,10 @@ class SurfaceTests(unittest.TestCase):
                 kdk_already_installed=False, kdk_url="https://example.com/kdk.dmg", error_msg="")
             modules = {"opencore_legacy_patcher.sys_patch.patchsets": SimpleNamespace(HardwarePatchsetDetection=lambda c: detection),
                 "opencore_legacy_patcher.support.kdk_handler": SimpleNamespace(KernelDebugKitObject=lambda *a, **kw: kdk)}
-            with patch.object(root, "is_macos", return_value=True), patch.dict(sys.modules, modules):
+            # This test injects native services; host-policy rejection has its own
+            # cross-platform execution tests and must not mask KDK assertions.
+            with patch.object(root, "is_macos", return_value=True), patch.dict(sys.modules, modules), \
+                 patch("x86.mellow.integration.validate_live", return_value=None):
                 report = root.preflight(PROFILE_ID, constants=c)
                 self.assertTrue(report["can_patch"], report)
                 self.assertFalse(report["kdk"]["exact_build_match"])

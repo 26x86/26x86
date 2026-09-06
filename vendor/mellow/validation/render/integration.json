@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-05T21:10:31.106799+00:00",
+  "release": "platform-v0.4.0-dev",
+  "scope": "Artifact/source consistency audit of recorded Windows GPU runs; not another GPU run",
+  "artifact_consistency_passed": true,
+  "source_hash_comparisons": 94,
+  "render": {
+    "offscreen_frames": 1000,
+    "visible_frames": 120,
+    "offscreen_pixels_compared": 3072000,
+    "visible_pixels_compared": 368640,
+    "pipeline_compilations_per_run": 1,
+    "frontend_checks_per_platform": 969,
+    "frontend_linux_sanitizers": true,
+    "driver": {
+      "vendor": "Intel",
+      "renderer": "Intel(R) Graphics",
+      "version": "3.3.0 - Build 32.0.101.6737",
+      "glsl_version": "3.30 - Build 32.0.101.6737",
+      "major": 3,
+      "minor": 3,
+      "pixel_format": 5,
+      "accelerated_pixel_format": true,
+      "core_profile": true,
+      "software_renderer_rejected": true
+    },
+    "raw_streams": {
+      "offscreen": {
+        "file": "render-offscreen/actual-gpu-frames.rgba",
+        "sha256": "53c393239bc985655705a3eca8c5ee3c0832285dfa7254e44074bf90f7f1b4ad"
+      },
+      "visible": {
+        "file": "render-visible/actual-gpu-frames.rgba",
+        "sha256": "6d991fc2c0b75e4d2c0d1705e932327523d5d056c1bda4fc765ee8415bb09413"
+      }
+    }
+  },
+  "scope_contract": {
+    "explicit_mellow_msl_render_gpu_execution": true,
+    "prior_compute_evidence_preserved": true,
+    "apple_metal_abi_registered": false,
+    "system_mtl_device_registered": false,
+    "native_tahoe_gpu_execution": false,
+    "tahoe_kext_loaded": false,
+    "full_metal_2_3_implemented": false,
+    "windowserver_acceleration_verified": false,
+    "display_scanout_verified": false,
+    "nvidia_amd_backend_implemented": false
+  },
+  "kext": {
+    "version": "0.4.3",
+    "changed_by_this_release": false,
+    "binary_sha256": "6932453a484ac62fb46f19b78f4a6424cef8ba907a3abe655b051bf03daed3c7",
+    "role": "Unchanged Tahoe diagnostic kext; not a render backend"
+  },
+  "files": {
+    "example.json": "cd08c8d5da44d4c3556f89a1b8c9895d033ccd0f97f151ffd4934fd4239844f1",
+    "frontend-linux-sanitized.json": "b552a0e2680c7980f288a57df8b587e94a2338ba8ec3515bbf1836424961db7f",
+    "frontend-windows.json": "f016824bd4f1efac20c3925d19c2d1b0abf6cf9c6f475abbf6fb2465eb52fe4a",
+    "objects-linux-build.json": "02a80e6dba1f4b0a34f75d89753d38a140d63fc383e92e31bd7871678b097dbe",
+    "objects-offscreen.json": "8512a032f0002d9dd5b2351dfad72113dcdb50e7390fa9b2d3bcf1ff9efd368a",
+    "objects-visible.json": "cbd948f02a1418d1ddabfcc99a556114ea3c92af34777ac44526b4e00f19805a",
+    "offscreen-gpu-readback.png": "0582ed604ed80b8d3cfb8ef89228ce19d49a4a2e3667a40f68938f73e73a8e6d",
+    "provider-offscreen.json": "81f540b94dbf79d1fb074c445ce926f0a49581b0f2ac655884484998ed37abb7",
+    "provider-visible.json": "5a5b59ddd901005a07aaab00766a17e4c65e9bffad4475d42cb84b9b40603e1f",
+    "report-controls.json": "9ac546a0434749a69311753213583d0f005f96179a945813e64132b2a8328a2e",
+    "visible-gpu-readback.png": "5afa7f92172aa343588c65626723e8ef4bf8ba11253bc86e9802392abc5526ec"
+  },
+  "ci": "GitHub Actions did not run because the account billing lock prevented scheduling; local tests are separate"
+}

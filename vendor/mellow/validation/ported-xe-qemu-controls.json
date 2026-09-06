@@ -1,0 +1,93 @@
+{
+  "scope": "one actual port run plus five synthetic harness controls",
+  "passed": true,
+  "cases": [
+    {
+      "name": "actual-final",
+      "kind": "actual_port",
+      "expected_accepted": true,
+      "accepted": true,
+      "passed": true,
+      "runner_exit_code": 0,
+      "status": "PASS_QEMU_GUEST_PORTED_XE_ALGORITHMS",
+      "report": "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-emulator-20260906/review-actual-final-run/report.json",
+      "qemu_exit_code": 33,
+      "execution_inputs_unchanged": true,
+      "guest_acceptance_error": null,
+      "error": null
+    },
+    {
+      "name": "exit7-final",
+      "kind": "synthetic_harness_control",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true,
+      "runner_exit_code": 1,
+      "status": "FAIL_QEMU_GUEST_TEST",
+      "report": "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-emulator-20260906/review-exit7-final-run/report.json",
+      "qemu_exit_code": 35,
+      "execution_inputs_unchanged": true,
+      "guest_acceptance_error": "guest did not exit through the success debug-exit port",
+      "error": null
+    },
+    {
+      "name": "zero-final",
+      "kind": "synthetic_harness_control",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true,
+      "runner_exit_code": 1,
+      "status": "FAIL_QEMU_GUEST_TEST",
+      "report": "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-emulator-20260906/review-zero-final-run/report.json",
+      "qemu_exit_code": 33,
+      "execution_inputs_unchanged": true,
+      "guest_acceptance_error": "guest result has missing or contradictory acceptance evidence",
+      "error": null
+    },
+    {
+      "name": "trailing-final",
+      "kind": "synthetic_harness_control",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true,
+      "runner_exit_code": 1,
+      "status": "FAIL_QEMU_GUEST_TEST",
+      "report": "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-emulator-20260906/review-trailing-final-run/report.json",
+      "qemu_exit_code": 33,
+      "execution_inputs_unchanged": true,
+      "guest_acceptance_error": "guest protocol is incomplete, duplicated or contradictory",
+      "error": null
+    },
+    {
+      "name": "metal-claim-final",
+      "kind": "synthetic_harness_control",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true,
+      "runner_exit_code": 1,
+      "status": "FAIL_QEMU_GUEST_TEST",
+      "report": "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-emulator-20260906/review-metal-claim-final-run/report.json",
+      "qemu_exit_code": 33,
+      "execution_inputs_unchanged": true,
+      "guest_acceptance_error": "guest result has missing or contradictory acceptance evidence",
+      "error": null
+    },
+    {
+      "name": "input-drift-final",
+      "kind": "synthetic_harness_control",
+      "expected_accepted": false,
+      "accepted": false,
+      "passed": true,
+      "runner_exit_code": 1,
+      "status": "FAIL_EMULATOR_PREPARATION",
+      "report": "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-emulator-20260906/review-input-drift-final-run/report.json",
+      "qemu_exit_code": 33,
+      "execution_inputs_unchanged": false,
+      "guest_acceptance_error": null,
+      "error": "execution input changed during guest run; evidence is invalid"
+    }
+  ],
+  "physical_gpu_tested": false,
+  "metal_tested": false,
+  "hash_stability_limitation": "Recorded file stability before/after; not hostile TOCTOU prevention."
+}

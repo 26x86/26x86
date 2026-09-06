@@ -1,0 +1,111 @@
+{
+  "scope": "Primary source ABI/algorithm inspection; no physical hardware validation",
+  "linux_commit": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+  "files": [
+    {
+      "file": "xe_guc.c",
+      "url": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/xe_guc.c",
+      "revision": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+      "bytes": 49978,
+      "sha256": "efed6c9767c85bf8693132b7209df6b971b74abb07966c34a3f658daee41360a"
+    },
+    {
+      "file": "xe_hw_engine.c",
+      "url": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/xe_hw_engine.c",
+      "revision": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+      "bytes": 32687,
+      "sha256": "8c95a45dba45f5065fa7b2ecff305f3fbe695bbcf137d086093add945bfb784f"
+    },
+    {
+      "file": "xe_hw_engine_types.h",
+      "url": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/xe_hw_engine_types.h",
+      "revision": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+      "bytes": 6116,
+      "sha256": "1d39acf297adaa3e9b4861a6fcac6eb6fbdf2cc098be7e1c378c3351eee00bbb"
+    },
+    {
+      "file": "xe_hw_fence.c",
+      "url": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/xe_hw_fence.c",
+      "revision": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+      "bytes": 6280,
+      "sha256": "b79d90cfd84f6b212acf69a2a4424da11a8c2fd05b11d4d48ff6bb0d141663cb"
+    },
+    {
+      "file": "xe_irq.c",
+      "url": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/xe_irq.c",
+      "revision": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+      "bytes": 26721,
+      "sha256": "a94b834ae361e7cb6f0a49aa7f3979d948274194b69de4079546a471369d2677"
+    },
+    {
+      "file": "xe_lrc.c",
+      "url": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/xe_lrc.c",
+      "revision": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+      "bytes": 76678,
+      "sha256": "eff4b7a414455f9a0a6117286bbffdb23bf1fc2fedeb68ff758f7eb10c346438"
+    },
+    {
+      "file": "xe_ring_ops.c",
+      "url": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/xe_ring_ops.c",
+      "revision": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+      "bytes": 17171,
+      "sha256": "76872c71c305f729b22c49048cc4d6c14e2112260c05c194951ae9b3e9ed5110"
+    },
+    {
+      "file": "apple/IOFilterInterruptEventSource.cpp",
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/main/iokit/Kernel/IOFilterInterruptEventSource.cpp",
+      "revision": "main observed; content hash pinned below",
+      "bytes": 9171,
+      "sha256": "2d2bc8de4ca3cdb275984267e18e39742943549ed93c284562d99d22eecf5d5b"
+    },
+    {
+      "file": "apple/IOInterruptController.cpp",
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/main/iokit/Kernel/IOInterruptController.cpp",
+      "revision": "main observed; content hash pinned below",
+      "bytes": 25019,
+      "sha256": "76b9e77dc6a70dba9513737f9c175bcd522b8da30af3be171d0eb6eec22626aa"
+    },
+    {
+      "file": "apple/IOInterruptEventSource.cpp",
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/main/iokit/Kernel/IOInterruptEventSource.cpp",
+      "revision": "main observed; content hash pinned below",
+      "bytes": 15378,
+      "sha256": "eeb34721f888cc03a24c006b87aa67032473562a4473f118cb94c83650c9d88e"
+    },
+    {
+      "file": "regs/xe_engine_regs.h",
+      "url": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/regs/xe_engine_regs.h",
+      "revision": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+      "bytes": 9763,
+      "sha256": "aa78bf12d749a675cdd7bf4ce47b417d4c40c33cff6c61271551283a46a881f1"
+    },
+    {
+      "file": "regs/xe_gt_regs.h",
+      "url": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/regs/xe_gt_regs.h",
+      "revision": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+      "bytes": 25984,
+      "sha256": "f2b8cbaf596679c2e86a7eccf2f7ceb188e8921769b6035c178a44d39eb055c3"
+    },
+    {
+      "file": "regs/xe_guc_regs.h",
+      "url": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/regs/xe_guc_regs.h",
+      "revision": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+      "bytes": 5662,
+      "sha256": "d35e363c0f521daf9a44db2a8a827c2e5905d736408e0ded5042c597cfc1d9a7"
+    },
+    {
+      "file": "regs/xe_irq_regs.h",
+      "url": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/regs/xe_irq_regs.h",
+      "revision": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+      "bytes": 4159,
+      "sha256": "ae0355fe8153152086bc9e10e04efbf3a42d903a97ee44abf3f12085f18f28f4"
+    },
+    {
+      "file": "regs/xe_regs.h",
+      "url": "https://github.com/torvalds/linux/blob/4d7d9486c04d917265f64c55bd23b2cc4fe7749c/drivers/gpu/drm/xe/regs/xe_regs.h",
+      "revision": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+      "bytes": 1786,
+      "sha256": "42e064147fe7a028d511e86337df5fea576bd442e23944e62c435dad6602ccfc"
+    }
+  ]
+}

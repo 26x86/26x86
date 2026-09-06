@@ -1,0 +1,5 @@
+Id, Name, Section, Value, Type, Visibility, Binding
+0, UNDEF, UNDEF, 0, 0, 0, 0
+1, _entry, .text.mellow_evidence, 256, 0, 0, 0
+2, mellow_evidence, .text.mellow_evidence, 0, 2, 0, 0
+3, __INTEL_PATCH_CROSS_THREAD_OFFSET_OFF_R0, UNDEF, 0, 0, 0, 1

@@ -7,6 +7,7 @@ from __future__ import annotations
 import logging
 import os
 import sys
+import tempfile
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
@@ -18,14 +19,14 @@ from .paths import Paths
 
 def resolve_logs_dir() -> Path:
     base_path = Paths.user_logs_dir().expanduser()
-    if not base_path.parent.exists() or str(base_path).startswith("/var/root/"):
+    if sys.platform == "darwin" and str(base_path).startswith("/var/root/"):
         base_path = Path("/var/tmp/26x86")
-    elif not base_path.exists():
-        try:
-            base_path.mkdir(parents=True, exist_ok=True)
-        except (PermissionError, OSError) as error:
-            print(f"Failed to create 26x86 log folder: {error}", file=sys.stderr)
-            base_path = Path("/var/tmp/26x86")
+    try:
+        base_path.mkdir(parents=True, exist_ok=True)
+    except (PermissionError, OSError) as error:
+        print(f"Failed to create 26x86 log folder: {error}", file=sys.stderr)
+        base_path = Path(tempfile.gettempdir()) / "26x86"
+        base_path.mkdir(parents=True, exist_ok=True)
     return base_path
 
 

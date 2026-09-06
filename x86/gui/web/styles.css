@@ -338,7 +338,7 @@ body {
   justify-content: center;
 }
 
-select.field {
+select.field, input.field {
   width: 100%;
   max-width: 420px;
   padding: 12px 14px;
@@ -433,7 +433,9 @@ select.field {
 .dialog {
   border: none;
   padding: 0;
-  max-width: 420px;
+  max-width: 520px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
   width: calc(100% - 32px);
 }
 
@@ -445,6 +447,12 @@ select.field {
 .dialog-body {
   padding: 22px;
 }
+
+.dialog-body label:not(.checkbox-row) { display: block; margin: 14px 0 6px; font-weight: 600; }
+.dialog-body .field { box-sizing: border-box; max-width: none; }
+.dialog-body .muted { font-size: 0.86rem; line-height: 1.5; }
+
+.logo[hidden], .logo-fallback[hidden] { display: none; }
 
 .dialog-body h2 {
   margin: 0 0 16px;

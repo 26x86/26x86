@@ -198,6 +198,12 @@ def cmd_detect(args: argparse.Namespace) -> int:
 
 
 def cmd_build(args: argparse.Namespace) -> int:
+    from x86.execution import resolve_execution
+    try:
+        resolve_execution(getattr(args, "mode", None), settings=SettingsStore().load()).require_native_apply("Native EFI build")
+    except ValueError as exc:
+        _emit_json({"ok": False, "status": "native_build_blocked", "error": str(exc)})
+        return 2
     if not is_macos():
         message = MACOS_ONLY_MESSAGE
         if args.json:
@@ -220,8 +226,23 @@ def cmd_build(args: argparse.Namespace) -> int:
 
 
 def cmd_patch(args: argparse.Namespace) -> int:
-    from x86.patch.root import apply, preflight
-    result = (apply if args.apply else preflight)(args.profile, args.payload_dir)
+    from x86.patch.root import apply, preflight, unpatch
+    result = (unpatch if args.unpatch else apply if args.apply else preflight)(args.profile, args.payload_dir,
+        mode=args.mode, deployment=args.mellow, mellow_payload=args.mellow_payload, efi=args.efi)
+    _emit_json(result)
+    return 0 if result.get("ok") else 2
+
+
+def cmd_mellow(args: argparse.Namespace) -> int:
+    from x86.mellow.integration import plan, prepare_efi
+    try:
+        options = {"mode": args.mode, "payload_dir": args.payload, "efi": args.efi}
+        if args.operation in ("prepare-efi", "prepare-root-efi"):
+            result = prepare_efi(output=args.output, deployment="root-patch" if args.operation == "prepare-root-efi" else "efi", **options)
+        else:
+            result = plan(deployment=args.deployment, **options)
+    except (ValueError, OSError, KeyError) as exc:
+        result = {"ok": False, "status": "mellow_rejected", "error": str(exc)}
     _emit_json(result)
     return 0 if result.get("ok") else 2
 
@@ -362,6 +383,9 @@ def cmd_status(args: argparse.Namespace) -> int:
 
 def cmd_wizard(args: argparse.Namespace) -> int:
     _ensure_repo_on_path()
+    if args.mode:
+        from x86.execution import resolve_execution
+        os.environ["X86_EXECUTION_MODE"] = resolve_execution(args.mode).mode.value
     if args.profile:
         os.environ["X86_TARGET_PROFILE"] = args.profile
     if args.efi:
@@ -413,6 +437,7 @@ def build_parser() -> argparse.ArgumentParser:
     detect.set_defaults(handler=cmd_detect)
 
     build = subparsers.add_parser("build", help="OpenCore EFI 빌드 (macOS 전용)")
+    build.add_argument("--mode", choices=["x86", "apple-silicon-sandbox"])
     build.add_argument("--model", help="대상 Mac 모델 (예: iMac18,3)")
     build.add_argument("--json", action="store_true", help="JSON 형식으로 결과 출력")
     build.set_defaults(handler=cmd_build)
@@ -422,10 +447,28 @@ def build_parser() -> argparse.ArgumentParser:
     mode = patch.add_mutually_exclusive_group()
     mode.add_argument("--apply", action="store_true", help="설치된 macOS의 루트 패치 실행 (sudo 필요)")
     mode.add_argument("--preflight", action="store_true", help="읽기 전용 사전 검사 (기본)")
+    mode.add_argument("--unpatch", action="store_true", help="APFS 패치 및 Mellow Data 파일 복원 (sudo 필요)")
     patch.add_argument("--profile", choices=["surface-pro6-i5-tahoe"])
     patch.add_argument("--payload-dir", help="Universal-Binaries.dmg를 포함한 payloads 디렉터리")
+    patch.add_argument("--mode", choices=["x86", "apple-silicon-sandbox"])
+    patch.add_argument("--mellow", choices=["disabled", "efi", "root-patch"])
+    patch.add_argument("--mellow-payload", help="검증된 Mellow manifest 디렉터리")
+    patch.add_argument("--efi", help="실제 대상 OpenCore EFI 경로 (중복 주입 검사)")
     patch.add_argument("--json", action="store_true", help="JSON 형식으로 결과 출력")
     patch.set_defaults(handler=cmd_patch)
+
+    mellow = subparsers.add_parser("mellow", help="Mellow driver/root-patch 준비 및 검증")
+    mellow_ops = mellow.add_subparsers(dest="operation", required=True)
+    for operation in ("plan", "prepare-efi", "prepare-root-efi"):
+        command = mellow_ops.add_parser(operation)
+        command.add_argument("--mode", choices=["x86", "apple-silicon-sandbox"])
+        command.add_argument("--payload", help="Mellow manifest 디렉터리")
+        command.add_argument("--efi", required=True, help="OpenCore EFI 입력 경로")
+        if operation in ("prepare-efi", "prepare-root-efi"):
+            command.add_argument("--output", required=True, help="새 EFI 출력 디렉터리")
+        else:
+            command.add_argument("--deployment", choices=["efi", "root-patch"], default="root-patch")
+        command.set_defaults(handler=cmd_mellow)
 
     surface = subparsers.add_parser("surface", help="Surface Pro 6 Tahoe EFI 읽기 전용 검사 (모든 OS)")
     surface.add_argument("--efi", help="EFI 디렉터리 또는 이를 포함한 폴더")
@@ -437,6 +480,7 @@ def build_parser() -> argparse.ArgumentParser:
     status.set_defaults(handler=cmd_status)
 
     wizard = subparsers.add_parser("wizard", help="기본 GUI 마법사 실행")
+    wizard.add_argument("--mode", choices=["x86", "apple-silicon-sandbox"])
     wizard.add_argument("--profile", choices=["surface-pro6-i5-tahoe"])
     wizard.add_argument("--efi", help="Surface EFI 검사 경로 미리 입력 (자동 기록 없음)")
     wizard.add_argument(

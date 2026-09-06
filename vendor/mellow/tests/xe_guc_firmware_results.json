@@ -1,0 +1,17 @@
+{
+  "assertions": 1490,
+  "passed": true,
+  "firmware_bytes": 320320,
+  "firmware_sha256": "7794f0b6abe5fcd9c6f47035dafe2199f30a6e7d230bd5a53fbf8005a60e5911",
+  "scope": "Production loader and GGTT readback helper, original Intel firmware, emulated MMIO and ownership callbacks. No physical upload, BootROM authentication, or GPU execution tested.",
+  "source_sha256": {
+    "Mellow\\XeGuCFirmware.cpp": "b197259f9df7a52a931fd0cf7d5ad2e923900b3c3dd3ab45f243c24218ba053d",
+    "Mellow\\XeFirmware.cpp": "b5360475a6d1c85aa1aef56d816b2180139ec1303c249a07b12b7b0eaa96e7c6",
+    "Mellow\\XeGuCTransport.cpp": "bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd",
+    "tests\\xe_guc_firmware_tests.cpp": "23a39b9079cd433c6b5699f71666f9abbe9d438aef414eb86b7f331e53c5efde",
+    "Mellow\\XeGuCFirmware.hpp": "56d92036048a4afe98d423c2a74717a8eb344f129186fa66ea70a7479d845309",
+    "Mellow\\XeGuCFirmwareIOKit.hpp": "f8dc32496fa7bfa47c82d5d223b5fb829c0935ccd7d6d162be75a89fb2f2c3d4",
+    "Mellow\\XeGuCFirmwareIOKit.cpp": "1be5bca59acc3756a231305402581286bae0d3f9a58725b2ffdcaf50712ef4c9"
+  },
+  "iokit_adapter_runtime_tested": false
+}

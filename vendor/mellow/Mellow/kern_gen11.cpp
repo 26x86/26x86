@@ -1,0 +1,9571 @@
+//  Copyright © 2026 Stezza @ inc. Licensed under the Thou Shalt Not Profit License version 1.0. See LICENSE for
+//  details.
+#include "kern_gen11.hpp"
+#include "AppleIntelParams.hpp"
+#include <Headers/kern_api.hpp>
+#include "kern_genx.hpp"
+#include "kern_mellow.hpp"
+#include "kern_model.hpp"
+#include "IntelDPLinkTraining.hpp"
+#include <IOKit/IOBufferMemoryDescriptor.h>
+#include <IOKit/IOCatalogue.h>
+#include <IOKit/IOLib.h>
+#include <kern/thread_call.h>
+
+// ==== 6 kextInfos: ICL fallback + dual TGL identities (com.xxxxx and com.apple) from /Library/Extensions ====
+//trivial
+// ICL FB — com.apple (fallback path)
+static const char *pathsICLFB[] = {
+    "/System/Library/Extensions/AppleIntelICLLPGraphicsFramebuffer.kext/Contents/MacOS/AppleIntelICLLPGraphicsFramebuffer",
+};
+static KernelPatcher::KextInfo kextG11FB {"com.apple.driver.AppleIntelICLLPGraphicsFramebuffer", pathsICLFB, 1, {}, {},
+    KernelPatcher::KextInfo::Unloaded};
+
+// ICL HW — com.apple (fallback path)
+static const char *pathsICLHW[] = {
+    "/System/Library/Extensions/AppleIntelICLGraphics.kext/Contents/MacOS/AppleIntelICLGraphics",
+};
+static KernelPatcher::KextInfo kextG11HW {"com.apple.driver.AppleIntelICLGraphics", pathsICLHW, 1, {}, {},
+    KernelPatcher::KextInfo::Unloaded};
+
+// TGL FB — com.xxxxx (loaded from /Library/Extensions/)
+static const char *pathsTGLFB[] = {
+    "/Library/Extensions/AppleIntelTGLGraphicsFramebuffer.kext/Contents/MacOS/AppleIntelTGLGraphicsFramebuffer",
+};
+static KernelPatcher::KextInfo kextG11FBT {"com.xxxxx.driver.AppleIntelTGLGraphicsFramebuffer", pathsTGLFB, 1,
+    {false, false, false, true}, {},
+    KernelPatcher::KextInfo::Unloaded};
+
+// TGL FB — com.apple (loaded from /Library/Extensions/)
+static KernelPatcher::KextInfo kextG11FBTA {"com.apple.driver.AppleIntelTGLGraphicsFramebuffer", pathsTGLFB, 1,
+	{false, false, false, true}, {},
+	KernelPatcher::KextInfo::Unloaded};
+
+// TGL HW — com.xxxxx (loaded from /Library/Extensions/)
+static const char *pathsTGLHW[] = {
+    "/Library/Extensions/AppleIntelTGLGraphics.kext/Contents/MacOS/AppleIntelTGLGraphics",
+};
+static KernelPatcher::KextInfo kextG11HWT {"com.xxxxx.driver.AppleIntelTGLGraphics", pathsTGLHW, 1,
+    {false, false, false, true}, {},
+    KernelPatcher::KextInfo::Unloaded};
+
+// TGL HW — com.apple (loaded from /Library/Extensions/)
+static KernelPatcher::KextInfo kextG11HWTA {"com.apple.driver.AppleIntelTGLGraphics", pathsTGLHW, 1,
+	{false, false, false, true}, {},
+	KernelPatcher::KextInfo::Unloaded};
+
+// IOAcceleratorFamily2 symbols are resolved inside MellowCore::processKext via
+// kextIOAcceleratorFamily2 (kern_mellow.cpp) which already has the valid path.
+// No separate kextIOAF2 registration needed here.
+
+Gen11 *Gen11::callback = nullptr;
+
+void Gen11::init() {
+	callback = this;
+
+	if (checkKernelArgument("-mellowtglfb") || checkKernelArgument("-mellowtglwithgfx")) {
+		SYSLOG("mellow", "Gen11::init: FB tier → TGL (ICL FB skipped)");
+		lilu.onKextLoadForce(&kextG11FBT);
+		lilu.onKextLoadForce(&kextG11FBTA);
+		if (checkKernelArgument("-mellowtglwithgfx")) {
+			SYSLOG("mellow", "Gen11::init: HW tier → TGL (ICL HW skipped)");
+			lilu.onKextLoadForce(&kextG11HWT);
+			lilu.onKextLoadForce(&kextG11HWTA);
+		}
+	} else if (checkKernelArgument("-mellowtglgfx")) {
+		SYSLOG("mellow", "Gen11::init: HW tier → TGL (ICL HW skipped)");
+		lilu.onKextLoadForce(&kextG11HWT);
+		lilu.onKextLoadForce(&kextG11HWTA);
+	}
+}
+
+static bool isWEGCoexistMode() {
+	// WhateverGreen coexistence is deliberately outside the first Ultra-only
+	// baseline. Keep the inherited branch dead until it can be audited as a
+	// separate experiment.
+	return false;
+}
+
+static bool isExperimentalMonitorEnabled() {
+	int enabled = 0;
+	if (PE_parse_boot_argn("mellowexp", &enabled, sizeof(enabled))) {
+		return enabled != 0;
+	}
+
+	return checkKernelArgument("-mellowexp");
+}
+
+static bool isV60MonitorEnabled() {
+	int forceOff = 0;
+	if (PE_parse_boot_argn("mellowv60off", &forceOff, sizeof(forceOff))) {
+		if (forceOff != 0)
+			return false;
+	}
+
+	if (checkKernelArgument("-mellowv60off")) {
+		return false;
+	}
+
+	int forceOn = 0;
+	if (PE_parse_boot_argn("mellowv60", &forceOn, sizeof(forceOn))) {
+		if (forceOn != 0)
+			return true;
+	}
+
+	if (checkKernelArgument("-mellowv60")) {
+		return true;
+	}
+
+	return isExperimentalMonitorEnabled();
+}
+
+static bool isDisplayPipeForceDisabled() {
+	// NOTE: isLegacyOwnershipModeEnabled() (V80 plane-linearization) is intentionally
+	// NOT checked here. V80 writes are self-limiting to the first 3 ticks (≤150ms) and
+	// must not prevent WindowServer from opening the display pipe after that window.
+	// Coupling these two features caused DisplayPipeSupported=0 → black screen forever.
+
+	// Stage-3 baseline now has DYLD-side NULL guards for DisplayPipe path.
+	// Keep native DisplayPipe ON by default and use mellowdp0 only as an explicit
+	// fallback switch when troubleshooting.
+	int nativeDisplayPipe = 0;
+	if (PE_parse_boot_argn("mellowdp1", &nativeDisplayPipe, sizeof(nativeDisplayPipe))) {
+		SYSLOG("mellow", "V78A: parsed mellowdp1=%d", nativeDisplayPipe);
+		if (nativeDisplayPipe != 0)
+			return false;
+	}
+
+	if (checkKernelArgument("-mellowdp1")) {
+		SYSLOG("mellow", "V78A: detected -mellowdp1");
+		return false;
+	}
+
+	int enabled = 0;
+	if (PE_parse_boot_argn("mellowdp0", &enabled, sizeof(enabled))) {
+		SYSLOG("mellow", "V78A: parsed mellowdp0=%d", enabled);
+		return enabled != 0;
+	}
+
+	if (checkKernelArgument("-mellowdp0")) {
+		SYSLOG("mellow", "V78A: detected -mellowdp0");
+		return true;
+	}
+
+	static bool v78aLogged = false;
+	if (!v78aLogged) {
+		v78aLogged = true;
+		SYSLOG("mellow", "V78A (capped): default native DisplayPipeSupported ON");
+	}
+	return false;
+}
+
+static bool isV93PlaneGuardEnabled() {
+	int enabled = 0;
+	if (PE_parse_boot_argn("mellowv93", &enabled, sizeof(enabled))) {
+		return enabled != 0;
+	}
+
+	return checkKernelArgument("-mellowv93");
+}
+
+static bool shouldForceFullMetalPath() {
+	int enabled = 0;
+	if (PE_parse_boot_argn("mellowfullmtlcore", &enabled, sizeof(enabled))) {
+		return enabled != 0;
+	}
+	if (checkKernelArgument("-mellowfullmtlcore")) {
+		return true;
+	}
+	// Legacy: unified arg still accepted as fallback.
+	if (PE_parse_boot_argn("mellowfullmtl", &enabled, sizeof(enabled))) {
+		return enabled != 0;
+	}
+	return checkKernelArgument("-mellowfullmtl");
+}
+
+static int getV142SubmitBlitMode() {
+
+	// Only mode 3 submits work. Old modes 1/2 returned fabricated status values
+	// without touching a ring, which invalidated Metal readback/completion tests.
+	int parsed = 0;
+	if (PE_parse_boot_argn("mellowV142", &parsed, sizeof(parsed)))
+		return parsed == 3 ? 3 : 0;
+	if (checkKernelArgument("-mellowV142orig"))
+		return 3;
+	// No verified 7D41 submission backend yet. Reject by default; callers must
+	// receive an error instead of observing success for commands never submitted.
+	return 0;
+}
+
+static bool isV88ScanoutFillEnabled() {
+	int enabled = 0;
+	if (PE_parse_boot_argn("mellowv88", &enabled, sizeof(enabled))) {
+		return enabled != 0;
+	}
+
+	return checkKernelArgument("-mellowv88");
+}
+
+static bool isV60AggressiveMonitorEnabled() {
+	int enabled = 0;
+	if (PE_parse_boot_argn("mellowv60rw", &enabled, sizeof(enabled))) {
+		return enabled != 0;
+	}
+
+	return checkKernelArgument("-mellowv60rw");
+}
+
+static bool isV80LEnforcerEnabled() {
+	return checkKernelArgument("-mellowv80l");
+}
+
+static uint32_t getV65Tier1WantBits(bool isRealTGL) {
+	// Real TGL: always use native behavior (RCS + BCS).
+	if (isRealTGL) {
+		return (1u << GEN11_RCS0) | (1u << GEN11_BCS);
+	}
+
+	// Non-real-TGL Ultra spoof path: BCS must be enabled when the original submitBlit path
+	// (V142 mode 3) is active — that path submits directly to BCS ring. Leaving
+	// BCS out of the want bits means RING_CTRL never gets the enable bit set,
+	// commands queue up and the ring stalls (gpuRestart Signature 801).
+	// Other V142 values reject work; keep the inherited RCS-only IRQ selection.
+	if (getV142SubmitBlitMode() == 3 || checkKernelArgument("-mellowbcsirq")) {
+		return (1u << GEN11_RCS0) | (1u << GEN11_BCS);
+	}
+
+	return (1u << GEN11_RCS0);
+}
+
+static int getV77KillDelayIterations() {
+	int delay = 0;
+	if (PE_parse_boot_argn("mellowV77DelayKill", &delay, sizeof(delay))) {
+		if (delay < 0)
+			return 0;
+		if (delay > 60)
+			return 60;
+		return delay;
+	}
+
+	// Final/default behavior: do not kill DisplayPipe clients unless explicitly requested.
+	return 60;
+}
+
+bool Gen11::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
+	if (kextG11FB.loadIndex == index) {
+		if (this->tglFBLoaded) {
+			DBGLOG("mellow", "Skipping ICL FB — TGL FB already loaded");
+			return true;
+		}
+		auto *activeKext = &kextG11FB;
+		DBGLOG("mellow", "init AppleIntelICLLPGraphicsFramebuffer!");
+		//MellowCore::callback->igfxGen = iGFXGen::Gen11;
+		MellowCore::callback->setRMMIOIfNecessary();
+		
+		const bool wegCoexist = isWEGCoexistMode();
+		if (wegCoexist) {
+			SYSLOG("mellow", "WEG coexist mode enabled: skipping legacy CDCLK route overlap");
+		}
+
+		if (wegCoexist) {
+			SolveRequestPlus solveRequests[] = {
+			//		{"__ZN31AppleIntelFramebufferController14disableCDClockEv", this->orgDisableCDClock},
+			//		{"__ZN31AppleIntelFramebufferController19setCDClockFrequencyEy", this->orgSetCDClockFrequency},
+			//		{"__ZN20IntelFBClientControl11doAttributeEjPmmS0_S0_P25IOExternalMethodArguments", this->orgFBClientDoAttribute},
+			//		{"__ZN31AppleIntelFramebufferController5startEP9IOService",	this->ostart},
+			//		{"__ZN31AppleIntelFramebufferController14ReadRegister32Em",	this->oreadRegister32},
+		 		{"__ZN31AppleIntelFramebufferController20hwConfigureCustomAUXEb", this->ohwConfigureCustomAUX},
+			};
+			PANIC_COND(!SolveRequestPlus::solveAll(patcher, index, solveRequests, address, size), "mellow",	"Failed to resolve symbols");
+		} else {
+			SolveRequestPlus solveRequests[] = {
+			//		{"__ZN31AppleIntelFramebufferController14disableCDClockEv", this->orgDisableCDClock},
+			//		{"__ZN31AppleIntelFramebufferController19setCDClockFrequencyEy", this->orgSetCDClockFrequency},
+			//		{"__ZN20IntelFBClientControl11doAttributeEjPmmS0_S0_P25IOExternalMethodArguments", this->orgFBClientDoAttribute},
+			//		{"__ZN31AppleIntelFramebufferController5startEP9IOService",	this->ostart},
+			//		{"__ZN31AppleIntelFramebufferController14ReadRegister32Em",	this->oreadRegister32},
+		 		{"__ZN31AppleIntelFramebufferController20hwConfigureCustomAUXEb", this->ohwConfigureCustomAUX},
+				{"__ZN31AppleIntelFramebufferController21probeCDClockFrequencyEv", this->orgProbeCDClockFrequency},
+			};
+			PANIC_COND(!SolveRequestPlus::solveAll(patcher, index, solveRequests, address, size), "mellow",	"Failed to resolve symbols");
+		}
+		
+		if (wegCoexist) {
+			RouteRequestPlus requests[] = {
+			// Keep stock ReadRegister32 while stabilizing display pipeline behavior.
+			//		{"__ZN31AppleIntelFramebufferController14ReadRegister32Em",wrapReadRegister32,	this->owrapReadRegister32},
+			//		{"__ZN21AppleIntelFramebuffer13SaveNVRAMModeEv",handleLinkIntegrityCheck},
+			// Keep stock wake/sleep lifecycle handlers to avoid broken restore paths.
+			//{"__ZN21AppleIntelFramebuffer18prepareToEnterWakeEv",dovoid},
+			//{"__ZN21AppleIntelFramebuffer17prepareToExitWakeEv",dovoid},
+			//{"__ZN21AppleIntelFramebuffer18prepareToExitSleepEv",dovoid},
+			//{"__ZN21AppleIntelFramebuffer19prepareToEnterSleepEv",dovoid},
+			// Keep stock doAttribute while chasing UI stalls / high WindowServer CPU.
+			//		{"__ZN20IntelFBClientControl11doAttributeEjPmmS0_S0_P25IOExternalMethodArguments",wrapFBClientDoAttribute,	this->orgFBClientDoAttribute},
+			//ADDED
+			//{"__ZN21AppleIntelFramebuffer4initEP31AppleIntelFramebufferControllerj",AppleIntelFramebufferinit, this->oAppleIntelFramebufferinit},
+			//		{"__ZN31AppleIntelFramebufferController10hwShutdownEP21AppleIntelFramebuffer",handleLinkIntegrityCheck},
+				{"__ZN31AppleIntelFramebufferController18hwInitializeCStateEv",hwInitializeCState, this->ohwInitializeCState},
+			//		{"__ZN31AppleIntelFramebufferController20hwConfigureCustomAUXEb",hwConfigureCustomAUX, this->ohwConfigureCustomAUX},
+			//	{"__ZN31AppleIntelFramebufferController21probeCDClockFrequencyEv",wrapProbeCDClockFrequency,	this->orgProbeCDClockFrequency},
+			};
+			PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, requests, address, size), "mellow","Failed to route symbols");
+		} else {
+			RouteRequestPlus requests[] = {
+			// Keep stock ReadRegister32 while stabilizing display pipeline behavior.
+			//		{"__ZN31AppleIntelFramebufferController14ReadRegister32Em",wrapReadRegister32,	this->owrapReadRegister32},
+			//		{"__ZN21AppleIntelFramebuffer13SaveNVRAMModeEv",handleLinkIntegrityCheck},
+			// Keep stock wake/sleep lifecycle handlers to avoid broken restore paths.
+			//{"__ZN21AppleIntelFramebuffer18prepareToEnterWakeEv",dovoid},
+			//{"__ZN21AppleIntelFramebuffer17prepareToExitWakeEv",dovoid},
+			//{"__ZN21AppleIntelFramebuffer18prepareToExitSleepEv",dovoid},
+			//{"__ZN21AppleIntelFramebuffer19prepareToEnterSleepEv",dovoid},
+			// Keep stock doAttribute while chasing UI stalls / high WindowServer CPU.
+			//		{"__ZN20IntelFBClientControl11doAttributeEjPmmS0_S0_P25IOExternalMethodArguments",wrapFBClientDoAttribute,	this->orgFBClientDoAttribute},
+			//ADDED
+			//{"__ZN21AppleIntelFramebuffer4initEP31AppleIntelFramebufferControllerj",AppleIntelFramebufferinit, this->oAppleIntelFramebufferinit},
+			//		{"__ZN31AppleIntelFramebufferController10hwShutdownEP21AppleIntelFramebuffer",handleLinkIntegrityCheck},
+				{"__ZN31AppleIntelFramebufferController18hwInitializeCStateEv",hwInitializeCState, this->ohwInitializeCState},
+			//		{"__ZN31AppleIntelFramebufferController20hwConfigureCustomAUXEb",hwConfigureCustomAUX, this->ohwConfigureCustomAUX},
+			//	{"__ZN31AppleIntelFramebufferController21probeCDClockFrequencyEv",wrapProbeCDClockFrequency,	this->orgProbeCDClockFrequency},
+				{"__ZN31AppleIntelFramebufferController11initCDClockEv",initCDClock,this->oinitCDClock}
+			};
+			PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, requests, address, size), "mellow","Failed to route symbols");
+		}
+
+		//static const uint8_t f15[]= {0x00,0x02, 0x00, 0x5c, 0x8a};
+		//static const uint8_t r15[]= {0x00,0x00, 0x00, 0x49, 0x9a};
+		
+		
+		// AppleIntelFramebufferController::hwSetMode skip hwRegsNeedUpdate
+		static const uint8_t f2[] = {0xE8, 0x31, 0xE5, 0xFF, 0xFF, 0x84, 0xC0, 0x74, 0x3D};
+		static const uint8_t r2[] = {0xE8, 0x31, 0xE5, 0xFF, 0xFF, 0x84, 0xC0, 0xEB, 0x3D};
+		
+		//sonoma
+		static const uint8_t f2b[] = {0xE8, 0x54, 0xEA, 0xFF, 0xFF, 0x84, 0xC0, 0x74, 0x5C};
+		static const uint8_t r2b[] = {0xE8, 0x54, 0xEA, 0xFF, 0xFF, 0x84, 0xC0, 0xeb, 0x5C};
+		
+		//sequoia
+		static const uint8_t f2c[] = {0xE8, 0x74, 0xEA, 0xFF, 0xFF, 0x84, 0xC0, 0x74, 0x5C};
+		static const uint8_t r2c[] = {0xE8, 0x74, 0xEA, 0xFF, 0xFF, 0x84, 0xC0, 0xeb, 0x5C};
+		
+		/*if (getKernelVersion() <= KernelVersion::Ventura) {
+			KernelPatcher::LookupPatch patch { &kextG11FB, f2, r2, sizeof(f2), 1 };
+			patcher.applyLookupPatch(&patch);
+		}
+		
+		if (getKernelVersion() == KernelVersion::Sonoma) {
+			KernelPatcher::LookupPatch patchb { &kextG11FB, f2b, r2b, sizeof(f2b), 1 };
+			patcher.applyLookupPatch(&patchb);
+		}
+		
+		if (getKernelVersion() >= KernelVersion::Sequoia) {
+			KernelPatcher::LookupPatch patchc { &kextG11FB, f2c, r2c, sizeof(f2c), 1 };
+			patcher.applyLookupPatch(&patchc);
+		}*/
+		
+		
+
+		// Variant-consistent remap for constructor entries:
+		// B8 xx 00 5C 8A -> B8 xx 00 49 9A and exact C7 05 ... 02 00 5C 8A site.
+		static const uint8_t kPatchPlatformRemapMovEaxFind0[] = {0xB8, 0x00, 0x00, 0x5C, 0x8A};
+		static const uint8_t kPatchPlatformRemapMovEaxReplace0[] = {0xB8, 0x00, 0x00, 0x49, 0x9A};
+		static const uint8_t kPatchPlatformRemapMovEaxFind1[] = {0xB8, 0x01, 0x00, 0x5C, 0x8A};
+		static const uint8_t kPatchPlatformRemapMovEaxReplace1[] = {0xB8, 0x01, 0x00, 0x49, 0x9A};
+		static const uint8_t kPatchPlatformRemapMovEaxFind2[] = {0xB8, 0x02, 0x00, 0x5C, 0x8A};
+		static const uint8_t kPatchPlatformRemapMovEaxReplace2[] = {0xB8, 0x02, 0x00, 0x49, 0x9A};
+		static const uint8_t kPatchPlatformRemapC705Find2[] = {0xC7, 0x05, 0xE9, 0x9B, 0x05, 0x00, 0x02, 0x00, 0x5C, 0x8A};
+		static const uint8_t kPatchPlatformRemapC705Replace2[] = {0xC7, 0x05, 0xE9, 0x9B, 0x05, 0x00, 0x02, 0x00, 0x49, 0x9A};
+
+		// hwSetMode: bypass hwRegsNeedUpdate result (CALL hwRegsNeedUpdate; TEST AL,AL: JE+0x62 → JMP+0x62)
+		// Verified unique (1 match at 0x94055) in ICL LP le binary. Forces register reprogram unconditionally. [ICL-LP]
+		static const uint8_t kPatchHwRegsNeedUpdateBypassFind[] = {0xe8, 0xe2, 0xcc, 0xff, 0xff, 0x84, 0xc0, 0x74, 0x62};
+		static const uint8_t kPatchHwRegsNeedUpdateBypassReplace[] = {0xe8, 0xe2, 0xcc, 0xff, 0xff, 0x84, 0xc0, 0xeb, 0x62};
+
+		LookupPatchPlus const minPatches[] = {
+			{&kextG11FB, kPatchPlatformRemapMovEaxFind0, kPatchPlatformRemapMovEaxReplace0, arrsize(kPatchPlatformRemapMovEaxFind0), 1},
+			{&kextG11FB, kPatchPlatformRemapMovEaxFind1, kPatchPlatformRemapMovEaxReplace1, arrsize(kPatchPlatformRemapMovEaxFind1), 1},
+			{&kextG11FB, kPatchPlatformRemapMovEaxFind2, kPatchPlatformRemapMovEaxReplace2, arrsize(kPatchPlatformRemapMovEaxFind2), 1},
+			{&kextG11FB, kPatchPlatformRemapC705Find2, kPatchPlatformRemapC705Replace2, arrsize(kPatchPlatformRemapC705Find2), 1},
+			{&kextG11FB, kPatchHwRegsNeedUpdateBypassFind, kPatchHwRegsNeedUpdateBypassReplace, arrsize(kPatchHwRegsNeedUpdateBypassFind), 1},  // hwSetMode always reprogram [ICL-LP]
+		};
+		
+		PANIC_COND(!LookupPatchPlus::applyAll(patcher, minPatches , address, size), "mellow", "kextG11FB Failed to apply patches!");
+		//PANIC_COND
+		
+		DBGLOG("mellow", "Loaded AppleIntelICLLPGraphicsFramebuffer!");
+		return true;
+		
+		
+	}	else if (kextG11FBT.loadIndex == index || kextG11FBTA.loadIndex == index) {
+		this->tglFBLoaded = true;
+		auto *activeKext = (kextG11FBTA.loadIndex == index) ? &kextG11FBTA : &kextG11FBT;
+		MellowCore::callback->setRMMIOIfNecessary();
+		SYSLOG("mellow", "init AppleIntelTGLGraphicsFramebuffer");
+		
+		bool isprod=false;
+		auto prod=patcher.solveSymbol(index, "__ZN24AppleIntelBaseController5startEP9IOService", address, size);
+		if (!prod) isprod=true;
+		
+		if (isprod) {
+			
+			SolveRequestPlus solveRequests[] = {
+				{"__ZN31AppleIntelFramebufferController19setCDClockFrequencyEy", this->orgSetCDClockFrequency},
+				{"_gPlatformInformationList", this->gPlatformInformationList},
+			};
+			PANIC_COND(!SolveRequestPlus::solveAll(patcher, index, solveRequests, address, size), "mellow",	"Failed to resolve symbols");
+		}
+		else
+		{
+			SolveRequestPlus solveRequests[] = {
+				{"__ZN24AppleIntelBaseController19setCDClockFrequencyEy", this->orgSetCDClockFrequency},
+				{"_gPlatformInformationList", this->gPlatformInformationList},
+			};
+			PANIC_COND(!SolveRequestPlus::solveAll(patcher, index, solveRequests, address, size), "mellow",	"Failed to resolve symbols");
+			
+		}
+
+		RouteRequestPlus requests[] = {
+			// ...existing routes...
+			//{"__ZN24AppleIntelBaseController17registerWithAICPMEPv", alwaysReturnSuccess, this->oalwaysReturnSuccess},
+			// ...existing routes...
+			/*{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj.cold.1",releaseDoorbell},
+			{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj.cold.2",releaseDoorbell},
+			{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj.cold.3",releaseDoorbell},
+			{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj.cold.4",releaseDoorbell},
+			{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj.cold.5",releaseDoorbell},
+			{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj.cold.6",releaseDoorbell},
+			{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj.cold.7",releaseDoorbell},
+			{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj.cold.8",releaseDoorbell},
+			{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj.cold.9",releaseDoorbell},
+			{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj.cold.10",releaseDoorbell},
+			{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj.cold.11",releaseDoorbell},
+			{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj.cold.12",releaseDoorbell},
+			{"__ZN19AppleIntelPowerWell22hwSetPowerWellStateAuxEbj.cold.1",releaseDoorbell},*/
+			// V204: re-enable AppleIntelScaler/Plane init constructors so ccont is set
+			// once at object construction. Friend's working version routes only these and
+			// keeps the per-method patches commented; we keep both as belt-and-suspenders.
+			{"__ZN16AppleIntelScaler4initE10IGScalerID", AppleIntelScalerinit, this->oAppleIntelScalerinit},
+			{"__ZN15AppleIntelPlane4initE9IGPlaneID",     AppleIntelPlaneinit,  this->oAppleIntelPlaneinit},
+			// AppleIntelPlaneinit/Scalerinit hooks are disabled in kern_genx.cpp, so fields
+			// 0x90 (plane RAM) and 0x28/0x10 (scaler RAM) are never set at object-init time.
+			// Every entry point into Plane/Scaler that calls ReadRegister32 will crash with
+			// this=NULL unless we patch ccont in here.  These hooks must stay until the init
+			// hooks are re-enabled (see kern_genx.cpp lines 75-76).
+			{"__ZN16AppleIntelScaler13disableScalerEb",disableScaler, this->odisableScaler},
+			{"__ZN15AppleIntelPlane11enablePlaneEb",enablePlane, this->oenablePlane},
+			{"__ZN16AppleIntelScaler17programPipeScalerEP21AppleIntelDisplayPath",programPipeScaler, this->oprogramPipeScaler},
+			// V400: read-only logger for setupPipeScaler. Confirms whether Apple's
+			// pipe scaler is downscaling (PIPE_SRCSZ vs PS_PS_WIN_SZ mismatch) — if
+			// yes, that's a direct cause of the fragmented/repeated scanout.
+			{"__ZN16AppleIntelScaler15setupPipeScalerEP21AppleIntelDisplayPathP10CRTCParams", setupPipeScaler, this->osetupPipeScaler},
+			// V401: paramsSurfCompare — read-only. Fires per flip. Logs PLANE_CTL
+			// tiling bits (mask 0xF800000), PLANE_STRIDE (+0x18), PLANE_SURF (+0x20)
+			// for both old and new PLANEPARAMS, plus CRTCParams PIPE_SRCSZ.
+			{"__ZN24AppleIntelBaseController17paramsSurfCompareEP10CRTCParamsS1_PN15AppleIntelPlane11PLANEPARAMSES4_", paramsSurfCompare, this->oparamsSurfCompare},
+			// V402: setupDSCEngineParams — read-only. Logs entry of DSC config path.
+			// Linux says DSC=off; this hook reveals whether Apple still goes through it.
+			{"__ZN24AppleIntelBaseController20setupDSCEngineParamsEP21AppleIntelFramebufferP10CRTCParamsP21AppleIntelDisplayPathP29IODetailedTimingInformationV2", setupDSCEngineParams, this->osetupDSCEngineParams},
+			// V403: SetupParams — master CRTCParams builder. Read-only logger of all
+			// key fields after Apple populates the struct. Single chokepoint where
+			// future origin-level overrides should land.
+			{"__ZN24AppleIntelBaseController11SetupParamsEP21AppleIntelFramebufferP21AppleIntelDisplayPathP10CRTCParamsPK29IODetailedTimingInformationV2", setupParams, this->osetupParams},
+			// V404: setupPipeWatermarks — runs INSIDE SetupParams before setupPipeScaler.
+			// Per-pipe DBUF/watermark allocator. Prime suspect for setting PIPE_SEAM_EXCESS=0x1.
+			{"__ZN24AppleIntelBaseController19setupPipeWatermarksEP21AppleIntelFramebufferP21AppleIntelDisplayPathP10CRTCParams", setupPipeWatermarks, this->osetupPipeWatermarks},
+			// V405: AppleIntelPlane::configureColorPipeLine(FlipTransactionArgs*, bool)
+			// Dispatches 8/10/12/12SEG gamma pipeline based on FlipTransactionArgs BPC mode.
+			// Hook logs GAMMA_MODE (0x4A480) and PIPE_MISC (0x70030) before/after the call
+			// to confirm Apple writes correct values for ADL-P Display 13 on our 8bpc eDP.
+			{"__ZN15AppleIntelPlane22configureColorPipeLineEP19FlipTransactionArgsb", configureColorPipeLine, this->oConfigureColorPipeLine},
+			// V406: AppleIntelPlane::configurePlane(FlipTransactionArgs*)
+			// Patches FlipTransactionArgs+0x3c tiling enum to 2 (linear) so Apple builds
+			// PLANE_CTL with bits[12:10]=000 and PLANE_STRIDE=pitch/512 natively.
+			{"__ZN15AppleIntelPlane14configurePlaneEP19FlipTransactionArgs", configurePlane, this->oConfigurePlane},
+			{"__ZN15AppleIntelPlane19updateRegisterCacheEv",AppleIntelPlaneupdateRegisterCache, this->oAppleIntelPlaneupdateRegisterCache},
+			{"__ZN16AppleIntelScaler19updateRegisterCacheEv",AppleIntelScalerupdateRegisterCache, this->oAppleIntelScalerupdateRegisterCache},
+			{"__ZN19AppleIntelPowerWell20disableDisplayEngineEv",disableDisplayEngine, this->odisableDisplayEngine},
+			{"__ZN19AppleIntelPowerWell19enableDisplayEngineEv",enableDisplayEngine, this->oenableDisplayEngine},
+			// V35: Removed ComboPhyEv hook — causes MCE on RPL/ADL. Firmware calibration sufficient.
+			{"__ZN14AppleIntelPort16computeLaneCountEPK29IODetailedTimingInformationV2jjPj",computeLaneCount, this->ocomputeLaneCount},
+			{"__ZN14AppleIntelPort21setupOptimalLaneCountEPK29IODetailedTimingInformationV2j",setupOptimalLaneCount, this->osetupOptimalLaneCount},
+			// V97: Log AUX transactions to diagnose eDP link training failures on the
+			// non-real-TGL Ultra spoof path.
+			{"__ZN14AppleIntelPort7readAUXEjPvj", wrapICLReadAUX, this->orgICLReadAUX},
+			// V96: Force display online — WEG's getDisplayStatus hook (FOD) fails with
+			// "err 2" on TGL kext because that symbol doesn't exist. TGL uses getOnlineInfo.
+			{"__ZN21AppleIntelFramebuffer13getOnlineInfoEP21AppleIntelDisplayPathPhS2_", getOnlineInfo, this->ogetOnlineInfo},
+			// V208/V209/V210 routes DISABLED at 3/3/3 baseline. They actively cause
+			// the IOFramebuffer::getAttributeExt+0x25 NULL deref when fb1/fb2 start()
+			// is refused but IGAccelDisplayPipe still tracks them. Re-enable only
+			// alongside pinfo 1/1/1 if pursuing FB-count-reduction direction.
+			//{"__ZN21AppleIntelFramebuffer5startEP9IOService", wrapAppleIntelFramebufferStart, this->oAppleIntelFramebufferStart},
+			//{"__ZN21AppleIntelFramebuffer16enableControllerEv", wrapEnableController, this->oEnableController},
+			//{"__ZN21AppleIntelDisplayPath24getFreeJoinablePathCountEv", wrapGetFreeJoinablePathCount, this->oGetFreeJoinablePathCount},
+			// Path B: Force aperture memory under dp0 mode to prevent WS=0x3 migration to
+			// non-aperture, which leaves the display scanning empty pages and triggers
+			// the 0x3→0x1 WS degradation.
+			{"__ZN21AppleIntelFramebuffer24isApertureMemoryRequiredEv", wrapIsApertureMemoryRequired, this->oIsApertureMemoryRequired},
+			// Path C: Coerce kIOWindowServerActiveAttribute=0x1 (WS degrade) to 0x3 (stay-active)
+			// under dp0 mode so kernel-tracked fWSAAState never drops below 3 once WS goes active.
+			{"__ZN21AppleIntelFramebuffer12setAttributeEjm", wrapSetAttribute, this->oSetAttribute},
+			// V183: write-only compatibility power-well handler for the non-real-TGL Ultra
+			// spoof path; no callthrough because the inherited TGL poll loop can hang.
+			// Real TGL falls through to original via ohwSetPowerWellStatePGE.
+			{"__ZN19AppleIntelPowerWell21hwSetPowerWellStatePGEbj", hwSetPowerWellStatePGE, this->ohwSetPowerWellStatePGE},
+			{"__ZN19AppleIntelPowerWell22hwSetPowerWellStateAuxEbj",hwSetPowerWellStateAux, this->ohwSetPowerWellStateAux},
+			{"__ZN19AppleIntelPowerWell22hwSetPowerWellStateDDIEbj",hwSetPowerWellStateDDI, this->ohwSetPowerWellStateDDI},
+			{"__ZN31AppleIntelRegisterAccessManager19FastWriteRegister32Emj",FastWriteRegister32, this->oFastWriteRegister32},
+			// V60: ReadRegister32 hooks DISABLED — V59 proved they cause 0-children regression
+			// (display driver loops in forceWake power-well cycling, never completes init)
+			/*{"__ZN31AppleIntelRegisterAccessManager14ReadRegister32Em",raReadRegister32, this->oraReadRegister32},
+			{"__ZN31AppleIntelRegisterAccessManager14ReadRegister32EPVvm",raReadRegister32b},*/
+			{"__ZN31AppleIntelRegisterAccessManager15WriteRegister32Emj",raWriteRegister32, this->oraWriteRegister32},
+			{"__ZN31AppleIntelRegisterAccessManager15WriteRegister32EPVvmj",raWriteRegister32b},
+			// V410: hook sleep/wake transition methods to intercept panel state tracking.
+			// On the non-real-TGL Ultra spoof path these inherited implementations can
+			// corrupt WindowServer state on resume.
+			{"__ZN21AppleIntelFramebuffer17prepareToExitWakeEv",   prepareToExitWake,   this->oprepareToExitWake},
+			{"__ZN21AppleIntelFramebuffer18prepareToEnterWakeEv",  prepareToEnterWake,  this->oprepareToEnterWake},
+			{"__ZN21AppleIntelFramebuffer18prepareToExitSleepEv",  prepareToExitSleep,  this->oprepareToExitSleep},
+			{"__ZN21AppleIntelFramebuffer19prepareToEnterSleepEv", prepareToEnterSleep, this->oprepareToEnterSleep},
+			{"__ZN24AppleIntelBaseController15enableVDDForAuxEP14AppleIntelPort", releaseDoorbell},
+			// Keep native SST timing setup; forcing custom clocks can break CoreDisplay validation.
+			//{"__ZN24AppleIntelBaseController17SetupDPSSTTimingsEP21AppleIntelFramebufferP21AppleIntelDisplayPathP10CRTCParams", SetupDPSSTTimings, this->oSetupDPSSTTimings},
+			//{"__ZN24AppleIntelBaseController12SetupTimingsEP21AppleIntelFramebufferP21AppleIntelDisplayPathPK29IODetailedTimingInformationV2P10CRTCParams", SetupTimings, this->oSetupTimings},
+			// Keep native detailed timing validation; avoid overriding pixel clock fields.
+			//{"__ZN21AppleIntelFramebuffer22validateDetailedTimingEPvy", validateDetailedTiming, this->ovalidateDetailedTiming},
+			//{"__ZN21AppleIntelFramebuffer19validateDisplayModeEiPPKNS_15ModeDescriptionEPPK29IODetailedTimingInformationV2", validateDisplayMode, this->ovalidateDisplayMode},
+	   		//{"__ZN21AppleIntelFramebuffer18setupDisplayTimingEPK29IODetailedTimingInformationV2PS0_", setupDisplayTiming, this->osetupDisplayTiming},
+			//{"__ZN21AppleIntelFramebuffer18maxSupportedDepthsEPK29IODetailedTimingInformationV2", maxSupportedDepths, this->omaxSupportedDepths},
+			//{"__ZN21AppleIntelFramebuffer17validateModeDepthEPK29IODetailedTimingInformationV2j", validateModeDepth, this->ovalidateModeDepth},
+			//*****
+			//{"__ZN21AppleIntelFramebuffer19getPixelInformationEiiiP18IOPixelInformation", getPixelInformation, this->ogetPixelInformation},
+			//{"__ZN20IntelFBClientControl11doAttributeEjPmmS0_S0_P25IOExternalMethodArguments",wrapFBClientDoAttribute, this->orgFBClientDoAttribute},
+			//{"__ZN20IntelFBClientControl24vendor_doDeviceAttributeEjPmmS0_S0_P25IOExternalMethodArguments", releaseDoorbell},
+			//{"__ZN21AppleIntelFramebuffer16enableControllerEv", isPanelPowerOn},
+		};
+		PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, requests, address, size), "mellow","Failed to route dp symbols");
+		
+		if (isprod) {
+			RouteRequestPlus requests[] = {
+				{"__ZN21AppleIntelFramebuffer4initEP31AppleIntelFramebufferControllerj",AppleIntelFramebufferinit, this->oAppleIntelFramebufferinit},
+				{"__ZN31AppleIntelFramebufferController23initPlatformWorkaroundsEv", initPlatformWorkarounds, this->oinitPlatformWorkarounds},
+				{"__ZN31AppleIntelFramebufferController16getOSInformationEv", getOSInformation, this->ogetOSInformation},
+				{"__ZN31AppleIntelFramebufferController10hwShutdownEP21AppleIntelFramebuffer",handleLinkIntegrityCheck},
+				{"__ZN31AppleIntelFramebufferController18hwInitializeCStateEv",hwInitializeCState, this->ohwInitializeCState},
+				{"__ZN31AppleIntelFramebufferController20hwConfigureCustomAUXEb",hwConfigureCustomAUX, this->ohwConfigureCustomAUX},
+				{"__ZN19AppleIntelPowerWell4initEP31AppleIntelFramebufferController",AppleIntelPowerWellinit, this->oAppleIntelPowerWellinit},
+				{"__ZN31AppleIntelFramebufferController5startEP9IOService",AppleIntelBaseControllerstart, this->oAppleIntelBaseControllerstart},
+				{"__ZN31AppleIntelFramebufferController21probeCDClockFrequencyEv",wrapProbeCDClockFrequency,	this->orgProbeCDClockFrequency},
+				{"__ZN31AppleIntelFramebufferController11initCDClockEv",initCDClock, this->oinitCDClock},
+				{"__ZN31AppleIntelFramebufferController28setCDClockFrequencyOnHotplugEv",setCDClockFrequencyOnHotplug, this->osetCDClockFrequencyOnHotplug},
+				{"__ZN31AppleIntelFramebufferController14disableCDClockEv",disableCDClock,this->odisableCDClock},
+				{"__ZN31AppleIntelFramebufferController16hwRegsNeedUpdateEP21AppleIntelFramebufferP21AppleIntelDisplayPathP10CRTCParamsPK29IODetailedTimingInformationV2PN16AppleIntelScaler12SCALERPARAMSE",hwRegsNeedUpdate, this->ohwRegsNeedUpdate},
+			};
+			PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, requests, address, size), "mellow","Failed to route p symbols");
+			
+		} else
+		{
+			RouteRequestPlus requests[] = {
+				{"__ZN21AppleIntelFramebuffer4initEP24AppleIntelBaseControllerj",AppleIntelFramebufferinit, this->oAppleIntelFramebufferinit},
+				{"__ZN24AppleIntelBaseController23initPlatformWorkaroundsEv", initPlatformWorkarounds, this->oinitPlatformWorkarounds},
+				{"__ZN24AppleIntelBaseController16getOSInformationEv", getOSInformation, this->ogetOSInformation},
+				{"__ZN24AppleIntelBaseController10hwShutdownEP21AppleIntelFramebuffer",handleLinkIntegrityCheck},
+				{"__ZN24AppleIntelBaseController18hwInitializeCStateEv",hwInitializeCState, this->ohwInitializeCState},
+				{"__ZN24AppleIntelBaseController20hwConfigureCustomAUXEb",hwConfigureCustomAUX, this->ohwConfigureCustomAUX},
+				{"__ZN19AppleIntelPowerWell4initEP24AppleIntelBaseController",AppleIntelPowerWellinit, this->oAppleIntelPowerWellinit},
+				{"__ZN24AppleIntelBaseController5startEP9IOService",AppleIntelBaseControllerstart, this->oAppleIntelBaseControllerstart},
+				{"__ZN24AppleIntelBaseController21probeCDClockFrequencyEv",wrapProbeCDClockFrequency,	this->orgProbeCDClockFrequency},
+				{"__ZN24AppleIntelBaseController11initCDClockEv",initCDClock, this->oinitCDClock},
+				{"__ZN24AppleIntelBaseController28setCDClockFrequencyOnHotplugEv",setCDClockFrequencyOnHotplug, this->osetCDClockFrequencyOnHotplug},
+				{"__ZN24AppleIntelBaseController14disableCDClockEv",disableCDClock,this->odisableCDClock},
+				{"__ZN24AppleIntelBaseController16hwRegsNeedUpdateEP21AppleIntelFramebufferP21AppleIntelDisplayPathP10CRTCParamsPK29IODetailedTimingInformationV2PN16AppleIntelScaler12SCALERPARAMSE",hwRegsNeedUpdate, this->ohwRegsNeedUpdate},
+				// V201 diagnostic: read scanout buffer right after hwSetupMemory returns to
+				// detect what fills it (zeros vs wallpaper pixels). FB-only scope.
+				{"__ZN24AppleIntelBaseController13hwSetupMemoryEP21AppleIntelFramebufferP21AppleIntelDisplayPathP10CRTCParamsb", wrapHwSetupMemory, this->ohwSetupMemory},
+			};
+			PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, requests, address, size), "mellow","Failed to route d symbols");
+			
+		}
+		
+		//powerwell
+		static const uint8_t f1[]= {0xe8, 0x99, 0x9f, 0xfd, 0xff, 0x89, 0x45, 0xc8, 0x3d, 0xff, 0xff, 0x00, 0x00, 0x74, 0x78};
+		static const uint8_t r1[]= {0xe8, 0x99, 0x9f, 0xfd, 0xff, 0x89, 0x45, 0xc8, 0x3d, 0xff, 0xff, 0x00, 0x00, 0xeb, 0x78};
+		
+		static const uint8_t f1p[]= {0xe8, 0x66, 0xb0, 0xfe, 0xff, 0x89, 0x45, 0xc8, 0x3d, 0xff, 0xff, 0x00, 0x00, 0x74, 0x45};
+		static const uint8_t r1p[]= {0xe8, 0x66, 0xb0, 0xfe, 0xff, 0x89, 0x45, 0xc8, 0x3d, 0xff, 0xff, 0x00, 0x00, 0xeb, 0x45};
+		
+		//osinfo
+		/*fInfoHasLid                  : 1
+		fInfoPipeCount               : 3
+		fInfoPortCount               : 3
+		fInfoFramebufferCount        : 3*/
+
+		static const uint8_t f2[]= {0xc7, 0x05, 0x07, 0x81, 0x10, 0x00, 0x01, 0x03, 0x09, 0x03, 0xb8, 0x00, 0x00, 0x00, 0x04};
+		static const uint8_t r2[]= {0xc7, 0x05, 0x07, 0x81, 0x10, 0x00, 0x01, 0x04, 0x03, 0x02, 0xb8, 0x00, 0x00, 0x00, 0x04};
+
+		static const uint8_t f2p[]= {0xc7, 0x05, 0x57, 0xe5, 0x0b, 0x00, 0x01, 0x03, 0x09, 0x03};
+		static const uint8_t r2p[]= {0xc7, 0x05, 0x57, 0xe5, 0x0b, 0x00, 0x01, 0x04, 0x03, 0x02};
+		
+		static const uint8_t f2b[]= {0x49, 0xbe, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x4c, 0x89, 0x35, 0x17, 0x81, 0x10, 0x00, 0xb8, 0x08, 0x00, 0x00, 0x00};
+		static const uint8_t r2b[]= {0x49, 0xbe, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x4c, 0x89, 0x35, 0x17, 0x81, 0x10, 0x00, 0xb8, 0x08, 0x00, 0x00, 0x00};
+		
+		static const uint8_t f2c[]= {0x48, 0x89, 0x1d, 0xc0, 0x81, 0x10, 0x00, 0x4c, 0x89, 0x35, 0xc1, 0x81, 0x10, 0x00, 0x48, 0xb8, 0x08, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00};
+		static const uint8_t r2c[]= {0x48, 0x89, 0x1d, 0xc0, 0x81, 0x10, 0x00, 0x4c, 0x89, 0x35, 0xc1, 0x81, 0x10, 0x00, 0x48, 0xb8, 0x05, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00};
+		
+		//mem
+		static const uint8_t f2d[]= {0x0f, 0x94, 0xc0, 0xb9, 0x00, 0x00, 0x10, 0x00, 0xba, 0x00, 0x00, 0x80, 0x00};
+		static const uint8_t r2d[]= {0x0f, 0x94, 0xc0, 0xb9, 0x00, 0x00, 0x10, 0x00, 0xba, 0x00, 0x00, 0x40, 0x00};
+		
+		//mem
+		static const uint8_t f2dp[]= {0xb8, 0x00, 0x00, 0x10, 0x00, 0xba, 0x00, 0x00, 0x80, 0x00, 0x0f, 0x44, 0xd0, 0x0f, 0x94, 0xc1, 0x48, 0x01, 0x0d, 0xa2, 0xd0, 0x09, 0x00};
+		static const uint8_t r2dp[]= {0xb8, 0x00, 0x00, 0x10, 0x00, 0xba, 0x00, 0x00, 0x40, 0x00, 0x0f, 0x44, 0xd0, 0x0f, 0x94, 0xc1, 0x48, 0x01, 0x0d, 0xa2, 0xd0, 0x09, 0x00};
+		
+		//cdclock
+		static const uint8_t f2e[]= {0x48, 0xc7, 0x83, 0x60, 0x43, 0x00, 0x00, 0x00, 0x2d, 0x31, 0x01, 0x48, 0xc7, 0x83, 0x68, 0x43, 0x00, 0x00, 0x00, 0x54, 0xea, 0x2a, 0xc6, 0x83, 0xb4, 0x45, 0x00, 0x00, 0x00};
+		static const uint8_t r2e[]= {0x48, 0xc7, 0x83, 0x60, 0x4a, 0x00, 0x00, 0x00, 0xa3, 0x02, 0x00, 0x48, 0xc7, 0x83, 0x68, 0x4a, 0x00, 0x00, 0x00, 0xf6, 0x09, 0x00, 0xc6, 0x83, 0xb4, 0x45, 0x00, 0x00, 0x00};
+		
+
+
+		//conn
+		static const uint8_t f3[]= {
+			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00,
+			0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x01, 0x02, 0x00, 0x00,
+			0x02, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x01, 0x02, 0x00, 0x00,
+			0x03, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x01, 0x02, 0x00, 0x00,
+			0x04, 0x00, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x01, 0x02, 0x00, 0x00,
+			0x05, 0x00, 0x00, 0x00, 0x0b, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x01, 0x02, 0x00, 0x00,
+			0x06, 0x00, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x01, 0x02, 0x00, 0x00,
+			0x07, 0x00, 0x00, 0x00, 0x0d, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x01, 0x02, 0x00, 0x00,
+			0x08, 0x00, 0x00, 0x00, 0x0e, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x01, 0x02, 0x00, 0x00};
+		
+		static const uint8_t r3[]= {
+			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00,
+			0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x01, 0x02, 0x00, 0x00,
+			0x02, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x01, 0x02, 0x00, 0x00,
+			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+		
+		
+		//lcd power reg
+		static const uint8_t f4[]= {0x00, 0x72, 0x0c, 0x00};
+		static const uint8_t r4[]= {0x00, 0x12, 0x06, 0x00};
+		
+		static const uint8_t f4a[]= {0x04, 0x72, 0x0c, 0x00};
+		static const uint8_t r4a[]= {0x04, 0x12, 0x06, 0x00};
+		
+		static const uint8_t f4b[]= {0x08, 0x72, 0x0c, 0x00};
+		static const uint8_t r4b[]= {0x08, 0x12, 0x06, 0x00};
+		
+		static const uint8_t f4c[]= {0x0c, 0x72, 0x0c, 0x00};
+		static const uint8_t r4c[]= {0x0c, 0x12, 0x06, 0x00};
+		
+		
+		//jalavoui
+		static const uint8_t f6a[]= { 0xbe, 0x04, 0x00, 0x00, 0x00, 0x48, 0x89, 0xda, 0x31, 0xc9, 0xe8, 0x8c, 0xac, 0x04, 0x00};
+		static const uint8_t r6a[]= { 0xbe, 0x04, 0x00, 0x00, 0x00, 0x48, 0x89, 0xda, 0x31, 0xc9, 0x90, 0x90, 0x90, 0x90, 0x90};
+		
+		//ReadRegister64
+		static const uint8_t f7[]= {0x83, 0xc0, 0xfc, 0x48, 0x39, 0xf0, 0x76, 0x11, 0x48, 0x8b, 0x47, 0x50, 0x48, 0xff, 0x05, 0xca, 0xf5, 0x0c, 0x00};
+		static const uint8_t r7[]= {0x83, 0xc0, 0xf8, 0x48, 0x39, 0xf0, 0x76, 0x11, 0x48, 0x8b, 0x47, 0x50, 0x48, 0xff, 0x05, 0xca, 0xf5, 0x0c, 0x00};
+		
+		static const uint8_t f7p[]= {0x83, 0xc0, 0xfc, 0x48, 0x39, 0xf0, 0x76, 0x11, 0x48, 0x8b, 0x47, 0x50, 0x48, 0xff, 0x05, 0x84, 0x40, 0x08, 0x00};
+		static const uint8_t r7p[]= {0x83, 0xc0, 0xf8, 0x48, 0x39, 0xf0, 0x76, 0x11, 0x48, 0x8b, 0x47, 0x50, 0x48, 0xff, 0x05, 0x84, 0x40, 0x08, 0x00};
+
+		
+		//hwreg
+		static const uint8_t f10[]= {0xe8, 0xaf, 0xe2, 0xff, 0xff, 0x84, 0xc0, 0x74, 0x5b};
+		static const uint8_t r10[]= {0xe8, 0xaf, 0xe2, 0xff, 0xff, 0x84, 0xc0, 0xeb, 0x5b};
+		
+		static const uint8_t f10p[]= {0xe8, 0x9e, 0xf3, 0xff, 0xff, 0x84, 0xc0, 0x74, 0x3d};
+		static const uint8_t r10p[]= {0xe8, 0x9e, 0xf3, 0xff, 0xff, 0x84, 0xc0, 0xeb, 0x3d};
+		
+		//probeportmode
+		static const uint8_t f13b[]= {0xff, 0x90, 0x90, 0x01, 0x00, 0x00, 0x49, 0x8b, 0x0e, 0x4c, 0x89, 0xf7, 0x89, 0xc6, 0xff, 0x91, 0x38, 0x01, 0x00, 0x00};
+		static const uint8_t r13b[]= {0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00, 0x49, 0x8b, 0x0e, 0x4c, 0x89, 0xf7, 0x89, 0xc6, 0xff, 0x91, 0x38, 0x01, 0x00, 0x00};
+
+		static const uint8_t f13[]= {0xff, 0x91, 0x90, 0x01, 0x00, 0x00, 0x83, 0xf8, 0x02, 0x0f, 0x84, 0xec, 0x00, 0x00, 0x00};
+		static const uint8_t r13[]= {0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90};
+		
+		static const uint8_t f13p[]= {0xff, 0x91, 0x78, 0x01, 0x00, 0x00, 0x83, 0xf8, 0x02, 0x74, 0x64};
+		static const uint8_t r13p[]= {0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90};
+		
+		static const uint8_t f13pb[]= {0xff, 0x90, 0x78, 0x01, 0x00, 0x00, 0x49, 0x8b, 0x0e, 0x4c, 0x89, 0xf7, 0x89, 0xc6, 0xff, 0x91, 0x38, 0x01, 0x00, 0x00};
+		static const uint8_t r13pb[]= {0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00, 0x49, 0x8b, 0x0e, 0x4c, 0x89, 0xf7, 0x89, 0xc6, 0xff, 0x91, 0x38, 0x01, 0x00, 0x00};
+
+		
+		//getPathByPipe logs
+		static const uint8_t f15[]= {0x74, 0x36, 0x48, 0xff, 0x05, 0x7e, 0x51, 0x08, 0x00, 0x44, 0x89, 0x3c, 0x24, 0x48, 0x8d, 0x15, 0x4d, 0x88, 0x03, 0x00, 0x4c, 0x8d, 0x05, 0x28, 0x8a, 0x03, 0x00};
+		static const uint8_t r15[]= {0xeb, 0x36, 0x48, 0xff, 0x05, 0x7e, 0x51, 0x08, 0x00, 0x44, 0x89, 0x3c, 0x24, 0x48, 0x8d, 0x15, 0x4d, 0x88, 0x03, 0x00, 0x4c, 0x8d, 0x05, 0x28, 0x8a, 0x03, 0x00};
+		
+		//getBuiltInPor
+		static const uint8_t f16[]= {0x48, 0x89, 0x05, 0xfc, 0x39, 0x12, 0x00, 0x48, 0x8b, 0x83, 0x48, 0x05, 0x00, 0x00, 0xf6, 0x40, 0x14, 0x08, 0x75, 0x0d};
+		static const uint8_t r16[]= {0x48, 0x89, 0x05, 0xfc, 0x39, 0x12, 0x00, 0x48, 0x8b, 0x83, 0x48, 0x05, 0x00, 0x00, 0xf6, 0x40, 0x14, 0x08, 0x90, 0x90};
+		
+		static const uint8_t f16p[]= {0x48, 0x8b, 0x80, 0x48, 0x05, 0x00, 0x00, 0xf6, 0x40, 0x14, 0x08, 0x75, 0x0a};
+		static const uint8_t r16p[]= {0x48, 0x8b, 0x80, 0x48, 0x05, 0x00, 0x00, 0xf6, 0x40, 0x14, 0x08, 0x90, 0x90};
+
+		//getHPDState
+		static const uint8_t f19[]= {0xbe, 0x70, 0x44, 0x04, 0x00};
+		static const uint8_t r19[]= {0xbe, 0xa0, 0x38, 0x16, 0x00};
+		
+		//savenvram
+		static const uint8_t f20[]= {0xff, 0x90, 0xf8, 0x09, 0x00, 0x00, 0x41, 0x89, 0xc6, 0x48, 0x85, 0xdb, 0x74, 0x17};
+		static const uint8_t r20[]= {0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x48, 0x85, 0xdb, 0x74, 0x17};
+		
+		static const uint8_t f20p[]= {0xff, 0x90, 0xf8, 0x09, 0x00, 0x00, 0x41, 0x89, 0xc6, 0x48, 0x85, 0xdb, 0x74, 0x17};
+		static const uint8_t r20p[]= {0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x48, 0x85, 0xdb, 0x74, 0x17};
+		
+		//SafeForceWake
+		static const uint8_t f21[]= {0x0f, 0x84, 0x96, 0x00, 0x00, 0x00, 0x48, 0xff, 0x05, 0xbc, 0x05, 0x0f, 0x00, 0xbe, 0x44, 0x00, 0x13, 0x00, 0x4c, 0x89, 0xf7};
+		static const uint8_t r21[]= {0x48, 0xe9, 0x96, 0x00, 0x00, 0x00, 0x48, 0xff, 0x05, 0xbc, 0x05, 0x0f, 0x00, 0xbe, 0x44, 0x00, 0x13, 0x00, 0x4c, 0x89, 0xf7};
+		
+		static const uint8_t f21p[]= {0x74, 0x3c, 0x48, 0xff, 0x05, 0x7a, 0x73, 0x09, 0x00, 0xbe, 0x44, 0x00, 0x13, 0x00, 0x4c, 0x89, 0xf7, 0xe8, 0x97, 0x80, 0x01, 0x00};
+		static const uint8_t r21p[]= {0xeb, 0x3c, 0x48, 0xff, 0x05, 0x7a, 0x73, 0x09, 0x00, 0xbe, 0x44, 0x00, 0x13, 0x00, 0x4c, 0x89, 0xf7, 0xe8, 0x97, 0x80, 0x01, 0x00};
+        
+        //pixel hwcrt
+        static const uint8_t f22[]= {0x48, 0x69, 0xc2, 0x50, 0xc3, 0x00, 0x00, 0x49, 0x89, 0x47, 0x28, 0xbf, 0x08, 0x00, 0x00, 0x00, 0xbe, 0x06, 0x00, 0x00, 0x00, 0xe8, 0x9e, 0x81, 0x01, 0x00, 0x84, 0xc0, 0x74, 0x3a};
+        
+        static const uint8_t r22[]= {0x48, 0xc7, 0xc0, 0xc0, 0x40, 0xd0, 0x2e, 0x49, 0x89, 0x47, 0x28, 0xbf, 0x08, 0x00, 0x00, 0x00, 0xbe, 0x06, 0x00, 0x00, 0x00, 0xe8, 0x9e, 0x81, 0x01, 0x00, 0x84, 0xc0, 0x90, 0x90};
+		
+
+		// force eDP panel detection regardless of pipe number (from NootedBlue)
+		// NOPs two JE and one JNE that would skip eDP init when pipe != 1.
+		// Required because our pinfo sets eDP on pipe=0, not pipe=1.
+		static const uint8_t f6nb[]= {0x74, 0x2a, 0x83, 0xf8, 0x01, 0x74, 0x43, 0x85, 0xc0, 0x75, 0x60};
+		static const uint8_t r6nb[]= {0x90, 0x90, 0x83, 0xf8, 0x01, 0x90, 0x90, 0x85, 0xc0, 0x90, 0x90};
+
+		// fix register addresses if pipe=0 (jne→jmp to always use pipe-0 register offsets)
+		static const uint8_t f24bp[]= {0x83, 0x78, 0x08, 0x00, 0x75, 0x0c};
+		static const uint8_t r24bp[]= {0x83, 0x78, 0x08, 0x00, 0xeb, 0x0c};
+		static const uint8_t f24cp[]= {0x00, 0x4c, 0x89, 0xea, 0x75, 0x12};
+		static const uint8_t r24cp[]= {0x00, 0x4c, 0x89, 0xea, 0xeb, 0x12};
+		static const uint8_t f24dp[]= {0x83, 0x78, 0x08, 0x00, 0x75, 0x0d};
+		static const uint8_t r24dp[]= {0x83, 0x78, 0x08, 0x00, 0xeb, 0x0d};
+		static const uint8_t f24b[]= {0x83, 0x78, 0x08, 0x00, 0x75, 0x0c};
+		static const uint8_t r24b[]= {0x83, 0x78, 0x08, 0x00, 0xeb, 0x0c};
+		static const uint8_t f24c[]= {0x48, 0x8b, 0x55, 0xd0, 0x75, 0x13};
+		static const uint8_t r24c[]= {0x48, 0x8b, 0x55, 0xd0, 0xeb, 0x13};
+		static const uint8_t f24d[]= {0x83, 0x78, 0x08, 0x00, 0x75, 0x0d};
+		static const uint8_t r24d[]= {0x83, 0x78, 0x08, 0x00, 0xeb, 0x0d};
+		// link training speed constant fix
+		static const uint8_t f25[]= {0x77, 0x77, 0x00, 0x00};
+		static const uint8_t r25[]= {0x33, 0x00, 0x00, 0x00};
+
+		// Path E (TCON ID): guarded by -mellowtglwithgfx boot-arg (requires GFX kext present).
+		// Rewrites CamelliaTcon2/BanksiaTcon DPCD ID comparisons so they match this panel's
+		// DPCD bytes [14 1e c4 c1] → 0xc1c41e14. Also sets cameliav=2 in getOSInformation.
+		// DO NOT enable on FB-only boot (no GFX): calls into AGDC services → hang.
+		static const uint8_t f_tcon_camellia[]= {0x3d, 0x11, 0x0a, 0x84, 0x41};
+		static const uint8_t r_tcon_camellia[]= {0x3d, 0x14, 0x1e, 0xc4, 0xc1};
+		static const uint8_t f_tcon_banksia[] = {0x3d, 0x12, 0x14, 0xc4, 0x41};
+		static const uint8_t r_tcon_banksia[] = {0x3d, 0x14, 0x1e, 0xc4, 0xc1};
+		const bool enableTcon = checkKernelArgument("-mellowtglwithgfx");
+
+		if (isprod){
+			LookupPatchPlus const patchesp[] = {// tgl production kext
+
+				// f1p (powerwell JZ→JMP) commented out — not present in NootedBlue's
+				// working TGL FBT prod patch list. Was an extra Mellow accumulated.
+				//{activeKext, f1p, r1p, arrsize(f1p),	1},
+				{activeKext, f2p, r2p, arrsize(f2p),	1},
+				{activeKext, f2dp, r2dp, arrsize(f2dp),	1},
+				// f3 (connector data table rewrite) commented out — not in NootedBlue.
+				//{activeKext, f3, r3, arrsize(f3),	1},
+				// f4 family ("lcd power reg" 0x72→0x12, 4 variants ~27 binary mods) commented out
+				// — NOT present in NootedBlue's working TGL FBT prod patch list. These rewrite
+				// what appears to be LCD power register access patterns; on Display 13 hardware
+				// the original Apple code paths may be correct without the rewrite.
+				//{activeKext, f4, r4, arrsize(f4),	11},
+				//{activeKext, f4a, r4a, arrsize(f4a),	11},
+				//{activeKext, f4b, r4b, arrsize(f4b),	2},
+				//{activeKext, f4c, r4c, arrsize(f4c),	2},
+				{activeKext, f7p, r7p, arrsize(f7p),	1},
+				// f10p ("hwreg" CALL+JZ→JMP bypass) commented out — NOT in NootedBlue.
+				//{activeKext, f10p, r10p, arrsize(f10p),	1},
+				// Keep native probe-port mode flow for compatibility.
+				//{activeKext, f13p, r13p, arrsize(f13p),	1},
+				//{activeKext, f13pb, r13pb, arrsize(f13pb),	1},
+				//{activeKext, f16p, r16p, arrsize(f16p),	1},
+				{activeKext, f6nb, r6nb, arrsize(f6nb),	1},
+				{activeKext, f13p, r13p, arrsize(f13p),	1},
+				{activeKext, f13pb, r13pb, arrsize(f13pb),	1},
+				{activeKext, f19, r19, arrsize(f19),	1},
+				{activeKext, f20p, r20p, arrsize(f20p),	1},
+				{activeKext, f24bp, r24bp, arrsize(f24bp),	14},
+				{activeKext, f24cp, r24cp, arrsize(f24cp),	1},
+				{activeKext, f24dp, r24dp, arrsize(f24dp),	4},
+				{activeKext, f25,  r25,  arrsize(f25),	6},
+			};
+
+			PANIC_COND(!LookupPatchPlus::applyAll(patcher, patchesp , address, size), "mellow", "kextG11FBT Failed to apply production patches!");
+			if (enableTcon) {
+				LookupPatchPlus const tconPatches[] = {
+					{activeKext, f_tcon_camellia, r_tcon_camellia, arrsize(f_tcon_camellia), 1},
+					{activeKext, f_tcon_banksia,  r_tcon_banksia,  arrsize(f_tcon_banksia),  1},
+				};
+				LookupPatchPlus::applyAll(patcher, tconPatches, address, size);
+				SYSLOG("mellow", "Path E: TCON ID patches applied (prod)");
+			}
+		}
+		else {
+			LookupPatchPlus const patches[] = {// tgl debug kext
+				// f1 (powerwell JZ→JMP) commented out — not present in NootedBlue's
+				// working TGL FBT debug patch list. Was an extra Mellow accumulated.
+				//{activeKext, f1, r1, arrsize(f1),	1},
+				// f2/f2d: osinfo pipe/port/fb counts now set via getOSInformation hook — no binary patch needed.
+				// f3 (connector data table rewrite) commented out — not in NootedBlue.
+				//{activeKext, f3, r3, arrsize(f3),	1},
+				// f4 family ("lcd power reg" 0x72→0x12, 4 variants ~27 binary mods) commented out
+				// — NOT in NootedBlue's working TGL FBT debug patch list. Suspected contributor
+				// to the fragmentation/repetition symptom: rewriting LCD power register access
+				// patterns may corrupt panel-side state on Display 13 (ADL-P) hardware.
+				//{activeKext, f4, r4, arrsize(f4),	12},
+				//{activeKext, f4a, r4a, arrsize(f4a),	11},
+				//{activeKext, f4b, r4b, arrsize(f4b),	2},
+				//{activeKext, f4c, r4c, arrsize(f4c),	2},
+		//		{activeKext, f6a, r6a, arrsize(f6a),	1},
+		//		{activeKext, f7, r7, arrsize(f7),	1},
+				// f10 ("hwreg" CALL+JZ→JMP bypass) commented out — NOT in NootedBlue.
+				{activeKext, f10, r10, arrsize(f10),	1},
+				// f13: mandatory. Without this port-probe bypass the spoofed TGL path freezes during boot.
+				{activeKext, f13, r13, arrsize(f13),	1},
+				// f13b: mandatory. Without this bypass AppleIntelPort::probePortStateEv hits
+				// a pure-virtual call and panics in WindowServer during enableController.
+		//		{activeKext, f13b, r13b, arrsize(f13b),	1},
+				// f15: suppress getPathByPipe log flood at IGLogLevel=8.
+				// On platform 0x9a490000 all paths are on pipe 0; every scan cycle logs
+				// "pipe = 0" many times per second, flooding the log unreadably.
+				// The je→jmp makes the branch unconditionally skip the IGFB log emit.
+				// Purely cosmetic: no behavioral change, no display-pipe impact.
+				{activeKext, f15, r15, arrsize(f15),	1},
+				//{activeKext, f16, r16, arrsize(f16),	1},
+				{activeKext, f19, r19, arrsize(f19),	1},
+		//		{activeKext, f20, r20, arrsize(f20),	1},
+				//{activeKext, f21, r21, arrsize(f21),	1},
+				//{activeKext, f22, r22, arrsize(f22),    1},
+		//		{activeKext, f6nb, r6nb, arrsize(f6nb),	1},
+		//		{activeKext, f19, r19, arrsize(f19),	1},
+		//		{activeKext, f20, r20, arrsize(f20),	1},
+				{activeKext, f24b, r24b, arrsize(f24b),	11},
+		//		{activeKext, f24c, r24c, arrsize(f24c),	1},
+		//		{activeKext, f24d, r24d, arrsize(f24d),	6},
+		//		{activeKext, f25,  r25,  arrsize(f25),	6},
+				};
+
+			PANIC_COND(!LookupPatchPlus::applyAll(patcher, patches , address, size), "mellow", "kextG11FBT Failed to apply dbg patches!");
+			if (enableTcon) {
+				LookupPatchPlus const tconPatches[] = {
+					{activeKext, f_tcon_camellia, r_tcon_camellia, arrsize(f_tcon_camellia), 1},
+					{activeKext, f_tcon_banksia,  r_tcon_banksia,  arrsize(f_tcon_banksia),  1},
+				};
+				LookupPatchPlus::applyAll(patcher, tconPatches, address, size);
+				SYSLOG("mellow", "Path E: TCON ID patches applied (dbg)");
+			}
+		}
+		
+		return true;
+		
+	}else if (kextG11HW.loadIndex == index) {
+		if (this->tglHWLoaded) {
+			DBGLOG("mellow", "Skipping ICL HW — TGL HW already loaded");
+			return true;
+		}
+		auto *activeKext = &kextG11HW;
+		DBGLOG("mellow", "init AppleIntelICLGraphics!");
+		injectAcceleratorPersonality(false);
+		MellowCore::callback->setRMMIOIfNecessary();
+		const bool wegCoexist = isWEGCoexistMode();
+
+		{
+			// loadGuCBinary: always route — WEG's firmware path is Mojave-gated and dead on Sonoma.
+			// Without this hook, no GuC binary loads at all in coexist mode → ring dead.
+			RouteRequestPlus firmwareRoute[] = {
+				{"__ZN13IGHardwareGuC13loadGuCBinaryEv", loadGuCBinary, this->oloadGuCBinary},
+			};
+			PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, firmwareRoute, address, size), "mellow", "Failed to route loadGuCBinary (ICL)");
+		}
+
+		if (!wegCoexist) {
+			RouteRequestPlus requests[] = {
+				// PAVP/DRM: intercept session command callback (ICL hardware path, shared hook with TGL)
+				{"__ZN16IntelAccelerator19PAVPCommandCallbackE22PAVPSessionCommandID_tjPjb", wrapPavpSessionCallback, this->orgPavpSessionCallback},
+				// initHardwareCaps NOT routed: NBlue's wrapper reads TGL offset 0x1120 for SKU,
+				// but ICL stores SKU at 0x1150. Let the original ICL code run — SKU gates are patched.
+				// IGScheduler5resume NOT routed: kIGHwCsDesc is only resolved for kextG11HWT.
+				// With -disablegfxfirmware, Host Preemptive scheduler is selected (not IGScheduler5).
+				//last	 {"__ZN12IGScheduler56resumeEv", IGScheduler5resume, this->oIGScheduler5resume},
+				// resetGraphicsEngine NOT routed: NBlue wrapper applies TGL GT workarounds which
+				// target TGL MMIO offsets. Hardware is RPL-P (adlp/raptorlake) — using TGL workarounds
+				// on RPL MMIO could corrupt the command streamer. Let the ICL original run unmodified.
+			//symbol absent in kext	{"__ZN20IGHardwareRingBuffer19resetGraphicsEngineEP17IGHardwareContext", resetGraphicsEngine, this->oresetGraphicsEngine},
+				//last	 {"__ZN13IGHardwareGuC18checkWOPCMSettingsEmR14IOVirtualRange", checkWOPCMSettings, this->ocheckWOPCMSettings},
+				//last	 {"__ZN11IGScheduler15canLoadFirmwareEP16IntelAccelerator", canLoadFirmware, this->ocanLoadFirmware},
+				 // V36: Hook readAndClearInterrupts to initialize Gen11 multi-engine GT interrupts.
+				 // Same implementation as TGL path — Gen11 IRQ registers are identical for ICL/TGL.
+				 // V37: DISABLED — caused boot hang on TGL path; disabling ICL too for safety.
+				 // {"__ZN16IntelAccelerator23readAndClearInterruptsEPv", readAndClearInterrupts, this->oreadAndClearInterrupts},
+			};
+
+			PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, requests, address, size), "mellow","Failed to route dp symbols");
+
+			RouteRequestPlus gpuInfoRoute[] = {
+				// getGPUInfo: override topology at ICL object offsets (different from TGL offsets)
+				{"__ZN16IntelAccelerator10getGPUInfoEv", getGPUInfoICL, this->ogetGPUInfoICL},
+			};
+			PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, gpuInfoRoute, address, size), "mellow", "Failed to route getGPUInfoICL");
+		}
+		
+		// SKU gate 1+2: NOP JNZ/JA + XOR eax,eax (Sonoma AppleIntelICLGraphics, verified in KC)
+		static const uint8_t fSKUGates12[] = {
+			0x83, 0xF9, 0x01,
+			0x0F, 0x85, 0x0B, 0x01, 0x00, 0x00,
+			0xFF, 0xC8,
+			0x83, 0xF8, 0x07,
+			0x0F, 0x87, 0x00, 0x01, 0x00, 0x00,
+			0x48, 0x8D, 0x0D, 0x77, 0x02, 0x00, 0x00, 0x48
+		};
+		static const uint8_t rSKUGates12[] = {
+			0x83, 0xF9, 0x01,
+			0x90, 0x90, 0x90, 0x90, 0x90, 0x90,
+			0x31, 0xC0,
+			0x83, 0xF8, 0x07,
+			0x90, 0x90, 0x90, 0x90, 0x90, 0x90,
+			0x48, 0x8D, 0x0D, 0x77, 0x02, 0x00, 0x00, 0x48
+		};
+
+		// SKU gate 3: NOP JNZ (Sonoma AppleIntelICLGraphics, verified in KC)
+		static const uint8_t fSKUGate3[] = {
+			0x83, 0xF8, 0x08, 0x0F, 0x85, 0xC2, 0x00, 0x00, 0x00, 0xC7
+		};
+		static const uint8_t rSKUGate3[] = {
+			0x83, 0xF8, 0x08, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0xC7
+		};
+
+		// SKU bypass: TEST rax,rax; JZ->JMP (Sonoma, f2Long verified in KC at 0x14152bcd)
+		static const uint8_t fSkuBypassLong[] = {
+			0x48, 0x85, 0xC0, 0x74, 0x72, 0x48, 0x0F, 0xBC, 0xC0, 0x48, 0xFF, 0xC0, 0x48,
+			0x8D, 0x15, 0x00, 0xCD, 0x0F, 0x00, 0x48, 0x8D, 0x48, 0xFF, 0x48, 0xF7, 0xC1,
+			0xFD, 0xFF, 0xFF, 0xFF, 0x74, 0x27, 0x48, 0x6B, 0xC9, 0x79
+		};
+		static const uint8_t rSkuBypassLong[] = {
+			0x48, 0x85, 0xC0, 0xEB, 0x72, 0x48, 0x0F, 0xBC, 0xC0, 0x48, 0xFF, 0xC0, 0x48,
+			0x8D, 0x15, 0x00, 0xCD, 0x0F, 0x00, 0x48, 0x8D, 0x48, 0xFF, 0x48, 0xF7, 0xC1,
+			0xFD, 0xFF, 0xFF, 0xFF, 0x74, 0x27, 0x48, 0x6B, 0xC9, 0x79
+		};
+
+		LookupPatchPlus const patches[] = {
+			{&kextG11HW, fSKUGates12,    rSKUGates12,    arrsize(fSKUGates12),    1},
+			{&kextG11HW, fSKUGate3,      rSKUGate3,      arrsize(fSKUGate3),      1},
+			{&kextG11HW, fSkuBypassLong, rSkuBypassLong, arrsize(fSkuBypassLong), 1},
+		};
+		
+		/*auto catalina = getKernelVersion() == KernelVersion::Catalina;
+		if (catalina)
+			PANIC_COND(!LookupPatchPlus::applyAll(patcher, patchesc , address, size), "mellow", "cata Failed to apply patches!");
+		else*/
+		for (size_t i = 0; i < sizeof(patches)/sizeof(patches[0]); ++i) {
+			//IOSleep(delay);
+			PANIC_COND(!patches[i].apply(patcher, address, size), "mellow", "kextG11HW Failed to apply patch %zu", i);
+		}
+		DBGLOG("mellow", "Loaded AppleIntelICLGraphics!");
+
+		return true;
+
+	} else if (kextG11HWT.loadIndex == index || kextG11HWTA.loadIndex == index) {
+		this->tglHWLoaded = true;
+		auto *activeKext = (kextG11HWTA.loadIndex == index) ? &kextG11HWTA : &kextG11HWT;
+		SYSLOG("mellow", "init AppleIntelTGLGraphics (HW accelerator)");
+		injectAcceleratorPersonality(true);
+		MellowCore::callback->setRMMIOIfNecessary();
+		SYSLOG("mellow", "V165: setRMMIO done, starting symbol resolve");
+
+		// V144: Resolve the Blit3D context params struct and the ExtendedContext initWithOptions.
+		// Blit3DExtendedCtxParams is a static data symbol — address passed as param_2 to initWithOptions.
+		// Without these, IGHardwareExtendedContextinitWithOptions is called with param_2=0
+		// causing it to return 0 (ok=0) and leave ctx+0xb8=NULL → submitBlit crash at +0x28e.
+		{
+			SolveRequestPlus solveRequests[] = {
+				{"__ZN23IGHardwareBlit3DContext17ExtendedCtxParamsE", this->Blit3DExtendedCtxParams},
+			};
+			SYSLOG_COND(!SolveRequestPlus::solveAll(patcher, index, solveRequests, address, size), "mellow",
+			            "V144: Failed to resolve Blit3DExtendedCtxParams");
+		}
+
+		const bool wegCoexist = isWEGCoexistMode();
+		const bool forceFullMTL = shouldForceFullMetalPath();
+
+		RouteRequestPlus requests[] = {
+			
+			 {"__ZN16IntelAccelerator20_PAVPCommandCallbackEP8OSObject22PAVPSessionCommandID_tjPj", wrapPavpSessionCallback, this->orgPavpSessionCallback},
+			
+			// V163: Hook startGraphicsEngine to clear PERCTX_PREEMPT_CTRL (FF_SLICE_CS_CHICKEN1 bit 14)
+			// immediately after the TGL kext enables it. The TGL kext writes 0x40004000 to reg 0x20E0
+			// (mask=bit14, value=bit14=1). On the non-real-TGL Ultra spoof path this can
+			// freeze the EU thread dispatcher on
+			// first context switch because hardware snapshots the register into the context image DMA
+			// buffer — clearing it here, before any execlist context is created, prevents the bad
+			// value from ever reaching the DMA buffer.
+		 	{"__ZN16IntelAccelerator19startGraphicsEngineEv", startGraphicsEngine, this->ostartGraphicsEngine},
+			{"__ZN16IntelAccelerator18stopGraphicsEngineEv",  stopGraphicsEngine,  this->ostopGraphicsEngine},
+
+			// Preserve scheduler idle decisions; no INSTDONE-based success override.
+			{"__ZNK12IGScheduler59isGpuIdleEv", wrapIGScheduler5IsGpuIdle, this->oIGScheduler5IsGpuIdle},
+			{"__ZNK12IGScheduler49isGpuIdleEv", wrapIGScheduler4IsGpuIdle, this->oIGScheduler4IsGpuIdle},
+
+			// V164: Hook populateResetRegisterList which reads live MMIO values into the per-context
+			// replay list (a batch of MI_LRI commands executed before every context switch).
+			// startGraphicsEngine enables PERCTX_PREEMPT_CTRL then calls populateResetRegisterList,
+			// which snapshots the live 0x4000 into the list. Hardware then replays 0x4000 back to
+			// 0x20E0 on every context switch, overriding any post-hoc MMIO clear.
+			// Fix: clear bit 14 BEFORE calling original so the snapshot captures 0x0000.
+			{"__ZN16IntelAccelerator25populateResetRegisterListEv", populateResetRegisterList, this->opopulateResetRegisterList},
+
+
+			 // V132: Hook task producers so submitBlit never sees a null IGAccelTask on the
+			 // non-real-TGL Ultra spoof path.
+			 {"__ZN16IntelAccelerator17createUserGPUTaskEv", createUserGPUTask, this->ocreateUserGPUTask},
+			 {"__ZN11IGAccelTask11withOptionsEP16IntelAccelerator", igAccelTaskWithOptions, this->oigAccelTaskWithOptions},
+
+			 // V36: Hook readAndClearInterrupts to initialize Gen11 multi-engine GT interrupts.
+			 // Without this, RCS/BCS user interrupts and context-switch notifications may not
+			 // be properly enabled, preventing IOAccelF2 from seeing stamp completions.
+			 // V37: DISABLED — caused boot hang (symbol may not exist in TGL kext, or
+			 // interrupt reprogramming too early causes deadlock/panic).
+			 // {"__ZN16IntelAccelerator23readAndClearInterruptsEPv", readAndClearInterrupts, this->oreadAndClearInterrupts},
+
+			// V119: Route getBlit3DContext so our guard checks context+0xb8 before storing.
+			 // Without this, Apple's original runs, stores a context with +0xb8=NULL to
+			 // that+0x298 (when init path leaves +0xb8 unset), and submitBlit+0x28e crashes.
+			 {"__ZN11IGAccelTask16getBlit3DContextEb", getBlit3DContext, this->ogetBlit3DContext},
+		
+			 // V112: Resolve the NootedBlue Blit3D helpers so the fallback path can
+			 // initialize scratch/context state instead of leaving the blit object empty.
+			 {"__Z31blit3d_initialize_scratch_spaceP16IGAccelSysMemory", blit3d_initialize_scratch_space, this->oblit3d_initialize_scratch_space},
+			 {"__Z15blit3d_init_ctxP23IGHardwareBlit3DContext", blit3d_init_ctx, this->oblit3d_init_ctx},
+			 // V69: ENABLED — original crashes at +0x4c memcpy'ing 68 bytes to unmapped GPU buffer
+			 // at VA 0xfffffff034136000 (page 0xD of context buffer). Our replacement skips the
+			 // dangerous memcpy and logs diagnostic info about the mapping.
+			 {"__ZN23IGHardwareBlit3DContext10initializeEv", IGHardwareBlit3DContextinitialize, this->oIGHardwareBlit3DContextinitialize},
+			 // V143: Register operator new for IGHardwareBlit3DContext so getBlit3DContext can
+			 // actually allocate the context object. Without this, oIGHardwareBlit3DContextoperatornew
+			 // is always null → alloc always returns nullptr → ctx=0 forever → NULL-task submitBlit
+			 // flood → BCS ring WAIT_ON_SCANLINE stall.
+			 {"__ZN23IGHardwareBlit3DContextnwEm", IGHardwareBlit3DContextoperatornew, this->oIGHardwareBlit3DContextoperatornew},
+			 // V508: Hook base-class IGHardwareContext::withOptions to inspect ctx+0xb8 (FIFO
+			 // channel / ring buffer allocation) and dump LRCA page1 via wbinvd+aperture right
+			 // after initWithOptions writes it — determines if RING_START=0 is real or LLC artifact.
+			 {"__ZN17IGHardwareContext11withOptionsEP11IGAccelTaskRK23IGHardwareContextParamsh", IGHardwareContextwithOptions, this->oIGHardwareContextwithOptions},
+			 // V509: Hook base-class IGHardwareContext::initWithOptions — repair LRCA page1 when
+			 // restoreFromSafeImage skips g_cInitGfxRingContextRCS memcpy (leaves DW1=0x00ffffff).
+			 // Writes the Gen12 ring-context MI_LRI block required by the non-real-TGL
+			 // Ultra spoof path's ExecList context restore.
+			 {"__ZN17IGHardwareContext15initWithOptionsEP11IGAccelTaskRK23IGHardwareContextParamsh", IGHardwareContextinitWithOptions, this->oIGHardwareContextinitWithOptions},
+
+			 // V144: Hook IGHardwareExtendedContext::initWithOptions so it actually runs with
+			 // the resolved Blit3DExtendedCtxParams. Without this, oIGHardwareExtendedContextinitWithOptions
+			 // is null → init returns 0 → ctx+0xb8 stays NULL → submitBlit+0x28e crash.
+			 {"__ZN25IGHardwareExtendedContext15initWithOptionsEP11IGAccelTaskRK31IGHardwareExtendedContextParams", IGHardwareExtendedContextinitWithOptions, this->oIGHardwareExtendedContextinitWithOptions},
+			 {"__ZNK14IGMappedBuffer9getMemoryEv", IGMappedBuffergetMemory, this->oIGMappedBuffergetMemory},
+			 
+			 // V120: Hook submitBlit to protect against nullptr context.
+			 // Even with getBlit3DContext hooked and returning null, Apple's blitCopy
+			 // doesn't check the return value and passes it straight to submitBlit.
+			 // submitBlit+0x28e unconditionally dereferences param_5+0xb8 (where param_5
+			 // is the Blit3D or Blit2D context) -> page fault. 
+			 {"__ZN16IntelAccelerator10submitBlitEP15blit3d_params_tRK8IGVectorI11rect_pair_t25IGIOMallocAllocatorPolicyEP11IGAccelTaskb", submitBlit, this->osubmitBlit},
+
+			 // V121: Hook IGAccelSegmentResourceList::initBlitUsage which also crashes at +0x17
+			 // dereferencing [member+0xb8] when the Blit3D context was never populated
+			 // (same root cause: incomplete Blit context init leaves context+0xb8 null).
+			 // The crash arrives via: coalesceSegment -> prepare -> initBlitUsage.
+			 {"__ZN26IGAccelSegmentResourceList13initBlitUsageEv", initBlitUsage, this->oinitBlitUsage},
+
+			 // V122: markBlitUsage+0x17 has the identical [ctx+0xb8] dereference and is called
+			 // from prepare+0x2a immediately after initBlitUsage. Must be guarded too.
+			 {"__ZN26IGAccelSegmentResourceList13markBlitUsageEv", markBlitUsage, this->omarkBlitUsage},
+
+			 // V123b: Register the prepare hook — the implementation (returning 0 early) existed
+			 // but was never routed, so Apple's original kept calling initBlitUsage/markBlitUsage.
+			 {"__ZN26IGAccelSegmentResourceList7prepareEv", IGAccelSegmentResourceListprepare, this->oIGAccelSegmentResourceListprepare},
+
+			 // V124: IGAccelCommandQueue::beginCoalescedSegment+0x2f dereferences [member+0xb8]
+			 // (same null as the inherited crashes: context is not initialized on the
+			 // non-real-TGL Ultra spoof path).
+			 // Called from processAndSubmitCoalescedSegments even when prepare returns 0.
+			 // NOTE: processCommandBuffer (the caller) calls [off_C8178+0xA30] which IS the
+			 // actual render submission — hooking that would break display. So we guard here
+			 // at the lowest safe level instead.
+			 {"__ZN19IGAccelCommandQueue21beginCoalescedSegmentEv", beginCoalescedSegment, this->obeginCoalescedSegment},
+
+			 // Preserve actual GPU ordering: unsupported barriers fail, while explicitly
+			 // selected original barriers retain their arguments and backend status.
+			 {"__Z17barrierSubmissionR19IGAccelCommandQueueR16IntelAcceleratorR24IGAccelCommandDescriptorR12IOAccelEventtPKt", barrierSubmission, this->obarrierSubmission},
+			 
+			 // V117: Hook getBlit2DContext for null-guarding only.
+			 // submitBlit expects a real Blit2D context layout and unconditionally reads
+			 // [ctx+0xb8], so we must never substitute depth/color/3D context objects here.
+			 {"__ZN11IGAccelTask16getBlit2DContextEb", getBlit2DContext, this->ogetBlit2DContext},
+
+			 // Resolve-context getters are used by barrierSubmission and are generally safe.
+			 {"__ZN11IGAccelTask22getDepthResolveContextEb", getDepthResolveContext, this->ogetDepthResolveContext},
+			 {"__ZN11IGAccelTask22getColorResolveContextEb", getColorResolveContext, this->ogetColorResolveContext},
+			 
+		 };
+		SYSLOG("mellow", "V165: routing %zu HW accelerator symbols", sizeof(requests)/sizeof(requests[0]));
+		PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, requests, address, size), "mellow","Failed to route symbols");
+		SYSLOG("mellow", "V165: HW accelerator symbols routed OK");
+
+		{
+			RouteRequestPlus startRoute[] = {
+				{"__ZN16IntelAccelerator5startEP9IOService", start, this->ostart},
+			};
+			if (RouteRequestPlus::routeAll(patcher, index, startRoute, address, size)) {
+				SYSLOG("mellow", "V44: Hooked IntelAccelerator::start");
+			} else {
+				SYSLOG("mellow", "V44: IntelAccelerator::start symbol not found; Gen11::start logs unavailable on this build");
+			}
+		}
+
+		{
+			// loadGuCBinary: always route — WEG's firmware path is Mojave-gated and dead on Sonoma.
+			// Without this hook, no GuC binary loads at all in coexist mode → ring dead.
+			RouteRequestPlus firmwareRoute[] = {
+				{"__ZN13IGHardwareGuC13loadGuCBinaryEv", loadGuCBinary, this->oloadGuCBinary},
+			};
+			PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, firmwareRoute, address, size), "mellow", "Failed to route loadGuCBinary");
+		}
+
+		if (!MellowCore::callback->isRealTGL) {
+			// Observe deviceStart without overriding readiness failures. A non-null
+			// MTLDevice is not evidence that the hardware has executed any commands.
+			RouteRequestPlus devStartRoute[] = {
+				{"__ZN13IGAccelDevice11deviceStartEv", deviceStart, this->odeviceStart},
+			};
+			if (RouteRequestPlus::routeAll(patcher, index, devStartRoute, address, size)) {
+				SYSLOG("mellow", "ACCEL: hooked IGAccelDevice::deviceStart with original status preserved");
+			} else {
+				SYSLOG("mellow", "ACCEL: IGAccelDevice::deviceStart symbol not found; no readiness bypass applied");
+			}
+		}
+
+		if (!wegCoexist || forceFullMTL) {
+			RouteRequestPlus coexistOffRoutes[] = {
+				// ForceWake: replace Apple's SafeForceWakeMultithreaded with i915-ported version.
+				// Apple's code uses 90ms timeouts and no fallback; ours uses 50ms + reserve-bit fallback.
+				// The original domain mapping was broken (d<<1 loop misaligned Apple's 3-bit dom bitmap).
+				{"__ZN16IntelAccelerator26SafeForceWakeMultithreadedEbjj", forceWake, this->oforceWake},
+			};
+			PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, coexistOffRoutes, address, size), "mellow", "Failed to route coexist-off symbols");
+			if (forceFullMTL && wegCoexist) {
+				SYSLOG("mellow", "FULL_MTL: forcing SafeForceWakeMultithreaded route despite coexist mode");
+			}
+		}
+
+		if (!wegCoexist) {
+			RouteRequestPlus gpuInfoRoute[] = {
+				{"__ZN16IntelAccelerator10getGPUInfoEv", getGPUInfo, this->ogetGPUInfo},
+			};
+			PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, gpuInfoRoute, address, size), "mellow", "Failed to route getGPUInfo");
+		}
+
+		// SKU/device-ID panic bypass (verified @ 0x23c1d in LE binary)
+		// Original: mov edi,[rsi]; cmp edi,0xDEAFBEEE; jg sentinel; cmp edi,0x9A408086; je ok; cmp edi,0x9A488086; je ok; call panic
+		// Patch:    nop the sentinel-jg + change last "je ok" → "jmp ok" → always jumps to GT2 init path.
+		// Necessary: our spoofed 0x9A498086 is not in the whitelist (0x9A408086 / 0x9A488086).
+		static const uint8_t f3[] = {
+			0x8b, 0x3e, 0x81, 0xff, 0xee, 0xbe, 0xaf, 0xde, 0x7f, 0x15, 0x81, 0xff, 0x86, 0x80, 0x40, 0x9a, 0x74, 0x2d
+		};
+		static const uint8_t r3[] = {
+			0x8b, 0x3e, 0x81, 0xff, 0xee, 0xbe, 0xaf, 0xde, 0x90, 0x90, 0x81, 0xff, 0x86, 0x80, 0x40, 0x9a, 0xeb, 0x2d
+		};
+		// GT tier override: stores GT1 (0x1) instead of GT2 (0x2) at IGAccelDevice+0x1120.
+		// Disabled – 0x9A49 is GT2 so the default path (which writes 0x2) is correct.
+		static const uint8_t f3a[] = {//gt1
+			0x41, 0xc7, 0x86, 0x20, 0x11, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0xe9, 0xda, 0xfc, 0xff, 0xff
+		};
+		static const uint8_t r3a[] = {
+			0x41, 0xc7, 0x86, 0x20, 0x11, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0xe9, 0xda, 0xfc, 0xff, 0xff
+		};
+		
+		// L3BankCount bypass (verified @ 0x28776 in LE binary)
+		// Original: topology-gated conditionals (cmp slices/eu/threads) → only set L3BankCount=8 for a specific config.
+		// Patch:    NOP all conditional branches → always store L3BankCount=8 @ IGAccelDevice+0x1164.
+		static const uint8_t f3b[] = {// jmp L3BankCount
+			0x74, 0x23, 0x83, 0xf9, 0x02, 0x0f, 0x85, 0x89, 0x01, 0x00, 0x00, 0x83, 0xfe, 0x01, 0x75, 0x59, 0x83, 0xfa, 0x0c, 0x75, 0x54, 0x41, 0xc7, 0x87, 0x64, 0x11, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00
+		};
+		static const uint8_t r3b[] = {
+			0x90, 0x90, 0x83, 0xf9, 0x02, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x83, 0xfe, 0x01, 0x90, 0x90, 0x83, 0xfa, 0x0c, 0x90, 0x90, 0x41, 0xc7, 0x87, 0x64, 0x11, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00
+		};
+		
+		// MaxEUPerSubSlice override (verified @ 0x28692 in LE binary)
+		// Original: MaxEUPerSubSlice = 8 - popcount(EUDisableFuse)  → stores result at IGAccelDevice+0x116c
+		// Patch:    hardcodes MaxEUPerSubSlice=8 for the Ultra compatibility topology.
+		//           TGL binary counts sub-slices (SS), not dual sub-slices (DSS).
+		//           Linux shows 16 EU/DSS = 8 EU/SS since each DSS has 2 SS.
+		static const uint8_t f3bb[] = {//MaxEUPerSubSlice
+			0xbe, 0x08, 0x00, 0x00, 0x00, 0x29, 0xde, 0x41, 0x89, 0xb7, 0x6c, 0x11, 0x00, 0x00, 0x41, 0x8b, 0x8f, 0x58, 0x11, 0x00, 0x00
+		};
+		static const uint8_t r3bb[] = {
+			0xbe, 0x08, 0x00, 0x00, 0x00, 0x90, 0x90, 0x41, 0x89, 0xb7, 0x6c, 0x11, 0x00, 0x00, 0x41, 0x8b, 0x8f, 0x58, 0x11, 0x00, 0x00
+		};
+		
+		// NumSubSlices override (verified @ 0x28654 in LE binary)
+		// Original: mov ebx,[rbp-0x30]; popcnt esi,ebx; add esi,esi; mov [r15+0x1158],esi
+		//           → NumSubSlices = popcount(subsliceMask) * 2  (hardware-detected)
+		// Patch:    hardcodes NumSubSlices to the selected Ultra device's compatibility count.
+		static const uint8_t f3bbb[] = {//NumSubSlices
+			0x8b, 0x5d, 0xd0, 0xf3, 0x0f, 0xb8, 0xf3, 0x01, 0xf6, 0x41, 0x89, 0xb7, 0x58, 0x11, 0x00, 0x00
+		};
+		static uint8_t r3bbb[] = {
+			0x8b, 0x5d, 0xd0, 0xbe, 0x08, 0x00, 0x00, 0x00, 0x90, 0x41, 0x89, 0xb7, 0x58, 0x11, 0x00, 0x00
+		};
+		
+		// GPU caps override (disabled) – would change MaxSlices 6→5, SARation 2→1, MaxEU/SS 6→5.
+		// Leave disabled unless acceleration shows wrong Metal tier/feature set.
+		static const uint8_t f4[] = {// CAPS
+			0xc7, 0x83, 0x48, 0x11, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x8b, 0x83, 0x58, 0x11, 0x00, 0x00, 0xd1, 0xe8, 0xba, 0x02, 0x00, 0x00, 0x00, 0xbe, 0x06, 0x00, 0x00, 0x00
+		};
+		static const uint8_t r4[] = {
+			0xc7, 0x83, 0x48, 0x11, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x8b, 0x83, 0x58, 0x11, 0x00, 0x00, 0x90, 0x90, 0xba, 0x01, 0x00, 0x00, 0x00, 0xbe, 0x05, 0x00, 0x00, 0x00
+		};
+
+		// Device readiness branches stay intact: failed BCS startup must fail.
+
+		// V139: non-real-TGL Ultra spoof-path mitigation for GP faults inside
+		// blit3d_submit_rectlist.
+		// Some command-buffer pointers on spoofed paths are 8-byte aligned; Apple emits
+		// aligned SSE stores (movaps [r9+...], xmmN), which faults on unaligned targets.
+		// Convert the hot-path stores to movups to tolerate unaligned command pointers.
+		static const uint8_t f_v139_movaps_10[] = {
+			0x41, 0x0f, 0x29, 0x51, 0x10, 0x0f, 0x28, 0xd4
+		};
+		static const uint8_t r_v139_movaps_10[] = {
+			0x41, 0x0f, 0x11, 0x51, 0x10, 0x0f, 0x28, 0xd4
+		};
+		static const uint8_t f_v139_movaps_30[] = {
+			0x66, 0x0f, 0x3a, 0x21, 0xd4, 0x23, 0x41, 0x0f, 0x29, 0x51, 0x30
+		};
+		static const uint8_t r_v139_movaps_30[] = {
+			0x66, 0x0f, 0x3a, 0x21, 0xd4, 0x23, 0x41, 0x0f, 0x11, 0x51, 0x30
+		};
+		static const uint8_t f_v139_movaps_50[] = {
+			0x0f, 0x57, 0xd2, 0x0f, 0x16, 0xd4, 0x41, 0x0f, 0x29, 0x51, 0x50
+		};
+		static const uint8_t r_v139_movaps_50[] = {
+			0x0f, 0x57, 0xd2, 0x0f, 0x16, 0xd4, 0x41, 0x0f, 0x11, 0x51, 0x50
+		};
+		static const uint8_t f_v139_movaps_00[] = {
+			0x41, 0x0f, 0x29, 0x09
+		};
+		static const uint8_t r_v139_movaps_00[] = {
+			0x41, 0x0f, 0x11, 0x09
+		};
+		static const uint8_t f_v139_movaps_20[] = {
+			0x41, 0x0f, 0x29, 0x49, 0x20
+		};
+		static const uint8_t r_v139_movaps_20[] = {
+			0x41, 0x0f, 0x11, 0x49, 0x20
+		};
+		static const uint8_t f_v139_movaps_40[] = {
+			0x41, 0x0f, 0x29, 0x59, 0x40
+		};
+		static const uint8_t r_v139_movaps_40[] = {
+			0x41, 0x0f, 0x11, 0x59, 0x40
+		};
+		static const uint8_t f_v141_movapd_00[] = {
+			0x66, 0x41, 0x0f, 0x29, 0x09
+		};
+		static const uint8_t r_v141_movapd_00[] = {
+			0x66, 0x41, 0x0f, 0x11, 0x09
+		};
+
+		// V140: Cover the switch cases that use contextual aligned stores at [r9] / [r9+20].
+		// These are the remaining sites after V139's generic signatures.
+		static const uint8_t f_v140_default_store00[] = {
+			0x0f, 0x28, 0xcb, 0x66, 0x0f, 0x15, 0xcc, 0x41, 0x0f, 0x29, 0x09,
+			0x0f, 0x28, 0xcb, 0x0f, 0xc6, 0xcc, 0xcc
+		};
+		static const uint8_t r_v140_default_store00[] = {
+			0x0f, 0x28, 0xcb, 0x66, 0x0f, 0x15, 0xcc, 0x41, 0x0f, 0x11, 0x09,
+			0x0f, 0x28, 0xcb, 0x0f, 0xc6, 0xcc, 0xcc
+		};
+		static const uint8_t f_v140_default_store20[] = {
+			0x0f, 0xc6, 0xcc, 0xcc, 0x41, 0x0f, 0x29, 0x49, 0x20, 0x0f, 0x16, 0xdc
+		};
+		static const uint8_t r_v140_default_store20[] = {
+			0x0f, 0xc6, 0xcc, 0xcc, 0x41, 0x0f, 0x11, 0x49, 0x20, 0x0f, 0x16, 0xdc
+		};
+		static const uint8_t f_v140_case4_store00[] = {
+			0x0f, 0x28, 0xcc, 0xf2, 0x0f, 0x12, 0xcb, 0x66, 0x41, 0x0f, 0x29, 0x09,
+			0x0f, 0x28, 0xcb, 0x0f, 0xc6, 0xcc, 0xc6
+		};
+		static const uint8_t r_v140_case4_store00[] = {
+			0x0f, 0x28, 0xcc, 0xf2, 0x0f, 0x12, 0xcb, 0x66, 0x41, 0x0f, 0x11, 0x09,
+			0x0f, 0x28, 0xcb, 0x0f, 0xc6, 0xcc, 0xc6
+		};
+		static const uint8_t f_v140_case4_store20[] = {
+			0x0f, 0xc6, 0xcc, 0xc6, 0x41, 0x0f, 0x29, 0x49, 0x20, 0x0f, 0xc6, 0xdc, 0x4e
+		};
+		static const uint8_t r_v140_case4_store20[] = {
+			0x0f, 0xc6, 0xcc, 0xc6, 0x41, 0x0f, 0x11, 0x49, 0x20, 0x0f, 0xc6, 0xdc, 0x4e
+		};
+
+		{
+			// Split the spoof identity bypass from the Ultra compatibility patches.
+			LookupPatchPlus const patchesAlways[] = {
+				// SKU/device-ID bypass — needed for both (0x9A49 not in whitelist)
+				{activeKext, f3, r3, arrsize(f3),	1},
+			};
+			PANIC_COND(!LookupPatchPlus::applyAll(patcher, patchesAlways, address, size), "mellow",
+				"kextG11HWT Failed to apply base patches!");
+			
+			if (!MellowCore::callback->isRealTGL) {
+				const uint8_t compatSubSlices = getUltraCompatSubSliceCount(MellowCore::callback->deviceId);
+				PANIC_COND(compatSubSlices == 0, "mellow", "Missing Ultra compatibility topology for device 0x%04x",
+				           MellowCore::callback->deviceId);
+				r3bbb[4] = compatSubSlices;
+
+				// Ultra spoof path: inherited topology patches; readiness checks remain intact.
+				LookupPatchPlus const patchesUltra[] = {
+					{activeKext, f3b, r3b, arrsize(f3b),	1},      // L3BankCount=8
+					{activeKext, f3bb, r3bb, arrsize(f3bb),	1},    // MaxEU/SS=8
+					{activeKext, f3bbb, r3bbb, arrsize(f3bbb),	1},// NumSubSlices
+				};
+				PANIC_COND(!LookupPatchPlus::applyAll(patcher, patchesUltra, address, size), "mellow",
+					"kextG11HWT Failed to apply Ultra compatibility patches!");
+
+				// Optional SSE unaligned-store mitigation for blit3d_submit_rectlist.
+				LookupPatchPlus const patchV139Store10 {
+					activeKext,
+					f_v139_movaps_10,
+					r_v139_movaps_10,
+					arrsize(f_v139_movaps_10),
+					1
+				};
+				LookupPatchPlus const patchV139Store30 {
+					activeKext,
+					f_v139_movaps_30,
+					r_v139_movaps_30,
+					arrsize(f_v139_movaps_30),
+					1
+				};
+				LookupPatchPlus const patchV139Store50 {
+					activeKext,
+					f_v139_movaps_50,
+					r_v139_movaps_50,
+					arrsize(f_v139_movaps_50),
+					1
+				};
+				LookupPatchPlus const patchV139Store00 {
+					activeKext,
+					f_v139_movaps_00,
+					r_v139_movaps_00,
+					arrsize(f_v139_movaps_00),
+					1
+				};
+				LookupPatchPlus const patchV139Store00Skip1 {
+					activeKext,
+					f_v139_movaps_00,
+					r_v139_movaps_00,
+					arrsize(f_v139_movaps_00),
+					1,
+					1
+				};
+				LookupPatchPlus const patchV139Store00Skip2 {
+					activeKext,
+					f_v139_movaps_00,
+					r_v139_movaps_00,
+					arrsize(f_v139_movaps_00),
+					1,
+					2
+				};
+				LookupPatchPlus const patchV139Store00Skip3 {
+					activeKext,
+					f_v139_movaps_00,
+					r_v139_movaps_00,
+					arrsize(f_v139_movaps_00),
+					1,
+					3
+				};
+				LookupPatchPlus const patchV139Store00Skip4 {
+					activeKext,
+					f_v139_movaps_00,
+					r_v139_movaps_00,
+					arrsize(f_v139_movaps_00),
+					1,
+					4
+				};
+				LookupPatchPlus const patchV139Store00Skip5 {
+					activeKext,
+					f_v139_movaps_00,
+					r_v139_movaps_00,
+					arrsize(f_v139_movaps_00),
+					1,
+					5
+				};
+				LookupPatchPlus const patchV139Store20 {
+					activeKext,
+					f_v139_movaps_20,
+					r_v139_movaps_20,
+					arrsize(f_v139_movaps_20),
+					1
+				};
+				LookupPatchPlus const patchV139Store20Skip1 {
+					activeKext,
+					f_v139_movaps_20,
+					r_v139_movaps_20,
+					arrsize(f_v139_movaps_20),
+					1,
+					1
+				};
+				LookupPatchPlus const patchV139Store20Skip2 {
+					activeKext,
+					f_v139_movaps_20,
+					r_v139_movaps_20,
+					arrsize(f_v139_movaps_20),
+					1,
+					2
+				};
+				LookupPatchPlus const patchV139Store20Skip3 {
+					activeKext,
+					f_v139_movaps_20,
+					r_v139_movaps_20,
+					arrsize(f_v139_movaps_20),
+					1,
+					3
+				};
+				LookupPatchPlus const patchV139Store40 {
+					activeKext,
+					f_v139_movaps_40,
+					r_v139_movaps_40,
+					arrsize(f_v139_movaps_40),
+					1
+				};
+				LookupPatchPlus const patchV141StoreMovapd00 {
+					activeKext,
+					f_v141_movapd_00,
+					r_v141_movapd_00,
+					arrsize(f_v141_movapd_00),
+					1
+				};
+				LookupPatchPlus const patchV140DefaultStore00 {
+					activeKext,
+					f_v140_default_store00,
+					r_v140_default_store00,
+					arrsize(f_v140_default_store00),
+					1
+				};
+				LookupPatchPlus const patchV140DefaultStore20 {
+					activeKext,
+					f_v140_default_store20,
+					r_v140_default_store20,
+					arrsize(f_v140_default_store20),
+					1
+				};
+				LookupPatchPlus const patchV140Case4Store00 {
+					activeKext,
+					f_v140_case4_store00,
+					r_v140_case4_store00,
+					arrsize(f_v140_case4_store00),
+					1
+				};
+				LookupPatchPlus const patchV140Case4Store20 {
+					activeKext,
+					f_v140_case4_store20,
+					r_v140_case4_store20,
+					arrsize(f_v140_case4_store20),
+					1
+				};
+				int v139Applied = 0;
+				v139Applied += patchV139Store10.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store30.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store50.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store00.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store00Skip1.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store00Skip2.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store00Skip3.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store00Skip4.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store00Skip5.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store20.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store20Skip1.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store20Skip2.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store20Skip3.apply(patcher, address, size) ? 1 : 0;
+				v139Applied += patchV139Store40.apply(patcher, address, size) ? 1 : 0;
+				SYSLOG("mellow", "V139: blit3d unaligned-store mitigation applied %d/12 signatures", v139Applied);
+				int v141Applied = 0;
+				v141Applied += patchV141StoreMovapd00.apply(patcher, address, size) ? 1 : 0;
+				SYSLOG("mellow", "V141: blit3d movapd mitigation applied %d/1 signatures", v141Applied);
+				int v140Applied = 0;
+				v140Applied += patchV140DefaultStore00.apply(patcher, address, size) ? 1 : 0;
+				v140Applied += patchV140DefaultStore20.apply(patcher, address, size) ? 1 : 0;
+				v140Applied += patchV140Case4Store00.apply(patcher, address, size) ? 1 : 0;
+				v140Applied += patchV140Case4Store20.apply(patcher, address, size) ? 1 : 0;
+				SYSLOG("mellow", "V140: contextual blit3d store mitigation applied %d/4 signatures", v140Applied);
+
+				SYSLOG("mellow", "Applied Ultra compatibility patches: device=0x%04x subslices=%u maxEU/SS=8 totalEU=%u",
+				       MellowCore::callback->deviceId, compatSubSlices, compatSubSlices * 8U);
+			} else {
+				SYSLOG("mellow", "V52: Real TGL — skipping topology hardcodes and BCS bypass");
+			}
+		}
+
+		SYSLOG("mellow", "Loaded AppleIntelTGLGraphics for Ultra device 0x%04x",
+			   MellowCore::callback->deviceId);
+
+		return true;
+	}
+
+    return false;
+}
+
+void *ccont;
+void *ccont2;  // AppleIntelBaseController pointer (captured in FBMemMgr_Init)
+
+//FB Hooks
+
+uint64_t Gen11::AppleIntelScalerinit(AppleIntel::AppleIntelScaler *that, uint32_t pipeIndex)
+{
+	auto ret = FunctionCast(AppleIntelScalerinit, callback->oAppleIntelScalerinit)(that, pipeIndex);
+	that->fWriteAccessor = ccont;
+	that->fController    = reinterpret_cast<AppleIntel::AppleIntelBaseController *>(ccont2);
+	return ret;
+}
+
+uint64_t Gen11::AppleIntelPlaneinit(AppleIntel::AppleIntelPlane *that, uint32_t pipeIndex)
+{
+	auto ret = FunctionCast(AppleIntelPlaneinit, callback->oAppleIntelPlaneinit)(that, pipeIndex);
+	getMember<void *>(that, 0x90) = ccont; // fWriteAccessor — ccont must NOT go to real fRegCache at +0x88
+
+	return ret;
+}
+
+void Gen11::disableScaler(AppleIntel::AppleIntelScaler *that, bool disable)
+{
+	that->fWriteAccessor = ccont;
+	FunctionCast(disableScaler, callback->odisableScaler)(that, disable);
+}
+
+void Gen11::enablePlane(AppleIntel::AppleIntelPlane *that, bool enable)
+{
+	getMember<void *>(that, 0x90) = ccont; // fWriteAccessor — ccont must NOT go to real fRegCache at +0x88
+	FunctionCast(enablePlane, callback->oenablePlane)(that, enable);
+
+}
+
+void Gen11::programPipeScaler(AppleIntel::AppleIntelScaler *that, AppleIntel::AppleIntelDisplayPath *displayPath)
+{
+	that->fWriteAccessor = ccont;
+	FunctionCast(programPipeScaler, callback->oprogramPipeScaler)(that, displayPath);
+}
+
+// V400: AppleIntelScaler::setupPipeScaler(AppleIntelDisplayPath *, CRTCParams *)
+// ORIGIN-LEVEL FIX for seam-joining scaler wrongly enabled on single-pipe panels.
+//
+// Apple's setupPipeScaler enters the "Seam joining scaler enabled" branch when
+// a byte gate is non-zero — disasm reveals:
+//   rax = this->[+0x10]                     (AppleIntelScaler's controller ptr)
+//   if [rax+0x3FD8] == 0xFFFFFFFF (device-tree absent on the non-real-TGL
+//   Ultra spoof path)
+//       rax += 0x1E5
+//   else
+//       rax += 0x1E3
+//   if [rax] != 0:  enable seam joining
+//   else:           skip seam joining
+//
+// Linux i915 on this exact hardware confirms `bigjoiner: no, pipes: 0x0` —
+// dual-pipe joining must NOT be active for this single-pipe 2560x1600 eDP panel.
+// Apple is doing it anyway, producing the per-row offset / fragmented pattern.
+//
+// Fix: before calling original, zero BOTH gate bytes (+0x1E3 and +0x1E5) at
+// this->[+0x10]. Belt-and-suspenders covers both device-tree-present and absent
+// branches. Origin-level — modifies Apple's own decision input, not MMIO. The
+// rest of Apple's code paths run unchanged with seam joining naturally skipped.
+//
+// Gated on !isRealTGL since real TGL doesn't need this.
+//
+// Post-call still logs CRTCParams scaler fields to verify SEAM_EXCESS==0.
+void Gen11::setupPipeScaler(AppleIntel::AppleIntelScaler *that, AppleIntel::AppleIntelDisplayPath *path, AppleIntel::CRTCParams *params)
+{
+	// ccont fixup (same as programPipeScaler) — needed because V204 init hooks
+	// don't always populate ccont; original would crash on this=NULL ccont path.
+	that->fWriteAccessor = ccont;
+
+
+	// Pre-call snapshot — captures values BEFORE setupPipeScaler runs so we can
+	// tell whether THIS function sets PIPE_SEAM_EXCESS=0x1 or whether something
+	// upstream did. Also captures the gate bytes our zero-the-gate attempt targeted.
+	uint32_t pre_seam = 0, pre_winsz = 0, pre_winpos = 0, pre_hphase = 0;
+	uint8_t pre_gate1E3 = 0xFF, pre_gate1E5 = 0xFF;
+	bool have_base = false;
+	if (MellowCore::callback != nullptr && !MellowCore::callback->isRealTGL) {
+		if (params != nullptr) {
+			pre_seam   = params->PIPE_SEAM_EXCESS;
+			pre_winsz  = params->PS_PS_WIN_SZ;
+			pre_winpos = params->PS_PS_WIN_POS;
+			pre_hphase = params->PS_HPHASE;
+		}
+		if (that != nullptr) {
+			auto *base = reinterpret_cast<uint8_t *>(that->fController);
+			if (base != nullptr) {
+				have_base    = true;
+				pre_gate1E3  = base[0x1E3];
+				pre_gate1E5  = base[0x1E5];
+				// Still try the gate clear — harmless if not the right gate.
+				base[0x1E3]  = 0;
+				base[0x1E5]  = 0;
+			}
+		}
+	}
+
+	FunctionCast(setupPipeScaler, callback->osetupPipeScaler)(that, path, params);
+
+	if (MellowCore::callback == nullptr || MellowCore::callback->isRealTGL || params == nullptr)
+		return;
+
+	static int v400Count = 0;
+	if (v400Count >= 12) return;
+	++v400Count;
+
+	// PIPE_SRCSZ per Intel spec: high 16 = horizontal-1, low 16 = vertical-1.
+	const uint32_t src_w = ((params->PIPE_SRCSZ >> 16) & 0xFFFF) + 1;
+	const uint32_t src_h = (params->PIPE_SRCSZ & 0xFFFF) + 1;
+	SYSLOG("mellow", "V400[%d]: setupPipeScaler %s gates[+0x1E3,+0x1E5]=(0x%02x,0x%02x) "
+		   "PRE: SEAM=0x%x WINSZ=0x%x WINPOS=0x%x HPHASE=0x%x | "
+		   "POST: SRC=%ux%u SEAM=0x%x WINSZ=0x%x WINPOS=0x%x HPHASE=0x%x "
+		   "HTOTAL=0x%x VTOTAL=0x%x TRANS_CONF=0x%x",
+		   v400Count, have_base ? "base-ok" : "NO-base",
+		   pre_gate1E3, pre_gate1E5,
+		   pre_seam, pre_winsz, pre_winpos, pre_hphase,
+		   src_w, src_h, params->PIPE_SEAM_EXCESS, params->PS_PS_WIN_SZ, params->PS_PS_WIN_POS, params->PS_HPHASE,
+		   params->TRANS_HTOTAL, params->TRANS_VTOTAL, params->TRANS_CONF);
+}
+
+// V401: AppleIntelBaseController::paramsSurfCompare — READ-ONLY logger.
+// Fires per flip. Apple uses the return value to decide whether to fully reprogram
+// the plane. We just log the inputs.
+bool Gen11::paramsSurfCompare(AppleIntel::AppleIntelBaseController *that,
+                              AppleIntel::CRTCParams *p1, AppleIntel::CRTCParams *p2,
+                              AppleIntel::PLANEPARAMS *pl1, AppleIntel::PLANEPARAMS *pl2)
+{
+	// V408: force linear tiling in the NEW (pl2) PLANEPARAMS before the comparison.
+	// hwRegsNeedUpdate has no PLANEPARAMS argument — it cannot fix tiling there.
+	// paramsSurfCompare is the last point where pl2 can be patched before its values
+	// trigger raWriteRegister32 writes for PLANE_CTL and PLANE_STRIDE.
+	// Old (pl1/hardware) is already linear from UEFI; patching pl2 to match suppresses
+	// the X-tiled commit without any MMIO intercept.
+	/*if (MellowCore::callback && !MellowCore::callback->isRealTGL && pl2) {
+		pl2->PLANE_CTL    = (pl2->PLANE_CTL & ~(0x7u << 10));  // bits[12:10] = 000 → linear
+		pl2->PLANE_STRIDE = 0xa0;                               // 2560×4 / 64 = 160 = 0xa0
+	}*/
+
+	// Capture Apple's natural values BEFORE any force, for V401 logging.
+	uint32_t nat_ctl_pl1    = pl1 ? pl1->PLANE_CTL    : 0;
+	uint32_t nat_stride_pl1 = pl1 ? pl1->PLANE_STRIDE : 0;
+	uint32_t nat_surf_pl1   = pl1 ? pl1->PLANE_SURF   : 0;
+	uint32_t nat_ctl_pl2    = pl2 ? pl2->PLANE_CTL    : 0;
+	uint32_t nat_stride_pl2 = pl2 ? pl2->PLANE_STRIDE : 0;
+	uint32_t nat_surf_pl2   = pl2 ? pl2->PLANE_SURF   : 0;
+
+	if (!MellowCore::callback->isRealTGL && pl2) {
+		pl2->PLANE_CTL    = (pl2->PLANE_CTL & ~(0x7u << 10));  // bits[12:10] = 000 → linear
+		pl2->PLANE_STRIDE = 0xa0;                               // 2560×4 / 64 = 160 = 0xa0
+	}
+
+	bool ret = FunctionCast(paramsSurfCompare, callback->oparamsSurfCompare)(that, p1, p2, pl1, pl2);
+
+	SYSLOG("mellow", "V401, original ret [%d]", ret);
+	// On the non-real-TGL Ultra spoof path, the ICL/TGL driver's SURF-only fast path
+	// inherited from the ADL-P compatibility profile (used when paramsSurfCompare returns
+	// false) does not work correctly — PLANE_SURF never gets written on
+	// subsequent flips.  Force a full reprogram whenever the surface address actually changes.
+	if (!MellowCore::callback->isRealTGL && !ret && pl1 && pl2) {
+		if (pl1->PLANE_SURF != pl2->PLANE_SURF)
+			ret = true;
+	}
+
+	// Real fix for seam scaler 2: Apple reads PIPE_SEAM_EXCESS and PS_PS_WIN_SZ from p2
+	// AFTER paramsSurfCompare returns, to fill the GPU DSB buffer entry for PS_WIN_SZ_2_A
+	// (0x68274). With the inherited single-pipe ADL-P compatibility profile there is no
+	// seam scaler 2; if the DSB gets
+	// 0x3fff04f there, the pipeline aborts the flip immediately (param2=0 at V405).
+	// Zeroing here prevents any non-zero seam value from reaching the DSB.
+	if (!MellowCore::callback->isRealTGL && p2 != nullptr) {
+		p2->PIPE_SEAM_EXCESS = 0;
+		p2->PS_PS_WIN_SZ     = 0;
+	}
+
+	if (MellowCore::callback == nullptr || MellowCore::callback->isRealTGL) return ret;
+
+	static int v401Count = 0;
+	if (v401Count >= 20) return ret;
+	++v401Count;
+
+	uint32_t old_ctl    = pl1 ? pl1->PLANE_CTL    : 0;
+	uint32_t new_ctl    = pl2 ? pl2->PLANE_CTL    : 0;
+	uint32_t old_stride = pl1 ? pl1->PLANE_STRIDE : 0;
+	uint32_t new_stride = pl2 ? pl2->PLANE_STRIDE : 0;
+	uint32_t old_surf   = pl1 ? pl1->PLANE_SURF   : 0;
+	uint32_t new_surf   = pl2 ? pl2->PLANE_SURF   : 0;
+	uint32_t old_src    = p1  ? p1->PIPE_SRCSZ    : 0;
+	uint32_t new_src    = p2  ? p2->PIPE_SRCSZ    : 0;
+
+	// PLANE_CTL tiling is bits[12:10]: 000=linear, 001=X-tile, 100=Tile4.
+	uint32_t old_tile     = (old_ctl     >> 10) & 0x7;
+	uint32_t new_tile     = (new_ctl     >> 10) & 0x7;
+	uint32_t nat_tile_pl1 = (nat_ctl_pl1 >> 10) & 0x7;
+	uint32_t nat_tile_pl2 = (nat_ctl_pl2 >> 10) & 0x7;
+
+	SYSLOG("mellow", "V401[%d]: paramsSurfCompare ret=%d | "
+		   "OLD: CTL=0x%x tile=%u STRIDE=0x%x SURF=0x%x SRC=0x%x | "
+		   "NEW: CTL=0x%x tile=%u STRIDE=0x%x SURF=0x%x SRC=0x%x | "
+		   "NAT plold: tile_pl1=%u stride_pl1=0x%x surf_pl1=0x%x | "
+		   "NAT: plnew tile_pl2=%u stride_pl2=0x%x surf_pl2=0x%x",
+		   v401Count, ret,
+		   old_ctl, old_tile, old_stride, old_surf, old_src,
+		   new_ctl, new_tile, new_stride, new_surf, new_src,
+		   nat_tile_pl1, nat_tile_pl2, nat_stride_pl1, nat_surf_pl1,
+		   nat_tile_pl2, nat_stride_pl2, nat_surf_pl2);
+
+	return ret;
+}
+
+// V402: AppleIntelBaseController::setupDSCEngineParams — READ-ONLY logger.
+// Logs entry of DSC config path. Linux says DSC=off on our panel; if Apple still
+// goes through this with non-zero DSC bits, the call is the origin of any DSC
+// corruption and disabling it here would replace V300's CRTCParams write-back.
+void Gen11::setupDSCEngineParams(AppleIntel::AppleIntelBaseController *that,
+                                 AppleIntel::AppleIntelFramebuffer *fb,
+                                 AppleIntel::CRTCParams *params,
+								 AppleIntel::AppleIntelDisplayPath *path,
+                                 IODetailedTimingInformationV2 *timing)
+{
+	// Pre-call snapshot: did anyone set DSC fields before us?
+	uint32_t pre_dsc_engine = 0, pre_dsc_joiner = 0, pre_pps0 = 0;
+	if (MellowCore::callback != nullptr && !MellowCore::callback->isRealTGL && params != nullptr) {
+		pre_dsc_engine = params->DSC_ENGINE_SEL;
+		pre_dsc_joiner = params->DSC_JOINER_CTL;
+		pre_pps0       = params->PPS_0;
+	}
+
+	FunctionCast(setupDSCEngineParams, callback->osetupDSCEngineParams)(that, fb, params, path, timing);
+
+	if (MellowCore::callback == nullptr || MellowCore::callback->isRealTGL || params == nullptr) return;
+
+	static int v402Count = 0;
+	if (v402Count >= 6) return;
+	++v402Count;
+
+	const bool dsc_was_enabled = (params->DSC_ENGINE_SEL & 0xF0000000u) != 0;
+	SYSLOG("mellow", "V402[%d]: setupDSCEngineParams %s | "
+		   "PRE: DSC_ENGINE=0x%x DSC_JOINER=0x%x PPS_0=0x%x | "
+		   "POST: DSC_ENGINE=0x%x DSC_JOINER=0x%x PPS_0=0x%x PPS_16=0x%x",
+		   v402Count,
+		   dsc_was_enabled ? "*** DSC ENABLED (vs Linux=off) ***" : "(DSC stayed off)",
+		   pre_dsc_engine, pre_dsc_joiner, pre_pps0,
+		   params->DSC_ENGINE_SEL, params->DSC_JOINER_CTL, params->PPS_0, params->PPS_16);
+}
+
+// V403: AppleIntelBaseController::SetupParams — post-call.
+// Logs full CRTCParams + causation test: force PIPE_SEAM_EXCESS=0 and PS_PS_WIN_SZ=0
+// so any seam-join config Apple set up earlier in the modeset is wiped after the
+// master builder finishes. If fragmentation disappears with these zeroed, seam was
+// the cause. If unchanged, seam fields are irrelevant and we look elsewhere.
+void Gen11::setupParams(AppleIntel::AppleIntelBaseController *that,
+                        AppleIntel::AppleIntelFramebuffer *fb,
+						AppleIntel::AppleIntelDisplayPath *path,
+                        AppleIntel::CRTCParams *params,
+                        const IODetailedTimingInformationV2 *timing)
+{
+	FunctionCast(setupParams, callback->osetupParams)(that, fb, path, params, timing);
+
+	if (MellowCore::callback == nullptr || MellowCore::callback->isRealTGL || params == nullptr) return;
+
+	// V403-zero: causation test. Wipe seam-join CRTCParams fields BEFORE any
+	// post-SetupParams consumer reads them (paramsSurfCompare, MMIO emit etc).
+	uint32_t pre_seam  = params->PIPE_SEAM_EXCESS;
+	uint32_t pre_winsz = params->PS_PS_WIN_SZ;
+	uint32_t pre_hphase = params->PS_HPHASE;
+	if (pre_seam != 0 || pre_winsz != 0 || pre_hphase != 0) {
+		params->PIPE_SEAM_EXCESS = 0;
+		params->PS_PS_WIN_SZ     = 0;
+		params->PS_HPHASE        = 0;
+	}
+
+	static int v403Count = 0;
+	if (v403Count >= 6) return;
+	++v403Count;
+
+	SYSLOG("mellow", "V403[%d]: SetupParams post-call CRTCParams: "
+		   "CLK_SEL=0x%x DDI_FUNC_CTL=0x%x DDI_FUNC_CTL2=0x%x MSA_MISC=0x%x "
+		   "HTOTAL=0x%x HBLANK=0x%x HSYNC=0x%x VTOTAL=0x%x VBLANK=0x%x VSYNC=0x%x "
+		   "PIPE_SRCSZ=0x%x TRANS_CONF=0x%x | "
+		   "PS_WIN_POS=0x%x | PRE: SEAM=0x%x WINSZ=0x%x HPHASE=0x%x -> NOW 0 | "
+		   "DSC_ENGINE=0x%x DSC_JOINER=0x%x PPS_0=0x%x PPS_16=0x%x",
+		   v403Count,
+		   params->TRANS_CLK_SEL, params->TRANS_DDI_FUNC_CTL, params->TRANS_DDI_FUNC_CTL2, params->TRANS_MSA_MISC,
+		   params->TRANS_HTOTAL, params->TRANS_HBLANK, params->TRANS_HSYNC,
+		   params->TRANS_VTOTAL, params->TRANS_VBLANK, params->TRANS_VSYNC,
+		   params->PIPE_SRCSZ, params->TRANS_CONF,
+		   params->PS_PS_WIN_POS,
+		   pre_seam, pre_winsz, pre_hphase,
+		   params->DSC_ENGINE_SEL, params->DSC_JOINER_CTL, params->PPS_0, params->PPS_16);
+}
+
+// V404: AppleIntelBaseController::setupPipeWatermarks — READ-ONLY pre/post.
+// Tells us if setupPipeWatermarks is what sets PIPE_SEAM_EXCESS=0x1. Called
+// from inside SetupParams before setupPipeScaler — if pre=0 post=1 here, this
+// is our seam-join origin (rather than setupPipeScaler).
+void Gen11::setupPipeWatermarks(AppleIntel::AppleIntelBaseController *that,
+                                AppleIntel::AppleIntelFramebuffer *fb,
+								AppleIntel::AppleIntelDisplayPath *path,
+                                AppleIntel::CRTCParams *params)
+{
+	uint32_t pre_seam = 0, pre_winsz = 0, pre_winpos = 0;
+	if (MellowCore::callback != nullptr && !MellowCore::callback->isRealTGL && params != nullptr) {
+		pre_seam   = params->PIPE_SEAM_EXCESS;
+		pre_winsz  = params->PS_PS_WIN_SZ;
+		pre_winpos = params->PS_PS_WIN_POS;
+	}
+
+	FunctionCast(setupPipeWatermarks, callback->osetupPipeWatermarks)(that, fb, path, params);
+
+	if (MellowCore::callback == nullptr || MellowCore::callback->isRealTGL || params == nullptr) return;
+
+	static int v404Count = 0;
+	if (v404Count >= 4) return;
+	++v404Count;
+
+	SYSLOG("mellow", "V404[%d]: setupPipeWatermarks | "
+		   "PRE: SEAM=0x%x WINSZ=0x%x WINPOS=0x%x | "
+		   "POST: SEAM=0x%x WINSZ=0x%x WINPOS=0x%x %s",
+		   v404Count,
+		   pre_seam, pre_winsz, pre_winpos,
+		   params->PIPE_SEAM_EXCESS, params->PS_PS_WIN_SZ, params->PS_PS_WIN_POS,
+		   (pre_seam == 0 && params->PIPE_SEAM_EXCESS != 0)
+			   ? "*** SEAM SET HERE ***"
+			   : (pre_seam != 0 ? "(seam pre-existed)" : "(no seam)"));
+}
+
+// V405: AppleIntelPlane::configureColorPipeLine(FlipTransactionArgs*, bool)
+//
+// Dispatches to configurePipePostCSCGamma_{8,10,12,12SEG}Bit based on a BPC/gamma
+// mode selector field within FlipTransactionArgs.  The field is at byte offset 0x1C
+// (IDA's "param_1[7].Tiling" — element 7 of a dword array inside the struct).
+//
+// For our 2560×1600 eDP at 8bpc this always hits case 0 → 8Bit, which writes:
+//   GAMMA_MODE   (0x4A480, Pipe A) = 0x0  (LEGACY_8BIT)
+//   PIPE_MISC    (0x70030, Pipe A) bits[5:3] = 0b000 (8 bpc)
+//
+// Display 13 (ADL-P) uses the same register addresses as Display 12 (TGL), so
+// Apple's writes are structurally correct.  The hook logs pre/post snapshots so
+// we can confirm the hardware actually sees the right values each flip cycle.
+void Gen11::configureColorPipeLine(AppleIntel::AppleIntelPlane *that, AppleIntel::FlipTransactionArgs *flipArgs, bool param_2)
+{
+	static int v405Count = 0;
+
+	uint32_t pre_gamma = 0, pre_misc = 0;
+	uint8_t  sel = 0xFF;
+
+	if (MellowCore::callback != nullptr && !MellowCore::callback->isRealTGL) {
+		pre_gamma = MellowCore::callback->readReg32(0x4A480);  // GAMMA_MODE Pipe A
+		pre_misc  = MellowCore::callback->readReg32(0x70030);  // PIPE_MISC  Pipe A
+		if (flipArgs != nullptr)
+			sel = static_cast<uint8_t>(*reinterpret_cast<const uint32_t *>(&flipArgs->flt_001C) >> 24);
+
+		// DIAG: log the color pipeline bitmask (FB+0x4248) to identify which bit drives PIPE_MISC bit 23.
+		// The bitmask at FB+0x4248 (FB = *(that+0x68)) selects which sub-functions run inside
+		// configureColorPipeLine. Bit 10 = configurePipeHDRMode candidate. Log pre/post to verify.
+		if (that != nullptr) {
+			void *fb = getMember<void *>(that, 0x68);
+			if (fb != nullptr) {
+				uint32_t bm_before = getMember<uint32_t>(fb, 0x4248);
+				getMember<uint32_t>(fb, 0x4248) &= ~(1u << 10);
+				uint32_t bm_after  = getMember<uint32_t>(fb, 0x4248);
+				SYSLOG("mellow", "DIAG[BM]: fb=%p bitmask 0x%08x→0x%08x param2=%d",
+				       fb, bm_before, bm_after, (int)param_2);
+			}
+		}
+	}
+
+	FunctionCast(configureColorPipeLine, callback->oConfigureColorPipeLine)(that, flipArgs, param_2);
+
+	if (MellowCore::callback == nullptr || MellowCore::callback->isRealTGL) return;
+
+	if (v405Count >= 20) return;
+	++v405Count;
+
+	const uint32_t post_gamma = MellowCore::callback->readReg32(0x4A480);
+	const uint32_t post_misc  = MellowCore::callback->readReg32(0x70030);
+	// PIPE_MISC BPC field: bits[5:3].  0=8bpc, 1=10bpc, 2=6bpc, 3=12bpc.
+	const uint8_t bpc_pre  = (pre_misc  >> 3) & 0x7u;
+	const uint8_t bpc_post = (post_misc >> 3) & 0x7u;
+	// GAMMA_MODE encoding: 0=legacy8bit, 1=prec10bit, 2=prec12interp, 3=split
+	const char *gammaName[] = {"LEGACY_8BIT", "PREC_10BIT", "PREC_12INTERP", "SPLIT"};
+	const char *gname = (post_gamma <= 3) ? gammaName[post_gamma] : "unknown";
+
+	SYSLOG("mellow", "V405[%d]: configureColorPipeLine sel=0x%02x param2=%d | "
+		   "GAMMA_MODE: 0x%x→0x%x(%s) | PIPE_MISC: 0x%x→0x%x bpc[5:3]=%u→%u",
+		   v405Count, sel, (int)param_2,
+		   pre_gamma, post_gamma, gname,
+		   pre_misc, post_misc, bpc_pre, bpc_post);
+}
+
+// V406: CORE origin-level plane tiling/stride manipulation for the non-real-TGL
+// Ultra spoof path. The register assumptions originate in the ADL-P/RPL baseline.
+// Physical framebuffer pages are CPU-written in linear order. Apple's IOSurface allocates
+// with tiling enum=0 (X-tiled) → configurePlane ORs PLANE_CTL bit10 → display engine
+// fetches X-tile geometry → black screen.
+//
+// Linux i915 on this exact ADL-P hardware: modifier=0x0 (LINEAR), stride=0x2800 bytes (0x14 units)
+//
+// FlipTransactionArgs+0x3c tiling enum (from disasm VA 0x59ad-0x59c3):
+//   0x0 → X-tiled:  ORs 0x400 into PLANE_CTL bits[12:10] = 001
+//   0x1 → Y-tiled:  ORs 0x1000 into bits[12:10] = 100
+//   else → linear:  ANDs 0xffe7e7ff (clears bits[12:10] = 000)
+//
+// AppleIntelPlane shadow offsets (from configurePlane disasm):
+//   +0x100 = PLANE_CTL shadow (tiling bits built here, read @ VA 0x5a41)
+//   +0x104 = PLANE_STRIDE shadow (read @ VA 0x6867)
+//   +0x154 = PLANE_COLOR_CTL shadow (post-OR write @ VA 0x6687)
+//
+// ============================================================================
+// === CHOOSE ONE: Main approach (uncomment your choice below) ===
+// ============================================================================
+
+// ✓ APPROACH 1: PRE-CALL TILING PATCH (origin-level, Apple's natural path)
+#define V406_APPROACH_TILING_PATCH 1
+
+// Alternative approaches below (comment out APPROACH 1 if trying these):
+// #define V406_APPROACH_POST_SHADOW_PATCH 1      // Post-call shadow field write
+// #define V406_APPROACH_STRIDE_DIVISOR 1          // Stride divisor manipulation
+// #define V406_APPROACH_DUAL_TILING_STRIDE 1      // Tiling + stride combined
+// #define V406_APPROACH_DIAGNOSTIC_ONLY 1         // Pass-through with logging
+
+// ============================================================================
+// === TILING ENUM SELECTOR (active for approaches using pre-call patch) ===
+// ============================================================================
+
+// #define V406_TILING_VALUE 2       // linear — CPU BAR2 compositor path
+// #define V406_TILING_VALUE 1       // Y-tiled
+#define V406_TILING_VALUE 0          // X-tiled — matches Apple IOSurface allocator
+
+// ============================================================================
+// === STRIDE FORCE (active for stride-manipulation approaches) ===
+// ============================================================================
+
+#define V406_STRIDE_FORCE_ENABLE 0              // stride handled by paramsSurfCompare V408
+#define V406_STRIDE_VALUE 0x14                  // X-tile: 2560×4 / 512 = 20 = 0x14
+
+// ============================================================================
+// === PLANE_CTL BITS MANIPULATION (advanced—leave as 0 unless testing) ===
+// ============================================================================
+
+#define V406_PLANE_CTL_CLEAR_MASK 0x0           // Bits to clear (0xFFE7E7FF = tiling bits)
+#define V406_PLANE_CTL_SET_MASK 0x0             // Bits to set (0x400=X-tiled, 0x1000=Y-tiled)
+
+// ============================================================================
+// === SHADOW FIELD OFFSET OVERRIDES (for post-call patching) ===
+// ============================================================================
+
+#define V406_STRIDE_SHADOW_OFFSET 0x104         // AppleIntelPlane+0x104 = PLANE_STRIDE
+#define V406_CTL_SHADOW_OFFSET 0x100            // AppleIntelPlane+0x100 = PLANE_CTL
+
+// ============================================================================
+
+void Gen11::configurePlane(AppleIntel::AppleIntelPlane *that, AppleIntel::FlipTransactionArgs *flipArgs)
+{
+	if (MellowCore::callback == nullptr || MellowCore::callback->isRealTGL || flipArgs == nullptr) {
+		FunctionCast(configurePlane, callback->oConfigurePlane)(that, flipArgs);
+		return;
+	}
+
+	// Pre-call snapshot
+	uint32_t incomingTiling = 0;
+	if (flipArgs != nullptr)
+		incomingTiling = flipArgs->TilingEnum;
+
+	static int v406CallCount = 0;
+	static int v406LogCount = 0;
+	++v406CallCount;
+
+#ifdef V406_APPROACH_TILING_PATCH
+	// ===== APPROACH 1: PRE-CALL TILING PATCH =====
+	// Patch FlipTransactionArgs+0x3c before calling original
+	// Apple's configurePlane reads this, takes the corresponding disasm branch,
+	// builds PLANE_CTL with correct tiling bits natively
+	
+	uint32_t *tilingField = &flipArgs->TilingEnum;
+	const uint32_t savedTiling = *tilingField;
+	*tilingField = V406_TILING_VALUE;
+
+	if (v406LogCount < 20) {
+		++v406LogCount;
+		SYSLOG("mellow", "V406[%d]: TILING_PATCH call#%d | "
+			   "Incoming tiling=0x%x → Patched=0x%x (%s)",
+			   v406LogCount, v406CallCount, incomingTiling, V406_TILING_VALUE,
+			   (V406_TILING_VALUE == 0) ? "X-tiled" :
+			   (V406_TILING_VALUE == 1) ? "Y-tiled" : "linear/else");
+	}
+
+	FunctionCast(configurePlane, callback->oConfigurePlane)(that, flipArgs);
+
+	*tilingField = savedTiling;   // restore
+
+#elif defined(V406_APPROACH_POST_SHADOW_PATCH)
+	// ===== APPROACH 2: POST-CALL SHADOW PATCH =====
+	// Call original, then modify AppleIntelPlane shadow fields directly
+	
+	FunctionCast(configurePlane, callback->oConfigurePlane)(that, flipArgs);
+
+	if (that != nullptr) {
+		// Patch PLANE_CTL shadow at +0x100 (or custom offset)
+		uint32_t &ctlShadow = getMember<uint32_t>(that, V406_CTL_SHADOW_OFFSET);
+		const uint32_t ctlBefore = ctlShadow;
+		
+		// Clear tiling bits if needed
+		if (V406_PLANE_CTL_CLEAR_MASK != 0)
+			ctlShadow &= ~V406_PLANE_CTL_CLEAR_MASK;
+		
+		// Set specific bits if needed
+		if (V406_PLANE_CTL_SET_MASK != 0)
+			ctlShadow |= V406_PLANE_CTL_SET_MASK;
+		
+		if (v406LogCount < 20) {
+			++v406LogCount;
+			SYSLOG("mellow", "V406[%d]: POST_SHADOW_PATCH call#%d | "
+				   "PLANE_CTL shadow @+0x%x: 0x%x → 0x%x (clear=0x%x set=0x%x)",
+				   v406LogCount, v406CallCount, V406_CTL_SHADOW_OFFSET,
+				   ctlBefore, ctlShadow, V406_PLANE_CTL_CLEAR_MASK, V406_PLANE_CTL_SET_MASK);
+		}
+
+		// Optionally patch STRIDE shadow
+		if (V406_STRIDE_FORCE_ENABLE) {
+			uint32_t &strideShadow = getMember<uint32_t>(that, V406_STRIDE_SHADOW_OFFSET);
+			const uint32_t strideBefore = strideShadow;
+			strideShadow = V406_STRIDE_VALUE;
+			if (v406LogCount < 20) {
+				SYSLOG("mellow", "V406[%d]: STRIDE shadow @+0x%x: 0x%x → 0x%x",
+					   v406LogCount, V406_STRIDE_SHADOW_OFFSET, strideBefore, V406_STRIDE_VALUE);
+			}
+		}
+	}
+
+#elif defined(V406_APPROACH_STRIDE_DIVISOR)
+	// ===== APPROACH 3: STRIDE DIVISOR (experimental) =====
+	// Patch stride divisor used in configurePlane's pitch/divisor calculation
+	// WARNING: This requires knowing the exact location where stride divisor is stored
+	// (likely in a local stack variable or controller object). This is highly experimental.
+	
+	FunctionCast(configurePlane, callback->oConfigurePlane)(that, flipArgs);
+
+	if (v406LogCount < 20) {
+		++v406LogCount;
+		SYSLOG("mellow", "V406[%d]: STRIDE_DIVISOR call#%d | "
+			   "Attempting stride divisor override (experimental) | "
+			   "Incoming tiling=0x%x",
+			   v406LogCount, v406CallCount, incomingTiling);
+	}
+
+	// NOTE: Actual stride divisor patching would require identifying the controller
+	// field or register that holds 0x200 (stride divisor for X-tiled).
+	// This approach is a placeholder—override if you find the divisor location.
+
+#elif defined(V406_APPROACH_DUAL_TILING_STRIDE)
+	// ===== APPROACH 4: DUAL TILING + STRIDE =====
+	// Combine pre-call tiling patch + post-call stride shadow patch
+	
+	uint32_t *tilingField = &flipArgs->TilingEnum;
+	const uint32_t savedTiling = *tilingField;
+	*tilingField = V406_TILING_VALUE;
+
+	FunctionCast(configurePlane, callback->oConfigurePlane)(that, flipArgs);
+
+	*tilingField = savedTiling;
+
+	// Post-call: patch STRIDE shadow
+	if (V406_STRIDE_FORCE_ENABLE && that != nullptr) {
+		uint32_t &strideShadow = getMember<uint32_t>(that, V406_STRIDE_SHADOW_OFFSET);
+		const uint32_t strideBefore = strideShadow;
+		strideShadow = V406_STRIDE_VALUE;
+		
+		if (v406LogCount < 20) {
+			++v406LogCount;
+			SYSLOG("mellow", "V406[%d]: DUAL_TILING_STRIDE call#%d | "
+				   "Tiling=0x%x STRIDE shadow: 0x%x → 0x%x",
+				   v406LogCount, v406CallCount, V406_TILING_VALUE,
+				   strideBefore, V406_STRIDE_VALUE);
+		}
+	}
+
+#else
+	// ===== APPROACH 5: DIAGNOSTIC PASS-THROUGH =====
+	// No changes—pure logging to see original behavior
+	
+	FunctionCast(configurePlane, callback->oConfigurePlane)(that, flipArgs);
+
+	if (v406LogCount < 20) {
+		++v406LogCount;
+		SYSLOG("mellow", "V406[%d]: DIAGNOSTIC_ONLY call#%d | "
+			   "Incoming tiling=0x%x (unchanged)",
+			   v406LogCount, v406CallCount, incomingTiling);
+	}
+#endif
+
+	// Always log final state if STRIDE monitoring enabled
+	if (V406_STRIDE_FORCE_ENABLE && that != nullptr && v406LogCount < 20) {
+		uint32_t ctlFinal = getMember<uint32_t>(that, V406_CTL_SHADOW_OFFSET);
+		uint32_t strideFinal = getMember<uint32_t>(that, V406_STRIDE_SHADOW_OFFSET);
+		SYSLOG("mellow", "V406-final[%d]: CTL@+0x%x=0x%x STRIDE@+0x%x=0x%x",
+			   v406LogCount, V406_CTL_SHADOW_OFFSET, ctlFinal,
+			   V406_STRIDE_SHADOW_OFFSET, strideFinal);
+	}
+}
+
+void Gen11::AppleIntelPlaneupdateRegisterCache(AppleIntel::AppleIntelPlane *that)
+{
+	getMember<void *>(that, 0x90) = ccont; // fWriteAccessor — ccont must NOT go to real fRegCache at +0x88
+	FunctionCast(AppleIntelPlaneupdateRegisterCache, callback->oAppleIntelPlaneupdateRegisterCache)(that);
+}
+
+void Gen11::AppleIntelScalerupdateRegisterCache(AppleIntel::AppleIntelScaler *that)
+{
+	that->fWriteAccessor = ccont;
+	FunctionCast(AppleIntelScalerupdateRegisterCache, callback->oAppleIntelScalerupdateRegisterCache)(that);
+}
+
+void Gen11::disableDisplayEngine(AppleIntel::AppleIntelBaseController *that)
+{
+	getMember<void *>(that, 0x78) = ccont;
+	FunctionCast(disableDisplayEngine, callback->odisableDisplayEngine)(that );
+}
+
+void Gen11::enableDisplayEngine(AppleIntel::AppleIntelBaseController *that)
+{
+	getMember<void *>(that, 0x78) = ccont;
+	FunctionCast(enableDisplayEngine, callback->oenableDisplayEngine)(that );
+}
+
+void Gen11::computeLaneCount(AppleIntel::AppleIntelBaseController *that, const IODetailedTimingInformationV2 *timing, unsigned int linkRate, unsigned int bpp, unsigned int *laneCount) {
+	if (!laneCount) return;
+
+	// Call original first — handles all standard DP rates on both real TGL and spoofed paths.
+	FunctionCast(computeLaneCount, callback->ocomputeLaneCount)(that, timing, linkRate, bpp, laneCount);
+
+	// Real TGL: preserve Apple's result unchanged.
+	if (MellowCore::callback->isRealTGL)
+		return;
+
+	// For the non-real-TGL Ultra spoof path, Apple's DPCD-based result
+	// (MAX_LANE_COUNT) reflects
+	// the panel's capability, but UEFI/GOP may have trained the link at a different lane
+	// count.  Read DDI_BUF_CTL_A to discover the actual HW-trained lane count and
+	// override Apple's result if UEFI trained more lanes than Apple computed.
+	//
+	// DDI_BUF_CTL PORT_WIDTH field bits[3:1]:
+	//   000 = x1 (1 lane),  001 = x2 (2 lanes),  011 = x4 (4 lanes)
+	const uint32_t ddiA    = MellowCore::callback->readReg32(0x64000);  // DDI_BUF_CTL_A
+	const unsigned int width   = (ddiA >> 1) & 0x7u;
+	const unsigned int hwLanes = (width >= 3) ? 4u : (width >= 1) ? 2u : 1u;
+
+	static int v90L4Logs = 0;
+	if (v90L4Logs < 10) {
+		v90L4Logs++;
+		SYSLOG("mellow", "V90L4[%d]: linkRate=%u bpp=%u appleLC=%u DDI_BUF_CTL_A=0x%x hwLanes=%u",
+			   v90L4Logs, linkRate, bpp, *laneCount, ddiA, hwLanes);
+	}
+
+	if (hwLanes > *laneCount)
+		*laneCount = hwLanes;
+}
+
+// setupOptimalLaneCount is called by hwSetMode to pick the lane count that gets
+// stored in the port's cached LinkConfig (and ultimately into TRANS_DDI_FUNC_CTL).
+// Apple's implementation runs: optimal = computeLaneCount(...); then caps it to
+// port->maxLaneCount (from DPCD MAX_LANE_COUNT, which is 2 on this panel).
+// On !isRealTGL we instead snap the cached count to match DDI_BUF_CTL_A so that
+// SetupParams builds TRANS_DDI_FUNC_CTL with the correct HW-trained lane field.
+void Gen11::setupOptimalLaneCount(AppleIntel::AppleIntelBaseController *that, const IODetailedTimingInformationV2 *timing, unsigned int bpp) {
+	// Always run Apple's original first to populate all other LinkConfig fields.
+	FunctionCast(setupOptimalLaneCount, callback->osetupOptimalLaneCount)(that, timing, bpp);
+
+	if (MellowCore::callback->isRealTGL)
+		return;
+
+	// Read HW-trained lane count from DDI_BUF_CTL_A bits[3:1].
+	// PORT_WIDTH: 0=x1, 1=x2, 3=x4.
+	const uint32_t ddiA    = MellowCore::callback->readReg32(0x64000);
+	const unsigned int width   = (ddiA >> 1) & 0x7u;
+	const unsigned int hwLanes = (width >= 3) ? 4u : (width >= 1) ? 2u : 1u;
+
+	// The port object stores the cached optimal lane count at a known offset.
+	// AppleIntelPort::setupOptimalLaneCount writes fOptimalLaneCount (confirmed
+	// by IDA: str result into [x0 + offset] before returning).
+	// We patch it post-call so the cap-to-DPCD logic is overridden.
+	// Offset 0x148 is fOptimalLaneCount in AppleIntelPort on this kext version.
+	unsigned int &cached = getMember<unsigned int>(that, 0x148);
+
+	static int v90L5Logs = 0;
+	if (v90L5Logs < 10) {
+		v90L5Logs++;
+		SYSLOG("mellow", "V90L5[%d]: setupOptimalLC: was=%u DDI_BUF_CTL_A=0x%x hwLanes=%u",
+			   v90L5Logs, cached, ddiA, hwLanes);
+	}
+
+	if (hwLanes > cached)
+		cached = hwLanes;
+}
+
+IOReturn Gen11::wrapICLReadAUX(void *that, uint32_t address, void *buffer, uint32_t length) {
+
+	IOReturn retVal = FunctionCast(wrapICLReadAUX, callback->orgICLReadAUX)(that, address, buffer, length);
+
+	// V97AUX: log first ~40 AUX reads to diagnose eDP link training failures.
+	static int auxLogCount = 0;
+	if (auxLogCount < 40) {
+		auxLogCount++;
+		uint8_t *b = reinterpret_cast<uint8_t *>(buffer);
+		if (length >= 2)
+			SYSLOG("mellow", "V97AUX[%d]: addr=0x%04x len=%u ret=0x%x [0]=0x%02x [1]=0x%02x",
+				   auxLogCount, address, length, retVal, b ? b[0] : 0xFF, (b && length >= 2) ? b[1] : 0xFF);
+		else
+			SYSLOG("mellow", "V97AUX[%d]: addr=0x%04x len=%u ret=0x%x",
+				   auxLogCount, address, length, retVal);
+	}
+
+	// V98T removed: do NOT clamp DPCD[0x0100-0x0101] (LINK_BW_SET / LANE_COUNT_SET).
+	// Capping these to HBR2/2-lanes caused Apple to train the link at HBR2×2 lanes.
+	// V97P then wrote a 4-lane DDI_FUNC_CTL value to a 2-lane trained link → black screen.
+	// UEFI already trained the link at HBR3×4 lanes; we must let Apple see those values
+	// so it (re-)trains consistently and V97P's bit16-only correction stays coherent.
+	if (MellowCore::callback && !MellowCore::callback->isRealTGL && address == 0x0100 && buffer && length >= 1) {
+		auto *raw = reinterpret_cast<uint8_t *>(buffer);
+		static int v98tLogs = 0;
+		if (v98tLogs < 5) {
+			v98tLogs++;
+			if (length >= 2)
+				SYSLOG("mellow", "V98T[%d]: DPCD 0x0100 passthrough bw=0x%02x lanes=0x%02x",
+					   v98tLogs, raw[0], raw[1]);
+			else
+				SYSLOG("mellow", "V98T[%d]: DPCD 0x0100 passthrough bw=0x%02x (len=1)",
+					   v98tLogs, raw[0]);
+		}
+	}
+
+	// V99: Suppress the spurious LINK_STATUS_UPDATED (DPCD[0x204] bit7) on the
+	// non-real-TGL Ultra spoof path. This signature was first observed on RPL-P.
+	// HDCP probing reads DPCD 0x6921d, which causes the eDP panel to assert IRQ_HPD,
+	// setting LINK_STATUS_UPDATED=1. Apple's checkLinkStatus then sees
+	// INTERLANE_ALIGN_DONE=0 and tears down the display (~10s after boot).
+	// The physical link is healthy; only the IRQ flag is spurious.
+	// Clearing bit7 of DPCD[0x204] prevents the driver from acting on the IRQ.
+	if (MellowCore::callback && !MellowCore::callback->isRealTGL && address == 0x0202 && buffer && length >= 3) {
+		auto *raw = reinterpret_cast<uint8_t *>(buffer);
+		if (raw[2] & 0x80) {
+			static int v99Logs = 0;
+			if (v99Logs < 10) {
+				v99Logs++;
+				SYSLOG("mellow", "V99[%d]: suppressed DPCD 0x204 LINK_STATUS_UPDATED "
+					   "(was 0x%02x, lanes=[0x%02x 0x%02x])",
+					   v99Logs, raw[2], raw[0], raw[1]);
+			}
+			raw[2] &= ~0x80u; // clear LINK_STATUS_UPDATED
+		}
+	}
+
+	if (address != 0x0000 && address != 0x2200) return retVal;
+
+	if (length < sizeof(DPCDCap16) || buffer == nullptr)
+		return retVal;
+
+	auto caps = reinterpret_cast<DPCDCap16 *>(buffer);
+
+	if (MellowCore::callback && !MellowCore::callback->isRealTGL) {
+		// V98: Do NOT cap maxLaneCount or maxLinkRate.
+		// Previous versions capped maxLaneCount to 2, which caused Apple to train at
+		// 2 lanes while V97P subsequently wrote a 4-lane DDI_FUNC_CTL value → black screen.
+		// The hardware is trained at HBR3×4 lanes by UEFI; let Apple see those real caps
+		// so its LightUpEDP (re-)trains consistently at HBR3×4 lanes.
+		static int v98Logs = 0;
+		if (v98Logs < 5) {
+			v98Logs++;
+			SYSLOG("mellow", "V98[%d]: DPCD caps @0x%04x maxLinkRate=0x%02x maxLane=0x%02x (passthrough)",
+				   v98Logs, address, caps->maxLinkRate, caps->maxLaneCount);
+		}
+	}
+
+	if (caps->revision < 0x03) {
+		caps->maxLinkRate = 0;
+	}
+
+	return retVal;
+}
+
+void Gen11::getOnlineInfo(AppleIntel::AppleIntelFramebuffer *that, AppleIntel::AppleIntelDisplayPath *displayPath, unsigned char *online, unsigned char *changed) {
+	// V96 removed (was: force *online=1 for fbId==0). Confirmed no-op on this hardware:
+	// baseline log shows Apple's getOnlineInfo natively reports orig=1 for FB0, so the
+	// V96 forcing was already redundant. Keeping the wrapper as a logging shell so we
+	// can observe original online behavior across boots — if any orig!=1 case shows up
+	// we'll know V96 was masking a real status bug, not just being redundant.
+	FunctionCast(getOnlineInfo, callback->ogetOnlineInfo)(that, displayPath, online, changed);
+	uint32_t fbId = getMember<uint32_t>(that, 0x1DC);
+	unsigned char origOnline = online ? *online : 0xFF;
+	static int v96PassLogs = 0;
+	if (v96PassLogs < 12) {
+		v96PassLogs++;
+		SYSLOG("mellow", "V96p: fb%u getOnlineInfo: orig=%d passthrough (V96 hack removed)",
+			   fbId, origOnline);
+	}
+}
+
+// Path B: hook AppleIntelFramebuffer::isApertureMemoryRequired().
+// On real TGL: pass-through (preserve native behavior).
+// On the non-real-TGL Ultra spoof path with -mellowdp0: force return true so
+// setupScanoutMemory never migrates
+// from aperture → non-aperture. setupScanoutMemory's logic is:
+//   if (isApertureMemoryRequired() && nonAperSurf!=0) → migrate-TO-aperture
+//   else if (!isApertureMemoryRequired() && nonAperSurf==0) → migrate-FROM-aperture (the bad path)
+//   else → no migration; if nonAperSurf==0 → "Using aperture memory"
+// Forcing true with nonAperSurf==0 (the boot state) keeps us on the aperture path forever,
+// matching what V99S+V99G already do at the hardware level — but cleanly, at the driver level,
+// so WS sees a coherent fWSAAState→memory mapping and shouldn't degrade 0x3→0x1.
+bool Gen11::wrapIsApertureMemoryRequired(AppleIntel::AppleIntelFramebuffer *that) {
+	bool orig = FunctionCast(wrapIsApertureMemoryRequired, callback->oIsApertureMemoryRequired)(that);
+	const bool isRealTGL = MellowCore::callback && MellowCore::callback->isRealTGL;
+
+	// V205 freeze probe + continuous PSR1 disable. PSR1 at 0x60800 was found re-enabled
+	// post-V105 (V105 was writing wrong register 0x64800). Even with the V105 fix, Apple
+	// or DMC may re-arm PSR1 later — keep stomping it on every call.
+	if (MellowCore::callback) {
+		static uint32_t v205Calls = 0;
+		v205Calls++;
+
+		// V99Z dirty-rect test removed: wipe ran but visually no change because WS
+		// rewrites the whole buffer every frame. The "frozen images" symptom is
+		// actually the X-tile-as-linear scanout artifact appearing more pronounced
+		// on low-frequency content (text, solid blocks) than high-frequency content
+		// (wallpaper texture). Single root cause = scanout-vs-buffer tile mismatch.
+		// (Wipe proved BAR2 writes reach scanout in earlier magenta test, but WS's
+		// per-frame rewriting makes the wipe invisible.)
+
+		// Continuous PSR1+PSR2 disable — every call. PSR enabled = panel refreshes from
+		// its own cache and ignores new SURF arms → frozen frame even while pipe vsyncs.
+		uint32_t psr1Now = MellowCore::callback->readReg32(0x60800);
+		if (psr1Now & 1) {
+			MellowCore::callback->writeReg32(0x60800, 0);
+			static uint32_t v205PSR1Resets = 0;
+			if (v205PSR1Resets < 8) {
+				v205PSR1Resets++;
+				SYSLOG("mellow", "V205PSR1[%u]: re-disabled PSR1 (was 0x%x) at call=%u",
+					   v205PSR1Resets, psr1Now, v205Calls);
+			}
+		}
+		uint32_t psr2Now = MellowCore::callback->readReg32(0x60A10);
+		if (psr2Now & 1) {
+			MellowCore::callback->writeReg32(0x60A10, 0);
+			static uint32_t v205PSR2Resets = 0;
+			if (v205PSR2Resets < 8) {
+				v205PSR2Resets++;
+				SYSLOG("mellow", "V205PSR2[%u]: re-disabled PSR2 (was 0x%x) at call=%u",
+					   v205PSR2Resets, psr2Now, v205Calls);
+			}
+		}
+
+		// Periodic state snapshot for freeze diagnosis. Reduced thresholds since
+		// wrapIsApertureMemoryRequired only fires ~44 times per boot in FB-only mode.
+		const bool sample = (v205Calls == 1  || v205Calls == 2  || v205Calls == 5  ||
+							 v205Calls == 10 || v205Calls == 20 || v205Calls == 30 ||
+							 v205Calls == 40 || v205Calls == 44);
+		if (sample) {
+			uint32_t frm   = MellowCore::callback->readReg32(0x70040);
+			uint32_t pstat = MellowCore::callback->readReg32(0x70024);
+			uint32_t pcfg  = MellowCore::callback->readReg32(0x70008);
+			uint32_t dcst  = MellowCore::callback->readReg32(0x45504);
+			// V211: also probe Plane 2 (overlay) and Plane 3 (sprite) on Pipe A.
+			// The visible "frozen overlay over animating background" symptom suggests
+			// these planes hold stale content because WS's dp0 path only writes Plane 1.
+			uint32_t p1ctl = MellowCore::callback->readReg32(0x70180);
+			uint32_t p1surf = MellowCore::callback->readReg32(0x7019C);
+			uint32_t p1liv = MellowCore::callback->readReg32(0x701AC);
+			uint32_t p2ctl = MellowCore::callback->readReg32(0x71180);
+			uint32_t p2surf = MellowCore::callback->readReg32(0x7119C);
+			uint32_t p2liv = MellowCore::callback->readReg32(0x711AC);
+			uint32_t p3ctl = MellowCore::callback->readReg32(0x72180);
+			uint32_t p3surf = MellowCore::callback->readReg32(0x7219C);
+			uint32_t p3liv = MellowCore::callback->readReg32(0x721AC);
+			uint32_t curctl = MellowCore::callback->readReg32(0x70080);
+			uint32_t curbase = MellowCore::callback->readReg32(0x70084);
+			uint32_t curpos = MellowCore::callback->readReg32(0x70088);
+			SYSLOG("mellow", "V205[c=%u]: FRM=%u STAT=%08x CONF=%08x DC=%08x | P1 CTL=%08x SURF=%08x LIVE=%08x | P2 CTL=%08x SURF=%08x LIVE=%08x | P3 CTL=%08x SURF=%08x LIVE=%08x | CUR CTL=%08x BASE=%08x POS=%08x | PSR1=%08x PSR2=%08x",
+				   v205Calls, frm, pstat, pcfg, dcst,
+				   p1ctl, p1surf, p1liv,
+				   p2ctl, p2surf, p2liv,
+				   p3ctl, p3surf, p3liv,
+				   curctl, curbase, curpos,
+				   MellowCore::callback->readReg32(0x60800), MellowCore::callback->readReg32(0x60A10));
+		}
+	}
+
+	if (isRealTGL || !isDisplayPipeForceDisabled()) {
+		return orig;
+	}
+	static int logCount = 0;
+	if (logCount < 8 && orig != true) {
+		logCount++;
+		SYSLOG("mellow", "PathB: isApertureMemoryRequired forced true (orig=%d) fb=%p", orig, that);
+	}
+	return true;
+}
+
+// Path C: hook AppleIntelFramebuffer::setAttribute(IOSelect, uintptr_t).
+// We intercept exactly one path: kIOWindowServerActiveAttribute ('wsrv' = 0x77737276).
+// When WindowServer writes 0x1 (degrade-from-active), coerce the value to 0x3 before
+// calling the original — keeping the driver's fWSAAState pinned at the active value so
+// it never takes the hwDeferFeatures / degraded path.  Real TGL is unaffected.
+IOReturn Gen11::wrapSetAttribute(void *that, uint32_t attr, uintptr_t value) {
+	const bool isRealTGL = MellowCore::callback && MellowCore::callback->isRealTGL;
+	if (attr == 0x77737276u /* 'wsrv' */ && !isRealTGL && isDisplayPipeForceDisabled()) {
+		static int logCount = 0;
+		uintptr_t newValue = value;
+		bool coerced = false;
+		if ((value & 0xFFu) == 0x1u) {
+			newValue = (value & ~uintptr_t(0xFF)) | 0x3u;
+			coerced = true;
+		}
+		if (logCount < 16) {
+			logCount++;
+			SYSLOG("mellow", "PathC: wsrv setAttribute fb=%p value=0x%llx%s",
+				   that, (unsigned long long)value, coerced ? " → coerced 0x3" : "");
+		}
+		return FunctionCast(wrapSetAttribute, callback->oSetAttribute)(that, attr, newValue);
+	}
+	return FunctionCast(wrapSetAttribute, callback->oSetAttribute)(that, attr, value);
+}
+
+// V183: write-only power-well handler for the non-real-TGL Ultra spoof path,
+// reusing the inherited ADL-P/RPL register policy.
+// HSW_PWR_WELL_CTL1 (0x45400): REQ bits = odd bits (mask 0xAA: bits 1,3,5,7,...);
+//                               STATE bits = even bits (mask 0x55: bits 0,2,4,6,...).
+// The TGL original polls STATE bits after writing REQ; on the inherited ADL-P
+// compatibility profile those ACKs
+// never arrive within the 20-iteration timeout, spinning the CPU.
+// Fix: write REQ bits directly to CTL1, skip polling entirely.
+// Previously this wrote to CTL2 (0x45404) — wrong register. CTL2 controls DDI/AUX
+// wells; PG display wells (PG1/PG2) are in CTL1. Writing to CTL2 left CTL1 at the
+// DMC-reset value (0x405, no REQ bits) → hardware never enabled display power domains
+// → vsync interrupts never delivered → GPU ring idle → framebuffer stayed black.
+void Gen11::hwSetPowerWellStatePGE(AppleIntel::AppleIntelBaseController *that, bool param_1, uint param_2)
+{
+	if (!MellowCore::callback->isRealTGL) {
+		uint32_t ctl1 = MellowCore::callback->readReg32(0x45400);
+		uint32_t newVal;
+		if (param_1) {
+			// Enable: clear all REQ bits then set the requested ones.
+			newVal = (ctl1 & 0xFFFFFF55U) | (param_2 & 0xAAU);
+		} else {
+			// Disable: clear the requested REQ bits.
+			newVal = ctl1 & ~(param_2 & 0xAAU);
+		}
+		SYSLOG("mellow", "V183.PGE: en=%u mask=0x%x ctl1: 0x%x->0x%x",
+			   (unsigned)param_1, param_2, ctl1, newVal);
+		MellowCore::callback->writeReg32(0x45400, newVal);
+		return;
+	}
+	// Real TGL: use original with ccont fixup.
+	getMember<void *>(that, 0x78) = ccont;
+	FunctionCast(hwSetPowerWellStatePGE, callback->ohwSetPowerWellStatePGE)(that, param_1, param_2);
+}
+
+void Gen11::hwSetPowerWellStateAux(AppleIntel::AppleIntelBaseController *that, bool param_1, uint param_2)
+{
+	getMember<void *>(that, 0x78) = ccont;
+	FunctionCast(hwSetPowerWellStateAux, callback->ohwSetPowerWellStateAux)(that,param_1,param_2);
+}
+
+void Gen11::hwSetPowerWellStateDDI(AppleIntel::AppleIntelBaseController *that, bool param_1, uint param_2)
+{
+	getMember<void *>(that, 0x78) = ccont;
+	FunctionCast(hwSetPowerWellStateDDI, callback->ohwSetPowerWellStateDDI)(that,param_1,param_2);
+}
+
+void Gen11::FastWriteRegister32(AppleIntel::AppleIntelBaseController *that, unsigned long param_1, uint32_t param_2)
+{
+	// V99D: Diagnose — log all FastWrite calls near display engine range on first boot
+	// to understand what addresses/values flow through this path.
+	{
+		static int v99DCount = 0;
+		if (v99DCount < 30) {
+			v99DCount++;
+			SYSLOG("mellow", "V99D[%d]: FastWrite addr=0x%lx val=0x%x",
+				   v99DCount, param_1, param_2);
+		}
+	}
+
+	// V72F removed (was: force RCS/BCS RING_EMR FastWrite path to 0xFFFFFFFF — same
+	// blanket-mask hack as V72R/V72W, on the FastWriteRegister32 entry). Last of the
+	// "raWriteRegister32-side" EMR mask trio. The V74 50ms enforcer still re-forces
+	// EMR via direct writeReg32 from a polling thread, so this passthrough alone is
+	// not yet a full "no blanket EMR mask" test — V74's EMR portion is stripped
+	// separately in v71EmrEnforcer.
+	if (param_1 == 0x20b4 || param_1 == 0x220b4) {
+		static int v72FPassCount = 0;
+		if (v72FPassCount < 6) {
+			++v72FPassCount;
+			SYSLOG("mellow", "V72Fp[%d]: EMR @ 0x%lx val=0x%x passthrough (V72F hack removed)",
+				   v72FPassCount, param_1, param_2);
+		}
+	}
+
+	// V99F[S] removed (was: PLANE_STRIDE *= 8 — same X-tile-units → 64B-cacheline-units
+	// rewrite as V99R[S], on the FastWriteRegister32 entry). Pair-mate to V99R[Sp].
+	// V99S downstream still re-forces STRIDE=0xa0 at SURF arm via direct MMIO, so
+	// this passthrough does not affect what scans out.
+	if ((param_1 & 0xFFFFF) == 0x70188) {
+		static int v99FSpCount = 0;
+		if (v99FSpCount < 3) {
+			++v99FSpCount;
+			SYSLOG("mellow", "V99F[Sp%d]: PLANE_STRIDE 0x%x passthrough (V99F[S] hack removed)",
+				   v99FSpCount, param_2);
+		}
+	}
+	// V99F[C] removed (was: PLANE_CTL X-tiled (001) → Y-tiled-legacy (100) rewrite,
+	// FastWriteRegister32 twin of V99R[C]). V99S at SURF arm still re-forces CTL
+	// downstream, so this is a no-op for actually-displayed values.
+	if ((param_1 & 0xFFFFF) == 0x70180) {
+		static int v99FCpCount = 0;
+		if (v99FCpCount < 3) {
+			++v99FCpCount;
+			uint32_t tiling = (param_2 >> 10) & 0x7;
+			SYSLOG("mellow", "V99F[Cp%d]: PLANE_CTL 0x%x passthrough tiling=%d (V99F[C] hack removed)",
+				   v99FCpCount, param_2, tiling);
+		}
+	}
+	// V103F removed (was: FastWriteRegister32 twin of V103 — block DC_STATE_EN
+	// non-zero writes). Pair-mate to V103/V103P; all three sites now passthrough.
+	if ((param_1 & 0xFFFFF) == 0x45504 && MellowCore::callback && MellowCore::callback->dmcIsAdlp) {
+		static int v103FpCount = 0;
+		if (v103FpCount < 6) {
+			++v103FpCount;
+			SYSLOG("mellow", "V103Fp[%d]: DC_STATE_EN FastWrite 0x%x passthrough (V103F hack removed)",
+				   v103FpCount, param_2);
+		}
+	}
+
+	// V195F removed (FastWriteRegister32 site of V195 — same hack pile).
+	if ((param_1 & 0xFFFFF) == 0x45400 && MellowCore::callback && !MellowCore::callback->isRealTGL
+		&& MellowCore::callback->uefiCtl1 != 0) {
+		static int v195FpCount = 0;
+		if (v195FpCount < 6) {
+			++v195FpCount;
+			SYSLOG("mellow", "V195Fp[%d]: CTL1 FastWrite 0x%x passthrough (V195F hack removed)",
+				   v195FpCount, param_2);
+		}
+	}
+
+	// V99F[SURF] removed (was: at SURF arm via FastWriteRegister32, force PLANE_STRIDE=0xa0
+	// — FastWrite-path twin of V99S non-dp0 STRIDE=0xa0 force in raWriteRegister32). The
+	// raWriteRegister32 V99S still re-forces STRIDE at SURF arm via direct MMIO, so this
+	// passthrough doesn't change what scans out.
+	if ((param_1 & 0xFFFFF) == 0x7019C && MellowCore::callback) {
+		uint32_t hwStride = MellowCore::callback->readReg32(0x70188);
+		static int v99FSurfPassCount = 0;
+		if (v99FSurfPassCount < 3) {
+			++v99FSurfPassCount;
+			SYSLOG("mellow", "V99F[SURFp%d]: SURF arm 0x%x STRIDE=0x%x passthrough (V99F[SURF] hack removed)",
+				   v99FSurfPassCount, param_2, hwStride);
+		}
+	}
+
+	return FunctionCast(FastWriteRegister32, callback->oFastWriteRegister32)(that,param_1,param_2 );
+}
+
+void Gen11::raWriteRegister32b(void *that,void *param_1,unsigned long param_2, UInt32 param_3)
+{
+	//if (reinterpret_cast<volatile uint64_t*>(that)==nullptr) return;
+	//if (reinterpret_cast<volatile uint64_t*>(param_1)==nullptr) return;
+	raWriteRegister32(that, reinterpret_cast<uint64_t>(param_1) + param_2,param_3);
+};
+
+void Gen11::raWriteRegister32(void *that,unsigned long param_1, UInt32 param_2)
+{
+	// V93: optional plane SURF zero-write guard.
+	// Disabled by default due black-screen regressions; enable only with -mellowv93.
+	struct V93PlaneSurfState {
+		uint32_t surfReg;
+		uint32_t lastNonZeroSurf;
+	};
+	static V93PlaneSurfState v93States[8] {};
+	static int v93LogCount = 0;
+
+	auto getV93State = [](uint32_t surfReg) -> V93PlaneSurfState * {
+		for (auto &state : v93States) {
+			if (state.surfReg == surfReg)
+				return &state;
+		}
+		for (auto &state : v93States) {
+			if (state.surfReg == 0) {
+				state.surfReg = surfReg;
+				state.lastNonZeroSurf = 0;
+				return &state;
+			}
+		}
+		return nullptr;
+	};
+
+	if (MellowCore::callback && isV93PlaneGuardEnabled()) {
+		const uint32_t reg = static_cast<uint32_t>(param_1 & 0xFFFFF);
+		const bool looksLikePlaneSurf =
+			(reg >= 0x60000 && reg <= 0xBFFFF) &&
+			((reg & 0xFFF) == 0x19C);
+
+		if (looksLikePlaneSurf) {
+			auto *state = getV93State(reg);
+			if (param_2 != 0) {
+				if (state)
+					state->lastNonZeroSurf = param_2;
+			} else {
+				const uint32_t ctlReg = reg - 0x1C; // PLANE_CTL is SURF - 0x1C on Gen11 paths.
+				uint32_t planCtl = MellowCore::callback->readReg32(ctlReg);
+				if (planCtl & 0x80000000u) {
+					if (state && state->lastNonZeroSurf != 0) {
+						if (v93LogCount < 32) {
+							SYSLOG("mellow", "V93: blocked zero SURF@0x%x while enabled; keeping last 0x%x", reg, state->lastNonZeroSurf);
+							v93LogCount++;
+						}
+						param_2 = state->lastNonZeroSurf;
+					} else {
+						uint32_t currentSurf = MellowCore::callback->readReg32(reg);
+						if (currentSurf != 0) {
+							if (state)
+								state->lastNonZeroSurf = currentSurf;
+							if (v93LogCount < 32) {
+								SYSLOG("mellow", "V93: blocked zero SURF@0x%x while enabled; keeping current 0x%x", reg, currentSurf);
+								v93LogCount++;
+							}
+							param_2 = currentSurf;
+						} else {
+							// Last resort: disable plane before allowing SURF=0 write.
+							MellowCore::callback->writeReg32(ctlReg, planCtl & ~0x80000000u);
+							if (v93LogCount < 32) {
+								SYSLOG("mellow", "V93: forced plane disable for SURF@0x%x before zero write", reg);
+								v93LogCount++;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// V72R removed (was: force RING_EMR (0x20b4 / 0x220b4) writes to 0xFFFFFFFF —
+	// blanket-mask-all-GT-engine-errors). Hack that hides root cause; Linux i915
+	// doesn't do blanket EMR masking. Remove and observe what real engine errors
+	// emerge so the actual cause can be fixed.
+	// NOTE: V72W (in wrapWriteRegister32 helper) and V72F (in FastWriteRegister32)
+	// and V74 50ms permanent enforcer still mask RING_EMR. To fully test "no EMR
+	// blanket mask" they need to be disabled in subsequent steps.
+
+	// V99R[S] removed (was: PLANE_STRIDE *= 8 — convert X-tiled tile-units 0x14 to
+	// Y-tiled/linear cacheline-units 0xa0). Hack guessing the right scanout stride
+	// without knowing the actual buffer layout. Linux i915 picks stride based on
+	// the IOSurface/buffer's documented tiling, not by rewriting Apple's value.
+	// Removing this lets Apple's natural PLANE_STRIDE (0x14) reach hardware. If
+	// scanout shows X-tiled bytes correctly → buffer was X-tiled. If garbled →
+	// real layer is buffer/renderer side, not register-write.
+	// NOTE: V99S (SURF arm) and V99f (fast-write variant) and V99F (FastWrite) still
+	// have their own PLANE_STRIDE rewrites — to fully test, those need removal too.
+	// For now keep the address-match shell so future legitimate intercepts can use it.
+	if ((param_1 & 0xFFFFF) == 0x70188) { // PLANE_STRIDE Pipe A Plane 1
+		static int v99SPassCount = 0;
+		if (v99SPassCount < 3) {
+			++v99SPassCount;
+			SYSLOG("mellow", "V99R[Sp%d]: PLANE_STRIDE 0x%x passthrough (V99R hack removed)", v99SPassCount, param_2);
+		}
+	}
+	// V99R[C] / V99R[Cdp] removed (was: PLANE_CTL tiling rewrites — X-tiled (001) →
+	// Y-tiled legacy (100) on default path, force linear under -mellowdp0). Same
+	// "guess the tiling" antipattern as V99R[S]; pairs with the stride-rewrite hack
+	// just removed. Linux i915 picks PLANE_CTL tiling bits from the IOSurface/buffer's
+	// declared tiling, never rewrites Apple's value. With V99R[S] passthrough, leaving
+	// the corresponding CTL field rewritten is contradictory: STRIDE is now 0x14
+	// (X-tiled tile-units) but CTL would still be forced to Y-tiled or linear, which
+	// is guaranteed-wrong scanout. Removing both lets Apple's natural CTL reach HW so
+	// we can observe what tiling Apple's allocator actually chose.
+	if ((param_1 & 0xFFFFF) == 0x70180) { // PLANE_CTL Pipe A Plane 1
+		static int v99CPassCount = 0;
+		if (v99CPassCount < 3) {
+			++v99CPassCount;
+			uint32_t tiling = (param_2 >> 10) & 0x7;
+			SYSLOG("mellow", "V99R[Cp%d]: PLANE_CTL 0x%x passthrough tiling=%d (V99R hack removed)",
+				   v99CPassCount, param_2, tiling);
+		}
+	}
+
+	// V97 removed (was: clear bit[16] PORT_SYNC_MODE_MASTER_SELECT[0] from
+	// TRANS_DDI_FUNC_CTL_A on !isRealTGL — Apple's SetupParams sets it but UEFI GOP
+	// doesn't, allegedly disrupting trained eDP link → "InterLane Alignment is lost"
+	// ~10s later). Symptom-hiding hack: real fix should match Linux i915's Display 13
+	// transcoder programming, not strip a bit Apple's stack expects to set. Removing
+	// reveals whether the InterLane loss still happens; if yes, look at Linux's
+	// TRANS_DDI_FUNC_CTL field layout for ADL-P (Display 13) since PORT_SYNC fields
+	// changed across display generations.
+	if ((param_1 & 0xFFFFF) == 0x60400 && MellowCore::callback && !MellowCore::callback->isRealTGL) {
+		static int v97RpCount = 0;
+		if (v97RpCount < 6) {
+			++v97RpCount;
+			SYSLOG("mellow", "V97Rp[%d]: TRANS_DDI_FUNC_CTL_A 0x%x passthrough bit16=%d (V97 hack removed)",
+				   v97RpCount, param_2, !!(param_2 & (1u << 16)));
+		}
+	}
+
+	// V103 removed (was: block all non-zero DC_STATE_EN writes when ADL-P DMC is
+	// loaded — keeps the DMC from entering DC3/DC5/DC6 because Apple's ICL-targeted
+	// driver has no ADL-P DC exit recovery, all eDP lanes drop ~70s after a write).
+	// Symptom-hiding hack: Linux i915 has proper DC enter/exit for Display 13 via
+	// the DMC. Permanently disabling DC states masks Apple's broken DC exit instead
+	// of providing one. Removing reveals when DC_STATE_EN gets written and what
+	// value Apple wants set; the fix is to ensure DC exit is properly handled (or
+	// to align with what Linux ADL-P DMC expects).
+	if ((param_1 & 0xFFFFF) == 0x45504 && MellowCore::callback && MellowCore::callback->dmcIsAdlp) {
+		static int v103PassCount = 0;
+		if (v103PassCount < 10) {
+			++v103PassCount;
+			SYSLOG("mellow", "V103p[%d]: DC_STATE_EN 0x%x passthrough (V103 hack removed)",
+				   v103PassCount, param_2);
+		}
+	}
+
+	// V195 removed (was: same OR-in bits 14,12 hack as V195W, on raWriteRegister32).
+	if ((param_1 & 0xFFFFF) == 0x45400 && MellowCore::callback && !MellowCore::callback->isRealTGL
+		&& MellowCore::callback->uefiCtl1 != 0) {
+		static int v195pCount = 0;
+		if (v195pCount < 6) {
+			++v195pCount;
+			SYSLOG("mellow", "V195p[%d]: CTL1 ra 0x%x passthrough (V195 hack removed)",
+				   v195pCount, param_2);
+		}
+	}
+
+	// V99S: PLANE_SURF arm — force correct STRIDE/CTL immediately before latching.
+	// raWriteRegister32/WriteRegister32 is a CACHE-ONLY update; hardware MMIO for
+	// double-buffered PLANE_STRIDE is written via a volatile* path not caught by
+	// FastWriteRegister32. Forcing writeReg32 here ensures the hardware shadow is
+	// correct right before SURF arms the double-buffer flip.
+	//
+	// dp0 path: redirect non-aperture SURF to 0x0 AND remap GGTT[0..] to the same
+	// physical pages (V99G).  setupScanoutMemory migrates SURF from aperture to
+	// ≥0x10000000 (non-aperture stolen RAM, phys ~0x7f…) when WindowServer sets
+	// kIOWindowServerActiveAttribute=3. After migration WS writes to the non-aperture
+	// physical pages; PLANE_SURF must also scan them. V99G copies the GGTT PTEs from the
+	// non-aperture range down to GGTT[0..3999] so SURF=0x0 scans the same pages.
+	if ((param_1 & 0xFFFFF) == 0x7019C && MellowCore::callback) {
+		uint32_t hwStride = MellowCore::callback->readReg32(0x70188);
+		uint32_t hwCtl    = MellowCore::callback->readReg32(0x70180);
+		static int v99SCount = 0;
+		if (v99SCount < 8) {
+			++v99SCount;
+			// V201B: read TOP-LEFT (gray border) AND CENTER (Apple logo / loading bar
+			// area) of the buffer. Linear byte offset of pixel (x,y) = y*10240 + x*4.
+			// Sample points (BGRA, 2560×1600):
+			//  - (0,0)         offset 0          → top-left, gray bg
+			//  - (1280,800)    offset 0x7D2800   → screen center, Apple logo
+			//  - (1280,1000)   offset 0x9C7800   → loading-bar row
+			//  - (640,800)     offset 0x7D1A00   → mid-left of logo area
+			MellowCore::callback->setApertureIfNecessary();
+			uint32_t tlCtr = 0xDEADBEEF, ctr = 0xDEADBEEF, bar = 0xDEADBEEF, mid = 0xDEADBEEF;
+			if (MellowCore::callback->aperturePtr && MellowCore::callback->apertureLen >= 0xA00000) {
+				volatile uint32_t *fb32 = MellowCore::callback->aperturePtr;
+				tlCtr = fb32[0];             // top-left
+				ctr   = fb32[0x7D2800 / 4];  // center (Apple logo)
+				bar   = fb32[0x9C7800 / 4];  // loading bar row
+				mid   = fb32[0x7D1A00 / 4];  // mid-left of logo area
+			}
+			SYSLOG("mellow", "V99S[%d]: SURF arm 0x%x STRIDE=0x%x CTL=0x%x | tl=%08x ctr(1280,800)=%08x bar(1280,1000)=%08x mid(640,800)=%08x",
+				   v99SCount, (uint32_t)param_2, hwStride, hwCtl, tlCtr, ctr, bar, mid);
+
+			// V203: on the LAST sampled SURF arm, dump every pipe/transcoder/DSC/scaler
+			// register relevant to the duplicated-content symptom. We're hunting an
+			// off-by-2 in stride / src-vs-active / DSC bpp / pipe-bpc / M-N.
+			if (v99SCount == 8) {
+				#define R(addr) MellowCore::callback->readReg32(addr)
+				SYSLOG("mellow", "V203: --- SCANOUT REGISTER DUMP ---");
+				// Plane A
+				SYSLOG("mellow", "V203 PLANE_A: CTL=%08x STRIDE=%08x POS=%08x SIZE=%08x OFFSET=%08x SURF=%08x SURFLIVE=%08x AUX_DIST=%08x AUX_OFFSET=%08x KEYVAL=%08x KEYMSK=%08x KEYMAX=%08x COLOR_CTL=%08x",
+					   R(0x70180), R(0x70188), R(0x7018C), R(0x70190), R(0x701A4),
+					   R(0x7019C), R(0x701AC), R(0x701C0), R(0x701C4),
+					   R(0x70194), R(0x70198), R(0x701A0), R(0x701CC));
+				// Pipe A general
+				SYSLOG("mellow", "V203 PIPE_A: SRCSZ=%08x CONF=%08x MISC=%08x MISC2=%08x STAT=%08x",
+					   R(0x6001C), R(0x70008), R(0x70030), R(0x7002C), R(0x70024));
+				// Transcoder A timings
+				SYSLOG("mellow", "V203 TRANS_A: HTOTAL=%08x HBLANK=%08x HSYNC=%08x VTOTAL=%08x VBLANK=%08x VSYNC=%08x VSYNCSHIFT=%08x",
+					   R(0x60000), R(0x60004), R(0x60008), R(0x6000C),
+					   R(0x60010), R(0x60014), R(0x60028));
+				// DDI function control + MSA
+				SYSLOG("mellow", "V203 TRANS_A_DDI: DDI_FUNC_CTL=%08x DDI_FUNC_CTL2=%08x MSA_MISC=%08x CONF=%08x CLK_SEL=%08x",
+					   R(0x60400), R(0x60404), R(0x60410), R(0x70008), R(0x46140));
+				// DP M/N values for Pipe A
+				SYSLOG("mellow", "V203 TRANS_A_DPMN: DATAM1=%08x DATAN1=%08x DATAM2=%08x DATAN2=%08x LINKM1=%08x LINKN1=%08x LINKM2=%08x LINKN2=%08x",
+					   R(0x60030), R(0x60034), R(0x60038), R(0x6003C),
+					   R(0x60040), R(0x60044), R(0x60048), R(0x6004C));
+				// Pipe A scaler 1
+				SYSLOG("mellow", "V203 PIPE_A_PS1: CTRL=%08x WIN_POS=%08x WIN_SZ=%08x VPHASE=%08x HPHASE=%08x",
+					   R(0x68180), R(0x68170), R(0x68174), R(0x68188), R(0x68194));
+				// DSC slice control / PPS for Pipe A (DSC_BASE_A around 0x6B200; varies by gen)
+				SYSLOG("mellow", "V203 DSC_A: PIC_RC=%08x PPS0=%08x PPS1=%08x PPS2=%08x PPS3=%08x PPS4=%08x",
+					   R(0x6B200), R(0x6B210), R(0x6B214), R(0x6B218), R(0x6B21C), R(0x6B220));
+				// DDI buf / port
+				SYSLOG("mellow", "V203 DDI_BUF: A_CTL=%08x B_CTL=%08x | DP_TP_CTL_A=%08x DP_TP_STATUS_A=%08x",
+					   R(0x64000), R(0x64100), R(0x64040), R(0x64044));
+				// Display Buffer programming
+				SYSLOG("mellow", "V203 DBUF: CTL_S0=%08x CTL_S1=%08x DBUF_BUF_CFG_A_PA=%08x A_PB=%08x",
+					   R(0x44300), R(0x44304), R(0x70B80), R(0x70B84));
+				#undef R
+			}
+		}
+		/*.  ------ MAN IN THE MIDDLE CHIP HACK -------
+		// V99R[P] + V99G + linear CTL/STRIDE forces — CORE scanout coherence (!isRealTGL).
+		// Confirmed load-bearing for visible scanout on spoofed RPL/ADL-P in dp0, dp1, AND
+		// without any -mellowdp* boot arg. Real TGL hardware programs these correctly via
+		// Apple's native code path — gating the entire triad on !isRealTGL.
+		//
+		// Friend's architectural feedback (Visual Ehrmanntraut, NootedBlue lineage):
+		// the right long-term fix is intercepting CRTCParams / PLANEPARAMS / SCALERPARAMS
+		// at hwSetupMemory / paramsSurfCompare / hwRegsNeedUpdate (already partial via
+		// V97P / V97C) instead of hooking MMIO writes after-the-fact. "Hacking regs only
+		// won't work — leave WS alone, problem is in apple code."
+		//
+		//   1. SURF redirect: non-aperture writes (>=0x10000000) → 0, so the display engine
+		//      always scans from the same GGTT page range (GGTT[0..3999]) no matter where
+		//      Apple's setupScanoutMemory chose to migrate the surface.
+		//   2. V99G: per-flip GGTT remap — copies the PTEs at the migrated surface pages
+		//      down to GGTT[0..3999] so SURF=0 fetches the same physical memory WS's CPU
+		//      compositor is writing into. Re-runs whenever Apple's SURF address changes
+		//      (handles double/triple buffering — WS rotates between 2-3 IOSurfaces per flip).
+		//   3. Linear CTL/STRIDE forces (tiling→0, STRIDE=0xa0): required for visible
+		//      output. Removing them produces a black screen with no scanout activity,
+		//      confirmed empirically. Side effect: produces the fragmented/repeated
+		//      pattern when Apple's allocator stores buffer in non-linear physical layout
+		//      — known cost of this path, removable only by struct-level fix.
+		if (MellowCore::callback && !MellowCore::callback->isRealTGL && param_2 >= 0x10000000u) {
+			static int v99PCount = 0;
+			if (v99PCount < 8)
+				SYSLOG("mellow", "V99R[P%d]: SURF 0x%x->aperture (non-aperture redirect)",
+					   ++v99PCount, (uint32_t)param_2);
+
+			// mellow-buf=N: 1=single, 2=double (default), 3=triple buffering.
+			// Each buffer slot occupies 4000 GGTT pages = 0xFA0000 bytes of aperture:
+			//   slot 0 → GGTT[0..3999],      SURF=0x0
+			//   slot 1 → GGTT[4000..7999],   SURF=0xFA0000
+			//   slot 2 → GGTT[8000..11999],  SURF=0x1F40000
+			// Each unique non-aperture srcPage Apple presents is assigned a fixed slot.
+			// The GGTT PTEs for that slot are remapped to point at the IOSurface's
+			// physical pages. SURF is rewritten to the matching aperture slot address
+			// so the display engine scans the correct physical memory.
+			// With single buffering all flips always land on slot 0 (SURF=0x0).
+			static int  bufCount       = -1;
+			static uint32_t slotPages[3] = {0, 0, 0}; // srcPage assigned to each slot
+			static int  slotCount      = 0;
+			static int  v99GCount      = 0;
+
+			if (bufCount < 0) {
+				int val = 2;
+				PE_parse_boot_argn("mellow-buf", &val, sizeof(val));
+				bufCount = (val >= 1 && val <= 3) ? val : 2;
+				SYSLOG("mellow", "V99G: mellow-buf=%d (buffering slots)", bufCount);
+			}
+
+			uint32_t srcPage = (uint32_t)param_2 >> 12;
+
+			// Find existing slot or assign a new one.
+			int slot = -1;
+			for (int s = 0; s < slotCount; s++) {
+				if (slotPages[s] == srcPage) { slot = s; break; }
+			}
+			if (slot < 0) {
+				if (slotCount < bufCount) {
+					slot = slotCount++;
+				} else {
+					// All slots occupied — evict oldest (slot 0), shift down.
+					for (int s = 0; s < bufCount - 1; s++) slotPages[s] = slotPages[s + 1];
+					slot = bufCount - 1;
+				}
+				slotPages[slot] = srcPage;
+			}
+
+			// Remap GGTT[slot*4000 .. slot*4000+3999] from srcPage..srcPage+3999.
+			{
+				int base = slot * 4000;
+				int remapped = 0, remapSkipped = 0;
+				for (int i = 0; i < 4000; i++) {
+					uint32_t lo = MellowCore::callback->readReg32(GGTT_PTE_LO(srcPage + i));
+					uint32_t hi = MellowCore::callback->readReg32(GGTT_PTE_HI(srcPage + i));
+					if (!(lo & 1)) { remapSkipped++; continue; }
+					MellowCore::callback->writeReg32(GGTT_PTE_LO(base + i), lo);
+					MellowCore::callback->writeReg32(GGTT_PTE_HI(base + i), hi);
+					remapped++;
+				}
+				MellowCore::callback->writeReg32(0x101008, 0x1); // flush GGTT TLB
+				if (++v99GCount <= 8 || (v99GCount & 0x3F) == 0)
+					SYSLOG("mellow", "V99G[%d]: GGTT[%d..%d] <- srcPage=0x%x slot=%d remapped=%d skip=%d",
+						   v99GCount, base, base + 3999, srcPage, slot, remapped, remapSkipped);
+			}
+
+			// Redirect SURF to the aperture address of the assigned slot.
+			// slot 0 → 0x0, slot 1 → 0xFA0000, slot 2 → 0x1F40000.
+			param_2 = (uint32_t)slot * 0xFA0000u;
+		}
+		// CTL/STRIDE forces — MATCH APPLE'S NATURAL INTENT.
+		// V401 paramsSurfCompare logs prove Apple wants: CTL bits[12:10]=001 (X-tiled),
+		// STRIDE=0x14 (20 X-tile units = 10240B/row = 2560*4bpp). Apple's IOSurface
+		// allocator produces X-tiled physical buffers — Y-tile and linear forces both
+		// scan wrong bytes from an X-tile buffer. Match Apple = same tile mode as the
+		// buffer = correct scanout, IF the SURF address reaches the right pages
+		// (V99R[P]+V99G handle the SURF redirect / GGTT remap unconditionally).
+		//
+		// Gated on !isRealTGL. Real TGL programs natively.
+		if (MellowCore::callback && !MellowCore::callback->isRealTGL) {
+			// force CTL linear and STRIDE=0xa0 (CPU compositor writes linearly via BAR2).
+			uint32_t hwTiling = (hwCtl >> 10) & 0x7;
+			if (hwTiling != 0)
+				MellowCore::callback->writeReg32(0x70180, hwCtl & ~(0x7u << 10));
+			if (hwStride != 0xa0)
+				MellowCore::callback->writeReg32(0x70188, 0xa0);
+		}*/
+	}
+
+	if (reinterpret_cast<volatile uint64_t*>(that)==nullptr) return MellowCore::callback->writeReg32(param_1,param_2);
+	if (!callback->oraWriteRegister32) return MellowCore::callback->writeReg32(param_1,param_2);
+	FunctionCast(raWriteRegister32, callback->oraWriteRegister32)( that,param_1,param_2);
+};
+
+uint32_t Gen11::AppleIntelFramebufferinit(AppleIntel::AppleIntelFramebuffer *frame,
+                                          AppleIntel::AppleIntelBaseController *cont,
+                                          uint32_t pipeIndex)
+{
+	// Offsets into the full IOFramebuffer subclass hierarchy (much larger than the
+	// tail fields captured in AppleIntelParams::AppleIntelFramebuffer).
+	getMember<void *>(frame, 0x4a40) = ccont;
+	getMember<void *>(frame, 0xc40)  = ccont;
+	auto ret = FunctionCast(AppleIntelFramebufferinit, callback->oAppleIntelFramebufferinit)(frame, cont, pipeIndex);
+	getMember<void *>(frame, 0x4a40) = ccont;
+	getMember<void *>(frame, 0xc40)  = ccont;
+	return ret;
+}
+
+
+
+void Gen11::initPlatformWorkarounds(AppleIntel::AppleIntelBaseController *that)
+{
+	// Platform workaround flags for the non-real-TGL Ultra spoof path, inherited
+	// from the ADL-P/RPL-P-under-TGL baseline.
+	// flags_ig (+0xC58): boot info flags — checked by PowerWell::init to set fAlwaysOn.
+	//   Must be set BEFORE PowerWell::init runs if we want Apple's native fAlwaysOn path.
+	//   We also force fAlwaysOn=1 in our PowerWell::init hook as belt-and-suspenders.
+	// fInfoFlags2 (+0xC5C): display feature flags.
+	//   ADL-P uses PCH PWM for backlight (cnp_setup_backlight confirmed in Linux syslog).
+	//   Do NOT set FB_FLAG_ENABLE_BACKLIGHT_REG_CONTROL (that forces CPU-register backlight).
+	that->flags_ig    = FB_FLAG_BOOST_PIXEL_FREQUENCY_LIMIT;
+	that->fInfoFlags2 =
+		FB_FLAG_ALTERNATE_PWM_INCREMENT1 |
+		FB_FLAG_ALTERNATE_PWM_INCREMENT2 |
+		FB_FLAG_ENABLE_SLICE_FEATURES    |
+		FB_FLAG_FORCE_POWER_ALWAYS_CONNECTED |
+		FB_FLAG_AVOID_FAST_LINK_TRAINING;
+
+	FunctionCast(initPlatformWorkarounds, callback->oinitPlatformWorkarounds)(that);
+
+	// V212: ADL-P (Display 13) specific display workarounds, ported from Linux i915.
+	// Apple's TGL kext targets Display 12 and doesn't apply these chicken bits / clock-
+	// gating / error masks on the spoofed setup. Linux marks them as REQUIRED for
+	// Display 13+; their absence can manifest as display engine misbehavior
+	// (timing/underrun/error-recovery loops). Gated by !isRealTGL so genuine TGL HW
+	// (Display 12) is unaffected.
+	if (MellowCore::callback && !MellowCore::callback->isRealTGL) {
+		// Wa_22011091694:adlp — DPCE_GATING_DIS = REG_BIT(17) in GEN9_CLKGATE_DIS_5 (0x46540)
+		MellowCore::callback->intel_de_rmw(0x46540, 0, 1u << 17);
+
+		// Bspec/49189 ADL-P init — CLEAR DDI_CLOCK_REG_ACCESS = REG_BIT(7) in GEN8_CHICKEN_DCPR_1 (0x46430)
+		MellowCore::callback->intel_de_rmw(0x46430, 1u << 7, 0);
+
+		// PIPE_CHICKEN Pipe A (0x70038):
+		//   bit 30 = UNDERRUN_RECOVERY_DISABLE_ADLP — required on Display 13+
+		//   bit 7  = PER_PIXEL_ALPHA_BYPASS_EN     — Display WA #1153
+		//   bit 15 = PIXEL_ROUNDING_TRUNC_FB_PASSTHRU — Display WA #1605353570
+		MellowCore::callback->intel_de_rmw(0x70038, 0, (1u << 30) | (1u << 15) | (1u << 7));
+
+		// XELPD_DISPLAY_ERR_FATAL_MASK (0x4421C) ← mask all fatal display errors on
+		// Display 13 (per icl_display_core_init in Linux i915). Without this, fatal
+		// error events can trigger pipeline restart loops.
+		MellowCore::callback->writeReg32(0x4421C, 0xFFFFFFFFu);
+
+		uint32_t pipeChicken    = MellowCore::callback->readReg32(0x70038);
+		uint32_t clkGateDis5    = MellowCore::callback->readReg32(0x46540);
+		uint32_t chickenDcpr1   = MellowCore::callback->readReg32(0x46430);
+		uint32_t errFatalMask   = MellowCore::callback->readReg32(0x4421C);
+		SYSLOG("mellow", "V212: ADL-P Display 13+ workarounds applied — PIPE_CHICKEN(A)=0x%x CLKGATE_DIS_5=0x%x CHICKEN_DCPR_1=0x%x ERR_FATAL_MASK=0x%x",
+			   pipeChicken, clkGateDis5, chickenDcpr1, errFatalMask);
+	}
+}
+
+uint64_t Gen11::getOSInformation(AppleIntel::AppleIntelBaseController *that)
+{
+	auto *pinfo = reinterpret_cast<PlatformInfo *>(callback->gPlatformInformationList);
+	if (pinfo) {
+		// Index 1 = the mobile TGL/ADL-P platform entry (0x9A490000 and variants).
+		pinfo[1].fInfoFlags =
+			FB_FLAG_DISABLE_PIPE_SCRAMBLE      |
+			FB_FLAG_FRAMEBUFFER_COMPRESSION    |
+			FB_FLAG_ALLOW_CONNECTOR_RECOVER    |
+			FB_FLAG_FORCE_POWER_ALWAYS_CONNECTED |
+			FB_FLAG_AVOID_FAST_LINK_TRAINING;
+
+		// cameliav=2 (CamelliaTcon2) requires GFX kext present — gate on -mellowtglwithgfx.
+		pinfo[1].cameliav = checkKernelArgument("-mellowtglwithgfx") ? 2 : 0;
+		pinfo[1].fMobile  = 1;
+		// 3/3/3 baseline restored. Multi-pipe reduction is whack-a-mole — every count
+		// reduction reveals new cross-pipe NULL-deref sites in TGL FB internals
+		// (enableController +0x1356, getFreeJoinablePathCount +0xa7, etc).
+		// Best known config: 3/3/3 + -mellowdp0 → reaches login with banded display.
+		pinfo[1].fPipeCount            = 3;
+		pinfo[1].fInfoPortCount        = 3;
+		pinfo[1].fInfoFramebufferCount = 3;
+		pinfo[1].fSliceCount  = 1;
+		pinfo[1].fmaxEuCount  = 8;
+		pinfo[1].fsubslices   = 10;
+
+		// Connector 0: built-in eDP (LVDS), DDI-A, pipe 0
+		pinfo[1].connectors[0].index = 0;
+		pinfo[1].connectors[0].busId = 0;
+		pinfo[1].connectors[0].pipe  = 0;
+		pinfo[1].connectors[0].pad   = 0;
+		pinfo[1].connectors[0].type  = ConnectorLVDS;
+		pinfo[1].connectors[0].flags = 0x8 | 0x10;
+
+		// Connector 1: external USB-C/Thunderbolt DP (TC1/DDI-D), pipe 2
+		pinfo[1].connectors[1].index = 1;
+		pinfo[1].connectors[1].busId = 1;
+		pinfo[1].connectors[1].pipe  = 2;
+		pinfo[1].connectors[1].pad   = 0;
+		pinfo[1].connectors[1].type  = ConnectorDP;
+		pinfo[1].connectors[1].flags = 0x1 | 0x400;
+
+		// Connectors 2-3: Dummy
+		pinfo[1].connectors[2] = { 2, 2, 2, 0, ConnectorDummy, 0 };
+		pinfo[1].connectors[3] = { 3, 3, 3, 0, ConnectorDummy, 0 };
+
+		SYSLOG("mellow", "getOSInformation: patched pinfo[1] for ADL-P (LVDS+HDMI, mobile)");
+	}
+	return FunctionCast(getOSInformation, callback->ogetOSInformation)(that);
+}
+
+int Gen11::handleLinkIntegrityCheck()
+{
+	return 0;
+};
+
+void Gen11::hwInitializeCState(AppleIntel::AppleIntelBaseController *that)
+{
+	SYSLOG("mellow", "MELLOW-BUILD-V50-ALLOW-METAL");
+
+	int origB48 = getMember<int>(that, 0xB48);
+	int origCE4 = getMember<int>(that, 0xCE4);
+	SYSLOG("mellow", "hwInitCState B48=%d CE4=%d", origB48, origCE4);
+
+	// Boot-arg "mellow-dmc":
+	//   not set or "adlp" → default Ultra compatibility policy: ADL-P MMIO/power-well profile
+	//   "tgl"             → TGL MMIO/power-well compatibility profile
+	//   "icl"             → passthrough original ICL DMC load + ICL combo PHY signal levels
+	//   "skip"            → passthrough original without compatibility MMIO writes
+	// Invalid values fail closed to "skip". Values are matched exactly.
+	enum class DmcMode { Adlp, Tgl, Icl, Skip };
+	char dmcArg[16] = {};
+	const bool dmcArgSupplied = PE_parse_boot_argn("mellow-dmc", dmcArg, sizeof(dmcArg));
+	dmcArg[sizeof(dmcArg) - 1] = '\0';
+	DmcMode dmcMode = DmcMode::Adlp;
+	if (dmcArgSupplied) {
+		if (strcmp(dmcArg, "adlp") == 0) {
+			dmcMode = DmcMode::Adlp;
+		} else if (strcmp(dmcArg, "tgl") == 0) {
+			dmcMode = DmcMode::Tgl;
+		} else if (strcmp(dmcArg, "icl") == 0) {
+			dmcMode = DmcMode::Icl;
+		} else if (strcmp(dmcArg, "skip") == 0) {
+			dmcMode = DmcMode::Skip;
+		} else {
+			dmcMode = DmcMode::Skip;
+			SYSLOG("mellow", "hwInitCState: invalid mellow-dmc='%s'; selecting skip", dmcArg);
+		}
+	} else {
+		SYSLOG("mellow", "hwInitCState: mellow-dmc not set; defaulting to adlp");
+	}
+	MellowCore::callback->dmcIsAdlp = false;
+	MellowCore::callback->use7D41PanelTimings = false;
+
+	if (dmcMode == DmcMode::Tgl) {
+		// ── TGL compatibility profile ──
+		// Mellow intentionally does not redistribute a modified Intel DMC payload.
+		// Apple's original initializer remains the CSR firmware fallback below.
+		SYSLOG("mellow", "hwInitCState: mellow-dmc=tgl compatibility profile (Apple CSR fallback)");
+
+		// Disable DC states before touching display engine registers (same as ADL-P path).
+		// DC_STATE_EN = 0x45504
+		MellowCore::callback->writeReg32(DC_STATE_EN, 0);
+
+		// Use UEFI CTL1 as base (same pattern as ADL-P path).
+		uint32_t tglUefiCtl1 = MellowCore::callback->readReg32(0x45400);
+		{
+			uint32_t newCtl1 = tglUefiCtl1 | 0x00000401u;
+			MellowCore::callback->writeReg32(0x45400, newCtl1); // HSW_PWR_WELL_CTL1
+			MellowCore::callback->writeReg32(0x45404, 0x00000C03); // HSW_PWR_WELL_CTL2
+			SYSLOG("mellow", "V101T: PWR_WELL CTL1 uefi=0x%x->0x%x CTL2=0xc03", tglUefiCtl1, newCtl1);
+		}
+		MellowCore::callback->writeReg32(0x45408, 0x40000000); // HSW_PWR_WELL_CTL3
+		MellowCore::callback->writeReg32(0x4540C, 0x00000401); // HSW_PWR_WELL_CTL4
+		MellowCore::callback->writeReg32(0x45440, 0x00000003); // ICL_PWR_WELL_CTL_AUX1 — AUX A
+		MellowCore::callback->writeReg32(0x45444, 0x00000003); // ICL_PWR_WELL_CTL_AUX2 — AUX B
+		MellowCore::callback->writeReg32(0x45450, 0x00000003); // ICL_PWR_WELL_CTL_DDI1 — DDI A
+		MellowCore::callback->writeReg32(0x45454, 0x00000003); // ICL_PWR_WELL_CTL_DDI2 — DDI B
+
+		// TGL display engine registers (DMC trigger/context regs in 0x8Fxxx range)
+		// Values from IDA of original hwInitializeCState (TGL-native values)
+		MellowCore::callback->writeReg32(0x8F074, 0x00006FC0);
+		MellowCore::callback->writeReg32(0x8F004, 0x00A40088);
+		MellowCore::callback->writeReg32(0x8F034, 0xC003B400);
+
+		// Enable DMC — DC_STATE_DEBUG (0x45520) = 2
+		MellowCore::callback->writeReg32(0x45520, 2); // DC_STATE_DEBUG
+		MellowCore::callback->dmcIsAdlp = false;
+		MellowCore::callback->uefiCtl1  = tglUefiCtl1;
+		SYSLOG("mellow", "hwInitCState: TGL MMIO profile staged");
+		// setSignalLevels block REMOVED for the same reason as the ADL-P branch:
+		// Linux i915 (per /Volumes/EFI/syslog.txt drm trace) only calls setSignalLevels
+		// during DP link training, where swing=0/0/0/0 is the negotiation STARTING point
+		// before DPRX adjust-request bumps it to vswing=1/1/1/1. Calling it once at
+		// hwInitCState with all-zero levels freezes the combo PHY at the lowest drive
+		// strength forever → DP receivers read garbage bitRates, link silently fails.
+		// {
+		// 	uint8_t swing[4]   = {0, 0, 0, 0};
+		// 	uint8_t preEmph[4] = {0, 0, 0, 0};
+		// 	IntelDPLinkTraining::setSignalLevels(/*phy=*/0, /*lanes=*/4, /*isHBR2=*/false, /*isDP=*/true, swing, preEmph);
+		// 	IntelDPLinkTraining::setSignalLevels(/*phy=*/1, /*lanes=*/4, /*isHBR2=*/false, /*isDP=*/true, swing, preEmph);
+		// }
+		// Let original run with B48=1 (ICL CSR blob loads to SRAM).
+		// Run Apple's original CSR initializer, then restore the selected TGL
+		// compatibility registers it may overwrite.
+		FunctionCast(hwInitializeCState, callback->ohwInitializeCState)(that);
+		// Re-apply TGL context regs overwritten by original's ICL blob load.
+		MellowCore::callback->writeReg32(0x8F074, 0x00006FC0);
+		MellowCore::callback->writeReg32(0x8F004, 0x00A40088);
+		MellowCore::callback->writeReg32(0x8F034, 0xC003B400);
+		SYSLOG("mellow", "V104T: TGL context regs re-applied after ICL blob load");
+		// V102T: restore CTL1 after original (ICL DMC save/restore table may write 0x401).
+		{
+			uint32_t postCtl1 = MellowCore::callback->readReg32(0x45400);
+			uint32_t fixCtl1  = tglUefiCtl1 | 0x00000401u;
+			if (postCtl1 != fixCtl1) {
+				MellowCore::callback->writeReg32(0x45400, fixCtl1);
+				SYSLOG("mellow", "V102T: restore PWR_WELL CTL1 0x%x->0x%x", postCtl1, fixCtl1);
+			}
+		}
+
+	} else if (dmcMode == DmcMode::Adlp) {
+		// ── ADL-P compatibility profile ──
+		// This profile reuses Display 13 MMIO and power-well setup without
+		// embedding a stripped or otherwise modified Intel firmware binary.
+		SYSLOG("mellow", "hwInitCState: mellow-dmc=adlp compatibility profile (Apple CSR fallback)");
+
+		// Disable DC states before touching display engine registers.
+		// If DC5/DC6 is active when we write, the clock-gated blocks won't latch the writes.
+		// DC_STATE_EN = 0x45504 (confirmed: Archive HIGH, linux display/intel_display_regs.h)
+		MellowCore::callback->writeReg32(DC_STATE_EN, 0);
+
+		// Power wells — Gen12 ICL-style DDI + AUX power well enable.
+		// HSW_PWR_WELL_CTL1/2 (0x45400/45404): PG1/PG2 enable+state — values read from
+		// Linux intel_reg dump on same hardware (reg_dump.txt):
+		//   CTL1=0x00000401 (PG1 req+enabled), CTL2=0x00000C03 (PG1+PG2 req+enabled)
+		//   CTL3=0x40000000 (PG3 state only), CTL4=0x00000401
+		// V100: preserve UEFI CTL1 state bits (bits 12,14 = display power wells enabled).
+		// Writing the hardcoded 0x401 clears those bits, breaking vsync interrupt delivery
+		// → WindowServer crash at ~60s ("Display not ready").
+		// Fix: read UEFI CTL1 and OR in our minimum bits; keep CTL2 hardcoded at 0x0C03.
+		// DO NOT OR CTL2 with UEFI: UEFI leaves 0xfc00 (TC port "state" bits) set in CTL2.
+		// Asserting TC bits without IOM handshake disrupts the display domain during mode
+		// change, preventing the WSA un-blank (stays at 0x1, no cursor, no desktop).
+		uint32_t uefiCtl1 = MellowCore::callback->readReg32(0x45400);
+		{
+			uint32_t newCtl1  = uefiCtl1 | 0x00000401u;  // ensure PG1 req+state bits set
+			MellowCore::callback->writeReg32(0x45400, newCtl1); // HSW_PWR_WELL_CTL1
+			MellowCore::callback->writeReg32(0x45404, 0x00000C03); // HSW_PWR_WELL_CTL2 — hardcoded, no TC bits
+			SYSLOG("mellow", "V101: PWR_WELL CTL1 uefi=0x%x->0x%x CTL2=0xc03",
+				   uefiCtl1, newCtl1);
+		}
+		MellowCore::callback->writeReg32(0x45408, 0x40000000); // HSW_PWR_WELL_CTL3
+		MellowCore::callback->writeReg32(0x4540C, 0x00000401); // HSW_PWR_WELL_CTL4
+		// ICL_PWR_WELL_CTL_AUX1/2 (0x45440/45444): enable AUX power wells A+B
+		// bit1=req, bit0=enabled per ICL DDI power well HW spec (intel_display_regs.h)
+		MellowCore::callback->writeReg32(0x45440, 0x00000003); // ICL_PWR_WELL_CTL_AUX1 — AUX A enabled
+		MellowCore::callback->writeReg32(0x45444, 0x00000003); // ICL_PWR_WELL_CTL_AUX2 — AUX B enabled
+		// ICL_PWR_WELL_CTL_DDI1/2 (0x45450/45454): enable DDI power wells A+B
+		MellowCore::callback->writeReg32(0x45450, 0x00000003); // ICL_PWR_WELL_CTL_DDI1 — DDI A enabled
+		MellowCore::callback->writeReg32(0x45454, 0x00000003); // ICL_PWR_WELL_CTL_DDI2 — DDI B enabled
+
+		// ADL-P / RPL-P display engine registers — exact MMIO init pairs from v3 blob header
+		// (ADL-P Display 13 DMC metadata MMIO[0..6], stepping-'A' variant)
+		MellowCore::callback->writeReg32(0x8F074, 0x00086FC0);
+		MellowCore::callback->writeReg32(0x8F034, 0xC003B400);
+		MellowCore::callback->writeReg32(0x8F004, 0x01240108);
+		MellowCore::callback->writeReg32(0x8F038, 0xC003B200); // was missing
+		MellowCore::callback->writeReg32(0x8F008, 0x4FE44F98); // corrected from 0x512050D4
+		MellowCore::callback->writeReg32(0x8F03C, 0xC003B300);
+		MellowCore::callback->writeReg32(0x8F00C, 0x571056C0); // corrected from 0x584C57FC
+		// DDI C-F (ADL-P TC port registers — DKL PHY, 0x5Fxxx range)
+		MellowCore::callback->writeReg32(0x5F074, 0x00096FC0);
+		MellowCore::callback->writeReg32(0x5F034, 0xC003DF00);
+		MellowCore::callback->writeReg32(0x5F004, 0x214C2114);
+		MellowCore::callback->writeReg32(0x5F038, 0xC003E000);
+		MellowCore::callback->writeReg32(0x5F008, 0x22402208);
+		MellowCore::callback->writeReg32(0x5F03C, 0xC0032C00);
+		MellowCore::callback->writeReg32(0x5F00C, 0x241422FC);
+		MellowCore::callback->writeReg32(0x5F040, 0xC0033100);
+		MellowCore::callback->writeReg32(0x5F010, 0x26F826CC);
+		MellowCore::callback->writeReg32(0x5F474, 0x0009EFC0);
+		MellowCore::callback->writeReg32(0x5F434, 0xC003DF00);
+		MellowCore::callback->writeReg32(0x5F404, 0xA968A930);
+		MellowCore::callback->writeReg32(0x5F438, 0xC003E000);
+		MellowCore::callback->writeReg32(0x5F408, 0xAA5CAA24);
+		MellowCore::callback->writeReg32(0x5F43C, 0xC0032C00);
+		MellowCore::callback->writeReg32(0x5F40C, 0xAC30AB18);
+		MellowCore::callback->writeReg32(0x5F440, 0xC0033100);
+		MellowCore::callback->writeReg32(0x5F410, 0xAF14AEE8);
+		MellowCore::callback->writeReg32(0x5F874, 0x00053FC0);
+		MellowCore::callback->writeReg32(0x5F83C, 0xC0032C00);
+		MellowCore::callback->writeReg32(0x5F80C, 0x25202408);
+		MellowCore::callback->writeReg32(0x5F840, 0xC0033100);
+		MellowCore::callback->writeReg32(0x5F810, 0x280427D8);
+		MellowCore::callback->writeReg32(0x5FC3C, 0xC0032C00);
+		MellowCore::callback->writeReg32(0x5FC0C, 0x95209408);
+		MellowCore::callback->writeReg32(0x5FC40, 0xC0033100);
+		MellowCore::callback->writeReg32(0x5FC10, 0x980497D8);
+
+		// These timings are specific to the target 7D41 notebook panel. Keep them
+		// out of the default Ultra path; they are only safe as an explicit bring-up
+		// experiment on the matching device.
+		MellowCore::callback->use7D41PanelTimings = MellowCore::callback->deviceId == 0x7D41 &&
+			checkKernelArgument("-mellow7d41timings");
+		if (MellowCore::callback->use7D41PanelTimings) {
+		// Transcoder A DDI function + timing registers (re-imported from EFI reference for safety).
+		// Values from Linux intel_reg dump on this hardware (reg_dump.txt).
+		//   0x60400 = TRANS_DDI_FUNC_CTL_A  — DDI A enabled, DP SST, 8bpc, 2 lanes
+		//   0x60000 = TRANS_HTOTAL_A        — 2560 active, 2720 total
+		//   0x60004 = TRANS_HBLANK_A        — same as HTOTAL on eDP
+		//   0x60008 = TRANS_HSYNC_A         — sync positions
+		//   0x6000C = TRANS_VTOTAL_A        — 1600 active, 1750 total
+		//   0x60010 = TRANS_VBLANK_A
+		//   0x60014 = TRANS_VSYNC_A
+		//   0x60028 = TRANS_VSYNCSHIFT_A
+		//   0x60030/34 TRANS_DATA_M1/N1_A   — DP M/N values (TU 64, link rate)
+		//   0x60040/44 TRANS_LINK_M1/N1_A
+		// 0x8A000106: bit31=enable, [27:24]=DDI_A, [19:16]=2lanes, [3:1]=DP_SST(0x01)
+		// Pre-matches Apple's target so paramsFbCompare sees no lane-count change; changing
+		// lane count in TRANS_DDI_FUNC_CTL while transcoder is live resets the DDI buffer
+		// and drops the trained link.
+		MellowCore::callback->writeReg32(0x60400, 0x8A000106); // TRANS_DDI_FUNC_CTL_A
+		MellowCore::callback->writeReg32(0x60000, 0x0A9F09FF); // TRANS_HTOTAL_A
+		MellowCore::callback->writeReg32(0x60004, 0x0A9F09FF); // TRANS_HBLANK_A
+		MellowCore::callback->writeReg32(0x60008, 0x0A4F0A2F); // TRANS_HSYNC_A
+		MellowCore::callback->writeReg32(0x6000C, 0x06D5063F); // TRANS_VTOTAL_A
+		MellowCore::callback->writeReg32(0x60010, 0x06D50000); // TRANS_VBLANK_A
+		MellowCore::callback->writeReg32(0x60014, 0x06480642); // TRANS_VSYNC_A
+		MellowCore::callback->writeReg32(0x60028, 0x00000000); // TRANS_VSYNCSHIFT_A
+		MellowCore::callback->writeReg32(0x60030, 0x7E5D159E); // TRANS_DATA_M1_A  (TU 64, M=0x5d159e)
+		MellowCore::callback->writeReg32(0x60034, 0x00800000); // TRANS_DATA_N1_A  (N=0x800000)
+		MellowCore::callback->writeReg32(0x60040, 0x0007C1CD); // TRANS_LINK_M1_A  (M=0x7c1cd)
+		MellowCore::callback->writeReg32(0x60044, 0x00080000); // TRANS_LINK_N1_A  (N=0x80000)
+
+		// Panel power sequencer (re-imported from EFI reference).
+		// TGL/ADL-P both have PCH_SPLIT (ICP/TGP PCH) → intel_pps_setup sets
+		// mmio_base = PCH_PPS_BASE = 0xC7200 (not 0x61200 which is BXT/APL).
+		// Values from Linux intel_reg dump on this hardware:
+		//   0xC7204 (PP_CONTROL)   = 0x00000067 (panel on, VDD on, power-on target)
+		//   0xC7208 (PP_ON_DELAYS) = 0x07D00001 (T1=1, T3=2000ms power-on delays)
+		MellowCore::callback->writeReg32(0xC7204, 0x00000067); // PP_CONTROL
+		MellowCore::callback->writeReg32(0xC7208, 0x07D00001); // PP_ON_DELAYS
+			SYSLOG("mellow", "7D41 target panel timing override applied");
+		} else {
+			SYSLOG("mellow", "Target panel timing override skipped (requires DEV_7D41 and -mellow7d41timings)");
+		}
+
+		// PIPE_CLK_SEL_A (0x46140 = 0x10000000) REMOVED after the EFI re-import caused
+		// "CD Clock PLL is locked" line to disappear from the FB log and link bitRates to
+		// turn into garbage (27/40/63 instead of 179/204/206). Empirical: writing this
+		// value to 0x46140 here either selects a clock source that prevents CD PLL lock,
+		// or 0x46140 isn't actually PIPE_CLK_SEL on Display 13 (ADL-P) — Linux i915
+		// names it differently for ADL-P. Leave for Apple's later mode-setup to program.
+		// MellowCore::callback->writeReg32(0x46140, 0x10000000); // PIPE_CLK_SEL_A
+
+		// Enable DMC — DC_STATE_DEBUG (0x45520) = 2
+		MellowCore::callback->writeReg32(0x45520, 2); // DC_STATE_DEBUG
+		MellowCore::callback->dmcIsAdlp = true;
+		MellowCore::callback->uefiCtl1  = uefiCtl1;  // save for V60 re-enforcement
+		SYSLOG("mellow", "hwInitCState: ADL-P MMIO profile staged");
+		// setSignalLevelsADLP block REMOVED after the EFI re-import caused link bitRates
+		// to turn into garbage (27/40/63 instead of 179/204/206). Likely cause: calling
+		// it with swing[]=preEmph[]={0,0,0,0} BEFORE Apple's link training overwrites
+		// the UEFI-trained combo PHY DW2/4/5/7 with zero levels → DP link reads back
+		// nonsense bitrates. The setSignalLevels function should only be invoked DURING
+		// link training when swing/preEmph are properly populated, not as init scaffolding.
+		// Left as a comment so we can re-enable surgically once real swing values are known.
+		// {
+		// 	uint8_t swing[4]   = {0, 0, 0, 0};
+		// 	uint8_t preEmph[4] = {0, 0, 0, 0};
+		// 	IntelDPLinkTraining::setSignalLevelsADLP(/*phy=*/0, /*lanes=*/4, /*isHBR2=*/false, /*isEDP=*/true,  swing, preEmph);
+		// 	IntelDPLinkTraining::setSignalLevelsADLP(/*phy=*/1, /*lanes=*/4, /*isHBR2=*/false, /*isEDP=*/false, swing, preEmph);
+		// }
+		// Run Apple's original CSR initializer, then restore the ADL-P compatibility
+		// context registers. This is a profile/fallback policy, not a claim that an
+		// ADL-P DMC image is resident or validated on Xe-LPG.
+		FunctionCast(hwInitializeCState, callback->ohwInitializeCState)(that);
+		// Re-apply ADL-P context regs overwritten by original's ICL blob load.
+		MellowCore::callback->writeReg32(0x8F074, 0x00086FC0);
+		MellowCore::callback->writeReg32(0x8F034, 0xC003B400);
+		MellowCore::callback->writeReg32(0x8F004, 0x01240108);
+		MellowCore::callback->writeReg32(0x8F038, 0xC003B200);
+		MellowCore::callback->writeReg32(0x8F008, 0x4FE44F98);
+		MellowCore::callback->writeReg32(0x8F03C, 0xC003B300);
+		MellowCore::callback->writeReg32(0x8F00C, 0x571056C0);
+		SYSLOG("mellow", "V104: ADL-P context regs re-applied after ICL blob load");
+		// V102: CTL1 restore — ICL DMC save/restore table writes CTL1=0x401, clearing
+		{
+			uint32_t postCtl1 = MellowCore::callback->readReg32(0x45400);
+			uint32_t fixCtl1  = uefiCtl1 | 0x00000401u;
+			if (postCtl1 != fixCtl1) {
+				MellowCore::callback->writeReg32(0x45400, fixCtl1);
+				SYSLOG("mellow", "V102: restore PWR_WELL CTL1 0x%x->0x%x", postCtl1, fixCtl1);
+			}
+		}
+		// V105: disable PSR1+PSR2 — the ICL DMC initializer (original hwInitializeCState)
+		// enables PSR2 (EDP_PSR2_CTL bit 0 = 1) for the eDP panel. On ADL-P hardware with
+		// the ICL driver the PSR2 selective-update path is non-functional: the panel locks
+		// into self-refresh showing the initial black frame; only the cursor plane (separate
+		// SU path) updates. Clearing both registers before the first frame is displayed
+		// restores normal scanout. Confirmed root cause via V76: PSR2_CTL=0x4811, V88
+		// direct physical writes to SURF invisible despite valid GGTT PTEs.
+		{
+			// V105 ADDRESS FIX: PSR1 control on TGL is at 0x60800 (transcoder EDP space),
+			// NOT 0x64800 (older Gen ICL/SKL layout). Pre-fix V105 was writing to a wrong
+			// register; PSR1 stayed enabled at 0x60800 = 0x00100001, panel kept refreshing
+			// from its own cache, screen frozen on first frame even while PIPE_FRMCOUNT
+			// kept advancing. Probe V205 caught this. Now writes to both addresses for
+			// safety (0x60800 = TGL, 0x64800 = legacy/ICL — covers both spoof paths).
+			uint32_t psr2ctl     = MellowCore::callback->readReg32(0x60A10);  // EDP_PSR2_CTL TGL
+			uint32_t psr1ctlTgl  = MellowCore::callback->readReg32(0x60800);  // EDP_PSR_CTL  TGL
+			uint32_t psr1ctlIcl  = MellowCore::callback->readReg32(0x64800);  // EDP_PSR_CTL  ICL
+			uint32_t psr2ctlIcl  = MellowCore::callback->readReg32(0x60900);  // EDP_PSR2_CTL ICL
+			MellowCore::callback->writeReg32(0x60A10, 0);  // PSR2 TGL
+			MellowCore::callback->writeReg32(0x60800, 0);  // PSR1 TGL  ← THE ACTUAL FIX
+			MellowCore::callback->writeReg32(0x60900, 0);  // PSR2 legacy
+			MellowCore::callback->writeReg32(0x64800, 0);  // PSR1 legacy
+			SYSLOG("mellow", "V105: PSR disabled — TGL(PSR1=0x%x PSR2=0x%x) legacy(PSR1=0x%x PSR2=0x%x)",
+				   psr1ctlTgl, psr2ctl, psr1ctlIcl, psr2ctlIcl);
+		}
+
+	} else if (dmcMode == DmcMode::Icl) {
+		// ── ICL passthrough ──
+		// Do not pre-program zero swing/pre-emphasis levels here: link training owns
+		// those values, and forcing zero early can destroy the UEFI-trained link.
+		SYSLOG("mellow", "hwInitCState: mellow-dmc=icl, passthrough original");
+		FunctionCast(hwInitializeCState, callback->ohwInitializeCState)(that);
+		SYSLOG("mellow", "hwInitCState: ICL done");
+
+	} else {
+		// ── explicit or fail-closed skip ──
+		// Proven working: just let original run + configure AUX.
+		// No DMC blob, no display engine register writes.
+		SYSLOG("mellow", "hwInitCState: skip (safe fallback), passthrough original");
+		FunctionCast(hwInitializeCState, callback->ohwInitializeCState)(that);
+	}
+
+	hwConfigureCustomAUX(that, true);
+	SYSLOG("mellow", "hwInitCState: done");
+}
+
+void MellowCore::adlpDcExit(const char *caller) {
+	if (!dmcIsAdlp) return;
+	const uint32_t dcState = readReg32(0x45504); // DC_STATE_EN
+	if (dcState == 0) return;
+	static int adlpDcExitCount = 0;
+	if (adlpDcExitCount < 48) {
+		adlpDcExitCount++;
+		SYSLOG("mellow", "adlpDcExit[%s/%d]: DC_STATE_EN=0x%x — restoring ADL-P display state", caller, adlpDcExitCount, dcState);
+	}
+	// 1. Disable DC states so clock-gated blocks latch the writes below.
+	writeReg32(0x45504, 0);
+	// 2. Restore power wells (request enable on CTL1/2/3/4 + AUX A/B + DDI A/B).
+	writeReg32(0x45400, uefiCtl1 | 0x401u);  // PWR_WELL_CTL1
+	writeReg32(0x45404, 0x0C03u);             // PWR_WELL_CTL2
+	writeReg32(0x45408, 0x40000000u);         // PWR_WELL_CTL3
+	writeReg32(0x4540C, 0x401u);              // PWR_WELL_CTL4
+	writeReg32(0x45440, 0x3u);               // ICL_PWR_WELL_CTL_AUX1 — AUX A
+	writeReg32(0x45444, 0x3u);               // ICL_PWR_WELL_CTL_AUX2 — AUX B
+	writeReg32(0x45450, 0x3u);               // ICL_PWR_WELL_CTL_DDI1 — DDI A
+	writeReg32(0x45454, 0x3u);               // ICL_PWR_WELL_CTL_DDI2 — DDI B
+	// 3. Restore ADL-P display engine context registers (saved by DMC on DC entry).
+	writeReg32(0x8F074, 0x00086FC0u);
+	writeReg32(0x8F034, 0xC003B400u);
+	writeReg32(0x8F004, 0x01240108u);
+	writeReg32(0x8F038, 0xC003B200u);
+	writeReg32(0x8F008, 0x4FE44F98u);
+	writeReg32(0x8F03C, 0xC003B300u);
+	writeReg32(0x8F00C, 0x571056C0u);
+	// 4. Restore the target panel sequencer only when its board-specific
+	// timing profile was explicitly selected.
+	if (use7D41PanelTimings)
+		writeReg32(0xC7204, 0x67u);  // PP_CONTROL
+	// 5. Disable PSR — DMC may have re-enabled it on DC exit.
+	writeReg32(0x60800, 0u);   // EDP_PSR_CTL (TGL)
+	writeReg32(0x60A10, 0u);   // EDP_PSR2_CTL (TGL)
+	if (adlpDcExitCount <= 48) {
+		SYSLOG("mellow", "adlpDcExit[%s]: restore complete", caller);
+	}
+}
+
+void Gen11::AppleIntelPowerWellinit(AppleIntel::AppleIntelPowerWell *that, AppleIntel::AppleIntelBaseController *param_1)
+{
+	ccont = param_1->fRegCachePool;
+
+	FunctionCast(AppleIntelPowerWellinit, callback->oAppleIntelPowerWellinit)(that, param_1);
+
+	// After callthrough the south display domain is clocked; direct BAR read is safe.
+	uint32_t pg  = MellowCore::callback->readReg32(0x45404);
+	uint32_t ddi = MellowCore::callback->readReg32(0x45454);
+	uint32_t aux = MellowCore::callback->readReg32(0x45444);
+	SYSLOG("mellow", "PowerWell::init UEFI state — PG=0x%08x DDI=0x%08x AUX=0x%08x", pg, ddi, aux);
+
+	// Apple's PowerWell::init checks fController->flags_ig & FB_FLAG_BOOST_PIXEL_FREQUENCY_LIMIT
+	// (+0xC58) before setting fAlwaysOn=1. On the non-real-TGL Ultra spoof path that
+	// flag may not be set when the kext first
+	// calls PowerWell::init (initPlatformWorkarounds runs later), so fAlwaysOn stays 0 and
+	// Apple can gate power wells off. We force fAlwaysOn=1 unconditionally on non-real-TGL.
+	// Also stamp fMMIO in case Apple's TGL-path init skipped it on ADL-P hardware.
+	SYSLOG("mellow", "PowerWell::init — flags_ig=0x%x fAlwaysOn(before)=%u fMMIO=%p",
+		   param_1->flags_ig, that->fAlwaysOn, that->fMMIO);
+	if (!MellowCore::callback->isRealTGL) {
+		that->fAlwaysOn = 1;
+		if (!that->fMMIO) that->fMMIO = reinterpret_cast<AppleIntel::AppleIntelMMIO *>(ccont);
+		SYSLOG("mellow", "PowerWell::init forced fAlwaysOn=1, fMMIO=%p fMMIOBase=%p",
+			   that->fMMIO, that->fMMIO ? that->fMMIO->fMMIOBase : nullptr);
+	}
+	SYSLOG("mellow", "PowerWell::init done — fAlwaysOn=%u fPGBase=%u PG1=%u PG2=%u PG3=%u PG4=%u",
+		   that->fAlwaysOn, that->fPGBase, that->fPG1, that->fPG2, that->fPG3, that->fPG4);
+	SYSLOG("mellow", "PowerWell::init DDI — [0]=%u [1]=%u [2]=%u [3]=%u [4]=%u [5]=%u [6]=%u [7]=%u [8]=%u",
+		   that->fDDI[0], that->fDDI[1], that->fDDI[2], that->fDDI[3], that->fDDI[4],
+		   that->fDDI[5], that->fDDI[6], that->fDDI[7], that->fDDI[8]);
+	SYSLOG("mellow", "PowerWell::init AUX — [0]=%u [1]=%u [2]=%u [3]=%u [4]=%u [5]=%u [6]=%u [7]=%u [8]=%u",
+		   that->fAUX[0], that->fAUX[1], that->fAUX[2], that->fAUX[3], that->fAUX[4],
+		   that->fAUX[5], that->fAUX[6], that->fAUX[7], that->fAUX[8]);
+}
+
+// ─── Sleep/wake lifecycle hooks ──────────────────────────────────────────────
+// All four Apple implementations set this+0x49e0=4 as their final operation.
+// If Apple's code exits early (null Camellia ptr, lock contention, etc.) that
+// write never happens and the FB state machine is stuck.  We callthrough and
+// then enforce state=4 regardless, plus track panel power for IOKit properties.
+//
+// Lifecycle order:
+//   Sleep: prepareToEnterSleep → prepareToExitWake
+//   Wake:  prepareToExitSleep  → prepareToEnterWake
+
+static void logFBCtrlState(const char *tag, AppleIntel::AppleIntelFramebuffer *that)
+{
+	auto *ctrl = that->fController;
+	uint32_t fbState = getMember<uint32_t>(that, 0x49e0);
+	if (ctrl) {
+		SYSLOG("mellow", "%s fb=%p fbState=%u flags_ig=0x%x fInfoFlags2=0x%x fGPUIsAwake=%u pipe=%u",
+			   tag, that, fbState,
+			   ctrl->flags_ig, ctrl->fInfoFlags2, getMember<uint32_t>(ctrl, 0x1A00),
+			   that->fPipeIndex);
+	} else {
+		SYSLOG("mellow", "%s fb=%p fbState=%u ctrl=NULL pipe=%u", tag, that, fbState, that->fPipeIndex);
+	}
+}
+
+// Wake stage 2: confirm panel is on, log state.
+// Apple does: panel-power property, some vtable dispatch, then state=4.
+void Gen11::prepareToEnterWake(AppleIntel::AppleIntelFramebuffer *that)
+{
+	logFBCtrlState("prepareToEnterWake>>", that);
+	bool panelOn = isPanelPowerOn(getMember<void *>(that, 0x1d0));
+	if (panelOn) {
+		reinterpret_cast<IORegistryEntry *>(that)->setProperty("AAPL,LCD-PowerState-ON", true);
+	}
+	FunctionCast(prepareToEnterWake, callback->oprepareToEnterWake)(that);
+	uint32_t state_after = getMember<uint32_t>(that, 0x49e0);
+	if (state_after != 4) {
+		SYSLOG("mellow", "prepareToEnterWake: state=0x%x (expected 4), forcing", state_after);
+		getMember<uint32_t>(that, 0x49e0) = 4;
+	}
+	logFBCtrlState("prepareToEnterWake<<", that);
+}
+
+// Sleep stage 2: NVRAM save, Camellia backlight off, StopTransactions,
+// disableDisplay, hwSetPanelPower(0), two handleEvent calls, then state=4.
+void Gen11::prepareToExitWake(AppleIntel::AppleIntelFramebuffer *that)
+{
+	logFBCtrlState("prepareToExitWake>>", that);
+	reinterpret_cast<IORegistryEntry *>(that)->setProperty("AAPL,LCD-PowerState-ON", false);
+	FunctionCast(prepareToExitWake, callback->oprepareToExitWake)(that);
+	uint32_t state_after = getMember<uint32_t>(that, 0x49e0);
+	if (state_after != 4) {
+		SYSLOG("mellow", "prepareToExitWake: state=0x%x (expected 4), forcing", state_after);
+		getMember<uint32_t>(that, 0x49e0) = 4;
+	}
+	logFBCtrlState("prepareToExitWake<<", that);
+}
+
+// Sleep stage 1: fSleeping=1, cancel timers, clientNotify(2,0), state=4,
+// handleEvent(sleep), hwSaveState, hwDisableInterrupts, fGPUIsAwake=0.
+void Gen11::prepareToEnterSleep(AppleIntel::AppleIntelFramebuffer *that)
+{
+	logFBCtrlState("prepareToEnterSleep>>", that);
+	reinterpret_cast<IORegistryEntry *>(that)->setProperty("AAPL,LCD-PowerState-ON", false);
+	FunctionCast(prepareToEnterSleep, callback->oprepareToEnterSleep)(that);
+	uint32_t state_after = getMember<uint32_t>(that, 0x49e0);
+	if (state_after != 4) {
+		SYSLOG("mellow", "prepareToEnterSleep: state=0x%x (expected 4), forcing", state_after);
+		getMember<uint32_t>(that, 0x49e0) = 4;
+	}
+	logFBCtrlState("prepareToEnterSleep<<", that);
+}
+
+// Wake stage 1: restorePowerWellsState, hwEnableInterrupts, hwInitializeCState,
+// hwRestoreState, probePortState per port, gamma/reg-cache restore,
+// clientNotify(2,1), handleEvent(wake), fGPUIsAwake=1, setDPPowerState, state=4.
+void Gen11::prepareToExitSleep(AppleIntel::AppleIntelFramebuffer *that)
+{
+	logFBCtrlState("prepareToExitSleep>>", that);
+	FunctionCast(prepareToExitSleep, callback->oprepareToExitSleep)(that);
+	uint32_t state_after = getMember<uint32_t>(that, 0x49e0);
+	if (state_after != 4) {
+		SYSLOG("mellow", "prepareToExitSleep: state=0x%x (expected 4), forcing", state_after);
+		getMember<uint32_t>(that, 0x49e0) = 4;
+	}
+	reinterpret_cast<IORegistryEntry *>(that)->setProperty("AAPL,LCD-PowerState-ON", true);
+	logFBCtrlState("prepareToExitSleep<<", that);
+}
+
+bool Gen11::AppleIntelBaseControllerstart(AppleIntel::AppleIntelBaseController *that, IOService *param_1)
+{
+	// V25: Display workarounds BEFORE start (no ForceWake needed for display regs 0x4xxxx+).
+	// GT workarounds moved AFTER start (ForceWake must be held for GT regs 0x0-0x7FFF).
+	
+	SYSLOG("mellow", "AppleIntelBaseControllerstart: applying display workarounds");
+
+	// Disable DC states during init to prevent power domain conflicts
+	MellowCore::callback->writeReg32(DC_STATE_EN, 0);
+	
+	/* Wa_14011294188:ehl,jsl,tgl,rkl,adl-s */
+	MellowCore::callback->intel_de_rmw(SOUTH_DSPCLK_GATE_D, 0,
+				PCH_DPMGUNIT_CLOCK_GATE_DISABLE);
+	
+	// PCH reset handshake
+	MellowCore::callback->intel_de_rmw(HSW_NDE_RSTWRN_OPT, RESET_PCH_HANDSHAKE_ENABLE,
+				RESET_PCH_HANDSHAKE_ENABLE);
+	
+	/* Wa_14011508470:tgl,dg1,rkl,adl-s,adl-p,dg2 */
+	MellowCore::callback->intel_de_rmw(GEN11_CHICKEN_DCPR_2, 0,
+				DCPR_CLEAR_MEMSTAT_DIS | DCPR_SEND_RESP_IMM |
+				DCPR_MASK_LPMODE | DCPR_MASK_MAXLATENCY_MEMUP_CLR);
+	
+	/* Display WA #1185 WaDisableDARBFClkGating:glk,icl,ehl,tgl (Wa_14010480278) */
+	MellowCore::callback->intel_de_rmw(GEN9_CLKGATE_DIS_0, 0, DARBF_GATING_DIS);
+	
+	/* Wa_14013723622 */
+	MellowCore::callback->intel_de_rmw(CLKREQ_POLICY, CLKREQ_POLICY_MEM_UP_OVRD, 0);
+	
+	SYSLOG("mellow", "AppleIntelBaseControllerstart: display workarounds applied");
+
+	SYSLOG("mellow", "FBController::start() entering...");
+	auto ret=FunctionCast(AppleIntelBaseControllerstart, callback->oAppleIntelBaseControllerstart)(that,param_1 );
+	SYSLOG("mellow", "FBController::start() returned %d", ret);
+	
+	if (ret) {
+		// The personality dict itself was registered in IOCatalogue from the HW-kext
+		// processKext branch (see Gen11::injectAcceleratorPersonality). All this wrapper
+		// does — and all an FB-tier route should do — is poke the FBController service
+		// so IOKit re-runs matching now that the personality is present.
+		auto *service = OSDynamicCast(IOService, reinterpret_cast<OSObject *>(that));
+		if (service) {
+			SYSLOG("mellow", "FBController: calling registerService() to trigger accelerator matching");
+			service->registerService();
+		}
+	}
+
+	return ret;
+}
+
+uint32_t Gen11::wrapProbeCDClockFrequency(AppleIntel::AppleIntelBaseController *that) {
+
+	// Sonoma probeCDClockFrequency checks reg 0x46070 (BXT_DE_PLL_ENABLE) bit 31 first.
+	// If bit 31 is CLEAR it panics immediately: "Wrong CD clock frequency set by EFI".
+	// EFI on Hackintosh may leave this clear, so we ensure it is set before calling the original.
+	auto squash = MellowCore::callback->readReg32(BXT_DE_PLL_ENABLE);  // byte addr OK — readReg32 divides internally
+	if (!(squash & BXT_DE_PLL_PLL_ENABLE)) {
+		DBGLOG("mellow", "wrapProbeCDClockFrequency: BXT_DE_PLL_PLL_ENABLE (0x46070 bit31) was clear (0x%x), setting it", squash);
+		MellowCore::callback->writeReg32(BXT_DE_PLL_ENABLE, squash | BXT_DE_PLL_PLL_ENABLE);
+	}
+
+	// Always sanitize (disable + reprogram PLL) regardless of current CDCLK value.
+	//
+	// When BIOS leaves CDCLK already at >= 648 MHz (threshold), skipping sanitize causes
+	// orgProbeCDClockFrequency to take the "cdclk already at target" path, which reads PCU
+	// mailbox command 0x6 (PCODE_CDCLK_CONFIG verify). On ADL-P this returns 0x9b9b9b9b
+	// (PCU not responding / command not supported), causing initCDClock to return an error.
+	// start() then skips port allocation and boot display setup entirely — no hwUpdateCursorMemory,
+	// no cursor GGTT entries → full black screen even when the display link is trained.
+	//
+	// Always calling sanitize takes the "frequency changed" success path in initCDClock,
+	// which writes mailbox(7,2) ACK and skips the failing PCU 0x6 verify read.
+	auto cdclk = MellowCore::callback->readReg32(ICL_REG_CDCLK_CTL) & CDCLK_FREQ_DECIMAL_MASK;  // byte addr OK
+	SYSLOG("mellow", "wrapProbeCDClockFrequency: cdclk=0x%x, force-sanitizing to bypass PCU mailbox failure", cdclk);
+	sanitizeCDClockFrequency(that);
+
+	auto retVal = callback->orgProbeCDClockFrequency(that);
+	return retVal;
+}
+
+void Gen11::sanitizeCDClockFrequency(AppleIntel::AppleIntelBaseController *that) {
+
+	//auto referenceFrequency = callback->wrapReadRegister32(that, SKL_DSSM) & ICL_DSSM_CDCLK_PLL_REFCLK_MASK;
+	auto referenceFrequency =MellowCore::callback->readReg32(ICL_REG_DSSM)>> 29;
+	//auto referenceFrequency = callback->wrapReadRegister32(that, ICL_REG_DSSM) >> 29;
+	uint32_t newCdclkFrequency = 0;
+	uint32_t newPLLFrequency = 0;
+	switch (referenceFrequency) {
+		case ICL_REF_CLOCK_FREQ_19_2:
+			newCdclkFrequency = ICL_CDCLK_FREQ_652_8;
+			newPLLFrequency = ICL_CDCLK_PLL_FREQ_REF_19_2;
+			break;
+			
+		case ICL_REF_CLOCK_FREQ_24_0:
+			newCdclkFrequency = ICL_CDCLK_FREQ_648_0;
+			newPLLFrequency = ICL_CDCLK_PLL_FREQ_REF_24_0;
+			break;
+			
+		case ICL_REF_CLOCK_FREQ_38_4:
+			newCdclkFrequency = ICL_CDCLK_FREQ_652_8;
+			newPLLFrequency = ICL_CDCLK_PLL_FREQ_REF_38_4;
+			break;
+			
+		default:
+			return;
+	}
+
+	DBGLOG("mellow", "sanitizeCDClockFrequency: ref=%u targetCdclk=0x%x targetPll=0x%x", referenceFrequency, newCdclkFrequency, newPLLFrequency);
+
+	// Use solved original directly so sanitize remains safe even when disableCDClock route is toggled off.
+	if (callback->orgDisableCDClock) {
+		callback->orgDisableCDClock(that);
+	} else {
+		disableCDClock(that);
+	}
+
+	callback->orgSetCDClockFrequency(that, newPLLFrequency);
+
+}
+
+/*
+void Gen11::initCDClock(void *that)
+{
+	// Mirrors AppleIntelFramebufferController::initCDClock decompiled flow.
+	// DSSM bits [31:29] encode the reference clock frequency (0=24MHz, 1=19.2MHz, 2=38.4MHz).
+	// The check < 0x60000000 ensures bits[31:29] < 3 (i.e. a valid reference).
+	auto dssm = MellowCore::callback->readReg32(ICL_REG_DSSM);
+	if (dssm >= 0x60000000) {
+		// Invalid / unsupported reference clock — fall back to original which will panic/reset.
+		return FunctionCast(initCDClock, callback->oinitCDClock)(that);
+	}
+
+	uint32_t refFreqIdx = dssm >> 0x1d;                       // bits [31:29]
+	getMember<uint32_t>(that, 0xe98) = refFreqIdx;
+
+	// Call through our safe wrapper so BXT_DE_PLL_ENABLE / CDCLK sanity checks are applied.
+	auto probedFreq = static_cast<uint64_t>(wrapProbeCDClockFrequency(that));
+	getMember<uint64_t>(that, 0xe88) = probedFreq;
+
+	if (probedFreq == 0) {
+		// Fallback table — mirrors DAT_00081140[refFreqIdx * 0x24], first uint32 per entry.
+		static const uint32_t kDefaultCDClkFreq[] = {
+			ICL_CDCLK_FREQ_648_0,   // index 0: 24.0 MHz ref → 648 MHz
+			ICL_CDCLK_FREQ_652_8,   // index 1: 19.2 MHz ref → 652.8 MHz
+			ICL_CDCLK_FREQ_652_8,   // index 2: 38.4 MHz ref → 652.8 MHz
+		};
+		probedFreq = (refFreqIdx < arrsize(kDefaultCDClkFreq))
+			? kDefaultCDClkFreq[refFreqIdx]
+			: ICL_CDCLK_FREQ_648_0;
+	}
+
+	getMember<uint64_t>(that, 0xe90) = probedFreq;
+}
+*/
+void Gen11::initCDClock(AppleIntel::AppleIntelBaseController *that)
+{
+	return FunctionCast(initCDClock, callback->oinitCDClock)(that);
+}
+
+void Gen11::setCDClockFrequencyOnHotplug(AppleIntel::AppleIntelBaseController *that)
+{
+	return FunctionCast(setCDClockFrequencyOnHotplug, callback->osetCDClockFrequencyOnHotplug)(that );
+}
+
+
+void Gen11::disableCDClock(AppleIntel::AppleIntelBaseController *that)
+{
+	FunctionCast(disableCDClock, callback->odisableCDClock)(that );
+}
+
+uint8_t Gen11::hwRegsNeedUpdate
+		  (AppleIntel::AppleIntelBaseController *that,
+		   AppleIntel::AppleIntelFramebuffer *param_1,
+		   AppleIntel::AppleIntelDisplayPath *param_2,
+		   AppleIntel::CRTCParams *param_3,
+		   const IODetailedTimingInformationV2 *param_4,
+		   AppleIntel::SCALERPARAMS *param_5)
+{
+	// ADL-P DC exit: restore power wells and context before Apple writes registers.
+	if (MellowCore::callback->dmcIsAdlp)
+		MellowCore::callback->adlpDcExit("hwRNU");
+
+	// param_3 is the pending CRTCParams built by SetupParams.
+	if (!MellowCore::callback->isRealTGL && param_3) {
+		auto *params = param_3;
+
+		// V97P: clear bit[16] in TRANS_DDI_FUNC_CTL.
+		// Apple's SetupParams sets bit16 as a port-type flag; UEFI/HW never sets it.
+		// Without this the DDI FUNC_CTL compare fires and triggers a full modeset
+		// that disrupts the already-trained 4-lane eDP link → black screen.
+		if (params->TRANS_DDI_FUNC_CTL & (1u << 16)) {
+			static int v97PCount = 0;
+			if (v97PCount < 12) {
+				v97PCount++;
+				SYSLOG("mellow", "V97P[%d]: CRTCParams TRANS_DDI_FUNC_CTL 0x%x -> 0x%x",
+					   v97PCount, params->TRANS_DDI_FUNC_CTL,
+					   params->TRANS_DDI_FUNC_CTL & ~(1u << 16));
+			}
+			params->TRANS_DDI_FUNC_CTL &= ~(1u << 16);
+		}
+
+		// V97C: align pending TRANS_CONF with the live HW value.
+		// paramsFbCompare logs "TRANS_CONF 0xc0000000->0xc0000024": HW has bits[5,2]
+		// clear (UEFI default), Apple wants to set them (interlace/depth config).
+		// Writing those bits to an active pipe causes a transient signal disruption
+		// that sets the panel's DPCD InterLane Alignment Lost bit (0x202=0x80),
+		// which checkLinkStatus detects ~10 s later and tears down the display.
+		// Fix: replace the pending TRANS_CONF with the current HW register value so
+		// paramsFbCompare sees no change and the partial pipe update is suppressed.
+		// PIPE_CONF_A (= TRANS_CONF in ICL+) = 0x70008.
+		// NOTE: 0x60008 is TRANS_HSYNC_A (horizontal sync timing) — do NOT use that.
+		const uint32_t hwTransConf = MellowCore::callback->readReg32(0x70008);
+		if (params->TRANS_CONF != hwTransConf) {
+			static int v97CCount = 0;
+			if (v97CCount < 12) {
+				v97CCount++;
+				SYSLOG("mellow", "V97C[%d]: CRTCParams TRANS_CONF 0x%x -> HW 0x%x (suppressed pipe update)",
+					   v97CCount, params->TRANS_CONF, hwTransConf);
+			}
+			params->TRANS_CONF = hwTransConf;
+		}
+
+		// V300 REVERTED — was a memory-write hack zeroing CRTCParams[+0xE8]/[+0xEC] to
+		// kill DSC engine select bits. Per jalavoui's feedback ("stop hacking memory
+		// writes, fix the origin not the destination"), DSC should be controlled at
+		// getDPCDInfo / Info.plist FeatureControl level, not patched after-the-fact in
+		// the CRTCParams struct. Our Info.plist already sets DSCSupport=0/DSCCapReporting=0
+		// (confirmed by fb.log "DSC supported: 0" / "DSC Caps Reporting enabled: 0"),
+		// so if Apple still calls setupDSCEngineParams the path is somewhere downstream
+		// that ignores FeatureControl — needs investigation at the origin function, not
+		// here. Linux on this hardware: VBT Port A DSC:0, link runs "DSC off" → DSC was
+		// likely a wrong hypothesis for the fragmentation symptom in the first place.
+	}
+
+	static int CCount = 0;
+	CCount++;
+	SYSLOG("mellow", "V97C[%d]: hwRegsNeedUpdate called", CCount);
+	// Return the original result so that register reprogramming proceeds normally.
+	// The lane count mismatch (4→2) that previously broke the display is now fixed
+	// by the computeLaneCount hook forcing 4 lanes.  Without register updates, the
+	// plane surface address and stride never get written, leaving the stale BIOS
+	// framebuffer on screen (grey/black vertical bars with only cursor visible).
+	return FunctionCast(hwRegsNeedUpdate, callback->ohwRegsNeedUpdate)(that, param_1, param_2, param_3, param_4, param_5);
+}
+
+int Gen11::wrapHwSetupMemory(AppleIntel::AppleIntelBaseController *that, AppleIntel::AppleIntelFramebuffer *fb, AppleIntel::AppleIntelDisplayPath *displayPath, AppleIntel::CRTCParams *params, bool isAperture)
+{
+	int ret = FunctionCast(wrapHwSetupMemory, callback->ohwSetupMemory)(that, fb, displayPath, params, isAperture);
+
+	// V201: post-hwSetupMemory probe — read 32 bytes at the SURF GTT offset through BAR2.
+	// SURF address is at fb+0x4330 (per hwSetupMemory decomp at offset 0x6E046).
+	// If buffer is all zeros → freshly-allocated IOBufferMemoryDescriptor pages, nothing
+	// has rendered into them yet. If non-zero → some path filled them (EFI GOP carry-over,
+	// CoreDisplay handoff blit, or other).
+	static int v201Count = 0;
+	if (v201Count < 8 && MellowCore::callback) {
+		uint32_t surfAddr = getMember<uint32_t>(fb, 0x4330);
+		uint32_t fbSize   = getMember<uint32_t>(fb, 0x4334);
+		uint8_t  fbIdx    = getMember<uint8_t>(fb,  0x4288);
+		uint8_t  yTileFlg = getMember<uint8_t>(fb,  0x4A18);
+
+		MellowCore::callback->setApertureIfNecessary();
+		// Sample top-left and screen-center for 2560×1600 BGRA layout.
+		uint32_t tlCtr = 0xDEADBEEF, ctr = 0xDEADBEEF, bar = 0xDEADBEEF, mid = 0xDEADBEEF;
+		if (MellowCore::callback->aperturePtr && surfAddr + 0xA00000 <= MellowCore::callback->apertureLen) {
+			volatile uint32_t *fb32 = MellowCore::callback->aperturePtr + (surfAddr / sizeof(uint32_t));
+			tlCtr = fb32[0];
+			ctr   = fb32[0x7D2800 / 4];  // (1280,800) Apple logo center
+			bar   = fb32[0x9C7800 / 4];  // (1280,1000) loading-bar row
+			mid   = fb32[0x7D1A00 / 4];  // (640,800) mid-left of logo area
+		}
+		// V201P: read GGTT PTE for the surface page — verifies display controller can access it.
+		// GGTT PTE LO/HI at GEN8_GGTT_PTE_BASE(0x800000) + page*8. Valid: bit0=present, bit3=LLC.
+		uint32_t pteLo = 0, pteHi = 0;
+		if (surfAddr && MellowCore::callback->mmioValid()) {
+			uint32_t surfPage = surfAddr >> 12;
+			pteLo = MellowCore::callback->readReg32(GGTT_PTE_LO(surfPage));
+			pteHi = MellowCore::callback->readReg32(GGTT_PTE_HI(surfPage));
+		}
+		v201Count++;
+		SYSLOG("mellow", "V201[%d]: hwSetupMemory ret=0x%x fb=%p surf=0x%x size=0x%x idx=%u tile=%u | tl=%08x ctr=%08x bar=%08x mid=%08x | PTE=%08x:%08x(present=%d llc=%d)",
+			   v201Count, ret, fb, surfAddr, fbSize, fbIdx, yTileFlg, tlCtr, ctr, bar, mid,
+			   pteHi, pteLo, pteLo & 1, (pteLo >> 3) & 1);
+	}
+
+	return ret;
+}
+
+// HW hooks
+
+static void v44ScheduleBundleLog(void *accelInstance, unsigned delayMs);
+static void v45ScheduleDelayedCheck(void *accelInstance, unsigned delayMs);
+
+unsigned long Gen11::start(void *that,void  *param_1)
+{
+	Gen11::gGfxAccelStartDone = false;
+	// V44: Configurable scheduler type.
+	// populateAccelConfig reads "GraphicsSchedulerSelect" from the IORegistry.
+	// Types: 3=IGGuC (firmware), 4=IGScheduler4, 5=IGScheduler5 (host preemptive).
+	// Priority: boot-arg "mellowSched=N" > Info.plist "SchedulerType" > default.
+	// V52: Default depends on platform — real TGL uses GuC (3), while the
+	// non-real-TGL Ultra spoof path uses Host (5).
+	auto *service = static_cast<IOService *>(that);
+	{
+		int schedType = MellowCore::callback->isRealTGL ? 3 : 5;
+		
+		// 1. Check boot-arg first (highest priority)
+		int bootArgSched = 0;
+		if (PE_parse_boot_argn("mellowSched", &bootArgSched, sizeof(bootArgSched)) && bootArgSched >= 3 && bootArgSched <= 5) {
+			schedType = bootArgSched;
+			SYSLOG("mellow", "V44: scheduler type %d from boot-arg mellowSched", schedType);
+		} else {
+			// 2. Check Mellow's own IORegistry properties (from Info.plist)
+			auto *myService = OSDynamicCast(IOService, reinterpret_cast<OSObject *>(param_1));
+			if (myService) {
+				auto *stProp = OSDynamicCast(OSNumber, myService->getProperty("SchedulerType"));
+				if (stProp) {
+					int val = (int)stProp->unsigned32BitValue();
+					if (val >= 3 && val <= 5) {
+						schedType = val;
+						SYSLOG("mellow", "V44: scheduler type %d from Info.plist SchedulerType", schedType);
+					}
+				}
+			}
+			if (schedType == 5) {
+				SYSLOG("mellow", "V44: using default scheduler type 5 (host preemptive)");
+			}
+		}
+		
+		auto *schedNum = OSNumber::withNumber(static_cast<unsigned long long>(schedType), 32);
+		if (schedNum) {
+			service->setProperty("GraphicsSchedulerSelect", schedNum);
+			schedNum->release();
+			SYSLOG("mellow", "V44: injected GraphicsSchedulerSelect=%d", schedType);
+		}
+	}
+
+	// Inject MultiForceWakeSelect=1 into Development dictionary.
+	// This tells the accelerator to use SafeForceWakeMultithreaded (which we hook)
+	// instead of the framebuffer's SafeForceWake. The inherited RPL-P baseline
+	// observed ACK=0; retain this circuit breaker for the non-real-TGL Ultra spoof path.
+	// V52: Only needed on the spoof path; real TGL's native ForceWake works fine.
+	if (!MellowCore::callback->isRealTGL) {
+	auto *devDict = OSDynamicCast(OSDictionary, service->getProperty("Development"));
+	if (devDict) {
+		auto *newDevDict = OSDictionary::withDictionary(devDict);
+		if (newDevDict) {
+			auto *num = OSNumber::withNumber(1ULL, 32);
+			if (num) {
+				newDevDict->setObject("MultiForceWakeSelect", num);
+				num->release();
+			}
+			service->setProperty("Development", newDevDict);
+			newDevDict->release();
+			SYSLOG("mellow", "Injected MultiForceWakeSelect=1 into Development dict");
+		}
+	} else {
+		SYSLOG("mellow", "No Development dict found, creating one with MultiForceWakeSelect=1");
+		auto *newDevDict = OSDictionary::withCapacity(4);
+		if (newDevDict) {
+			auto *num = OSNumber::withNumber(1ULL, 32);
+			if (num) {
+				newDevDict->setObject("MultiForceWakeSelect", num);
+				num->release();
+			}
+			service->setProperty("Development", newDevDict);
+			newDevDict->release();
+		}
+	}
+	} else {
+		SYSLOG("mellow", "V52: Real TGL — skipping MultiForceWakeSelect override");
+	}
+
+	// ── V29: Apply GT workarounds + GGTT PTE diagnostics ──
+	SYSLOG("mellow", "Pre-start: acquiring ForceWake for GT workarounds");
+	MellowCore::callback->writeReg32(FORCEWAKE_RENDER_GEN9, (1 << 16) | 1);
+	IODelay(1000);
+	
+	uint32_t fwAck = 0;
+	uint64_t fwNow = 0, fwDeadline = 0;
+	clock_interval_to_deadline(50, kMillisecondScale, &fwDeadline);
+	for (clock_get_uptime(&fwNow); fwNow < fwDeadline; clock_get_uptime(&fwNow)) {
+		fwAck = MellowCore::callback->readReg32(FORCEWAKE_ACK_RENDER_GEN9);
+		if (fwAck & 1) break;
+	}
+	SYSLOG("mellow", "Pre-start ForceWake ACK: 0x%x %s", fwAck, (fwAck & 1) ? "OK" : "TIMEOUT");
+	
+	// ── V29 NEW: Pre-start GGTT PTE dump ──
+	// Dump first few GGTT PTEs to verify format
+	SYSLOG("mellow", "GGTT PTE format check (first 4 pages):");
+	for (int i = 0; i < 4; i++) {
+		SYSLOG("mellow", "  GGTT[%d]=0x%08x:%08x", i,
+			MellowCore::callback->readReg32(GGTT_PTE_HI(i)),
+			MellowCore::callback->readReg32(GGTT_PTE_LO(i)));
+	}
+	// Dump PTEs around the HWS page area (GGTT offset 0x40004000 → page 0x40004)
+	// But that PTE would be at 0x800000 + 0x40004*8 = 0xA00020 — check if within BAR
+	// Instead, dump some PTEs in the driver's active range
+	SYSLOG("mellow", "GGTT PTE near page 0x100:");
+	for (int i = 0x100; i < 0x104; i++) {
+		SYSLOG("mellow", "  GGTT[0x%x]=0x%08x:%08x", i,
+			MellowCore::callback->readReg32(GGTT_PTE_HI(i)),
+			MellowCore::callback->readReg32(GGTT_PTE_LO(i)));
+	}
+	
+	// ── V29 NEW: Context and engine config ──
+	SYSLOG("mellow", "RCS CTX_SIZE=0x%x CCID=0x%x CTX_CTRL=0x%x",
+		MellowCore::callback->readReg32(RING_CTX_SIZE(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_CCID(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_CTX_CTRL(RENDER_RING_BASE)));
+	SYSLOG("mellow", "RCS MI_MODE=0x%x RING_MODE=0x%x",
+		MellowCore::callback->readReg32(RING_MI_MODE(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_MODE(RENDER_RING_BASE)));
+	
+	{
+		uint32_t errPreStart = MellowCore::callback->readReg32(ERROR_GEN6);
+		SYSLOG("mellow", "Pre-start ERROR_GEN6=0x%x", errPreStart);
+
+		// V55: Full TLB flush + 5x clear BEFORE start().
+		// Simple W1C (0x37 -> 0x37 confirmed in log) cannot clear sticky TLB-fault bits.
+		// Post-start V55 proved: TLB invalidation via 0xcee8 + 5x clear succeeds (0x37 -> 0x0).
+		// Moving the same sequence here so Apple's getBlit3DContext sees a clean ERROR_GEN6.
+		// ForceWake is already held at this point (Pre-start ForceWake ACK logged above).
+		if (errPreStart && !MellowCore::callback->isRealTGL) {
+			uint32_t ccidBefore = MellowCore::callback->readReg32(RING_CCID(RENDER_RING_BASE));
+
+			// 1. GDRST render domain — evicts the stale EFI/firmware context (CCID=0x80)
+			// that keeps re-asserting ERROR_GEN6 into memory invalid in macOS address space.
+			// TLB flush + W1C alone can't win: the broken context re-fires errors immediately.
+			MellowCore::callback->writeReg32(GEN6_GDRST, GEN6_GRDOM_RENDER);
+			uint32_t gdrstVal = GEN6_GRDOM_RENDER;
+			int gdrstPoll = 0;
+			while ((gdrstVal & GEN6_GRDOM_RENDER) && gdrstPoll < 2000) {
+				gdrstVal = MellowCore::callback->readReg32(GEN6_GDRST);
+				gdrstPoll++;
+			}
+			uint32_t ccidAfter = MellowCore::callback->readReg32(RING_CCID(RENDER_RING_BASE));
+			SYSLOG("mellow", "V55G: pre-start GDRST poll=%d gdrst=0x%x CCID 0x%x->0x%x ERR->0x%x",
+				gdrstPoll, gdrstVal, ccidBefore, ccidAfter,
+				MellowCore::callback->readReg32(ERROR_GEN6));
+
+			// Re-acquire ForceWake — GDRST resets the render engine's FW tracking
+			MellowCore::callback->writeReg32(FORCEWAKE_RENDER_GEN9, (1 << 16) | 1);
+			IODelay(1000);
+
+			// 2. Invalidate RCS + BCS TLBs (GEN12_GUC_TLB_INV_CR = 0xcee8)
+			MellowCore::callback->writeReg32(0xcee8, 0x1);   // RCS TLBs
+			IODelay(500);
+			MellowCore::callback->writeReg32(0xcee8, 0x4);   // BCS TLBs
+			IODelay(500);
+			SYSLOG("mellow", "V55: Pre-start TLB invalidation requested (RCS+BCS)");
+
+			// 3. 5x clear loop — should now succeed with stale context evicted
+			uint32_t errLoop = MellowCore::callback->readReg32(ERROR_GEN6);
+			for (int i = 0; i < 5 && errLoop; i++) {
+				MellowCore::callback->writeReg32(ERROR_GEN6, errLoop);
+				IODelay(200);
+				errLoop = MellowCore::callback->readReg32(ERROR_GEN6);
+			}
+			SYSLOG("mellow", "V55: Pre-start ERROR_GEN6 after GDRST + TLB flush + 5x clear = 0x%x", errLoop);
+
+			// 4. Clear per-engine EIR
+			uint32_t rcsEir = MellowCore::callback->readReg32(RING_EIR(RENDER_RING_BASE));
+			uint32_t bcsEir = MellowCore::callback->readReg32(RING_EIR(BLT_RING_BASE));
+			if (rcsEir) MellowCore::callback->writeReg32(RING_EIR(RENDER_RING_BASE), rcsEir);
+			if (bcsEir) MellowCore::callback->writeReg32(RING_EIR(BLT_RING_BASE), bcsEir);
+
+			uint32_t tlbStatus = MellowCore::callback->readReg32(0xceec);
+			SYSLOG("mellow", "V55: Pre-start TLB_INV done status = 0x%x", tlbStatus);
+		}
+	}
+	
+	// GT workarounds
+	uint32_t misccpctl = MellowCore::callback->readReg32(GEN7_MISCCPCTL);
+	misccpctl &= ~GEN12_DOP_CLOCK_GATE_RENDER_ENABLE;
+	MellowCore::callback->writeReg32(GEN7_MISCCPCTL, misccpctl);
+	MellowCore::callback->wa_write_or(VDBOX_CGCTL3F10(RENDER_RING_BASE), IECPUNIT_CLKGATE_DIS);
+	MellowCore::callback->wa_write_or(VDBOX_CGCTL3F10(BLT_RING_BASE), IECPUNIT_CLKGATE_DIS);
+	MellowCore::callback->wa_write_or(VDBOX_CGCTL3F10(GEN11_VEBOX_RING_BASE), IECPUNIT_CLKGATE_DIS);
+	MellowCore::callback->wa_mcr_write_or(GEN10_DFR_RATIO_EN_AND_CHICKEN, DFR_DISABLE);
+	MellowCore::callback->wa_masked_en(GEN11_COMMON_SLICE_CHICKEN3,
+			GEN12_DISABLE_CPS_AWARE_COLOR_PIPE);
+	MellowCore::callback->wa_masked_field_set(GEN8_CS_CHICKEN1,
+				GEN9_PREEMPT_GPGPU_LEVEL_MASK,
+				GEN9_PREEMPT_GPGPU_THREAD_GROUP_LEVEL);
+	uint32_t mcr = GEN8_MCR_SLICE(0) | GEN8_MCR_SUBSLICE(0);
+	uint32_t mcr_mask = GEN8_MCR_SLICE_MASK | GEN8_MCR_SUBSLICE_MASK;
+	MellowCore::callback->wa_write_clr_set(GEN8_MCR_SELECTOR, mcr_mask, mcr);
+	// V162: PERCTX_PREEMPT_CTRL (bit 14) is a TGL-specific workaround that bakes
+	// into the execlist context image template. On the non-real-TGL Ultra spoof
+	// path the inherited circuit breaker treats this bit as unsafe because the RPL
+	// baseline froze the EU
+	// thread dispatcher on the first Metal context-image DMA restore.  Only enable
+	// it on genuine TGL hardware.
+	if (MellowCore::callback->isRealTGL) {
+		MellowCore::callback->wa_masked_en(GEN7_FF_SLICE_CS_CHICKEN1,
+				GEN9_FFSC_PERCTX_PREEMPT_CTRL);
+	}
+	
+	SYSLOG("mellow", "Pre-start: GT workarounds applied, calling original start()");
+	
+	// Release Render ForceWake
+	MellowCore::callback->writeReg32(FORCEWAKE_RENDER_GEN9, (1 << 16) | 0);
+	
+	// V42: Save accelerator instance for child enumeration in hangcheck
+	callback->accelInstance = that;
+	
+	// V54: Pre-enable Master IRQ BEFORE calling original start().
+	// V53 showed on the inherited RPL baseline that the TGL driver never enables
+	// GFX_MSTR_IRQ bit 31; enforce it for the non-real-TGL Ultra spoof path.
+	// Without it, completion interrupts never reach the CPU and start() hangs
+	// for ~15s until our hangcheck accidentally re-enabled it.
+	if (!MellowCore::callback->isRealTGL) {
+		// Enable Master IRQ (bit 31)
+		MellowCore::callback->writeReg32(GEN11_GFX_MSTR_IRQ, GEN11_MASTER_IRQ);
+		IODelay(100);
+		SYSLOG("mellow", "V54: Pre-enabled Master IRQ: GFX_MSTR_IRQ=0x%x",
+			MellowCore::callback->readReg32(GEN11_GFX_MSTR_IRQ));
+		
+		// V65: Pre-enable RCS0+BCS tier-1 interrupt routing BEFORE ring init.
+		// V64 proved GEN11_RENDER_COPY_INTR_ENABLE had RCS0 (bit 0) DISABLED,
+		// causing scheduler to never receive completion interrupts → timeout → dead engine.
+		// Must be set BEFORE ring activates (T+8-10s) to prevent scheduler timeout.
+		uint32_t rcIntrPre = MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE);
+		uint32_t wantBits = getV65Tier1WantBits(MellowCore::callback->isRealTGL);
+		uint32_t newEn = rcIntrPre | wantBits;
+		MellowCore::callback->writeReg32(GEN11_RENDER_COPY_INTR_ENABLE, newEn);
+		// Also unmask RCS context-switch + user interrupts at tier-2
+		uint32_t rcsMaskPre = MellowCore::callback->readReg32(GEN11_RCS0_RSVD_INTR_MASK);
+		uint32_t wantUnmasked = GT_CONTEXT_SWITCH_INTERRUPT | GT_RENDER_USER_INTERRUPT;
+		MellowCore::callback->writeReg32(GEN11_RCS0_RSVD_INTR_MASK, rcsMaskPre & ~wantUnmasked);
+		// Pre-clear any stale ERROR_GEN6 to prevent error handler interference
+		uint32_t errPre = MellowCore::callback->readReg32(ERROR_GEN6);
+		if (errPre) MellowCore::callback->writeReg32(ERROR_GEN6, 0x0);
+		SYSLOG("mellow", "V65: Pre-start interrupt fix: RC_INTR_EN 0x%x->0x%x, RCS_MASK 0x%x->0x%x, ERR=0x%x",
+			rcIntrPre, MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE),
+			rcsMaskPre, MellowCore::callback->readReg32(GEN11_RCS0_RSVD_INTR_MASK), errPre);
+	}
+	
+	// V54: Schedule IRQ watchdog timer — re-enables Master IRQ every 2s during start().
+	// The driver's interrupt setup may disable it during init; we keep re-enabling.
+	// Real TGL keeps native behavior; spoof path always needs this.
+	if (!MellowCore::callback->isRealTGL) {
+		auto timerCall = thread_call_allocate(v54IrqWatchdog, nullptr);
+		if (timerCall) {
+			uint64_t deadline;
+			clock_interval_to_deadline(2, kSecondScale, &deadline);
+			thread_call_enter_delayed(timerCall, deadline);
+			SYSLOG("mellow", "V54: IRQ watchdog armed — will re-enable Master IRQ every 2s");
+		}
+	}
+	
+	// V116: Remap GGTT page 0 to a safe dummy page BEFORE original start().
+	// Root cause of package-wide MCE (Banks 9/11/15, all CPUs, addr 0x3e800000):
+	// GGTT[0] PTE points to stolen memory base. Any GPU access to VA=0
+	// (ring buffer at addr 0, PLANE_SURF=0, etc.) reads stolen mem → LLC UCE → MCE.
+	// Fix: redirect GGTT[0] to a wired zero-page so stray VA-0 reads are harmless.
+	// Real TGL keeps native GGTT mapping; spoof path needs this MCE guard.
+	if (!MellowCore::callback->isRealTGL) {
+		if (!v116DummyBuf) {
+			v116DummyBuf = IOBufferMemoryDescriptor::inTaskWithPhysicalMask(
+				kernel_task,
+				kIOMemoryPhysicallyContiguous | kIODirectionInOut,
+				4096,
+				0x00000000FFFFF000ULL);  // keep below 4GB for 32-bit GGTT addressing
+			if (v116DummyBuf && v116DummyBuf->prepare() == kIOReturnSuccess) {
+				v116DummyPhys = v116DummyBuf->getPhysicalAddress();
+				auto *m = v116DummyBuf->createMappingInTask(kernel_task, 0, kIOMapAnywhere, 0, 4096);
+				if (m) { bzero((void *)m->getVirtualAddress(), 4096); m->release(); }
+				SYSLOG("mellow", "V116: dummy page allocated phys=0x%llx",
+					   (unsigned long long)v116DummyPhys);
+			} else {
+				OSSafeReleaseNULL(v116DummyBuf);
+				SYSLOG("mellow", "V116: dummy page alloc/prepare FAILED");
+			}
+		}
+		if (v116DummyPhys && MellowCore::callback->mmioValid()) {
+			// PTE format (Gen8+): bits[47:12]=phys PFN, bit[3]=LLC-coherent, bit[0]=present
+			uint32_t pteLo = (uint32_t)(v116DummyPhys & 0xFFFFF000ULL) | 0x9;  // LLC | present
+			uint32_t pteHi = (uint32_t)(v116DummyPhys >> 32);
+			uint32_t oldLo = MellowCore::callback->readReg32(GGTT_PTE_LO(0));
+			uint32_t oldHi = MellowCore::callback->readReg32(GGTT_PTE_HI(0));
+			MellowCore::callback->writeReg32(GGTT_PTE_LO(0), pteLo);
+			MellowCore::callback->writeReg32(GGTT_PTE_HI(0), pteHi);
+			MellowCore::callback->writeReg32(0x101008, 0x1);  // GGTT TLB flush
+			SYSLOG("mellow", "V116: GGTT[0] 0x%08x:%08x -> 0x%08x:%08x (dummy phys=0x%llx)",
+				   oldHi, oldLo, pteHi, pteLo, (unsigned long long)v116DummyPhys);
+		}
+	}
+
+	auto ret= FunctionCast(start, callback->ostart)(that,param_1);
+
+	// Returning from start is not success. Do not run post-start recovery writes
+	// or mark the accelerator ready after the original backend rejected startup.
+	Gen11::gGfxAccelStartDone = ret != 0;
+	SYSLOG("mellow", "ACCEL_START_DONE=%d ret=%lu", Gen11::gGfxAccelStartDone, ret);
+	if (!ret)
+		return ret;
+
+	// V65: IMMEDIATELY after original start() returns, re-enable RCS0 interrupts.
+	// Apple's init code may have overwritten our pre-start settings.
+	// This is our earliest opportunity after ring activation.
+	if (!MellowCore::callback->isRealTGL) {
+		uint32_t rcIntrPost = MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE);
+		uint32_t wantBits = getV65Tier1WantBits(MellowCore::callback->isRealTGL);
+		uint32_t newEn = rcIntrPost | wantBits;
+		MellowCore::callback->writeReg32(GEN11_RENDER_COPY_INTR_ENABLE, newEn);
+		// Re-unmask tier-2
+		uint32_t rcsMaskPost = MellowCore::callback->readReg32(GEN11_RCS0_RSVD_INTR_MASK);
+		uint32_t wantUnmasked = GT_CONTEXT_SWITCH_INTERRUPT | GT_RENDER_USER_INTERRUPT;
+		MellowCore::callback->writeReg32(GEN11_RCS0_RSVD_INTR_MASK, rcsMaskPost & ~wantUnmasked);
+		// Re-enable Master IRQ (may have been toggled during start)
+		MellowCore::callback->writeReg32(GEN11_GFX_MSTR_IRQ, GEN11_MASTER_IRQ);
+		// Clear any ERROR_GEN6 that fired during ring init
+		uint32_t errPost = MellowCore::callback->readReg32(ERROR_GEN6);
+		if (errPost) MellowCore::callback->writeReg32(ERROR_GEN6, 0x0);
+		SYSLOG("mellow", "V65: Post-start interrupt fix: RC_INTR_EN 0x%x->0x%x, RCS_MASK 0x%x->0x%x, ERR=0x%x",
+			rcIntrPost, MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE),
+			rcsMaskPost, MellowCore::callback->readReg32(GEN11_RCS0_RSVD_INTR_MASK), errPost);
+		// V507: GFX_RUN_LIST_ENABLE must be set in the live RING_MODE register before any
+		// ExecList submission — retain the inherited non-real-TGL circuit breaker because
+		// Apple's init did not set it on the RPL-P baseline (snapshots 0x0 into
+		// the MI_LRI replay list, leaving ExecList mode off permanently).
+		// RING_MODE uses the Intel masked-write convention: hi16=write-enable mask, lo16=values.
+		// Writing 0x80008000 sets bit15 (GFX_RUN_LIST_ENABLE) without touching other bits.
+		{
+			uint32_t rmPre = MellowCore::callback->readReg32(RING_MODE(RENDER_RING_BASE));
+			MellowCore::callback->writeReg32(RING_MODE(RENDER_RING_BASE), 0x80008000u);
+			uint32_t rmPost = MellowCore::callback->readReg32(RING_MODE(RENDER_RING_BASE));
+			SYSLOG("mellow", "V507: RING_MODE 0x%08x → 0x80008000 → readback 0x%08x (GFX_RUN_LIST_ENABLE=%d)",
+				rmPre, rmPost, !!(rmPost & (1u << 15)));
+		}
+	}
+	
+	// ── V29: Post-start diagnostics ──
+	MellowCore::callback->writeReg32(FORCEWAKE_RENDER_GEN9, (1 << 16) | 1);
+	MellowCore::callback->writeReg32(FORCEWAKE_BLITTER_GEN9, (1 << 16) | 1);
+	IODelay(1000);
+	
+	SYSLOG("mellow", "start() returned %d", ret);
+	
+	// V43: Scheduler type diagnostic — read field_1190 bits 23-25
+	{
+		uint64_t caps1190 = getMember<uint64_t>(that, 0x1190);
+		uint32_t schedType = (caps1190 >> 23) & 7;
+		uint32_t devType1120 = getMember<uint32_t>(that, 0x1120);
+		SYSLOG("mellow", "V43: field_1190=0x%llx schedType=%u (3=GuC,4=Sched4,5=Host) devType_1120=%u",
+			   (unsigned long long)caps1190, schedType, devType1120);
+		
+		// Read encodeFailureStack entries (offsets 0x1c30-0x1c4c, count at 0x1c50)
+		uint32_t failCount = getMember<uint32_t>(that, 0x1c50);
+		SYSLOG("mellow", "V43: encodeFailureStack count=%u", failCount);
+		for (uint32_t i = 0; i < failCount && i < 8; i++) {
+			uint32_t code = getMember<uint32_t>(that, 0x1c30 + i * 4);
+			SYSLOG("mellow", "V43:   failureStack[%u] = 0x%x", i, code);
+		}
+		
+		// Read the scheduler pointer — check if scheduler was actually created
+		// From start() disassembly, the scheduler is stored via virtual call;
+		// try reading field at 0xe00 (common IOAccelF2 scheduler offset)
+		uint64_t schedPtr = getMember<uint64_t>(that, 0xe00);
+		SYSLOG("mellow", "V43: scheduler ptr (0xe00) = 0x%llx %s",
+			   (unsigned long long)schedPtr, schedPtr ? "EXISTS" : "NULL");
+		
+		// V44: Check if accelerator registered with framebuffer controller
+		// Field 0x128c: set to 1 by registerWithFramebufferController() on success
+		// Field 0xde8: callback handler pointer set during FB registration
+		uint8_t fbRegistered = getMember<uint8_t>(that, 0x128c);
+		uint64_t fbCallbackPtr = getMember<uint64_t>(that, 0xde8);
+		SYSLOG("mellow", "V44: fbRegistered(0x128c)=%u fbCallbackPtr(0xde8)=0x%llx",
+			   fbRegistered, (unsigned long long)fbCallbackPtr);
+		
+		// V44: Dump key IORegistry properties of the accelerator service
+		auto *accelSvc = static_cast<IOService *>(that);
+		auto *metalProp = OSDynamicCast(OSString, accelSvc->getProperty("MetalPluginName"));
+		auto *glProp    = OSDynamicCast(OSString, accelSvc->getProperty("IOGLBundleName"));
+		auto *dvdProp   = OSDynamicCast(OSString, accelSvc->getProperty("IODVDBundleName"));
+		auto *vaRIDProp = OSDynamicCast(OSNumber, accelSvc->getProperty("IOVARendererID"));
+		const char *metalStr = (metalProp && metalProp->getCStringNoCopy()) ? metalProp->getCStringNoCopy() : "MISSING";
+		const char *glStr = (glProp && glProp->getCStringNoCopy()) ? glProp->getCStringNoCopy() : "MISSING";
+		const char *dvdStr = (dvdProp && dvdProp->getCStringNoCopy()) ? dvdProp->getCStringNoCopy() : "MISSING";
+		SYSLOG("mellow", "V44: MetalPlugin=%s GL=%s VARendID=0x%x",
+			   metalStr,
+			   glStr,
+			   vaRIDProp ? (uint32_t)vaRIDProp->unsigned32BitValue() : 0);
+		SYSLOG("mellow", "V44: DVD=%s MTL_TGL=%d GL_TGL=%d VA_TGL=%d",
+			   dvdStr,
+			   !strcmp(metalStr, "AppleIntelTGLGraphicsMTLDriver"),
+			   !strcmp(glStr, "AppleIntelTGLGraphicsGLDriver"),
+			   !strcmp(dvdStr, "AppleIntelTGLGraphicsVADriver"));
+	}
+	
+	// Ring buffer state
+	uint32_t rcsHead = MellowCore::callback->readReg32(RING_HEAD(RENDER_RING_BASE));
+	uint32_t rcsTail = MellowCore::callback->readReg32(RING_TAIL(RENDER_RING_BASE));
+	uint32_t rcsCtl  = MellowCore::callback->readReg32(RING_CTL(RENDER_RING_BASE));
+	uint32_t rcsStart = MellowCore::callback->readReg32(RING_START(RENDER_RING_BASE));
+	uint32_t rcsHws  = MellowCore::callback->readReg32(RING_HWS_PGA(RENDER_RING_BASE));
+	SYSLOG("mellow", "RCS0 HEAD=0x%x TAIL=0x%x CTL=0x%x START=0x%x",
+		rcsHead, rcsTail, rcsCtl, rcsStart);
+	SYSLOG("mellow", "RCS0 HWS_PGA=0x%x HWSTAM=0x%x",
+		rcsHws, MellowCore::callback->readReg32(RING_HWSTAM(RENDER_RING_BASE)));
+	
+	SYSLOG("mellow", "RCS0 ACTHD=0x%x:%08x IPEHR=0x%x IPEIR=0x%x",
+		MellowCore::callback->readReg32(RING_ACTHD_UDW(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_ACTHD(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_IPEHR(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_IPEIR(RENDER_RING_BASE)));
+	SYSLOG("mellow", "RCS0 INSTDONE=0x%x INSTPM=0x%x DMA_FADD=0x%x:%08x",
+		MellowCore::callback->readReg32(RING_INSTDONE(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_INSTPM(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_DMA_FADD_UDW(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_DMA_FADD(RENDER_RING_BASE)));
+	SYSLOG("mellow", "RCS0 EXECLIST_STATUS=0x%x CTX_STATUS_PTR=0x%x",
+		MellowCore::callback->readReg32(RING_EXECLIST_STATUS(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_CONTEXT_STATUS_PTR(RENDER_RING_BASE)));
+	
+	// Per-engine error
+	SYSLOG("mellow", "RCS0 EIR=0x%x ESR=0x%x EMR=0x%x",
+		MellowCore::callback->readReg32(RING_EIR(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_ESR(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_EMR(RENDER_RING_BASE)));
+	SYSLOG("mellow", "RCS0 RING_FAULT=0x%x",
+		MellowCore::callback->readReg32(RING_FAULT_REG(RENDER_RING_BASE)));
+	
+	// Global errors
+	SYSLOG("mellow", "ERROR_GEN6=0x%x RING_FAULT(global)=0x%x",
+		MellowCore::callback->readReg32(ERROR_GEN6),
+		MellowCore::callback->readReg32(GEN12_RING_FAULT_REG));
+	SYSLOG("mellow", "FAULT_TLB_DATA0=0x%x FAULT_TLB_DATA1=0x%x",
+		MellowCore::callback->readReg32(GEN8_FAULT_TLB_DATA0),
+		MellowCore::callback->readReg32(GEN8_FAULT_TLB_DATA1));
+	SYSLOG("mellow", "GT_INTR_DW0=0x%x DW1=0x%x",
+		MellowCore::callback->readReg32(GEN11_GT_INTR_DW0),
+		MellowCore::callback->readReg32(GEN11_GT_INTR_DW1));
+	
+	// ── V29 NEW: Context and engine config after start ──
+	SYSLOG("mellow", "RCS CTX_SIZE=0x%x CCID=0x%x CTX_CTRL=0x%x",
+		MellowCore::callback->readReg32(RING_CTX_SIZE(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_CCID(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_CTX_CTRL(RENDER_RING_BASE)));
+	SYSLOG("mellow", "RCS MI_MODE=0x%x RING_MODE=0x%x",
+		MellowCore::callback->readReg32(RING_MI_MODE(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_MODE(RENDER_RING_BASE)));
+	
+	// ── V29 NEW: GGTT PTEs for HWS page and ring buffer ──
+	// HWS_PGA is a GGTT address; read its PTE to check format
+	if (rcsHws) {
+		uint32_t hwsPage = rcsHws >> 12;
+		SYSLOG("mellow", "GGTT PTE for HWS (page 0x%x)=0x%08x:%08x", hwsPage,
+			MellowCore::callback->readReg32(GGTT_PTE_HI(hwsPage)),
+			MellowCore::callback->readReg32(GGTT_PTE_LO(hwsPage)));
+		// Also check adjacent pages
+		SYSLOG("mellow", "GGTT PTE for HWS+1 (page 0x%x)=0x%08x:%08x", hwsPage+1,
+			MellowCore::callback->readReg32(GGTT_PTE_HI(hwsPage+1)),
+			MellowCore::callback->readReg32(GGTT_PTE_LO(hwsPage+1)));
+	}
+	if (rcsStart) {
+		uint32_t ringPage = rcsStart >> 12;
+		uint32_t rpteHi = MellowCore::callback->readReg32(GGTT_PTE_HI(ringPage));
+		uint32_t rpteLo = MellowCore::callback->readReg32(GGTT_PTE_LO(ringPage));
+		SYSLOG("mellow", "GGTT PTE for RING (page 0x%x)=0x%08x:%08x", ringPage, rpteHi, rpteLo);
+
+	}
+
+	// CSB entries
+	uint32_t csp = MellowCore::callback->readReg32(RING_CONTEXT_STATUS_PTR(RENDER_RING_BASE));
+	SYSLOG("mellow", "CSB wr_ptr=%d rd_ptr=%d", (csp >> 8) & 0x7, csp & 0x7);
+	for (int i = 0; i < 6; i++) {
+		SYSLOG("mellow", "CSB[%d]=0x%x:%08x", i,
+			MellowCore::callback->readReg32(RING_CONTEXT_STATUS_BUF_HI(RENDER_RING_BASE, i)),
+			MellowCore::callback->readReg32(RING_CONTEXT_STATUS_BUF(RENDER_RING_BASE, i)));
+	}
+	
+	SYSLOG("mellow", "ForceWake ACK: Render=0x%x Blitter=0x%x",
+		MellowCore::callback->readReg32(FORCEWAKE_ACK_RENDER_GEN9),
+		MellowCore::callback->readReg32(FORCEWAKE_ACK_BLITTER_GEN9));
+	
+	// BCS full state (now with Blitter ForceWake held!)
+	uint32_t bcsHead = MellowCore::callback->readReg32(RING_HEAD(BLT_RING_BASE));
+	uint32_t bcsTail = MellowCore::callback->readReg32(RING_TAIL(BLT_RING_BASE));
+	uint32_t bcsCtl  = MellowCore::callback->readReg32(RING_CTL(BLT_RING_BASE));
+	uint32_t bcsStart = MellowCore::callback->readReg32(RING_START(BLT_RING_BASE));
+	SYSLOG("mellow", "BCS HEAD=0x%x TAIL=0x%x CTL=0x%x START=0x%x",
+		bcsHead, bcsTail, bcsCtl, bcsStart);
+	SYSLOG("mellow", "BCS HWS_PGA=0x%x MI_MODE=0x%x",
+		MellowCore::callback->readReg32(RING_HWS_PGA(BLT_RING_BASE)),
+		MellowCore::callback->readReg32(RING_MI_MODE(BLT_RING_BASE)));
+	SYSLOG("mellow", "BCS ACTHD=0x%x:%08x IPEHR=0x%x IPEIR=0x%x",
+		MellowCore::callback->readReg32(RING_ACTHD_UDW(BLT_RING_BASE)),
+		MellowCore::callback->readReg32(RING_ACTHD(BLT_RING_BASE)),
+		MellowCore::callback->readReg32(RING_IPEHR(BLT_RING_BASE)),
+		MellowCore::callback->readReg32(RING_IPEIR(BLT_RING_BASE)));
+	SYSLOG("mellow", "BCS INSTDONE=0x%x EIR=0x%x ESR=0x%x EMR=0x%x",
+		MellowCore::callback->readReg32(RING_INSTDONE(BLT_RING_BASE)),
+		MellowCore::callback->readReg32(RING_EIR(BLT_RING_BASE)),
+		MellowCore::callback->readReg32(RING_ESR(BLT_RING_BASE)),
+		MellowCore::callback->readReg32(RING_EMR(BLT_RING_BASE)));
+	SYSLOG("mellow", "BCS EXECLIST_STATUS=0x%x CTX_STATUS_PTR=0x%x",
+		MellowCore::callback->readReg32(RING_EXECLIST_STATUS(BLT_RING_BASE)),
+		MellowCore::callback->readReg32(RING_CONTEXT_STATUS_PTR(BLT_RING_BASE)));
+	
+	// V36: Dump interrupt enable/mask state to verify GT interrupts are configured
+	SYSLOG("mellow", "IRQ: GFX_MSTR_IRQ=0x%x DISPLAY_INT_CTL=0x%x",
+		MellowCore::callback->readReg32(GEN11_GFX_MSTR_IRQ),
+		MellowCore::callback->readReg32(GEN11_DISPLAY_INT_CTL));
+	SYSLOG("mellow", "IRQ: RENDER_COPY_INTR_EN=0x%x VCS_VECS_INTR_EN=0x%x",
+		MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE),
+		MellowCore::callback->readReg32(GEN11_VCS_VECS_INTR_ENABLE));
+	SYSLOG("mellow", "IRQ: RCS0_RSVD_MASK=0x%x BCS_RSVD_MASK=0x%x",
+		MellowCore::callback->readReg32(GEN11_RCS0_RSVD_INTR_MASK),
+		MellowCore::callback->readReg32(GEN11_BCS_RSVD_INTR_MASK));
+	
+	// V42: Log pending GT interrupts — do NOT clear (W1C would discard the tier-2 IIR
+	// user-interrupt for the stamp(8,3) that V221 faked; the now-installed handler needs
+	// to service it naturally so the cpu-side stamp counter is actually bumped).
+	uint32_t gt0 = MellowCore::callback->readReg32(0x190018);
+	if (gt0) {
+		SYSLOG("mellow", "V42: GT_INTR_DW0 pending=0x%x (leaving for handler)", gt0);
+	}
+	
+	// V42: Enumerate accelerator children to check if IOAccelDevice was created
+	{
+		auto *service = static_cast<IOService *>(that);
+		OSIterator *iter = service->getClientIterator();
+		int childCount = 0;
+		if (iter) {
+			OSObject *obj;
+			while ((obj = iter->getNextObject())) {
+				auto *child = OSDynamicCast(IOService, obj);
+				if (child) {
+					SYSLOG("mellow", "V42: accel child[%d]: %s", childCount, child->getName());
+					childCount++;
+				}
+			}
+			iter->release();
+		}
+		SYSLOG("mellow", "V42: accelerator has %d children after start()", childCount);
+	}
+	
+	// ── V45: IORegistry state & service visibility diagnostics ──
+	{
+		auto *accelSvc = static_cast<IOService *>(that);
+		
+		// 1. IOService state bitmask — verify the service is registered, matched, published
+		uint64_t svcState = accelSvc->getState();
+		SYSLOG("mellow", "V45: getState()=0x%llx (reg=%d match=%d pub=%d fmatch=%d inact=%d)",
+			   (unsigned long long)svcState,
+			   !!(svcState & 0x02),  // kIOServiceRegisteredState
+			   !!(svcState & 0x04),  // kIOServiceMatchedState
+			   !!(svcState & 0x08),  // kIOServiceFirstPublishState
+			   !!(svcState & 0x10),  // kIOServiceFirstMatchState
+			   !!(svcState & 0x01)); // kIOServiceInactiveState
+		
+		// 2. Provider chain — verify accelerator is attached to IGPU PCI device
+		auto *provider = accelSvc->getProvider();
+		if (provider) {
+			SYSLOG("mellow", "V45: provider name=%s class=%s state=0x%llx",
+				   provider->getName(),
+				   provider->getMetaClass()->getClassName(),
+				   (unsigned long long)provider->getState());
+			
+			// 3. Enumerate ALL siblings on the same provider to find IOServiceCompatibility
+			OSIterator *siblings = provider->getClientIterator();
+			if (siblings) {
+				OSObject *sib;
+				int sibIdx = 0;
+				while ((sib = siblings->getNextObject())) {
+					auto *sibSvc = OSDynamicCast(IOService, sib);
+					if (sibSvc) {
+						SYSLOG("mellow", "V45: provider child[%d]: name=%s class=%s state=0x%llx",
+							   sibIdx, sibSvc->getName(),
+							   sibSvc->getMetaClass()->getClassName(),
+							   (unsigned long long)sibSvc->getState());
+						sibIdx++;
+					}
+				}
+				siblings->release();
+			}
+		} else {
+			SYSLOG("mellow", "V45: WARNING: accelerator has no provider!");
+		}
+		
+		// 4. Check if key properties are present on the service itself
+		bool hasMetal = (accelSvc->getProperty("MetalPluginName") != nullptr);
+		bool hasGL    = (accelSvc->getProperty("IOGLBundleName") != nullptr);
+		bool hasCFPI  = (accelSvc->getProperty("IOCFPlugInTypes") != nullptr);
+		bool hasVARID = (accelSvc->getProperty("IOVARendererID") != nullptr);
+		SYSLOG("mellow", "V45: properties present: MetalPlugin=%d GL=%d CFPlugIn=%d VARend=%d",
+			   hasMetal, hasGL, hasCFPI, hasVARID);
+			   
+		//v44ScheduleBundleLog(that, 500);
+		v44ScheduleBundleLog(that, 3000);
+
+		// 5. If MetalPluginName is missing, set GPU properties directly on the service
+		//    (normally they come from the matched personality, but if IOKit didn't merge them...)
+		if (!hasMetal) {
+			const bool useTglNames = callback && callback->tglHWLoaded;
+			const char *mtlName = useTglNames ? "AppleIntelTGLGraphicsMTLDriver" : "AppleIntelICLGraphicsMTLDriver";
+			const char *glName = useTglNames ? "AppleIntelTGLGraphicsGLDriver" : "AppleIntelICLGraphicsGLDriver";
+			const char *vaName = useTglNames ? "AppleIntelTGLGraphicsVADriver" : "AppleIntelICLGraphicsVADriver";
+			SYSLOG("mellow", "V45: MetalPluginName MISSING — injecting %s GPU props directly on service",
+			       useTglNames ? "TGL" : "ICL");
+			accelSvc->setProperty("MetalPluginName", mtlName);
+			accelSvc->setProperty("IOGLBundleName", glName);
+			accelSvc->setProperty("IODVDBundleName", vaName);
+			accelSvc->setProperty("IOGVACodec", "Gen10");
+			accelSvc->setProperty("IOGVAScaler", "Gen10");
+			accelSvc->setProperty("IOGVABGRAEnc", "Gen10");
+			accelSvc->setProperty("IOSourceVersion", "0.0.0.0.0");
+			auto *vaRendID = OSNumber::withNumber(static_cast<unsigned long long>(17301568), 32);
+			if (vaRendID) { accelSvc->setProperty("IOVARendererID", vaRendID); vaRendID->release(); }
+			// V77: DisplayPipeSupported=0 — disable GPU display pipe compositing.
+			// WindowServer crash-loops (consecutiveCrashCount=11) in
+			// CoreDisplay::DisplayPipe::RunFullDisplayPipe because GPU can't render
+			// surfaces (RCS ring idle). Force CPU compositing via FB aperture.
+			auto *dpCaps = OSDictionary::withCapacity(2);
+			if (dpCaps) {
+				auto *v1 = OSNumber::withNumber(0ULL, 32);
+				auto *v2 = OSNumber::withNumber(0ULL, 32);
+				if (v1) { dpCaps->setObject("DisplayPipeSupported", v1); v1->release(); }
+				if (v2) { dpCaps->setObject("TransactionsSupported", v2); v2->release(); }
+				accelSvc->setProperty("IOAccelDisplayPipeCapabilities", dpCaps);
+				dpCaps->release();
+				SYSLOG("mellow", "V77: DisplayPipeSupported=0 set on accelerator");
+			}
+			auto *cfpi = OSDictionary::withCapacity(1);
+			if (cfpi) {
+				auto *pn = OSString::withCString("IOAccelerator2D.plugin");
+				if (pn) { cfpi->setObject("ACCF0000-0000-0000-0000-000a2789904e", pn); pn->release(); }
+				accelSvc->setProperty("IOCFPlugInTypes", cfpi);
+				cfpi->release();
+			}
+		}
+		
+		// V78: For spoofed (non-TGL) hardware, always force DisplayPipeSupported=0.
+		// AccessComplete (V187) is stubbed to return 0 on spoofed hw to prevent a
+		// crash at +1928 (null MTL device hash-table lookup). That stub silences the
+		// crash but prevents the "FB Ready" surface-flip signal from ever being sent.
+		// With DisplayPipeSupported=1 (GPU display pipe), WindowServer waits for
+		// that signal indefinitely → watchdogd kills it twice → KP.
+		// With DisplayPipeSupported=0, WindowServer uses CPU compositing via the
+		// linear framebuffer aperture — bypassing the GPU pipe entirely — so the
+		// FB Ready wait is never entered and WindowServer initialises successfully.
+		// Real TGL hardware uses the native value (never enters this branch).
+		// Explicit -mellowdp1 boot-arg restores native behavior for experimentation.
+		if (isDisplayPipeForceDisabled()) {
+			auto *dpCaps = OSDictionary::withCapacity(2);
+			if (dpCaps) {
+				auto *dpSupp = OSNumber::withNumber(0ULL, 32);
+				auto *trSupp = OSNumber::withNumber(0ULL, 32);
+				if (dpSupp) { dpCaps->setObject("DisplayPipeSupported", dpSupp); dpSupp->release(); }
+				if (trSupp) { dpCaps->setObject("TransactionsSupported", trSupp); trSupp->release(); }
+				accelSvc->setProperty("IOAccelDisplayPipeCapabilities", dpCaps);
+				dpCaps->release();
+				SYSLOG("mellow", "V78: DisplayPipeSupported=0 forced by boot-arg");
+			}
+		} else {
+			SYSLOG("mellow", "V78: keeping native DisplayPipeSupported (real TGL)");
+		}
+		
+		// 6. Explicit registerService() — ensures the service is visible to IOKit matching
+		//    even if IntelAccelerator::start() didn't call it or the internal call failed.
+		SYSLOG("mellow", "V45: calling explicit registerService(kIOServiceAsynchronous) on accelerator");
+		accelSvc->registerService(kIOServiceAsynchronous);
+		
+		// 7. Post-registerService state
+		svcState = accelSvc->getState();
+		SYSLOG("mellow", "V45: post-registerService state=0x%llx (reg=%d match=%d)",
+			   (unsigned long long)svcState, !!(svcState & 0x02), !!(svcState & 0x04));
+		
+		// V110: V59 delayed child checks + V74 EMR enforcer run unconditionally for
+		// non-real TGL. Without V59, IGAccelDevice stays at state=0x0, WindowServer
+		// never opens IOAccelDisplayPipeUserClient2, and the display pipe never activates.
+		// V74 keeps EMR masked so Apple can't re-enable error interrupts behind our back.
+		// V60 health monitor (which contains V77 DisplayPipe killer) remains opt-in via
+		// -mellowexp — without it, the display pipe is not terminated after opening.
+		if (!MellowCore::callback->isRealTGL) {
+			// 8. V59: Schedule delayed child checks to rescue stuck IGAccelDevice children.
+			v45ScheduleDelayedCheck(that, 3000);
+			v45ScheduleDelayedCheck(that, 10000);
+			v45ScheduleDelayedCheck(that, 15000);
+			v45ScheduleDelayedCheck(that, 20000);
+			v45ScheduleDelayedCheck(that, 30000);
+			v45ScheduleDelayedCheck(that, 60000);
+			v45ScheduleDelayedCheck(that, 120000);
+			SYSLOG("mellow", "V59: scheduled delayed child checks at T+3,10,15,20,30,60,120s");
+			// V74: Start PERMANENT EMR enforcer — 50ms interval, runs forever.
+			// Required: keeps EMR masked so Apple can't re-enable error interrupts.
+			// Without this the display pipe fails to activate entirely (all-black screen).
+			{
+				SYSLOG("mellow", "V74: config maskWrites=1 v116Reenforce=1 maxIters=unlimited");
+				auto *emrSvc = static_cast<IOService *>(that);
+				emrSvc->retain();
+				auto emrTimer = thread_call_allocate(v71EmrEnforcer,
+								 static_cast<thread_call_param_t>(emrSvc));
+				if (emrTimer) {
+					uint64_t deadline;
+					clock_interval_to_deadline(50, kMillisecondScale, &deadline);
+					thread_call_enter_delayed(emrTimer, deadline);
+					SYSLOG("mellow", "V74: EMR enforcer armed — 50ms interval, PERMANENT");
+				} else {
+					emrSvc->release(); // alloc failed — drop our retain
+				}
+			}
+
+			// V60: GPU health monitor (contains V77 DisplayPipe terminator) — opt-in only.
+			// Without this, IOAccelDisplayPipeUserClient2 is NOT killed after V59 opens it.
+			// Retain the IOService so it stays alive while a timer is pending (UAF fix).
+			if (isV60MonitorEnabled()) {
+				auto *monSvc = static_cast<IOService *>(that);
+				monSvc->retain();
+				auto monTimer = thread_call_allocate(v60GpuHealthMonitor,
+										 static_cast<thread_call_param_t>(monSvc));
+				if (monTimer) {
+					uint64_t deadline;
+					clock_interval_to_deadline(2, kSecondScale, &deadline);
+					thread_call_enter_delayed(monTimer, deadline);
+					SYSLOG("mellow", "V60: GPU health monitor armed — 2s interval, 60 iterations (120s)");
+				} else {
+					monSvc->release(); // alloc failed — drop our retain
+				}
+			} else {
+				SYSLOG("mellow", "V110: V60 health monitor disabled (use -mellowexp/-mellowv60 to enable, -mellowv60off to force disable)");
+			}
+		}
+	}
+	
+	// ── V47: Enable Master Interrupt (GFX_MSTR_IRQ bit 31) ──
+	// Without this, the GPU can't deliver interrupts to the CPU, and the
+	// scheduler never gets completion notifications. i915 does this in
+	// gen11_master_intr_enable() — just write (1 << 31) to 0x190010.
+	{
+		uint32_t mstrIrq = MellowCore::callback->readReg32(GEN11_GFX_MSTR_IRQ);
+		SYSLOG("mellow", "V47: GFX_MSTR_IRQ before enable = 0x%x (bit31=%d)", mstrIrq, !!(mstrIrq & GEN11_MASTER_IRQ));
+		if (!(mstrIrq & GEN11_MASTER_IRQ)) {
+			MellowCore::callback->writeReg32(GEN11_GFX_MSTR_IRQ, GEN11_MASTER_IRQ);
+			IODelay(100);
+			uint32_t after = MellowCore::callback->readReg32(GEN11_GFX_MSTR_IRQ);
+			SYSLOG("mellow", "V47: GFX_MSTR_IRQ after enable  = 0x%x (bit31=%d)", after, !!(after & GEN11_MASTER_IRQ));
+		} else {
+			SYSLOG("mellow", "V47: Master IRQ already enabled");
+		}
+	}
+	
+	// ── V47: Log initial RING_TIMESTAMP for RCS and BCS ──
+	SYSLOG("mellow", "V47: RCS RING_TIMESTAMP=0x%x BCS RING_TIMESTAMP=0x%x",
+		MellowCore::callback->readReg32(RENDER_RING_BASE + 0x358),
+		MellowCore::callback->readReg32(BLT_RING_BASE + 0x358));
+	
+	// ── V50: Log Metal-readiness summary ──
+	SYSLOG("mellow", "V50: start() ret=%d — policy: TGL from /Library/Extensions, fallback ICL from /System/Library/Extensions", ret);
+	SYSLOG("mellow", "V50: Metal ON. ICL f2 mask-based (fallback). Use -mellowNoMetal for display-only.");
+	SYSLOG("mellow", "V50: active GPU plugin track = %s (TGL and ICL both supported)",
+	       (callback && callback->tglHWLoaded) ? "TGL" : "ICL");
+	
+	// ── V51: Clear GPU errors — give Metal a clean slate ──
+	// ERROR_GEN6 is W1C (write-1-to-clear). Stale errors from init may cause
+	// the Metal plugin to reject the device during MTLDevice creation.
+	// Per-engine EIR/ESR registers are also W1C.
+	{
+		// 1. Clear global error register — try multiple times with W1C
+		uint32_t errPre = MellowCore::callback->readReg32(ERROR_GEN6);
+		if (errPre) {
+			// V55: Loop clear — stale errors may re-generate from in-flight ops
+			for (int i = 0; i < 3; i++) {
+				MellowCore::callback->writeReg32(ERROR_GEN6, errPre);
+				IODelay(200);
+				errPre = MellowCore::callback->readReg32(ERROR_GEN6);
+				if (!errPre) break;
+			}
+			SYSLOG("mellow", "V51: cleared ERROR_GEN6 → 0x%x (after loop)", errPre);
+		} else {
+			SYSLOG("mellow", "V51: ERROR_GEN6 already clean");
+		}
+		
+		// 2. Clear per-engine error interrupt registers
+		uint32_t rcsEir = MellowCore::callback->readReg32(RING_EIR(RENDER_RING_BASE));
+		uint32_t bcsEir = MellowCore::callback->readReg32(RING_EIR(BLT_RING_BASE));
+		uint32_t rcsEsr = MellowCore::callback->readReg32(RING_ESR(RENDER_RING_BASE));
+		uint32_t bcsEsr = MellowCore::callback->readReg32(RING_ESR(BLT_RING_BASE));
+		if (rcsEir) MellowCore::callback->writeReg32(RING_EIR(RENDER_RING_BASE), rcsEir);
+		if (bcsEir) MellowCore::callback->writeReg32(RING_EIR(BLT_RING_BASE), bcsEir);
+		if (rcsEsr) MellowCore::callback->writeReg32(RING_ESR(RENDER_RING_BASE), rcsEsr);
+		if (bcsEsr) MellowCore::callback->writeReg32(RING_ESR(BLT_RING_BASE), bcsEsr);
+		SYSLOG("mellow", "V51: cleared RCS EIR=0x%x ESR=0x%x, BCS EIR=0x%x ESR=0x%x",
+			   rcsEir, rcsEsr, bcsEir, bcsEsr);
+		
+		// 3. Clear ring fault register
+		uint32_t ringFault = MellowCore::callback->readReg32(GEN12_RING_FAULT_REG);
+		if (ringFault) {
+			MellowCore::callback->writeReg32(GEN12_RING_FAULT_REG, 0);
+			SYSLOG("mellow", "V51: cleared RING_FAULT=0x%x", ringFault);
+		}
+		
+		// 4. Clear TLB fault data
+		uint32_t tlb0 = MellowCore::callback->readReg32(GEN8_FAULT_TLB_DATA0);
+		uint32_t tlb1 = MellowCore::callback->readReg32(GEN8_FAULT_TLB_DATA1);
+		if (tlb0 || tlb1) {
+			MellowCore::callback->writeReg32(GEN8_FAULT_TLB_DATA0, 0);
+			MellowCore::callback->writeReg32(GEN8_FAULT_TLB_DATA1, 0);
+			SYSLOG("mellow", "V51: cleared TLB_FAULT data0=0x%x data1=0x%x", tlb0, tlb1);
+		}
+		
+		// 5. Clear GT interrupt identity (W1C) so stale interrupts don't confuse scheduler
+		uint32_t gtIntr0 = MellowCore::callback->readReg32(GEN11_GT_INTR_DW0);
+		uint32_t gtIntr1 = MellowCore::callback->readReg32(GEN11_GT_INTR_DW1);
+		if (gtIntr0) MellowCore::callback->writeReg32(GEN11_GT_INTR_DW0, gtIntr0);
+		if (gtIntr1) MellowCore::callback->writeReg32(GEN11_GT_INTR_DW1, gtIntr1);
+		SYSLOG("mellow", "V51: cleared GT_INTR DW0=0x%x DW1=0x%x", gtIntr0, gtIntr1);
+	}
+	
+	// ── V51: BCS engine stop+clear ──
+	// V52: Only on the non-real-TGL Ultra spoof path; real TGL's BCS works natively.
+	if (!MellowCore::callback->isRealTGL) {
+	// BCS ring is dead (CTL=0x0, EXECLIST_STATUS=0x1). The Host scheduler
+	// attempted context submission but the engine never started. Clear the
+	// engine state so it can be retried by the scheduler on first Metal blit.
+	{
+		uint32_t bcsCtlNow = MellowCore::callback->readReg32(RING_CTL(BLT_RING_BASE));
+		if (bcsCtlNow == 0) {
+			SYSLOG("mellow", "V51: BCS ring dead (CTL=0x0) — clearing engine state");
+			
+			// Request engine stop via masked write (set STOP_RING with mask bit)
+			MellowCore::callback->writeReg32(RING_MI_MODE(BLT_RING_BASE), 
+				(uint32_t)STOP_RING | ((uint32_t)STOP_RING << 16));
+			IODelay(500);
+			
+			// Clear STOP request
+			MellowCore::callback->writeReg32(RING_MI_MODE(BLT_RING_BASE),
+				(uint32_t)STOP_RING << 16);
+			IODelay(100);
+			
+			// Reset HEAD and TAIL
+			MellowCore::callback->writeReg32(RING_HEAD(BLT_RING_BASE), 0);
+			MellowCore::callback->writeReg32(RING_TAIL(BLT_RING_BASE), 0);
+			
+			uint32_t bcsCtlAfter = MellowCore::callback->readReg32(RING_CTL(BLT_RING_BASE));
+			uint32_t bcsExec = MellowCore::callback->readReg32(RING_EXECLIST_STATUS(BLT_RING_BASE));
+			SYSLOG("mellow", "V51: BCS after clear: CTL=0x%x EXECLIST=0x%x", bcsCtlAfter, bcsExec);
+		} else {
+			SYSLOG("mellow", "V51: BCS ring active (CTL=0x%x) — no reset needed", bcsCtlNow);
+		}
+	}
+	} else {
+		SYSLOG("mellow", "V52: Real TGL — skipping BCS engine reset");
+	}
+	
+	// ── V55: TLB invalidation + aggressive error clearing ──
+	// V54 showed ERROR_GEN6=0x7b cannot be cleared via simple W1C because the GPU
+	// continuously re-generates errors (TLB_MISS + PAGE_TABLE_ERROR). The root cause
+	// is stale TLB entries from the context init path. Flush TLBs first, then re-clear.
+	if (!MellowCore::callback->isRealTGL) {
+		// 1. Invalidate GPU TLBs via GEN12 MMIO (no GuC needed)
+		//    GEN12_GUC_TLB_INV_CR (0xcee8): write to trigger TLB invalidation
+		//    Each bit corresponds to an engine: bit0=RCS, bit1=BCS, etc.
+		MellowCore::callback->writeReg32(0xcee8, 0x1);   // Invalidate RCS TLBs
+		IODelay(500);
+		MellowCore::callback->writeReg32(0xcee8, 0x4);   // Invalidate BCS TLBs
+		IODelay(500);
+		SYSLOG("mellow", "V55: TLB invalidation requested (RCS+BCS)");
+		
+		// 2. Try clearing ERROR_GEN6 multiple times after TLB flush
+		uint32_t errLoop = MellowCore::callback->readReg32(ERROR_GEN6);
+		for (int attempt = 0; attempt < 5 && errLoop; attempt++) {
+			MellowCore::callback->writeReg32(ERROR_GEN6, errLoop);  // W1C
+			IODelay(200);
+			errLoop = MellowCore::callback->readReg32(ERROR_GEN6);
+		}
+		SYSLOG("mellow", "V55: ERROR_GEN6 after TLB flush + 5x clear = 0x%x", errLoop);
+		
+		// 3. Read back TLB invalidation status
+		uint32_t tlbInvDone = MellowCore::callback->readReg32(0xceec);
+		SYSLOG("mellow", "V55: TLB_INV done status = 0x%x", tlbInvDone);
+		
+		// ── V57: ERROR_GEN6 R/W clear + error masking ──
+		// V56 DISCOVERY: Writing 0xFFFFFFFF to ERROR_GEN6 SET reserved bits (0x7b→0x7ffff).
+		//   This proves ERROR_GEN6 is R/W (not W1C) on RPL-P Gen12.5!
+		// V56 DISCOVERY: GDRST killed the ring permanently (CTL→0x0, HEAD→0x0).
+		// V56 DISCOVERY: RING_RESET_CTL always reads 0x0 — not functional on RPL-P.
+		// V57 approach: Write 0x0 to ERROR_GEN6 (R/W clear), mask all error interrupts.
+		//   NO engine resets, NO GDRST — those are destructive.
+		{
+			uint32_t preErr57 = MellowCore::callback->readReg32(ERROR_GEN6);
+			uint32_t preEMR = MellowCore::callback->readReg32(RING_EMR(RENDER_RING_BASE));
+			uint32_t preEIR = MellowCore::callback->readReg32(RING_EIR(RENDER_RING_BASE));
+			uint32_t preESR = MellowCore::callback->readReg32(RING_ESR(RENDER_RING_BASE));
+			SYSLOG("mellow", "V57: Pre-clear ERROR_GEN6=0x%x EMR=0x%x EIR=0x%x ESR=0x%x",
+				   preErr57, preEMR, preEIR, preESR);
+			
+			// 1. Write 0x0 to ERROR_GEN6 — test R/W clear hypothesis
+			//    If register is R/W (as V56 proved), writing 0 should clear all bits.
+			//    If register is truly W1C, writing 0 has no effect (harmless test).
+			MellowCore::callback->writeReg32(ERROR_GEN6, 0x0);
+			IODelay(100);
+			uint32_t afterZero = MellowCore::callback->readReg32(ERROR_GEN6);
+			SYSLOG("mellow", "V57: ERROR_GEN6 after 0x0 write = 0x%x (was 0x%x)", afterZero, preErr57);
+			
+			// 2. If 0x0 didn't work, try writing just the set bits (proper W1C)
+			if (afterZero == preErr57 && preErr57 != 0) {
+				MellowCore::callback->writeReg32(ERROR_GEN6, preErr57);
+				IODelay(100);
+				uint32_t afterW1C = MellowCore::callback->readReg32(ERROR_GEN6);
+				SYSLOG("mellow", "V57: ERROR_GEN6 after W1C(0x%x) = 0x%x", preErr57, afterW1C);
+			}
+			
+			// 3. Mask ALL per-ring error interrupts via EMR
+			//    EMR bits: 0 = error enabled, 1 = error masked
+			//    V56 showed EMR=0xfffffffa (bits 0,2 unmasked). Mask everything.
+			MellowCore::callback->writeReg32(RING_EMR(RENDER_RING_BASE), 0xFFFFFFFF);
+			MellowCore::callback->writeReg32(RING_EMR(BLT_RING_BASE), 0xFFFFFFFF);
+			IODelay(100);
+			uint32_t postEMR_rcs = MellowCore::callback->readReg32(RING_EMR(RENDER_RING_BASE));
+			uint32_t postEMR_bcs = MellowCore::callback->readReg32(RING_EMR(BLT_RING_BASE));
+			SYSLOG("mellow", "V57: EMR after mask-all: RCS=0x%x BCS=0x%x", postEMR_rcs, postEMR_bcs);
+			
+			// 4. Clear per-ring EIR if set
+			uint32_t rcsEir = MellowCore::callback->readReg32(RING_EIR(RENDER_RING_BASE));
+			if (rcsEir) {
+				MellowCore::callback->writeReg32(RING_EIR(RENDER_RING_BASE), rcsEir);
+				IODelay(50);
+				uint32_t eir2 = MellowCore::callback->readReg32(RING_EIR(RENDER_RING_BASE));
+				SYSLOG("mellow", "V57: RCS EIR cleared 0x%x → 0x%x", rcsEir, eir2);
+			}
+			
+			// 5. Log ring state to confirm it's still alive (V56 GDRST killed it!)
+			uint32_t rcsHead = MellowCore::callback->readReg32(RING_HEAD(RENDER_RING_BASE));
+			uint32_t rcsTail = MellowCore::callback->readReg32(RING_TAIL(RENDER_RING_BASE));
+			uint32_t rcsCtl = MellowCore::callback->readReg32(RING_CTL(RENDER_RING_BASE));
+			SYSLOG("mellow", "V57: Ring preserved — HEAD=0x%x TAIL=0x%x CTL=0x%x (alive=%d)",
+				   rcsHead, rcsTail, rcsCtl, !!(rcsCtl & 0x1000));
+			
+			// 6. Error forensics: IPEIR/IPEHR show which instruction caused the error
+			SYSLOG("mellow", "V57: IPEIR=0x%x IPEHR=0x%x INSTDONE=0x%x",
+				   MellowCore::callback->readReg32(RING_IPEIR(RENDER_RING_BASE)),
+				   MellowCore::callback->readReg32(RING_IPEHR(RENDER_RING_BASE)),
+				   MellowCore::callback->readReg32(RING_INSTDONE(RENDER_RING_BASE)));
+			
+			// 7. Final ERROR_GEN6 snapshot
+			uint32_t finalErr57 = MellowCore::callback->readReg32(ERROR_GEN6);
+			SYSLOG("mellow", "V57: Final ERROR_GEN6=0x%x (goal: 0x0)", finalErr57);
+		}
+	}
+	
+	SYSLOG("mellow", "V51: GPU error clearing complete — Metal should see a clean GPU");
+	
+	// Release both ForceWake domains
+	MellowCore::callback->writeReg32(FORCEWAKE_RENDER_GEN9, (1 << 16) | 0);
+	MellowCore::callback->writeReg32(FORCEWAKE_BLITTER_GEN9, (1 << 16) | 0);
+	
+	return ret;
+}
+
+uint8_t Gen11::deviceStart(void *that)
+{
+
+	if (!callback || !callback->odeviceStart || !that)
+		return false;
+	const auto ret = FunctionCast(deviceStart, callback->odeviceStart)(that);
+	if (!ret)
+		SYSLOG("mellow", "ACCEL_DEVICE_START_FAILED: preserving backend failure");
+	return ret;
+}
+
+IOReturn Gen11::wrapPavpSessionCallback( void *intelAccelerator, int32_t sessionCommand, uint32_t sessionAppId, uint32_t *a4, bool flag) {
+	if (!callback || !callback->orgPavpSessionCallback)
+		return kIOReturnUnsupported;
+	// Protected-session completion is owned by the backend, including command 4.
+	return FunctionCast(wrapPavpSessionCallback, callback->orgPavpSessionCallback)(intelAccelerator, sessionCommand, sessionAppId, a4, flag);
+}
+
+void Gen11::getGPUInfoICL(void *that)
+{
+	FunctionCast(getGPUInfoICL, callback->ogetGPUInfoICL)(that);
+	
+	// --- GPU topology override for ICL HW binary ---
+	// ICL object layout (verified from AppleIntelICLGraphics.sonoma.bin disassembly):
+	//   0x1190 = NumSlices          0x12cc = NumSlices mirror
+	//   0x1188 = NumSubSlices       0x12d0 = NumSubSlices mirror
+	//   0x11a0 = MaxEUPerSubSlice
+	//   0x1154 = ExecutionUnitCount (= MaxEUPerSubSlice × NumSubSlices)
+	//   0x1198 = L3BankCount
+	//   0x1150 = GPU Sku
+	// ICL counts traditional sub-slices (same as TGL binary).
+	// Use ICL GT2 LP config (1×8×8 = 64 EU) to stay within ICL-valid topology.
+	unsigned int numSlices        = 1;
+	unsigned int numSubSlices     = 8;   // ICL GT2 LP max (8 SS)
+	unsigned int maxEUPerSubSlice = 8;
+	unsigned int totalEU          = maxEUPerSubSlice * numSubSlices; // = 64
+	
+	getMember<UInt32>(that, 0x1190) = numSlices;
+	getMember<UInt32>(that, 0x1188) = numSubSlices;
+	getMember<UInt32>(that, 0x11a0) = maxEUPerSubSlice;
+	getMember<UInt32>(that, 0x1154) = totalEU;
+	getMember<UInt32>(that, 0x12cc) = numSlices;     // NumSlices mirror
+	getMember<UInt32>(that, 0x12d0) = numSubSlices;  // NumSubSlices mirror
+	getMember<UInt32>(that, 0x1198) = 8;             // L3BankCount
+	
+	SYSLOG("mellow", "getGPUInfoICL: overridden topology → slices=%u subslices=%u maxEU/SS=%u totalEU=%u L3Banks=8",
+		   numSlices, numSubSlices, maxEUPerSubSlice, totalEU);
+}
+
+void Gen11::getGPUInfo(void *that)
+{
+
+#define RPM_CONFIG0				(0xd00)
+#define   GEN9_RPM_CONFIG0_CRYSTAL_CLOCK_FREQ_SHIFT	3
+#define   GEN9_RPM_CONFIG0_CRYSTAL_CLOCK_FREQ_MASK	(1 << GEN9_RPM_CONFIG0_CRYSTAL_CLOCK_FREQ_SHIFT)
+#define   GEN9_RPM_CONFIG0_CRYSTAL_CLOCK_FREQ_19_2_MHZ	0
+#define   GEN9_RPM_CONFIG0_CRYSTAL_CLOCK_FREQ_24_MHZ	1
+#define   GEN11_RPM_CONFIG0_CRYSTAL_CLOCK_FREQ_SHIFT	3
+#define   GEN11_RPM_CONFIG0_CRYSTAL_CLOCK_FREQ_MASK	(0x7 << GEN11_RPM_CONFIG0_CRYSTAL_CLOCK_FREQ_SHIFT)
+#define   GEN11_RPM_CONFIG0_CRYSTAL_CLOCK_FREQ_24_MHZ	0
+#define   GEN11_RPM_CONFIG0_CRYSTAL_CLOCK_FREQ_19_2_MHZ	1
+#define   GEN11_RPM_CONFIG0_CRYSTAL_CLOCK_FREQ_38_4_MHZ	2
+#define   GEN11_RPM_CONFIG0_CRYSTAL_CLOCK_FREQ_25_MHZ	3
+#define   GEN10_RPM_CONFIG0_CTC_SHIFT_PARAMETER_SHIFT	1
+#define   GEN10_RPM_CONFIG0_CTC_SHIFT_PARAMETER_MASK	(0x3 << GEN10_RPM_CONFIG0_CTC_SHIFT_PARAMETER_SHIFT)
+	
+	FunctionCast(getGPUInfo, callback->ogetGPUInfo)(that);
+
+	// Ultra compatibility topology. The TGL binary consumes traditional
+	// sub-slices (SS) with at most 8 EUs per SS; the device table supplies a
+	// conservative maximum-EU shape for each admitted Xe-LPG PCI ID.
+	// Object layout (byte offsets from `this`, verified via disassembly):
+	//   0x115c = NumSlices          0x0dd8 = NumSlices mirror
+	//   0x1158 = NumSubSlices       0x0ddc = NumSubSlices mirror
+	//   0x116c = MaxEUPerSubSlice
+	//   0x1124 = ExecutionUnitCount (= MaxEUPerSubSlice × NumSubSlices)
+	//   0x1150 = Frequency pair (low32=fMaxMHz, high32=fMinMHz)
+	//   0x1164 = L3BankCount
+	unsigned int numSlices        = 1;
+	unsigned int numSubSlices     = MellowCore::callback != nullptr ?
+		getUltraCompatSubSliceCount(MellowCore::callback->deviceId) : 0;
+	unsigned int maxEUPerSubSlice = 8;
+	if (numSubSlices == 0) {
+		// processKext() is guarded by ultraActive, so this is defensive only.
+		numSubSlices = 8;
+		SYSLOG("mellow", "getGPUInfo: missing device topology; using conservative 64-EU fallback");
+	}
+	unsigned int totalEU = maxEUPerSubSlice * numSubSlices;
+	
+	getMember<UInt32>(that, 0x115c) = numSlices;
+	getMember<UInt32>(that, 0x1158) = numSubSlices;
+	getMember<UInt32>(that, 0x116c) = maxEUPerSubSlice;
+	getMember<UInt32>(that, 0x1124) = totalEU;
+	getMember<UInt32>(that, 0x0dd8) = numSlices;
+	getMember<UInt32>(that, 0x0ddc) = numSubSlices;
+	getMember<UInt32>(that, 0x1164) = 8;  // L3BankCount (confirmed from InsanelyMac TGL logs)
+	
+	// Frequency: fMaxFrequencyInMhz=1000, fMinFrequencyInMhz=450 (TGL defaults)
+	getMember<uint64_t>(that, 0x1150) = 0x1C2000003E8ULL;
+	
+	SYSLOG("mellow", "getGPUInfo: Ultra device=0x%04x topology slices=%u subslices=%u maxEU/SS=%u totalEU=%u L3Banks=8",
+		   MellowCore::callback != nullptr ? MellowCore::callback->deviceId : 0,
+		   numSlices, numSubSlices, maxEUPerSubSlice, totalEU);
+
+}
+
+// V164: Hook populateResetRegisterList to clear PERCTX_PREEMPT_CTRL before snapshot.
+//
+// IntelAccelerator::startGraphicsEngine writes 0x40004000 to 0x20E0, then calls
+// populateResetRegisterList which reads the live MMIO value via [rax+20E0h] and stores
+// it into a per-context replay list (a batch of MI_LRI commands replayed before every
+// context switch). If 0x4000 is snapshotted into that list, hardware perpetually
+// replays it back, overriding any post-hoc MMIO clear (V162/V163 arrive too late).
+//
+// Fix: clear bit 14 BEFORE calling original so the snapshot captures 0x0000,
+// making the replay batch write 0x0000 to 0x20E0 on every context switch instead.
+void Gen11::populateResetRegisterList(void *that)
+{
+	if (!MellowCore::callback->isRealTGL) {
+		// Masked clear: mask=bit14, value=0 → 0x40000000
+		MellowCore::callback->writeReg32(GEN7_FF_SLICE_CS_CHICKEN1,
+			(GEN9_FFSC_PERCTX_PREEMPT_CTRL << 16) | 0);
+		SYSLOG("mellow", "V164: pre-snapshot clear FF_SLICE_CS_CHICKEN1=0x%08x",
+			MellowCore::callback->readReg32(GEN7_FF_SLICE_CS_CHICKEN1));
+
+	}
+	FunctionCast(populateResetRegisterList, callback->opopulateResetRegisterList)(that);
+
+	// V503: Dump the exact values Apple just baked into the context reset register list.
+	// Register set decoded from Ghidra decompile of IntelAccelerator::populateResetRegisterList.
+	static bool v503Logged = false;
+	if (!v503Logged && !MellowCore::callback->isRealTGL) {
+		v503Logged = true;
+		auto *cb = MellowCore::callback;
+		SYSLOG("mellow", "V503: context register snapshot (19 regs):");
+		SYSLOG("mellow", "V503:  0x2080 HWS_PGA           = 0x%08x", cb->readReg32(0x2080));
+		SYSLOG("mellow", "V503:  0x2134 RING_BUFFER_UHPTR = 0x%08x", cb->readReg32(0x2134));
+		SYSLOG("mellow", "V503:  0x20c0 INSTPM            = 0x%08x", cb->readReg32(0x20c0));
+		SYSLOG("mellow", "V503:  0x7000 CACHE_MODE_0      = 0x%08x", cb->readReg32(0x7000));
+		SYSLOG("mellow", "V503:  0x7004 CACHE_MODE_1      = 0x%08x", cb->readReg32(0x7004));
+		SYSLOG("mellow", "V503:  0x209c MI_MODE           = 0x%08x", cb->readReg32(0x209c));
+		SYSLOG("mellow", "V503:  0x2090 3D_CHICKEN3       = 0x%08x", cb->readReg32(0x2090));
+		SYSLOG("mellow", "V503:  0x4090 ECOCHK            = 0x%08x", cb->readReg32(0x4090));
+		SYSLOG("mellow", "V503:  0x20a0 FF_THREAD_MODE    = 0x%08x", cb->readReg32(0x20a0));
+		SYSLOG("mellow", "V503:  0x20e4 FF_SLICE_CS_CHKN2 = 0x%08x", cb->readReg32(0x20e4));
+		SYSLOG("mellow", "V503:  0x9430 UCGCTL6           = 0x%08x", cb->readReg32(0x9430));
+		SYSLOG("mellow", "V503:  0x7010 CMN_SLICE_CHKN1   = 0x%08x", cb->readReg32(0x7010));
+		SYSLOG("mellow", "V503:  0x0d08 RCPCONFIG         = 0x%08x", cb->readReg32(0x0d08));
+		SYSLOG("mellow", "V503:  0xe194 HALF_SLICE_CHKN7  = 0x%08x", cb->readReg32(0xe194));
+		SYSLOG("mellow", "V503:  0xb004 GARBCNTLREG       = 0x%08x", cb->readReg32(0xb004));
+		SYSLOG("mellow", "V503:  0x20ec CS_DEBUG_MODE1    = 0x%08x", cb->readReg32(0x20ec));
+		SYSLOG("mellow", "V503:  0x2580 CS_CHICKEN1       = 0x%08x", cb->readReg32(0x2580));
+		SYSLOG("mellow", "V503:  0x20e0 FF_SLICE_CS_CHKN1 = 0x%08x", cb->readReg32(0x20e0));
+		SYSLOG("mellow", "V503:  0x229c RCS_GFX_MODE      = 0x%08x", cb->readReg32(0x229c));
+	}
+	// V504: patch reset register list before context image bakes
+	// Walk IGVector: each entry = {uint32_t mmio_addr, uint32_t value, char name[0x1c]}
+	if (!MellowCore::callback->isRealTGL) {
+		auto *accel = reinterpret_cast<AppleIntel::IntelAccelerator*>(that);
+		uint64_t count = accel->fResetRegCount;
+		uint8_t *data  = reinterpret_cast<uint8_t*>(accel->fResetRegData);
+		static int v504CallCount = 0;
+		++v504CallCount;
+		bool v504Verbose = (v504CallCount <= 3);
+		if (v504Verbose)
+			SYSLOG("mellow", "V504[%d]: IGVector count=%llu data=%p", v504CallCount,
+				   (unsigned long long)count, data);
+		for (uint64_t i = 0; i < count; i++) {
+			uint32_t *entry = reinterpret_cast<uint32_t*>(data + i * 0x24);
+			uint32_t  addr  = entry[0];
+			// V504-TEST: 0x20ec CS_DEBUG_MODE1 patch commented out to test if clearing
+			// Apple's 0x11 (bits 0+4) is needed or harmful on RPL.
+			// if (addr == 0x20ec) {
+			//     entry[1] = 0x00000000;
+			//     if (v504Verbose) SYSLOG("mellow", "V504[%d]: patched CS_DEBUG_MODE1 → 0", v504CallCount);
+			// }
+			if (addr == 0x2580) {
+				entry[1] = 0x00000002;
+				if (v504Verbose) SYSLOG("mellow", "V504[%d]: patched CS_CHICKEN1 → 0x2", v504CallCount);
+			}
+			// V506: The populateResetRegisterList snapshot reads RING_MODE before Apple enables
+			// GFX_RUN_LIST_ENABLE (bit 15), so the baked value is 0x0.  On first lite-restore
+			// the MI_LRI replays RING_MODE=0, which clears GFX_RUN_LIST_ENABLE mid-restore —
+			// the ExecList state machine disables itself and the context never reaches ACTIVE.
+			// Fix: force bit 15 in the image so every context restore re-arms ExecList mode.
+			if (addr == 0x229c) {
+				uint32_t old = entry[1];
+				entry[1] |= (1u << 15);  // GFX_RUN_LIST_ENABLE
+				if (v504Verbose) SYSLOG("mellow", "V504[%d]: V506 RING_MODE 0x%08x → 0x%08x (GFX_RUN_LIST_ENABLE forced)",
+					v504CallCount, old, entry[1]);
+			}
+		}
+	}
+	// V507: Re-arm GFX_RUN_LIST_ENABLE in the live register after each reset/recovery attempt.
+	// Apple's recovery may clear RING_MODE; ensure ExecList mode stays on before context re-submit.
+	{
+		uint32_t rmPre = MellowCore::callback->readReg32(RING_MODE(RENDER_RING_BASE));
+		MellowCore::callback->writeReg32(RING_MODE(RENDER_RING_BASE), 0x80008000u);
+		uint32_t rmPost = MellowCore::callback->readReg32(RING_MODE(RENDER_RING_BASE));
+		SYSLOG("mellow", "V507: post-resetRegList RING_MODE 0x%08x → readback 0x%08x (GFX_RUN_LIST_ENABLE=%d)",
+			rmPre, rmPost, !!(rmPost & (1u << 15)));
+	}
+
+	// V507 LRCA repair: re-copy the ring-LRI from the saved RCS context buffer to the
+	// ExecList submission slot (GGTT[0x19]) after every populateResetRegisterList.
+	// The display retry loop reuses the same context without calling withOptions again,
+	// so the slot gets wiped by stopGraphicsEngine and never repaired by V508.
+	auto *cb = MellowCore::callback;
+	void *ctx = cb->lastRCSCtx;
+	if (!cb->isRealTGL && ctx) {
+		uint32_t lrcaGpuVa = getMember<uint32_t>(ctx, 0x89) & 0xFFFFF000;
+		if (lrcaGpuVa) {
+			uint32_t ctxPage1Idx = (lrcaGpuVa >> 12) + 1;
+			cb->setApertureIfNecessary();
+			if (cb->aperturePtr && cb->apertureLen >= 0x1000) {
+				uint32_t slotLo = cb->readReg32(GGTT_PTE_LO(0x19));
+				uint32_t slotHi = cb->readReg32(GGTT_PTE_HI(0x19));
+				uint32_t ctxLo  = cb->readReg32(GGTT_PTE_LO(ctxPage1Idx));
+				uint32_t ctxHi  = cb->readReg32(GGTT_PTE_HI(ctxPage1Idx));
+				if ((slotLo & 1) && (ctxLo & 1)) {
+					asm volatile("wbinvd" ::: "memory");
+					volatile uint32_t *ap = cb->aperturePtr;
+					uint32_t saveLo = cb->readReg32(GGTT_PTE_LO(0));
+					uint32_t saveHi = cb->readReg32(GGTT_PTE_HI(0));
+
+					uint32_t buf[96];
+					cb->writeReg32(GGTT_PTE_LO(0), ctxLo);
+					cb->writeReg32(GGTT_PTE_HI(0), ctxHi);
+					cb->writeReg32(0x101008, 0x1);
+					for (int i = 0; i < 96; i++) buf[i] = ap[i];
+
+					cb->writeReg32(GGTT_PTE_LO(0), slotLo);
+					cb->writeReg32(GGTT_PTE_HI(0), slotHi);
+					cb->writeReg32(0x101008, 0x1);
+
+					if ((ap[1] & 0x1F801000) != 0x11001000 &&
+					    (buf[1] & 0x1F801000) == 0x11001000) {
+						for (int i = 0; i < 96; i++) ap[i] = buf[i];
+						asm volatile("sfence" ::: "memory");
+						SYSLOG("mellow", "V507: LRCA re-repair slot←ctx DW1=%08x",
+						       buf[1]);
+					}
+
+					cb->writeReg32(GGTT_PTE_LO(0), saveLo);
+					cb->writeReg32(GGTT_PTE_HI(0), saveHi);
+					cb->writeReg32(0x101008, 0x1);
+				}
+			}
+		}
+	}
+}
+
+void *Gen11::createUserGPUTask(void *that)
+{
+	auto ensureTaskContext = [&](void *task, const char *origin) -> void * {
+		if (!task || MellowCore::callback->isRealTGL)
+			return task ? getMember<void *>(task, 0xb8) : nullptr;
+
+		void *taskCtx = getMember<void *>(task, 0xb8);
+		if (taskCtx)
+			return taskCtx;
+
+		// Read task+0x298 directly — that's where getBlit3DContext(task,true) stores the
+		// allocated context when Apple's driver naturally calls it. Calling getBlit3DContext
+		// with true ourselves triggers initWithOptions too early (before GPU memory is ready)
+		// causing a boot hang. Apple's call happens later; null here is safe — all callers
+		// of ensureTaskContext that dereference +0xb8 already have null guards.
+		void *ctx = getMember<void *>(task, 0x298);
+		if (!ctx)
+			return nullptr;
+
+		auto *ctxSlot = reinterpret_cast<void **>(reinterpret_cast<uint8_t *>(task) + 0xb8);
+		*ctxSlot = ctx;
+
+		if (isExperimentalMonitorEnabled()) {
+			static int v138Count = 0;
+			if (v138Count < 32) {
+				v138Count++;
+				SYSLOG("mellow", "V138[%d]: %s task=%p initialized ctx=%p", v138Count, origin, task, ctx);
+			}
+		}
+
+		return ctx;
+	};
+
+	auto *task = FunctionCast(createUserGPUTask, callback->ocreateUserGPUTask)(that);
+	if (isExperimentalMonitorEnabled()) {
+		static int v137CreateTaskCount = 0;
+		if (v137CreateTaskCount < 24) {
+			v137CreateTaskCount++;
+			void *taskVtable = task ? getMember<void *>(task, 0x0) : nullptr;
+			void *taskCtx = task ? getMember<void *>(task, 0xb8) : nullptr;
+			void *kernelTask = getMember<void *>(that, 0x150);
+			void *kernelTaskVtable = kernelTask ? getMember<void *>(kernelTask, 0x0) : nullptr;
+			void *kernelTaskCtx = kernelTask ? getMember<void *>(kernelTask, 0xb8) : nullptr;
+			SYSLOG("mellow", "V137.createUserGPUTask[%d]: acc=%p task=%p vtbl=%p ctx=%p ktask=%p kvtbl=%p kctx=%p cached=%p",
+				   v137CreateTaskCount, that, task, taskVtable, taskCtx,
+				   kernelTask, kernelTaskVtable, kernelTaskCtx, callback->v132CachedTask);
+		}
+	}
+	if (MellowCore::callback->isRealTGL || task) {
+		if (task)
+			ensureTaskContext(task, "createUserGPUTask-user");
+		return task;
+	}
+
+	void *kernelTask = getMember<void *>(that, 0x150);
+	if (kernelTask) {
+		callback->v132CachedTask = kernelTask;
+		ensureTaskContext(kernelTask, "createUserGPUTask-kernel");
+		SYSLOG("mellow", "V132: createUserGPUTask returned null, using kernel task fallback=%p", kernelTask);
+		return kernelTask;
+	}
+
+	if (callback->v132CachedTask) {
+		ensureTaskContext(callback->v132CachedTask, "createUserGPUTask-cached");
+		SYSLOG("mellow", "V132: createUserGPUTask returned null, using cached task=%p", callback->v132CachedTask);
+		return callback->v132CachedTask;
+	}
+
+	SYSLOG("mellow", "V132: createUserGPUTask returned null, no fallback task available");
+	return nullptr;
+}
+
+void *Gen11::igAccelTaskWithOptions(void *that)
+{
+	auto ensureTaskContext = [&](void *task, const char *origin) -> void * {
+		if (!task || MellowCore::callback->isRealTGL)
+			return task ? getMember<void *>(task, 0xb8) : nullptr;
+
+		void *taskCtx = getMember<void *>(task, 0xb8);
+		if (taskCtx)
+			return taskCtx;
+
+		// Read task+0x298 directly — that's where getBlit3DContext(task,true) stores the
+		// allocated context when Apple's driver naturally calls it. Calling getBlit3DContext
+		// with true ourselves triggers initWithOptions too early (before GPU memory is ready)
+		// causing a boot hang. Apple's call happens later; null here is safe — all callers
+		// of ensureTaskContext that dereference +0xb8 already have null guards.
+		void *ctx = getMember<void *>(task, 0x298);
+		if (!ctx)
+			return nullptr;
+
+		auto *ctxSlot = reinterpret_cast<void **>(reinterpret_cast<uint8_t *>(task) + 0xb8);
+		*ctxSlot = ctx;
+
+		if (isExperimentalMonitorEnabled()) {
+			static int v138Count = 0;
+			if (v138Count < 32) {
+				v138Count++;
+				SYSLOG("mellow", "V138[%d]: %s task=%p initialized ctx=%p", v138Count, origin, task, ctx);
+			}
+		}
+
+		return ctx;
+	};
+
+	auto *task = FunctionCast(igAccelTaskWithOptions, callback->oigAccelTaskWithOptions)(that);
+	if (isExperimentalMonitorEnabled()) {
+		static int v137WithOptionsCount = 0;
+		if (v137WithOptionsCount < 24) {
+			v137WithOptionsCount++;
+			void *taskVtable = task ? getMember<void *>(task, 0x0) : nullptr;
+			void *taskCtx = task ? getMember<void *>(task, 0xb8) : nullptr;
+			SYSLOG("mellow", "V137.withOptions[%d]: acc=%p task=%p vtbl=%p ctx=%p cached=%p",
+				   v137WithOptionsCount, that, task, taskVtable, taskCtx, callback->v132CachedTask);
+		}
+	}
+	if (MellowCore::callback->isRealTGL)
+		return task;
+
+	if (task) {
+		callback->v132CachedTask = task;
+		ensureTaskContext(task, "withOptions");
+		DBGLOG("mellow", "V132: IGAccelTask::withOptions created task=%p", task);
+		return task;
+	}
+
+	if (callback->v132CachedTask) {
+		ensureTaskContext(callback->v132CachedTask, "withOptions-cached");
+		SYSLOG("mellow", "V132: IGAccelTask::withOptions returned null, reusing cached task=%p", callback->v132CachedTask);
+		return callback->v132CachedTask;
+	}
+
+	return nullptr;
+}
+
+void * Gen11::getBlit3DContext(void *that,bool param_1)
+{
+	if (!that)
+		return nullptr;
+
+	// Preserve real TGL behavior.
+	if (MellowCore::callback->isRealTGL) {
+		if (!callback->ogetBlit3DContext)
+			return nullptr;
+		return FunctionCast(getBlit3DContext, callback->ogetBlit3DContext)(that, param_1);
+	}
+
+	// V165: On the non-real-TGL Ultra spoof path, ctx+0xb8 can be null because
+	// base-class initWithOptions does not populate it under this spoof.
+	// All callers that dereference ctx+0xb8 are guarded with !isRealTGL early-returns
+	// (initBlitUsage V121, markBlitUsage V122, beginCoalescedSegment V124, barrierSubmission V130).
+	// Accept any non-null context on the non-real-TGL Ultra spoof path.
+	//
+	// V194: Always call Apple's original first. After gpuRestart all context objects are
+	// freed/reallocated; original returns the live context for the task. If it returns a
+	// different non-null ctx than our cache, a restart happened — update the cache.
+	// Fall back to cache only when original returns null (early-init window).
+	//
+	// Tier-1 interrupt: ring init disables RENDER_COPY_INTR_ENABLE. Ensure it's set before
+	// each call so the GPU context-creation completion interrupt can fire.
+	uint32_t rcIntrPre = 0;
+	if (!MellowCore::callback->isRealTGL) {
+		rcIntrPre = MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE);
+		uint32_t wantBits = getV65Tier1WantBits(false);
+		if (!(rcIntrPre & wantBits)) {
+			MellowCore::callback->writeReg32(GEN11_RENDER_COPY_INTR_ENABLE, rcIntrPre | wantBits);
+			SYSLOG("mellow", "V148: tier-1 was 0x%x — enabled (0x%x) before getBlit3DContext",
+				   rcIntrPre, rcIntrPre | wantBits);
+		}
+	}
+
+	if (callback->ogetBlit3DContext) {
+		// V502: log param_1 and task+0x298 before calling original — tells us whether
+		// getBlit3DContext will attempt context creation (param_1=true) or just read cache.
+		void *cached298 = getMember<void *>(that, 0x298);
+		static int v502Count = 0;
+		if (v502Count < 12) {
+			v502Count++;
+			SYSLOG("mellow", "V502[%d]: getBlit3DContext task=%p param_1=%d cached298=%p",
+				   v502Count, that, (int)param_1, cached298);
+		}
+		void *ctx = FunctionCast(getBlit3DContext, callback->ogetBlit3DContext)(that, param_1);
+		void *b8 = ctx ? getMember<void *>(ctx, 0xb8) : nullptr;
+		if (ctx && (b8 || !MellowCore::callback->isRealTGL)) {
+			if (ctx != callback->v131CachedBlit3DCtx) {
+				SYSLOG("mellow", "V194: getBlit3DContext ctx changed %p -> %p (restart recovery), updating cache",
+					   callback->v131CachedBlit3DCtx, ctx);
+				callback->v131CachedBlit3DCtx = ctx;
+			} else if (isExperimentalMonitorEnabled()) {
+				SYSLOG("mellow", "V148: getBlit3DContext using cached ctx=%p ctx+0xb8=%p",
+					   ctx, b8);
+			}
+			return ctx;
+		}
+		uint32_t errReg     = MellowCore::callback->readReg32(ERROR_GEN6);
+		uint32_t rcIntrPost = MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE);
+		SYSLOG("mellow", "V148: getBlit3DContext original returned invalid ctx=%p ctx+0xb8=%p "
+			   "tier1_pre=0x%x tier1_post=0x%x ERROR_GEN6=0x%x param_1=%d cached298_pre=%p",
+			   ctx, b8, rcIntrPre, rcIntrPost, errReg, (int)param_1, cached298);
+
+	}
+
+	// Apple's original returned null (early init) — fall back to previously cached ctx.
+	if (callback->v131CachedBlit3DCtx) {
+		if (isExperimentalMonitorEnabled())
+			SYSLOG("mellow", "V148: getBlit3DContext using cached ctx=%p (original returned null)",
+				   callback->v131CachedBlit3DCtx);
+		return callback->v131CachedBlit3DCtx;
+	}
+
+	// Fallbacks: depth/color resolve contexts share the same +0xb8 layout.
+	// V165: On the non-real-TGL Ultra spoof path, accept a fallback context
+	// regardless of +0xb8.
+	void *depth = getDepthResolveContext(that, param_1);
+	void *depthB8 = depth ? getMember<void *>(depth, 0xb8) : nullptr;
+	if (depth && (depthB8 || !MellowCore::callback->isRealTGL)) {
+		SYSLOG("mellow", "V148: getBlit3DContext using depth-resolve fallback ctx=%p ctx+0xb8=%p", depth, depthB8);
+		return depth;
+	}
+	void *color = getColorResolveContext(that, param_1);
+	void *colorB8 = color ? getMember<void *>(color, 0xb8) : nullptr;
+	if (color && (colorB8 || !MellowCore::callback->isRealTGL)) {
+		SYSLOG("mellow", "V148: getBlit3DContext using color-resolve fallback ctx=%p ctx+0xb8=%p", color, colorB8);
+		return color;
+	}
+
+	SYSLOG("mellow", "V148: getBlit3DContext all paths exhausted");
+	return nullptr;
+}
+
+uint64_t Gen11::blit3d_init_ctx(void *that)
+{
+	// V128 rollback: allow original Blit3D context init on spoofed paths.
+	return FunctionCast(blit3d_init_ctx, callback->oblit3d_init_ctx)(that);
+}
+
+void Gen11::blit3d_initialize_scratch_space(void *that)
+{
+	// Real TGL: always use Apple's original path unchanged.
+	if (MellowCore::callback->isRealTGL) {
+		FunctionCast(blit3d_initialize_scratch_space, callback->oblit3d_initialize_scratch_space)(that);
+		return;
+	}
+
+	// V181: On spoofed paths, allow scratch init now that IOAF2 lock/unlock symbols
+	// are resolved. The scratch buffer must be populated for RCS (routeSel=3) blits
+	// to execute correctly; without it the GPU stalls on null shader code (Sig 813).
+	// Guard: only proceed if IOAF2 symbols resolved — if they're missing, suppressing
+	// is safer than a GPU hang.
+	if (!callback->oIOAF2_lockForCPUAccess || !callback->oIOAF2_unlockForCPUAccess) {
+		SYSLOG("mellow", "V181: suppressing scratch init on non-real-TGL Ultra spoof path — IOAF2 symbols unresolved lock=%p unlock=%p",
+			   reinterpret_cast<void *>(callback->oIOAF2_lockForCPUAccess),
+			   reinterpret_cast<void *>(callback->oIOAF2_unlockForCPUAccess));
+		return;
+	}
+
+	static bool v181InitLogged = false;
+	if (!v181InitLogged) {
+		v181InitLogged = true;
+		SYSLOG("mellow", "V181: blit3d_initialize_scratch_space running on non-real-TGL Ultra spoof path (IOAF2 lock=%p unlock=%p)",
+			   reinterpret_cast<void *>(callback->oIOAF2_lockForCPUAccess),
+			   reinterpret_cast<void *>(callback->oIOAF2_unlockForCPUAccess));
+	}
+	FunctionCast(blit3d_initialize_scratch_space, callback->oblit3d_initialize_scratch_space)(that);
+}
+
+void Gen11::IGHardwareBlit3DContextinitialize(void *that)
+{
+	// V69: Diagnostic hook — original crashes at +0x4c writing 0x44 bytes to buffer+0xD000.
+	// That page is unmapped (CPU page fault, type 14). We replace the entire function body
+	// to prevent the panic and log the buffer state for root-cause analysis.
+	// V73: Fixed double-dereference bug — *getMember<T*> reads a pointer then follows it.
+	//      Use getMember<T> to write to object fields directly.
+	//      Added NULL guard for `that` (crash seen with RDI=0x0).
+
+	if (!that) {
+		SYSLOG("mellow", "V73: IGHardwareBlit3DContext::initialize called with NULL this!");
+		return;
+	}
+
+	static int v69CallCount = 0;
+	v69CallCount++;
+	const bool v69Verbose = v69CallCount <= 6;
+
+	// Preserve real TGL behavior: always use Apple's original initializer.
+	if (MellowCore::callback->isRealTGL) {
+		FunctionCast(IGHardwareBlit3DContextinitialize, callback->oIGHardwareBlit3DContextinitialize)(that);
+		return;
+	}
+
+	if (v69Verbose)
+		SYSLOG("mellow", "V69: IGHardwareBlit3DContext::initialize[%d](%p)", v69CallCount, that);
+
+	// Dump context object internals — look for the GPU buffer mapping info
+	void *mappedBufPtr = getMember<void *>(that, 0xd8);
+	if (v69Verbose)
+		SYSLOG("mellow", "V69: ctx->0xd8(IGMappedBuffer)=%p", mappedBufPtr);
+
+	// Probe IGMappedBuffer internals: vtable, size, IOMemoryDescriptor*, base VA, etc.
+	if (mappedBufPtr && v69Verbose) {
+		for (int i = 0; i < 12; i++) {
+			uint64_t val = getMember<uint64_t>(mappedBufPtr, i * 8);
+			SYSLOG("mellow", "V69: mappedBuf[0x%02x]=0x%016llx", i * 8, (unsigned long long)val);
+		}
+	}
+
+	// V106: On spoofed paths, default to skip Apple's original init.
+	// The original still faults at +0x4c on some boots (page fault in SecurityAgent path).
+	// In full-MTL mode, keep skip-by-default for stability; allow original only via opt-in arg.
+	// Use -mellowV69AllowOriginal to test original init, and -mellowV69SkipOriginal to hard-disable it.
+	const bool allowOriginal = checkKernelArgument("-mellowV69AllowOriginal");
+	const bool forceFullMTL = shouldForceFullMetalPath();
+	const bool skipOriginal = checkKernelArgument("-mellowV69SkipOriginal");
+	uint64_t gpuBufBase = mappedBufPtr ? getMember<uint64_t>(mappedBufPtr, 0x18) : 0;
+	uint64_t gpuBufSize = mappedBufPtr ? getMember<uint64_t>(mappedBufPtr, 0x20) : 0;
+	// Calling the original Blit3D initializer on the non-real-TGL Ultra spoof path
+	// remains unsafe under the inherited Sonoma circuit breaker:
+	// crashes observed at initialize+0x4c with a write fault to the mapped scratch page.
+	// Keep original path blocked by default even when -mellowV69AllowOriginal is set.
+	// Only allow with explicit unsafe override for debugging.
+	// GPU VA is at mappedBuf[0x38], size at [0x20]. [0x18] is the task pointer, not GPU VA.
+	uint64_t gpuVA   = mappedBufPtr ? getMember<uint64_t>(mappedBufPtr, 0x38) : 0;
+	bool safeForOriginal = mappedBufPtr && gpuVA != 0 && gpuBufSize >= 0xD040;
+	const bool forceUnsafeOriginal = checkKernelArgument("-mellowV69ForceOriginalUnsafe");
+	const bool shouldTryOriginal = allowOriginal && !skipOriginal && safeForOriginal &&
+		(MellowCore::callback->isRealTGL || forceUnsafeOriginal);
+	if (shouldTryOriginal) {
+		SYSLOG("mellow", "V111B: calling original Blit3D init (opt-in, fullMTL=%d allow=%d skip=%d base=0x%llx size=0x%llx)",
+			   forceFullMTL, allowOriginal, skipOriginal,
+			   (unsigned long long)gpuBufBase, (unsigned long long)gpuBufSize);
+		FunctionCast(IGHardwareBlit3DContextinitialize, callback->oIGHardwareBlit3DContextinitialize)(that);
+		SYSLOG("mellow", "V111B: original Blit3D init completed");
+		return;
+	}
+	if (!MellowCore::callback->isRealTGL && allowOriginal && !forceUnsafeOriginal) {
+		SYSLOG("mellow", "V111B: -mellowV69AllowOriginal blocked on non-real-TGL Ultra spoof path (use -mellowV69ForceOriginalUnsafe only for crash debugging)");
+	}
+	if (allowOriginal && !safeForOriginal) {
+		SYSLOG("mellow", "V106: -mellowV69AllowOriginal requested but rejected (base=0x%llx size=0x%llx)",
+			   (unsigned long long)gpuBufBase, (unsigned long long)gpuBufSize);
+	} else if (!MellowCore::callback->isRealTGL && forceFullMTL && skipOriginal) {
+		SYSLOG("mellow", "V111B: full-MTL active and original Blit3D init disabled by -mellowV69SkipOriginal");
+	} else if (!MellowCore::callback->isRealTGL && forceFullMTL && !allowOriginal) {
+		SYSLOG("mellow", "V111B: full-MTL active; original Blit3D init remains disabled by default (use -mellowV69AllowOriginal to test)");
+	} else if (v69Verbose || v69CallCount == 16 || v69CallCount == 64 || v69CallCount == 256) {
+		SYSLOG("mellow", "V106: skip original Blit3D init on non-real TGL (base=0x%llx size=0x%llx)",
+			   (unsigned long long)gpuBufBase, (unsigned long long)gpuBufSize);
+	}
+
+	// Dump context fields 0xb0-0x120 (includes buffer pointers, sizes, GPU addresses)
+	for (int i = 0; v69Verbose && i < 16; i++) {
+		uint64_t val = getMember<uint64_t>(that, 0xb0 + i * 8);
+		if (val != 0) {
+			SYSLOG("mellow", "V69: ctx[0x%03x]=0x%016llx", 0xb0 + i * 8, (unsigned long long)val);
+		}
+	}
+
+	// V148: Replicate initialize() ourselves, skipping only blit3d_initialize_scratch_space.
+	//
+	// initWithOptions IDA (0x7CEBC) clarifies the full field layout when initialize() runs:
+	//   ctx+0xB8 — set by BASE CLASS IGHardwareContext::initWithOptions before we are called
+	//   ctx+0xD8 — IGSharedMappedBuffer* scratch buf, allocated by initWithOptions from params+0x10
+	//   ctx+0xE0 — optional extra IGMappedBuffer, only if params+0x18 != 0 (Blit3D: not used)
+	//   initialize() is called LAST (vtable[0x130]) after all fields are set.
+	//
+	// Original initialize() body (from disassembly at 0x7d8b8):
+	//   1. Zero ctx+0xe8, 0xf0, 0xf8, 0x100, 0x108, 0x110
+	//   2. ctx+0xd8 -> getMemory() -> blit3d_initialize_scratch_space()
+	//      <- inherited spoof-path crash: memcpy writes static GPU blit shader kernels to a
+	//         write-protected page (first observed on RPL)
+	//      (allocation succeeds, GPU VA valid, but CPU-side lockForCPUAccess ptr is read-only)
+	//   3. tail-call blit3d_init_ctx(ctx)
+	//      ← reads ctx+0xD8 for getGPUVirtualAddress(), reads ctx+0xE0 for getBufferPtrNoInc()
+	//      ← writes GPU 3D state init commands into the command buffer (ctx+0xE0 pool slot)
+	//
+	// We zero the fields (step 1), skip scratch-space init (step 2), then call
+	// oblit3d_init_ctx directly (step 3). ctx+0xD8 must be non-null for blit3d_init_ctx
+	// to safely call getGPUVirtualAddress() — guard before calling.
+	auto *base = reinterpret_cast<uint8_t *>(that);
+	*reinterpret_cast<uint64_t *>(base + 0xe8)  = 0;
+	*reinterpret_cast<uint64_t *>(base + 0xf0)  = 0;
+	*reinterpret_cast<uint64_t *>(base + 0xf8)  = 0;
+	*reinterpret_cast<uint64_t *>(base + 0x100) = 0;
+	*reinterpret_cast<uint64_t *>(base + 0x108) = 0;
+	*reinterpret_cast<uint32_t *>(base + 0x110) = 0;
+
+	if (!callback->oblit3d_init_ctx) {
+		SYSLOG("mellow", "V148: oblit3d_init_ctx is null, cannot init GPU command buffer");
+		return;
+	}
+	// ctx+0xD8 must be valid before calling blit3d_init_ctx (it reads it for GPU VA).
+	// In practice it is always set by initWithOptions from params+0x10; guard for safety.
+	if (!mappedBufPtr) {
+		SYSLOG("mellow", "V148: ctx+0xD8 is null (scratch buf not allocated), skipping blit3d_init_ctx");
+		return;
+	}
+
+	uint64_t rc = FunctionCast(blit3d_init_ctx, callback->oblit3d_init_ctx)(that);
+	if (v69Verbose)
+		SYSLOG("mellow", "V148: blit3d_init_ctx returned %llu, ctx+0xb8=0x%llx ctx+0xd8=%p ctx+0xe0=%p",
+			   (unsigned long long)rc,
+			   (unsigned long long)getMember<uint64_t>(that, 0xb8),
+			   mappedBufPtr,
+			   getMember<void *>(that, 0xe0));
+
+}
+
+// V163: Hook startGraphicsEngine to clear PERCTX_PREEMPT_CTRL before first execlist context snapshot.
+//
+// Root cause: IntelAccelerator::startGraphicsEngine writes 0x40004000 to MMIO 0x20E0
+// (FF_SLICE_CS_CHICKEN1). That masked write enables bit 14 (PERCTX_PREEMPT_CTRL).
+// When the GPU loads its first execlist context it snapshots all GPU registers into
+// the context image DMA buffer in GGTT memory. From that point every context-switch
+// restore re-writes 0x4000 back to 0x20E0 from the DMA buffer — overriding any MMIO
+// clear we do after the fact.
+//
+// Fix: call the original (must keep its side-effects), then immediately clear bit 14
+// using a masked write (upper 16 = mask, lower 16 = 0). This fires before any context
+// is ever submitted, so the DMA buffer snapshot captures 0x0000 instead of 0x4000.
+unsigned long Gen11::startGraphicsEngine(void *that)
+{
+	static int startCount = 0;
+
+	if (!MellowCore::callback->isRealTGL) {
+		startCount++;
+		applyPreStartEngineWorkarounds(startCount);
+	}
+
+	unsigned long ret = FunctionCast(startGraphicsEngine, callback->ostartGraphicsEngine)(that);
+
+	if (!MellowCore::callback->isRealTGL) {
+		// Masked clear: mask=bit14, value=0 → 0x40000000
+		MellowCore::callback->writeReg32(GEN7_FF_SLICE_CS_CHICKEN1,
+			(GEN9_FFSC_PERCTX_PREEMPT_CTRL << 16) | 0);
+		SYSLOG("mellow", "V163: startGraphicsEngine post-clear FF_SLICE_CS_CHICKEN1=0x%08x (ret=%lu)",
+			MellowCore::callback->readReg32(GEN7_FF_SLICE_CS_CHICKEN1), ret);
+	}
+
+	return ret;
+}
+
+// Minimal pre-start safety: clear ERROR_GEN6 + mask EMR only.
+// GT chicken/clock-gate WAs must NOT run before Apple's startGraphicsEngine — they
+// interfere with ring initialization and leave CTL=0 (ring never enabled).
+// GT WAs are applied pre-stop via applyPreStopEngineWorkarounds; they persist in
+// hardware state and the context image (V504) across the stop→start cycle.
+void Gen11::applyPreStartEngineWorkarounds(int callCount)
+{
+	uint32_t preErr = MellowCore::callback->readReg32(ERROR_GEN6);
+	if (preErr) {
+		MellowCore::callback->writeReg32(ERROR_GEN6, 0x0);
+		SYSLOG("mellow", "V71S[%d]: pre-start ERR=0x%x cleared", callCount, preErr);
+	}
+	MellowCore::callback->writeReg32(RING_EMR(RENDER_RING_BASE), 0xFFFFFFFF);
+	MellowCore::callback->writeReg32(RING_EMR(BLT_RING_BASE),    0xFFFFFFFF);
+}
+
+// Full GT workarounds + pre-engine error clearing + BCS drain.
+// Called before stopGraphicsEngine only — these WAs are safe to apply to a running
+// ring and need to be in place before the context image is captured on stop.
+void Gen11::applyPreStopEngineWorkarounds(int callCount)
+{
+	// ── GT workarounds (gen12_gt_workarounds_init / rcs_engine_wa_init) ──
+	// Applied on every reset — same set as Linux i915 for TGL/ADL-P.
+	/* Wa_14011060649:tgl,rkl,dg1,adl-s,adl-p */
+	MellowCore::callback->wa_write_or(VDBOX_CGCTL3F10(RENDER_RING_BASE), IECPUNIT_CLKGATE_DIS);
+	MellowCore::callback->wa_write_or(VDBOX_CGCTL3F10(BLT_RING_BASE),    IECPUNIT_CLKGATE_DIS);
+	MellowCore::callback->wa_write_or(VDBOX_CGCTL3F10(GEN11_VEBOX_RING_BASE), IECPUNIT_CLKGATE_DIS);
+	/* Wa_14011059788:tgl,rkl,adl-s,dg1,adl-p */
+	MellowCore::callback->wa_mcr_write_or(GEN10_DFR_RATIO_EN_AND_CHICKEN, DFR_DISABLE);
+	/* Wa_14015795083 */
+	MellowCore::callback->wa_add(GEN7_MISCCPCTL, GEN12_DOP_CLOCK_GATE_RENDER_ENABLE, 0, 0, false);
+	/* Wa_1409142259:tgl,dg1,adl-p */
+	MellowCore::callback->wa_masked_en(GEN11_COMMON_SLICE_CHICKEN3, GEN12_DISABLE_CPS_AWARE_COLOR_PIPE);
+	/* WaDisableGPGPUMidThreadPreemption:gen12 */
+	MellowCore::callback->wa_masked_field_set(GEN8_CS_CHICKEN1,
+			GEN9_PREEMPT_GPGPU_LEVEL_MASK, GEN9_PREEMPT_GPGPU_THREAD_GROUP_LEVEL);
+	/* MCR selector: slice 0, subslice 0 */
+	MellowCore::callback->wa_write_clr_set(GEN8_MCR_SELECTOR,
+			GEN8_MCR_SLICE_MASK | GEN8_MCR_SUBSLICE_MASK,
+			GEN8_MCR_SLICE(0) | GEN8_MCR_SUBSLICE(0));
+	/* rcs_engine_wa_init */
+	MellowCore::callback->wa_masked_en(GEN7_FF_SLICE_CS_CHICKEN1, GEN9_FFSC_PERCTX_PREEMPT_CTRL);
+
+	// V71 PRE: clear ERROR_GEN6 and mask EMR
+	{
+		uint32_t preErr = MellowCore::callback->readReg32(ERROR_GEN6);
+		if (preErr) {
+			MellowCore::callback->writeReg32(ERROR_GEN6, 0x0);
+			SYSLOG("mellow", "V71[%d]: pre-engine ERR=0x%x cleared", callCount, preErr);
+		}
+		MellowCore::callback->writeReg32(RING_EMR(RENDER_RING_BASE), 0xFFFFFFFF);
+		MellowCore::callback->writeReg32(RING_EMR(BLT_RING_BASE),    0xFFFFFFFF);
+	}
+
+	// V152: drain and disable BCS ring so Apple sees a clean BCS state
+	{
+		uint32_t bcsTail = MellowCore::callback->readReg32(RING_TAIL(BLT_RING_BASE));
+		uint32_t bcsHead = MellowCore::callback->readReg32(RING_HEAD(BLT_RING_BASE));
+		uint32_t bcsCtl  = MellowCore::callback->readReg32(RING_CTL(BLT_RING_BASE));
+		if (bcsCtl != 0 || bcsHead != bcsTail) {
+			if (bcsHead != bcsTail) {
+				MellowCore::callback->writeReg32(RING_TAIL(BLT_RING_BASE), bcsHead);
+				SYSLOG("mellow", "V152[%d]: BCS drain TAIL 0x%x→0x%x HEAD=0x%x CTL=0x%x",
+					   callCount, bcsTail, bcsHead, bcsHead, bcsCtl);
+			}
+			MellowCore::callback->writeReg32(RING_CTL(BLT_RING_BASE), 0x0);
+			SYSLOG("mellow", "V152[%d]: BCS disabled (CTL was 0x%x)", callCount, bcsCtl);
+		}
+	}
+}
+
+// stopGraphicsEngine is the real GPU reset entry point on this binary (resetGraphicsEngine
+// symbol is absent). Stop-specific: ring snapshot, V155 save/restore, V162 PERCTX clear,
+// V71 POST CSB drain. GT workarounds are in applyPreStopEngineWorkarounds() above.
+unsigned long Gen11::stopGraphicsEngine(void *that)
+{
+	static int   v63ResetCount            = 0;
+	static uint32_t v155SavedRcsCtl       = 0;
+	static int   v164GdrstCount           = 0;
+	static int   v505Count                = 0;
+
+	if (!MellowCore::callback->isRealTGL) {
+		v63ResetCount++;
+
+		applyPreStopEngineWorkarounds(v63ResetCount);
+
+		// V155: save RCS CTL while ring is still intact
+		{
+			uint32_t ctlNow = MellowCore::callback->readReg32(RING_CTL(RENDER_RING_BASE));
+			if (ctlNow != 0)
+				v155SavedRcsCtl = ctlNow | 1;
+		}
+
+		// V53/V161 PRE: snapshot ring and EU state before stop
+		uint32_t rcsHead  = MellowCore::callback->readReg32(RING_HEAD(RENDER_RING_BASE));
+		uint32_t rcsTail  = MellowCore::callback->readReg32(RING_TAIL(RENDER_RING_BASE));
+		uint32_t rcsStart = MellowCore::callback->readReg32(RING_START(RENDER_RING_BASE));
+		SYSLOG("mellow", "V53[%d] stop PRE: RCS CTL=0x%x HEAD=0x%x TAIL=0x%x START=0x%x EXEC=0x%x",
+			v63ResetCount,
+			MellowCore::callback->readReg32(RING_CTL(RENDER_RING_BASE)),
+			rcsHead, rcsTail, rcsStart,
+			MellowCore::callback->readReg32(RING_EXECLIST_STATUS(RENDER_RING_BASE)));
+		SYSLOG("mellow", "V161[%d] stop PRE: INSTDONE_1=0x%08x SLICE_DONE=0x%08x CS_CHKN1=0x%08x FF_CHKN1=0x%08x",
+			v63ResetCount,
+			MellowCore::callback->readReg32(0x206c),
+			MellowCore::callback->readReg32(0x2090),
+			MellowCore::callback->readReg32(GEN8_CS_CHICKEN1),
+			MellowCore::callback->readReg32(GEN7_FF_SLICE_CS_CHICKEN1));
+
+		// V505: dump ring preamble contents — ring still running at this point
+		if (v505Count < 3 && rcsStart) {
+			uint32_t ringPage = rcsStart >> 12;
+			uint32_t rpteHi   = MellowCore::callback->readReg32(GGTT_PTE_HI(ringPage));
+			uint32_t rpteLo   = MellowCore::callback->readReg32(GGTT_PTE_LO(ringPage));
+			if (rpteLo & 1) {
+				v505Count++;
+				uint64_t physBase = ((uint64_t)rpteHi << 32) | (rpteLo & 0xFFFFF000u);
+				SYSLOG("mellow", "V505[%d]: ring phys=0x%llx HEAD=0x%x TAIL=0x%x — 32 dwords:",
+					   v505Count, (unsigned long long)physBase, rcsHead, rcsTail);
+				for (int i = 0; i < 32; i++) {
+					uint32_t dw = IOMappedRead32(physBase + (uint64_t)(i * 4));
+					SYSLOG("mellow", "V505[%d]:  [%02d] +0x%02x = 0x%08x", v505Count, i, i * 4, dw);
+				}
+			} else {
+				SYSLOG("mellow", "V505: PTE invalid rpteHi=0x%x rpteLo=0x%x", rpteHi, rpteLo);
+			}
+		}
+
+		// V164: fire GDRST if ghost context detected (EXEC active, ring empty)
+		{
+			uint32_t execStatus = MellowCore::callback->readReg32(RING_EXECLIST_STATUS(RENDER_RING_BASE));
+			const bool ghostActive = (execStatus & 1) && (rcsHead == rcsTail);
+			if (ghostActive && v164GdrstCount < 8) {
+				v164GdrstCount++;
+				MellowCore::callback->writeReg32(GEN6_GDRST, GEN6_GRDOM_RENDER);
+				uint32_t gdrstVal = GEN6_GRDOM_RENDER;
+				int pollCount = 0;
+				while ((gdrstVal & GEN6_GRDOM_RENDER) && pollCount < 1000) {
+					gdrstVal = MellowCore::callback->readReg32(GEN6_GDRST);
+					pollCount++;
+				}
+				SYSLOG("mellow", "V164[%d]: GDRST #%d poll=%d gdrst=0x%x EXEC 0x%x->0x%x",
+					v63ResetCount, v164GdrstCount, pollCount, gdrstVal,
+					execStatus, MellowCore::callback->readReg32(RING_EXECLIST_STATUS(RENDER_RING_BASE)));
+			}
+		}
+	}
+
+	unsigned long ret = FunctionCast(stopGraphicsEngine, callback->ostopGraphicsEngine)(that);
+
+	if (!MellowCore::callback->isRealTGL) {
+		// V53/V161 POST: snapshot after stop
+		SYSLOG("mellow", "V53[%d] stop POST: RCS CTL=0x%x HEAD=0x%x TAIL=0x%x EXEC=0x%x",
+			v63ResetCount,
+			MellowCore::callback->readReg32(RING_CTL(RENDER_RING_BASE)),
+			MellowCore::callback->readReg32(RING_HEAD(RENDER_RING_BASE)),
+			MellowCore::callback->readReg32(RING_TAIL(RENDER_RING_BASE)),
+			MellowCore::callback->readReg32(RING_EXECLIST_STATUS(RENDER_RING_BASE)));
+
+		// V162: clear PERCTX_PREEMPT_CTRL after stop on the non-real-TGL Ultra spoof
+		// path. The inherited RPL baseline hung when the TGL context image set bit 14.
+		MellowCore::callback->writeReg32(GEN7_FF_SLICE_CS_CHICKEN1,
+				(GEN9_FFSC_PERCTX_PREEMPT_CTRL << 16) | 0);
+
+		// V155: restore RCS ring enable so Apple's startGraphicsEngine can take over
+		if (v155SavedRcsCtl != 0)
+			MellowCore::callback->writeReg32(RING_CTL(RENDER_RING_BASE), v155SavedRcsCtl | 1);
+
+		// V71 POST: clear any errors generated by stop + drain CSB
+		{
+			uint32_t postErr = MellowCore::callback->readReg32(ERROR_GEN6);
+			if (postErr) {
+				MellowCore::callback->writeReg32(ERROR_GEN6, 0x0);
+				SYSLOG("mellow", "V71[%d]: post-stop ERR=0x%x cleared", v63ResetCount, postErr);
+			}
+			MellowCore::callback->writeReg32(RING_EMR(RENDER_RING_BASE), 0xFFFFFFFF);
+			MellowCore::callback->writeReg32(RING_EMR(BLT_RING_BASE),    0xFFFFFFFF);
+			// Drain CSB: advance read pointer to write pointer
+			uint32_t csbReg   = MellowCore::callback->readReg32(RING_CONTEXT_STATUS_PTR(RENDER_RING_BASE));
+			uint32_t csbWrite = (csbReg >> 8) & 0xff;
+			uint32_t csbRead  = csbReg & 0xff;
+			if (csbRead != csbWrite)
+				MellowCore::callback->writeReg32(RING_CONTEXT_STATUS_PTR(RENDER_RING_BASE),
+											 (csbWrite << 8) | csbWrite);
+			SYSLOG("mellow", "V160[%d]: CSB rp %d→%d EXEC=0x%x FF_CS_CHKN1=0x%08x",
+				v63ResetCount, csbRead, csbWrite,
+				MellowCore::callback->readReg32(RING_EXECLIST_STATUS(RENDER_RING_BASE)),
+				MellowCore::callback->readReg32(GEN7_FF_SLICE_CS_CHICKEN1));
+		}
+	}
+	return ret;
+}
+
+void *  Gen11::IGHardwareBlit3DContextoperatornew(unsigned long size)
+{
+	if (!callback->oIGHardwareBlit3DContextoperatornew) {
+		// V143: symbol was never registered — this is the root-cause of context alloc always
+		// returning null, leading to the perpetual NULL-task submitBlit flood and BCS stall.
+		if (isExperimentalMonitorEnabled()) {
+			static bool v143NewNullLogged = false;
+			if (!v143NewNullLogged) {
+				v143NewNullLogged = true;
+				SYSLOG("mellow", "V143: oIGHardwareBlit3DContextoperatornew is null (RouteRequest missing?)");
+			}
+		}
+		return nullptr;
+	}
+	auto ret = FunctionCast(IGHardwareBlit3DContextoperatornew, callback->oIGHardwareBlit3DContextoperatornew)(size);
+	return ret;
+}
+
+// V509: Hook IGHardwareContext::initWithOptions (base class) — CPU-side LRCA page1 repair.
+// Apple's initWithOptions calls restoreFromSafeImage() before copying g_cInitGfxRingContextRCS.
+// On the inherited non-real-TGL spoof baseline that call returned true (skipping the
+// memcpy), leaving MI_LRI headers at DW1/DW8 as
+// 0x00ffffff GEM-fill.  Hardware sees 0x00ffffff=MI_NOOP at DW1, skips register restore entirely,
+// ring state is undefined, context posts IDLE immediately → startGraphicsEngine ret=3022544385.
+//
+// Fix: after original returns, if DW1 is still 0x00ffffff (only for RCS, this[0x6c]==0), write
+// the minimal Gen12 ring context MI_LRI block via aperture (BAR2 remap of GGTT page1 PTE).
+// LRCA GPU VA is in this+0x89 (set by initWithOptions on success path per Ghidra decompile).
+// RING_START and RING_CTL are read from live MMIO so they match what Apple's ring-setup wrote.
+uint64_t Gen11::IGHardwareContextinitWithOptions(void *that, void *task, const void *params, uint8_t arg)
+{
+	uint64_t ret = FunctionCast(IGHardwareContextinitWithOptions,
+	                             callback->oIGHardwareContextinitWithOptions)(that, task, params, arg);
+	auto *cb = MellowCore::callback;
+	if (cb->isRealTGL || !ret) return ret;
+
+	uint8_t engType = getMember<uint8_t>(that, 0x6c);
+	if (engType != 0) return ret;  // only repair RCS (case 0)
+
+	// LRCA GPU VA is stored at this+0x89 (4-byte field, written by initWithOptions success path).
+	// Bits [31:12] = 4K-aligned GPU physical address of LRCA page0.  Page1 = page0 + 0x1000.
+	uint32_t lrcaGpuVa = getMember<uint32_t>(that, 0x89) & 0xFFFFF000;
+	if (!lrcaGpuVa) {
+		SYSLOG("mellow", "V509: LRCA GPU VA zero, skipping repair");
+		return ret;
+	}
+	uint32_t page1Idx = (lrcaGpuVa >> 12) + 1;
+
+	// Flush CPU caches so aperture (UC) sees true DRAM content written by initWithOptions.
+	asm volatile("wbinvd" ::: "memory");
+	cb->setApertureIfNecessary();
+	uint32_t p1Lo = cb->readReg32(GGTT_PTE_LO(page1Idx));
+	uint32_t p1Hi = cb->readReg32(GGTT_PTE_HI(page1Idx));
+	if (!(p1Lo & 1) || !cb->aperturePtr || cb->apertureLen < 0x1000) {
+		SYSLOG("mellow", "V509: LRCA page1 PTE not present (idx=%u lo=%08x), skipping", page1Idx, p1Lo);
+		return ret;
+	}
+
+	volatile uint32_t *ap = cb->aperturePtr;
+	uint32_t saveLo = cb->readReg32(GGTT_PTE_LO(0));
+	uint32_t saveHi = cb->readReg32(GGTT_PTE_HI(0));
+	cb->writeReg32(GGTT_PTE_LO(0), p1Lo);
+	cb->writeReg32(GGTT_PTE_HI(0), p1Hi);
+	cb->writeReg32(0x101008, 0x1);
+
+	if (ap[1] != 0x00ffffff) {
+		// Already has a valid LRI header — restoreFromSafeImage gave us a good image.
+		SYSLOG("mellow", "V509: DW1=%08x (valid), no repair needed", (uint32_t)ap[1]);
+	} else {
+		// Read ring setup from live MMIO — Apple's ring-setup code runs before context creation.
+		uint32_t rcsStart = cb->readReg32(0x2038);   // RCS RING_START
+		uint32_t rcsCtl   = cb->readReg32(0x2040);   // RCS RING_CTL (bit0=0 when stopped)
+		if (!rcsStart) rcsStart = 0x402eb000;         // fallback from HANGCHECK
+
+		SYSLOG("mellow", "V509: repairing LRCA page1 lrcaGpuVa=%08x RING_START=%08x RING_CTL=%08x",
+		       lrcaGpuVa, rcsStart, rcsCtl);
+
+		// Zero DW0-DW79 (replaces 0x00ffffff GEM-fill with MI_NOOPs).
+		for (int i = 0; i < 80; i++) ap[i] = 0;
+
+		// LRI block 0 (DW0-DW7): CTX_CTRL | RING_HEAD | RING_TAIL  — 3 pairs, force-posted.
+		// Gen12 MI_LRI_FORCE_POSTED = bit 12 (confirmed from else-branch header 0x11001003).
+		ap[1]  = 0x11001005;   // MI_LRI(3) | FORCE_POSTED
+		ap[2]  = 0x00002090;   // RING_CONTEXT_CONTROL addr (RCS)
+		ap[3]  = 0xffff0001;   // CTX_CTRL: inhibit sync ctx switch (from initWithOptions decompile)
+		ap[4]  = 0x00002034;   // RING_HEAD addr
+		ap[5]  = 0x00000000;   // RING_HEAD = 0
+		ap[6]  = 0x00002030;   // RING_TAIL addr
+		ap[7]  = 0x00000000;   // RING_TAIL = 0
+
+		// LRI block 1 (DW8-DW12): RING_START | RING_CTL  — 2 pairs, force-posted.
+		ap[8]  = 0x11001003;   // MI_LRI(2) | FORCE_POSTED
+		ap[9]  = 0x00002038;   // RING_START addr
+		ap[10] = rcsStart;     // RING_START value (from live MMIO)
+		ap[11] = 0x00002040;   // RING_CTL addr
+		ap[12] = rcsCtl | 1;   // RING_CTL | RING_VALID
+
+		// Apple context-image valid marker at DW80 (from initWithOptions decompile:
+		// *(pSVar10 + 0x1140) = 0x5000001, where 0x1140 - 0x1000 = 0x140 = 80*4).
+		ap[80] = 0x05000001;
+
+		asm volatile("sfence" ::: "memory");
+		SYSLOG("mellow", "V509: repair done DW1=%08x DW10(RING_START)=%08x DW12(CTL)=%08x",
+		       (uint32_t)ap[1], rcsStart, rcsCtl | 1);
+	}
+
+	cb->writeReg32(GGTT_PTE_LO(0), saveLo);
+	cb->writeReg32(GGTT_PTE_HI(0), saveHi);
+	cb->writeReg32(0x101008, 0x1);
+	return ret;
+}
+
+// V508/V509: Hook IGHardwareContext::withOptions.
+// V508 (diagnostic, first 4 calls): logs FIFO/ring-buffer fields and page1 raw content.
+// V509 (repair, every RCS call): wbinvd flushes any stale cache write that re-stamped DW1 with
+//   0x00ffffff after initWithOptions, then writes the correct Gen12 ring context MI_LRI block to
+//   GGTT[0x19] (ExecList submission slot for page1) via aperture.  Without this, hardware sees
+//   MI_NOOP at DW1, skips all register restore, ring state is undefined, context posts IDLE.
+void *Gen11::IGHardwareContextwithOptions(void *task, const void *params, uint8_t arg)
+{
+	void *ctx = FunctionCast(IGHardwareContextwithOptions,
+	                         callback->oIGHardwareContextwithOptions)(task, params, arg);
+	auto *cb = MellowCore::callback;
+	if (cb->isRealTGL || !ctx) return ctx;
+
+	uint8_t engType = getMember<uint8_t>(ctx, 0x6c);
+
+	// V508: diagnostic dump (limited to first 4 withOptions calls).
+	static int v508Count = 0;
+	if (v508Count < 4) {
+		v508Count++;
+		void *fifo = getMember<void *>(ctx, 0xb8);
+		SYSLOG("mellow", "V508[%d]: ctx=%p fifo=%p arg=%u engType=%u",
+		       v508Count, ctx, fifo, (unsigned)arg, (unsigned)engType);
+		if (fifo) {
+			for (int i = 0; i < 12; i++) {
+				uint64_t v = getMember<uint64_t>(fifo, i * 8);
+				SYSLOG("mellow", "V508[%d]: fifo[0x%02x]=0x%016llx", v508Count, i*8, (unsigned long long)v);
+			}
+			void *ringBuf = getMember<void *>(fifo, 0x18);
+			if (ringBuf && v508Count == 1) {
+				SYSLOG("mellow", "V508[%d]: ring_buf=%p:", v508Count, ringBuf);
+				for (int i = 0; i < 20; i++) {
+					uint64_t v = getMember<uint64_t>(ringBuf, i * 8);
+					SYSLOG("mellow", "V508[%d]:   rb[0x%03x]=0x%016llx", v508Count, i*8, (unsigned long long)v);
+				}
+			}
+		}
+	}
+
+	// V509 repair: RCS contexts only.
+	// The ExecList submission slot (GGTT[0x19]) is the physical page hardware reads on
+	// context-restore. It starts as GEM fill (0x00ffffff / 0x00bfbfbf) because Apple never
+	// copies the valid LRI block that restoreFromSafeImage wrote into the actual context
+	// buffer (GGTT[ctxPage1Idx]).  Fix: read context buffer → copy to submission slot.
+	// Also save the ctx pointer so V507 can re-run the repair on every populateResetRegisterList
+	// call (the display retry loop reuses the same context without calling withOptions again).
+	if (engType != 0) return ctx;
+	cb->lastRCSCtx = ctx;
+
+	uint32_t lrcaGpuVa = getMember<uint32_t>(ctx, 0x89) & 0xFFFFF000;
+	if (!lrcaGpuVa) { SYSLOG("mellow", "V509: LRCA GPU VA zero"); return ctx; }
+	uint32_t ctxPage1Idx = (lrcaGpuVa >> 12) + 1;
+
+	cb->setApertureIfNecessary();
+	if (!cb->aperturePtr || cb->apertureLen < 0x1000) return ctx;
+
+	uint32_t slotLo = cb->readReg32(GGTT_PTE_LO(0x19));
+	uint32_t slotHi = cb->readReg32(GGTT_PTE_HI(0x19));
+	uint32_t ctxLo  = cb->readReg32(GGTT_PTE_LO(ctxPage1Idx));
+	uint32_t ctxHi  = cb->readReg32(GGTT_PTE_HI(ctxPage1Idx));
+	if (!(slotLo & 1) || !(ctxLo & 1)) return ctx;
+
+	asm volatile("wbinvd" ::: "memory");
+
+	volatile uint32_t *ap = cb->aperturePtr;
+	uint32_t saveLo = cb->readReg32(GGTT_PTE_LO(0));
+	uint32_t saveHi = cb->readReg32(GGTT_PTE_HI(0));
+
+	// Pass 1: read DW[0..95] from actual context buffer page1 into stack buffer.
+	uint32_t buf[96];
+	cb->writeReg32(GGTT_PTE_LO(0), ctxLo);
+	cb->writeReg32(GGTT_PTE_HI(0), ctxHi);
+	cb->writeReg32(0x101008, 0x1);
+	for (int i = 0; i < 96; i++) buf[i] = ap[i];
+
+	if (v508Count <= 4) {
+		SYSLOG("mellow", "V508: ctx  pg1 DW0..7: %08x %08x %08x %08x  %08x %08x %08x %08x",
+		       buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+	}
+
+	// Pass 2: map submission slot, check validity, copy if needed.
+	cb->writeReg32(GGTT_PTE_LO(0), slotLo);
+	cb->writeReg32(GGTT_PTE_HI(0), slotHi);
+	cb->writeReg32(0x101008, 0x1);
+
+	if (v508Count <= 4) {
+		SYSLOG("mellow", "V508: slot pg1 DW0..7: %08x %08x %08x %08x  %08x %08x %08x %08x",
+		       ap[0], ap[1], ap[2], ap[3], ap[4], ap[5], ap[6], ap[7]);
+	}
+
+	if ((ap[1] & 0x1F801000) != 0x11001000) {
+		if ((buf[1] & 0x1F801000) == 0x11001000) {
+			for (int i = 0; i < 96; i++) ap[i] = buf[i];
+			asm volatile("sfence" ::: "memory");
+			SYSLOG("mellow", "V509: ctx→slot copy done  DW1=%08x DW10=%08x DW12=%08x",
+			       buf[1], buf[10], buf[12]);
+		} else {
+			SYSLOG("mellow", "V509: both invalid  slot=%08x ctx=%08x — skipping",
+			       (uint32_t)ap[1], buf[1]);
+		}
+	} else if (v508Count <= 4) {
+		SYSLOG("mellow", "V509: slot DW1=%08x already valid — no repair", (uint32_t)ap[1]);
+	}
+
+	cb->writeReg32(GGTT_PTE_LO(0), saveLo);
+	cb->writeReg32(GGTT_PTE_HI(0), saveHi);
+	cb->writeReg32(0x101008, 0x1);
+	return ctx;
+}
+
+uint64_t Gen11::IGHardwareExtendedContextinitWithOptions(void *that,void *param_1,void *param_2)
+{
+	if (!callback->oIGHardwareExtendedContextinitWithOptions) {
+		static bool v136ExtInitLogged = false;
+		if (!v136ExtInitLogged) {
+			v136ExtInitLogged = true;
+			SYSLOG("mellow", "V136: oIGHardwareExtendedContextinitWithOptions is null");
+		}
+		return 0;
+	}
+	void *b8pre = getMember<void *>(that, 0xb8);
+	// V502: log ExtendedCtxParams+0x10 (buffer size) and +0x18 (scheduler flag).
+	// From Ghidra: if param_2+0x18==0 → simple buffer alloc path (no GPU cmd).
+	// If param_2+0x18!=0 -> GPU command submission via vtable+0x118, an inherited
+	// hang source on the non-real-TGL Ultra spoof path.
+	uint64_t p2f10 = param_2 ? getMember<uint64_t>(param_2, 0x10) : 0;
+	uint64_t p2f18 = param_2 ? getMember<uint64_t>(param_2, 0x18) : 0;
+	static bool v502iwoLogged = false;
+	if (!v502iwoLogged) {
+		v502iwoLogged = true;
+		SYSLOG("mellow", "V502: initWithOptions ExtCtxParams=%p +0x10=0x%llx +0x18=0x%llx (0=simple,!=0=GPU-cmd)",
+			   param_2, (unsigned long long)p2f10, (unsigned long long)p2f18);
+	}
+	uint64_t ret = FunctionCast(IGHardwareExtendedContextinitWithOptions, callback->oIGHardwareExtendedContextinitWithOptions)(that,param_1,param_2);
+	void *b8post = getMember<void *>(that, 0xb8);
+	// V115 REMOVED: V115 suppressed initWithOptions to prevent MCE from GGTT[0]→stolen mem.
+	// V116 now remaps GGTT[0] to a safe dummy page, so the MCE can't happen.
+	// V115 was causing Apple's (un-hooked) getBlit3DContext to return nullptr, which then
+	// made submitBlit+0x28e dereference nullptr+0xb8 → page fault. Pass through real result.
+	static int v501Count = 0;
+	if (v501Count < 8) {
+		v501Count++;
+		SYSLOG("mellow", "V501[%d]: initWithOptions(%p) ret=%llu b8_pre=%p b8_post=%p p1=%p p2=%p",
+			   v501Count, that, (unsigned long long)ret, b8pre, b8post, param_1, param_2);
+	}
+	return ret;
+	
+	uint8_t ctx=getMember<uint8_t>(that, 0x6c);
+	
+	//intel_engine_init_workarounds(engine);
+		//engine_fake_wa_init
+		/*if (engine->class == COMPUTE_CLASS)
+		ccs_engine_wa_init(engine, wal);
+		 else if (engine->class == RENDER_CLASS)
+		rcs_engine_wa_init(engine, wal);
+		 else
+		xcs_engine_wa_init(engine, wal);*/
+	
+	//intel_engine_init_whitelist(engine);
+	//intel_engine_init_ctx_wa(engine);
+	
+	if (ctx==0)// RCS
+	{
+		
+		//engine_fake_wa_init
+		uint8_t mocs= 3;
+		MellowCore::callback->wa_masked_field_set(
+					RING_CMD_CCTL(RENDER_RING_BASE),
+					CMD_CCTL_MOCS_MASK,
+					CMD_CCTL_MOCS_OVERRIDE(mocs, mocs));
+		
+		
+		
+		
+		//	rcs_engine_wa_init(engine, wal);
+		//rcs_engine_wa_init
+		//Wa_1606700617:tgl,dg1,adl-p
+		MellowCore::callback->wa_masked_en(
+				 GEN9_CS_DEBUG_MODE1,
+				 FF_DOP_CLOCK_GATE_DISABLE);
+		
+		
+		// Wa_1606931601:tgl,rkl,dg1,adl-s,adl-p
+		MellowCore::callback->wa_mcr_masked_en( GEN8_ROW_CHICKEN2, GEN12_DISABLE_EARLY_READ);
+
+
+		 // Wa_1407928979:tgl A
+		MellowCore::callback->wa_write_or( GEN7_FF_THREAD_MODE,
+				GEN12_FF_TESSELATION_DOP_GATE_DISABLE);
+
+		//general_render_compute_wa_init
+		// Wa_1406941453:tgl,rkl,dg1,adl-s,adl-p
+		MellowCore::callback->wa_mcr_masked_en(
+				 GEN10_SAMPLER_MODE,
+				 ENABLE_SMALLPL);
+		
+		
+		// Wa_1409804808
+		MellowCore::callback->wa_mcr_masked_en( GEN8_ROW_CHICKEN2,
+				 GEN12_PUSH_CONST_DEREF_HOLD_DIS);
+
+		// Wa_14010229206 /
+		MellowCore::callback->wa_mcr_masked_en( GEN9_ROW_CHICKEN4, GEN12_DISABLE_TDL_PUSH);
+		
+		// Wa_1607297627
+		MellowCore::callback->wa_masked_en(
+				RING_PSMI_CTL(RENDER_RING_BASE),
+				GEN12_WAIT_FOR_EVENT_POWER_DOWN_DISABLE |
+				GEN8_RC_SEMA_IDLE_MSG_DISABLE);
+		
+		
+		//if (GRAPHICS_VER(i915) >= 9)
+		MellowCore::callback->wa_masked_en(
+				 GEN7_FF_SLICE_CS_CHICKEN1,
+				 GEN9_FFSC_PERCTX_PREEMPT_CTRL);
+		
+		
+		
+		//tgl_whitelist_build
+		//WaAllowPMDepthAndInvocationCountAccessFromUMD
+		MellowCore::callback->whitelist_reg_ext( PS_INVOCATION_COUNT,
+				  RING_FORCE_TO_NONPRIV_ACCESS_RD |
+				  RING_FORCE_TO_NONPRIV_RANGE_4);
+
+		
+		 // Wa_1808121037:tgl
+
+		MellowCore::callback->whitelist_reg( GEN7_COMMON_SLICE_CHICKEN1);
+
+		// Wa_1806527549:tgl
+		MellowCore::callback->whitelist_reg( HIZ_CHICKEN);
+
+		// Required by recommended tuning setting (not a workaround)
+		MellowCore::callback->whitelist_reg( GEN11_COMMON_SLICE_CHICKEN3);
+		
+		
+		
+		//intel_engine_init_ctx_wa
+		//gen12_ctx_workarounds_init
+		// * Wa_1409142259:tgl,dg1,adl-p
+		
+		MellowCore::callback->wa_masked_en( GEN11_COMMON_SLICE_CHICKEN3,
+									  GEN12_DISABLE_CPS_AWARE_COLOR_PIPE);
+		
+		/* WaDisableGPGPUMidThreadPreemption:gen12 */
+		MellowCore::callback->wa_masked_field_set( GEN8_CS_CHICKEN1,
+											 GEN9_PREEMPT_GPGPU_LEVEL_MASK,
+											 GEN9_PREEMPT_GPGPU_THREAD_GROUP_LEVEL);
+		
+		//* Wa_16011163337 - GS_TIMER
+		MellowCore::callback->wa_add(
+								GEN12_FF_MODE2,
+								~0,
+								FF_MODE2_TDS_TIMER_128 | FF_MODE2_GS_TIMER_224,
+								0, false);
+		
+						
+	}
+	
+	if (ctx==1)//CCS
+	{
+		//return 0;
+		//engine_fake_wa_init
+		uint8_t mocs= 3;
+		MellowCore::callback->wa_masked_field_set(
+					RING_CMD_CCTL(GEN12_COMPUTE0_RING_BASE),
+					CMD_CCTL_MOCS_MASK,
+					CMD_CCTL_MOCS_OVERRIDE(mocs, mocs));
+		
+		//panic("x");
+	}
+	
+	if (ctx==2)//BCS
+	{
+
+		//gen12_ctx_gt_mocs_init
+		/*table->size  = ARRAY_SIZE(tgl_mocs_table);
+		table->table = tgl_mocs_table;
+		table->n_entries = GEN9_NUM_MOCS_ENTRIES;
+		table->uc_index = 3;*/
+		uint8_t mocs;
+		//if (engine->class == COPY_ENGINE_CLASS) {
+			mocs = 3;
+			MellowCore::callback->wa_write_clr_set(
+					 BLIT_CCTL(BLT_RING_BASE),//engine->mmio_base
+					 BLIT_CCTL_MASK,
+					 BLIT_CCTL_MOCS(mocs, mocs));
+		
+	}
+	
+	if (ctx==3)//VCS
+	{
+	}
+	
+	if (ctx==4)//VCS2
+	{
+	}
+	
+	if (ctx==5)//VECS
+	{
+	}
+	
+	
+	
+	return FunctionCast(IGHardwareExtendedContextinitWithOptions, callback->oIGHardwareExtendedContextinitWithOptions)(that,param_1,param_2);
+}
+
+void  Gen11::initBlitUsage(void *that)
+{
+	// V121: initBlitUsage reads [ctx+0xb8]+0x178 without null checks.
+	// Guard: skip if ctx+0xb8 is not yet populated (early init paths before
+	// blit3d_init_ctx has run). In the render phase ctx+0xb8 is always set.
+	if (!MellowCore::callback->isRealTGL) {
+		if (!getMember<void *>(that, 0xb8)) {
+			DBGLOG("mellow", "V121: initBlitUsage deferred — ctx+0xb8 null");
+			return;
+		}
+	}
+	FunctionCast(initBlitUsage, callback->oinitBlitUsage)(that);
+}
+
+unsigned long Gen11::submitBlit(void *that, void *param_1, void *param_2, void *param_3, bool param_4) {
+
+	if (!callback || !MellowCore::callback || !callback->osubmitBlit)
+		return static_cast<uint32_t>(kIOReturnUnsupported);
+
+	// Preserve native driver's argument validation and ownership on real TGL.
+	if (MellowCore::callback->isRealTGL)
+		return FunctionCast(submitBlit, callback->osubmitBlit)(that, param_1, param_2, param_3, param_4);
+
+	if (getV142SubmitBlitMode() != 3) {
+		static bool loggedUnsupported = false;
+		if (!loggedUnsupported) {
+			loggedUnsupported = true;
+			SYSLOG("mellow", "BLIT_NOT_SUBMITTED: unsupported backend (mellowV142=3 selects experimental original)");
+		}
+		return static_cast<uint32_t>(kIOReturnUnsupported);
+	}
+
+	if (!that || !param_1 || !param_2 || !param_3)
+		return static_cast<uint32_t>(kIOReturnBadArgument);
+
+	// These offsets belong to the inherited TGL driver ABI, not to Metal itself.
+	// Keep the incoming task and its own context. A global cached task/context
+	// cannot replace them: its retain count and owning address space are unknown.
+	const auto *blit = reinterpret_cast<const uint8_t *>(param_1);
+	const uint32_t route = (blit[0xA2] >> 3U) & 0x3U;
+	if (route == 3)
+		return static_cast<uint32_t>(kIOReturnUnsupported);
+	void *taskVtable = getMember<void *>(param_3, 0);
+	void *taskContext = getMember<void *>(param_3, 0x298);
+	if (!taskVtable || !taskContext || !getMember<void *>(taskContext, 0xb8))
+		return static_cast<uint32_t>(kIOReturnNotReady);
+
+	// No fabricated stamp, status, or task-field write. Accepted work is passed
+	// through exactly once and the backend result (including failure) propagates.
+	return FunctionCast(submitBlit, callback->osubmitBlit)(that, param_1, param_2, param_3, param_4);
+}
+
+void  Gen11::markBlitUsage(void *that)
+{
+	// V122: markBlitUsage dereferences [ctx+0xb8] without null checks.
+	// Same guard as V121: skip only when ctx+0xb8 is not yet set.
+	if (!MellowCore::callback->isRealTGL) {
+		if (!getMember<void *>(that, 0xb8)) {
+			DBGLOG("mellow", "V122: markBlitUsage deferred — ctx+0xb8 null");
+			return;
+		}
+	}
+	FunctionCast(markBlitUsage, callback->omarkBlitUsage)(that);
+}
+
+// still to order..
+
+void * Gen11::IGMappedBuffergetMemory(void *that)
+{
+	auto ret=FunctionCast(IGMappedBuffergetMemory, callback->oIGMappedBuffergetMemory)(that);
+	return ret;
+}
+
+uint32_t  Gen11::IGAccelSegmentResourceListprepare(void *that)
+{
+	// V123c: keep original prepare flow. initBlitUsage/markBlitUsage are already
+	// individually guarded for !isRealTGL, so short-circuiting prepare is no longer needed
+	// and can leave command-queue state incomplete, leading to stalls.
+	return FunctionCast(IGAccelSegmentResourceListprepare, callback->oIGAccelSegmentResourceListprepare)(that);
+}
+
+uint32_t Gen11::beginCoalescedSegment(void *that) {
+	// V124/IDA verified: beginCoalescedSegment is pure DTrace observability.
+	// Full disassembly:
+	//   [queue+0x830] = 0xFFFFFFFF           ← segment marker
+	//   task = *(*(queue+0x5C0)+0x150)
+	//   ctx  = getBlit3DContext(task, true)   ← may return null in early init
+	//   r15  = ctx+0xB8                       ← CRASH if ctx null or ctx+0xB8 null
+	//   r14  = r15+0x178                      ← usage counter
+	//   dtracePushUnique(queue+0x5C0+0xE08, queue+0x838)
+	//   dtHookSubmitQueueKMD(queue+0x838, 4, r14+1, r15+0x20, 0, 0)
+	// No GPU ring submission whatsoever.
+	//
+	// Always write queue+0x830 first (matches Apple's implementation).
+	reinterpret_cast<uint32_t *>(reinterpret_cast<uint8_t *>(that) + 0x830)[0] = 0xFFFFFFFF;
+
+	if (!MellowCore::callback->isRealTGL) {
+		// Guard: ctx+0xB8 must be non-null before calling through (DTrace reads it).
+		// In early init getBlit3DContext returns null → skip DTrace, return 1.
+		// In render phase ctx+0xB8 is always populated → call through for correct tracing.
+		void *cached = callback->v131CachedBlit3DCtx;
+		if (!cached || !getMember<void *>(cached, 0xb8)) {
+			static int v124EarlyCount = 0;
+			if (v124EarlyCount < 8) {
+				v124EarlyCount++;
+				DBGLOG("mellow", "V124[%d]: beginCoalescedSegment deferred — ctx+0xb8 null", v124EarlyCount);
+			}
+			return 1;
+		}
+	}
+	return FunctionCast(beginCoalescedSegment, callback->obeginCoalescedSegment)(that);
+}
+
+uint8_t Gen11::barrierSubmission(void *queue, void *accelerator, void *cmdDesc,
+								 void *event, uint16_t count, const uint16_t *list) {
+	if (!callback || !MellowCore::callback || !callback->obarrierSubmission)
+		return 0;
+	if (!MellowCore::callback->isRealTGL) {
+		int mode = 0;
+		if (!PE_parse_boot_argn("mellowV130", &mode, sizeof(mode)) &&
+			checkKernelArgument("-mellowV130orig"))
+			mode = 2;
+		// A barrier cannot succeed without ordering the preceding GPU work. The
+		// former bypass/hybrid modes returned 1 without submitting any barrier.
+		// Keep the existing explicit force flag for the unverified BCS path.
+		if (mode != 2 || !checkKernelArgument("-mellowV130forceorig")) {
+			static bool loggedUnsupported = false;
+			if (!loggedUnsupported) {
+				loggedUnsupported = true;
+				SYSLOG("mellow", "BARRIER_NOT_SUBMITTED: no validated ordering backend");
+			}
+			return 0;
+		}
+		if (!queue || !accelerator || !cmdDesc || !event || (count && !list))
+			return 0;
+	}
+	return FunctionCast(barrierSubmission, callback->obarrierSubmission)(queue,
+		accelerator, cmdDesc, event, count, list);
+}
+
+void * Gen11::getBlit2DContext(void *that,bool param_1)
+{
+	// V151 DIAGNOSTIC: Track call frequency to understand init vs render phase
+	if (!MellowCore::callback->isRealTGL) {
+		static int v127CallCount = 0;
+		v127CallCount++;
+		bool isInitPhase = v127CallCount < 100;
+		if (v127CallCount <= 20 || (v127CallCount > 100 && v127CallCount <= 120)) {
+			SYSLOG("mellow", "V127[%d]: getBlit2DContext called (phase=%s) task=%p force=%d",
+				   v127CallCount, isInitPhase ? "INIT" : "RENDER", that, param_1 ? 1 : 0);
+		}
+	}
+	
+	// V127: On the non-real-TGL Ultra spoof path, call the original getter and
+	// enforce only
+	// Blit2D-compatible fallbacks. submitBlit dereferences [ctx+0xb8] and then uses the
+	// resulting object as Blit2D FIFO/ring state, so returning depth/color/3D contexts here
+	// can corrupt renderer behavior (black output / wrong ring routing).
+	if (!MellowCore::callback->isRealTGL) {
+		auto cachedValid2D = [&]() -> void * {
+			void *cached = callback->v131CachedBlit2DCtx;
+			if (cached && getMember<void *>(cached, 0xb8))
+				return cached;
+			return nullptr;
+		};
+
+		if (!callback->ogetBlit2DContext) {
+			static bool v136Logged = false;
+			if (!v136Logged) {
+				v136Logged = true;
+				SYSLOG("mellow", "V136: ogetBlit2DContext is null");
+			}
+			void *fallback = cachedValid2D();
+			if (fallback)
+				return fallback;
+			return nullptr;
+		}
+		void *ctx = FunctionCast(getBlit2DContext, callback->ogetBlit2DContext)(that, param_1);
+		if (isExperimentalMonitorEnabled()) {
+			static int v137Blit2DOrigCount = 0;
+			if (v137Blit2DOrigCount < 24) {
+				v137Blit2DOrigCount++;
+				void *ctxField = ctx ? getMember<void *>(ctx, 0xb8) : nullptr;
+				SYSLOG("mellow", "V137.getBlit2DContext.orig[%d]: task=%p ctx=%p ctx+0xb8=%p", v137Blit2DOrigCount, that, ctx, ctxField);
+			}
+		}
+		if (!ctx) {
+			DBGLOG("mellow", "V127: getBlit2DContext original returned null on non-real-TGL Ultra spoof path");
+			void *fallback = cachedValid2D();
+			if (fallback)
+				return fallback;
+			// No cross-context fallback allowed here (depth/color/3D are incompatible layouts).
+			return nullptr;
+		}
+		void *ctxField = getMember<void *>(ctx, 0xb8);
+		if (!ctxField) {
+			DBGLOG("mellow", "V127: getBlit2DContext ctx+0xb8 NULL on non-real-TGL Ultra spoof path, trying cached Blit2D fallback");
+			void *fallback = cachedValid2D();
+			if (fallback)
+				return fallback;
+			return nullptr;
+		}
+		DBGLOG("mellow", "V127: getBlit2DContext ctx=%p ctx+0xb8=%p OK on non-real-TGL Ultra spoof path", ctx, ctxField);
+		// V131: Cache valid context for future NULL fallback
+		callback->v131CachedBlit2DCtx = ctx;
+		return ctx;
+	}
+	if (!callback->ogetBlit2DContext)
+		return nullptr;
+	return FunctionCast(getBlit2DContext, callback->ogetBlit2DContext)(that,param_1);
+}
+
+void * Gen11::getDepthResolveContext(void *that,bool param_1)
+{
+	if (!callback->ogetDepthResolveContext) {
+		static bool v136DepthLogged = false;
+		if (!v136DepthLogged) {
+			v136DepthLogged = true;
+			SYSLOG("mellow", "V136: ogetDepthResolveContext is null");
+		}
+		return nullptr;
+	}
+	void *ctx = FunctionCast(getDepthResolveContext, callback->ogetDepthResolveContext)(that,param_1);
+	if (isExperimentalMonitorEnabled()) {
+		static int v137DepthCount = 0;
+		if (v137DepthCount < 32) {
+			v137DepthCount++;
+			void *ctxField = ctx ? getMember<void *>(ctx, 0xb8) : nullptr;
+			SYSLOG("mellow", "V137.depthResolve[%d]: task=%p force=%u ctx=%p ctx+0xb8=%p", v137DepthCount, that,
+				   static_cast<unsigned>(param_1), ctx, ctxField);
+		}
+	}
+	return ctx;
+}
+
+void * Gen11::getColorResolveContext(void *that,bool param_1)
+{
+	if (!callback->ogetColorResolveContext) {
+		static bool v136ColorLogged = false;
+		if (!v136ColorLogged) {
+			v136ColorLogged = true;
+			SYSLOG("mellow", "V136: ogetColorResolveContext is null");
+		}
+		return nullptr;
+	}
+	void *ctx = FunctionCast(getColorResolveContext, callback->ogetColorResolveContext)(that,param_1);
+	if (isExperimentalMonitorEnabled()) {
+		static int v137ColorCount = 0;
+		if (v137ColorCount < 32) {
+			v137ColorCount++;
+			void *ctxField = ctx ? getMember<void *>(ctx, 0xb8) : nullptr;
+			SYSLOG("mellow", "V137.colorResolve[%d]: task=%p force=%u ctx=%p ctx+0xb8=%p", v137ColorCount, that,
+				   static_cast<unsigned>(param_1), ctx, ctxField);
+		}
+	}
+	return ctx;
+}
+
+int Gen11::blit3d_supported()
+{
+	return 0;
+}
+
+void  Gen11::setAsyncSliceCount(void *that,uint32_t configRaw)
+{
+		uint32_t sliceCount     = (configRaw >> 0) & 0xFF;
+		uint32_t subsliceCount  = (configRaw >> 8) & 0xFF;
+		uint32_t euCount        = (configRaw >> 16) & 0xFF;
+
+	uint32_t sliceField = 0;
+		switch (sliceCount) {
+			case 1: sliceField = 1; break;
+			case 2: sliceField = 2; break;
+			default:
+				panic("IGPU: setAsyncSliceCount - Invalid slice count: %u\n", sliceCount);
+				break;
+		}
+		
+		uint32_t subsliceField = 0;
+		switch (subsliceCount) {
+			case 2: subsliceField = 0x20; break;
+			case 4: subsliceField = 0x40; break;
+			case 5: subsliceField = 0x50; break;
+			case 6: subsliceField = 0x60; break;
+			case 8: subsliceField = 0x80; break;
+			default:
+						panic("IGPU: setAsyncSliceCount - Invalid subsliceCount: %u\n", subsliceCount);
+						break;
+		}
+
+		uint32_t euField = 0;
+		switch (euCount) {
+			case 1: euField = 0x100; break;
+			case 2: euField = 0x200; break;
+			case 3: euField = 0x300; break;
+			case 4: euField = 0x400; break;
+			case 5: euField = 0x500; break;
+			case 6: euField = 0x600; break;
+			case 8: euField = 0x800; break;
+			default:
+						panic("IGPU: setAsyncSliceCount - Invalid EU count/power mode: %u\n", euCount);
+						break;
+		}
+
+		uint32_t hwRegisterValue = sliceField | subsliceField | euField;
+
+		getMember<uint32_t>(that, 0x12a0) = configRaw;
+
+
+		//SafeForceWake(that,true, 4);
+		volatile uint32_t* mmioBase = getMember<volatile uint32_t*>(that, 0x1240);
+		mmioBase[0xa204 / 4] = hwRegisterValue;
+		//SafeForceWake(that,false, 4);
+	
+}
+
+static const uint8_t DAT_000b0bb0[] = {
+	0x00, 0x36, 0x6e, 0x01, 0x00, 0xf8, 0x24, 0x01,
+	0x00, 0xf0, 0x49, 0x02, 0x40, 0x78, 0x7d, 0x01
+};
+
+bool Gen11::initHardwareCaps(void *this_ptr) {
+		uint32_t gpuSku = getMember<uint32_t>(this_ptr, 0x1120);
+		bool result = false;
+		
+		uint32_t uVar1;
+		int iVar2;
+		int iVar3;
+		int iVar4;
+
+		if (gpuSku == 2) {
+			// --- SKU 2 (TGLLP) - Original TGL values for 6 Dual SubSlices (12 SubSlices) ---
+					
+					// Buffer sizes for 12 SubSlices (6 DSS × 2 SS/DSS)
+					// 0xc0 (192) = 16 bytes × 12 SS
+					getMember<uint64_t>(this_ptr, 0x112c) = 0x222000000c0ULL;
+					
+					// 0x150 (336) = 28 bytes × 12 SS
+					getMember<uint64_t>(this_ptr, 0x1134) = 0x22200000150ULL;
+					getMember<uint32_t>(this_ptr, 0x113c) = 0x150;
+					
+					getMember<uint64_t>(this_ptr, 0x1174) = 0x200000007ULL;
+					getMember<uint64_t>(this_ptr, 0x117c) = 0x1000000080ULL;
+					
+					getMember<uint32_t>(this_ptr, 0x1160) = 0xf00;
+					
+					// Max Dual SubSlices = 6 (matches hardware: 6 DSS)
+					getMember<uint32_t>(this_ptr, 0x1148) = 0x6;
+					
+					// Calculate actual Dual SubSlices (SubSlices / 2)
+					uVar1 = getMember<uint32_t>(this_ptr, 0x1158) >> 1;
+					iVar3 = 2;
+					
+					// Reference Dual SubSlices count = 6 (must match max to avoid underflow)
+					iVar4 = 0x6;
+					iVar2 = 0x80;
+		}
+		else {
+			if (gpuSku != 1) {
+				result = false;
+				return result;
+			}
+			
+			// --- SKU 1 (TGLHP) - Modified for 5 DSS ---
+			
+			// Sizes for 10 SubSlices
+			getMember<uint64_t>(this_ptr, 0x112c) = 0x2d800000140ULL;
+			getMember<uint64_t>(this_ptr, 0x1134) = 0x27000000168ULL;
+			getMember<uint32_t>(this_ptr, 0x113c) = 0x168;
+			
+			getMember<uint64_t>(this_ptr, 0x1174) = 0x100000007ULL;
+			getMember<uint64_t>(this_ptr, 0x117c) = 0x1000000040ULL;
+			
+			getMember<uint32_t>(this_ptr, 0x1160) = 0x800;
+			
+			// Max SubSlices set to 10
+			getMember<uint32_t>(this_ptr, 0x1148) = 0xA;
+			
+			uVar1 = getMember<uint32_t>(this_ptr, 0x1158);
+			iVar3 = 1;
+			
+			// Reference count set to 10
+			iVar4 = 0xA;
+			iVar2 = 0x40;
+		}
+
+		// Final calculations
+		getMember<uint32_t>(this_ptr, 0x114c) = uVar1;
+		
+		uint8_t &byteRef = getMember<uint8_t>(this_ptr, 0x1184);
+		byteRef = byteRef & 0xFB;
+		
+		getMember<uint32_t>(this_ptr, 0x1128) = iVar3 * uVar1;
+		getMember<uint32_t>(this_ptr, 0x1144) = (iVar4 - uVar1) * iVar3;
+		getMember<uint32_t>(this_ptr, 0x1140) = iVar2 * uVar1;
+		
+		getMember<uint32_t>(this_ptr, 0x1168) = getMember<uint32_t>(this_ptr, 0x115c) << 4;
+		
+		result = true;
+		return result;
+}
+
+void Gen11::checkWOPCMSettings(void *that,unsigned long param_1,void *param_2)
+{
+	const uint32_t GUC_WOPCM_OFFSET = 1 * 1024 * 1024;
+	const uint32_t GUC_WOPCM_SIZE = 1 * 1024 * 1024;
+	
+	typedef struct {
+		uint64_t address;
+		uint64_t length;
+	} IOVirtualRange;
+	
+	IOVirtualRange *wopcm_range = (IOVirtualRange *)param_2;
+		
+	wopcm_range->address = GUC_WOPCM_OFFSET;
+	wopcm_range->length = GUC_WOPCM_SIZE;
+	
+}
+
+IOReturn Gen11::wrapFBClientDoAttribute(void *fbclient, uint32_t attribute, unsigned long *unk1, unsigned long unk2, unsigned long *unk3, unsigned long *unk4,  void *externalMethodArguments) {
+	if (attribute == 0x923) {
+		return kIOReturnUnsupported;
+	}
+	return FunctionCast(wrapFBClientDoAttribute, callback->orgFBClientDoAttribute)(fbclient, attribute, unk1, unk2, unk3, unk4,  externalMethodArguments);
+}
+
+unsigned long Gen11::loadGuCBinary(void *that) {
+	if (!callback || !MellowCore::callback || !that)
+		return 0;
+	if (MellowCore::callback->isRealTGL && callback->oloadGuCBinary) {
+		return FunctionCast(loadGuCBinary, callback->oloadGuCBinary)(that);
+	}
+	// There is no 7D41 GuC authentication/submission implementation here. Claiming
+	// firmware load succeeded cannot select or implement a host scheduler.
+	SYSLOG("mellow", "GUC_NOT_LOADED: no implemented firmware backend for this hardware");
+	return 0;
+}
+
+UInt8 Gen11::wrapLoadGuCBinary(void *that) {
+
+	if (callback->firmwareSizePointer)
+		callback->performingFirmwareLoad = true;
+
+	auto r = FunctionCast(wrapLoadGuCBinary, callback->orgLoadGuCBinary)(that);
+	DBGLOG("mellow", "loadGuCBinary returned %d", r);
+
+	callback->performingFirmwareLoad = false;
+
+	return r;
+}
+
+bool Gen11::wrapLoadFirmware(void *that) {
+
+	//(*reinterpret_cast<uintptr_t **>(that))[35] = reinterpret_cast<uintptr_t>(wrapSystemWillSleep);
+	//(*reinterpret_cast<uintptr_t **>(that))[36] = reinterpret_cast<uintptr_t>(wrapSystemDidWake);
+	return FunctionCast(wrapLoadFirmware, callback->orgLoadFirmware)(that);
+}
+
+void Gen11::wrapSystemWillSleep(void *that) {
+	DBGLOG("mellow", "systemWillSleep GuC callback");
+}
+
+void Gen11::wrapSystemDidWake(void *that) {
+	DBGLOG("mellow", "systemDidWake GuC callback");
+
+	// This is IGHardwareGuC class instance.
+	auto &GuC = (reinterpret_cast<OSObject **>(that))[76];
+
+	if (GuC)
+	if (GuC->metaCast("IGHardwareGuC")) {
+		DBGLOG("igfx", "reloading firmware on wake; discovered IGHardwareGuC - releasing");
+		GuC->release();
+		GuC = nullptr;
+	}
+
+	FunctionCast(wrapLoadFirmware, callback->orgLoadFirmware)(that);
+}
+
+bool Gen11::wrapInitSchedControl(void *that) {
+	DBGLOG("mellow", "attempting to init sched control with load %d", callback->performingFirmwareLoad);
+	bool perfLoad = callback->performingFirmwareLoad;
+	callback->performingFirmwareLoad = false;
+	bool r = FunctionCast(wrapInitSchedControl, callback->orgInitSchedControl)(that);
+
+	callback->performingFirmwareLoad = perfLoad;
+	return r;
+}
+
+void *Gen11::wrapIgBufferWithOptions(void *accelTask, void* size, unsigned int type, unsigned int flags) {
+
+	// No replacement firmware/signature payload is provided by this source.
+	// The old path allocated a dummy buffer, copied from null payloads, set the
+	// firmware size to zero and changed the size argument ABI. Keep it intact.
+	if (!callback || !callback->orgIgBufferWithOptions)
+		return nullptr;
+	return FunctionCast(wrapIgBufferWithOptions, callback->orgIgBufferWithOptions)(accelTask, size, type, flags);
+}
+
+UInt64 Gen11::wrapIgBufferGetGpuVirtualAddress(void *that) {
+	if (callback->performingFirmwareLoad && callback->realFirmwareBuffer) {
+		static_cast<uint8_t **>(that)[7] = callback->realFirmwareBuffer;
+		callback->realFirmwareBuffer = nullptr;
+		Buffer::deleter(callback->dummyFirmwareBuffer);
+		callback->dummyFirmwareBuffer = nullptr;
+	}
+
+	return FunctionCast(wrapIgBufferGetGpuVirtualAddress, callback->orgIgBufferGetGpuVirtualAddress)(that);
+}
+
+
+uint32_t Gen11::wrapReadRegister32(void *controller, uint32_t address) {
+	if (controller == nullptr)
+		return MellowCore::callback->readReg32(address);  // readReg32 now takes byte offsets
+
+	// Mirror Apple bounds logic, but keep a fallback path for the 2D-only dropped window.
+	auto partInfo = getMember<uint8_t *>(controller, 0xCF8);
+	auto mmioBase = getMember<uint8_t *>(controller, 0x9B8);
+	auto mmioSize = static_cast<uint32_t>(getMember<int>(controller, 0xC38));
+
+	bool twoDOnlyPart = partInfo && ((partInfo[0xB2] & 0x1) != 0);
+	bool dropped2DWindow = (address >= 0x2000U && address <= 0x23FFFFU);
+
+	if (twoDOnlyPart && dropped2DWindow) {
+		return MellowCore::callback->readReg32(address);  // readReg32 now takes byte offsets
+	}
+
+	if (mmioBase && mmioSize >= 4U && address < (mmioSize - 4U)) {
+		return *reinterpret_cast<volatile uint32_t *>(mmioBase + address);
+	}
+
+	return FunctionCast(wrapReadRegister32, callback->owrapReadRegister32)(controller, address);
+}
+
+void Gen11::wrapWriteRegister32(void *controller, uint32_t address, uint32_t value) {
+	if (controller == nullptr) {
+		MellowCore::callback->writeReg32(address, value);
+		return;
+	}
+
+	// V195W removed (was: OR-in bits 14,12 from UEFI's HSW_PWR_WELL_CTL1 onto every
+	// 0x45400 write because the ICL DMC save/restore table allegedly clears them
+	// periodically, supposedly stalling WindowServer's vsync). Pair-mate to V195 in
+	// raWriteRegister32 + V195F in FastWriteRegister32 — all three sites stripped
+	// together. The DMC save/restore behavior on Display 13 (ADL-P) differs from
+	// Display 11 (ICL); enforcing UEFI's specific bits hides what Apple's stack
+	// actually wants and what the ADL-P DMC table actually contains. If vsync stalls
+	// re-emerge, fix should come from a correct DMC table or proper power-well init,
+	// not bit OR-in.
+	if (address == 0x45400 && MellowCore::callback && !MellowCore::callback->isRealTGL
+	    && MellowCore::callback->uefiCtl1 != 0) {
+		static int v195WpCount = 0;
+		if (v195WpCount < 6) {
+			++v195WpCount;
+			SYSLOG("mellow", "V195Wp[%d]: CTL1 0x%x passthrough uefiCtl1=0x%x (V195W hack removed)",
+			       v195WpCount, value, MellowCore::callback->uefiCtl1);
+		}
+	}
+
+	// V72W removed (was: force RCS/BCS RING_EMR writes to 0xFFFFFFFF — same blanket
+	// error-mask hack as V72R, on the wrapWriteRegister32 helper path). Pair-mate to
+	// the V72R passthrough already in place. Keeping the address-match shell so a
+	// future legitimate intercept can use this hook point.
+	if (address == 0x20b4 || address == 0x220b4) {
+		static int v72WPassCount = 0;
+		if (v72WPassCount < 6) {
+			++v72WPassCount;
+			SYSLOG("mellow", "V72Wp[%d]: EMR @ 0x%x val=0x%x passthrough (V72W hack removed)",
+			       v72WPassCount, address, value);
+		}
+	}
+
+	// ── V63: Broad RCS register write intercept (diagnostic only, no modification) ──
+	// Catches ANY write to RCS control range: ELSP, EXECLIST, CTX_CTRL, CCID, TAIL, etc.
+	// Rate-limited to first 100 writes to avoid flooding Lilu buffer.
+	if (!MellowCore::callback->isRealTGL) {
+		static int v63WriteCount = 0;
+		// RCS engine MMIO range: 0x2000-0x2FFF covers all ring control registers
+		if (address >= 0x2000 && address <= 0x2FFF) {
+			if (v63WriteCount < 100) {
+				v63WriteCount++;
+				SYSLOG("mellow", "V63W[%d]: RCS reg 0x%x = 0x%x", v63WriteCount, address, value);
+			} else if (v63WriteCount == 100) {
+				v63WriteCount++;
+				SYSLOG("mellow", "V63W: rate limit reached (100 RCS writes logged)");
+			}
+		}
+	}
+
+	FunctionCast(wrapWriteRegister32, callback->owrapWriteRegister32)(controller,address,value);
+}
+
+// V45: Delayed child check callback — runs on a kernel thread after a configurable delay.
+// Logs the IOService state and child count at the specified time after start().
+static void v45DelayedChildCheck(thread_call_param_t p0, thread_call_param_t p1) {
+	if (!isV60MonitorEnabled())
+		return;
+
+	auto *svc = static_cast<IOService *>(p0);
+	unsigned delayMs = (unsigned)(uintptr_t)p1;
+	
+	uint64_t state = svc->getState();
+	OSIterator *iter = svc->getClientIterator();
+	int count = 0;
+	if (iter) {
+		OSObject *obj;
+		while ((obj = iter->getNextObject())) {
+			auto *child = OSDynamicCast(IOService, obj);
+			if (child) {
+				uint64_t childState = child->getState();
+				SYSLOG("mellow", "V45: T+%ums child[%d]: %s class=%s state=0x%llx",
+					   delayMs, count, child->getName(),
+					   child->getMetaClass()->getClassName(),
+					   (unsigned long long)childState);
+				
+				// V55: Enhanced IGAccelDevice diagnostics + force-start
+				if (delayMs >= 3000) {
+					const char *childName = child->getName();
+					if (childName && (strcmp(childName, "IGAccelDevice") == 0 ||
+									  strcmp(childName, "IGAccelSharedUserClient") == 0 ||
+									  strcmp(childName, "IOAccelDisplayPipeUserClient2") == 0 ||
+									  strcmp(childName, "IGAccelCommandQueue") == 0)) {
+						// Dump child's provider and property state
+						auto *childProvider = child->getProvider();
+						SYSLOG("mellow", "V55: %s state=0x%llx provider=%s isOpen=%d",
+							   childName, (unsigned long long)childState,
+							   childProvider ? childProvider->getName() : "NULL",
+							   child->isOpen());
+						
+						// Check if the accelerator (our parent) is open
+						SYSLOG("mellow", "V55: accelerator isOpen=%d", svc->isOpen());
+						
+						if (childState == 0) {
+							if (strcmp(childName, "IOAccelDisplayPipeUserClient2") == 0) {
+								// Never call registerService on IOAccelDisplayPipeUserClient2.
+								// Starting it triggers stamp-9 timeouts every ~5.4s:
+								// AccessComplete is stubbed → stamp never advances →
+								// GPURestartSignaled → WS compositor interrupted per cycle.
+								// This applies in all modes, not just dp0.
+								SYSLOG("mellow", "V55: %s at state=0x0 — skip registerService (prevent stamp-9 timeout loop)", childName);
+							} else {
+								SYSLOG("mellow", "V55: %s at state=0x0 — calling registerService()", childName);
+								child->registerService(kIOServiceAsynchronous);
+								IODelay(500);
+								uint64_t newState = child->getState();
+								SYSLOG("mellow", "V55: %s after registerService → state=0x%llx",
+									   childName, (unsigned long long)newState);
+							}
+						}
+					}
+				}
+				count++;
+			}
+		}
+		iter->release();
+	}
+	
+	// Also check if the service is open (someone called IOServiceOpen on it)
+	bool isOpen = svc->isOpen();
+	
+	SYSLOG("mellow", "V45: T+%ums: %d children, state=0x%llx (reg=%d match=%d pub=%d fmatch=%d inact=%d), isOpen=%d",
+		   delayMs, count,
+		   (unsigned long long)state,
+		   !!(state & 0x02), !!(state & 0x04), !!(state & 0x08), !!(state & 0x10), !!(state & 0x01),
+		   isOpen);
+	
+	// Check provider's children too (siblings in IOAccelerator match category)
+	auto *provider = svc->getProvider();
+	if (provider) {
+		OSIterator *sibs = provider->getClientIterator();
+		if (sibs) {
+			int sibIdx = 0;
+			OSObject *s;
+			while ((s = sibs->getNextObject())) {
+				auto *sibSvc = OSDynamicCast(IOService, s);
+				if (sibSvc) {
+					SYSLOG("mellow", "V45: T+%ums provider child[%d]: %s class=%s",
+						   delayMs, sibIdx, sibSvc->getName(),
+						   sibSvc->getMetaClass()->getClassName());
+					sibIdx++;
+				}
+			}
+			sibs->release();
+		}
+	}
+}
+
+// V45: Helper to schedule a delayed child check
+static void v45ScheduleDelayedCheck(void *accelInstance, unsigned delayMs) {
+	if (!isV60MonitorEnabled())
+		return;
+
+	thread_call_t tc = thread_call_allocate(v45DelayedChildCheck,
+											static_cast<thread_call_param_t>(accelInstance));
+	if (tc) {
+		uint64_t deadline;
+		clock_interval_to_deadline(delayMs, kMillisecondScale, &deadline);
+		thread_call_enter1_delayed(tc,
+								   (thread_call_param_t)(uintptr_t)delayMs,
+								   deadline);
+	}
+}
+
+// V60: GPU health monitor — 2s interval with V57-proven R/W ERROR_GEN6 clear.
+// V59 ReadRegister32 intercept caused regression (0 children). Back to timer-based.
+// Also applies EMR mask-all every cycle to prevent Apple from unmasking errors.
+void Gen11::v60GpuHealthMonitor(thread_call_param_t param0, thread_call_param_t param1) {
+	if (!isV60MonitorEnabled())
+		return;
+
+	static int v60Count = 0;
+	static uint32_t v60LastHead = 0xDEAD;
+	static uint32_t v60LastTail = 0xDEAD;
+	v60Count++;
+	
+	auto *svc = static_cast<IOService *>(param0);
+	if (!svc) {
+		SYSLOG("mellow", "v60[%d]: null IOService, stopping health monitor", v60Count);
+		return;
+	}
+
+	const bool v60Aggressive = isV60AggressiveMonitorEnabled();
+
+	// Guard: bail if MMIO mapping has been released (GPU torn down before timer fired).
+	// Release the retain we hold — stop the timer loop.
+	if (!MellowCore::callback->mmioValid()) {
+		SYSLOG("mellow", "v60[%d]: MMIO not ready, stopping health monitor", v60Count);
+		svc->release();
+		return;
+	}
+
+	// 1. Read GPU state via direct MMIO
+	uint32_t realErr = MellowCore::callback->readReg32(ERROR_GEN6);
+	uint32_t rcsHead = MellowCore::callback->readReg32(RING_HEAD(RENDER_RING_BASE));
+	uint32_t rcsTail = MellowCore::callback->readReg32(RING_TAIL(RENDER_RING_BASE));
+	uint32_t rcsCtl  = MellowCore::callback->readReg32(RING_CTL(RENDER_RING_BASE));
+	uint32_t emr     = MellowCore::callback->readReg32(RING_EMR(RENDER_RING_BASE));
+	
+	// 2. ExecList state
+	uint32_t execStatus = MellowCore::callback->readReg32(RING_EXECLIST_STATUS(RENDER_RING_BASE));
+	uint32_t csbPtr = MellowCore::callback->readReg32(RING_CONTEXT_STATUS_PTR(RENDER_RING_BASE));
+	
+	// V63: Additional scheduler/context diagnostics
+	uint32_t acthd    = MellowCore::callback->readReg32(RING_ACTHD(RENDER_RING_BASE));
+	uint32_t ccid     = MellowCore::callback->readReg32(RING_CCID(RENDER_RING_BASE));
+	uint32_t ringFault = MellowCore::callback->readReg32(GEN12_RING_FAULT_REG);
+	
+	// 3. Track ring HEAD/TAIL movement
+	bool headChanged = (rcsHead != v60LastHead);
+	bool tailChanged = (rcsTail != v60LastTail);
+	
+	// 4. Count children + find IGAccelDevice state
+	int childCount = 0;
+	uint64_t accelDevState = 0xDEAD;
+	/*if (v60Aggressive) {
+		OSIterator *iter = svc->getClientIterator();
+		if (iter) {
+			OSObject *obj;
+			while ((obj = iter->getNextObject())) {
+				auto *child = OSDynamicCast(IOService, obj);
+				if (child) {
+					const char *cn = child->getName();
+					if (cn && strcmp(cn, "IGAccelDevice") == 0) {
+						accelDevState = child->getState();
+					}
+					childCount++;
+				}
+			}
+			iter->release();
+		}
+	}*/
+	
+	// V70: Track child transitions — dump all children when count or accelDev state changes
+	/*if (v60Aggressive) {
+		static int lastChildCount = -1;
+		static uint64_t lastAccelDevState = 0xBEEF;
+		if (childCount != lastChildCount || accelDevState != lastAccelDevState) {
+			SYSLOG("mellow", "V70: TRANSITION ch %d->%d dev 0x%llx->0x%llx [iter %d]",
+				   lastChildCount, childCount,
+				   (unsigned long long)lastAccelDevState, (unsigned long long)accelDevState,
+				   v60Count);
+			// Dump ALL children at the transition point
+			OSIterator *iter2 = svc->getClientIterator();
+			if (iter2) {
+				int idx = 0;
+				OSObject *obj2;
+				while ((obj2 = iter2->getNextObject())) {
+					auto *child2 = OSDynamicCast(IOService, obj2);
+					if (child2) {
+						SYSLOG("mellow", "V70: ch[%d]: %s cls=%s st=0x%llx",
+							   idx, child2->getName(),
+							   child2->getMetaClass()->getClassName(),
+							   (unsigned long long)child2->getState());
+						idx++;
+					}
+				}
+				iter2->release();
+			}
+			// If IGAccelDevice just disappeared, dump GPU error state at that moment
+			if (accelDevState == 0xDEAD && lastAccelDevState != 0xDEAD && lastAccelDevState != 0xBEEF) {
+				SYSLOG("mellow", "V70: *** IGAccelDevice LOST! Was dev=0x%llx ***",
+					   (unsigned long long)lastAccelDevState);
+				uint32_t errAtLoss = MellowCore::callback->readReg32(ERROR_GEN6);
+				uint32_t tlb0Loss  = MellowCore::callback->readReg32(GEN8_FAULT_TLB_DATA0);
+				uint32_t tlb1Loss  = MellowCore::callback->readReg32(GEN8_FAULT_TLB_DATA1);
+				uint32_t faultLoss = MellowCore::callback->readReg32(GEN12_RING_FAULT_REG);
+				SYSLOG("mellow", "V70: at loss: ERR=0x%x TLB0=0x%x TLB1=0x%x FAULT=0x%x",
+					   errAtLoss, tlb0Loss, tlb1Loss, faultLoss);
+				// Dump GGTT PTEs 0-3 to check general GGTT health at this moment
+				for (int pg = 0; pg < 4; pg++) {
+					uint32_t pteLo = MellowCore::callback->readReg32(GGTT_PTE_LO(pg));
+					uint32_t pteHi = MellowCore::callback->readReg32(GGTT_PTE_HI(pg));
+					SYSLOG("mellow", "V70: loss GGTT[%d]=0x%08x:%08x %s",
+						   pg, pteHi, pteLo, (pteLo & 1) ? "V" : "INV");
+				}
+			}
+			lastChildCount = childCount;
+			lastAccelDevState = accelDevState;
+		}
+	}*/
+	
+	// V78/V77: DisplayPipe terminator — DISABLED.
+	// V115+V116 now prevent the Blit3D MCE that caused GPU rendering failure.
+	// Killing IOAccelDisplayPipeUserClient2 every 2s blocks WindowServer's main
+	// thread mid-IOKit-call → userspace watchdog fires at T+40s and T+80s.
+	// Re-enable only if GPU rendering is still broken after V115/V116 testing.
+	/*
+	{
+		const int v77KillDelay = getV77KillDelayIterations();
+		if (v77KillDelay > 0 && v60Count <= v77KillDelay) {
+			SYSLOG("mellow", "V77: kill delayed at iter %d (mellowV77DelayKill=%d)",
+			       v60Count, v77KillDelay);
+		} else {
+		OSIterator *dpIter = svc->getClientIterator();
+		if (dpIter) {
+			OSObject *dpObj;
+			int dpKilled = 0;
+			while ((dpObj = dpIter->getNextObject())) {
+				auto *dpChild = OSDynamicCast(IOService, dpObj);
+				if (dpChild) {
+					const char *dpCn = dpChild->getMetaClass()->getClassName();
+					if (dpCn && strstr(dpCn, "DisplayPipe")) {
+						SYSLOG("mellow", "V77: TERMINATING %s (st=0x%llx) to prevent WS GPU compositing crash",
+							   dpCn, (unsigned long long)dpChild->getState());
+						dpChild->terminate(kIOServiceRequired);
+						dpKilled++;
+					}
+				}
+			}
+			dpIter->release();
+			if (dpKilled > 0) {
+				SYSLOG("mellow", "V77: Killed %d display pipe client(s) at iter %d", dpKilled, v60Count);
+			}
+		}
+		}
+	}
+	*/
+
+	// 5. V60: error suppression path. Default is read-only for stability.
+	// Use -mellowv60rw to enable active register writes during monitor ticks.
+	/*if (v60Aggressive) {
+		if (realErr) {
+			MellowCore::callback->writeReg32(ERROR_GEN6, 0x0);
+		}
+		// Re-mask EMR every cycle — Apple may unmask during error recovery attempts
+		if (emr != 0xFFFFFFFF) {
+			MellowCore::callback->writeReg32(RING_EMR(RENDER_RING_BASE), 0xFFFFFFFF);
+		}
+		
+		// ── V79: Plane linearization (brief Apple logo flash) — aggressive mode only ──
+		// Boot log shows SURF=0x0 for iters 1–6; SURF becomes non-zero (tiled) at iter 7 (~14s).
+		// Old cadence (<=5, 10, 20, 30) skipped iter 7/8/9 — the first 6s window where the plane
+		// is tiled. Writing at iter 10 (~20s) is too late: the login screen is already up and the
+		// Apple logo phase has ended. Fix: fire every tick from 1–12 so we catch iter 7 immediately
+		// (first time SURF is mapped and tiling != 0) while the Apple logo may still be on screen.
+		if (v60Count <= 5 || v60Count == 10 || v60Count == 20 || v60Count == 30) {
+			uint32_t planCtl  = MellowCore::callback->readReg32(0x70180); // PLANE_CTL
+			uint32_t planStrd = MellowCore::callback->readReg32(0x70188); // PLANE_STRIDE
+			uint32_t tiling = (planCtl >> 10) & 0x7; // bits[12:10]
+			if (tiling != 0) {
+				uint32_t newCtl = planCtl & ~(0x7u << 10); // clear tiling -> linear
+				uint32_t newStrd = planStrd;
+				if (tiling == 1) {
+					newStrd = planStrd * 8;
+				} else if (tiling == 4) {
+					newStrd = planStrd * 16;
+				}
+				MellowCore::callback->writeReg32(0x70180, newCtl);
+				MellowCore::callback->writeReg32(0x70188, newStrd);
+				uint32_t planSurf = MellowCore::callback->readReg32(0x7019C);
+				MellowCore::callback->writeReg32(0x7019C, planSurf);
+				SYSLOG("mellow", "V79[%d]: tiling %d->linear CTL 0x%x->0x%x STRIDE 0x%x->0x%x SURF=0x%x",
+					   v60Count, tiling, planCtl, newCtl, planStrd, newStrd, planSurf);
+			} else {
+				SYSLOG("mellow", "V79[%d]: already linear CTL=0x%x STRIDE=0x%x", v60Count, planCtl, planStrd);
+			}
+		}
+	}*/
+
+	// 5. V60: ACTIVE error suppression (V57 proven approach)
+	//    Keep this write path strictly opt-in via -mellowv60rw.
+	/*if (v60Aggressive) {
+		if (realErr) {
+			MellowCore::callback->writeReg32(ERROR_GEN6, 0x0);
+		}
+		// Re-mask EMR every cycle — Apple may unmask during error recovery attempts
+		if (emr != 0xFFFFFFFF) {
+			MellowCore::callback->writeReg32(RING_EMR(RENDER_RING_BASE), 0xFFFFFFFF);
+		}
+	}*/
+	
+	// 6. Log with ring + CSB focus
+	uint32_t postErr = MellowCore::callback->readReg32(ERROR_GEN6);
+	uint32_t gtDw0   = MellowCore::callback->readReg32(GEN11_GT_INTR_DW0);
+	uint32_t rcIntr  = MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE);
+	SYSLOG("mellow", "V60M[%d]: ERR=0x%x->0x%x HEAD=0x%x TAIL=0x%x CTL=0x%x EMR=0x%x EXEC=0x%x CSB=0x%x ch=%d dev=0x%llx%s%s",
+		   v60Count, realErr, postErr, rcsHead, rcsTail, rcsCtl, emr,
+		   execStatus, csbPtr, childCount, (unsigned long long)accelDevState,
+		   headChanged ? " HEAD_MOVED!" : "",
+		   tailChanged ? " TAIL_MOVED!" : "");
+	SYSLOG("mellow", "V66M[%d]: ACTHD=0x%x CCID=0x%x FAULT=0x%x GT_DW0=0x%x RC_EN=0x%x",
+		   v60Count, acthd, ccid, ringFault, gtDw0, rcIntr);
+	// V68: Log TLB fault data when ERROR_GEN6 fires — shows faulting address
+	if (realErr) {
+		uint32_t tlb0 = MellowCore::callback->readReg32(GEN8_FAULT_TLB_DATA0);
+		uint32_t tlb1 = MellowCore::callback->readReg32(GEN8_FAULT_TLB_DATA1);
+		SYSLOG("mellow", "V68F[%d]: ERR=0x%x TLB0=0x%x TLB1=0x%x", v60Count, realErr, tlb0, tlb1);
+	}
+	
+	// ── V64: CSB buffer dump + interrupt mask diagnostics + CSB read pointer advance ──
+	if (v60Count == 1) {
+		// Dump all 6 CSB entries (context status buffer) — GPU writes these during context switches
+		for (int i = 0; i < 6; i++) {
+			uint32_t csbHi = MellowCore::callback->readReg32(RING_CONTEXT_STATUS_BUF_HI(RENDER_RING_BASE, i));
+			uint32_t csbLo = MellowCore::callback->readReg32(RING_CONTEXT_STATUS_BUF(RENDER_RING_BASE, i));
+			SYSLOG("mellow", "V64: CSB[%d] = 0x%x:0x%x", i, csbHi, csbLo);
+		}
+		// Dump interrupt enable + mask registers for RCS
+		uint32_t rcIntrEn   = MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE);
+		uint32_t rcsIntrMask = MellowCore::callback->readReg32(GEN11_RCS0_RSVD_INTR_MASK);
+		uint32_t gtIntrDw0  = MellowCore::callback->readReg32(GEN11_GT_INTR_DW0);
+		uint32_t mstrIrq    = MellowCore::callback->readReg32(GEN11_GFX_MSTR_IRQ);
+		SYSLOG("mellow", "V64: RC_INTR_EN=0x%x RCS_INTR_MASK=0x%x GT_DW0=0x%x MSTR=0x%x",
+			   rcIntrEn, rcsIntrMask, gtIntrDw0, mstrIrq);
+		// Dump identity registers
+		uint32_t ident0 = MellowCore::callback->readReg32(GEN11_INTR_IDENTITY_REG0);
+		uint32_t ident1 = MellowCore::callback->readReg32(GEN11_INTR_IDENTITY_REG1);
+		SYSLOG("mellow", "V64: INTR_IDENT0=0x%x INTR_IDENT1=0x%x", ident0, ident1);
+		
+		// ── V67: Enhanced scheduler + workloop + event source diagnostics ──
+		// ── V68: + fault TLB data, e08obj class, early sched clear ──
+		{
+			// V68: Read fault detail registers (TLB data gives faulting address)
+			uint32_t tlbData0 = MellowCore::callback->readReg32(GEN8_FAULT_TLB_DATA0);
+			uint32_t tlbData1 = MellowCore::callback->readReg32(GEN8_FAULT_TLB_DATA1);
+			uint32_t gucStatus = MellowCore::callback->readReg32(0xC000); // GUC_STATUS
+			uint32_t rcsEir = MellowCore::callback->readReg32(RENDER_RING_BASE + 0xB0); // RING_EIR
+			SYSLOG("mellow", "V68: TLB_DATA0=0x%x TLB_DATA1=0x%x GUC=0x%x EIR=0x%x",
+				tlbData0, tlbData1, gucStatus, rcsEir);
+
+			uint64_t schedPtr = getMember<uint64_t>(svc, 0xe00);
+			if (schedPtr) {
+				SYSLOG("mellow", "V67: scheduler ptr=0x%llx", (unsigned long long)schedPtr);
+				auto *schedBase = reinterpret_cast<uint8_t *>(schedPtr);
+				// V67: Expanded dump — 0x000-0x400 (128 QWORDs)
+				for (int i = 0; i < 128; i++) {
+					uint64_t val = *reinterpret_cast<uint64_t *>(schedBase + i * 8);
+					if (val != 0) {  // Only log non-zero to reduce noise
+						SYSLOG("mellow", "V67: sched[0x%03x]=0x%016llx", i * 8, (unsigned long long)val);
+					}
+				}
+				
+				// V68: Clear sched error EARLY (don't wait for iteration 5).
+				// Clearing an error flag is safe regardless of V60 mode — the scheduler
+				// error 0x7b blocks all GPU submissions and must be cleared on boot.
+				uint32_t schedErr = *reinterpret_cast<uint32_t *>(schedBase + 0x0C);
+				if (schedErr) {
+					*reinterpret_cast<uint32_t *>(schedBase + 0x0C) = 0;
+					*reinterpret_cast<uint32_t *>(schedBase + 0x00) = 0;
+					SYSLOG("mellow", "V68: early sched clear err=0x%x->0x%x flag=0x0",
+						schedErr, *reinterpret_cast<uint32_t *>(schedBase + 0x0C));
+				}
+			} else {
+				SYSLOG("mellow", "V67: scheduler ptr is NULL!");
+			}
+			
+			// V67: Dump object at accel[0xe08] — may be the actual scheduler C++ object
+			uint64_t schedObj = getMember<uint64_t>(svc, 0xe08);
+			if (schedObj) {
+				auto *objBase = reinterpret_cast<uint8_t *>(schedObj);
+				// First 8 bytes should be vtable pointer for a C++ object
+				uint64_t vtable = *reinterpret_cast<uint64_t *>(objBase);
+				// V68: Identify class via getMetaClass()
+				auto *e08Obj = reinterpret_cast<OSObject *>(schedObj);
+				const char *e08Class = "?";
+				if (e08Obj->getMetaClass()) {
+					e08Class = e08Obj->getMetaClass()->getClassName();
+				}
+				SYSLOG("mellow", "V68: accel[0xe08] obj=0x%llx vtable=0x%llx class=%s",
+					(unsigned long long)schedObj, (unsigned long long)vtable, e08Class);
+				// Dump first 256 bytes, non-zero only
+				for (int i = 0; i < 32; i++) {
+					uint64_t val = *reinterpret_cast<uint64_t *>(objBase + i * 8);
+					if (val != 0) {
+						SYSLOG("mellow", "V68: e08obj[0x%03x]=0x%016llx", i * 8, (unsigned long long)val);
+					}
+				}
+			}
+			
+			// V67: Dump objects at accel[0xe10..0xe38] — identify by vtable class
+			for (int idx = 0; idx < 6; idx++) {
+				uint64_t objPtr = getMember<uint64_t>(svc, 0xe10 + idx * 8);
+				if (objPtr) {
+					auto *obj = reinterpret_cast<OSObject *>(objPtr);
+					const char *clsName = obj->getMetaClass() ? obj->getMetaClass()->getClassName() : "?";
+					SYSLOG("mellow", "V67: accel[0x%03x]=0x%llx class=%s",
+						0xe10 + idx * 8, (unsigned long long)objPtr, clsName);
+				}
+			}
+			
+			// V67: Workloop event source chain enumeration
+			auto *wl = svc->getWorkLoop();
+			SYSLOG("mellow", "V67: workLoop=%s", wl ? "EXISTS" : "NULL");
+			if (wl) {
+				SYSLOG("mellow", "V67: workLoop class=%s ptr=0x%llx",
+					wl->getMetaClass()->getClassName(), (unsigned long long)wl);
+				// Dump workloop object — first 128 bytes to find event source chain
+				auto *wlBase = reinterpret_cast<uint8_t *>(wl);
+				for (int i = 0; i < 16; i++) {
+					uint64_t val = *reinterpret_cast<uint64_t *>(wlBase + i * 8);
+					SYSLOG("mellow", "V67: wl[0x%02x]=0x%016llx", i * 8, (unsigned long long)val);
+				}
+				
+				// V67: Walk event source chain from workloop dump.
+				// IOWorkLoop layout: [0x00]=vtable [0x08-0x10]=OSObject fields
+				// [0x18]=gateLock [0x20]=eventChain [0x28]=controlG [0x30]=workToDo etc.
+				// Read eventChain pointer (offset ~0x20 or thereabouts in the dump above)
+				// and follow the chain manually.
+				uint64_t eventChain = *reinterpret_cast<uint64_t *>(wlBase + 0x20);
+				SYSLOG("mellow", "V67: wl eventChain=0x%016llx", (unsigned long long)eventChain);
+				int esIdx = 0;
+				uint64_t esPtr = eventChain;
+				while (esPtr && esIdx < 16) {
+					auto *esObj = reinterpret_cast<OSObject *>(esPtr);
+					const char *esClass = "?";
+					if (esObj->getMetaClass()) {
+						esClass = esObj->getMetaClass()->getClassName();
+					}
+					SYSLOG("mellow", "V67: eventSource[%d]: class=%s ptr=0x%016llx",
+						esIdx, esClass, (unsigned long long)esPtr);
+					// IOEventSource::eventChainNext is typically at offset 0x10
+					auto *esBase = reinterpret_cast<uint8_t *>(esPtr);
+					esPtr = *reinterpret_cast<uint64_t *>(esBase + 0x10);
+					esIdx++;
+				}
+				SYSLOG("mellow", "V67: workLoop has %d event sources in chain", esIdx);
+			}
+			
+			// V67: Key accelerator fields
+			for (int i = 0; i < 8; i++) {
+				uint64_t val = getMember<uint64_t>(svc, 0xe00 + i * 8);
+				SYSLOG("mellow", "V67: accel[0x%03x]=0x%016llx", 0xe00 + i * 8, (unsigned long long)val);
+			}
+			
+			// V70: Read ACTUAL GGTT PTEs from correct base (0x800000, not the 0x100000
+			// fence registers that V68 used). Each PTE is 8 bytes (64-bit).
+			// PTE format: phys_addr[47:12] | flags[11:0], bit 0 = VALID/PRESENT.
+			SYSLOG("mellow", "V70: GGTT PTE dump (base=0x%x):", GEN8_GGTT_PTE_BASE);
+			for (int pg = 0; pg < 16; pg++) {
+				uint32_t pteLo = MellowCore::callback->readReg32(GGTT_PTE_LO(pg));
+				uint32_t pteHi = MellowCore::callback->readReg32(GGTT_PTE_HI(pg));
+				SYSLOG("mellow", "V70: GGTT[%2d] = 0x%08x:%08x %s",
+					   pg, pteHi, pteLo, (pteLo & 1) ? "VALID" : "INVALID");
+			}
+			// Check pages around stolen memory boundary (128MB = 0x8000 pages)
+			for (int i = 0; i < 4; i++) {
+				int pg = 0x7FFE + i;
+				uint32_t pteLo = MellowCore::callback->readReg32(GGTT_PTE_LO(pg));
+				uint32_t pteHi = MellowCore::callback->readReg32(GGTT_PTE_HI(pg));
+				SYSLOG("mellow", "V70: GGTT[0x%x] = 0x%08x:%08x %s",
+					   pg, pteHi, pteLo, (pteLo & 1) ? "VALID" : "INVALID");
+			}
+			// MMIO BAR length — tells us if GGTT PTE access is direct or indirect
+			SYSLOG("mellow", "V70: rmmio length=0x%llx (GGTT direct=%s)",
+				   (unsigned long long)MellowCore::callback->rmmio->getLength(),
+				   (GEN8_GGTT_PTE_BASE + 16*8 <= MellowCore::callback->rmmio->getLength()) ? "yes" : "no(indirect)");
+		}
+	}
+	
+	// V64: On iteration 3, advance CSB read pointer to match write pointer
+	// CSB ptr format: bits[10:8]=write ptr (GPU), bits[2:0]=read ptr (software)
+	// If write > read, scheduler is stuck waiting for CSB processing
+	if (v60Count == 3) {
+		uint32_t csbPtrNow = MellowCore::callback->readReg32(RING_CONTEXT_STATUS_PTR(RENDER_RING_BASE));
+		uint32_t writeIdx = (csbPtrNow >> 8) & 0x7;
+		uint32_t readIdx  = csbPtrNow & 0x7;
+		SYSLOG("mellow", "V64: CSB ptr=0x%x write=%d read=%d", csbPtrNow, writeIdx, readIdx);
+		if (writeIdx != readIdx && v60Aggressive) {
+			// Advance read pointer to match write pointer
+			uint32_t newPtr = (csbPtrNow & ~0x7) | (writeIdx & 0x7);
+			MellowCore::callback->writeReg32(RING_CONTEXT_STATUS_PTR(RENDER_RING_BASE), newPtr);
+			uint32_t verify = MellowCore::callback->readReg32(RING_CONTEXT_STATUS_PTR(RENDER_RING_BASE));
+			SYSLOG("mellow", "V64: CSB read ptr advanced %d->%d (wrote 0x%x, readback 0x%x)",
+				   readIdx, writeIdx, newPtr, verify);
+		} else if (writeIdx != readIdx) {
+			SYSLOG("mellow", "V64: read-only mode (use -mellowv60rw to advance CSB read ptr)");
+		} else {
+			SYSLOG("mellow", "V64: CSB ptrs already matched (write=read=%d)", writeIdx);
+		}
+	}
+	
+	// V65: Enforce RCS0 interrupt enable on EVERY iteration (moved from V64 iteration 5).
+	// V64 proved the fix at T+10s was too late — scheduler already gave up.
+	// Now combined with V65 pre-start + V65W watchdog fixes for full coverage.
+	/*if (v60Aggressive) {
+		uint32_t rcIntrEn = MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE);
+		uint32_t rcsMask  = MellowCore::callback->readReg32(GEN11_RCS0_RSVD_INTR_MASK);
+		
+		// Tier-1 IRQ policy: RCS only on spoofed non-TGL by default.
+		uint32_t wantBits = getV65Tier1WantBits(MellowCore::callback->isRealTGL);
+		if ((rcIntrEn & wantBits) != wantBits) {
+			uint32_t newEn = rcIntrEn | wantBits;
+			MellowCore::callback->writeReg32(GEN11_RENDER_COPY_INTR_ENABLE, newEn);
+			if (v60Count <= 3) {
+				SYSLOG("mellow", "V65M[%d]: tier-1 fix 0x%x->0x%x", v60Count, rcIntrEn,
+					MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE));
+			}
+		}
+		// Unmask context-switch + user interrupt for RCS (0 = unmasked, 1 = masked)
+		uint32_t wantUnmasked = GT_CONTEXT_SWITCH_INTERRUPT | GT_RENDER_USER_INTERRUPT;
+		if (rcsMask & wantUnmasked) {
+			uint32_t newMask = rcsMask & ~wantUnmasked;
+			MellowCore::callback->writeReg32(GEN11_RCS0_RSVD_INTR_MASK, newMask);
+			if (v60Count <= 3) {
+				SYSLOG("mellow", "V65M[%d]: tier-2 fix mask 0x%x->0x%x", v60Count, rcsMask, newMask);
+			}
+		}
+	}*/
+
+	// V65: Enforce RCS0 interrupt enable on EVERY iteration (moved from V64 iteration 5).
+	// V64 proved the fix at T+10s was too late — scheduler already gave up.
+	// Now combined with V65 pre-start + V65W watchdog fixes for full coverage.
+	/*if (v60Aggressive) {
+		uint32_t rcIntrEn = MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE);
+		uint32_t rcsMask  = MellowCore::callback->readReg32(GEN11_RCS0_RSVD_INTR_MASK);
+		
+		// Tier-1 IRQ policy follows V65 helper (RCS-only on spoof path unless V142 orig/BCS requested).
+		uint32_t wantBits = getV65Tier1WantBits(MellowCore::callback->isRealTGL);
+		if ((rcIntrEn & wantBits) != wantBits) {
+			uint32_t newEn = rcIntrEn | wantBits;
+			MellowCore::callback->writeReg32(GEN11_RENDER_COPY_INTR_ENABLE, newEn);
+			if (v60Count <= 3) {
+				SYSLOG("mellow", "V65M[%d]: tier-1 fix 0x%x->0x%x", v60Count, rcIntrEn,
+					MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE));
+			}
+		}
+		// Unmask context-switch + user interrupt for RCS (0 = unmasked, 1 = masked)
+		uint32_t wantUnmasked = GT_CONTEXT_SWITCH_INTERRUPT | GT_RENDER_USER_INTERRUPT;
+		if (rcsMask & wantUnmasked) {
+			uint32_t newMask = rcsMask & ~wantUnmasked;
+			MellowCore::callback->writeReg32(GEN11_RCS0_RSVD_INTR_MASK, newMask);
+			if (v60Count <= 3) {
+				SYSLOG("mellow", "V65M[%d]: tier-2 fix mask 0x%x->0x%x", v60Count, rcsMask, newMask);
+			}
+		}
+	}*/
+	
+	// ── V79: Plane monitor (strictly read-only) ──
+	// Any plane-format writes here have caused either WS crash loops or WS hangs.
+	// Keep this path logging-only; never modify PLANE_CTL/STRIDE/SURF in V60.
+	/*{
+		uint32_t planCtl  = MellowCore::callback->readReg32(0x70180); // PLANE_CTL
+		uint32_t planStrd = MellowCore::callback->readReg32(0x70188); // PLANE_STRIDE
+		uint32_t planSurf = MellowCore::callback->readReg32(0x7019C); // PLANE_SURF
+		uint32_t planSize = MellowCore::callback->readReg32(0x70190); // PLANE_SIZE
+		uint32_t planPos  = MellowCore::callback->readReg32(0x7018C); // PLANE_POS
+		uint32_t pipeConf = MellowCore::callback->readReg32(0x70008); // PIPE_CONF_A
+		uint32_t tiling = (planCtl >> 10) & 0x7; // bits[12:10]
+
+		// Always log plane state for diagnostics
+		SYSLOG("mellow", "V79[%d]: PIPE=0x%x CTL=0x%x STRIDE=0x%x SURF=0x%x SIZE=0x%x POS=0x%x tiling=%d",
+			   v60Count, pipeConf, planCtl, planStrd, planSurf, planSize, planPos, tiling);
+	}*/
+
+	// ── V79: Plane monitor / experimental linearization ──
+	// The old copy only reached brief first-light when the experimental path forced
+	// the scanout plane to linear and re-armed PLANE_SURF. Keep the default path
+	// read-only; restore the old behavior only with -mellowexp.
+	/*if (isExperimentalMonitorEnabled() && v60Aggressive ) {
+		if (v60Count <= 5 || v60Count == 10 || v60Count == 20 || v60Count == 30) {
+			uint32_t planCtl  = MellowCore::callback->readReg32(0x70180); // PLANE_CTL
+			uint32_t planStrd = MellowCore::callback->readReg32(0x70188); // PLANE_STRIDE
+			uint32_t planSurf = MellowCore::callback->readReg32(0x7019C);
+			uint32_t tiling = (planCtl >> 10) & 0x7; // bits[12:10]
+			// V99S already ensures STRIDE=0xa0 and CTL=Y-tiled before every SURF arm.
+			// Do NOT re-convert tiling or recalculate stride (those are now correct).
+			// Just enforce correct values and re-arm SURF to keep the display engine live.
+			// Skip if SURF=0 (plane disabled — arming a null surface causes garbage).
+			if (planSurf != 0) {
+				uint32_t neededStrd = 0xa0;
+				uint32_t neededCtl  = (planCtl & ~(0x7u << 10)) | (0x4u << 10); // Y-tiled
+				bool strdWrong  = (planStrd != neededStrd);
+				bool tilingWrong = (tiling != 4);
+				if (strdWrong)   MellowCore::callback->writeReg32(0x70188, neededStrd);
+				if (tilingWrong) MellowCore::callback->writeReg32(0x70180, neededCtl);
+				MellowCore::callback->writeReg32(0x7019C, planSurf); // re-arm
+				SYSLOG("mellow", "V79RW[%d]: CTL=0x%x->0x%x STRIDE=0x%x->0x%x SURF=0x%x",
+					   v60Count,
+					   planCtl,  (tilingWrong ? neededCtl  : planCtl),
+					   planStrd, (strdWrong   ? neededStrd : planStrd),
+					   planSurf);
+			} else {
+				SYSLOG("mellow", "V79RW[%d]: SURF=0 skip. CTL=0x%x STRIDE=0x%x tiling=%d",
+					   v60Count, planCtl, planStrd, tiling);
+			}
+		}
+	} else {
+		uint32_t planCtl  = MellowCore::callback->readReg32(0x70180); // PLANE_CTL
+		uint32_t planStrd = MellowCore::callback->readReg32(0x70188); // PLANE_STRIDE
+		uint32_t planSurf = MellowCore::callback->readReg32(0x7019C); // PLANE_SURF
+		uint32_t planSize = MellowCore::callback->readReg32(0x70190); // PLANE_SIZE
+		uint32_t planPos  = MellowCore::callback->readReg32(0x7018C); // PLANE_POS
+		uint32_t pipeConf = MellowCore::callback->readReg32(0x70008); // PIPE_CONF_A
+		uint32_t tiling = (planCtl >> 10) & 0x7; // bits[12:10]
+		SYSLOG("mellow", "V79[%d]: PIPE=0x%x CTL=0x%x STRIDE=0x%x SURF=0x%x SIZE=0x%x POS=0x%x tiling=%d",
+			   v60Count, pipeConf, planCtl, planStrd, planSurf, planSize, planPos, tiling);
+
+		// V105B: same blanking-pedestal check as V105, applied here after V79 reads SURF.
+		if (planSurf != 0) {
+			MellowCore::callback->writeReg32(0x4A400, 0);    // index 0
+			uint32_t g0b  = MellowCore::callback->readReg32(0x4A404);
+			MellowCore::callback->writeReg32(0x4A400, 128);
+			uint32_t g128 = MellowCore::callback->readReg32(0x4A404);
+			if (g0b == g128 || g128 == 0) {
+				static int v105bCount = 0;
+				if (v105bCount < 10) {
+					v105bCount++;
+					SYSLOG("mellow", "V105B[%d]: Gamma bad (iter %d, SURF=0x%x g0=0x%x g128=0x%x) — linear LUT",
+					       v105bCount, v60Count, planSurf, g0b, g128);
+				}
+				MellowCore::callback->writeReg32(0x4A400, 0x8000);
+				for (int i = 0; i < 256; i++) {
+					uint32_t v10 = (uint32_t)i * 4;
+					MellowCore::callback->writeReg32(0x4A404, (v10 << 20) | (v10 << 10) | v10);
+				}
+			}
+		}
+	}*/
+
+	// ── V75: Display pipeline register dump — diagnose black screen ──
+	// System stays alive but display is black. Read pipe/plane/transcoder/backlight
+	// registers to understand what state the display hardware is in.
+	if (v60Count == 3 || v60Count == 30) {
+		// Pipe A config
+		uint32_t pipeConf  = MellowCore::callback->readReg32(0x70008); // PIPE_CONF_A
+		uint32_t pipeSrc   = MellowCore::callback->readReg32(0x6001C); // PIPE_SRCSZ_A
+		// Plane 1 on Pipe A
+		uint32_t planCtl   = MellowCore::callback->readReg32(0x70180); // PLANE_CTL
+		uint32_t planStrd  = MellowCore::callback->readReg32(0x70188); // PLANE_STRIDE
+		uint32_t planSurf  = MellowCore::callback->readReg32(0x7019C); // PLANE_SURF
+		uint32_t planSize  = MellowCore::callback->readReg32(0x70190); // PLANE_SIZE
+		uint32_t planPos   = MellowCore::callback->readReg32(0x7018C); // PLANE_POS
+		uint32_t planOff   = MellowCore::callback->readReg32(0x70194); // PLANE_OFFSET
+		// Transcoder A
+		uint32_t transConf = MellowCore::callback->readReg32(0x60008); // TRANS_CONF_A (or PIPE_CONF for ICL+)
+		uint32_t transH    = MellowCore::callback->readReg32(0x60000); // HTOTAL_A
+		uint32_t transV    = MellowCore::callback->readReg32(0x6000C); // VTOTAL_A
+		// DDI / port
+		uint32_t ddiFuncA  = MellowCore::callback->readReg32(0x60400); // DDI_FUNC_CTL_A (trans EDP on TGL)
+		uint32_t ddiFunc1  = MellowCore::callback->readReg32(0x60100); // DDI_FUNC_CTL_1 (trans A)
+		// Backlight
+		uint32_t blcPwm    = MellowCore::callback->readReg32(0xC8250); // BLC_PWM_CTL2
+		uint32_t blcDuty   = MellowCore::callback->readReg32(0xC8254); // BLC_PWM_DATA / duty cycle
+		uint32_t sblcPwm   = MellowCore::callback->readReg32(0xC8254); // South BLC_PWM_CTL
+		// Power wells
+		uint32_t pwrWell   = MellowCore::callback->readReg32(0x45400); // PWR_WELL_CTL2 (ICL+)
+		uint32_t dcState   = MellowCore::callback->readReg32(0x45504); // DC_STATE_EN
+
+		SYSLOG("mellow", "V75[%d]: PIPE_CONF=0x%x PIPE_SRC=0x%x", v60Count, pipeConf, pipeSrc);
+		SYSLOG("mellow", "V75[%d]: PLANE_CTL=0x%x STRIDE=0x%x SURF=0x%x SIZE=0x%x POS=0x%x OFF=0x%x",
+			   v60Count, planCtl, planStrd, planSurf, planSize, planPos, planOff);
+		SYSLOG("mellow", "V75[%d]: TRANS_CONF=0x%x HTOTAL=0x%x VTOTAL=0x%x",
+			   v60Count, transConf, transH, transV);
+		SYSLOG("mellow", "V75[%d]: DDI_FUNC_EDP=0x%x DDI_FUNC_A=0x%x",
+			   v60Count, ddiFuncA, ddiFunc1);
+		SYSLOG("mellow", "V75[%d]: BLC_PWM=0x%x BLC_DUTY=0x%x SBLC=0x%x",
+			   v60Count, blcPwm, blcDuty, sblcPwm);
+		SYSLOG("mellow", "V75[%d]: PWR_WELL=0x%x DC_STATE=0x%x",
+			   v60Count, pwrWell, dcState);
+
+		// V103P removed (was: every V60 tick, force DC_STATE_EN back to 0 when ADL-P
+		// DMC is active — third belt of the V103 trio). Now read-only: log the value
+		// when non-zero so we can see when Apple's DMC actually wants to enter a DC
+		// state. With V103 raWriteRegister32-side and V103F FastWrite-side also off,
+		// this is the full "no DC_STATE_EN block" experiment.
+		if (MellowCore::callback->dmcIsAdlp && dcState != 0)
+			MellowCore::callback->adlpDcExit("V60");
+		// V105: Pipe-A gamma LUT enforcement — write linear pass-through when LUT is bad.
+		// The Apple driver enables precision gamma mode before WindowServer writes the actual
+		// LUT.  Two bad states are observed:
+		//   zero LUT (g[128]=0): all pixels map to black
+		//   blanking pedestal (g[128]=0x8020080, R=G=B=128/1023): uniform dim grey —
+		//   the Apple IGFB power-management code sets this during display blanking and
+		//   does not clear it before WindowServer takes over.  Both states cause the
+		//   display to appear black/dark regardless of framebuffer content.
+		// Detect: sample entries 0 and 128; if they are equal (constant LUT = blanking)
+		// or both are zero, write a linear 8→10-bit pass-through until WS initialises.
+		// PAL_PREC_DATA (0x4A404) format: bits[29:20]=red, [19:10]=green, [9:0]=blue.
+		{
+			uint32_t planSurf = MellowCore::callback->readReg32(0x7019C); // PLANE_SURF_A
+			if (planSurf != 0) {
+				MellowCore::callback->writeReg32(0x4A400, 0);    // PAL_PREC_INDEX = 0
+				uint32_t g0   = MellowCore::callback->readReg32(0x4A404);
+				MellowCore::callback->writeReg32(0x4A400, 128);  // PAL_PREC_INDEX = 128
+				uint32_t g128 = MellowCore::callback->readReg32(0x4A404);
+				// Constant LUT (all entries equal) = blanking or zero = bad state
+				if (g0 == g128 || g128 == 0) {
+					static int v105Count = 0;
+					if (v105Count < 10) {
+						v105Count++;
+						SYSLOG("mellow", "V105[%d]: Gamma bad at iter %d (g0=0x%x g128=0x%x) — linear pass-through",
+						       v105Count, v60Count, g0, g128);
+					}
+					// Write linear LUT: set index=0 + AUTO_INCREMENT (bit 15 = 0x8000)
+					MellowCore::callback->writeReg32(0x4A400, 0x8000);
+					for (int i = 0; i < 256; i++) {
+						uint32_t v10 = (uint32_t)i * 4;
+						MellowCore::callback->writeReg32(0x4A404, (v10 << 20) | (v10 << 10) | v10);
+					}
+				}
+			}
+		}
+
+		// V104P removed (was: V60-tick log "V195 miss?" if CTL1 != uefiCtl1 | 0x401).
+		// V195 is gone (passthrough), so the "miss" framing is meaningless. The V60 V75
+		// SYSLOG above already prints PWR_WELL=0x%x every tick, so CTL1 drift is observable
+		// without this duplicate log line.
+	}
+
+	// ── V76: Deep display diagnostic + framebuffer physical write test ──
+	// V75 proved: ALL display regs are correctly configured (pipe, plane, DDI, backlight ON).
+	// Black screen must be because SURF=0x412ad000 points to unwritten (zeroed) memory.
+	// Verify GGTT mapping, check WM/PSR, and write a white test pattern directly
+	// to the framebuffer surface physical memory to prove the display pipeline works.
+	if (v60Count == 5) {
+		// 1. Read PLANE_SURF to get current surface GGTT address
+		uint32_t surfAddr = MellowCore::callback->readReg32(0x7019C); // PLANE_SURF
+		uint32_t surfPage = surfAddr >> 12;  // GGTT page number
+
+		// 2. Read GGTT PTE for this page — verify mapping is valid
+		uint32_t pteLo = MellowCore::callback->readReg32(GGTT_PTE_LO(surfPage));
+		uint32_t pteHi = MellowCore::callback->readReg32(GGTT_PTE_HI(surfPage));
+		uint64_t pte = ((uint64_t)pteHi << 32) | pteLo;
+		uint64_t physAddr = pte & 0x0000FFFFFFFFF000ULL;
+		bool pteValid = (pteLo & 0x1) != 0;
+		SYSLOG("mellow", "V76[%d]: SURF=0x%x page=0x%x PTE=0x%x:%08x phys=0x%llx valid=%d",
+			   v60Count, surfAddr, surfPage, pteHi, pteLo,
+			   (unsigned long long)physAddr, pteValid);
+
+		// Also check a few neighboring GGTT pages for the surface
+		for (int i = 1; i <= 3; i++) {
+			uint32_t nLo = MellowCore::callback->readReg32(GGTT_PTE_LO(surfPage + i));
+			uint32_t nHi = MellowCore::callback->readReg32(GGTT_PTE_HI(surfPage + i));
+			uint64_t nPhys = (((uint64_t)nHi << 32) | nLo) & 0x0000FFFFFFFFF000ULL;
+			SYSLOG("mellow", "V76[%d]: SURF+%d PTE=0x%x:%08x phys=0x%llx v=%d",
+				   v60Count, i, nHi, nLo, (unsigned long long)nPhys, nLo & 1);
+		}
+
+		// 3. Watermark registers — if wrong, the plane gets no FIFO bandwidth → blank
+		uint32_t wm0 = MellowCore::callback->readReg32(0x70240); // CUR_WM_A_0 (WM level 0)
+		uint32_t wm1 = MellowCore::callback->readReg32(0x70244); // CUR_WM_A_1
+		uint32_t planWm0 = MellowCore::callback->readReg32(0x70268); // PLANE_WM_A_0 (plane 1 WM level 0)
+		uint32_t planWm1 = MellowCore::callback->readReg32(0x7026C); // PLANE_WM_A_1
+		uint32_t planWmT = MellowCore::callback->readReg32(0x70278); // PLANE_WM_TRANS (transition WM)
+		SYSLOG("mellow", "V76[%d]: WM cur0=0x%x cur1=0x%x plan0=0x%x plan1=0x%x planT=0x%x",
+			   v60Count, wm0, wm1, planWm0, planWm1, planWmT);
+
+		// 4. PSR—Panel Self-Refresh: if active and confused, panel may show stale/black
+		uint32_t psrCtl  = MellowCore::callback->readReg32(0x64800); // EDP_PSR_CTL
+		uint32_t psrSts  = MellowCore::callback->readReg32(0x64840); // EDP_PSR_STATUS
+		uint32_t psrCtl2 = MellowCore::callback->readReg32(0x60900); // EDP_PSR2_CTL
+		SYSLOG("mellow", "V76[%d]: PSR_CTL=0x%x PSR_STATUS=0x%x PSR2_CTL=0x%x",
+			   v60Count, psrCtl, psrSts, psrCtl2);
+
+		// 5. Gamma LUT sample — if gamma table is zeroed, all output = black.
+		// In read-only mode keep current index untouched and only sample current entry.
+		uint32_t gammaIdx = MellowCore::callback->readReg32(0x4A400); // PREC_PAL_INDEX_A
+		uint32_t gamma0 = 0;
+		uint32_t gamma128 = 0;
+		uint32_t gamma255 = 0;
+		if (v60Aggressive) {
+			MellowCore::callback->writeReg32(0x4A400, 0);                 // Set index to 0
+			gamma0 = MellowCore::callback->readReg32(0x4A404);            // PREC_PAL_DATA_A
+			MellowCore::callback->writeReg32(0x4A400, 128);               // Mid-range index
+			gamma128 = MellowCore::callback->readReg32(0x4A404);
+			MellowCore::callback->writeReg32(0x4A400, 255);               // Near max index
+			gamma255 = MellowCore::callback->readReg32(0x4A404);
+			MellowCore::callback->writeReg32(0x4A400, gammaIdx);          // Restore original index
+		} else {
+			gamma0 = MellowCore::callback->readReg32(0x4A404);
+			gamma128 = gamma0;
+			gamma255 = gamma0;
+		}
+		SYSLOG("mellow", "V76[%d]: GAMMA idx_was=0x%x g[0]=0x%x g[128]=0x%x g[255]=0x%x",
+			   v60Count, gammaIdx, gamma0, gamma128, gamma255);
+
+		// (V105 now runs every tick in the periodic section above)
+
+		// 6. Framebuffer physical read test — read pixels from the display surface
+		// to check current content. V83 handles filling; V76 only reads now.
+		if (pteValid && physAddr != 0) {
+			auto *desc = IOMemoryDescriptor::withPhysicalAddress(
+				(IOPhysicalAddress)physAddr, 4096, kIODirectionIn);
+			if (desc) {
+				auto *map = desc->createMappingInTask(kernel_task, 0,
+					kIOMapAnywhere | kIOMapInhibitCache, 0, 4096);
+				if (map) {
+					volatile uint32_t *fb = (volatile uint32_t *)map->getVirtualAddress();
+					SYSLOG("mellow", "V76[%d]: READ px[0]=0x%x px[512]=0x%x px[1023]=0x%x phys=0x%llx",
+						   v60Count, fb[0], fb[512], fb[1023],
+						   (unsigned long long)physAddr);
+					map->release();
+				}
+				desc->release();
+			}
+		} else {
+			SYSLOG("mellow", "V76[%d]: SURF PTE invalid — cannot read framebuffer", v60Count);
+		}
+	}
+
+	// ── V84: Page-by-page framebuffer fill — persistent, no GGTT modification ──
+	// V82 proved: display engine reads from PLANE_SURF via GGTT (magenta visible).
+	// V83 bug: SURF redirect to GGTT page 0 → MCE at phys 0x3e800000 (stolen mem base).
+	// MC Bank 11 (GPU) uncorrected error on all 20 CPUs. NEVER touch stolen base.
+	// V88: Color band diagnostic + GGTT TLB flush + plane toggle + transcoder probe
+	// V87 PROVED: SURF==SURFLIVE always MATCH. Only Plane 1 active. PipeB OFF.
+	// 4000 pages filled, magenta persists. Display still shows bars.
+	// PARADOX: buffer is correct, plane reads it, yet bars appear.
+	// V88: Fill 4 color bands (RED/GREEN/BLUE/WHITE) to test if display reads our
+	// data at all. Flush GGTT TLB. Toggle plane off/on. Probe transcoders.
+
+	// V88 scanout fill is intentionally opt-in: it paints debug bars/colors and can
+	// override normal Apple UI composition. Enable only for diagnostics with -mellowv88.
+	// In dp0 mode V88 is harmful: readReg32(PLANE_SURF) returns the hardware echo of
+	// setupScanoutMemory's 0x412be000 write (before V99S redirects it), causing V88[5]'s
+	// plane toggle to arm with the wrong SURF and fill non-aperture pages with color bands.
+	if (isExperimentalMonitorEnabled() && isV88ScanoutFillEnabled() && v60Count >= 1 && v60Count <= 30) {
+		uint32_t surfAddr = MellowCore::callback->readReg32(0x7019C);
+		uint32_t surfPage = surfAddr >> 12;
+
+		// 1. Iteration 1-3: Deep transcoder & pipe diagnostic
+		if (v60Count <= 3) {
+			// Check ALL transcoder configs (A, B, C, D, EDP)
+			uint32_t transAconf  = MellowCore::callback->readReg32(0x60008);
+			uint32_t transBconf  = MellowCore::callback->readReg32(0x61008);
+			uint32_t transEDPconf = MellowCore::callback->readReg32(0x6F008);
+			SYSLOG("mellow", "V88[%d]: TransA=0x%x TransB=0x%x TransEDP=0x%x",
+				   v60Count, transAconf, transBconf, transEDPconf);
+
+			// DDI function control for each transcoder
+			uint32_t transA_ddi = MellowCore::callback->readReg32(0x60400);  // TRANS_DDI_FUNC_CTL_A
+			uint32_t transEDP_ddi = MellowCore::callback->readReg32(0x6F400); // TRANS_DDI_FUNC_CTL_EDP
+			SYSLOG("mellow", "V88[%d]: TransA_DDI=0x%x TransEDP_DDI=0x%x",
+				   v60Count, transA_ddi, transEDP_ddi);
+
+			// Pipe status — check for underruns
+			uint32_t pipeStatA = MellowCore::callback->readReg32(0x70024);  // PIPE_STATUS_A (or PIPEASTAT)
+			// DSB control
+			uint32_t dsbCtl = MellowCore::callback->readReg32(0x70840);  // DSB_CTRL pipe A
+			// PLANE_COLOR_CTL
+			uint32_t planeColorCtl = MellowCore::callback->readReg32(0x701CC);
+			SYSLOG("mellow", "V88[%d]: PIPE_STAT=0x%x DSB_CTL=0x%x COLOR_CTL=0x%x",
+				   v60Count, pipeStatA, dsbCtl, planeColorCtl);
+
+			// Plane 1 KEY registers
+			uint32_t plKeyVal = MellowCore::callback->readReg32(0x70194);   // PLANE_KEYVAL
+			uint32_t plKeyMax = MellowCore::callback->readReg32(0x70198);   // PLANE_KEYMSK (or MAX)
+			uint32_t plOffset = MellowCore::callback->readReg32(0x701A4);   // PLANE_OFFSET
+			uint32_t plAuxSurf = MellowCore::callback->readReg32(0x701A0);  // PLANE_AUX_SURF
+			SYSLOG("mellow", "V88[%d]: KEYVAL=0x%x KEYMSK=0x%x OFFSET=0x%x AUX=0x%x",
+				   v60Count, plKeyVal, plKeyMax, plOffset, plAuxSurf);
+		}
+
+		// 2. Flush GGTT TLB (GFX_FLSH_CNTL_GEN6 = 0x101008)
+		MellowCore::callback->writeReg32(0x101008, 0x1);
+		// Wait for flush to complete (bit 0 clears when done)
+		for (int i = 0; i < 100; i++) {
+			if (!(MellowCore::callback->readReg32(0x101008) & 1)) break;
+		}
+
+		// 3. Fill with 4 COLOR BANDS (different color per screen quarter)
+		//    2560x1600 @ 4BPP, stride=10240B, 1600 lines total
+		//    Each page = 4096B. Lines/page = 4096/10240 ≈ 0.4
+		//    Pages per quarter = 4000/4 = 1000
+		int filled = 0, failed = 0, skipped = 0;
+		uint32_t firstPx = 0;
+		uint64_t firstPhys = 0;
+
+		for (int p = 0; p < 4000; p++) {
+			uint32_t lo = MellowCore::callback->readReg32(GGTT_PTE_LO(surfPage + p));
+			uint32_t hi = MellowCore::callback->readReg32(GGTT_PTE_HI(surfPage + p));
+			uint64_t phys = (((uint64_t)hi << 32) | lo) & 0x0000FFFFFFFFF000ULL;
+			if (!(lo & 1) || phys == 0) { failed++; continue; }
+			if (phys < 0x40000000ULL) { skipped++; continue; }
+
+			// Choose color by screen quarter
+			uint32_t color;
+			if (p < 1000)      color = 0xFFFF0000;  // RED    (top)
+			else if (p < 2000) color = 0xFF00FF00;  // GREEN  (2nd)
+			else if (p < 3000) color = 0xFF0000FF;  // BLUE   (3rd)
+			else               color = 0xFFFFFFFF;  // WHITE  (bottom)
+
+			auto *desc = IOMemoryDescriptor::withPhysicalAddress(
+				(IOPhysicalAddress)phys, 4096, kIODirectionInOut);
+			if (!desc) { failed++; continue; }
+			auto *map = desc->createMappingInTask(kernel_task, 0,
+				kIOMapAnywhere | kIOMapInhibitCache, 0, 4096);
+			if (map) {
+				volatile uint32_t *fb = (volatile uint32_t *)map->getVirtualAddress();
+				if (p == 0) {
+					firstPx = fb[0];
+					firstPhys = phys;
+					if (!v85PersistMap && v60Count >= 3) {
+						v85PersistMap = desc->createMappingInTask(kernel_task, 0,
+							kIOMapAnywhere | kIOMapInhibitCache, 0, 4096);
+						v85SurfAddr = surfAddr;
+					}
+				}
+				for (int px = 0; px < 1024; px++)
+					fb[px] = color;
+				filled++;
+				map->release();
+			} else { failed++; }
+			desc->release();
+		}
+
+		// 4. Re-arm PLANE_SURF (guard: zero -> GGTT[0] -> stolen mem -> MCE)
+		if (filled > 0 && surfAddr != 0)
+			MellowCore::callback->writeReg32(0x7019C, surfAddr);
+
+		// 5. On iteration 5: toggle plane OFF then ON (force re-init)
+		if (v60Count == 5 && filled > 0 && surfAddr != 0) {
+			uint32_t planCtl = MellowCore::callback->readReg32(0x70180);
+			// Disable plane (clear bit 31)
+			MellowCore::callback->writeReg32(0x70180, planCtl & ~0x80000000u);
+			MellowCore::callback->writeReg32(0x7019C, surfAddr); // commit disable
+			// Small delay — ~1000 register reads as delay
+			for (volatile int d = 0; d < 1000; d++)
+				MellowCore::callback->readReg32(0x70180);
+			// Re-enable plane with same settings
+			MellowCore::callback->writeReg32(0x70180, planCtl);
+			MellowCore::callback->writeReg32(0x7019C, surfAddr); // commit enable
+			SYSLOG("mellow", "V88[%d]: plane toggle OFF->ON CTL=0x%x", v60Count, planCtl);
+		}
+
+		if (v60Count <= 5 || v60Count == 10 || v60Count == 20) {
+			SYSLOG("mellow", "V88[%d]: SURF=0x%x filled=%d fail=%d skip=%d px0=0x%x phys=0x%llx",
+				   v60Count, surfAddr, filled, failed, skipped, firstPx,
+				   (unsigned long long)firstPhys);
+		}
+	}
+
+	// ── V68: Iteration 5 — deep probe e08obj + GGTT PTE check ──
+	// V67 proved: sched error clear sticks, but hardware ERROR_GEN6=0x7b recurs
+	// every ~10s independently. Need to find WHAT generates the error.
+	if (v60Count == 5) {
+		uint64_t schedObj = getMember<uint64_t>(svc, 0xe08);
+		if (schedObj) {
+			auto *objBase = reinterpret_cast<uint8_t *>(schedObj);
+			// V68: Dump e08obj bytes 0x100-0x200 — look for engine dead/reset flags
+			for (int i = 0; i < 32; i++) {
+				uint64_t val = *reinterpret_cast<uint64_t *>(objBase + 0x100 + i * 8);
+				if (val != 0) {
+					SYSLOG("mellow", "V68: e08deep[0x%03x]=0x%016llx", 0x100 + i * 8, (unsigned long long)val);
+				}
+			}
+			// V68: Check e08obj+0x200-0x300 — possible per-engine state arrays
+			for (int i = 0; i < 32; i++) {
+				uint64_t val = *reinterpret_cast<uint64_t *>(objBase + 0x200 + i * 8);
+				if (val != 0) {
+					SYSLOG("mellow", "V68: e08deep[0x%03x]=0x%016llx", 0x200 + i * 8, (unsigned long long)val);
+				}
+			}
+		}
+		// V68: Re-check scheduler error after V68 early clear at iter 1
+		uint64_t schedPtr = getMember<uint64_t>(svc, 0xe00);
+		if (schedPtr) {
+			auto *schedBase = reinterpret_cast<uint8_t *>(schedPtr);
+			uint32_t schedFlag = *reinterpret_cast<uint32_t *>(schedBase + 0x00);
+			uint32_t schedErr = *reinterpret_cast<uint32_t *>(schedBase + 0x0C);
+			SYSLOG("mellow", "V68: iter5 sched[0x00]=0x%x sched[0x0C]=0x%x (cleared at iter1)",
+				schedFlag, schedErr);
+		}
+		// V68: Read GGTT PTE for ring buffer page (ring base = acthd area)
+		// GGTT is accessed via aperture at BAR offset or via registers
+		// Read the first few GGTT PTEs to check format
+		uint32_t ringBase44k = 0x98 >> 12; // ring HEAD offset → page 0
+		// Read fence regs to check for GGTT format clues
+		uint32_t fence0 = MellowCore::callback->readReg32(0x100000); // First GGTT PTE
+		uint32_t fence1 = MellowCore::callback->readReg32(0x100004);
+		uint32_t fence2 = MellowCore::callback->readReg32(0x100008);
+		uint32_t fence3 = MellowCore::callback->readReg32(0x10000C);
+		SYSLOG("mellow", "V68: GGTT[0]=0x%x:%x GGTT[1]=0x%x:%x", fence1, fence0, fence3, fence2);
+		// Read TLB data again
+		uint32_t tlb0 = MellowCore::callback->readReg32(GEN8_FAULT_TLB_DATA0);
+		uint32_t tlb1 = MellowCore::callback->readReg32(GEN8_FAULT_TLB_DATA1);
+		uint32_t faultReg = MellowCore::callback->readReg32(GEN12_RING_FAULT_REG);
+		SYSLOG("mellow", "V68: FAULT=0x%x TLB0=0x%x TLB1=0x%x", faultReg, tlb0, tlb1);
+		// Check encodeFailureStack
+		uint32_t failCount = getMember<uint32_t>(svc, 0x1c50);
+		SYSLOG("mellow", "V68: encodeFailureStack count=%u", failCount);
+	}
+	
+	// V68: Iteration 10 — re-check e08obj + scheduler after error suppression
+	if (v60Count == 10) {
+		uint64_t schedObj = getMember<uint64_t>(svc, 0xe08);
+		if (schedObj) {
+			auto *objBase = reinterpret_cast<uint8_t *>(schedObj);
+			// Re-dump first 256 bytes to see if any state shifted
+			for (int i = 0; i < 32; i++) {
+				uint64_t val = *reinterpret_cast<uint64_t *>(objBase + i * 8);
+				if (val != 0) {
+					SYSLOG("mellow", "V68B: e08obj[0x%03x]=0x%016llx", i * 8, (unsigned long long)val);
+				}
+			}
+		}
+		uint64_t schedPtr = getMember<uint64_t>(svc, 0xe00);
+		if (schedPtr) {
+			auto *schedBase = reinterpret_cast<uint8_t *>(schedPtr);
+			// Dump non-zero fields in 0x000-0x400
+			for (int i = 0; i < 128; i++) {
+				uint64_t val = *reinterpret_cast<uint64_t *>(schedBase + i * 8);
+				if (val != 0) {
+					SYSLOG("mellow", "V68B: sched[0x%03x]=0x%016llx", i * 8, (unsigned long long)val);
+				}
+			}
+		}
+	}
+	
+	v60LastHead = rcsHead;
+	v60LastTail = rcsTail;
+	
+	// Re-arm: 60 iterations x 2s = 120s
+	// Each timer holds a retain on the IOService (param0 = svc).
+	auto *monSvc = static_cast<IOService *>(param0);
+	if (v60Count < 60) {
+		auto nextTimer = thread_call_allocate(v60GpuHealthMonitor, param0);
+		if (nextTimer) {
+			uint64_t deadline;
+			clock_interval_to_deadline(2, kSecondScale, &deadline);
+			thread_call_enter_delayed(nextTimer, deadline);
+			// retain is transferred to the next timer — do NOT release here
+		} else {
+			// alloc failed — release the retain we hold
+			monSvc->release();
+		}
+	} else {
+		SYSLOG("mellow", "V60M: complete — %d iterations, final HEAD=0x%x EXEC=0x%x ch=%d",
+			   v60Count, rcsHead, execStatus, childCount);
+		monSvc->release(); // last iteration — release the retain
+	}
+}
+
+// V74: Permanent EMR + GGTT enforcer — fires every 50ms for the lifetime of the GPU.
+//
+// WHY: On the non-real-TGL Ultra spoof path, Apple's AppleIntelTGLGraphics can
+// continuously rewrite
+// RING_EMR (Error Mask Register) for RCS and BCS back to a non-full-mask value, and also
+// re-maps GGTT[0] to the stolen-memory base. Both are fatal:
+//   - Un-masked EMR causes the GPU error interrupt to fire on every submitted command,
+//     preventing the display pipe from ever activating (all-black screen).
+//   - GGTT[0] → stolen mem causes a package-wide MCE if any GPU VA-0 access occurs.
+//
+// HOW: Apple writes EMR via direct GT MMIO (not through the hookable WriteRegister32
+// vtable), so we cannot intercept it. Instead we poll every 50ms and correct any
+// deviation. The timer re-arms itself indefinitely; it stops only if MMIO becomes
+// invalid (GPU teardown). Each timer instance holds a retain on the IOService and
+// transfers it to the next allocation to avoid UAF.
+//
+// WHAT it does each tick:
+//   1. Force RING_EMR(RCS) and RING_EMR(BCS) to 0xFFFFFFFF (all errors masked).
+//   2. Clear ERROR_GEN6 if non-zero.
+//   3. Re-enforce GGTT[0] → safe wired dummy page (V116, see below).
+void Gen11::v71EmrEnforcer(thread_call_param_t param0, thread_call_param_t param1) {
+	static int v71Count = 0;
+	v71Count++;
+
+	// V74 EMR-mask portion REMOVED (was: every 50ms force RING_EMR(RCS) and RING_EMR(BCS)
+	// to 0xFFFFFFFF, clear ERROR_GEN6). Pair-mate to V72R/V72W/V72F. With those three
+	// passthrough on the write paths but V74 still polling and rewriting EMR back to
+	// all-ones from a thread, the "no blanket EMR mask" experiment was incomplete.
+	// Now reads-only: log what Apple's actual EMR/ERROR values look like so we can
+	// see WHICH bits Apple unmasks and WHICH errors actually fire (instead of hiding
+	// them under a blanket 0xFFFFFFFF). The V116 GGTT[0] re-enforcer below is left
+	// intact — that prevents real MCE on stolen-mem GVA-0 access, not a hack.
+	uint32_t emrRcs = MellowCore::callback->readReg32(RING_EMR(RENDER_RING_BASE));
+	uint32_t emrBcs = MellowCore::callback->readReg32(RING_EMR(BLT_RING_BASE));
+	uint32_t err    = MellowCore::callback->readReg32(ERROR_GEN6);
+	if (v71Count <= 3 || (err != 0 && v71Count <= 50) ||
+	    ((emrRcs != 0xFFFFFFFF || emrBcs != 0xFFFFFFFF) && v71Count <= 50)) {
+		SYSLOG("mellow", "V74Ep[%d]: EMR_RCS=0x%x EMR_BCS=0x%x ERR=0x%x (V74 EMR mask removed)",
+		       v71Count, emrRcs, emrBcs, err);
+	}
+
+	// V80 legacy ownership mode: one-shot plane linearization at early boot.
+	// Runs only during the first 3 ticks (≤150ms after start) — this produces the
+	// brief display flash that was present before the start hook was active.
+	// After tick 3 WS has composited its first frame and owns those registers;
+	// continuing to write them causes WS crash-loop → watchdog KP at T+120s.
+	// -mellowv80l overrides to run continuously (for isolated plane-write testing only).
+	/*if (!MellowCore::callback->isRealTGL && isV60MonitorEnabled() &&
+	    (v71Count <= 3 || isV80LEnforcerEnabled())) {
+		uint32_t planCtl = MellowCore::callback->readReg32(0x70180); // PLANE_CTL
+		bool planeEnabled = !!(planCtl & 0x80000000u);
+		if (planeEnabled) {
+			uint32_t planStrd = MellowCore::callback->readReg32(0x70188); // PLANE_STRIDE
+			uint32_t planSurf = MellowCore::callback->readReg32(0x7019C); // PLANE_SURF
+			uint32_t tiling = (planCtl >> 10) & 0x7; // bits[12:10]
+			if (planSurf != 0 && tiling != 0) {
+				uint32_t newCtl = planCtl & ~(0x7u << 10); // clear tiling -> linear
+				uint32_t newStrd = planStrd;
+				if (tiling == 1) {
+					newStrd = planStrd * 8;
+				} else if (tiling == 4) {
+					newStrd = planStrd * 16;
+				}
+				MellowCore::callback->writeReg32(0x70180, newCtl);
+				MellowCore::callback->writeReg32(0x70188, newStrd);
+				MellowCore::callback->writeReg32(0x7019C, planSurf);
+				if (v71Count <= 20 || (v71Count % 20) == 0) {
+					SYSLOG("mellow", "V80L[%d]: tiling %u->linear CTL 0x%x->0x%x STRIDE 0x%x->0x%x SURF=0x%x",
+						   v71Count, tiling, planCtl, newCtl, planStrd, newStrd, planSurf);
+				}
+			} else if (planSurf != 0) {
+				MellowCore::callback->writeReg32(0x7019C, planSurf);
+				if (v71Count <= 20 || (v71Count % 20) == 0) {
+					SYSLOG("mellow", "V80L[%d]: already linear, SURF re-arm=0x%x", v71Count, planSurf);
+				}
+			}
+		}
+	}*/
+
+	// V116: Re-enforce GGTT[0] → safe wired dummy page every 50ms.
+	// Apple's TGL framebuffer driver re-writes GGTT[0] to the stolen-memory physical base
+	// during its internal GTT setup. Any GPU command that dereferences VA 0x0 then hits
+	// stolen memory, triggering an uncorrectable MCE (machine check exception) that kills
+	// the whole package. We restore GGTT[0] to a wired zero-page (allocated at start) on
+	// every enforcer tick so the stolen-mem mapping can never persist.
+	// PTE flags: bits[11:0]=0x9 → present | global (TGL/ICL GTT format, no cache attrs).
+	if (v116DummyPhys) {
+		uint32_t wantLo = (uint32_t)(v116DummyPhys & 0xFFFFF000ULL) | 0x9;
+		uint32_t cur0Lo = MellowCore::callback->readReg32(GGTT_PTE_LO(0));
+		if (cur0Lo != wantLo) {
+			uint32_t wantHi = (uint32_t)(v116DummyPhys >> 32);
+			MellowCore::callback->writeReg32(GGTT_PTE_LO(0), wantLo);
+			MellowCore::callback->writeReg32(GGTT_PTE_HI(0), wantHi);
+			MellowCore::callback->writeReg32(0x101008, 0x1);  // GGTT TLB flush
+			if (v71Count <= 10)
+				SYSLOG("mellow", "V116E[%d]: GGTT[0] restored (was 0x%x → 0x%x)",
+					   v71Count, cur0Lo, wantLo);
+		}
+	}
+
+	// V74: Re-arm FOREVER — never stop. 50ms interval.
+	// Each timer holds a retain on the IOService (param0). Pass the retain to the
+	// next timer so the IOService stays alive. If MMIO is gone (GPU tore down),
+	// stop re-arming and release the last retain to avoid UAF.
+	auto *emrSvc = static_cast<IOService *>(param0);
+	if (!MellowCore::callback->mmioValid()) {
+		// GPU torn down — stop timer loop and release the retain we hold.
+		SYSLOG("mellow", "V74E[%d]: MMIO gone, stopping EMR enforcer", v71Count);
+		emrSvc->release();
+		return;
+	}
+	auto nextTimer = thread_call_allocate(v71EmrEnforcer, param0);
+	if (nextTimer) {
+		uint64_t deadline;
+		clock_interval_to_deadline(50, kMillisecondScale, &deadline);
+		thread_call_enter_delayed(nextTimer, deadline);
+		// retain is transferred to the next timer — do NOT release here
+	} else {
+		// alloc failed — stop loop and release our retain
+		emrSvc->release();
+	}
+}
+
+// V85: Static member definitions for persistent FB mapping
+IOMemoryMap *Gen11::v85PersistMap = nullptr;
+uint32_t Gen11::v85SurfAddr = 0;
+
+// V116: Safe dummy page for GGTT[0] remap (prevents stolen-mem MCE on GPU VA 0 access)
+IOBufferMemoryDescriptor *Gen11::v116DummyBuf = nullptr;
+uint64_t Gen11::v116DummyPhys = 0;
+
+// Records successful IntelAccelerator::start(); it is not proof of GPU execution
+// or a replacement for a completed fence.
+volatile bool Gen11::gGfxAccelStartDone = false;
+
+// V54: IRQ watchdog — re-enables Master IRQ if the driver disables it during init.
+// Fires every 2s, up to 5 times (10s total), then stops.
+void Gen11::v54IrqWatchdog(thread_call_param_t param0, thread_call_param_t) {
+	static int v54WatchdogCount = 0;
+	v54WatchdogCount++;
+	
+	uint32_t mstrIrq = MellowCore::callback->readReg32(GEN11_GFX_MSTR_IRQ);
+	bool enabled = !!(mstrIrq & GEN11_MASTER_IRQ);
+	
+	if (!enabled) {
+		// Re-enable Master IRQ
+		MellowCore::callback->writeReg32(GEN11_GFX_MSTR_IRQ, GEN11_MASTER_IRQ);
+		IODelay(100);
+		uint32_t after = MellowCore::callback->readReg32(GEN11_GFX_MSTR_IRQ);
+		SYSLOG("mellow", "V54W[%d]: Master IRQ was DISABLED (0x%x) — re-enabled → 0x%x",
+			v54WatchdogCount, mstrIrq, after);
+	} else {
+		SYSLOG("mellow", "V54W[%d]: Master IRQ OK (0x%x)", v54WatchdogCount, mstrIrq);
+	}
+	
+	// V65: Continuously enforce RCS0 tier-1 interrupt enable during ring init window.
+	// V64 proved Apple's code leaves RCS0 DISABLED in RENDER_COPY_INTR_ENABLE.
+	// The ring activates between V54W[4]-V54W[5] (T+8-10s) — we must have this set BEFORE.
+	{
+		uint32_t rcIntrEn = MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE);
+		uint32_t wantBits = getV65Tier1WantBits(MellowCore::callback->isRealTGL);
+		bool rcsOk = !!(rcIntrEn & (1 << GEN11_RCS0));
+		if (!rcsOk) {
+			uint32_t newEn = rcIntrEn | wantBits;
+			MellowCore::callback->writeReg32(GEN11_RENDER_COPY_INTR_ENABLE, newEn);
+			SYSLOG("mellow", "V65W[%d]: RCS0 tier-1 DISABLED (0x%x) — enabled → 0x%x",
+				v54WatchdogCount, rcIntrEn,
+				MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE));
+		} else {
+			SYSLOG("mellow", "V65W[%d]: RCS0 tier-1 OK (0x%x)", v54WatchdogCount, rcIntrEn);
+		}
+		// Also enforce tier-2 unmask
+		uint32_t rcsMask = MellowCore::callback->readReg32(GEN11_RCS0_RSVD_INTR_MASK);
+		uint32_t wantUnmasked = GT_CONTEXT_SWITCH_INTERRUPT | GT_RENDER_USER_INTERRUPT;
+		if (rcsMask & wantUnmasked) {
+			uint32_t newMask = rcsMask & ~wantUnmasked;
+			MellowCore::callback->writeReg32(GEN11_RCS0_RSVD_INTR_MASK, newMask);
+			SYSLOG("mellow", "V65W[%d]: RCS mask fix 0x%x->0x%x", v54WatchdogCount, rcsMask, newMask);
+		}
+		// V65: Proactively clear ERROR_GEN6 to prevent error handler from killing engine
+		uint32_t errNow = MellowCore::callback->readReg32(ERROR_GEN6);
+		if (errNow) {
+			MellowCore::callback->writeReg32(ERROR_GEN6, 0x0);
+			SYSLOG("mellow", "V65W[%d]: cleared ERROR_GEN6=0x%x", v54WatchdogCount, errNow);
+		}
+	}
+	
+	// Also dump quick GPU state for diagnostics
+	SYSLOG("mellow", "V54W[%d]: RCS CTL=0x%x HEAD=0x%x TAIL=0x%x ERROR_GEN6=0x%x",
+		v54WatchdogCount,
+		MellowCore::callback->readReg32(RING_CTL(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_HEAD(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(RING_TAIL(RENDER_RING_BASE)),
+		MellowCore::callback->readReg32(ERROR_GEN6));
+	
+	// Re-arm for up to 5 iterations
+	if (v54WatchdogCount < 5) {
+		// Allocate a fresh timer call for the next iteration
+		auto nextTimer = thread_call_allocate(v54IrqWatchdog, nullptr);
+		if (nextTimer) {
+			uint64_t deadline;
+			clock_interval_to_deadline(2, kSecondScale, &deadline);
+			thread_call_enter_delayed(nextTimer, deadline);
+		}
+	} else {
+		SYSLOG("mellow", "V54W: watchdog complete after %d iterations", v54WatchdogCount);
+	}
+}
+// V44: Bundle/property logging helper — logs Metal/GL/VA bundle names after a delay.
+static const char *v44SafeCString(OSString *str) {
+    if (!str) {
+        return "MISSING";
+    }
+    auto *cstr = str->getCStringNoCopy();
+    return cstr ? cstr : "<null-cstr>";
+}
+
+static void v44DelayedBundleLog(thread_call_param_t p0, thread_call_param_t p1) {
+    auto *svc = static_cast<IOService *>(p0);
+    unsigned delayMs = (unsigned)(uintptr_t)p1;
+
+    auto *metalProp = OSDynamicCast(OSString, svc->getProperty("MetalPluginName"));
+    auto *glProp    = OSDynamicCast(OSString, svc->getProperty("IOGLBundleName"));
+    auto *dvdProp   = OSDynamicCast(OSString, svc->getProperty("IODVDBundleName"));
+    auto *accelBid  = OSDynamicCast(OSString, svc->getProperty("AcceleratorBundleIdentifier"));
+    auto *fbBid     = OSDynamicCast(OSString, svc->getProperty("FramebufferBundleIdentifier"));
+    auto *vaRIDProp = OSDynamicCast(OSNumber, svc->getProperty("IOVARendererID"));
+
+    SYSLOG("mellow", "V44: T+%ums MetalPlugin=%s GL=%s DVD=%s VARendID=0x%x",
+           delayMs,
+           v44SafeCString(metalProp),
+           v44SafeCString(glProp),
+           v44SafeCString(dvdProp),
+           vaRIDProp ? (uint32_t)vaRIDProp->unsigned32BitValue() : 0);
+    SYSLOG("mellow", "V44: T+%ums AcceleratorBundleIdentifier=%s FramebufferBundleIdentifier=%s",
+           delayMs,
+           v44SafeCString(accelBid),
+           v44SafeCString(fbBid));
+
+    // Release retain acquired by scheduler helper.
+    svc->release();
+}
+
+static void v44ScheduleBundleLog(void *accelInstance, unsigned delayMs) {
+    auto *svc = static_cast<IOService *>(accelInstance);
+    svc->retain();
+
+    thread_call_t tc = thread_call_allocate(v44DelayedBundleLog,
+                                        static_cast<thread_call_param_t>(svc));
+    if (tc) {
+        uint64_t deadline;
+        clock_interval_to_deadline(delayMs, kMillisecondScale, &deadline);
+        thread_call_enter1_delayed(tc,
+                                   (thread_call_param_t)(uintptr_t)delayMs,
+                                   deadline);
+    } else {
+        svc->release();
+    }
+}
+
+int Gen11::wrapPmNotifyWrapper(unsigned int a0, unsigned int a1, unsigned long long *a2, unsigned int *freq) {
+	
+	/*struct intel_rps_freq_caps *caps;
+	
+	caps->rp0_freq *= GEN9_FREQ_SCALER;
+	caps->rp1_freq *= GEN9_FREQ_SCALER;
+	caps->min_freq *= GEN9_FREQ_SCALER;
+	
+	uint32_t mult=GEN9_FREQ_SCALER;
+	uint32_t ddcc_status = 0;
+	
+	*freq =caps->rp1_freq;
+	return 0;*/
+	
+	uint32_t cfreq = 0;
+
+	FunctionCast(wrapPmNotifyWrapper, callback->orgPmNotifyWrapper)(a0, a1, a2, &cfreq);
+	
+	if (!callback->freq_max) {
+		callback->freq_max = wrapReadRegister32(callback->framecont, GEN6_RP_STATE_CAP) & 0xFF;
+
+	}
+	
+	*freq = (GEN9_FREQ_SCALER << GEN9_FREQUENCY_SHIFT) * callback->freq_max;
+	return 0;
+}
+
+bool Gen11::patchRCSCheck(mach_vm_address_t& start) {
+	constexpr unsigned ninsts_max {256};
+	
+	hde64s dis;
+	
+	bool found_cmp = false;
+	bool found_jmp = false;
+
+	for (size_t i = 0; i < ninsts_max; i++) {
+		auto sz = Disassembler::hdeDisasm(start, &dis);
+
+		if (dis.flags & F_ERROR) {
+			break;
+		}
+
+		/* cmp byte ptr [rcx], 0 */
+		if (!found_cmp && dis.opcode == 0x80 && dis.modrm_reg == 7 && dis.modrm_rm == 1)
+			found_cmp = true;
+		/* jnz rel32 */
+		if (found_cmp && dis.opcode == 0x0f && dis.opcode2 == 0x85) {
+			found_jmp = true;
+			break;
+		}
+
+		start += sz;
+	}
+	
+	if (found_jmp) {
+		auto status = MachInfo::setKernelWriting(true, KernelPatcher::kernelWriteLock);
+		if (status == KERN_SUCCESS) {
+			constexpr uint8_t nop6[] {0x90, 0x90, 0x90, 0x90, 0x90, 0x90};
+			lilu_os_memcpy(reinterpret_cast<void*>(start), nop6, arrsize(nop6));
+			MachInfo::setKernelWriting(false, KernelPatcher::kernelWriteLock);
+			return true;
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Port of i915 force wake for Gen12 (TGL/ADL/RPL).
+ * Replaces IntelAccelerator::SafeForceWakeMultithreaded.
+ *
+ * Differences from Apple's code:
+ * 1. 50 ms ACK timeouts (Apple uses 90 ms) — https://patchwork.kernel.org/patch/7057561/
+ * 2. Reserve-bit fallback on primary ACK timeout — https://patchwork.kernel.org/patch/10029821/
+ * 3. Correct Gen9-style 3-domain iteration matching Apple's dom bitmask
+ *    (dom: bit0=Render, bit1=Media, bit2=Blitter/GT)
+ *
+ * NOTE: The header's regForDom/ackForDom use Gen11+ domain bitmask IDs
+ * (FORCEWAKE_RENDER=1=Render, FORCEWAKE_GT=2, FORCEWAKE_MEDIA=4) which does NOT
+ * match Apple's 3-bit dom (1=Render, 2=Media, 4=Blitter). We use direct register
+ * mapping here to match Apple's convention, same as WEG's ForceWakeWorkaround.
+ */
+
+// Map Apple's 3-bit domain to MMIO request register (Render + GT/Blitter same Gen9-Gen12)
+static uint32_t fwReqReg(unsigned d) {
+	if (d == DOM_RENDER)  return FORCEWAKE_RENDER_GEN9;   // 0xa278
+	if (d == DOM_BLITTER) return FORCEWAKE_BLITTER_GEN9;  // 0xa188
+	return 0;  // Media uses Gen11+ per-engine registers, handled separately
+}
+
+// Map Apple's 3-bit domain to MMIO ACK register (Render + GT/Blitter same Gen9-Gen12)
+static uint32_t fwAckReg(unsigned d) {
+	if (d == DOM_RENDER)  return FORCEWAKE_ACK_RENDER_GEN9;   // 0x0D84
+	if (d == DOM_BLITTER) return FORCEWAKE_ACK_BLITTER_GEN9;  // 0x130044
+	return 0;
+}
+
+// Gen12 Media ForceWake: per-engine register pairs (VDBOX + VEBOX)
+struct FwMediaEngine {
+	uint32_t req;
+	uint32_t ack;
+	const char *name;
+};
+static const FwMediaEngine fwMediaEngines[] = {
+	{ FORCEWAKE_MEDIA_VDBOX_GEN11(0), FORCEWAKE_ACK_MEDIA_VDBOX_GEN11(0), "VDBOX0" },  // 0xa540 / 0x0D50
+	{ FORCEWAKE_MEDIA_VEBOX_GEN11(0), FORCEWAKE_ACK_MEDIA_VEBOX_GEN11(0), "VEBOX0" },  // 0xa560 / 0x0D70
+};
+
+void Gen11::wrapSafeForceWake(void *that, bool set, uint32_t dom) {
+	forceWake(that, set, dom, 1);  // forward to our forceWake with ctx=1 (normal, non-IRQ)
+}
+
+void Gen11::forceWake(void *that, bool set, uint32_t dom, uint8_t ctx) {
+	// V61: silenced per-call logging — was flooding Lilu circular buffer (384+ entries/boot)
+	// preventing V60M health monitor and delayed child check entries from surviving
+	
+	// ── Hangcheck: dump GPU state once after stamp-timeout restart ──
+	// During init, ~14 forceWake calls happen. After IOAcceleratorFamily2 submits
+	// work and the stamp times out (~5s later), a burst of restart-related calls
+	// occurs. Dump full RCS/BCS state once on the 30th call to capture post-hang state.
+	static int fwCallCount = 0;
+	static bool hangcheckDumped = false;
+	fwCallCount++;
+	
+	if (!hangcheckDumped && fwCallCount == 15) {
+		hangcheckDumped = true;
+		SYSLOG("mellow", "=== HANGCHECK: GPU state dump (fwCall=%d) ===", fwCallCount);
+		
+		// Acquire both Render + Blitter ForceWake for reliable reads
+		MellowCore::callback->writeReg32(FORCEWAKE_RENDER_GEN9, (1 << 16) | 1);
+		MellowCore::callback->writeReg32(FORCEWAKE_BLITTER_GEN9, (1 << 16) | 1);
+		IODelay(1000);
+		
+		SYSLOG("mellow", "HANGCHECK ForceWake ACK: Render=0x%x Blitter=0x%x",
+			MellowCore::callback->readReg32(FORCEWAKE_ACK_RENDER_GEN9),
+			MellowCore::callback->readReg32(FORCEWAKE_ACK_BLITTER_GEN9));
+		
+		// RCS ring state
+		SYSLOG("mellow", "HANGCHECK RCS HEAD=0x%x TAIL=0x%x CTL=0x%x START=0x%x",
+			MellowCore::callback->readReg32(RING_HEAD(RENDER_RING_BASE)),
+			MellowCore::callback->readReg32(RING_TAIL(RENDER_RING_BASE)),
+			MellowCore::callback->readReg32(RING_CTL(RENDER_RING_BASE)),
+			MellowCore::callback->readReg32(RING_START(RENDER_RING_BASE)));
+		SYSLOG("mellow", "HANGCHECK RCS ACTHD=0x%x:%08x IPEHR=0x%x",
+			MellowCore::callback->readReg32(RING_ACTHD_UDW(RENDER_RING_BASE)),
+			MellowCore::callback->readReg32(RING_ACTHD(RENDER_RING_BASE)),
+			MellowCore::callback->readReg32(RING_IPEHR(RENDER_RING_BASE)));
+		SYSLOG("mellow", "HANGCHECK RCS INSTDONE=0x%x DMA_FADD=0x%x:%08x",
+			MellowCore::callback->readReg32(RING_INSTDONE(RENDER_RING_BASE)),
+			MellowCore::callback->readReg32(RING_DMA_FADD_UDW(RENDER_RING_BASE)),
+			MellowCore::callback->readReg32(RING_DMA_FADD(RENDER_RING_BASE)));
+		SYSLOG("mellow", "HANGCHECK RCS EIR=0x%x ESR=0x%x EMR=0x%x",
+			MellowCore::callback->readReg32(RING_EIR(RENDER_RING_BASE)),
+			MellowCore::callback->readReg32(RING_ESR(RENDER_RING_BASE)),
+			MellowCore::callback->readReg32(RING_EMR(RENDER_RING_BASE)));
+		// V203: EXECLIST_STATUS is a 64-bit context descriptor echo.
+		// LRCA GGTT byte address = full64 & ~0xFFF  (bits[11:0] are context flags).
+		// Must combine both words — the upper 12 bits of the GGTT address live in elsHi bits[11:0].
+		// RING_MODE bit15 = GFX_RUN_LIST_ENABLE; if 0, ExecList submissions are silently dropped.
+		{
+			uint32_t rcsMode = MellowCore::callback->readReg32(RING_MODE(RENDER_RING_BASE));
+			SYSLOG("mellow", "HANGCHECK V205: RING_MODE=0x%x GFX_RUN_LIST_ENABLE=%d",
+				rcsMode, !!(rcsMode & (1u << 15)));
+			uint32_t elsLo = MellowCore::callback->readReg32(RING_EXECLIST_STATUS(RENDER_RING_BASE));
+			uint32_t elsHi = MellowCore::callback->readReg32(RENDER_RING_BASE + 0x238);
+			uint32_t hws   = MellowCore::callback->readReg32(RING_HWS_PGA(RENDER_RING_BASE));
+			// Correct LRCA extraction: descriptor is 64-bit, LRCA = full64 & ~0xFFF.
+			// Using only elsLo gives the wrong address (e.g. 0x18000 instead of 0x40018000).
+			uint64_t fullDesc = ((uint64_t)elsHi << 32) | elsLo;
+			uint32_t lrcaGgtt = (uint32_t)(fullDesc & ~0xFFFULL);
+			SYSLOG("mellow", "HANGCHECK RCS EXECLIST_STATUS=0x%08x:%08x lrca_ggtt=0x%x HWS_PGA=0x%x",
+				elsHi, elsLo, lrcaGgtt, hws);
+			// V204: Context Status Buffer — each entry records what happened to submitted contexts.
+			// Entry status bits[2:0]: 1=idle, 2=active, 4=preempted, 8=element-switch, 0x10=complete.
+			// wr_ptr advances after each event; rd_ptr is the software "consumed up to here" pointer.
+			{
+				uint32_t csp = MellowCore::callback->readReg32(RING_CONTEXT_STATUS_PTR(RENDER_RING_BASE));
+				uint32_t wrPtr = (csp >> 8) & 0x7;
+				uint32_t rdPtr = csp & 0x7;
+				SYSLOG("mellow", "HANGCHECK V204: CSB CTX_STATUS_PTR=0x%x wr=%d rd=%d",
+					csp, wrPtr, rdPtr);
+				for (int i = 0; i < 6; i++) {
+					uint32_t csbHi = MellowCore::callback->readReg32(RING_CONTEXT_STATUS_BUF_HI(RENDER_RING_BASE, i));
+					uint32_t csbLo = MellowCore::callback->readReg32(RING_CONTEXT_STATUS_BUF(RENDER_RING_BASE, i));
+					SYSLOG("mellow", "HANGCHECK V204: CSB[%d]=%08x:%08x ctx_id=%d status=0x%x%s",
+						i, csbHi, csbLo,
+						(csbLo >> 8) & 0xFF,
+						csbLo & 0xFF,
+						(csbLo & 0x10) ? " COMPLETE" :
+						(csbLo & 0x08) ? " ELEMENT_SWITCH" :
+						(csbLo & 0x04) ? " PREEMPTED" :
+						(csbLo & 0x02) ? " ACTIVE" :
+						(csbLo & 0x01) ? " IDLE" : " (empty/unknown)");
+				}
+			}
+			// V204: Read PTE for the HWS page — if HWS isn't mapped, CS completion writes fault.
+			// Also read PTE for the legacy RING_START page (the preamble ring buffer).
+			if (hws) {
+				uint32_t hwsPg  = hws >> 12;
+				uint32_t hwsPLo = MellowCore::callback->readReg32(GGTT_PTE_LO(hwsPg));
+				uint32_t hwsPHi = MellowCore::callback->readReg32(GGTT_PTE_HI(hwsPg));
+				SYSLOG("mellow", "HANGCHECK V204: HWS PTE[page 0x%x]=%08x:%08x present=%d llc=%d",
+					hwsPg, hwsPHi, hwsPLo, hwsPLo & 1, (hwsPLo >> 3) & 1);
+			} else {
+				SYSLOG("mellow", "HANGCHECK V204: HWS_PGA=0 (status page NOT set up!)");
+			}
+			{
+				uint32_t rStart = MellowCore::callback->readReg32(RING_START(RENDER_RING_BASE));
+				uint32_t rHead  = MellowCore::callback->readReg32(RING_HEAD(RENDER_RING_BASE));
+				if (rStart) {
+					uint32_t rPg  = rStart >> 12;
+					uint32_t rPLo = MellowCore::callback->readReg32(GGTT_PTE_LO(rPg));
+					uint32_t rPHi = MellowCore::callback->readReg32(GGTT_PTE_HI(rPg));
+					SYSLOG("mellow", "HANGCHECK V204: RING_START PTE[page 0x%x]=%08x:%08x present=%d llc=%d",
+						rPg, rPHi, rPLo, rPLo & 1, (rPLo >> 3) & 1);
+					// Dump the preamble ring: HEAD bytes already executed — these are the
+					// exact commands Apple submitted. IPEHR=last command pipelined.
+					MellowCore::callback->setApertureIfNecessary();
+					if (MellowCore::callback->aperturePtr && MellowCore::callback->apertureLen >= 0x2000 && (rPLo & 1)) {
+						volatile uint32_t *ap = MellowCore::callback->aperturePtr;
+						uint32_t saveLo = MellowCore::callback->readReg32(GGTT_PTE_LO(0));
+						uint32_t saveHi = MellowCore::callback->readReg32(GGTT_PTE_HI(0));
+						MellowCore::callback->writeReg32(GGTT_PTE_LO(0), rPLo);
+						MellowCore::callback->writeReg32(GGTT_PTE_HI(0), rPHi);
+						MellowCore::callback->writeReg32(0x101008, 0x1);
+						uint32_t dumpDW = (rHead + 0x3F) / 4;  // round HEAD up to nearest 16 DW
+						if (dumpDW < 16) dumpDW = 16;
+						if (dumpDW > 64) dumpDW = 64;
+						SYSLOG("mellow", "HANGCHECK V204: preamble ring [0..0x%x] (HEAD=0x%x IPEHR=0x%x):",
+							dumpDW*4 - 1, rHead,
+							MellowCore::callback->readReg32(RING_IPEHR(RENDER_RING_BASE)));
+						for (uint32_t i = 0; i < dumpDW; i += 4)
+							SYSLOG("mellow", "HANGCHECK V204: ring[%02d-%02d] +0x%02x: %08x %08x %08x %08x",
+								i, i+3, i*4, ap[i], ap[i+1], ap[i+2], ap[i+3]);
+						MellowCore::callback->writeReg32(GGTT_PTE_LO(0), saveLo);
+						MellowCore::callback->writeReg32(GGTT_PTE_HI(0), saveHi);
+						MellowCore::callback->writeReg32(0x101008, 0x1);
+					}
+				}
+			}
+			// V205: Dump LRCA via aperture remap — no IOMappedRead32, no PTE range issue.
+			// Temporarily point GGTT page 0 at each LRCA page, read via aperturePtr[0],
+			// then restore. GPU is hung so clobbering GGTT[0] momentarily is safe.
+			if (lrcaGgtt) {
+				uint32_t lPg0 = lrcaGgtt >> 12;
+				uint32_t lPg1 = lPg0 + 1;
+				uint32_t p0Lo = MellowCore::callback->readReg32(GGTT_PTE_LO(lPg0));
+				uint32_t p0Hi = MellowCore::callback->readReg32(GGTT_PTE_HI(lPg0));
+				uint32_t p1Lo = MellowCore::callback->readReg32(GGTT_PTE_LO(lPg1));
+				uint32_t p1Hi = MellowCore::callback->readReg32(GGTT_PTE_HI(lPg1));
+				SYSLOG("mellow", "HANGCHECK V205: LRCA ggtt=0x%x pg0 PTE=%08x:%08x present=%d | pg1 PTE=%08x:%08x present=%d",
+					lrcaGgtt, p0Hi, p0Lo, p0Lo & 1, p1Hi, p1Lo, p1Lo & 1);
+				MellowCore::callback->setApertureIfNecessary();
+				if (MellowCore::callback->aperturePtr && MellowCore::callback->apertureLen >= 0x2000 &&
+				    (p0Lo & 1) && (p1Lo & 1))
+				{
+					volatile uint32_t *ap = MellowCore::callback->aperturePtr;
+					uint32_t saveLo = MellowCore::callback->readReg32(GGTT_PTE_LO(0));
+					uint32_t saveHi = MellowCore::callback->readReg32(GGTT_PTE_HI(0));
+					// Remap GGTT[0] → LRCA page0 (PPHWSP)
+					MellowCore::callback->writeReg32(GGTT_PTE_LO(0), p0Lo);
+					MellowCore::callback->writeReg32(GGTT_PTE_HI(0), p0Hi);
+					MellowCore::callback->writeReg32(0x101008, 0x1);
+					SYSLOG("mellow", "HANGCHECK V205: LRCA page0 (PPHWSP) DW0..31:");
+					for (int i = 0; i < 8; i++)
+						SYSLOG("mellow", "HANGCHECK V205: LRCA[%02d-%02d] %08x %08x %08x %08x",
+							i*4, i*4+3, ap[i*4], ap[i*4+1], ap[i*4+2], ap[i*4+3]);
+					// Remap GGTT[0] → LRCA page1 (ctx-reg-image)
+					MellowCore::callback->writeReg32(GGTT_PTE_LO(0), p1Lo);
+					MellowCore::callback->writeReg32(GGTT_PTE_HI(0), p1Hi);
+					MellowCore::callback->writeReg32(0x101008, 0x1);
+					SYSLOG("mellow", "HANGCHECK V205: LRCA page1 (ctx-reg-image) DW0..63:");
+					for (int i = 0; i < 16; i++)
+						SYSLOG("mellow", "HANGCHECK V205: LRCA+1K[%02d-%02d] %08x %08x %08x %08x",
+							i*4, i*4+3, ap[i*4], ap[i*4+1], ap[i*4+2], ap[i*4+3]);
+					// Restore GGTT[0]
+					MellowCore::callback->writeReg32(GGTT_PTE_LO(0), saveLo);
+					MellowCore::callback->writeReg32(GGTT_PTE_HI(0), saveHi);
+					MellowCore::callback->writeReg32(0x101008, 0x1);
+				} else {
+					SYSLOG("mellow", "HANGCHECK V205: remap skipped aper=%s len=0x%llx p0=%d p1=%d",
+						MellowCore::callback->aperturePtr ? "ok" : "null",
+						(unsigned long long)MellowCore::callback->apertureLen,
+						p0Lo & 1, p1Lo & 1);
+				}
+			}
+		}
+
+		// V206: Dump preamble stamp target pages (GPU addr 0x40000000 / 0x40001200).
+		// PC1 writes 0 → GGTT[0x40000]+0, PC2 writes stamp value 2 → GGTT[0x40001]+0x200.
+		// If either PTE is invalid the PIPE_CONTROL write silently drops and
+		// fwWaitForHardwareRegisterValue polls forever.
+		{
+			MellowCore::callback->setApertureIfNecessary();
+			auto *apcb = MellowCore::callback;
+			if (apcb->aperturePtr && apcb->apertureLen >= 0x1000) {
+				volatile uint32_t *ap = apcb->aperturePtr;
+				uint32_t saveLo = apcb->readReg32(GGTT_PTE_LO(0));
+				uint32_t saveHi = apcb->readReg32(GGTT_PTE_HI(0));
+
+				// PC1 clear target: GGTT[0x40000]
+				uint32_t pc1Lo = apcb->readReg32(GGTT_PTE_LO(0x40000));
+				uint32_t pc1Hi = apcb->readReg32(GGTT_PTE_HI(0x40000));
+				SYSLOG("mellow", "HANGCHECK V206: stamp PC1 GGTT[0x40000] PTE=%08x:%08x present=%d llc=%d",
+					pc1Hi, pc1Lo, pc1Lo & 1, (pc1Lo >> 3) & 1);
+				if (pc1Lo & 1) {
+					asm volatile("wbinvd" ::: "memory");
+					apcb->writeReg32(GGTT_PTE_LO(0), pc1Lo);
+					apcb->writeReg32(GGTT_PTE_HI(0), pc1Hi);
+					apcb->writeReg32(0x101008, 0x1);
+					SYSLOG("mellow", "HANGCHECK V206: GGTT[0x40000] DW[0..3]=%08x %08x %08x %08x",
+						ap[0], ap[1], ap[2], ap[3]);
+				}
+
+				// PC2 stamp target: GGTT[0x40001] + 0x200 = DW[0x80]
+				uint32_t pc2Lo = apcb->readReg32(GGTT_PTE_LO(0x40001));
+				uint32_t pc2Hi = apcb->readReg32(GGTT_PTE_HI(0x40001));
+				SYSLOG("mellow", "HANGCHECK V206: stamp PC2 GGTT[0x40001] PTE=%08x:%08x present=%d llc=%d",
+					pc2Hi, pc2Lo, pc2Lo & 1, (pc2Lo >> 3) & 1);
+				if (pc2Lo & 1) {
+					asm volatile("wbinvd" ::: "memory");
+					apcb->writeReg32(GGTT_PTE_LO(0), pc2Lo);
+					apcb->writeReg32(GGTT_PTE_HI(0), pc2Hi);
+					apcb->writeReg32(0x101008, 0x1);
+					// DW[0x80] = offset 0x200 = the stamp value written by PC2
+					SYSLOG("mellow", "HANGCHECK V206: GGTT[0x40001] DW[0x7e..0x81]=%08x %08x %08x %08x (stamp@DW[0x80]=%08x)",
+						ap[0x7e], ap[0x7f], ap[0x80], ap[0x81], ap[0x80]);
+				}
+
+				apcb->writeReg32(GGTT_PTE_LO(0), saveLo);
+				apcb->writeReg32(GGTT_PTE_HI(0), saveHi);
+				apcb->writeReg32(0x101008, 0x1);
+			} else {
+				SYSLOG("mellow", "HANGCHECK V206: aperture unavailable — skipping stamp target dump");
+			}
+		}
+
+		// BCS ring state (with proper Blitter ForceWake held!)
+		SYSLOG("mellow", "HANGCHECK BCS HEAD=0x%x TAIL=0x%x CTL=0x%x START=0x%x",
+			MellowCore::callback->readReg32(RING_HEAD(BLT_RING_BASE)),
+			MellowCore::callback->readReg32(RING_TAIL(BLT_RING_BASE)),
+			MellowCore::callback->readReg32(RING_CTL(BLT_RING_BASE)),
+			MellowCore::callback->readReg32(RING_START(BLT_RING_BASE)));
+		SYSLOG("mellow", "HANGCHECK BCS HWS_PGA=0x%x ACTHD=0x%x:%08x",
+			MellowCore::callback->readReg32(RING_HWS_PGA(BLT_RING_BASE)),
+			MellowCore::callback->readReg32(RING_ACTHD_UDW(BLT_RING_BASE)),
+			MellowCore::callback->readReg32(RING_ACTHD(BLT_RING_BASE)));
+		SYSLOG("mellow", "HANGCHECK BCS IPEHR=0x%x INSTDONE=0x%x",
+			MellowCore::callback->readReg32(RING_IPEHR(BLT_RING_BASE)),
+			MellowCore::callback->readReg32(RING_INSTDONE(BLT_RING_BASE)));
+		SYSLOG("mellow", "HANGCHECK BCS EIR=0x%x ESR=0x%x EMR=0x%x",
+			MellowCore::callback->readReg32(RING_EIR(BLT_RING_BASE)),
+			MellowCore::callback->readReg32(RING_ESR(BLT_RING_BASE)),
+			MellowCore::callback->readReg32(RING_EMR(BLT_RING_BASE)));
+		
+		// Global error state
+		SYSLOG("mellow", "HANGCHECK ERROR_GEN6=0x%x RING_FAULT=0x%x",
+			MellowCore::callback->readReg32(0x40A0),
+			MellowCore::callback->readReg32(0xCEC4));
+		SYSLOG("mellow", "HANGCHECK FAULT_TLB0=0x%x TLB1=0x%x",
+			MellowCore::callback->readReg32(0x4B10),
+			MellowCore::callback->readReg32(0x4B14));
+		SYSLOG("mellow", "HANGCHECK GT_INTR_DW0=0x%x DW1=0x%x",
+			MellowCore::callback->readReg32(0x190018),
+			MellowCore::callback->readReg32(0x19001C));
+		
+		// V47: RING_TIMESTAMP — check if GPU engines have processed any commands
+		// Timestamp increments with GPU clock whenever the engine is active.
+		// If it's 0 or unchanged from start, the engine never executed anything.
+		SYSLOG("mellow", "HANGCHECK V47: RCS RING_TIMESTAMP=0x%x BCS RING_TIMESTAMP=0x%x",
+			MellowCore::callback->readReg32(RENDER_RING_BASE + 0x358),
+			MellowCore::callback->readReg32(BLT_RING_BASE + 0x358));
+		
+		// V47: Re-check GFX_MSTR_IRQ — did someone disable master interrupt since start?
+		uint32_t hcMstr = MellowCore::callback->readReg32(GEN11_GFX_MSTR_IRQ);
+		SYSLOG("mellow", "HANGCHECK V47: GFX_MSTR_IRQ=0x%x (bit31=%d)", hcMstr, !!(hcMstr & GEN11_MASTER_IRQ));
+		if (!(hcMstr & GEN11_MASTER_IRQ)) {
+			SYSLOG("mellow", "HANGCHECK V47: Master IRQ disabled! Re-enabling...");
+			MellowCore::callback->writeReg32(GEN11_GFX_MSTR_IRQ, GEN11_MASTER_IRQ);
+		}
+
+		// V202: GGTT PTE verification — ForceWake is held so reads are reliable.
+		// GGTT[0] (stolen memory base) MUST have a valid PTE — if it shows 0 here
+		// then either stolen memory was never mapped (fatal) or the base address is wrong.
+		// PLANE_SURF PTE reveals whether the display engine can actually DMA the surface.
+		{
+			uint32_t pte0Lo = MellowCore::callback->readReg32(GGTT_PTE_LO(0));
+			uint32_t pte0Hi = MellowCore::callback->readReg32(GGTT_PTE_HI(0));
+			SYSLOG("mellow", "HANGCHECK V202: GGTT[0] (stolen base) PTE=%08x:%08x present=%d llc=%d",
+				pte0Hi, pte0Lo, pte0Lo & 1, (pte0Lo >> 3) & 1);
+
+			// Display registers don't need GT ForceWake — read live PLANE_SURF.
+			uint32_t hcSurf = MellowCore::callback->readReg32(0x7019C);
+			if (hcSurf) {
+				uint32_t surfPg  = hcSurf >> 12;
+				uint32_t surfPLo = MellowCore::callback->readReg32(GGTT_PTE_LO(surfPg));
+				uint32_t surfPHi = MellowCore::callback->readReg32(GGTT_PTE_HI(surfPg));
+				SYSLOG("mellow", "HANGCHECK V202: PLANE_SURF=0x%x (page 0x%x) PTE=%08x:%08x present=%d llc=%d",
+					hcSurf, surfPg, surfPHi, surfPLo, surfPLo & 1, (surfPLo >> 3) & 1);
+			} else {
+				SYSLOG("mellow", "HANGCHECK V202: PLANE_SURF=0 (display armed to null)");
+			}
+		}
+
+		// Release ForceWake
+		MellowCore::callback->writeReg32(FORCEWAKE_RENDER_GEN9, (1 << 16) | 0);
+		MellowCore::callback->writeReg32(FORCEWAKE_BLITTER_GEN9, (1 << 16) | 0);
+		
+		// V42: Enumerate accelerator children at hangcheck time
+		if (callback->accelInstance) {
+			auto *service = static_cast<IOService *>(callback->accelInstance);
+			OSIterator *iter = service->getClientIterator();
+			int childCount = 0;
+			if (iter) {
+				OSObject *obj;
+				while ((obj = iter->getNextObject())) {
+					auto *child = OSDynamicCast(IOService, obj);
+					if (child) {
+						SYSLOG("mellow", "HANGCHECK child[%d]: %s (busy=%d)", childCount,
+							child->getName(), child->getBusyState());
+						// Check if child has its own children (user clients)
+						OSIterator *iter2 = child->getClientIterator();
+						if (iter2) {
+							int ucCount = 0;
+							OSObject *obj2;
+							while ((obj2 = iter2->getNextObject())) {
+								auto *uc = OSDynamicCast(IOService, obj2);
+								if (uc) {
+									SYSLOG("mellow", "HANGCHECK   child[%d].uc[%d]: %s", childCount, ucCount, uc->getName());
+									ucCount++;
+								}
+							}
+							iter2->release();
+						}
+						childCount++;
+					}
+				}
+				iter->release();
+			}
+			SYSLOG("mellow", "HANGCHECK accelerator has %d children total", childCount);
+			
+			// V45: Log IOService state at hangcheck time
+			uint64_t hcState = service->getState();
+			bool hcOpen = service->isOpen();
+			SYSLOG("mellow", "HANGCHECK V45: state=0x%llx (reg=%d match=%d pub=%d fmatch=%d inact=%d) isOpen=%d",
+				   (unsigned long long)hcState,
+				   !!(hcState & 0x02), !!(hcState & 0x04), !!(hcState & 0x08),
+				   !!(hcState & 0x10), !!(hcState & 0x01), hcOpen);
+		}
+		
+		// V42: Check interrupt state — did GT_INTR_DW0 re-assert since we cleared it?
+		SYSLOG("mellow", "HANGCHECK IRQ: RENDER_COPY_INTR_EN=0x%x RCS0_RSVD_MASK=0x%x",
+			MellowCore::callback->readReg32(GEN11_RENDER_COPY_INTR_ENABLE),
+			MellowCore::callback->readReg32(GEN11_RCS0_RSVD_INTR_MASK));
+		SYSLOG("mellow", "HANGCHECK IRQ: GFX_MSTR_IRQ=0x%x",
+			MellowCore::callback->readReg32(GEN11_GFX_MSTR_IRQ));
+		
+		SYSLOG("mellow", "=== HANGCHECK: dump complete ===");
+	}
+	
+	// ctx 2: IRQ, ctx 1: normal
+	uint32_t ack_exp = set << ctx;
+	uint32_t mask = 1 << ctx;
+	uint32_t wr = ack_exp | (1 << ctx << 16);
+
+	for (unsigned d = DOM_FIRST; d <= DOM_LAST; d <<= 1) {
+		if (!(dom & d)) continue;
+
+		if (d == DOM_MEDIA) {
+			// Gen12+: Media uses per-engine ForceWake (VDBOX + VEBOX), NOT Gen9 single register
+			for (const auto &eng : fwMediaEngines) {
+				wrapWriteRegister32(callback->framecont, eng.req, wr);
+				IOPause(100);
+				if (!pollRegister(eng.ack, ack_exp, mask, FORCEWAKE_ACK_TIMEOUT_MS) &&
+					!forceWakeWaitAckFallback(eng.req, eng.ack, ack_exp, mask) &&
+					!pollRegister(eng.ack, ack_exp, mask, FORCEWAKE_ACK_TIMEOUT_MS))
+					SYSLOG("mellow", "ForceWake timeout for %s (dom=0x%x), expected 0x%x", eng.name, dom, ack_exp);
+				else
+					DBGLOG("mellow", "ForceWake OK %s set=%d", eng.name, set);
+			}
+		} else {
+			wrapWriteRegister32(callback->framecont, fwReqReg(d), wr);
+			IOPause(100);
+			if (!pollRegister(fwAckReg(d), ack_exp, mask, FORCEWAKE_ACK_TIMEOUT_MS) &&
+				!forceWakeWaitAckFallback(fwReqReg(d), fwAckReg(d), ack_exp, mask) &&
+				!pollRegister(fwAckReg(d), ack_exp, mask, FORCEWAKE_ACK_TIMEOUT_MS))
+				SYSLOG("mellow", "ForceWake timeout for domain %s (dom=0x%x), expected 0x%x", strForDom(d), dom, ack_exp);
+			else
+				DBGLOG("mellow", "ForceWake OK domain=%s set=%d ack=0x%x", strForDom(d), set, wrapReadRegister32(callback->framecont, fwAckReg(d)));
+		}
+	}
+	// V61: silenced — see above
+}
+
+bool Gen11::pollRegister(uint32_t reg, uint32_t val, uint32_t mask, uint32_t timeout) {
+    uint64_t now = 0, deadline = 0;
+    clock_interval_to_deadline(timeout, kMillisecondScale, &deadline);
+    for (clock_get_uptime(&now); now < deadline; clock_get_uptime(&now)) {
+        auto rd = wrapReadRegister32(callback->framecont, reg);
+        if ((rd & mask) == val)
+            return true;
+    }
+    return false;
+}
+
+bool Gen11::forceWakeWaitAckFallback(uint32_t reqReg, uint32_t ackReg, uint32_t val, uint32_t mask) {
+	unsigned pass = 1;
+	bool ack = false;
+	auto controller = callback->framecont;
+	
+	do {
+		pollRegister(ackReg, 0, FORCEWAKE_KERNEL_FALLBACK, FORCEWAKE_ACK_TIMEOUT_MS);
+		wrapWriteRegister32(controller, reqReg, fw_set(FORCEWAKE_KERNEL_FALLBACK));
+		
+		IODelay(10 * pass);
+		pollRegister(ackReg, FORCEWAKE_KERNEL_FALLBACK, FORCEWAKE_KERNEL_FALLBACK, FORCEWAKE_ACK_TIMEOUT_MS);
+
+		ack = (wrapReadRegister32(controller, ackReg) & mask) == val;
+
+		wrapWriteRegister32(controller, reqReg, fw_clear(FORCEWAKE_KERNEL_FALLBACK));
+	} while (!ack && pass++ < 10);
+	
+	return ack;
+}
+
+void Gen11::releaseDoorbell()
+{}
+
+bool Gen11::dotrue()
+{
+	return true;
+}
+
+int iniin=1;
+void  Gen11::readAndClearInterrupts(AppleIntel::AppleIntelBaseController *that, void *param_1)
+{
+	
+	if (iniin){
+		iniin=0;
+		SYSLOG("mellow", "readAndClearInterrupts: first call — initializing Gen11 GT interrupts");
+		
+		wrapWriteRegister32(callback->framecont, GEN11_GFX_MSTR_IRQ, 0);
+		wrapWriteRegister32(callback->framecont,GEN11_DISPLAY_INT_CTL, 0);
+		uint32_t master_ctl=wrapReadRegister32(callback->framecont,GEN11_GFX_MSTR_IRQ);
+		
+		//Disable RCS, BCS, VCS and VECS class engines.
+		wrapWriteRegister32(callback->framecont, GEN11_RENDER_COPY_INTR_ENABLE, 0);
+		wrapWriteRegister32(callback->framecont, GEN11_VCS_VECS_INTR_ENABLE,	  0);
+		
+		// Restore masks irqs on RCS, BCS, VCS and VECS engines.
+		wrapWriteRegister32(callback->framecont, GEN11_RCS0_RSVD_INTR_MASK,	~0);
+		wrapWriteRegister32(callback->framecont, GEN11_BCS_RSVD_INTR_MASK,	~0);
+		wrapWriteRegister32(callback->framecont, GEN11_VCS0_VCS1_INTR_MASK,	~0);
+		wrapWriteRegister32(callback->framecont, GEN11_VCS2_VCS3_INTR_MASK,	~0);
+		wrapWriteRegister32(callback->framecont, GEN11_VECS0_VECS1_INTR_MASK,	~0);
+		
+		wrapWriteRegister32(callback->framecont, GEN11_GPM_WGBOXPERF_INTR_ENABLE, 0);
+		wrapWriteRegister32(callback->framecont, GEN11_GPM_WGBOXPERF_INTR_MASK,  ~0);
+		wrapWriteRegister32(callback->framecont, GEN11_GUC_SG_INTR_ENABLE, 0);
+		wrapWriteRegister32(callback->framecont, GEN11_GUC_SG_INTR_MASK,  ~0);
+		
+		
+		
+		uint32_t irqs = GT_RENDER_USER_INTERRUPT;
+		uint32_t guc_mask = /*intel_uc_wants_guc(&gt->uc) ? GUC_INTR_GUC2HOST :*/ 0;
+		uint32_t gsc_mask = 0;
+		uint32_t heci_mask = 0;
+		uint32_t dmask;
+		uint32_t smask;
+		
+		irqs |= GT_CS_MASTER_ERROR_INTERRUPT |
+		GT_CONTEXT_SWITCH_INTERRUPT |
+		GT_WAIT_SEMAPHORE_INTERRUPT;
+		
+		dmask = irqs << 16 | irqs;
+		smask = irqs << 16;
+		
+		
+		/* Enable RCS, BCS, VCS and VECS class interrupts. */
+		wrapWriteRegister32(callback->framecont, GEN11_RENDER_COPY_INTR_ENABLE, dmask);
+		wrapWriteRegister32(callback->framecont, GEN11_VCS_VECS_INTR_ENABLE, dmask);
+		
+		/* Unmask irqs on RCS, BCS, VCS and VECS engines. */
+		wrapWriteRegister32(callback->framecont, GEN11_RCS0_RSVD_INTR_MASK, ~smask);
+		wrapWriteRegister32(callback->framecont, GEN11_BCS_RSVD_INTR_MASK, ~smask);
+		wrapWriteRegister32(callback->framecont, GEN11_VCS0_VCS1_INTR_MASK, ~dmask);
+		wrapWriteRegister32(callback->framecont, GEN11_VCS2_VCS3_INTR_MASK, ~dmask);
+		wrapWriteRegister32(callback->framecont, GEN11_VECS0_VECS1_INTR_MASK, ~dmask);
+		
+		/*
+		 * RPS interrupts will get enabled/disabled on demand when RPS itself
+		 * is enabled/disabled.
+		 */
+		
+		
+		wrapWriteRegister32(callback->framecont, GEN11_GPM_WGBOXPERF_INTR_ENABLE, 0);
+		wrapWriteRegister32(callback->framecont, GEN11_GPM_WGBOXPERF_INTR_MASK,  ~0);
+		
+		/* Same thing for GuC interrupts */
+		wrapWriteRegister32(callback->framecont, GEN11_GUC_SG_INTR_ENABLE, 0);
+		wrapWriteRegister32(callback->framecont, GEN11_GUC_SG_INTR_MASK,  ~0);
+		
+		wrapWriteRegister32(callback->framecont,GEN11_DISPLAY_INT_CTL, GEN11_DISPLAY_IRQ_ENABLE);
+		wrapWriteRegister32(callback->framecont, GEN11_GFX_MSTR_IRQ, GEN11_MASTER_IRQ);
+	}
+	
+	
+	FunctionCast(readAndClearInterrupts, callback->oreadAndClearInterrupts)(that,param_1);
+}
+
+void * Gen11::serviceInterrupts(void *param_1)
+{
+	return FunctionCast(serviceInterrupts, callback->oserviceInterrupts)(param_1);
+	
+}
+
+void * Gen11::wprobe(void *that,void *param_1,int *param_2)
+{
+	//FunctionCast(wprobe, callback->owprobe)(that, param_1,param_2);
+	//logStateInRegistry(that,0x56);
+	initializeLogging(reinterpret_cast<AppleIntel::AppleIntelBaseController *>(that));
+	return that;
+	
+}
+
+void *contr;
+bool  Gen11::tgstart(void *that,void *param_1)
+{
+	contr=that;
+	FunctionCast(tgstart, callback->otgstart)(that, param_1);
+	return true;
+	
+}
+
+void Gen11::FBMemMgr_Init(void *that)
+{
+	ccont  = getMember<void *>(that, 0xc40);  // MMIO register access manager
+	ccont2 = that;                             // AppleIntelBaseController itself
+
+	FunctionCast(FBMemMgr_Init, callback->oFBMemMgr_Init)(that);
+	
+	
+
+	/*IODeviceMemory * m= MellowCore::callback->iGPU->getDeviceMemoryWithIndex(0);
+	IODeviceMemory *dm;
+	m->withSubRange(dm,0x4180000,0x12000);//fDSBBufferBytes = 73728, fDSBBufferBaseOffset = 68681728
+	IOMemoryMap *dsb=dm->map();
+	
+	IODeviceMemory *dm2;
+	m->withSubRange(dm2,0x4192000,0x3000);//fConnectionStatusBytes = 12288, fConnectionStatusOffset = 68755456
+	IOMemoryMap *dsb2=dm2->map();*/
+	
+}
+
+uint32_t Gen11::probePortMode()
+{
+	auto ret=FunctionCast(probePortMode, callback->oprobePortMode)();
+	return ret;
+};
+
+
+uint32_t Gen11::wdepthFromAttribute(void *that,uint param_1)
+{
+	return 0x1e;
+};
+
+uint32_t Gen11::raReadRegister32(void *that,unsigned long param_1)
+{
+	if (reinterpret_cast<volatile uint64_t*>(that)==nullptr) return MellowCore::callback->readReg32(param_1);
+	
+	// V60: ReadRegister32 intercept REMOVED — V59 proved hooking all register reads
+	// causes display driver to loop in power-well cycling, producing 0 children.
+	// Error suppression done via timer-based R/W clear (V57 approach).
+	
+	auto ret=FunctionCast(raReadRegister32, callback->oraReadRegister32)(that,param_1);
+	return ret;
+};
+
+unsigned long Gen11::raReadRegister32b(void *that,void *param_1,unsigned long param_2)
+{
+	//if (reinterpret_cast<volatile uint64_t*>(that)==nullptr) return 0;
+	//if (reinterpret_cast<volatile uint64_t*>(param_1)==nullptr) return 0;
+	return  raReadRegister32(that,reinterpret_cast<uint64_t>(param_1) + param_2);
+};
+
+uint64_t Gen11::raReadRegister64(void *that,unsigned long param_1)
+{
+	//if (reinterpret_cast<volatile uint64_t*>(that)==nullptr) return 0;
+	
+	return FunctionCast(raReadRegister64, callback->oraReadRegister64)(that,param_1);
+};
+uint64_t Gen11::raReadRegister64b(void *that,void *param_1,unsigned long param_2)
+{
+	//if (reinterpret_cast<volatile uint64_t*>(that)==nullptr) return 0;
+	return  raReadRegister64(that,reinterpret_cast<uint64_t>(param_1) + param_2);
+};
+
+void Gen11::radWriteRegister32(void *that,unsigned long param_1, UInt32 param_2)
+{
+	radWriteRegister32f( that,param_1,param_2);
+};
+
+void Gen11::radWriteRegister32f(void *that,unsigned long param_1, UInt32 param_2)
+{
+	//FunctionCast(radWriteRegister32f, callback->oradWriteRegister32f)( that,param_1,param_2);
+};
+
+void Gen11::raWriteRegister64(void *that,unsigned long param_1,UInt64 param_2)
+{
+	//if (reinterpret_cast<volatile uint64_t*>(that)==nullptr) return;
+
+	if (MellowCore::callback) {
+		const uint32_t reg = static_cast<uint32_t>(param_1 & 0xFFFFF);
+		const bool looksLikePlaneSurf =
+			(reg >= 0x60000 && reg <= 0xBFFFF) &&
+			((reg & 0xFFF) == 0x19C);
+
+		if (looksLikePlaneSurf && param_2 == 0) {
+			const uint32_t ctlReg = reg - 0x1C;
+			const uint32_t planCtl = MellowCore::callback->readReg32(ctlReg);
+			if (planCtl & 0x80000000U) {
+				const uint32_t currentSurf = MellowCore::callback->readReg32(reg);
+				if (currentSurf != 0) {
+					param_2 = static_cast<UInt64>(currentSurf);
+				} else {
+					MellowCore::callback->writeReg32(ctlReg, planCtl & ~0x80000000U);
+				}
+			}
+		}
+	}
+
+	FunctionCast(raWriteRegister64, callback->oraWriteRegister64)(that, param_1, param_2);
+};
+
+void Gen11::raWriteRegister64b(void *that,void *param_1,unsigned long param_2,UInt64 param_3)
+{
+	//if (reinterpret_cast<volatile uint64_t*>(that)==nullptr) return;
+	raWriteRegister64( that,reinterpret_cast<uint64_t>(param_1) + param_2,param_3);
+};
+
+void Gen11::setupPlanarSurfaceDBUF()
+{
+	//FunctionCast(setupPlanarSurfaceDBUF, callback->osetupPlanarSurfaceDBUF)();
+};
+
+void Gen11::updateDBUF(void *that,uint param_1,uint param_2,bool param_3)
+{
+	//setupPlanarSurfaceDBUF();
+};
+
+int Gen11::LightUpEDP(void *that,void *param_1, void *param_2,void *param_3)
+{
+	FunctionCast(LightUpEDP, callback->oLightUpEDP)(that,param_1,param_2,param_3);
+	return 0;
+};
+
+uint8_t Gen11::disableVDDForAux(void *that)
+{
+	uint32_t iVar3 = raReadRegister32(ccont,0xc7200);
+	if (-1 < iVar3) {
+		IORegistryEntry *r= (IORegistryEntry *)getMember<long *>(that, 0xd60);
+		r->setProperty("AAPL,LCD-PowerState-ON", false);
+	}
+	return FunctionCast(disableVDDForAux, callback->odisableVDDForAux)(that);
+};
+
+void Gen11::setPanelPowerState(void *that,bool param_1)
+{
+	FunctionCast(setPanelPowerState, callback->osetPanelPowerState)(that,param_1);
+	
+	IORegistryEntry *r= (IORegistryEntry *)getMember<long *>(that, 0xd60);
+	r->setProperty("AAPL,LCD-PowerState-ON", param_1);
+};
+
+unsigned long Gen11::fastLinkTraining()
+{
+	
+	FunctionCast(fastLinkTraining, callback->ofastLinkTraining)();
+	return 1;
+};
+
+void Gen11::logStateInRegistry(void *that,uint param_1)
+{
+ FunctionCast(logStateInRegistry, callback->ologStateInRegistry)(that,param_1 );
+}
+
+void Gen11::initializeLogging(AppleIntel::AppleIntelBaseController *that)
+{
+	FunctionCast(initializeLogging, callback->oinitializeLogging)(that );
+}
+
+int Gen11::getPlatformID()
+{
+ return FunctionCast(getPlatformID, callback->ogetPlatformID)( );
+}
+
+uint32_t Gen11::tprobePortMode(void * that)
+{
+ return Genx::callback->tprobePortMode(that );
+}
+
+void  Gen11::AppleIntelPlanec1(AppleIntel::AppleIntelPlane *that)
+{
+	Genx::callback->AppleIntelPlanec1(that );
+}
+
+void  Gen11::AppleIntelScalerc1(AppleIntel::AppleIntelScaler *that)
+{
+	Genx::callback->AppleIntelScalerc1(that );
+}
+
+void * Gen11::AppleIntelScalernew(unsigned long param_1)
+{
+	return Genx::callback->AppleIntelScalernew(param_1 );
+}
+
+void * Gen11::AppleIntelPlanenew(unsigned long param_1)
+{
+	return Genx::callback->AppleIntelPlanenew(param_1 );
+}
+
+void Gen11::uupdateDBUF(void *that,uint param_1,uint param_2,bool param_3)
+{
+	Genx::callback->uupdateDBUF(that,param_1,param_2 );
+}
+
+bool inpwell=false;
+void Gen11::PowerWellinit(void *that,void *param_1)
+{
+	inpwell=true;
+  FunctionCast(PowerWellinit, callback->oPowerWellinit)(that,param_1 );
+	inpwell=false;
+}
+
+long Gen11::getPortByDDI(uint param_1)
+{
+ auto ret= FunctionCast(getPortByDDI, callback->ogetPortByDDI)(param_1 );
+	if (inpwell) setPortMode((void*)ret,1);
+ return ret;
+}
+
+uint8_t  Gen11::setPortMode(void *that,uint32_t param_1)
+{
+ auto ret= FunctionCast(setPortMode, callback->osetPortMode)(that,param_1 );
+	
+ return ret;
+}
+
+int smo=0;
+
+int Gen11::isConflictRegister()
+{
+	return -1;
+
+}
+
+int Gen11::wrapGetFreeJoinablePathCount(void *that)
+{
+	// Always return 0 — with 1/1/1 pinfo config, only pipe 0 has a path. Original
+	// would call getPathByPipe(1) and (2), get NULL back, dereference [+0x3644] →
+	// kernel panic at setupBootDisplay->allocateBootDisplayResources chain.
+	// Returning 0 means "no joinable paths" which is correct for single-pipe.
+	static int v210Count = 0;
+	if (v210Count < 4) {
+		v210Count++;
+		SYSLOG("mellow", "V210[%d]: getFreeJoinablePathCount → 0 (1/1/1 single-pipe safe)", v210Count);
+	}
+	return 0;
+}
+
+int Gen11::wrapEnableController(void *that)
+{
+	uint32_t fbId = getMember<uint32_t>(that, 0x1DC);
+	if (fbId != 0) {
+		// Short-circuit for phantom FB1/FB2: don't call original, return success
+		// without doing the per-fb setup (gController ref-count bumps,
+		// AppleIntelBaseController::enableController, AAPL0n,IgnoreConnection
+		// property lookup, etc). Without this, the per-fb setup chain leaves
+		// fb1/fb2 partially-initialized → IGAccelDisplayPipe iterates them in
+		// displayModeDidChange → IOFramebuffer::getAttributeExt+0x25 NULL deref.
+		// Returning 0 (kIOReturnSuccess) so callers don't error-handle.
+		SYSLOG("mellow", "V209: enableController short-circuited for fb=%u", fbId);
+		return 0;
+	}
+	int ret = FunctionCast(wrapEnableController, callback->oEnableController)(that);
+	SYSLOG("mellow", "V209: enableController fb=0 ret=0x%x", ret);
+	return ret;
+}
+
+bool Gen11::wrapAppleIntelFramebufferStart(void *that, void *provider)
+{
+	uint32_t fbId = getMember<uint32_t>(that, 0x1DC);
+	if (fbId != 0) {
+		// Refuse to start phantom FB1/FB2 — they have no display path assigned and
+		// trip CoreDisplay_CreateDisplayForCGXDisplayDevice's __assert_rtn during WS init.
+		// Returning false from start() means IOService::registerService is never called,
+		// so CoreDisplay never sees this FB. Apple's controller still has 3 FBs internally
+		// (per pinfo counts) — we just block IOFramebufferShared registration for !FB0.
+		SYSLOG("mellow", "V208: AppleIntelFramebuffer::start refused for fb=%u (only FB0 starts)",
+		       fbId);
+		return false;
+	}
+	bool ret = FunctionCast(wrapAppleIntelFramebufferStart, callback->oAppleIntelFramebufferStart)(that, provider);
+	SYSLOG("mellow", "V208: AppleIntelFramebuffer::start fb=0 ret=%d", ret);
+	return ret;
+}
+
+void Gen11::injectAcceleratorPersonality(bool useTglNames)
+{
+	if (this->acceleratorPersonalityInjected) {
+		DBGLOG("mellow", "injectAcceleratorPersonality: already injected, skipping");
+		return;
+	}
+
+	SYSLOG("mellow", "injectAcceleratorPersonality: registering IntelAccelerator (%s) into IOCatalogue",
+	       useTglNames ? "TGL" : "ICL");
+
+	auto *dict = OSDictionary::withCapacity(24);
+	if (!dict) return;
+
+	const char *bundleId = useTglNames ? "com.xxxxx.driver.AppleIntelTGLGraphics" : "com.apple.driver.AppleIntelICLGraphics";
+	const char *mtlName  = useTglNames ? "AppleIntelTGLGraphicsMTLDriver"        : "AppleIntelICLGraphicsMTLDriver";
+	const char *glName   = useTglNames ? "AppleIntelTGLGraphicsGLDriver"         : "AppleIntelICLGraphicsGLDriver";
+	const char *vaName   = useTglNames ? "AppleIntelTGLGraphicsVADriver"         : "AppleIntelICLGraphicsVADriver";
+
+	// Basic matching properties
+	auto *bi  = OSString::withCString(bundleId);
+	auto *cls = OSString::withCString("IntelAccelerator");
+	auto *mc  = OSString::withCString("IOAccelerator");
+	auto *pv  = OSString::withCString("IOPCIDevice");
+	auto *pcm = OSString::withCString("0x03000000&0xff000000");
+	auto *ps  = OSNumber::withNumber(static_cast<unsigned long long>(1000), 32);
+
+	dict->setObject("CFBundleIdentifier", bi);
+	dict->setObject("IOClass", cls);
+	dict->setObject("IOMatchCategory", mc);
+	dict->setObject("IOProviderClass", pv);
+	dict->setObject("IOPCIClassMatch", pcm);
+	dict->setObject("IOProbeScore", ps);
+
+	OSSafeReleaseNULL(bi);
+	OSSafeReleaseNULL(cls);
+	OSSafeReleaseNULL(mc);
+	OSSafeReleaseNULL(pv);
+	OSSafeReleaseNULL(pcm);
+	OSSafeReleaseNULL(ps);
+
+	// V44: GPU driver bundle names — required by IOAcceleratorFamily2 and WindowServer
+	auto *mtl = OSString::withCString(mtlName);
+	auto *gl  = OSString::withCString(glName);
+	auto *dvd = OSString::withCString(vaName);
+	auto *src = OSString::withCString("0.0.0.0.0");
+	auto *vaCodec  = OSString::withCString("Gen10");
+	auto *vaScaler = OSString::withCString("Gen10");
+	auto *vaBGRA   = OSString::withCString("Gen10");
+	auto *vaRendID = OSNumber::withNumber(static_cast<unsigned long long>(17301568), 32); // 0x1084000
+
+	dict->setObject("MetalPluginName", mtl);
+	dict->setObject("IOGLBundleName", gl);
+	dict->setObject("IODVDBundleName", dvd);
+	dict->setObject("IOSourceVersion", src);
+	dict->setObject("IOGVACodec", vaCodec);
+	dict->setObject("IOGVAScaler", vaScaler);
+	dict->setObject("IOGVABGRAEnc", vaBGRA);
+	dict->setObject("IOVARendererID", vaRendID);
+
+	OSSafeReleaseNULL(mtl);
+	OSSafeReleaseNULL(gl);
+	OSSafeReleaseNULL(dvd);
+	OSSafeReleaseNULL(src);
+	OSSafeReleaseNULL(vaCodec);
+	OSSafeReleaseNULL(vaScaler);
+	OSSafeReleaseNULL(vaBGRA);
+	OSSafeReleaseNULL(vaRendID);
+
+	// IOAccelerator2D plugin type (required for 2D acceleration matching)
+	auto *pluginDict = OSDictionary::withCapacity(1);
+	if (pluginDict) {
+		auto *pluginName = OSString::withCString("IOAccelerator2D.plugin");
+		pluginDict->setObject("ACCF0000-0000-0000-0000-000a2789904e", pluginName);
+		OSSafeReleaseNULL(pluginName);
+		dict->setObject("IOCFPlugInTypes", pluginDict);
+		pluginDict->release();
+	}
+
+	// V77: Display pipe capabilities forced to 0 to prevent WS GPU compositing crash.
+	auto *dpCaps = OSDictionary::withCapacity(2);
+	if (dpCaps) {
+		auto *dpSupp = OSNumber::withNumber(static_cast<unsigned long long>(0), 32);
+		auto *trSupp = OSNumber::withNumber(static_cast<unsigned long long>(0), 32);
+		dpCaps->setObject("DisplayPipeSupported", dpSupp);
+		dpCaps->setObject("TransactionsSupported", trSupp);
+		OSSafeReleaseNULL(dpSupp);
+		OSSafeReleaseNULL(trSupp);
+		dict->setObject("IOAccelDisplayPipeCapabilities", dpCaps);
+		dpCaps->release();
+	}
+
+	SYSLOG("mellow", "injectAcceleratorPersonality: personality has %u properties", dict->getCount());
+
+	auto *array = OSArray::withCapacity(1);
+	if (array) {
+		array->setObject(dict);
+		if (gIOCatalogue) {
+			bool ok = gIOCatalogue->addDrivers(array, true);
+			SYSLOG("mellow", "injectAcceleratorPersonality: addDrivers returned %d", ok);
+			this->acceleratorPersonalityInjected = ok;
+		} else {
+			SYSLOG("mellow", "injectAcceleratorPersonality: gIOCatalogue is null!");
+		}
+		array->release();
+	}
+	dict->release();
+}
+
+void  Gen11::disablePowerWellPG(AppleIntel::AppleIntelBaseController *that, uint param_1)
+{
+	getMember<void *>(that, 0x78) = ccont;
+	FunctionCast(disablePowerWellPG, callback->odisablePowerWellPG)(that, param_1);
+}
+void  Gen11::enablePowerWellPG(AppleIntel::AppleIntelBaseController *that, uint param_1)
+{
+	getMember<void *>(that, 0x78) = ccont;
+	FunctionCast(enablePowerWellPG, callback->oenablePowerWellPG)(that, param_1);
+}
+
+void Gen11::hwSetPowerWellStatePG(AppleIntel::AppleIntelBaseController *that, bool param_1, uint param_2)
+{
+	getMember<void *>(that, 0x78) = ccont;
+	FunctionCast(hwSetPowerWellStatePG, callback->ohwSetPowerWellStatePG)(that,param_1,param_2);
+}
+
+void Gen11::hwConfigureCustomAUX(AppleIntel::AppleIntelBaseController *that, bool param_1)
+{
+	SYSLOG("mellow", "hwAUX p1=%d CE4=%d",
+		(int)param_1, getMember<int>(that, 0xCE4));
+
+	// Pure passthrough — V12 showed that the native "Custom AUX enable" logic works
+	// correctly on ADL-P hardware. The 0x863xx PHY writes added in V12 broke EDID
+	// (56283 µs failure). Native-only: EDID succeeded in 3663 µs on same hardware.
+	if (callback->ohwConfigureCustomAUX)
+		FunctionCast(hwConfigureCustomAUX, callback->ohwConfigureCustomAUX)(that, param_1);
+}
+
+int Gen11::hasExternalDispla()
+{
+
+	return 1;
+}
+
+long blti=0;
+
+uint8_t Gen11::isPanelPowerOn()
+{
+	return 1;
+}
+
+uint8_t Gen11::SetupDPSSTTimings(void *that,void *param_1,void *param_2,void *param_3){
+	return FunctionCast(SetupDPSSTTimings, callback->oSetupDPSSTTimings)(that,param_1,param_2,param_3);
+}
+
+uint32_t Gen11::validateDetailedTiming(void *that,void *param_1,unsigned long param_2) {
+	return FunctionCast(validateDetailedTiming, callback->ovalidateDetailedTiming)(that,param_1,param_2);
+}
+
+uint8_t Gen11::maxSupportedDepths(void *param_1) {
+    auto displayTimingInfo = const_cast<IODetailedTimingInformationV2 *>(reinterpret_cast<const IODetailedTimingInformationV2 *>(param_1));
+    if (displayTimingInfo!=nullptr) displayTimingInfo->pixelClock = 785400000;
+    auto ret= FunctionCast(maxSupportedDepths, callback->omaxSupportedDepths)(param_1);
+	return ret;
+}
+
+uint8_t Gen11::validateModeDepth(void *that,void *param_1,uint param_2)
+{
+    auto displayTimingInfo = const_cast<IODetailedTimingInformationV2 *>(reinterpret_cast<const IODetailedTimingInformationV2 *>(param_1));
+    if (displayTimingInfo!=nullptr) displayTimingInfo->pixelClock = 785400000;
+	auto ret= FunctionCast(validateModeDepth, callback->ovalidateModeDepth)(that, param_1, param_2);
+	return ret;
+}
+
+void Gen11::SetupTimings(void *that, void *param_1, void *param_2, void *param_3, void *param_4){
+	FunctionCast(SetupTimings, callback->oSetupTimings)(that,param_1,param_2, param_3, param_4);
+}
+
+uint8_t Gen11::validateDisplayMode(void *that, int param_1,void *param_2, void *param_3){
+	auto displayTimingInfo = const_cast<IODetailedTimingInformationV2 *>(reinterpret_cast<const IODetailedTimingInformationV2 *>(param_3));
+	if (displayTimingInfo!=nullptr) displayTimingInfo->pixelClock = 785400000;
+	auto ret= FunctionCast(validateDisplayMode, callback->ovalidateDisplayMode)(that,param_1,param_2,param_3);
+	return ret;
+}
+
+void Gen11::setupDisplayTiming (void *that,void *param_1,
+                         void *param_2){
+    auto displayTimingInfo = const_cast<IODetailedTimingInformationV2 *>(reinterpret_cast<const IODetailedTimingInformationV2 *>(param_2));
+    if (displayTimingInfo!=nullptr) displayTimingInfo->pixelClock = 785400000;
+	FunctionCast(setupDisplayTiming, callback->osetupDisplayTiming)(that,param_1,param_2);
+    //auto ret= FunctionCast(setupDisplayTiming, callback->osetupDisplayTiming)(that,param_1,param_2);
+    //return ret;
+}
+
+unsigned long Gen11::getPixelInformation (void *that, uint param_1,int param_2,int param_3, void *param_4){
+	return FunctionCast(getPixelInformation, callback->ogetPixelInformation)(that,param_1,param_2, param_3, param_4);
+}
+
+int Gen11::blit3d_supported(void *param_1,void *param_2)
+{
+	return 0;
+}
+
+uint8_t Gen11::isPanelPowerOn(void *that)
+{
+	return 1;//FunctionCast(isPanelPowerOn, callback->oisPanelPowerOn)(that);
+}
+
+void * Gen11::ExtendedContextWithOptions(void *param_1)
+{
+	return FunctionCast(ExtendedContextWithOptions, callback->oExtendedContextWithOptions)(param_1);
+}
+
+uint8_t Gen11::enableController(AppleIntel::AppleIntelFramebuffer *that)
+{
+	if (getMember<uint32_t>(that, 0x1dc)==0) getMember<uint8_t>(that, 0x1e0)=1;
+	auto ret= FunctionCast(enableController, callback->oenableController)(that);
+	return ret;
+}
+
+
+uint8_t Gen11::setDisplayMode(AppleIntel::AppleIntelFramebuffer *that, int param_1, int param_2)
+{
+	if (getMember<uint32_t>(that, 0x1dc)==0) getMember<uint8_t>(that, 0x1e0)=1;
+	return FunctionCast(setDisplayMode, callback->osetDisplayMode)(that,param_1,param_2 );
+
+}
+
+uint8_t Gen11::connectionChanged(void *that)
+{
+	
+	auto ret= FunctionCast(connectionChanged, callback->oconnectionChanged)(that);
+	//getMember<uint8_t>(that, 0x1e0)=1;
+	return ret;
+}
+
+unsigned long  Gen11::allocateDisplayResources(void *that)
+{
+	auto ret=FunctionCast(allocateDisplayResources, callback->oallocateDisplayResources)(that);
+
+	if (!MellowCore::callback->isRealTGL) {
+		// Non-real-TGL Ultra spoof path. This circuit breaker reuses the inherited
+		// ADL-P/RPL-P/RPL-U Xe-LPD Display 13 register policy.
+		// Apple's TGL driver (AppleIntelTGLGraphicsFramebuffer) does not program this
+		// hardware correctly when spoofed, so we replicate icl_display_core_init here.
+
+		//icl_display_core_init
+		MellowCore::callback->writeReg32(DC_STATE_EN,0);
+
+		/* Wa_14011294188:ehl,jsl,tgl,rkl,adl-s */
+		MellowCore::callback->intel_de_rmw( SOUTH_DSPCLK_GATE_D, 0,
+					 PCH_DPMGUNIT_CLOCK_GATE_DISABLE);
+
+		uint32_t reg,reset_bits;
+		reg = HSW_NDE_RSTWRN_OPT;
+		reset_bits = RESET_PCH_HANDSHAKE_ENABLE;
+		MellowCore::callback->intel_de_rmw( reg, reset_bits, reset_bits);
+
+		//intel_cdclk_init_hw(dev_priv);
+		//gen12_dbuf_slices_config — XE_LPD: 4 slices (Linux syslog: dbuf slices=0xf)
+		MellowCore::callback->intel_de_rmw(_DBUF_CTL_S0,
+					 DBUF_TRACKER_STATE_SERVICE_MASK,
+					 DBUF_TRACKER_STATE_SERVICE(8));
+		MellowCore::callback->intel_de_rmw(_DBUF_CTL_S1,
+					 DBUF_TRACKER_STATE_SERVICE_MASK,
+					 DBUF_TRACKER_STATE_SERVICE(8));
+		MellowCore::callback->intel_de_rmw(_DBUF_CTL_S2,
+					 DBUF_TRACKER_STATE_SERVICE_MASK,
+					 DBUF_TRACKER_STATE_SERVICE(8));
+		MellowCore::callback->intel_de_rmw(_DBUF_CTL_S3,
+					 DBUF_TRACKER_STATE_SERVICE_MASK,
+					 DBUF_TRACKER_STATE_SERVICE(8));
+
+		//gen9_dbuf_enable(dev_priv); — enable all 4 slices
+		reg = _DBUF_CTL_S0;
+		MellowCore::callback->intel_de_rmw(reg, DBUF_POWER_REQUEST,
+				  DBUF_POWER_REQUEST);
+		MellowCore::callback->readReg32(reg);
+		IODelay(10);
+		reg = _DBUF_CTL_S1;
+		MellowCore::callback->intel_de_rmw(reg, DBUF_POWER_REQUEST,
+				  DBUF_POWER_REQUEST);
+		MellowCore::callback->readReg32(reg);
+		IODelay(10);
+		reg = _DBUF_CTL_S2;
+		MellowCore::callback->intel_de_rmw(reg, DBUF_POWER_REQUEST,
+				  DBUF_POWER_REQUEST);
+		MellowCore::callback->readReg32(reg);
+		IODelay(10);
+		reg = _DBUF_CTL_S3;
+		MellowCore::callback->intel_de_rmw(reg, DBUF_POWER_REQUEST,
+				  DBUF_POWER_REQUEST);
+		MellowCore::callback->readReg32(reg);
+		IODelay(10);
+
+
+		//icl_mbus_init
+		// XE_LPD_FEATURES (Linux intel_display_device.c): .abox_mask = GENMASK(1, 0)
+		// = ABOX0 (0x45038) + ABOX1 (0x45048)
+		unsigned long abox_mask = GENMASK(1, 0);//DISPLAY_INFO(dev_priv)->abox_mask;
+		int config, i;
+
+		unsigned long abox_regs=abox_mask;
+		uint32_t mask = MBUS_ABOX_BT_CREDIT_POOL1_MASK |
+			MBUS_ABOX_BT_CREDIT_POOL2_MASK |
+			MBUS_ABOX_B_CREDIT_MASK |
+			MBUS_ABOX_BW_CREDIT_MASK;
+		uint32_t val = MBUS_ABOX_BT_CREDIT_POOL1(16) |
+			MBUS_ABOX_BT_CREDIT_POOL2(16) |
+			MBUS_ABOX_B_CREDIT(1) |
+			MBUS_ABOX_BW_CREDIT(1);
+
+		for_each_set_bit(i, &abox_regs, sizeof(abox_regs))
+		MellowCore::callback->intel_de_rmw( MBUS_ABOX_CTL(i), mask, val);
+
+
+		//tgl_bw_buddy_init
+		// Linux syslog: DRAM channels=4, memory type 0x23=LPDDR5
+		// tgl_buddy_page_masks: {4ch, LPDDR4, 0x38} and {4ch, LPDDR5, 0x38} — same page_mask
+		// Use LPDDR4 bucket (LPDDR5 maps identically in the table)
+		enum intel_dram_type type = INTEL_DRAM_LPDDR4;
+		uint8_t num_channels = 4; //4ch LPDDR — tgl_buddy_page_masks → page_mask=0x38
+		const struct buddy_page_mask *table=tgl_buddy_page_masks;
+
+		for (config = 0; table[config].page_mask != 0; config++)
+			if (table[config].num_channels == num_channels &&
+				table[config].type == type)
+				break;
+
+		for_each_set_bit(i, &abox_mask, sizeof(abox_mask)) {
+			MellowCore::callback->writeReg32( BW_BUDDY_PAGE_MASK(i),
+						   table[config].page_mask);
+
+			/* Wa_22010178259:tgl,dg1,rkl,adl-s */
+			MellowCore::callback->intel_de_rmw( BW_BUDDY_CTL(i),
+							 BW_BUDDY_TLB_REQ_TIMER_MASK,
+							 BW_BUDDY_TLB_REQ_TIMER(0x8));
+		}
+
+		/* Wa_14011508470:tgl,dg1,rkl,adl-s,adl-p,dg2 */
+		//if (IS_DISPLAY_VER_FULL(dev_priv, IP_VER(12, 0), IP_VER(13, 0)))
+		/*MellowCore::callback->intel_de_rmw( GEN11_CHICKEN_DCPR_2, 0,
+					 DCPR_CLEAR_MEMSTAT_DIS | DCPR_SEND_RESP_IMM |
+					 DCPR_MASK_LPMODE | DCPR_MASK_MAXLATENCY_MEMUP_CLR);*/
+
+		/* * Display WA #1185 WaDisableDARBFClkGating:glk,icl,ehl,tgl
+		 * Also known as Wa_14010480278.
+		 */
+		//if (IS_DISPLAY_VER(i915, 10, 12))
+		//MellowCore::callback->intel_de_rmw( GEN9_CLKGATE_DIS_0, 0, DARBF_GATING_DIS);
+
+		/* Wa_14013723622 */
+		MellowCore::callback->intel_de_rmw( CLKREQ_POLICY, CLKREQ_POLICY_MEM_UP_OVRD, 0);
+
+	}
+	// isRealTGL: Apple's AppleIntelTGLGraphicsFramebuffer handles all of the above
+	// natively (2 DBUF slices, XE_D abox_mask=GENMASK(2,1), correct DRAM config).
+	// No additional writes needed.
+
+	return ret;
+}
+	
+void Gen11::IGScheduler5resume(void *that) {
+		
+		void *accelerator = getMember<void *>(that, 0x10);
+		struct IGHwCsDesc *descArray = (struct IGHwCsDesc *)callback->kIGHwCsDesc;
+		uint32_t mode = _MASKED_BIT_ENABLE(GEN11_GFX_DISABLE_LEGACY_MODE);
+
+		for (int i = 0; i < 6; i++) {
+			struct IGHwCsDesc *desc = &descArray[i];
+
+			// --- FILTER: ONLY RCS AND BCS ---
+			if (desc->type == kIGHwCsTypeRCS) {
+				//FunctionCast(SafeForceWake, callback->oSafeForceWake)(accelerator, true, 0);
+			} else if (desc->type == kIGHwCsTypeBCS) {
+				//FunctionCast(SafeForceWake, callback->oSafeForceWake)(accelerator, true, 1);
+			} else {
+				continue;
+			}
+
+					uint32_t ringBase = desc->mmioExecListControl - 0x3c;
+					
+					// USE THE CORRECT STRUCT MEMBER FOR HWS
+					// The dump proves mmioGlobalStatusPage holds the offset 0x2080
+					uint32_t hwsRegisterOffset = desc->mmioGlobalStatusPage;
+					
+					// READ SHADOW REGISTER
+					// We use the offset from the struct (0x2080) to index the shadow map
+					uint32_t hwsAddr = getMember<uint32_t>(accelerator, 0x1240 + hwsRegisterOffset);
+					
+					// WRITE TO HARDWARE
+					MellowCore::callback->writeReg32(hwsRegisterOffset, hwsAddr);
+					MellowCore::callback->readReg32(hwsRegisterOffset);
+
+					// REST OF INIT (Using explicit offsets from struct where possible)
+					MellowCore::callback->writeReg32(ringBase + 0x98, ~0u); // HWSTAM
+					MellowCore::callback->writeReg32(desc->mmioGfxMode, mode); // GFX Mode
+					MellowCore::callback->writeReg32(ringBase + 0x9c, _MASKED_BIT_DISABLE(STOP_RING)); // MI Mode
+					
+					MellowCore::callback->writeReg32(desc->mmioErrorIdentity, ~0u); // EMR
+					MellowCore::callback->writeReg32(desc->mmioErrorMask, ~0u);    // EIR
+					MellowCore::callback->writeReg32(desc->mmioErrorIdentity, ~0x1); // I915_ERROR_INSTRUCTION
+		}
+	
+	FunctionCast(IGScheduler5resume, callback->oIGScheduler5resume)(that);
+
+}
+
+// The backend owns idle/fence state. Preserve it even during failed startup.
+bool Gen11::wrapIGScheduler5IsGpuIdle(const void *that) {
+
+	if (!callback || !callback->oIGScheduler5IsGpuIdle || !that)
+		return false;
+	// A register value of 0xfffffffe (or a failed 0xffffffff MMIO read) does
+	// not prove that queues are idle. Preserve the scheduler's own decision.
+	return FunctionCast(wrapIGScheduler5IsGpuIdle, callback->oIGScheduler5IsGpuIdle)(that);
+}
+
+bool Gen11::wrapIGScheduler4IsGpuIdle(const void *that) {
+
+	if (!callback || !callback->oIGScheduler4IsGpuIdle || !that)
+		return false;
+	// A register value of 0xfffffffe (or a failed 0xffffffff MMIO read) does
+	// not prove that queues are idle. Preserve the scheduler's own decision.
+	return FunctionCast(wrapIGScheduler4IsGpuIdle, callback->oIGScheduler4IsGpuIdle)(that);
+}
+
+typedef enum AGDCVendorClass {
+	kAGDCVendorClassReserved,
+	kAGDCVendorClassIntegratedGPU,
+	kAGDCVendorClassDiscreteGPU,
+	kAGDCVendorClassOtherHW,
+	kAGDCVendorClassOtherSW,
+	kAGDCVendorClassAppleGPUPolicyManager,
+	kAGDCVendorClassAppleGPUPowerManager,
+	kAGDCVendorClassGPURoot,
+	kAGDCVendorClassAppleGPUWrangler,
+	kAGDCVendorClassAppleMuxControl,
+} AGDCVendorClass_t;
+
+typedef struct AGDCVendorInfo {
+	union {
+		struct {
+			UInt16 Minor;
+			UInt16 Major;
+		};
+		UInt32 Raw;
+	} Version;
+	char VendorString[32];
+	UInt32 VendorID;
+	AGDCVendorClass_t VendorClass;
+} AGDCVendorInfo_t;
+
+uint32_t
+Gen11::IntelFBClientControldoAttribute
+		  (void *that,uint param_1,unsigned long *param_2,unsigned long param_3,unsigned long *param_4,
+		   unsigned long *param_5,void *param_6)
+{
+
+	/*if (param_1 == 0x923) {
+		return kIOReturnUnsupported;
+	}*/
+	
+	auto ret=FunctionCast(IntelFBClientControldoAttribute, callback->oIntelFBClientControldoAttribute)(that,param_1,param_2,param_3,param_4,param_5,param_6);
+	
+	if (param_1 == 1)//0x2001)
+	if (param_5 != (unsigned long *)0x0)
+		if (0x2b < *param_5) {
+			//memset(param_4,0,0x2c);
+			AGDCVendorInfo *v=(AGDCVendorInfo*)param_4;
+			v->Version.Raw=0;
+			v->Version.Major=0;
+			v->Version.Minor=0;
+			v->VendorID=0x8086;
+			*v->VendorString=*(char*)"INTEL";
+			v->VendorClass=kAGDCVendorClassIntegratedGPU;
+			//*(mach_vm_address_t*)v=callback->IntelFBClientControl11doAttribut;
+		return 0;
+	}
+	return ret;
+}
+
+int hw=1;
+int Gen11::hwSetMode
+		  (AppleIntel::AppleIntelBaseController *that,
+		   AppleIntel::AppleIntelFramebuffer *param_1,
+		   AppleIntel::AppleIntelDisplayPath *param_2,
+		   AppleIntel::CRTCParams *param_3)
+{
+	// On the non-real-TGL Ultra spoof path, setPortMode ran just before us and
+	// restored TRANS_DDI_FUNC_CTL_A using the inherited RPL-P compatibility value
+	// to 0x8A000106 (4-lane eDP, matching UEFI DDI_BUF_CTL_A). paramsFbCompare inside the
+	// original hwSetMode reads TRANS_DDI_FUNC_CTL_A and compares it with the target 0x8A010102
+	// (2-lane DP SST). Write the correct value NOW so paramsFbCompare sees no lane-count change
+	// needed and leaves DDI_BUF_CTL_A alone — preserving the UEFI-trained 4-lane eDP link.
+	if (!MellowCore::callback->isRealTGL) {
+		MellowCore::callback->writeReg32(0x60400, 0x8A000106);  // TRANS_DDI_FUNC_CTL_A
+		DBGLOG("mellow", "hwSetMode: pre-write TRANS_DDI_FUNC_CTL_A=0x8A000106 to prevent paramsFbCompare lane reprog");
+	}
+	auto ret= FunctionCast(hwSetMode, callback->ohwSetMode)(that, param_1, param_2, param_3);
+	if (hw)
+		enablePipe(that, param_1, param_2, param_3);
+	hw=0;
+	return ret;
+}
+
+void Gen11::enablePipe
+		  (AppleIntel::AppleIntelBaseController *that,
+		   AppleIntel::AppleIntelFramebuffer *param_1,
+		   AppleIntel::AppleIntelDisplayPath *param_2,
+		   AppleIntel::CRTCParams *param_3)
+{
+	return FunctionCast(enablePipe, callback->oenablePipe)(that, param_1, param_2, param_3);
+}
+
+uint8_t Gen11::beginReset(void *that)
+{
+	auto ret= FunctionCast(beginReset, callback->obeginReset)(that);
+	
+	/*static const struct intel_device_info tgl_info = {
+		GEN12_FEATURES,
+		PLATFORM(INTEL_TIGERLAKE),
+		.platform_engine_mask =
+			BIT(RCS0) | BIT(BCS0) | BIT(VECS0) | BIT(VCS0) | BIT(VCS2),
+	};*/
+	
+	
+	
+	/*if (GRAPHICS_VER_FULL(dev_priv) >= IP_VER(12, 10))
+		dg1_irq_reset(dev_priv);
+	else if (GRAPHICS_VER(dev_priv) >= 11)
+		gen11_irq_reset(dev_priv);*/
+	
+	//dg1_irq_reset(struct drm_i915_private *dev_priv)
+	MellowCore::callback->writeReg32( DG1_MSTR_TILE_INTR, 0);
+	
+	//gen11_irq_reset
+	
+	MellowCore::callback->writeReg32( GEN11_GFX_MSTR_IRQ, 0);
+	
+	//gen11_gt_irq_reset(gt);
+	// Disable RCS, BCS, VCS and VECS class engines.
+	MellowCore::callback->writeReg32( GEN11_RENDER_COPY_INTR_ENABLE, 0);
+	MellowCore::callback->writeReg32( GEN11_VCS_VECS_INTR_ENABLE,	  0);
+
+	// Restore masks irqs on RCS, BCS, VCS and VECS engines.
+	MellowCore::callback->writeReg32( GEN11_RCS0_RSVD_INTR_MASK,	~0);
+	MellowCore::callback->writeReg32( GEN11_BCS_RSVD_INTR_MASK,	~0);
+	
+	MellowCore::callback->writeReg32( GEN11_VCS0_VCS1_INTR_MASK,	~0);
+	MellowCore::callback->writeReg32( GEN11_VCS2_VCS3_INTR_MASK,	~0);
+	
+	//if (HAS_ENGINE(gt, VECS2) || HAS_ENGINE(gt, VECS3))
+	MellowCore::callback->writeReg32( GEN12_VECS2_VECS3_INTR_MASK, ~0);
+	
+	MellowCore::callback->writeReg32( GEN11_GPM_WGBOXPERF_INTR_ENABLE, 0);
+	MellowCore::callback->writeReg32( GEN11_GPM_WGBOXPERF_INTR_MASK,  ~0);
+	MellowCore::callback->writeReg32( GEN11_GUC_SG_INTR_ENABLE, 0);
+	MellowCore::callback->writeReg32( GEN11_GUC_SG_INTR_MASK,  ~0);
+
+	MellowCore::callback->writeReg32( GEN11_CRYPTO_RSVD_INTR_ENABLE, 0);
+	MellowCore::callback->writeReg32( GEN11_CRYPTO_RSVD_INTR_MASK,  ~0);
+	
+	//gen11_display_irq_reset(dev_priv);
+	
+	MellowCore::callback->writeReg32( GEN11_GFX_MSTR_IRQ, ~0);
+
+	return ret;
+}
+											
+void Gen11::endReset(void *that)
+{
+	FunctionCast(endReset, callback->oendReset)(that);
+	
+	//void gen11_gt_irq_postinstall(struct intel_gt *gt)
+	uint32_t irqs = GT_RENDER_USER_INTERRUPT;
+	uint32_t dmask,smask;
+	
+	dmask = irqs << 16 | irqs;
+	smask = irqs << 16;
+	
+	
+	
+	// Enable RCS, BCS, VCS and VECS class interrupts.
+	MellowCore::callback->writeReg32( GEN11_RENDER_COPY_INTR_ENABLE, dmask);
+	MellowCore::callback->writeReg32( GEN11_VCS_VECS_INTR_ENABLE, dmask);
+
+		// Unmask irqs on RCS, BCS, VCS and VECS engines.
+	MellowCore::callback->writeReg32( GEN11_RCS0_RSVD_INTR_MASK, ~smask);
+	MellowCore::callback->writeReg32( GEN11_BCS_RSVD_INTR_MASK, ~smask);
+
+	MellowCore::callback->writeReg32( GEN11_VCS0_VCS1_INTR_MASK, ~dmask);
+	MellowCore::callback->writeReg32( GEN11_VCS2_VCS3_INTR_MASK, ~dmask);
+	
+	MellowCore::callback->writeReg32( GEN11_VECS0_VECS1_INTR_MASK, ~dmask);
+	
+		//if (HAS_ENGINE(gt, VECS2) || HAS_ENGINE(gt, VECS3))
+	MellowCore::callback->writeReg32( GEN12_VECS2_VECS3_INTR_MASK, ~dmask);
+	
+	
+	//gen11_de_irq_postinstall(dev_priv);
+	MellowCore::callback->writeReg32( GEN11_GFX_MSTR_IRQ, GEN11_MASTER_IRQ);
+	
+	MellowCore::callback->writeReg32( DG1_MSTR_TILE_INTR, DG1_MSTR_IRQ);
+}
+
+//SIGNATURES GFX
+//ulong __thiscall IntelAccelerator::start(IntelAccelerator *this,IOService *param_1)
+//undefined8 __thiscall IGAccelDevice::deviceStart(IGAccelDevice *this)
+//void __thiscall IntelAccelerator::getGPUInfo(IntelAccelerator *this)
+//void IntelAccelerator::getGPUInfo(void)
+//void __thiscall IntelAccelerator::populateResetRegisterList(IntelAccelerator *this)
+//undefined8 __thiscall IntelAccelerator::createUserGPUTask(IntelAccelerator *this)
+//IGAccelTask * IGAccelTask::withOptions(IntelAccelerator *param_1)
+//IGHardwareExtendedContext * __thiscall IGAccelTask::getBlit3DContext(IGAccelTask *this,bool param_1)
+//undefined8 __thiscall IGHardwareExtendedContext::initWithOptions (IGHardwareExtendedContext *this,IGAccelTask *param_1, IGHardwareExtendedContextParams *param_2)
+//undefined8 blit3d_init_ctx(IGHardwareBlit3DContext *param_1)
+//void blit3d_initialize_scratch_space(IGAccelSysMemory *param_1)
+//void __thiscall IGHardwareBlit3DContext::initialize(IGHardwareBlit3DContext *this)
+//ulong __thiscall IntelAccelerator::startGraphicsEngine(IntelAccelerator *this)
+//undefined8 __thiscall IntelAccelerator::stopGraphicsEngine(IntelAccelerator *this)
+//void __thiscall IGAccelSegmentResourceList::initBlitUsage(IGAccelSegmentResourceList *this)
+//ulong IntelAccelerator::submitBlit (blit3d_params_t *param_1,IGVector *param_2,IGAccelTask *param_3,bool param_4)

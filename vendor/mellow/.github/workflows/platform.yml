@@ -1,0 +1,68 @@
+name: Mellow platform foundation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portable:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and execute portable policy tests
+        run: python3 Tools/run-platform-tests.py --cxx g++ --out build/platform-tests
+      - name: Backport source intake and negative tests
+        run: python3 -m unittest discover -s tests -p test_mellow_port.py -v
+      - name: Execute ported Linux Xe algorithms and verify provenance
+        run: python3 Tools/run-ported-xe-tests.py --cxx g++ --out "${{ runner.temp }}/mellow-ported-xe"
+      - name: Compile native OpenCL provider without requiring a runner GPU
+        run: python3 Tools/run-opencl-runtime.py --cxx g++ --out build/opencl-runtime-build
+      - name: Check OpenCL lifecycle and injected cleanup failures
+        run: python3 Tools/run-opencl-runtime-regressions.py --cxx g++ --out build/opencl-regressions --sanitize
+      - name: Check stress timeout and malformed worker reports
+        run: python3 tests/opencl_runtime_stress_report_tests.py
+      - name: Check typed MSL and AIR lowering with sanitizers
+        run: python3 Tools/run-shader-jit-tests.py --cxx g++ --clang clang --require-opencl-syntax --sanitize --out "${{ runner.temp }}/mellow-shader-jit"
+      - name: Check AIR containers and supervised translator failure paths
+        run: |
+          python3 tests/air_decoder_tests.py
+          python3 tests/shader_cli_controls.py
+          python3 tests/metal_objects_report_tests.py
+      - name: Compile Mellow object API without claiming a runner GPU
+        run: python3 Tools/run-metal-objects.py --cxx g++ --out build/metal-objects-compile
+      - name: Check typed MSL render frontend with sanitizers
+        run: python3 Tools/run-render-shader-tests.py --cxx g++ --sanitize --out "$RUNNER_TEMP/mellow-render-shader"
+      - name: Compile GL provider and render objects without a runner GPU
+        run: |
+          python3 Tools/run-opengl-provider.py --cxx g++ --out build/opengl-provider-compile
+          python3 Tools/run-render-objects.py --cxx g++ --out build/render-objects-compile
+      - name: Check render reports and independent pixel-reference failure controls
+        run: |
+          python3 tests/opengl_provider_report_tests.py
+          python3 tests/render_objects_report_tests.py
+      - name: Check diagnostic driver protocol with sanitizers
+        run: python3 Tools/run-tahoe-diagnostic-tests.py --cxx g++ --sanitize --out "${{ runner.temp }}/mellow-tahoe-diagnostic"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mellow-platform-host-evidence
+          path: |
+            build/platform-tests/
+            ${{ runner.temp }}/mellow-ported-xe/
+            build/opencl-runtime-build/
+            build/opencl-regressions/
+            build/metal-objects-compile/
+            build/opengl-provider-compile/
+            build/render-objects-compile/
+            ${{ runner.temp }}/mellow-render-shader/
+            ${{ runner.temp }}/mellow-shader-jit/
+            ${{ runner.temp }}/mellow-tahoe-diagnostic/
+          if-no-files-found: error

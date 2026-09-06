@@ -61,6 +61,12 @@ class WebviewApi:
     def save_settings(self, data: dict[str, Any]) -> dict[str, Any]:
         return self._bridge.save_settings(data)
 
+    def prepare_mellow_efi(self, output: str) -> dict[str, Any]:
+        return self._bridge.prepare_mellow_efi(output)
+
+    def prepare_mellow_root_efi(self, source: str, output: str, payload: str) -> dict[str, Any]:
+        return self._bridge.prepare_mellow_root_efi(source, output, payload)
+
     def host_can_build(self) -> dict[str, Any]:
         return self._bridge.host_can_build()
 

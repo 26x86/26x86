@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "assertions": 38,
+  "iokit_runtime_tested": false,
+  "scope": "Production IOKit adapter method bodies; fake OS allocation, provider, map and event-source boundary. No actual IRQ synchronization or DMA tested.",
+  "source_sha256": {
+    "Mellow/XeInterruptIOKit.hpp": "b6c688d1ab7dc4d9563115ee772c1eb872b47ef4c59ff1cf89b67c6492c67ee1",
+    "Mellow/XeInterruptIOKit.cpp": "d0ab31bdec02b6b0bf6555877befa79c4cb10e9eb15ebd9e5954f0c46398d2a8",
+    "Mellow/XeFenceIOKit.hpp": "b068782679ac923db2395faf31d5004cf45448abf59d136e57e864c2a358e3a4",
+    "Mellow/XeFenceIOKit.cpp": "3b6a84ca88ee7ad0959d175ea2b4463f03a107bf142455a8f7e9c32e4253e034",
+    "tests/xe_interrupt_iokit_tests.cpp": "1c3821b90c312cb5ab812aeacd4ff9235315a2abfc2d3d54eea8d82bfd0a203f",
+    "tests/xe_interrupt_iokit_shim.hpp": "7fea549044488422ae4980125471203f24989c76af69917b742ea0cfbb4ea36f",
+    "Mellow/XeInterrupt.cpp": "804af667d214063f3faf0e4df41bc1875a0b6d365234fc16ec05123c4894edbc",
+    "Mellow/XeFence.cpp": "57e70e44b55be29c2f3e734223cbba03ef3d0c8a71c56ff57b77d0a346055989"
+  }
+}

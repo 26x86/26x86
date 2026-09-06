@@ -30,6 +30,8 @@ API_METHODS = frozenset(
         "get_status",
         "get_settings",
         "save_settings",
+        "prepare_mellow_efi",
+        "prepare_mellow_root_efi",
         "host_can_build",
         "launch_wx_action",
         "reveal_log",

@@ -1,0 +1,57 @@
+{
+  "scope": "pinned input/extraction hashes; no independent signature verification or runtime test",
+  "image": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\GalaxyBook-Tahoe\\installer\\com.apple.recovery.boot\\BaseSystem.dmg",
+  "image_sha256": "edddd0d5869caaa12e29e6996a04f11590280580976a119dbd42c24fa62fe18e",
+  "image_bytes": 960530321,
+  "output": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\tahoe-abi\\extracted",
+  "extracted_now": [],
+  "apple_chunklist_signature_verified_by_this_tool": false,
+  "files": [
+    {
+      "path": "macOS Base System/System/Library/CoreServices/SystemVersion.plist",
+      "bytes": 603,
+      "sha256": "6151cb883e5b48d43a33d4d41956405a1cd502e0c8622319388d943e2cb804a1"
+    },
+    {
+      "path": "macOS Base System/System/Library/dyld/dyld_shared_cache_x86_64",
+      "bytes": 760791040,
+      "sha256": "e5f4c3ff1cd2d985d6c3d370aa34a22034f6f815bcc4a2f0a044093e39e7dceb"
+    },
+    {
+      "path": "macOS Base System/System/Library/dyld/dyld_shared_cache_x86_64.01",
+      "bytes": 232357888,
+      "sha256": "9db68bbe532a4d99babc588767b67ba58942e14c2b74f1082bad857f74e9b377"
+    },
+    {
+      "path": "macOS Base System/System/Library/Extensions/IOAcceleratorFamily2.kext/Contents/Info.plist",
+      "bytes": 2391,
+      "sha256": "a538a844e004051d469d19e76b192b7676cc1953a9e0a8bfd22e930f39abc318"
+    },
+    {
+      "path": "macOS Base System/System/Library/KernelCollections/BaseSystemKernelExtensions.kc",
+      "bytes": 22282240,
+      "sha256": "60d3f43f1a23847aa8b60b7c57153fd93d20d0653c116d14da4875f09e5d2f04"
+    },
+    {
+      "path": "macOS Base System/System/Library/KernelCollections/BaseSystemKernelExtensions.kc.bundles",
+      "bytes": 3482,
+      "sha256": "692c3ae5907e152a653e7841d8476fce45bfb9dae5756ba7df451cf38cc8ff5b"
+    },
+    {
+      "path": "macOS Base System/System/Library/KernelCollections/BaseSystemKernelExtensions.kc.elides",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "macOS Base System/System/Library/KernelCollections/BootKernelExtensions.kc",
+      "bytes": 67584000,
+      "sha256": "c80161fa3065883753fc285339281361a8469cbb6fb27653c88e2a22eb4807a4"
+    },
+    {
+      "path": "macOS Base System/System/Library/KernelCollections/BootKernelExtensions.kc.elides",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "all_pinned_hashes_match": true
+}

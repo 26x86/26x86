@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-05T20:13:08.535783+00:00",
+  "release": "platform-v0.3.0-dev",
+  "kext_version": "0.4.3",
+  "scope": "Source, staged Git bytes, recorded test semantics and artifact consistency. This audit does not execute GPU or IOKit.",
+  "artifact_consistency_passed": true,
+  "scope_contract": {
+    "recorded_windows_msl_subset_gpu_execution": true,
+    "recorded_windows_synthetic_air_subset_gpu_execution": true,
+    "apple_metal_abi_registered": false,
+    "system_mtl_device_registered": false,
+    "native_tahoe_gpu_execution": false,
+    "tahoe_kext_loaded": false,
+    "full_metal_2_3_implemented": false,
+    "tahoe_installation_verified": false,
+    "nvidia_amd_backend_implemented": false
+  },
+  "gpu_runs": {
+    "msl": {
+      "verified_submissions": 10000,
+      "uint_values_compared": 2560000,
+      "pipeline_build_count": 1,
+      "extra_ordered_dispatches": 2,
+      "driver": "32.0.101.6737",
+      "driver_reported_pci": "8086:7D41",
+      "apple_compiler_output_verified": false,
+      "input_sha256": "4fe354ad13546ad32966bc683405932c37ae36e5f8b2c7d754ebc61e237c387b",
+      "readback_sha256": "63f82c709067e1e8d8d82d069ae6c0f61d91da523d64d37d7f0db8ae0b59062e"
+    },
+    "air-bitcode": {
+      "verified_submissions": 10000,
+      "uint_values_compared": 2560000,
+      "pipeline_build_count": 1,
+      "extra_ordered_dispatches": 2,
+      "driver": "32.0.101.6737",
+      "driver_reported_pci": "8086:7D41",
+      "apple_compiler_output_verified": false,
+      "input_sha256": "5651deb93c2124cc95e10cf83062abbf7fa7d79ddd9c91f42f92f3cea0f77f1c",
+      "readback_sha256": "b0303c75130fed00acaafb78601440b0c28aeabaffb66eef177ccc5dd0ed1dd3"
+    }
+  },
+  "kext": {
+    "sha256": "6932453a484ac62fb46f19b78f4a6424cef8ba907a3abe655b051bf03daed3c7",
+    "bytes": 474472,
+    "translation_units": 33,
+    "filetype": "MH_KEXT_BUNDLE",
+    "statically_eligible_imports": 426,
+    "total_imports": 426,
+    "target_recovery_build": "25G83",
+    "kernel_linker_executed": false
+  },
+  "reports": {
+    "validation/msl-object-gpu.json": "30bdf5da84da1a180ac42f310c3cc49fec0b10a80b2f139482875fa5eb8a3625",
+    "validation/air-object-gpu.json": "4d97d3fe6cf442b7b8ec84863f1f1c96b19f4fa41f718d6810b14e9d71265520",
+    "validation/shader-frontend-windows.json": "c689d29cec774651b18654d79e7bd07bc6d2da50fa29ac2e1f39ce2331d65db2",
+    "validation/shader-frontend-linux.json": "8502bef644d24d620686e9d4d2c1cecbc8e2e1cdf1edc1c1ab1c2b3ee0abcc35",
+    "validation/reusable-pipeline-regressions.json": "a257e9f65633427f1a24997d29a6d77d065f93c0515a45c0898c9c78ee6aea2b",
+    "validation/tahoe-diagnostic-protocol-windows.json": "2f512f288e6c9a26740f7d184e5bbdad4af090ebabd7ae67dc2394adfa626226",
+    "validation/tahoe-diagnostic-protocol-linux.json": "9f7ce14e3b761c2bad46ec6f51ad40100ac844d94b86f829aa362b7fdc222c65",
+    "validation/tahoe-diagnostic-kext-build.json": "ca3f804b1e18812961c78bccb968058837605aac603155481af6b1e11c8d4682",
+    "validation/tahoe-diagnostic-kext-macho.json": "e84658424261bdf193d3fb4c2f707dcaf36e82d0097a06272d1653be314048e5",
+    "validation/tahoe-diagnostic-import-resolution.json": "99b734bbc3656eae297ea48e974ca4d1f2b6dc876f054e739b29979d397968ac",
+    "validation/air-decoder-native.json": "513fb3e122a167b07a0705fd03eb6c391e8589b92ae9f4c80cccc5596602d9c2",
+    "validation/air-decoder-negative.json": "2fa0963627fe5448e317c6db28136f0f5cf32ff3e65b3b84ecaeb471d45cd5fc",
+    "validation/air-decoder-corpus.json": "70e95a01d3e1b5a7c742d838a7bd6dff3bf5408ac8f7ec2c7ddf4087f98d9851",
+    "validation/air-dll-lifetime-experiment.json": "b3e70703ebdf3cbe97ac688f96cbd28e975ff256181ca7d2f32871035b20fde2",
+    "validation/compute-msl-example.json": "9d65c1ef3592541ac4d5c945c42717f7508b1e0bef5aa5d4722dfb1f51cc5010",
+    "validation/metal-jit-host-policy.json": "91f613aef0bd4f9eaf21cbd73954de1370c2d08bb7667c4600ba19fcf1a80bd8",
+    "validation/shader-control-tests.json": "eb1b24ae9a25e9a11dcf337977457b5d3141f4fa95f4d856afbe6c7959261a97",
+    "validation/metal-objects-linux-build.json": "193dc424991f8ff3bcbc4b69584a40b7df661eb50388e17f65b493ec141273f1"
+  },
+  "source_hash_comparisons": 1468,
+  "unique_git_source_files_verified": 1381,
+  "git_index_bytes_match_tested_source": true,
+  "external_input_pins_verified": {
+    "C:\\msys64\\mingw64\\bin\\g++.exe": "fe03455c28ab0c69f1adb0ccde202124091f01d02b0c0ede8578f606063cc894",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\llvm-c-windows\\bin\\LLVM-C.dll": "b84e81d2ffa8fb030b58f1d9ad75ef3ab37f63cd094993c302d9efb34242eaf1",
+    "C:\\Windows\\System32\\kernel32.dll": "cb482d2b85870a538ffc867efbbea4dbe395771dd3a9e4cb95f66389e0084a15",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\metal-objects-msl-final\\metal-objects.exe": "d41b3e81d450c229dfc7a5ee94f0e6d21ff854367304af4bac79a4697d13e58f",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\metal-objects-air-bitcode-final\\metal-objects.exe": "a7d7d4e00640500f59baa4e3ec7d25f8c2ecb465a35916693302178084e82d76",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\shader-jit-cli.exe": "77d2dbf0f34683bdd7adb45a0d49c09c2592df053207b3053363ed19e9c9c766",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\compute-msl.exe": "7d6ff050e3d71a5e2374f645d9de99ce09babbf4417de9966b96f7fa1b01b50b",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\Tahoe-Final\\Mellow.kext\\Contents\\MacOS\\Mellow": "6932453a484ac62fb46f19b78f4a6424cef8ba907a3abe655b051bf03daed3c7",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\tahoe-abi\\extracted\\macOS Base System\\System\\Library\\KernelCollections\\BootKernelExtensions.kc": "c80161fa3065883753fc285339281361a8469cbb6fb27653c88e2a22eb4807a4",
+    "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\tahoe-abi\\extracted\\macOS Base System\\System\\Library\\KernelCollections\\BaseSystemKernelExtensions.kc": "60d3f43f1a23847aa8b60b7c57153fd93d20d0653c116d14da4875f09e5d2f04"
+  },
+  "intentional_negative_report": "validation/air-decoder-negative.json: wrong-library FAIL is expected",
+  "historical_counterexample": "validation/air-dll-lifetime-experiment.json: original load/unload behavior, not a current GPU test",
+  "remaining": [
+    "Apple Objective-C Metal ABI and system registration",
+    "General MSL/AIR and texture/render/blit",
+    "Integrated Tahoe GuC/context/physical IRQ/fence/reset GPU owner",
+    "Tahoe installation and physical kext/DMA testing",
+    "Native macOS diagnostic-client compilation",
+    "NVIDIA/AMD driver execution"
+  ],
+  "ci": "Native Xcode and Linux Actions execution blocked by GitHub account billing; local evidence is separate"
+}

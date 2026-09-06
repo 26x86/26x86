@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-05T19:15:17.750447+00:00",
+  "status": "PARTIAL_IMPLEMENTATION_VERIFIED",
+  "complete_tahoe_metal_validation": false,
+  "verified_scopes": [
+    "manual Linux Xe page-entry algorithm port",
+    "native Windows OpenCL C provider through MellowRT; 10000 verified submissions",
+    "QEMU Linux CPU execution of ported algorithms with simulated MMIO/DMA",
+    "actual Darwin kext cross compilation/link/structural verification"
+  ],
+  "unverified_or_unimplemented": [
+    "Tahoe kernel load and Recovery/installation",
+    "physical Darwin DMA/IOMMU/GGTT/GuC/IRQ/fence/reset",
+    "MSL/AIR/metallib frontend and Metal JIT",
+    "Mellow Metal device and offscreen render",
+    "WindowServer/scanout/sleep-wake",
+    "full Linux driver conversion or AMD/NVIDIA backend"
+  ],
+  "windows_display_inventory": {
+    "name": "Intel(R) Graphics",
+    "driver_version": "32.0.101.6737",
+    "hardware_id": "VEN_8086&DEV_7D41&SUBSYS_C906144D&REV_00"
+  },
+  "independent_pci_owner_binding_proven": false,
+  "kext": {
+    "version": "0.4.2",
+    "sha256": "195e749e0603c447a317b5fc06aec971be102f1c4c0cf1bd1ef0c4b2c2fecd06",
+    "size_bytes": 449768,
+    "actual_source_units": 31,
+    "new_unresolved_imports": [],
+    "unresolved_import_count": 378,
+    "previous_kext_sha256": "cee0482b2d858856c0696e0d8d6f18e6e12f87bb81bb0a0e1330984e1329eb36",
+    "xe_memory_object_sha256": "b23017dfcbb54e680a4f0c7c2d08d8f9e8e08bf02f79e8dceedb2ae19df9561c",
+    "ported_encoding_branch_relocations": [
+      "000000000000009a X86_64_RELOC_BRANCH      __ZN6Mellow8PortedXe9encodePdeEythRy",
+      "0000000000000049 X86_64_RELOC_BRANCH      __ZN6Mellow8PortedXe11encodePpgttEytjbhRyb"
+    ],
+    "kernel_load_tested": false
+  },
+  "artifacts": {
+    "ported-xe-host.json": {
+      "path": "validation/ported-xe-host.json",
+      "sha256": "1b4781ab94f5b02352cb8b23ba54a1d02767914999c88d793dabe04012a50b79"
+    },
+    "ported-xe-qemu.json": {
+      "path": "validation/ported-xe-qemu.json",
+      "sha256": "f881a65942802e12209bfb9b1a5f36b0c14b696b9fe626ddea1227b55d904f53"
+    },
+    "ported-xe-qemu-controls.json": {
+      "path": "validation/ported-xe-qemu-controls.json",
+      "sha256": "7b1686b8f5ca25864266daa71ec9415b794bc6949f7d42fa795e987a75993bf1"
+    },
+    "ported-xe-qemu-parser-controls.json": {
+      "path": "validation/ported-xe-qemu-parser-controls.json",
+      "sha256": "4800bb492acfcc460f6299ab5327aa8166961e9323964c5de86c35e2cecacf0f"
+    },
+    "ported-xe-qemu-kernel.json": {
+      "path": "validation/ported-xe-qemu-kernel.json",
+      "sha256": "77f74d9f6da9c6a6def58c3c6c19573fe4ad6f53bd72df2e984991f8c4cfb74f"
+    },
+    "ported-xe-kext-build.json": {
+      "path": "validation/ported-xe-kext-build.json",
+      "sha256": "c6855c77b2af99008105485e11f565aceb010cca01532feee8fa4ec98de2ba3b"
+    },
+    "ported-xe-kext-macho.json": {
+      "path": "validation/ported-xe-kext-macho.json",
+      "sha256": "5796027df430a9a8f9d138a6f545d404561fec2965a27e97456317e90dd1598a"
+    },
+    "ported-xe-kext-regression.json": {
+      "path": "validation/ported-xe-kext-regression.json",
+      "sha256": "800162d83acbd98ac70840e8c6e10cc7ed34e00f11ef6367471bfbe3b5285405"
+    },
+    "ported-xe-runtime-regression.json": {
+      "path": "validation/ported-xe-runtime-regression.json",
+      "sha256": "ef3dce30fc4457f15aa8c75c66f2bf44c484e4b95213c047d32beeceb4a5f604"
+    },
+    "native-opencl-runtime.json": {
+      "path": "validation/native-opencl-runtime.json",
+      "sha256": "ba093719b673ad0a62103d0dd8c770b7cb90fcb389b0c47b06485822c8009beb"
+    },
+    "native-opencl-regressions.json": {
+      "path": "validation/native-opencl-regressions.json",
+      "sha256": "8d0eec731cb9b42497cf2da1f35df60c36caaee5b7845581b790900e6066fd73"
+    },
+    "native-opencl-report-controls.json": {
+      "path": "validation/native-opencl-report-controls.json",
+      "sha256": "b2aadb773e333c16f05c7481f909cb37f75a2701f010bd96b041d915bd3c6707"
+    },
+    "native-opencl-linux-build.json": {
+      "path": "validation/native-opencl-linux-build.json",
+      "sha256": "0a4d792738937013da01d64458e3a0d9fdc92c4ed25267322934d14422852199"
+    },
+    "platform-directcl-tests.json": {
+      "path": "validation/platform-directcl-tests.json",
+      "sha256": "8e72ace0beb9410bc5158751022ab306c7c8a666931c3a39d4e709b5c96e2349"
+    },
+    "ported-xe-qemu-serial.log": {
+      "path": "validation/ported-xe-qemu-serial.log",
+      "sha256": "e6e2d17d8d089b2c7578eb6afac77646e2a9dc8c3ca72269490a6773312c8cb4"
+    }
+  }
+}

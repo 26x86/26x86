@@ -1,0 +1,10 @@
+{
+  "package": "linux-image-6.8.0-139-generic",
+  "version": "6.8.0-139.139",
+  "source": "http://archive.ubuntu.com/ubuntu/pool/main/l/linux-signed/linux-image-6.8.0-139-generic_6.8.0-139.139_amd64.deb",
+  "package_sha256": "99d9e27b999f5c3d26377822212198b3ee664735f758c7cefdf8fd93f2ba138a",
+  "matched_apt_package_metadata_sha256": true,
+  "bzimage_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+  "installed_on_host": false,
+  "extracted_for_diskless_guest_only": true
+}

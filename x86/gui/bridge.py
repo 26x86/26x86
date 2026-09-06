@@ -86,9 +86,34 @@ class WizardBridge:
         return os.environ.get("X86_TARGET_PROFILE") or self._settings.read("hardware_profile")
 
     def _constants(self):
-        return bootstrap.get_constants(start_unpack=True)
+        from .execution_settings import effective
+        selection = effective(self._settings.load())
+        if selection.get("execution_error"):
+            # An invalid saved native mode must not strand the mode selector.
+            # This object is for labels only and never starts a native probe.
+            from opencore_legacy_patcher.constants import Constants
+            from types import SimpleNamespace
+            c = Constants()
+            c.computer = SimpleNamespace(real_model="Execution configuration needs correction",
+                                         build_model="Execution configuration needs correction")
+            c.detected_os, c.detected_os_minor = 25, 0
+            c.detected_os_build = c.detected_os_version = ""
+            c.execution_mode = selection["execution"]["mode"]
+            c.gui_mode, c.cli_mode = True, False
+            c.launcher_binary = sys.executable
+            c.launcher_script = str(bootstrap.ensure_repo_on_path() / "26x86.py")
+            return c
+        # Viewing or changing modes must not race an old payload-mount thread.
+        # Native action workers request unpacking only after their own guard.
+        return bootstrap.get_constants(start_unpack=False, settings=self._settings.load())
+
+    def _configuration(self):
+        from x86.mellow.integration import configuration
+        return configuration(settings=self._settings.load())
 
     def get_app_info(self) -> dict[str, Any]:
+        from .execution_settings import effective
+        selection = effective(self._settings.load())
         c = self._constants()
         logo = resolve_gui_logo_path(c.icns_resource_path)
         logo_url = self._logo_data_uri(logo)
@@ -103,13 +128,14 @@ class WizardBridge:
             "title": window_title(PATCHER_VERSION),
             "guide_link": URL_GUIDE,
             "logo_url": logo_url,
-            "advanced_enabled": is_advanced_gui_enabled() and is_macos(),
+            "advanced_enabled": is_advanced_gui_enabled() and selection["execution"]["can_native_apply"],
             "host_is_mac": is_macos(),
             "macos_only_message": None if is_macos() else MACOS_ONLY_MESSAGE,
             "status_ready": strings.STATUS_READY,
             "hardware_profile": self._hardware_profile(),
             "profile_locked": bool(os.environ.get("X86_TARGET_PROFILE")),
             "surface_efi_path": os.environ.get("X86_SURFACE_EFI", ""),
+            **selection,
         }
 
     def set_hardware_profile(self, profile: Optional[str] = None) -> dict[str, Any]:
@@ -172,6 +198,16 @@ class WizardBridge:
         return {"ok": True, "selected_kernel": kernel, "label": label}
 
     def detect(self, refresh: bool = False) -> dict[str, Any]:
+        try:
+            context, _, _, _ = self._configuration()
+        except ValueError as exc:
+            return {"ok": True, "detect": {"model": "Execution configuration needs correction",
+                "host_is_mac": is_macos(), "native_device_probe": False, "error": str(exc)}}
+        if not context.can_native_apply and is_macos():
+            label = "Apple Silicon Sandbox" if context.is_sandbox else "Native host verification unavailable"
+            return {"ok": True, "detect": {"model": label, "host_is_mac": True,
+                "execution": context.as_dict(), "native_device_probe": False,
+                "marketing_name": label, "os_version": "", "os_build": ""}}
         c = self._constants()
         if refresh and is_macos():
             from opencore_legacy_patcher.detections import device_probe
@@ -210,6 +246,26 @@ class WizardBridge:
         return {"ok": True, "detect": payload}
 
     def get_patch_status(self) -> dict[str, Any]:
+        try:
+            context, deployment, payload, efi = self._configuration()
+            if context.is_sandbox:
+                return {"ok": True, "execution": context.as_dict(),
+                    "patch": {"can_patch": False, "can_unpatch": False, "patches_available": []},
+                    "summary": "Apple Silicon Sandbox Mode · native kext 및 루트 패치 사용 불가. 가상 GPU 런타임은 아직 제공되지 않습니다."}
+            if deployment == "root-patch":
+                from x86.patch.root import preflight
+                report = preflight(self._hardware_profile(), constants=self._constants())
+                return {"ok": True, "execution": context.as_dict(), "patch": report,
+                    "summary": "Mellow diagnostic root patch · GPU 가속 미검증\n" + "\n".join(
+                        report.get("patches", []) + report.get("blockers", []) + [report.get("error") or ""])}
+            if deployment == "efi":
+                from x86.mellow.integration import plan
+                report = plan(mode=context.mode.value, deployment=deployment, payload_dir=payload,
+                              efi=efi, settings=self._settings.load())
+                return {"ok": True, "execution": context.as_dict(), "patch": {"can_patch": False},
+                    "summary": "Mellow EFI 준비 가능 · 새 출력 폴더에 생성합니다. 실제 부팅 및 Metal 가속은 미검증입니다."}
+        except Exception as exc:
+            return {"ok": False, "patch": {"can_patch": False}, "summary": str(exc), "error": str(exc)}
         from x86.surface import PROFILE_ID
         if self._hardware_profile() == PROFILE_ID:
             from x86.patch.root import preflight
@@ -250,6 +306,7 @@ class WizardBridge:
             return {"ok": False, "error": errors.user_message(exc), "summary": errors.user_message(exc)}
 
     def get_status(self) -> dict[str, Any]:
+        from .execution_settings import effective
         settings = self._settings.load()
         patch_result = self.get_patch_status()
         return {
@@ -258,39 +315,69 @@ class WizardBridge:
             "config_path": str(self._settings.config_path),
             "patch": patch_result.get("patch"),
             "build_completed": self._build_completed,
+            "execution": effective(settings)["execution"],
         }
 
     def get_settings(self) -> dict[str, Any]:
-        from opencore_legacy_patcher.support import global_settings
-
-        gs = global_settings.GlobalEnviromentSettings()
-        analytics = gs.read_property("EnableCrashAndAnalyticsReporting")
-        if analytics is None:
-            analytics = True
+        from .execution_settings import effective
         data = self._settings.load()
-        data["analytics"] = bool(analytics)
+        data.setdefault("analytics", True)
+        selection = effective(data)
+        if selection["execution"]["can_native_apply"]:
+            from opencore_legacy_patcher.support import global_settings
+            existing = global_settings.GlobalEnviromentSettings().read_property("EnableCrashAndAnalyticsReporting")
+            if existing is not None:
+                data["analytics"] = bool(existing)
+        data.update(execution_mode=selection["execution"]["mode"],
+            mellow_deployment=selection["mellow_deployment"], mellow_payload=selection["mellow_payload"],
+            mellow_efi=selection["mellow_efi"])
         return {"ok": True, "settings": data, "config_path": str(self._settings.config_path)}
 
     def save_settings(self, data: dict[str, Any]) -> dict[str, Any]:
-        from opencore_legacy_patcher.support import global_settings
-
         try:
-            store_data = {k: v for k, v in data.items() if k != "analytics"}
-            if store_data:
-                current = self._settings.load()
-                current.update(store_data)
-                self._settings.save(current)
-
-            if "analytics" in data:
-                gs = global_settings.GlobalEnviromentSettings()
-                gs.write_property("EnableCrashAndAnalyticsReporting", bool(data["analytics"]))
-
-            return {"ok": True}
+            from .execution_settings import save_choice, effective
+            saved = save_choice(self._settings, data)
+            self._build_completed = False
+            bootstrap.reset_constants()
+            if "analytics" in data and self._configuration()[0].can_native_apply:
+                from opencore_legacy_patcher.support import global_settings
+                global_settings.GlobalEnviromentSettings().write_property("EnableCrashAndAnalyticsReporting", data["analytics"])
+            return {"ok": True, "settings": saved, **effective(saved)}
+        except (ValueError, OSError) as exc:
+            return {"ok": False, "error": str(exc)}
         except Exception as exc:
             logging.exception("save_settings failed")
             return {"ok": False, "error": errors.user_message(exc)}
 
+    def prepare_mellow_efi(self, output: str) -> dict[str, Any]:
+        try:
+            context, deployment, payload, efi = self._configuration()
+            context.require_native_plan("Mellow EFI preparation")
+            if deployment != "efi":
+                raise ValueError("Select Mellow EFI deployment in settings first")
+            from x86.mellow.integration import prepare_efi
+            return prepare_efi(efi, output, mode=context.mode.value, payload_dir=payload,
+                               settings=self._settings.load())
+        except (ValueError, OSError) as exc:
+            return {"ok": False, "error": str(exc)}
+
+    def prepare_mellow_root_efi(self, source: str, output: str, payload: str) -> dict[str, Any]:
+        """Prepare a separate disk-Lilu EFI before committing root-patch settings."""
+        try:
+            context, _, _, _ = self._configuration()
+            context.require_native_plan("Mellow root-patch EFI preparation")
+            from x86.mellow.integration import prepare_efi
+            return prepare_efi(source, output, mode=context.mode.value, payload_dir=payload,
+                               settings=self._settings.load(), deployment="root-patch")
+        except (ValueError, OSError) as exc:
+            return {"ok": False, "error": str(exc)}
+
     def host_can_build(self) -> dict[str, Any]:
+        try:
+            context, _, _, _ = self._configuration()
+            context.require_native_apply("Native EFI builder")
+        except ValueError as exc:
+            return {"ok": True, "can_build": False, "build_completed": False, "message": str(exc)}
         if not is_macos():
             return {
                 "ok": True,
@@ -321,8 +408,26 @@ class WizardBridge:
         if action not in allowed:
             return {"ok": False, "error": f"Unknown action: {action}"}
 
+        try:
+            context, deployment, payload, efi = self._configuration()
+            context.require_native_apply("Native wizard action")
+        except ValueError as exc:
+            return {"ok": False, "error": str(exc)}
+
         if not is_macos():
             return {"ok": False, "error": MACOS_ONLY_MESSAGE}
+
+        if deployment == "root-patch" and action in ("patch", "unpatch") and (
+                not hasattr(os, "geteuid") or os.geteuid() != 0):
+            import shlex
+            command = ["sudo", sys.executable] + (
+                ["--x86-cli"] if getattr(sys, "frozen", False) else ["-m", "x86.cli"])
+            command += ["patch",
+                       "--apply" if action == "patch" else "--unpatch", "--mode", "x86",
+                       "--mellow", "root-patch", "--mellow-payload", str(payload), "--efi", str(efi or "")]
+            return {"ok": False, "needs_root": True, "command": command,
+                "error": "Mellow 복원 저널은 관리자 권한의 전체 작업 프로세스가 필요합니다. "
+                "저장한 설정으로 터미널에서 실행하세요: " + shlex.join(command)}
 
         from x86.surface import PROFILE_ID
         surface = self._hardware_profile() == PROFILE_ID
@@ -348,6 +453,8 @@ class WizardBridge:
         repo = bootstrap.ensure_repo_on_path()
         env = os.environ.copy()
         env.setdefault("X86_LEGACY_GUI", "1")
+        env.update(X86_EXECUTION_MODE=context.mode.value, X86_MELLOW_DEPLOYMENT=deployment,
+                   X86_MELLOW_PAYLOAD=str(payload), X86_MELLOW_EFI=str(efi or ""))
         if surface:
             env["X86_TARGET_PROFILE"] = PROFILE_ID
         if action == "advanced":

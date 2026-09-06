@@ -1,0 +1,165 @@
+test_arm_and_rosetta_default_to_sandbox_and_block_all_native_paths (test_execution.ExecutionPolicyTests) ... ok
+test_auto_native_intel_and_preparation_hosts (test_execution.ExecutionPolicyTests) ... ok
+test_context_is_immutable_and_json_does_not_expose_mutable_internal_errors (test_execution.ExecutionPolicyTests) ... ok
+test_default_calls_real_host_detector_once (test_execution.ExecutionPolicyTests) ... ok
+test_enum_request_and_mapping_facts (test_execution.ExecutionPolicyTests) ... ok
+test_environment_lock_rejects_both_conflicting_directions (test_execution.ExecutionPolicyTests) ... ok
+test_explicit_request_does_not_read_unused_setting_value (test_execution.ExecutionPolicyTests) ... ok
+test_explicit_sandbox_restricts_native_intel_too (test_execution.ExecutionPolicyTests) ... ok
+test_invalid_environment_is_not_ignored_by_explicit_request (test_execution.ExecutionPolicyTests) ... ok
+test_invalid_fact_types_and_unknown_fact_keys_are_rejected (test_execution.ExecutionPolicyTests) ... ok
+test_invalid_selected_modes_fail_closed (test_execution.ExecutionPolicyTests) ... ok
+test_matching_explicit_and_environment_mode_is_allowed_but_locked (test_execution.ExecutionPolicyTests) ... ok
+test_no_implicit_settings_io_and_explicit_empty_environ_is_respected (test_execution.ExecutionPolicyTests) ... ok
+test_precedence (test_execution.ExecutionPolicyTests) ... ok
+test_stored_and_environment_x86_do_not_bypass_arm_detection (test_execution.ExecutionPolicyTests) ... ok
+test_unknown_darwin_facts_never_permit_native_operations (test_execution.ExecutionPolicyTests) ... ok
+test_arm_process_never_becomes_native_after_probe_failures (test_execution.HostDetectionTests) ... ok
+test_exact_arm64_oid_absence_accepts_verified_nontranslated_x86 (test_execution.HostDetectionTests) ... ok
+test_exact_translation_enoent_is_nontranslated_with_note (test_execution.HostDetectionTests) ... ok
+test_generic_or_ambiguous_arm64_errors_remain_denied (test_execution.HostDetectionTests) ... ok
+test_missing_arm64_oid_cannot_hide_translated_process (test_execution.HostDetectionTests) ... ok
+test_missing_arm64_oid_does_not_relax_machine_check (test_execution.HostDetectionTests) ... ok
+test_missing_arm64_oid_requires_successful_translation_evidence (test_execution.HostDetectionTests) ... ok
+test_native_intel_probes (test_execution.HostDetectionTests) ... ok
+test_non_darwin_does_not_run_sysctl (test_execution.HostDetectionTests) ... ok
+test_other_sysctl_failures_never_become_native (test_execution.HostDetectionTests) ... ok
+test_positive_arm64_evidence_wins_over_nontranslated_sysctl_helper (test_execution.HostDetectionTests) ... ok
+test_rosetta_is_detected_despite_x86_process_machine (test_execution.HostDetectionTests) ... ok
+test_cli_sandbox_no_native_imports (test_mellow_integration.IntegrationTests) ... ok
+test_conflicting_environment_cannot_be_overridden (test_mellow_integration.IntegrationTests) ... ok
+test_copy_readback_dependency_order_no_source_changes (test_mellow_integration.IntegrationTests) ... ok
+test_duplicate_dependency_rejected (test_mellow_integration.IntegrationTests) ... ok
+test_duplicate_disk_lilu_is_rejected (test_mellow_integration.IntegrationTests) ... ok
+test_efi_only_lilu_is_not_a_kernel_collection_link_input (test_mellow_integration.IntegrationTests) ... ok
+test_existing_or_nested_output_refused (test_mellow_integration.IntegrationTests) ... ok
+test_lilu_version_arch_range_binary (test_mellow_integration.IntegrationTests) ... ok
+test_live_gate_rejects_windows_without_importing_native_modules (test_mellow_integration.IntegrationTests) ... ok
+test_missing_lilu (test_mellow_integration.IntegrationTests) ... ok
+test_nearby_kdk_cannot_approve_mellow (test_mellow_integration.IntegrationTests) ... ok
+test_path_escape_rejected (test_mellow_integration.IntegrationTests) ... ok
+test_root_efi_preparation_disables_dependency_injection (test_mellow_integration.IntegrationTests) ... ok
+test_root_plan_uses_data_driver_path_and_never_claims_metal (test_mellow_integration.IntegrationTests) ... ok
+test_sandbox_rejects_before_payload_read (test_mellow_integration.IntegrationTests) ... ok
+test_copy_error_reaches_outer_rollback (test_mellow_integration.OrchestratorTests) ... ERROR:root:We have a problem to execute patches and rebuild the Kernel Cache.
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 537, in _patch_root_vol
+  File "C:\Users\Admin\Documents\ChatGPT\26x86darwin\tests\test_mellow_integration.py", line 264, in <lambda>
+    _execute_patchset=lambda p: (_ for _ in ()).throw(IOError("copy failed")))
+  File "C:\Users\Admin\Documents\ChatGPT\26x86darwin\tests\test_mellow_integration.py", line 264, in <genexpr>
+    _execute_patchset=lambda p: (_ for _ in ()).throw(IOError("copy failed")))
+OSError: copy failed
+ok
+test_failed_patch_metadata_is_not_success (test_mellow_integration.OrchestratorTests) ... ERROR:root:- Failed to write patchset: Failed to generate root patch metadata
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 521, in _write_patchset
+RuntimeError: Failed to generate root patch metadata
+ok
+test_failed_rsync_rejects_even_with_preexisting_libkern (test_mellow_integration.OrchestratorTests) ... ok
+test_false_kernel_rebuild_never_reports_success (test_mellow_integration.OrchestratorTests) ... ERROR:root:We have a problem to execute patches and rebuild the Kernel Cache.
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 549, in _patch_root_vol
+RuntimeError: Kernel collection or APFS snapshot rebuild failed
+ok
+test_kdk_merge_error_is_not_swallowed (test_mellow_integration.OrchestratorTests) ... ERROR:root:Merging KDK with root volume failed
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 254, in _merge_kdk_with_root
+  File "C:\Users\Admin\Documents\ChatGPT\26x86darwin\tests\test_mellow_integration.py", line 229, in <lambda>
+    merger = lambda *a: SimpleNamespace(merge=lambda *a: (_ for _ in ()).throw(IOError("KDK copy failed")))
+  File "C:\Users\Admin\Documents\ChatGPT\26x86darwin\tests\test_mellow_integration.py", line 229, in <genexpr>
+    merger = lambda *a: SimpleNamespace(merge=lambda *a: (_ for _ in ()).throw(IOError("KDK copy failed")))
+OSError: KDK copy failed
+ERROR:root:Merging KDK with root volume failed
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 258, in _merge_kdk_with_root
+RuntimeError: Mellow requires the exact-build KDK to be successfully merged
+ok
+test_readback_failure_prevents_cache_and_snapshot (test_mellow_integration.OrchestratorTests) ... ERROR:root:We have a problem to execute patches and rebuild the Kernel Cache.
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 540, in _patch_root_vol
+  File "C:\Users\Admin\Documents\ChatGPT\26x86darwin\tests\test_mellow_integration.py", line 282, in <lambda>
+    _mellow_transaction=SimpleNamespace(installed=lambda: (_ for _ in ()).throw(ValueError("hash"))),
+  File "C:\Users\Admin\Documents\ChatGPT\26x86darwin\tests\test_mellow_integration.py", line 282, in <genexpr>
+    _mellow_transaction=SimpleNamespace(installed=lambda: (_ for _ in ()).throw(ValueError("hash"))),
+ValueError: hash
+ok
+test_sandbox_constructor_rejects_before_native_snapshot_probe (test_mellow_integration.OrchestratorTests) ... ok
+test_unpatch_retains_journal_until_cache_succeeds (test_mellow_integration.OrchestratorTests) ... ok
+test_acceleration_false_only (test_mellow_payload.PayloadTests) ... ok
+test_archive_is_not_payload (test_mellow_payload.PayloadTests) ... ok
+test_component_traversal (test_mellow_payload.PayloadTests) ... ok
+test_destination_allowlist (test_mellow_payload.PayloadTests) ... ok
+test_duplicate_category (test_mellow_payload.PayloadTests) ... ok
+test_duplicate_json_key (test_mellow_payload.PayloadTests) ... ok
+test_extra_file (test_mellow_payload.PayloadTests) ... ok
+test_extra_kext_plugin_even_with_updated_inventory (test_mellow_payload.PayloadTests) ... ok
+test_file_hash (test_mellow_payload.PayloadTests) ... ok
+test_fresh_validation_at_patch_creation (test_mellow_payload.PayloadTests) ... ok
+test_invalid_json_shape (test_mellow_payload.PayloadTests) ... ok
+test_inventory_traversal (test_mellow_payload.PayloadTests) ... ok
+test_macho_invalid_command_even_with_updated_inventory (test_mellow_payload.PayloadTests) ... ok
+test_macho_wrong_cpu_even_with_updated_inventory (test_mellow_payload.PayloadTests) ... ok
+test_macho_wrong_type_even_with_updated_inventory (test_mellow_payload.PayloadTests) ... ok
+test_metadata (test_mellow_payload.PayloadTests) ... ok
+test_missing_file (test_mellow_payload.PayloadTests) ... ok
+test_missing_runtime_and_user_driver (test_mellow_payload.PayloadTests) ... ok
+test_real_bundle_and_engine_dictionary (test_mellow_payload.PayloadTests) ... ok
+test_required_diagnostic_gate (test_mellow_payload.PayloadTests) ... ok
+test_revalidate_and_patch_cannot_bypass_sandbox (test_mellow_payload.PayloadTests) ... ok
+test_sandbox_is_denied_before_io (test_mellow_payload.PayloadTests) ... ok
+test_source_snapshot_all_crossbuild_inputs_match (test_mellow_payload.PayloadTests) ... ok
+test_symlink (test_mellow_payload.PayloadTests) ... ok
+test_unknown_category (test_mellow_payload.PayloadTests) ... ok
+test_unknown_mode (test_mellow_payload.PayloadTests) ... ok
+test_corrupted_backup_is_detected_before_target_deletion (test_mellow_transaction.MellowTransactionTests) ... ok
+test_corrupted_expected_snapshot_blocks_installed_receipt (test_mellow_transaction.MellowTransactionTests) ... ok
+test_default_journal_is_rooted_in_explicit_data_root (test_mellow_transaction.MellowTransactionTests) ... ok
+test_deferred_finalize_preserves_receipt_for_cache_retry (test_mellow_transaction.MellowTransactionTests) ... ok
+test_duplicate_category_and_wrong_root_are_rejected (test_mellow_transaction.MellowTransactionTests) ... ok
+test_extra_files_in_new_target_block_destructive_rollback (test_mellow_transaction.MellowTransactionTests) ... ok
+test_failed_archive_keeps_restored_receipt_for_retry (test_mellow_transaction.MellowTransactionTests) ... ok
+test_finalize_rejects_unrestored_transaction (test_mellow_transaction.MellowTransactionTests) ... ok
+test_first_install_is_removed_by_verified_unpatch (test_mellow_transaction.MellowTransactionTests) ... ok
+test_journal_cannot_overlap_component_or_payload (test_mellow_transaction.MellowTransactionTests) ... ok
+test_known_partial_first_install_is_removed (test_mellow_transaction.MellowTransactionTests) ... ok
+test_new_instance_cannot_finalize_or_rollback_another_active_transaction (test_mellow_transaction.MellowTransactionTests) ... ok
+test_new_transaction_allowed_after_successful_restore (test_mellow_transaction.MellowTransactionTests) ... ok
+test_no_active_journal_returns_false_without_creating_it (test_mellow_transaction.MellowTransactionTests) ... ok
+test_original_removed_by_engine_can_still_be_restored (test_mellow_transaction.MellowTransactionTests) ... ok
+test_pending_and_files_verified_transactions_block_new_prepare (test_mellow_transaction.MellowTransactionTests) ... ok
+test_posix_original_owner_is_restored (test_mellow_transaction.MellowTransactionTests) ... skipped 'Ownership restoration needs a privileged POSIX temporary fixture'
+test_post_restore_external_change_blocks_retry_and_finalization (test_mellow_transaction.MellowTransactionTests) ... ok
+test_preparation_copy_failure_leaves_blocked_journal_and_unchanged_original (test_mellow_transaction.MellowTransactionTests) ... ok
+test_prepare_fsync_failure_never_authorizes_target_overwrite (test_mellow_transaction.MellowTransactionTests) ... ok
+test_prepare_only_creates_journal_and_preserves_existing_bytes_modes (test_mellow_transaction.MellowTransactionTests) ... ok
+test_prepare_then_rollback_without_copy_is_noop_for_target (test_mellow_transaction.MellowTransactionTests) ... ok
+test_readback_rejects_missing_or_truncated_copy_then_restores_original (test_mellow_transaction.MellowTransactionTests) ... ok
+test_real_copy_readback_and_persistent_unpatch_restore_original (test_mellow_transaction.MellowTransactionTests) ... ok
+test_receipt_checksum_failure_preserves_targets (test_mellow_transaction.MellowTransactionTests) ... ok
+test_receipt_replacement_failure_does_not_claim_files_verified (test_mellow_transaction.MellowTransactionTests) ... ok
+test_recomputed_receipt_cannot_choose_arbitrary_destination (test_mellow_transaction.MellowTransactionTests) ... ok
+test_recomputed_receipt_cannot_escape_with_backup_relative_path (test_mellow_transaction.MellowTransactionTests) ... ok
+test_restore_copy_failure_is_resumable_from_pending_receipt (test_mellow_transaction.MellowTransactionTests) ... ok
+test_symlink_inserted_after_install_blocks_rollback (test_mellow_transaction.MellowTransactionTests) ... ok
+test_symlinked_destination_parent_is_rejected_before_journal (test_mellow_transaction.MellowTransactionTests) ... ok
+test_unrecognized_bytes_are_not_deleted_even_at_mellow_destination (test_mellow_transaction.MellowTransactionTests) ... ok
+test_websites_cannot_launch_local_patch_or_read_efi (test_surface.BridgeBoundaryTests) ... ok
+test_enabled_path_cannot_escape_efi (test_surface.SurfaceTests) ... ok
+test_missing_optional_qt_parents_are_not_startup_errors (test_surface.SurfaceTests) ... ok
+test_non_mac_root_patch_never_loads_engine (test_surface.SurfaceTests) ... ok
+test_preflight_reports_nearby_kdk_and_blocks_unrelated_patches (test_surface.SurfaceTests) ... ok
+test_preparation_does_not_import_mac_frameworks_or_wx (test_surface.SurfaceTests) ... ok
+test_profile_requires_cpu_and_gpu_not_spoofed_smbios (test_surface.SurfaceTests) ... ok
+test_rollback_success_cannot_be_reported_as_patch_success (test_surface.SurfaceTests) ... ok
+test_validation_preserves_efi_and_detects_missing_binary (test_surface.SurfaceTests) ... ok
+
+----------------------------------------------------------------------
+Ran 118 tests in 4.566s
+
+OK (skipped=1)

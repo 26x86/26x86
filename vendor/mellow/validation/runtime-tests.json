@@ -1,0 +1,668 @@
+{
+  "schema_version": 1,
+  "utc": "2026-09-05T12:22:31.960724+00:00",
+  "host": "Windows-10-10.0.28000-SP0",
+  "python": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+  "compiler": "C:/msys64/mingw64/bin/g++.exe",
+  "passed": true,
+  "hardware_executed": false,
+  "native_metal_executed": false,
+  "driver_loaded": false,
+  "scope": "Real production source with explicit host MMIO, DMA, OS and GPU-peer simulations; no physical GPU, IRQ, firmware upload or Metal execution",
+  "baseline_included": true,
+  "firmware_sha256": "7794f0b6abe5fcd9c6f47035dafe2199f30a6e7d230bd5a53fbf8005a60e5911",
+  "source_sha256": {
+    "compiler-evidence/mellow_evidence_mtl.bin": "fea5095ddad2a328b6216263a1ab0571778f6277058720b09318399196185a90",
+    "Mellow/AppleIntelParams.hpp": "089c3cc6d4d27514776eff82410ffec2e54a6fa6892633add185cc0f90fd0360",
+    "Mellow/DisplayMergeNub.cpp": "94d4c9c266746042c689518f9af056cee5a780a407f0c680176c497b1f76768d",
+    "Mellow/DisplayMergeNub.h": "4ebe5ca57569384ab8ea12bb621aa9271340e4a1d7f56b623c106428664d7360",
+    "Mellow/DYLDPatches.cpp": "feb95b539daed1895e1dbe4da71d989beecf09218fa1ad8b78de1b7ccf4d348e",
+    "Mellow/DYLDPatches.hpp": "953e62ca731598b41de850c5587a9f40b1ee313005426acaf14e54d5c44feec8",
+    "Mellow/HardwareAccess.hpp": "c468ef423a37b575244c7040f055ff05596d8072f6aee1e52e5beb960cd2eefc",
+    "Mellow/HDMI.cpp": "6185c9b490e39d7187bc6438a18bd72f72e0568027bef56346456349b3dd2c78",
+    "Mellow/HDMI.hpp": "2404822a22e07011648f7ae21c1bc5ce5a259d7a4a3c68a34bac0ea6dc8367d9",
+    "Mellow/IntelDPLinkTraining.cpp": "f1d6637ceb90d059047bb2b1b99d13359066e621216c5c757fd8c2b949c416d5",
+    "Mellow/IntelDPLinkTraining.hpp": "ab623dae8032adf561170d5ffa31e84468f14e1e6825c25b6d1d35872f3d63fa",
+    "Mellow/kern_gen11.cpp": "702d90c98ac71d0dee6162d6d883e8ca2dbacb1c536d7b04641a00d10eec980c",
+    "Mellow/kern_gen11.hpp": "b7dbf339967cc388286b48724eac6b81033feb403a03ca8a4162e0e36402699b",
+    "Mellow/kern_genx.cpp": "56c79a93ba0df8783f875f9730fe3ab8188f791a2c4d8e6fa7a71f54ca666fe6",
+    "Mellow/kern_genx.hpp": "0470dc37984f7b33047d4d358fc81e2180539dfc54bbc1eb167ff54ce4c5f795",
+    "Mellow/kern_mellow.cpp": "6de8161c87d3033724ba26257f48cc5b39bf9e6575daa7c207955c1807275bf3",
+    "Mellow/kern_mellow.hpp": "d7bb4da859e37365b7ed559b146e3127669b4b410ac1dd6d2197ead2e84c0ff5",
+    "Mellow/kern_model.hpp": "4ea086ddc9054aff84daee10f20059bfd674fc0779f8c1ae33e756e0813420f9",
+    "Mellow/kern_netdbg.cpp": "578778f7761364fbc12557f7ce2bc39eed6bc2d0102e3fd3e933b96dd4983629",
+    "Mellow/kern_netdbg.hpp": "fe9b45be5b9019bd9a3a19dc99cea1125b58879c08433eb62475ff0bb8b2462d",
+    "Mellow/kern_patcherplus.cpp": "8403a164c70f5f36eb78ea9496fbb178d599e2b55864f05a3bea69cddfea9e04",
+    "Mellow/kern_patcherplus.hpp": "39803d1309077420a84e6a7843b2d64b9b5d50cf6ccf9df06fd4db5e6e95c064",
+    "Mellow/kern_start.cpp": "52c99fd7bdb571ac5f28e7f20f88a4108113b6e9e1969c995a5c2fb6f1ccb756",
+    "Mellow/PatternMatch.hpp": "01e3ba828d09cc4f09ceab348b06d917fb1206cbc385c57a7402ca7e1bdbe82f",
+    "Mellow/StartupPolicy.hpp": "6a476022092d530bab66658873fd63ee12c5f8a6d3b493c0775851d96e49db88",
+    "Mellow/XeContext.cpp": "fa150dc82d085084ed438605ec48a96bb8e0b27805c1f59a9d96b7df5277b101",
+    "Mellow/XeContext.hpp": "ca0f3b2e8ddd1561958c08066583c0e82e90ba463deeed3df425c58c7b22c0d1",
+    "Mellow/XeContextExecution.cpp": "01c8b0e4dcad01f9b11565c798b5b8787e45efdc93dac79cde656fa9536e0a97",
+    "Mellow/XeContextExecution.hpp": "dd052f230aff12db1dcfbf330e2ac0b823a74740b7f0e9cbbf03c7a048400ab9",
+    "Mellow/XeDispatch.cpp": "5434ffef73bb8337b2dd91fce4649732c96e9f6d5e38f5c788ef5752e43a45fc",
+    "Mellow/XeDispatch.hpp": "9a4bea95eeba1e9a9c6e544cc9a155f784987673e54d9a7f8ac3ddfa8dacb481",
+    "Mellow/XeFence.cpp": "57e70e44b55be29c2f3e734223cbba03ef3d0c8a71c56ff57b77d0a346055989",
+    "Mellow/XeFence.hpp": "1a2630e47da7dc412cbc0d6fce03d487152782c6f662acdb9743a9862e88cccd",
+    "Mellow/XeFenceIOKit.cpp": "3b6a84ca88ee7ad0959d175ea2b4463f03a107bf142455a8f7e9c32e4253e034",
+    "Mellow/XeFenceIOKit.hpp": "b068782679ac923db2395faf31d5004cf45448abf59d136e57e864c2a358e3a4",
+    "Mellow/XeFirmware.cpp": "b5360475a6d1c85aa1aef56d816b2180139ec1303c249a07b12b7b0eaa96e7c6",
+    "Mellow/XeFirmware.hpp": "e40fd3350a9fe84e9e6d92da76e63805dc475b5980a5034085acfe6a7b6d4c94",
+    "Mellow/XeGuCFirmware.cpp": "b197259f9df7a52a931fd0cf7d5ad2e923900b3c3dd3ab45f243c24218ba053d",
+    "Mellow/XeGuCFirmware.hpp": "56d92036048a4afe98d423c2a74717a8eb344f129186fa66ea70a7479d845309",
+    "Mellow/XeGuCFirmwareIOKit.cpp": "1be5bca59acc3756a231305402581286bae0d3f9a58725b2ffdcaf50712ef4c9",
+    "Mellow/XeGuCFirmwareIOKit.hpp": "f8dc32496fa7bfa47c82d5d223b5fb829c0935ccd7d6d162be75a89fb2f2c3d4",
+    "Mellow/XeGuCTransport.cpp": "bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd",
+    "Mellow/XeGuCTransport.hpp": "994637508919c5d6f001fedd18aded9ff2f855280f07ed8003a7942260767c25",
+    "Mellow/XeGuCTransportIOKit.cpp": "def9f9b594bc028fdbc58b58fe33f255e0adbda5fb40097eb0301dd4bdfdf6f5",
+    "Mellow/XeGuCTransportIOKit.hpp": "452271b709ff3dbb7cbc3cfff3a995246ed3ce8df54df90109030ef63c376a62",
+    "Mellow/XeInterrupt.cpp": "804af667d214063f3faf0e4df41bc1875a0b6d365234fc16ec05123c4894edbc",
+    "Mellow/XeInterrupt.hpp": "5c7d14f0e5cb7eaf1e29b3ec6050d3e8207499f93f2dd9696ce7caca91fad69c",
+    "Mellow/XeInterruptDispatch.hpp": "e96308c0f171afd298a660bedf62c3f318bb6adf739eaf2eb56a239de6554dca",
+    "Mellow/XeInterruptIOKit.cpp": "d0ab31bdec02b6b0bf6555877befa79c4cb10e9eb15ebd9e5954f0c46398d2a8",
+    "Mellow/XeInterruptIOKit.hpp": "b6c688d1ab7dc4d9563115ee772c1eb872b47ef4c59ff1cf89b67c6492c67ee1",
+    "Mellow/XeMemory.cpp": "3ea4de6e65ccbaebbf366412ba88ac57c88514ddcbed4ba9cb4a2787fb0bd354",
+    "Mellow/XeMemory.hpp": "6da839cc46a9901c04908e42c73d426df879c0c4d566d42fb124c4b55bb4376d",
+    "Mellow/XeMemoryIOKit.cpp": "21e9bc2d71a1e27a3469a484d93590efca6744cac641e6ebc92a5012236b15a7",
+    "Mellow/XeMemoryIOKit.hpp": "1f3f8c3f47428de1a255edb25892d883b62aea4dc97c3728e99d947115d15bc1",
+    "Mellow/XeMemorySubmission.hpp": "061e20da6c163a8013010688e479f6fdbfc4480791ebcd9c70fb68e9bb0e67d2",
+    "Mellow/XeMmioAccess.cpp": "8fe6d6e0dc35f4e12794a67563a116cb0775d35b5b76c91d58d3dc61c8489332",
+    "Mellow/XeMmioAccess.hpp": "5da06a872c9e0ac31cb4ea510e186f7a27ace0cb26bcfca28191ede0fe76ae10",
+    "Mellow/XeMmioIOKit.cpp": "f7eeca1d695dcdfde8cb07ab4a096e8875660faeaa89c136774c4f43cd0315a0",
+    "Mellow/XeMmioIOKit.hpp": "f95cc0fcae19ae7265eed61ac2a6fe4d03836cd67c366458d704d80cba4d6e15",
+    "Mellow/XePageTable.cpp": "dfb68e85286976bdfdce64ea494adb1f2b3f52df44332928893f5689847667a1",
+    "Mellow/XePageTable.hpp": "577085e394f2d5c7fca15e635abffe368003a6c84e95856079d0fdbce7d38f26",
+    "Mellow/XePageTableIOKit.cpp": "231830c579da1c4852ddda54859b5f6a25cb6cd9ba2f384369a2357cf72a634d",
+    "Mellow/XePageTableIOKit.hpp": "9f6e40a95a949e0d61d6b8a127efb8ecced90027a903150f8ebab929efc8c14e",
+    "Mellow/XeSubmission.cpp": "4a1b946d2bbc47438927fa9742855688f5620ce5b59ac881108ded95c114f229",
+    "Mellow/XeSubmission.hpp": "5a034c0ad77779b7058704259e41ced17bd184cf35d852d987b4e064fbbeb0ac",
+    "Mellow/XeZebin.cpp": "b83fa5ff530c240b22a1a081d4121a6a49037b725c7716a9905272ae2af68850",
+    "Mellow/XeZebin.hpp": "e51965d9e67269204b456e5968f16ceca5599524a02340be7cc0e685be9ef163",
+    "tests/accel_contracts.py": "8664645047b3b49fd8e087b7dfb265f82942f74222baab80be3b59f97f589ddd",
+    "tests/accel_contracts_harness.cpp": "4359818a075b63eb2af4a371d90eff86ecf08b4fef9fae30896d398a8d9d5a7e",
+    "tests/accel_hde/hde64.h": "109319ff7ab6b135708fb4ff7d20a7cef4eb30cd4c2048cf8090caaadb53bb1a",
+    "tests/accel_hde/table64.h": "98b281719ce1f20ebb72d0b6a851fbf57d14c11e93b2d50477dd51d65da80678",
+    "tests/build_macho_validation.py": "4ed9b9cbcc674850ad3643c38b543fa0b23b75f18f48e7d1c7028830bdc6f6d8",
+    "tests/HardwareAccessTests.cpp": "13259c004b598bf7dcdda3372b8196940a3df1b7bdc2e323e1204039153a6efd",
+    "tests/iokit_types/IOKit/IOMapper.h": "9bd0c688a7fdfd8739e6edcd74ff46db1bfbed46cf377a81ae8e9c6679a5c4c6",
+    "tests/metal_evidence_tests.py": "68e0bdff5e3ac2682e1e02dc15f9d861cd8f37bbb103ba88bbc68cc5129de90f",
+    "tests/metal_session_tests.py": "3832f3fe5a70be983a5186b675428511d1d6a47d983d083f93928bbd724c39a9",
+    "tests/modelTests.cpp": "2d1218f6c62e61af6901f57f05cbb90df23d078d4ac982f16a0f66420dae9dc9",
+    "tests/patcher_policy_tests.cpp": "a8eeea0722f78928a0d6cd4e32eb3818f5e31de4c077bf5d6bee6c5dbfc78c7a",
+    "tests/xe_bridge_tests.cpp": "8fce78bf15739dbf6965590924bdf86a1d872fb64b8b294995db2e123ed78aaa",
+    "tests/xe_context_execution_tests.cpp": "4428f404500341304d24e7617cc2e67e98b909fb85f3559fbbd0fd749d233855",
+    "tests/xe_context_tests.cpp": "ee215285dd40e2260194a86d1e643456201fd89d47795375a73e1995a1d3a7f3",
+    "tests/xe_dispatch_intel_reference.inl": "2e372f6415dc9d84ef6d2fd611ac8f409c8d48e9c3b793896f2b7ebf82f3b5fc",
+    "tests/xe_dispatch_tests.cpp": "31e6090af2428c97811f6d02b419e024f0451a141486bf3d22aa21810acaae82",
+    "tests/xe_guc_firmware_test.py": "4155da48175714f24d02f3625f01b8fd0fe498ac83a3a388c6e5f76d235322ad",
+    "tests/xe_guc_firmware_tests.cpp": "23a39b9079cd433c6b5699f71666f9abbe9d438aef414eb86b7f331e53c5efde",
+    "tests/xe_guc_test.py": "7297543db8db9b2ec415731ca329fbd57ac1678f4dbe71c892ab339fb79afdb5",
+    "tests/xe_guc_tests.cpp": "7d93bb6755f754b9e347b1d462454b165d567e93af1216349adf624b8ad7dbd0",
+    "tests/xe_interrupt_iokit_shim.hpp": "7fea549044488422ae4980125471203f24989c76af69917b742ea0cfbb4ea36f",
+    "tests/xe_interrupt_iokit_test.py": "74d824dd3075fdcfbaa24b03424ca621372f01d87356f1fd59ed800b64945d39",
+    "tests/xe_interrupt_iokit_tests.cpp": "1c3821b90c312cb5ab812aeacd4ff9235315a2abfc2d3d54eea8d82bfd0a203f",
+    "tests/xe_interrupt_test.py": "0433a61252c8bb1dec65f6aae560bbd72e6c475413b33f523c10e8082a4aecc6",
+    "tests/xe_interrupt_tests.cpp": "631fa445f25599fae2f3f655189f0944e53fba9ac5dd141e82780154402a97b4",
+    "tests/xe_memory_tests.cpp": "0a52cb1d6baeddd27c1e097ff1e2d77a016c8f2b2c1759e480644f12ba5b8468",
+    "tests/xe_mmio_tests.cpp": "db57091366e4f90ddb859558a1fa739cbf8f26270bfcde6c5f1ac5c2d4960412",
+    "tests/xe_page_table_iokit_tests.cpp": "2a4376577592f8ee579960b397701c6d53e5c1c6e7ed07d3614127bc28679c69",
+    "tests/xe_page_table_tests.cpp": "d6f62cb55e3c129db2e13dd0857e9c93d6c9607348769a9641613037d3bf82f9",
+    "tests/xe_submission_fetch_firmware.py": "ab9d2962d409ec7887b6b8633a5a20235994fd0fd8a2e439948e0e70af712e57",
+    "tests/xe_submission_test.py": "e36684bc7c71f64357060d0dc3ed7597d90c8cd49bc990f43ecb4a56487f296f",
+    "tests/xe_submission_tests.cpp": "6474949718f5d0867543173240dbad4ad9cdbfb27bb05140af5f5e7bf883cd14",
+    "tests/xe_zebin_tests.cpp": "e3d7f939c984f3bcfa60898a582843227bd97204dd94282225bfd18f118177ed",
+    "Tools/abi-inventory.py": "1dbbc0916d9509eb40bf9b14eeba3671cfda6bc65639b8ed8b86f157231b038b",
+    "Tools/cross-build.py": "09583d7f253fe4da2c2c82ff927dd391fb1d3319ef8ac811d5d460b171f254a3",
+    "Tools/metal-offline-compile.py": "50483a84203b8ce67f967534429ac31b36907e37c5b1d46caa5cf70e488766bf",
+    "Tools/metal-run.py": "d515a94dfd247fc53344ed24e32058bc621f2e9666c1b720b93cf320255504a1",
+    "Tools/run-host-tests.py": "b2bee1cebc1fcc39e1e5c3b33d4d47c50929f745a244c766f5bf033ef7722616",
+    "Tools/run-runtime-tests.py": "f96e0241d930d5d97a01368636be7a14d4720d169d60ebb8bb1aa3afa6a38569",
+    "Tools/run-xe-tests.py": "4b277f9870e8d49f2f6fcc969a4ce7d9a306aa020bf0600201cd78d540f8e04b",
+    "Tools/tahoe-abi-tests.py": "22b48c4f0f7541941529140cba8a82902a69047b9da7774eb78098e1c84b03aa",
+    "Tools/tahoe-abi.py": "8f16d881f1009356a9b5ba8ff67e3052e5dcfc106a20230c786afa60164aaea4",
+    "Tools/tahoe-extract.py": "83289cb9822e96d757cb7c8d31d7c274454c9d8d2d4e8cd7aa32ec68fa5bec06",
+    "Tools/tahoe-umd-evidence.py": "f876fd1c7008de26d2e02e53e99f9e312ede5fc695b552075482fbb7599beb56",
+    "Tools/validate-macho.py": "6bea147ab40cd368f162d4ec2d9f86702495b800e62c16a26decef200279d347",
+    "Userspace/metal_session.py": "028d6b5a3ed1d6eaa70227ba3ab7d1538171da6870330000f1f9bbde2d3ca7ce"
+  },
+  "source_changed_during_run": [],
+  "production_sources": {
+    "xe_context_tests": [
+      "Mellow/XeContext.cpp",
+      "Mellow/XeMemory.cpp"
+    ],
+    "xe_dispatch_tests": [
+      "Mellow/XeDispatch.cpp",
+      "Mellow/XeContext.cpp",
+      "Mellow/XeMemory.cpp",
+      "Mellow/XeZebin.cpp"
+    ],
+    "xe_context_execution_tests": [
+      "Mellow/XeContextExecution.cpp",
+      "Mellow/XeContext.cpp",
+      "Mellow/XeDispatch.cpp",
+      "Mellow/XeMemory.cpp",
+      "Mellow/XeZebin.cpp",
+      "Mellow/XeGuCTransport.cpp",
+      "Mellow/XeFirmware.cpp",
+      "Mellow/XeFence.cpp"
+    ]
+  },
+  "results": [
+    {
+      "name": "compiler_version",
+      "command": [
+        "C:/msys64/mingw64/bin/g++.exe",
+        "--version"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "g++.exe (Rev3, Built by MSYS2 project) 16.2.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": "",
+      "elapsed_seconds": 0.046
+    },
+    {
+      "name": "xe_context_tests_compile",
+      "command": [
+        "C:/msys64/mingw64/bin/g++.exe",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_context_tests.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeContext.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeMemory.cpp",
+        "-o",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\xe_context_tests.exe"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 0.766
+    },
+    {
+      "name": "xe_context_tests",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\xe_context_tests.exe"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "XeContext: PASS 3658796 checks; offline LRC/ring, GPU not executed\n",
+      "stderr": "",
+      "elapsed_seconds": 0.047
+    },
+    {
+      "name": "xe_dispatch_tests_compile",
+      "command": [
+        "C:/msys64/mingw64/bin/g++.exe",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_dispatch_tests.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeDispatch.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeContext.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeMemory.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeZebin.cpp",
+        "-o",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\xe_dispatch_tests.exe"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 1.797
+    },
+    {
+      "name": "xe_dispatch_tests",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\xe_dispatch_tests.exe",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\compiler-evidence\\mellow_evidence_mtl.bin"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "XeDispatch: PASS 88716 checks; Intel original encoder oracle; GPU not executed\n",
+      "stderr": "",
+      "elapsed_seconds": 0.047
+    },
+    {
+      "name": "xe_context_execution_tests_compile",
+      "command": [
+        "C:/msys64/mingw64/bin/g++.exe",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_context_execution_tests.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeContextExecution.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeContext.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeDispatch.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeMemory.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeZebin.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeGuCTransport.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeFirmware.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeFence.cpp",
+        "-o",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\xe_context_execution_tests.exe"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_seconds": 2.375
+    },
+    {
+      "name": "xe_context_execution_tests",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\xe_context_execution_tests.exe",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\compiler-evidence\\mellow_evidence_mtl.bin"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "XeContextExecution: PASS 224 checks; real VM+GuC+fence code, hardware callbacks simulated\n",
+      "stderr": "",
+      "elapsed_seconds": 0.031
+    },
+    {
+      "name": "guc_transport",
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_guc_test.py",
+        "--compiler",
+        "C:/msys64/mingw64/bin/g++.exe",
+        "--report",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\components\\guc_transport.json"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "{\n  \"assertions\": 105073,\n  \"status\": \"passed\",\n  \"gpu_execution\": false,\n  \"scope\": \"Native actual protocol source with emulated peer/MMIO callbacks; no GPU upload, authentication, CTB, IRQ or execution tested on hardware\",\n  \"source_sha256\": {\n    \"Mellow\\\\XeGuCTransport.cpp\": \"bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd\",\n    \"tests\\\\xe_guc_tests.cpp\": \"7d93bb6755f754b9e347b1d462454b165d567e93af1216349adf624b8ad7dbd0\"\n  }\n}\n",
+      "stderr": "",
+      "elapsed_seconds": 0.687,
+      "component_report": {
+        "assertions": 105073,
+        "status": "passed",
+        "gpu_execution": false,
+        "scope": "Native actual protocol source with emulated peer/MMIO callbacks; no GPU upload, authentication, CTB, IRQ or execution tested on hardware",
+        "source_sha256": {
+          "Mellow\\XeGuCTransport.cpp": "bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd",
+          "tests\\xe_guc_tests.cpp": "7d93bb6755f754b9e347b1d462454b165d567e93af1216349adf624b8ad7dbd0"
+        }
+      }
+    },
+    {
+      "name": "guc_firmware",
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_guc_firmware_test.py",
+        "--compiler",
+        "C:/msys64/mingw64/bin/g++.exe",
+        "--report",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\components\\guc_firmware.json",
+        "--firmware",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\xe-submission-primary\\i915_mtl_guc_70.bin"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "{\n  \"assertions\": 1490,\n  \"passed\": true,\n  \"firmware_bytes\": 320320,\n  \"firmware_sha256\": \"7794f0b6abe5fcd9c6f47035dafe2199f30a6e7d230bd5a53fbf8005a60e5911\",\n  \"scope\": \"Production loader and GGTT readback helper, original Intel firmware, emulated MMIO and ownership callbacks. No physical upload, BootROM authentication, or GPU execution tested.\",\n  \"source_sha256\": {\n    \"Mellow\\\\XeGuCFirmware.cpp\": \"b197259f9df7a52a931fd0cf7d5ad2e923900b3c3dd3ab45f243c24218ba053d\",\n    \"Mellow\\\\XeFirmware.cpp\": \"b5360475a6d1c85aa1aef56d816b2180139ec1303c249a07b12b7b0eaa96e7c6\",\n    \"Mellow\\\\XeGuCTransport.cpp\": \"bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd\",\n    \"tests\\\\xe_guc_firmware_tests.cpp\": \"23a39b9079cd433c6b5699f71666f9abbe9d438aef414eb86b7f331e53c5efde\",\n    \"Mellow\\\\XeGuCFirmware.hpp\": \"56d92036048a4afe98d423c2a74717a8eb344f129186fa66ea70a7479d845309\",\n    \"Mellow\\\\XeGuCFirmwareIOKit.hpp\": \"f8dc32496fa7bfa47c82d5d223b5fb829c0935ccd7d6d162be75a89fb2f2c3d4\",\n    \"Mellow\\\\XeGuCFirmwareIOKit.cpp\": \"1be5bca59acc3756a231305402581286bae0d3f9a58725b2ffdcaf50712ef4c9\"\n  },\n  \"iokit_adapter_runtime_tested\": false\n}\n",
+      "stderr": "",
+      "elapsed_seconds": 2.766,
+      "component_report": {
+        "assertions": 1490,
+        "passed": true,
+        "firmware_bytes": 320320,
+        "firmware_sha256": "7794f0b6abe5fcd9c6f47035dafe2199f30a6e7d230bd5a53fbf8005a60e5911",
+        "scope": "Production loader and GGTT readback helper, original Intel firmware, emulated MMIO and ownership callbacks. No physical upload, BootROM authentication, or GPU execution tested.",
+        "source_sha256": {
+          "Mellow\\XeGuCFirmware.cpp": "b197259f9df7a52a931fd0cf7d5ad2e923900b3c3dd3ab45f243c24218ba053d",
+          "Mellow\\XeFirmware.cpp": "b5360475a6d1c85aa1aef56d816b2180139ec1303c249a07b12b7b0eaa96e7c6",
+          "Mellow\\XeGuCTransport.cpp": "bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd",
+          "tests\\xe_guc_firmware_tests.cpp": "23a39b9079cd433c6b5699f71666f9abbe9d438aef414eb86b7f331e53c5efde",
+          "Mellow\\XeGuCFirmware.hpp": "56d92036048a4afe98d423c2a74717a8eb344f129186fa66ea70a7479d845309",
+          "Mellow\\XeGuCFirmwareIOKit.hpp": "f8dc32496fa7bfa47c82d5d223b5fb829c0935ccd7d6d162be75a89fb2f2c3d4",
+          "Mellow\\XeGuCFirmwareIOKit.cpp": "1be5bca59acc3756a231305402581286bae0d3f9a58725b2ffdcaf50712ef4c9"
+        },
+        "iokit_adapter_runtime_tested": false
+      }
+    },
+    {
+      "name": "interrupt_fence",
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_interrupt_test.py",
+        "--compiler",
+        "C:/msys64/mingw64/bin/g++.exe",
+        "--report",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\components\\interrupt_fence.json"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "{\n  \"passed\": true,\n  \"assertions\": 132009,\n  \"physical_irq_or_fence_tested\": false,\n  \"scope\": \"Actual production IRQ/fence source; emulated MMIO and host memory. No physical GPU interrupt, DMA or completion observed.\",\n  \"source_sha256\": {\n    \"Mellow/XeInterrupt.cpp\": \"804af667d214063f3faf0e4df41bc1875a0b6d365234fc16ec05123c4894edbc\",\n    \"Mellow/XeFence.cpp\": \"57e70e44b55be29c2f3e734223cbba03ef3d0c8a71c56ff57b77d0a346055989\",\n    \"Mellow/XeGuCTransport.cpp\": \"bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd\",\n    \"tests/xe_interrupt_tests.cpp\": \"631fa445f25599fae2f3f655189f0944e53fba9ac5dd141e82780154402a97b4\",\n    \"Mellow/XeInterrupt.hpp\": \"5c7d14f0e5cb7eaf1e29b3ec6050d3e8207499f93f2dd9696ce7caca91fad69c\",\n    \"Mellow/XeInterruptDispatch.hpp\": \"e96308c0f171afd298a660bedf62c3f318bb6adf739eaf2eb56a239de6554dca\",\n    \"Mellow/XeInterruptIOKit.hpp\": \"b6c688d1ab7dc4d9563115ee772c1eb872b47ef4c59ff1cf89b67c6492c67ee1\",\n    \"Mellow/XeFence.hpp\": \"1a2630e47da7dc412cbc0d6fce03d487152782c6f662acdb9743a9862e88cccd\",\n    \"Mellow/XeFenceIOKit.hpp\": \"b068782679ac923db2395faf31d5004cf45448abf59d136e57e864c2a358e3a4\"\n  }\n}\n",
+      "stderr": "",
+      "elapsed_seconds": 0.891,
+      "component_report": {
+        "passed": true,
+        "assertions": 132009,
+        "physical_irq_or_fence_tested": false,
+        "scope": "Actual production IRQ/fence source; emulated MMIO and host memory. No physical GPU interrupt, DMA or completion observed.",
+        "source_sha256": {
+          "Mellow/XeInterrupt.cpp": "804af667d214063f3faf0e4df41bc1875a0b6d365234fc16ec05123c4894edbc",
+          "Mellow/XeFence.cpp": "57e70e44b55be29c2f3e734223cbba03ef3d0c8a71c56ff57b77d0a346055989",
+          "Mellow/XeGuCTransport.cpp": "bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd",
+          "tests/xe_interrupt_tests.cpp": "631fa445f25599fae2f3f655189f0944e53fba9ac5dd141e82780154402a97b4",
+          "Mellow/XeInterrupt.hpp": "5c7d14f0e5cb7eaf1e29b3ec6050d3e8207499f93f2dd9696ce7caca91fad69c",
+          "Mellow/XeInterruptDispatch.hpp": "e96308c0f171afd298a660bedf62c3f318bb6adf739eaf2eb56a239de6554dca",
+          "Mellow/XeInterruptIOKit.hpp": "b6c688d1ab7dc4d9563115ee772c1eb872b47ef4c59ff1cf89b67c6492c67ee1",
+          "Mellow/XeFence.hpp": "1a2630e47da7dc412cbc0d6fce03d487152782c6f662acdb9743a9862e88cccd",
+          "Mellow/XeFenceIOKit.hpp": "b068782679ac923db2395faf31d5004cf45448abf59d136e57e864c2a358e3a4"
+        }
+      }
+    },
+    {
+      "name": "interrupt_fence_iokit",
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_interrupt_iokit_test.py",
+        "--compiler",
+        "C:/msys64/mingw64/bin/g++.exe",
+        "--report",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\components\\interrupt_fence_iokit.json"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "{\n  \"passed\": true,\n  \"assertions\": 38,\n  \"iokit_runtime_tested\": false,\n  \"scope\": \"Production IOKit adapter method bodies; fake OS allocation, provider, map and event-source boundary. No actual IRQ synchronization or DMA tested.\",\n  \"source_sha256\": {\n    \"Mellow/XeInterruptIOKit.hpp\": \"b6c688d1ab7dc4d9563115ee772c1eb872b47ef4c59ff1cf89b67c6492c67ee1\",\n    \"Mellow/XeInterruptIOKit.cpp\": \"d0ab31bdec02b6b0bf6555877befa79c4cb10e9eb15ebd9e5954f0c46398d2a8\",\n    \"Mellow/XeFenceIOKit.hpp\": \"b068782679ac923db2395faf31d5004cf45448abf59d136e57e864c2a358e3a4\",\n    \"Mellow/XeFenceIOKit.cpp\": \"3b6a84ca88ee7ad0959d175ea2b4463f03a107bf142455a8f7e9c32e4253e034\",\n    \"tests/xe_interrupt_iokit_tests.cpp\": \"1c3821b90c312cb5ab812aeacd4ff9235315a2abfc2d3d54eea8d82bfd0a203f\",\n    \"tests/xe_interrupt_iokit_shim.hpp\": \"7fea549044488422ae4980125471203f24989c76af69917b742ea0cfbb4ea36f\",\n    \"Mellow/XeInterrupt.cpp\": \"804af667d214063f3faf0e4df41bc1875a0b6d365234fc16ec05123c4894edbc\",\n    \"Mellow/XeFence.cpp\": \"57e70e44b55be29c2f3e734223cbba03ef3d0c8a71c56ff57b77d0a346055989\"\n  }\n}\n",
+      "stderr": "",
+      "elapsed_seconds": 1.031,
+      "component_report": {
+        "passed": true,
+        "assertions": 38,
+        "iokit_runtime_tested": false,
+        "scope": "Production IOKit adapter method bodies; fake OS allocation, provider, map and event-source boundary. No actual IRQ synchronization or DMA tested.",
+        "source_sha256": {
+          "Mellow/XeInterruptIOKit.hpp": "b6c688d1ab7dc4d9563115ee772c1eb872b47ef4c59ff1cf89b67c6492c67ee1",
+          "Mellow/XeInterruptIOKit.cpp": "d0ab31bdec02b6b0bf6555877befa79c4cb10e9eb15ebd9e5954f0c46398d2a8",
+          "Mellow/XeFenceIOKit.hpp": "b068782679ac923db2395faf31d5004cf45448abf59d136e57e864c2a358e3a4",
+          "Mellow/XeFenceIOKit.cpp": "3b6a84ca88ee7ad0959d175ea2b4463f03a107bf142455a8f7e9c32e4253e034",
+          "tests/xe_interrupt_iokit_tests.cpp": "1c3821b90c312cb5ab812aeacd4ff9235315a2abfc2d3d54eea8d82bfd0a203f",
+          "tests/xe_interrupt_iokit_shim.hpp": "7fea549044488422ae4980125471203f24989c76af69917b742ea0cfbb4ea36f",
+          "Mellow/XeInterrupt.cpp": "804af667d214063f3faf0e4df41bc1875a0b6d365234fc16ec05123c4894edbc",
+          "Mellow/XeFence.cpp": "57e70e44b55be29c2f3e734223cbba03ef3d0c8a71c56ff57b77d0a346055989"
+        }
+      }
+    },
+    {
+      "name": "metal_session",
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\metal_session_tests.py"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "",
+      "stderr": "test_completion_cannot_repeat (__main__.Tests) ... ok\ntest_every_nonterminal_holds_resources (__main__.Tests) ... ok\ntest_foreign_ticket (__main__.Tests) ... ok\ntest_gpu_error_retires_without_output_read (__main__.Tests) ... ok\ntest_identity_each_field (__main__.Tests) ... ok\ntest_input_bounds_and_snapshot (__main__.Tests) ... ok\ntest_invalid_timeout (__main__.Tests) ... ok\ntest_native_precommit_failure_unwinds (__main__.Tests) ... ok\ntest_native_submit_acceptance_receipt (__main__.Tests) ... ok\ntest_outstanding_bound (__main__.Tests) ... ok\ntest_platform_refusal (__main__.Tests) ... ok\ntest_precommit_failure_leaves_no_job (__main__.Tests) ... ok\ntest_success_is_not_native (__main__.Tests) ... ok\ntest_thread_affinity (__main__.Tests) ... ok\ntest_timeout_late_completion (__main__.Tests) ... ok\ntest_wrong_output_fails (__main__.Tests) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 0.002s\n\nOK\n",
+      "elapsed_seconds": 0.109,
+      "component_report": {
+        "passed": true,
+        "methods": 16,
+        "native_metal_tested": false,
+        "scope": "Actual Python session lifecycle; explicit fake Objective-C/Metal boundary"
+      }
+    },
+    {
+      "name": "xe_baseline",
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Tools\\run-xe-tests.py",
+        "--cxx",
+        "C:/msys64/mingw64/bin/g++.exe",
+        "--out",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline",
+        "--firmware",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\xe-submission-primary\\i915_mtl_guc_70.bin"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime",
+      "returncode": 0,
+      "hardware_executed": false,
+      "stdout": "xe_memory_tests compile PASS\nxe_memory_tests PASS\nPASS xe_memory: 79451 checks; hardware backend NOT executed\nxe_page_table_tests compile PASS\nxe_page_table_tests PASS\nPASS XePageTable: 30698 assertions; CPU buffers only, no GPU publication or execution\nxe_mmio_tests compile PASS\nxe_mmio_tests PASS\nPASS 3110 assertions; actual ForceWake code, simulated registers/time, hardware not executed\nxe_page_table_iokit_tests compile PASS\nxe_page_table_iokit_tests PASS\nPASS 41 assertions; actual pinned-table lifecycle/tree, simulated IOKit boundary\nxe_zebin_tests compile PASS\nxe_zebin_tests PASS\nPASS xe_zebin: 21438 checks; actual 6944-byte Intel Zebin, GPU NOT executed\nxe_bridge_tests compile PASS\nxe_bridge_tests PASS\nPASS xe_bridge: 123 checks; real VM/queue bridge, hardware callbacks are test mocks\nxe_submission_tests PASS\n{\n  \"assertion_groups\": 269,\n  \"hardware_backend\": \"explicit-test-mocks-only\",\n  \"firmware\": {\n    \"bytes\": 320320,\n    \"parse_status\": \"parsed-not-authenticated\",\n    \"release\": \"70.53.0\",\n    \"submission\": \"1.26.0\",\n    \"ucode_bytes\": 319808,\n    \"rsa_bytes\": 384,\n    \"private_data_bytes\": 8392704,\n    \"hardware_authenticated\": false,\n    \"sha256\": \"7794f0b6abe5fcd9c6f47035dafe2199f30a6e7d230bd5a53fbf8005a60e5911\"\n  },\n  \"status\": \"passed\",\n  \"scope\": \"host code execution; no GPU firmware load, DMA, IRQ or compute execution\"\n}\nxe_guc_tests PASS\n{\n  \"assertions\": 105073,\n  \"status\": \"passed\",\n  \"gpu_execution\": false,\n  \"scope\": \"Native actual protocol source with emulated peer/MMIO callbacks; no GPU upload, authentication, CTB, IRQ or execution tested on hardware\",\n  \"source_sha256\": {\n    \"Mellow\\\\XeGuCTransport.cpp\": \"bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd\",\n    \"tests\\\\xe_guc_tests.cpp\": \"7d93bb6755f754b9e347b1d462454b165d567e93af1216349adf624b8ad7dbd0\"\n  }\n}\nmetal_evidence_tests PASS\ntest_complete_synthetic_fixture_only_tests_parser (__main__.EvidenceGateTests) ... ok\ntest_each_stage_registry_and_schema (__main__.EvidenceGateTests) ... ok\ntest_enumeration_cannot_pass (__main__.EvidenceGateTests) ... ok\ntest_fault_injection (__main__.EvidenceGateTests) ... ok\ntest_invalid_registry (__main__.EvidenceGateTests) ... ok\ntest_partial_duplicate_reordered_and_failed (__main__.EvidenceGateTests) ... ok\ntest_actual_intel_compiler_output (__main__.IntelContainerTests) ... ok\ntest_corrupt_machine_and_section_bounds (__main__.IntelContainerTests) ... ok\ntest_corrupt_relocation_or_notes_rejected (__main__.IntelContainerTests) ... ok\ntest_wrong_target_rejected (__main__.IntelContainerTests) ... ok\ntest_malformed_plist_and_executable_traversal (__main__.MachOInventoryTests) ... ok\ntest_missing_dependency_and_complete_fixture_stay_blocked (__main__.MachOInventoryTests) ... ok\ntest_real_crossbuilt_kext_inventory_not_abi_pass (__main__.MachOInventoryTests) ... ok\ntest_truncated_and_invalid_load_commands_rejected (__main__.MachOInventoryTests) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 0.028s\n\nOK\n",
+      "stderr": "",
+      "elapsed_seconds": 7.766,
+      "component_report": {
+        "utc": "2026-09-05T12:22:31.936577+00:00",
+        "passed": true,
+        "results": [
+          {
+            "name": "xe_memory_tests compile",
+            "command": [
+              "C:/msys64/mingw64/bin/g++.exe",
+              "-std=c++17",
+              "-O2",
+              "-Wall",
+              "-Wextra",
+              "-Werror",
+              "-pedantic",
+              "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_memory_tests.cpp",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeMemory.cpp",
+              "-o",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe_memory_tests.exe"
+            ],
+            "exit": 0,
+            "output": ""
+          },
+          {
+            "name": "xe_memory_tests",
+            "command": [
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe_memory_tests.exe"
+            ],
+            "exit": 0,
+            "output": "PASS xe_memory: 79451 checks; hardware backend NOT executed\n"
+          },
+          {
+            "name": "xe_page_table_tests compile",
+            "command": [
+              "C:/msys64/mingw64/bin/g++.exe",
+              "-std=c++17",
+              "-O2",
+              "-Wall",
+              "-Wextra",
+              "-Werror",
+              "-pedantic",
+              "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_page_table_tests.cpp",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeMemory.cpp",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XePageTable.cpp",
+              "-o",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe_page_table_tests.exe"
+            ],
+            "exit": 0,
+            "output": ""
+          },
+          {
+            "name": "xe_page_table_tests",
+            "command": [
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe_page_table_tests.exe"
+            ],
+            "exit": 0,
+            "output": "PASS XePageTable: 30698 assertions; CPU buffers only, no GPU publication or execution\n"
+          },
+          {
+            "name": "xe_mmio_tests compile",
+            "command": [
+              "C:/msys64/mingw64/bin/g++.exe",
+              "-std=c++17",
+              "-O2",
+              "-Wall",
+              "-Wextra",
+              "-Werror",
+              "-pedantic",
+              "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_mmio_tests.cpp",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeMmioAccess.cpp",
+              "-o",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe_mmio_tests.exe"
+            ],
+            "exit": 0,
+            "output": ""
+          },
+          {
+            "name": "xe_mmio_tests",
+            "command": [
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe_mmio_tests.exe"
+            ],
+            "exit": 0,
+            "output": "PASS 3110 assertions; actual ForceWake code, simulated registers/time, hardware not executed\n"
+          },
+          {
+            "name": "xe_page_table_iokit_tests compile",
+            "command": [
+              "C:/msys64/mingw64/bin/g++.exe",
+              "-std=c++17",
+              "-O2",
+              "-Wall",
+              "-Wextra",
+              "-Werror",
+              "-pedantic",
+              "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow",
+              "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\iokit_types",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_page_table_iokit_tests.cpp",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeMemory.cpp",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XePageTable.cpp",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XePageTableIOKit.cpp",
+              "-o",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe_page_table_iokit_tests.exe"
+            ],
+            "exit": 0,
+            "output": ""
+          },
+          {
+            "name": "xe_page_table_iokit_tests",
+            "command": [
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe_page_table_iokit_tests.exe"
+            ],
+            "exit": 0,
+            "output": "PASS 41 assertions; actual pinned-table lifecycle/tree, simulated IOKit boundary\n"
+          },
+          {
+            "name": "xe_zebin_tests compile",
+            "command": [
+              "C:/msys64/mingw64/bin/g++.exe",
+              "-std=c++17",
+              "-O2",
+              "-Wall",
+              "-Wextra",
+              "-Werror",
+              "-pedantic",
+              "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_zebin_tests.cpp",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeMemory.cpp",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeZebin.cpp",
+              "-o",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe_zebin_tests.exe"
+            ],
+            "exit": 0,
+            "output": ""
+          },
+          {
+            "name": "xe_zebin_tests",
+            "command": [
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe_zebin_tests.exe",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\compiler-evidence\\mellow_evidence_mtl.bin"
+            ],
+            "exit": 0,
+            "output": "PASS xe_zebin: 21438 checks; actual 6944-byte Intel Zebin, GPU NOT executed\n"
+          },
+          {
+            "name": "xe_bridge_tests compile",
+            "command": [
+              "C:/msys64/mingw64/bin/g++.exe",
+              "-std=c++17",
+              "-O2",
+              "-Wall",
+              "-Wextra",
+              "-Werror",
+              "-pedantic",
+              "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_bridge_tests.cpp",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeMemory.cpp",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeFirmware.cpp",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\Mellow\\XeSubmission.cpp",
+              "-o",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe_bridge_tests.exe"
+            ],
+            "exit": 0,
+            "output": ""
+          },
+          {
+            "name": "xe_bridge_tests",
+            "command": [
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe_bridge_tests.exe"
+            ],
+            "exit": 0,
+            "output": "PASS xe_bridge: 123 checks; real VM/queue bridge, hardware callbacks are test mocks\n"
+          },
+          {
+            "name": "xe_submission_tests",
+            "command": [
+              "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_submission_test.py",
+              "--compiler",
+              "C:/msys64/mingw64/bin/g++.exe",
+              "--report",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe-submission.json",
+              "--firmware",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\xe-submission-primary\\i915_mtl_guc_70.bin"
+            ],
+            "exit": 0,
+            "output": "{\n  \"assertion_groups\": 269,\n  \"hardware_backend\": \"explicit-test-mocks-only\",\n  \"firmware\": {\n    \"bytes\": 320320,\n    \"parse_status\": \"parsed-not-authenticated\",\n    \"release\": \"70.53.0\",\n    \"submission\": \"1.26.0\",\n    \"ucode_bytes\": 319808,\n    \"rsa_bytes\": 384,\n    \"private_data_bytes\": 8392704,\n    \"hardware_authenticated\": false,\n    \"sha256\": \"7794f0b6abe5fcd9c6f47035dafe2199f30a6e7d230bd5a53fbf8005a60e5911\"\n  },\n  \"status\": \"passed\",\n  \"scope\": \"host code execution; no GPU firmware load, DMA, IRQ or compute execution\"\n}\n"
+          },
+          {
+            "name": "xe_guc_tests",
+            "command": [
+              "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\xe_guc_test.py",
+              "--compiler",
+              "C:/msys64/mingw64/bin/g++.exe",
+              "--report",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\runtime-release-tests\\baseline\\xe-guc.json"
+            ],
+            "exit": 0,
+            "output": "{\n  \"assertions\": 105073,\n  \"status\": \"passed\",\n  \"gpu_execution\": false,\n  \"scope\": \"Native actual protocol source with emulated peer/MMIO callbacks; no GPU upload, authentication, CTB, IRQ or execution tested on hardware\",\n  \"source_sha256\": {\n    \"Mellow\\\\XeGuCTransport.cpp\": \"bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd\",\n    \"tests\\\\xe_guc_tests.cpp\": \"7d93bb6755f754b9e347b1d462454b165d567e93af1216349adf624b8ad7dbd0\"\n  }\n}\n"
+          },
+          {
+            "name": "metal_evidence_tests",
+            "command": [
+              "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+              "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\outputs\\Mellow-7D41-runtime\\tests\\metal_evidence_tests.py"
+            ],
+            "exit": 0,
+            "output": "test_complete_synthetic_fixture_only_tests_parser (__main__.EvidenceGateTests) ... ok\ntest_each_stage_registry_and_schema (__main__.EvidenceGateTests) ... ok\ntest_enumeration_cannot_pass (__main__.EvidenceGateTests) ... ok\ntest_fault_injection (__main__.EvidenceGateTests) ... ok\ntest_invalid_registry (__main__.EvidenceGateTests) ... ok\ntest_partial_duplicate_reordered_and_failed (__main__.EvidenceGateTests) ... ok\ntest_actual_intel_compiler_output (__main__.IntelContainerTests) ... ok\ntest_corrupt_machine_and_section_bounds (__main__.IntelContainerTests) ... ok\ntest_corrupt_relocation_or_notes_rejected (__main__.IntelContainerTests) ... ok\ntest_wrong_target_rejected (__main__.IntelContainerTests) ... ok\ntest_malformed_plist_and_executable_traversal (__main__.MachOInventoryTests) ... ok\ntest_missing_dependency_and_complete_fixture_stay_blocked (__main__.MachOInventoryTests) ... ok\ntest_real_crossbuilt_kext_inventory_not_abi_pass (__main__.MachOInventoryTests) ... ok\ntest_truncated_and_invalid_load_commands_rejected (__main__.MachOInventoryTests) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 0.028s\n\nOK\n"
+          }
+        ],
+        "scope": "Actual software components with synthetic host backends and optional real firmware metadata; no GPU execution",
+        "iokit_pin_runtime_tested": false,
+        "gpu_page_table_publication_tested": false,
+        "guc_authentication_tested": false,
+        "metal_tested": false
+      }
+    }
+  ]
+}

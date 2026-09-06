@@ -1,0 +1,24 @@
+{
+  "scope": "synthetic-ICD-provider-lifecycle-only",
+  "gpu_work_executed": false,
+  "passed": true,
+  "source_sha256": {
+    "Runtime/OpenCLAbi.hpp": "4281a4deb971d1f11e57618d96a8ac53b0997c5b059f3dcd5589208e425dc278",
+    "Runtime/OpenCLProvider.hpp": "4c2b31293eca44ce57f61c9a791e4361699fa40444fb799158086984b0017d62",
+    "Runtime/OpenCLProvider.cpp": "b90d3fd2ef875185ace5f49299bda8315c559257ed753412ce07a9ab13783da1",
+    "Runtime/PlatformRuntime.hpp": "b1e0ac06ea3bf74b25f39369968491039ef2c62396f2b4c3f86e0f60cf6e7b52",
+    "Runtime/PlatformRuntime.cpp": "20d3209308a48afc143fd3c1432c8442d6fb04f0a4d947a2ea00347e5ad3634f",
+    "tests/opencl_runtime_regression.cpp": "ab22be1c9878c24c448143da44effd60577f936f1d23ae8394c75ad3fb583828",
+    "Tools/run-opencl-runtime-regressions.py": "5a797fe2f2c383135c5e0703e50768dc2a9a34245b2cb106e52102b26016b861"
+  },
+  "build": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "test": {
+    "exit_code": 0,
+    "stdout": "PASS: 70 synthetic ICD state/cleanup regressions; no hardware GPU execution\n",
+    "stderr": ""
+  }
+}

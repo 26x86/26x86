@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-05T20:06:26.420747+00:00",
+  "scope": "portable-Mellow-object-API-translated-subset-native-OpenCL-GPU",
+  "os": {
+    "system": "Linux",
+    "release": "6.18.33.2-microsoft-standard-WSL2",
+    "version": "#1 SMP PREEMPT_DYNAMIC Thu Jun 18 21:54:43 UTC 2026",
+    "machine": "x86_64"
+  },
+  "source_sha256": {
+    "Runtime/PlatformRuntime.hpp": "b1e0ac06ea3bf74b25f39369968491039ef2c62396f2b4c3f86e0f60cf6e7b52",
+    "Runtime/PlatformRuntime.cpp": "20d3209308a48afc143fd3c1432c8442d6fb04f0a4d947a2ea00347e5ad3634f",
+    "Runtime/OpenCLAbi.hpp": "4281a4deb971d1f11e57618d96a8ac53b0997c5b059f3dcd5589208e425dc278",
+    "Runtime/OpenCLProvider.hpp": "4c2b31293eca44ce57f61c9a791e4361699fa40444fb799158086984b0017d62",
+    "Runtime/OpenCLProvider.cpp": "b90d3fd2ef875185ace5f49299bda8315c559257ed753412ce07a9ab13783da1",
+    "Runtime/MetalObjects.hpp": "186439e8f38fca649dffd1aac7d048fb05f477c4f170e89a05a0b6cbc68d84f9",
+    "Runtime/MetalObjects.cpp": "d5b2515ceefd7764b660021e57692a8dd78335f0e062547cca9fc07d9a4dfdbb",
+    "Runtime/ShaderJit.hpp": "71f796a723f4619be4092fe4e493642528e3ee07c3397441d26784570820748e",
+    "Runtime/ShaderJit.cpp": "11020b2e42da1d5f8ff9f4d8fcfaa2cf502a628a1e12dd24a519294f79bae337",
+    "Runtime/AirDecoder.hpp": "6210c453f5c7a791f5f426ed1b7a3b049f140260def11a13dfe66b3147b4b34f",
+    "Runtime/AirDecoder.cpp": "75df73ea70176a6f64328bc00295644d6ef1540d17cee3be90963685478208ae",
+    "tests/metal_objects_tests.cpp": "1a81003c079f2128972656ab38d5bef2cc85ddc4642005c8242a055dda9c0847",
+    "tests/opencl_runtime_sha256.hpp": "c5a42c0d06992a7bf20b433e6448a26866651090b35b6ba438074c6c7a31038c",
+    "Tools/run-metal-objects.py": "828abfbf72b0c144e6f84245365c2ea530d158d4a62ba9a86e3f73bf3f57cb3e"
+  },
+  "apple_metal_abi_registered": false,
+  "system_mtl_device_registered": false,
+  "native_macos_execution": false,
+  "gpu_work_executed": false,
+  "passed": false,
+  "status": "BUILT_ONLY",
+  "requested_iterations": 1000,
+  "input_pins": {},
+  "source_kind": "msl",
+  "apple_compiler_output_verified": false,
+  "compiler_version": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "build": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "binary_sha256": "e9be7b10e9faac9238f6b6a57a3ce25304fe2e20b826bb1bc96778308860ae4f",
+  "source_changed_during_run": [],
+  "inputs_changed_during_run": []
+}

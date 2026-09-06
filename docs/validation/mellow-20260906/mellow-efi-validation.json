@@ -1,0 +1,36 @@
+{
+  "ok": true,
+  "status": "efi_prepared_not_booted",
+  "execution": {
+    "mode": "x86",
+    "source": "request",
+    "environment_locked": false,
+    "is_sandbox": false,
+    "can_native_plan": true,
+    "can_native_apply": false,
+    "host": {
+      "system": "Windows",
+      "machine": "AMD64",
+      "hw_optional_arm64": null,
+      "proc_translated": null,
+      "probe_errors": [],
+      "probe_notes": [],
+      "is_apple_silicon": false,
+      "is_verified_native_x86_macos": false
+    }
+  },
+  "deployment": "efi",
+  "source_commit": "72f3df08ff05c20bdbbada7723009b88f6ccd25e",
+  "required_boot_args": [
+    "-mellowdiag"
+  ],
+  "efi_supplied_not_boot_attested": true,
+  "requires_native_preflight": true,
+  "root_patch_executed": false,
+  "native_metal_verified": false,
+  "source_efi_modified": false,
+  "source_files_preserved": 78,
+  "validator_exit_code": 0,
+  "prepared_config_sha256": "6c5d010f1f8532d6a5505e6e92590a00fbcad9e71fe4a5cc518f33a339e6dc2c",
+  "native_tahoe_tested": false
+}

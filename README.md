@@ -20,6 +20,11 @@
 
 ## 실행
 
+**Mellow 통합 및 실행 모드:** [Mellow 안내](docs/MELLOW_INTEGRATION.md).
+`x86`에서는 EFI 또는 루트 패치로 네이티브 드라이버를 준비하고,
+`apple-silicon-sandbox`에서는 호스트 kext·루트 패치를 차단합니다.
+현재 포함된 Mellow는 진단 kext이며 Tahoe Metal 가속 완료를 의미하지 않습니다.
+
 Surface Pro 6 i5-8250U / Tahoe 준비·검사와 macOS 루트 패치 경로:
 [Surface Pro 6 안내](docs/SURFACE_PRO6.md). Windows/Linux GUI는 EFI 준비와 검사를
 지원하며 APFS 루트 패치는 설치된 macOS에서 실행합니다.

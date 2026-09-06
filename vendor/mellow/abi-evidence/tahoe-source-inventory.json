@@ -1,0 +1,5395 @@
+{
+  "system_version": {
+    "BuildID": "900EF00A-96B9-11F1-9901-B394A77C0399",
+    "ProductBuildVersion": "25G83",
+    "ProductCopyright": "1983-2026 Apple Inc.",
+    "ProductName": "macOS",
+    "ProductUserVisibleVersion": "26.6.2",
+    "ProductVersion": "26.6.2",
+    "iOSSupportVersion": "26.6"
+  },
+  "kernel_collections": [
+    {
+      "path": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\tahoe-abi\\extracted\\macOS Base System\\System\\Library\\KernelCollections\\BootKernelExtensions.kc",
+      "sha256": "c80161fa3065883753fc285339281361a8469cbb6fb27653c88e2a22eb4807a4",
+      "uuid": "721186a74a968910192193ea8e8e169f",
+      "images": [
+        {
+          "identifier": "com.apple.kernel",
+          "header_offset": 950272,
+          "uuid": "39cc2c263f72356589c494dfe36dfdf2",
+          "version": null,
+          "definitions": 23790,
+          "imports": 0
+        },
+        {
+          "identifier": "com.apple.nke.applicationfirewall",
+          "header_offset": 20348928,
+          "uuid": "606ff15a9d1137119a3542385a716517",
+          "version": "406",
+          "definitions": 221,
+          "imports": 87
+        },
+        {
+          "identifier": "com.apple.driver.AppleACPIPlatform",
+          "header_offset": 20385792,
+          "uuid": "339645dc55ec376e89ba2cd64dc1e94e",
+          "version": "6.1",
+          "definitions": 1924,
+          "imports": 822
+        },
+        {
+          "identifier": "com.apple.driver.AppleACPIButtons",
+          "header_offset": 20938752,
+          "uuid": "e991cf1e6cc63002bedb5eee2dc43b3b",
+          "version": "6.1",
+          "definitions": 107,
+          "imports": 385
+        },
+        {
+          "identifier": "com.apple.driver.AppleACPIEC",
+          "header_offset": 20967424,
+          "uuid": "8d20114740d931be8880b6b935259404",
+          "version": "6.1",
+          "definitions": 121,
+          "imports": 368
+        },
+        {
+          "identifier": "com.apple.driver.AppleAHCIPort",
+          "header_offset": 21004288,
+          "uuid": "9c2202790965361d83b1c7c557b403a5",
+          "version": "389",
+          "definitions": 558,
+          "imports": 460
+        },
+        {
+          "identifier": "com.apple.driver.AppleAPIC",
+          "header_offset": 21164032,
+          "uuid": "5625bf8c71d73f05976a55ebb4078135",
+          "version": "1.7",
+          "definitions": 58,
+          "imports": 319
+        },
+        {
+          "identifier": "com.apple.driver.AppleActuatorDriver",
+          "header_offset": 21180416,
+          "uuid": "3977718bb32c33a9bdcb81da5ff6da53",
+          "version": "9460.1",
+          "definitions": 307,
+          "imports": 418
+        },
+        {
+          "identifier": "com.apple.driver.AppleBCMWLANBusInterfacePCIeMac",
+          "header_offset": 21229568,
+          "uuid": "7e0ad820d9f73f12b60b77035195088d",
+          "version": "1",
+          "definitions": 1555,
+          "imports": 958
+        },
+        {
+          "identifier": "com.apple.driver.AppleBCMWLANCoreMac",
+          "header_offset": 21729280,
+          "uuid": "a82f43b5e9ca308fb008d1a95448244a",
+          "version": "1.0.0",
+          "definitions": 6062,
+          "imports": 1567
+        },
+        {
+          "identifier": "com.apple.driver.AppleBSDKextStarter",
+          "header_offset": 24129536,
+          "uuid": "f746dc6d13fd3bcc8e070fac73f2deac",
+          "version": "3",
+          "definitions": 35,
+          "imports": 294
+        },
+        {
+          "identifier": "com.apple.driver.AppleBluetoothDebug",
+          "header_offset": 24141824,
+          "uuid": "bedfa035af2632498e8bac0da058bc7f",
+          "version": "1",
+          "definitions": 245,
+          "imports": 395
+        },
+        {
+          "identifier": "com.apple.driver.AppleBluetoothDebugService",
+          "header_offset": 24190976,
+          "uuid": "f48b7ced4ae239279c95ada6ef7af761",
+          "version": "1",
+          "definitions": 36,
+          "imports": 287
+        },
+        {
+          "identifier": "com.apple.driver.AppleBluetoothModule",
+          "header_offset": 24203264,
+          "uuid": "3ecb2e24e9f7382b955dfc86ce8db4ec",
+          "version": "1",
+          "definitions": 151,
+          "imports": 385
+        },
+        {
+          "identifier": "com.apple.driver.AppleBluetoothMultitouch",
+          "header_offset": 24252416,
+          "uuid": "da974ac5d59e3bcaba8c05851592b8d6",
+          "version": "106",
+          "definitions": 187,
+          "imports": 463
+        },
+        {
+          "identifier": "com.apple.driver.AppleBusPowerController",
+          "header_offset": 24301568,
+          "uuid": "d07ba86d92023825b46eea5c8fcf9acf",
+          "version": "1.0",
+          "definitions": 70,
+          "imports": 324
+        },
+        {
+          "identifier": "com.apple.driver.AppleConvergedIPCOLYBTControl",
+          "header_offset": 24326144,
+          "uuid": "d44ee407ce0d3ceabe26b12bceb2ce22",
+          "version": "1",
+          "definitions": 1082,
+          "imports": 615
+        },
+        {
+          "identifier": "com.apple.driver.AppleConvergedPCI",
+          "header_offset": 24576000,
+          "uuid": "303bfad38e43349680acd5f25e566756",
+          "version": "1",
+          "definitions": 1216,
+          "imports": 469
+        },
+        {
+          "identifier": "com.apple.driver.AppleCredentialManager",
+          "header_offset": 24793088,
+          "uuid": "bb2ff69737ba370fb477cddf1ece7fb7",
+          "version": "1.0",
+          "definitions": 1534,
+          "imports": 440
+        },
+        {
+          "identifier": "com.apple.driver.AppleCyrus",
+          "header_offset": 25419776,
+          "uuid": "f8a83bfddb8337519cef22e85d5a4932",
+          "version": "1",
+          "definitions": 95,
+          "imports": 358
+        },
+        {
+          "identifier": "com.apple.driver.AppleDiskImages2",
+          "header_offset": 25444352,
+          "uuid": "1510da647bf8321fa737e4d37144300d",
+          "version": "524.160.11",
+          "definitions": 588,
+          "imports": 454
+        },
+        {
+          "identifier": "com.apple.driver.AppleEFIRuntime",
+          "header_offset": 25530368,
+          "uuid": "f842df2437dc3ffd94860498571f9196",
+          "version": "2.1",
+          "definitions": 55,
+          "imports": 321
+        },
+        {
+          "identifier": "com.apple.driver.AppleEFINVRAM",
+          "header_offset": 25546752,
+          "uuid": "7e2d300f3d5935bf879cea5f7c54d47b",
+          "version": "2.1",
+          "definitions": 156,
+          "imports": 367
+        },
+        {
+          "identifier": "com.apple.driver.AppleEffaceableNOR",
+          "header_offset": 25604096,
+          "uuid": "1a2b876f1fda3830b8d3086865b04e60",
+          "version": "1.0",
+          "definitions": 195,
+          "imports": 331
+        },
+        {
+          "identifier": "com.apple.driver.AppleEffaceableStorage",
+          "header_offset": 25640960,
+          "uuid": "b0373f96094c3e28a0b576374ded146a",
+          "version": "1.0",
+          "definitions": 165,
+          "imports": 362
+        },
+        {
+          "identifier": "com.apple.driver.AppleEffaceableTDM",
+          "header_offset": 25677824,
+          "uuid": "75f320e2b93d3e51a2fca5fa9af4cb3a",
+          "version": "1.0",
+          "definitions": 45,
+          "imports": 299
+        },
+        {
+          "identifier": "com.apple.kec.AppleEncryptedArchive",
+          "header_offset": 25690112,
+          "uuid": "747bec34709b3e77b9b6bf9780db2bd3",
+          "version": "1",
+          "definitions": 28,
+          "imports": 24
+        },
+        {
+          "identifier": "com.apple.driver.AppleEpochManager",
+          "header_offset": 25706496,
+          "uuid": "f4d74bdfad1d3249b52a99cc33c83427",
+          "version": "1",
+          "definitions": 93,
+          "imports": 353
+        },
+        {
+          "identifier": "com.apple.driver.AppleFDEKeyStore",
+          "header_offset": 25731072,
+          "uuid": "deac6171afbf3a69a9307aea4faf81c5",
+          "version": "28.30",
+          "definitions": 155,
+          "imports": 398
+        },
+        {
+          "identifier": "com.apple.AppleFSCompression.AppleFSCompressionTypeDataless",
+          "header_offset": 25767936,
+          "uuid": "718c96b420093369947f029163a539e1",
+          "version": "1.0.0d1",
+          "definitions": 1,
+          "imports": 326
+        },
+        {
+          "identifier": "com.apple.AppleFSCompression.AppleFSCompressionTypeZlib",
+          "header_offset": 25784320,
+          "uuid": "5cb334f0a71337c0a5b071aa5c62d99d",
+          "version": "1.0.0",
+          "definitions": 10,
+          "imports": 310
+        },
+        {
+          "identifier": "com.apple.driver.AppleFileSystemDriver",
+          "header_offset": 25853952,
+          "uuid": "ce2c8ca52e9c3ad89dcc672241c5f90f",
+          "version": "3.0.1",
+          "definitions": 51,
+          "imports": 316
+        },
+        {
+          "identifier": "com.apple.driver.AppleGameControllerPersonality",
+          "header_offset": 25870336,
+          "uuid": "817e5385dee833a0bbfa7bef0726b7d1",
+          "version": "13.6.2",
+          "definitions": 39,
+          "imports": 348
+        },
+        {
+          "identifier": "com.apple.driver.AppleHIDALSService",
+          "header_offset": 25882624,
+          "uuid": "93cfe2aa4ebd3872896dbb05cd4f4885",
+          "version": "1",
+          "definitions": 44,
+          "imports": 295
+        },
+        {
+          "identifier": "com.apple.driver.AppleHIDKeyboard",
+          "header_offset": 25894912,
+          "uuid": "318636aec9a03f38b38bbcf9edaa89bb",
+          "version": "9410.2",
+          "definitions": 197,
+          "imports": 418
+        },
+        {
+          "identifier": "com.apple.driver.AppleBluetoothHIDKeyboard",
+          "header_offset": 25931776,
+          "uuid": "ec517ab837cb3b2b9955168814e47e4b",
+          "version": "9410.2",
+          "definitions": 38,
+          "imports": 434
+        },
+        {
+          "identifier": "com.apple.driver.AppleHIDMouse",
+          "header_offset": 25944064,
+          "uuid": "c7a236060b403e26996ec6255171049f",
+          "version": "199",
+          "definitions": 150,
+          "imports": 69
+        },
+        {
+          "identifier": "com.apple.driver.AppleBluetoothHIDMouse",
+          "header_offset": 25968640,
+          "uuid": "cdbb513f51323a859c2973be7b998922",
+          "version": "199",
+          "definitions": 89,
+          "imports": 441
+        },
+        {
+          "identifier": "com.apple.driver.AppleUSBHIDMouse",
+          "header_offset": 25985024,
+          "uuid": "76651414ec213490aabfb9e42d320c7d",
+          "version": "199",
+          "definitions": 71,
+          "imports": 391
+        },
+        {
+          "identifier": "com.apple.driver.AppleHPET",
+          "header_offset": 26001408,
+          "uuid": "a47a4b58ad8c313782be842d663961e7",
+          "version": "1.8",
+          "definitions": 49,
+          "imports": 315
+        },
+        {
+          "identifier": "com.apple.driver.AppleHPM",
+          "header_offset": 26017792,
+          "uuid": "d2922175f03235999e8311acfadc52be",
+          "version": "3.4.4",
+          "definitions": 287,
+          "imports": 417
+        },
+        {
+          "identifier": "com.apple.driver.AppleIRController",
+          "header_offset": 26075136,
+          "uuid": "6ecc7f26000e301e98107923e226b428",
+          "version": "362",
+          "definitions": 212,
+          "imports": 514
+        },
+        {
+          "identifier": "com.apple.security.AppleImage4",
+          "header_offset": 26107904,
+          "uuid": "eb2408023a75373995a4faab08a8501b",
+          "version": "7.0.0",
+          "definitions": 1824,
+          "imports": 426
+        },
+        {
+          "identifier": "com.apple.driver.AppleInputDeviceSupport",
+          "header_offset": 26320896,
+          "uuid": "ac39047550a53d6a8dbfb652c78c8f59",
+          "version": "9420.5",
+          "definitions": 950,
+          "imports": 477
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelLpssDmac",
+          "header_offset": 26431488,
+          "uuid": "e96649201dcb3a36bfa2c17e38f92e4c",
+          "version": "3.0.60",
+          "definitions": 99,
+          "imports": 308
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelLpssGspi",
+          "header_offset": 26460160,
+          "uuid": "ba7ef3602ee439968c63f767b7589077",
+          "version": "3.0.60",
+          "definitions": 112,
+          "imports": 308
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelLpssI2C",
+          "header_offset": 26497024,
+          "uuid": "2a4f82c0f16c3ce4b9beb1a03f418120",
+          "version": "3.0.60",
+          "definitions": 115,
+          "imports": 306
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelLpssI2CController",
+          "header_offset": 26533888,
+          "uuid": "e2961b5f7455366d883f2ae435eedf26",
+          "version": "3.0.60",
+          "definitions": 421,
+          "imports": 468
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelLpssSpiController",
+          "header_offset": 26615808,
+          "uuid": "121442413811396d8297c5432d2fb286",
+          "version": "3.0.60",
+          "definitions": 216,
+          "imports": 380
+        },
+        {
+          "identifier": "com.apple.driver.AppleKeyStore",
+          "header_offset": 26685440,
+          "uuid": "060c7a7e28e13fedbdb3586e4210c064",
+          "version": "2",
+          "definitions": 2617,
+          "imports": 601
+        },
+        {
+          "identifier": "com.apple.driver.AppleLSIFusionMPT",
+          "header_offset": 27443200,
+          "uuid": "2ed6ebc2e7ae36159c313cbb7cd3e897",
+          "version": "3.8.0",
+          "definitions": 508,
+          "imports": 492
+        },
+        {
+          "identifier": "com.apple.driver.AppleLockdownMode",
+          "header_offset": 27553792,
+          "uuid": "50932afb3d683420874dfaa253767aa1",
+          "version": "1",
+          "definitions": 303,
+          "imports": 315
+        },
+        {
+          "identifier": "com.apple.driver.AppleMCP89RootPortPM",
+          "header_offset": 27668480,
+          "uuid": "a60afc865d3c3a2ab2e546d3d3f50b22",
+          "version": "1.11",
+          "definitions": 86,
+          "imports": 393
+        },
+        {
+          "identifier": "com.apple.kext.AppleMatch",
+          "header_offset": 27693056,
+          "uuid": "8eb05c4cab613e55b420b04053661321",
+          "version": "1.0.0d1",
+          "definitions": 38,
+          "imports": 12
+        },
+        {
+          "identifier": "com.apple.driver.AppleMobileFileIntegrity",
+          "header_offset": 27713536,
+          "uuid": "34556cfd5bac3a0bb8ed79508481d13f",
+          "version": "1.0.5",
+          "definitions": 1400,
+          "imports": 644
+        },
+        {
+          "identifier": "com.apple.driver.AppleMultiFunctionManagerMac",
+          "header_offset": 28004352,
+          "uuid": "45f9deaa35b2352eb6ce880b7a429481",
+          "version": "1",
+          "definitions": 262,
+          "imports": 382
+        },
+        {
+          "identifier": "com.apple.driver.AppleMultitouchDriver",
+          "header_offset": 28053504,
+          "uuid": "bc1ac78036623a0c85cb80f6b6310aca",
+          "version": "9460.1",
+          "definitions": 797,
+          "imports": 576
+        },
+        {
+          "identifier": "com.apple.driver.AppleOLYHALMac",
+          "header_offset": 28180480,
+          "uuid": "f597181a0bb83a9bbd1b8919b237fc5c",
+          "version": "1",
+          "definitions": 504,
+          "imports": 412
+        },
+        {
+          "identifier": "com.apple.driver.ApplePIODMA",
+          "header_offset": 28278784,
+          "uuid": "c16e4311bc483f11a004ea932d43e187",
+          "version": "1",
+          "definitions": 117,
+          "imports": 345
+        },
+        {
+          "identifier": "com.apple.driver.ApplePVPanic",
+          "header_offset": 28307456,
+          "uuid": "97f60345235a388fb2d779557a667a0f",
+          "version": "1",
+          "definitions": 81,
+          "imports": 293
+        },
+        {
+          "identifier": "com.apple.driver.AppleRAID",
+          "header_offset": 28323840,
+          "uuid": "3ef021bfa0a336878dc71e1cd2c8a062",
+          "version": "5.1.0",
+          "definitions": 730,
+          "imports": 545
+        },
+        {
+          "identifier": "com.apple.driver.AppleRTC",
+          "header_offset": 28442624,
+          "uuid": "0774141d5c4d33589664e597f882147a",
+          "version": "2.0.1",
+          "definitions": 108,
+          "imports": 383
+        },
+        {
+          "identifier": "com.apple.driver.AppleSDXC",
+          "header_offset": 28479488,
+          "uuid": "19b912f067533c7faf8fd8a77f8b4aed",
+          "version": "3.5.4",
+          "definitions": 604,
+          "imports": 479
+        },
+        {
+          "identifier": "com.apple.driver.AppleSEPManager",
+          "header_offset": 28631040,
+          "uuid": "0d42925e8b07306480d1328d43196288",
+          "version": "1.0.1",
+          "definitions": 761,
+          "imports": 441
+        },
+        {
+          "identifier": "com.apple.driver.AppleSMBIOS",
+          "header_offset": 28729344,
+          "uuid": "028897369c3d3756ac8a2018409a30b4",
+          "version": "2.1",
+          "definitions": 73,
+          "imports": 317
+        },
+        {
+          "identifier": "com.apple.driver.AppleSMC",
+          "header_offset": 28749824,
+          "uuid": "b1b2524f5c4c39239eb0ddaf52c67847",
+          "version": "3.1.9",
+          "definitions": 351,
+          "imports": 451
+        },
+        {
+          "identifier": "com.apple.driver.AppleSMCRTC",
+          "header_offset": 28876800,
+          "uuid": "636c3c070ac43fcd82e824c85f8d5483",
+          "version": "1.0",
+          "definitions": 71,
+          "imports": 332
+        },
+        {
+          "identifier": "com.apple.driver.AppleSSE",
+          "header_offset": 28901376,
+          "uuid": "2b5975f7b1473aafaf3872bb272f8aa6",
+          "version": "1.0",
+          "definitions": 190,
+          "imports": 363
+        },
+        {
+          "identifier": "com.apple.driver.AppleSmartBatteryManager",
+          "header_offset": 28946432,
+          "uuid": "611fef8dcae63ec4b55ae7d2dc1bc0e4",
+          "version": "161.0.0",
+          "definitions": 1109,
+          "imports": 462
+        },
+        {
+          "identifier": "com.apple.driver.AppleHollywood",
+          "header_offset": 29102080,
+          "uuid": "17312d5ecb7e3da2a26acbe8aa043e42",
+          "version": "562",
+          "definitions": 37,
+          "imports": 491
+        },
+        {
+          "identifier": "com.apple.driver.AppleMemorexCDROMDriver",
+          "header_offset": 29118464,
+          "uuid": "cbbc88198993349ea5d2be1a74ea77a1",
+          "version": "562",
+          "definitions": 33,
+          "imports": 480
+        },
+        {
+          "identifier": "com.apple.driver.AppleUSBCardReader",
+          "header_offset": 29134848,
+          "uuid": "64479ac2f65d3344bbc9ad05a36e12b4",
+          "version": "562",
+          "definitions": 249,
+          "imports": 722
+        },
+        {
+          "identifier": "com.apple.driver.AppleUSBMassStorageInterfaceNub",
+          "header_offset": 29200384,
+          "uuid": "963d151ddf6e3a64a6c78ebfccb031e2",
+          "version": "562",
+          "definitions": 40,
+          "imports": 324
+        },
+        {
+          "identifier": "com.apple.driver.AppleUSBODD",
+          "header_offset": 29216768,
+          "uuid": "b7f17e44716e35d9968dae7b338f34a6",
+          "version": "562",
+          "definitions": 67,
+          "imports": 584
+        },
+        {
+          "identifier": "com.apple.driver.AppleUSBTDM",
+          "header_offset": 29237248,
+          "uuid": "756b411a120e3d5abe96764395143258",
+          "version": "562",
+          "definitions": 331,
+          "imports": 697
+        },
+        {
+          "identifier": "com.apple.driver.MKE_LF_D211A",
+          "header_offset": 29302784,
+          "uuid": "fbff756ba45b356eb99dcf37f117a1a3",
+          "version": "562",
+          "definitions": 34,
+          "imports": 484
+        },
+        {
+          "identifier": "com.apple.driver.MKE_SR_8171",
+          "header_offset": 29319168,
+          "uuid": "36f395da00dd38798c8f76feab5544b6",
+          "version": "562",
+          "definitions": 33,
+          "imports": 481
+        },
+        {
+          "identifier": "com.apple.driver.PioneerSuperDrive",
+          "header_offset": 29335552,
+          "uuid": "b07d7a9a5c493edcad7919a70cbc1f28",
+          "version": "562",
+          "definitions": 33,
+          "imports": 482
+        },
+        {
+          "identifier": "com.apple.driver.PlasmonUDO",
+          "header_offset": 29351936,
+          "uuid": "528a6815e6f8380897427631ea3f431e",
+          "version": "562",
+          "definitions": 33,
+          "imports": 447
+        },
+        {
+          "identifier": "com.apple.driver.WriteProtectedMediaDriver",
+          "header_offset": 29364224,
+          "uuid": "5ffb83caf84737e390e1f2f7308a8a40",
+          "version": "562",
+          "definitions": 33,
+          "imports": 445
+        },
+        {
+          "identifier": "com.apple.driver.AppleSyntheticGameController",
+          "header_offset": 29376512,
+          "uuid": "c153cc1987bb381aa88fd8f2e7f8b267",
+          "version": "13.6.2",
+          "definitions": 217,
+          "imports": 434
+        },
+        {
+          "identifier": "com.apple.AppleSystemPolicy",
+          "header_offset": 29413376,
+          "uuid": "ddf57a4270273ac7bd10fee68720f3c8",
+          "version": "2.0.0",
+          "definitions": 444,
+          "imports": 485
+        },
+        {
+          "identifier": "com.apple.driver.AppleThunderboltDPAdapterFamily",
+          "header_offset": 29491200,
+          "uuid": "d8bc0f21ef993f5fa1003f59cf0469ec",
+          "version": "8.5.1",
+          "definitions": 363,
+          "imports": 436
+        },
+        {
+          "identifier": "com.apple.driver.AppleThunderboltDPInAdapter",
+          "header_offset": 29741056,
+          "uuid": "f1a40d96f28a37979aeb5d9db91d5be3",
+          "version": "8.5.1",
+          "definitions": 289,
+          "imports": 510
+        },
+        {
+          "identifier": "com.apple.driver.AppleThunderboltDPOutAdapter",
+          "header_offset": 29859840,
+          "uuid": "fb8ce979c6df3f2eba37bced8912d551",
+          "version": "8.5.1",
+          "definitions": 722,
+          "imports": 575
+        },
+        {
+          "identifier": "com.apple.driver.AppleThunderboltNHI",
+          "header_offset": 30310400,
+          "uuid": "12cdd63409463fce89cc3901a975e66c",
+          "version": "7.2.81",
+          "definitions": 1355,
+          "imports": 558
+        },
+        {
+          "identifier": "com.apple.driver.AppleThunderboltPCIDownAdapter",
+          "header_offset": 30638080,
+          "uuid": "e49672be55b332458fc5d36418b246e7",
+          "version": "4.1.1",
+          "definitions": 62,
+          "imports": 395
+        },
+        {
+          "identifier": "com.apple.driver.AppleThunderboltPCIUpAdapter",
+          "header_offset": 30662656,
+          "uuid": "eb20d6f4b8b73e1a9e27fd6110866068",
+          "version": "4.1.1",
+          "definitions": 117,
+          "imports": 411
+        },
+        {
+          "identifier": "com.apple.driver.AppleThunderboltUTDM",
+          "header_offset": 30760960,
+          "uuid": "4d13da7a61b93dee93b769065bf38ac2",
+          "version": "3.0.7",
+          "definitions": 355,
+          "imports": 716
+        },
+        {
+          "identifier": "com.apple.driver.AppleTopCaseHIDEventDriver",
+          "header_offset": 30834688,
+          "uuid": "87839d2c962c3d63967a51bfe41d2797",
+          "version": "9440.6",
+          "definitions": 349,
+          "imports": 473
+        },
+        {
+          "identifier": "com.apple.driver.AppleUSBTopCaseDriver",
+          "header_offset": 30896128,
+          "uuid": "1bbd6a65c1df3254896c1288bd553cdb",
+          "version": "9440.6",
+          "definitions": 37,
+          "imports": 388
+        },
+        {
+          "identifier": "com.apple.driver.usb.cdc",
+          "header_offset": 30908416,
+          "uuid": "53827c9cd1d33044847911786bbe246d",
+          "version": "5.0.0",
+          "definitions": 72,
+          "imports": 321
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBCommon",
+          "header_offset": 30928896,
+          "uuid": "a7842669d1f53ecfa838c1b1ff1d7f57",
+          "version": "1.0",
+          "definitions": 253,
+          "imports": 156
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBVHCICommon",
+          "header_offset": 30957568,
+          "uuid": "379b6b30bdde3e52bf0a65103578d8e9",
+          "version": "1.0",
+          "definitions": 177,
+          "imports": 82
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBVHCICommonBCE",
+          "header_offset": 30986240,
+          "uuid": "abe7b0c7b1c9352b985a8297e7940403",
+          "version": "1.0",
+          "definitions": 155,
+          "imports": 93
+        },
+        {
+          "identifier": "com.apple.driver.AppleUSBDisplays",
+          "header_offset": 31023104,
+          "uuid": "21aecefff34f3351b990e53ebf1211fd",
+          "version": "380",
+          "definitions": 77,
+          "imports": 389
+        },
+        {
+          "identifier": "com.apple.driver.usb.cdc.ecm",
+          "header_offset": 31039488,
+          "uuid": "c8d3b98a96f633a1be5254ecf0c0d62a",
+          "version": "5.0.0",
+          "definitions": 152,
+          "imports": 461
+        },
+        {
+          "identifier": "com.apple.driver.usb.ethernet.asix",
+          "header_offset": 31068160,
+          "uuid": "a78973b8ba78338fbb4fece6810430f0",
+          "version": "5.0.0",
+          "definitions": 233,
+          "imports": 456
+        },
+        {
+          "identifier": "com.apple.driver.usb.cdc.ncm",
+          "header_offset": 31137792,
+          "uuid": "e5a1e2f3f89c3e8884c4522f008c8cdf",
+          "version": "5.0.0",
+          "definitions": 161,
+          "imports": 502
+        },
+        {
+          "identifier": "com.apple.driver.usb.networking",
+          "header_offset": 31182848,
+          "uuid": "2e5d6635c43e3cd1b0bca94df950bad2",
+          "version": "5.0.0",
+          "definitions": 120,
+          "imports": 104
+        },
+        {
+          "identifier": "com.apple.driver.usb.realtek8153patcher",
+          "header_offset": 31203328,
+          "uuid": "7db4009f46153a70a01ec750098734fd",
+          "version": "5.0.0",
+          "definitions": 53,
+          "imports": 296
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBiBridge",
+          "header_offset": 31256576,
+          "uuid": "2358ff0eea2a36d19a5731d6bf7e6182",
+          "version": "1.0",
+          "definitions": 40,
+          "imports": 299
+        },
+        {
+          "identifier": "com.apple.driver.AppleVirtIO",
+          "header_offset": 31272960,
+          "uuid": "82aba0e41bdd3ddda89aa077b24b8826",
+          "version": "248.160.1",
+          "definitions": 1617,
+          "imports": 943
+        },
+        {
+          "identifier": "com.apple.driver.AppleXsanScheme",
+          "header_offset": 31518720,
+          "uuid": "90e672f9c24f370b803b3c9b64958514",
+          "version": "3",
+          "definitions": 151,
+          "imports": 378
+        },
+        {
+          "identifier": "com.apple.driver.BCMWLANFirmware4364.Hashstore",
+          "header_offset": 31547392,
+          "uuid": "373e2f01e4cd319281405a2e45f28183",
+          "version": "1",
+          "definitions": 1413,
+          "imports": 296
+        },
+        {
+          "identifier": "com.apple.driver.BCMWLANFirmware4378.Hashstore",
+          "header_offset": 31600640,
+          "uuid": "de0e8eb5261935b98ff8da76e863770a",
+          "version": "1",
+          "definitions": 843,
+          "imports": 296
+        },
+        {
+          "identifier": "com.apple.driver.BCMWLANFirmware4387.Hashstore",
+          "header_offset": 31637504,
+          "uuid": "1fdfca16c5bf3d2989eb1f5bf3e88b31",
+          "version": "1",
+          "definitions": 1303,
+          "imports": 296
+        },
+        {
+          "identifier": "com.apple.driver.BCMWLANFirmware4388.Hashstore",
+          "header_offset": 31690752,
+          "uuid": "bd559e7a96fa3ff98e1239ce4cc5b48e",
+          "version": "1",
+          "definitions": 4947,
+          "imports": 296
+        },
+        {
+          "identifier": "com.apple.BootCache",
+          "header_offset": 31842304,
+          "uuid": "9ad20fdcc20b36a08ad2283580ddffe7",
+          "version": "40",
+          "definitions": 162,
+          "imports": 433
+        },
+        {
+          "identifier": "com.apple.kec.Compression",
+          "header_offset": 31911936,
+          "uuid": "0cb8599c7688340cb0bfbf7ab6c9c1b9",
+          "version": "1.0",
+          "definitions": 45,
+          "imports": 7
+        },
+        {
+          "identifier": "com.apple.iokit.CoreAnalyticsFamily",
+          "header_offset": 31932416,
+          "uuid": "c2ab717429b131018e7a5f5fb4e9e0bd",
+          "version": "1",
+          "definitions": 450,
+          "imports": 411
+        },
+        {
+          "identifier": "com.apple.driver.CoreStorage",
+          "header_offset": 31993856,
+          "uuid": "e2203010821c39108b1cb4cbded800ad",
+          "version": "559",
+          "definitions": 1865,
+          "imports": 724
+        },
+        {
+          "identifier": "com.apple.driver.CoreStorageFsck",
+          "header_offset": 32690176,
+          "uuid": "d0dce9c5ea1f3f758e948c431572a564",
+          "version": "559",
+          "definitions": 244,
+          "imports": 341
+        },
+        {
+          "identifier": "com.apple.kext.CoreTrust",
+          "header_offset": 32780288,
+          "uuid": "12d8061f468736e3aeba87c3aa341d49",
+          "version": "1",
+          "definitions": 494,
+          "imports": 32
+        },
+        {
+          "identifier": "com.apple.Dont_Steal_Mac_OS_X",
+          "header_offset": 32862208,
+          "uuid": "8ed6da0afa173e8bae25cb666bb59fe7",
+          "version": "7.0.0",
+          "definitions": 50,
+          "imports": 309
+        },
+        {
+          "identifier": "com.apple.iokit.EndpointSecurity",
+          "header_offset": 32886784,
+          "uuid": "78ac5c35c1653ea59f4f2adc14d911c7",
+          "version": "1",
+          "definitions": 5555,
+          "imports": 516
+        },
+        {
+          "identifier": "com.apple.filesystems.hfs.kext",
+          "header_offset": 33660928,
+          "uuid": "593c3137ee723b758549520f572d2b82",
+          "version": "715.160.9",
+          "definitions": 803,
+          "imports": 758
+        },
+        {
+          "identifier": "com.apple.filesystems.hfs.encodings.kext",
+          "header_offset": 34074624,
+          "uuid": "c8d39da98c4936008ec7b42699545794",
+          "version": "1",
+          "definitions": 65,
+          "imports": 308
+        },
+        {
+          "identifier": "com.apple.iokit.IO80211Family",
+          "header_offset": 34091008,
+          "uuid": "6d9c65e593a6378a98a174487f9159b5",
+          "version": "1200.13.1",
+          "definitions": 17181,
+          "imports": 1003
+        },
+        {
+          "identifier": "com.apple.iokit.IOACPIFamily",
+          "header_offset": 37343232,
+          "uuid": "84ebb8fa30fd38a197ebe0b6fb45608f",
+          "version": "1.4",
+          "definitions": 173,
+          "imports": 370
+        },
+        {
+          "identifier": "com.apple.iokit.IOAHCIFamily",
+          "header_offset": 37371904,
+          "uuid": "cfec622d91b13e61aef518a5eb9af856",
+          "version": "310",
+          "definitions": 477,
+          "imports": 443
+        },
+        {
+          "identifier": "com.apple.iokit.IOAHCIBlockStorage",
+          "header_offset": 37457920,
+          "uuid": "442e14da49593610bbf456414753e04b",
+          "version": "368",
+          "definitions": 614,
+          "imports": 587
+        },
+        {
+          "identifier": "com.apple.iokit.IOAHCISerialATAPI",
+          "header_offset": 37580800,
+          "uuid": "c0e89715a0dd30a9a149ec882814e85c",
+          "version": "276",
+          "definitions": 166,
+          "imports": 463
+        },
+        {
+          "identifier": "com.apple.iokit.IOATAFamily",
+          "header_offset": 37621760,
+          "uuid": "7ac9eb9034a73da387ff0cea51415d04",
+          "version": "2.5.3",
+          "definitions": 804,
+          "imports": 367
+        },
+        {
+          "identifier": "com.apple.iokit.IOATABlockStorage",
+          "header_offset": 37687296,
+          "uuid": "b493e0b43abd33b4bfd3c1e4f46ab5fe",
+          "version": "3.1.2",
+          "definitions": 446,
+          "imports": 486
+        },
+        {
+          "identifier": "com.apple.iokit.IOATAPIProtocolTransport",
+          "header_offset": 37752832,
+          "uuid": "a483a0af328e3d8685f1e664f10099e4",
+          "version": "3.5.0",
+          "definitions": 113,
+          "imports": 388
+        },
+        {
+          "identifier": "com.apple.iokit.IOBDStorageFamily",
+          "header_offset": 37773312,
+          "uuid": "99811293f9473bf3836375bfec8765df",
+          "version": "1.8",
+          "definitions": 172,
+          "imports": 641
+        },
+        {
+          "identifier": "com.apple.iokit.IOBluetoothFamily",
+          "header_offset": 37818368,
+          "uuid": "3c23c7ef848b3d37b5a766f458fc7f73",
+          "version": "9.0.0",
+          "definitions": 1542,
+          "imports": 575
+        },
+        {
+          "identifier": "com.apple.driver.IOBluetoothHIDDriver",
+          "header_offset": 38084608,
+          "uuid": "c66564f6811f3599bba8970090293ec7",
+          "version": "9.0.0",
+          "definitions": 449,
+          "imports": 391
+        },
+        {
+          "identifier": "com.apple.iokit.IOBufferCopyController",
+          "header_offset": 38182912,
+          "uuid": "f95460e2f85d3ab4af0b428dd4bab8ee",
+          "version": "1.1.0",
+          "definitions": 119,
+          "imports": 352
+        },
+        {
+          "identifier": "com.apple.iokit.IOBufferCopyEngineFamily",
+          "header_offset": 38207488,
+          "uuid": "6b08fe6962373c709572aaa4419d7f2d",
+          "version": "1",
+          "definitions": 392,
+          "imports": 435
+        },
+        {
+          "identifier": "com.apple.iokit.IOCDStorageFamily",
+          "header_offset": 38252544,
+          "uuid": "f1b867ab3cf439358f24362b80fea503",
+          "version": "1.8",
+          "definitions": 256,
+          "imports": 593
+        },
+        {
+          "identifier": "com.apple.iokit.IODVDStorageFamily",
+          "header_offset": 38293504,
+          "uuid": "be03f88ad15b3df1970a282ff3fc9298",
+          "version": "1.8",
+          "definitions": 221,
+          "imports": 574
+        },
+        {
+          "identifier": "com.apple.iokit.IOGameControllerFamily",
+          "header_offset": 38326272,
+          "uuid": "52559fc3cf19397a92da8dc273ab435f",
+          "version": "13.6.2",
+          "definitions": 424,
+          "imports": 447
+        },
+        {
+          "identifier": "com.apple.driver.DiskImages",
+          "header_offset": 38453248,
+          "uuid": "bd478f302a29332097717e3f696cefc6",
+          "version": "493.0.0",
+          "definitions": 442,
+          "imports": 463
+        },
+        {
+          "identifier": "com.apple.driver.DiskImages.FileBackingStore",
+          "header_offset": 38531072,
+          "uuid": "017a59989417369d9fc6d9966d784dcd",
+          "version": "493.0.0",
+          "definitions": 41,
+          "imports": 334
+        },
+        {
+          "identifier": "com.apple.driver.DiskImages.HTTPBackingStore",
+          "header_offset": 38547456,
+          "uuid": "3a906641541f3c5f85ce2a9729537bce",
+          "version": "493.0.0",
+          "definitions": 109,
+          "imports": 344
+        },
+        {
+          "identifier": "com.apple.driver.DiskImages.KernelBacked",
+          "header_offset": 38576128,
+          "uuid": "ac83cc7587f13f9e8f91497e86d2a42a",
+          "version": "493.0.0",
+          "definitions": 365,
+          "imports": 481
+        },
+        {
+          "identifier": "com.apple.driver.DiskImages.RAMBackingStore",
+          "header_offset": 38637568,
+          "uuid": "5c85aba96f5537f0938f925889cbccbe",
+          "version": "493.0.0",
+          "definitions": 38,
+          "imports": 310
+        },
+        {
+          "identifier": "com.apple.driver.DiskImages.ReadWriteDiskImage",
+          "header_offset": 38649856,
+          "uuid": "5be06d1cecf03328908324c862a1328d",
+          "version": "493.0.0",
+          "definitions": 33,
+          "imports": 303
+        },
+        {
+          "identifier": "com.apple.driver.DiskImages.SparseDiskImage",
+          "header_offset": 38662144,
+          "uuid": "85f2500d290336bca22da09addfbcd24",
+          "version": "493.0.0",
+          "definitions": 68,
+          "imports": 314
+        },
+        {
+          "identifier": "com.apple.driver.DiskImages.UDIFDiskImage",
+          "header_offset": 38678528,
+          "uuid": "bc8a98a9d9ab36a9b74823a80ac6f8c4",
+          "version": "493.0.0",
+          "definitions": 243,
+          "imports": 353
+        },
+        {
+          "identifier": "com.apple.iokit.IOHIDFamily",
+          "header_offset": 38760448,
+          "uuid": "29db1d267c0e3e6ea011b38214743980",
+          "version": "2.0.0",
+          "definitions": 4809,
+          "imports": 721
+        },
+        {
+          "identifier": "com.apple.driver.IOImageLoader",
+          "header_offset": 39444480,
+          "uuid": "b62cfb54208c3b5fbeddbdcdd929c795",
+          "version": "1.0.0",
+          "definitions": 306,
+          "imports": 432
+        },
+        {
+          "identifier": "com.apple.iokit.IOKitRegistryCompatibility",
+          "header_offset": 39538688,
+          "uuid": "c783d03f76273ee2933a3605f1023d9d",
+          "version": "1",
+          "definitions": 35,
+          "imports": 302
+        },
+        {
+          "identifier": "com.apple.iokit.IONVMeFamily",
+          "header_offset": 39550976,
+          "uuid": "41a4064439323d17830b21f173cc3ea5",
+          "version": "2.1.0",
+          "definitions": 1683,
+          "imports": 671
+        },
+        {
+          "identifier": "com.apple.iokit.IONetworkingFamily",
+          "header_offset": 39759872,
+          "uuid": "0e40b82f49953f349955ec28b68057a2",
+          "version": "3.4",
+          "definitions": 1178,
+          "imports": 568
+        },
+        {
+          "identifier": "com.apple.iokit.AppleBCM5701Ethernet",
+          "header_offset": 39948288,
+          "uuid": "4f3edd5dd849303798f562a4bc6643f8",
+          "version": "11.0.0",
+          "definitions": 601,
+          "imports": 690
+        },
+        {
+          "identifier": "com.apple.driver.AppleEthernetAquantiaAqtion",
+          "header_offset": 40235008,
+          "uuid": "bd36c562e1f0375c833b859957af7a2f",
+          "version": "1.0.64",
+          "definitions": 747,
+          "imports": 819
+        },
+        {
+          "identifier": "com.apple.AppleEthernetAquantiaAqtionFirmware",
+          "header_offset": 40452096,
+          "uuid": "80ce2fb613fc39e3a6cb6326f9c40f5a",
+          "version": "1.0.36",
+          "definitions": 83,
+          "imports": 301
+        },
+        {
+          "identifier": "com.apple.driver.AppleEthernetRL",
+          "header_offset": 42180608,
+          "uuid": "de23f9f073ea3caeb1ac2d013c116388",
+          "version": "1.0.0d1",
+          "definitions": 657,
+          "imports": 616
+        },
+        {
+          "identifier": "com.apple.driver.AppleSkywalkAVB",
+          "header_offset": 42786816,
+          "uuid": "b9369baf7f0a3cd9b4a469f55fb0f9f8",
+          "version": "1",
+          "definitions": 81,
+          "imports": 534
+        },
+        {
+          "identifier": "com.apple.driver.AppleVmxnet3Ethernet",
+          "header_offset": 42803200,
+          "uuid": "74b74cc4242e3f1a8391bcbd60ad2514",
+          "version": "1.0.10",
+          "definitions": 114,
+          "imports": 446
+        },
+        {
+          "identifier": "com.apple.iokit.IOEthernetAVBController",
+          "header_offset": 42831872,
+          "uuid": "68509c05be8d354bbe0e3c74bd91e267",
+          "version": "1.1.0",
+          "definitions": 62,
+          "imports": 518
+        },
+        {
+          "identifier": "com.apple.driver.mDNSOffloadUserClient",
+          "header_offset": 42852352,
+          "uuid": "f4beeb92e2623958be52bfe8258ef121",
+          "version": "1.0.1b8",
+          "definitions": 94,
+          "imports": 363
+        },
+        {
+          "identifier": "com.apple.iokit.IOPCIFamily",
+          "header_offset": 42881024,
+          "uuid": "0d3c5e4a97173c1ba470d9f4f95b0ced",
+          "version": "2.9",
+          "definitions": 1462,
+          "imports": 561
+        },
+        {
+          "identifier": "com.apple.iokit.IOReportFamily",
+          "header_offset": 43294720,
+          "uuid": "b4feeabe4e12383fad88cf018493eece",
+          "version": "47",
+          "definitions": 99,
+          "imports": 352
+        },
+        {
+          "identifier": "com.apple.iokit.IOSCSIArchitectureModelFamily",
+          "header_offset": 43319296,
+          "uuid": "ed783bf3f30731d794587c37cdfa41fc",
+          "version": "545.100.10",
+          "definitions": 1018,
+          "imports": 489
+        },
+        {
+          "identifier": "com.apple.iokit.IOSCSIBlockCommandsDevice",
+          "header_offset": 43499520,
+          "uuid": "e6fe3fcb687830ab94adbfae949a98c8",
+          "version": "545.100.10",
+          "definitions": 489,
+          "imports": 604
+        },
+        {
+          "identifier": "com.apple.iokit.IOSCSIMultimediaCommandsDevice",
+          "header_offset": 43634688,
+          "uuid": "3769494af9913bbaa2a50f13fcc81a82",
+          "version": "545.100.10",
+          "definitions": 504,
+          "imports": 586
+        },
+        {
+          "identifier": "com.apple.iokit.IOSCSIReducedBlockCommandsDevice",
+          "header_offset": 43765760,
+          "uuid": "67c8622113403845834e39778e5ed9b8",
+          "version": "545.100.10",
+          "definitions": 208,
+          "imports": 482
+        },
+        {
+          "identifier": "com.apple.iokit.SCSITaskUserClient",
+          "header_offset": 43819008,
+          "uuid": "c75b563408773cd2ac3fb6b193dc2b8b",
+          "version": "545.100.10",
+          "definitions": 126,
+          "imports": 409
+        },
+        {
+          "identifier": "com.apple.iokit.IOSCSIParallelFamily",
+          "header_offset": 43859968,
+          "uuid": "9a67bbd991fb3d159f541251917c4603",
+          "version": "3.0.0",
+          "definitions": 570,
+          "imports": 561
+        },
+        {
+          "identifier": "com.apple.iokit.IOSMBusFamily",
+          "header_offset": 43945984,
+          "uuid": "4fc7a2d0e2493883a1da9e5d62f4dc5d",
+          "version": "1.1",
+          "definitions": 81,
+          "imports": 300
+        },
+        {
+          "identifier": "com.apple.iokit.IOSerialFamily",
+          "header_offset": 43962368,
+          "uuid": "cecc33d17e4d3f9293dd85dddebf9f75",
+          "version": "11",
+          "definitions": 249,
+          "imports": 375
+        },
+        {
+          "identifier": "com.apple.iokit.IOSkywalkFamily",
+          "header_offset": 44019712,
+          "uuid": "a6edb8db175b3a4989195769fcdb6bed",
+          "version": "1.0",
+          "definitions": 2556,
+          "imports": 928
+        },
+        {
+          "identifier": "com.apple.driver.IOSlaveProcessor",
+          "header_offset": 44331008,
+          "uuid": "70b0aed153443608b34245e9c11b79a5",
+          "version": "1",
+          "definitions": 150,
+          "imports": 330
+        },
+        {
+          "identifier": "com.apple.iokit.IOSlowAdaptiveClockingFamily",
+          "header_offset": 44355584,
+          "uuid": "c00f36eb531439a7bddb61e88fab8351",
+          "version": "1.0.0",
+          "definitions": 102,
+          "imports": 312
+        },
+        {
+          "identifier": "com.apple.iokit.IOStorageFamily",
+          "header_offset": 44376064,
+          "uuid": "42a6d7c8eaf63f8f88ee31c0ae9f16c2",
+          "version": "2.1",
+          "definitions": 977,
+          "imports": 496
+        },
+        {
+          "identifier": "com.apple.iokit.IOSurface",
+          "header_offset": 44564480,
+          "uuid": "8e1ffeda8c53336fb59b776024e3b66d",
+          "version": "393.5.8",
+          "definitions": 2246,
+          "imports": 495
+        },
+        {
+          "identifier": "com.apple.iokit.IOThunderboltFamily",
+          "header_offset": 44785664,
+          "uuid": "a3b307ec5da536d08fcea3bd6246fd77",
+          "version": "9.3.3",
+          "definitions": 9557,
+          "imports": 802
+        },
+        {
+          "identifier": "com.apple.iokit.IOTimeSyncFamily",
+          "header_offset": 46817280,
+          "uuid": "fade2a501d6b31bcbc3ff2ef949d1abe",
+          "version": "1460.2",
+          "definitions": 2634,
+          "imports": 469
+        },
+        {
+          "identifier": "com.apple.iokit.IOUSBHostFamily",
+          "header_offset": 47144960,
+          "uuid": "01ff54d065dc35139d14b1664009194d",
+          "version": "1.2",
+          "definitions": 3202,
+          "imports": 755
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBEHCI",
+          "header_offset": 47714304,
+          "uuid": "aefa980ee749354cb682e8b76312adc0",
+          "version": "1.2",
+          "definitions": 1079,
+          "imports": 841
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBEHCIPCI",
+          "header_offset": 47915008,
+          "uuid": "82e3847d1ea83a0aa330da1b3e9a35a0",
+          "version": "1.2",
+          "definitions": 114,
+          "imports": 450
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBHostBillboardDevice",
+          "header_offset": 47951872,
+          "uuid": "663973067187395197d65cd994010b1d",
+          "version": "1.0",
+          "definitions": 54,
+          "imports": 309
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBHostCompositeDevice",
+          "header_offset": 47968256,
+          "uuid": "6c4f45a072cf38e4a9e21f6f789505df",
+          "version": "1.2",
+          "definitions": 97,
+          "imports": 354
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBHostDeviceSupport",
+          "header_offset": 47992832,
+          "uuid": "06de3d10ef0a36d285346c4709d6c524",
+          "version": "1.0",
+          "definitions": 35,
+          "imports": 298
+        },
+        {
+          "identifier": "com.apple.driver.AppleUSBHostMergeProperties",
+          "header_offset": 48005120,
+          "uuid": "e0715176b52f3f9797941c77c12a353c",
+          "version": "1.2",
+          "definitions": 36,
+          "imports": 295
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBHostPacketFilter",
+          "header_offset": 48017408,
+          "uuid": "a836c7a608923d9ca3da54407340d64f",
+          "version": "1.0",
+          "definitions": 63,
+          "imports": 328
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBHostiOSDevice",
+          "header_offset": 48037888,
+          "uuid": "b9f1aab03119321780259505d865e513",
+          "version": "1.0",
+          "definitions": 54,
+          "imports": 298
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBHub",
+          "header_offset": 48054272,
+          "uuid": "d944a6a2cadd33409e95f1c14a5da18d",
+          "version": "1.2",
+          "definitions": 458,
+          "imports": 431
+        },
+        {
+          "identifier": "com.apple.driver.AppleUSBMergeNub",
+          "header_offset": 48168960,
+          "uuid": "acb1c3c5d6e63a2394506f1b74acd913",
+          "version": "900.4.2",
+          "definitions": 32,
+          "imports": 291
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBVHCI",
+          "header_offset": 48181248,
+          "uuid": "a7cf1a446eb931b68d6f1743471eea01",
+          "version": "1.2",
+          "definitions": 644,
+          "imports": 820
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBVHCIBCE",
+          "header_offset": 48291840,
+          "uuid": "6b7dd322fbed3e1196fa2ca9e43d5f41",
+          "version": "1.2",
+          "definitions": 50,
+          "imports": 405
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBXHCI",
+          "header_offset": 48308224,
+          "uuid": "5bcf6b706b8b31a297489fc44c792e94",
+          "version": "1.2",
+          "definitions": 1417,
+          "imports": 859
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBXHCIPCI",
+          "header_offset": 48594944,
+          "uuid": "9bdd881758203ba29d4d3e9311c99181",
+          "version": "1.2",
+          "definitions": 1182,
+          "imports": 853
+        },
+        {
+          "identifier": "com.apple.driver.usb.IOUSBHostHIDDevice",
+          "header_offset": 48955392,
+          "uuid": "648fbc77ce1f31318a023cccb2abe668",
+          "version": "1.2",
+          "definitions": 185,
+          "imports": 366
+        },
+        {
+          "identifier": "com.apple.iokit.IOUSBMassStorageDriver",
+          "header_offset": 48996352,
+          "uuid": "3becd7272ef03774a8cf906ac72be87c",
+          "version": "280",
+          "definitions": 1063,
+          "imports": 695
+        },
+        {
+          "identifier": "com.apple.private.KextAudit",
+          "header_offset": 49176576,
+          "uuid": "4f50f62d4c153301af6438344beb01a5",
+          "version": "1.0",
+          "definitions": 72,
+          "imports": 338
+        },
+        {
+          "identifier": "com.apple.kec.Libm",
+          "header_offset": 49192960,
+          "uuid": "4d18eca02b853da0871b5f25e08f2cc7",
+          "version": "1",
+          "definitions": 72,
+          "imports": 0
+        },
+        {
+          "identifier": "com.apple.driver.NVSMU",
+          "header_offset": 49254400,
+          "uuid": "ebafdfbda21a36c0b5ebe98f7f80bdb2",
+          "version": "2.2.9",
+          "definitions": 141,
+          "imports": 339
+        },
+        {
+          "identifier": "com.promise.driver.stex",
+          "header_offset": 49311744,
+          "uuid": "ae25355666d838d2b9d1179b78f29153",
+          "version": "6.2.13",
+          "definitions": 181,
+          "imports": 410
+        },
+        {
+          "identifier": "com.apple.security.quarantine",
+          "header_offset": 49364992,
+          "uuid": "a780dff51f6e3ecba3a511d9354e3e23",
+          "version": "4",
+          "definitions": 238,
+          "imports": 146
+        },
+        {
+          "identifier": "com.apple.security.sandbox",
+          "header_offset": 49414144,
+          "uuid": "583be8174a3e3b6f91ed0b25e545d7d2",
+          "version": "300.0",
+          "definitions": 1608,
+          "imports": 362
+        },
+        {
+          "identifier": "com.apple.kec.XrtHostedXnu",
+          "header_offset": 50401280,
+          "uuid": "6d4fa00cd14a3cfdaa560c100f7279b5",
+          "version": "1",
+          "definitions": 100,
+          "imports": 2
+        },
+        {
+          "identifier": "com.apple.filesystems.apfs",
+          "header_offset": 50417664,
+          "uuid": "ea890ba64f30340193eafe8125e9a7b2",
+          "version": "2811.160.7",
+          "definitions": 3163,
+          "imports": 1257
+        },
+        {
+          "identifier": "com.apple.driver.corecapture",
+          "header_offset": 52314112,
+          "uuid": "b1c1608ad88b3fe88fbca5a8569550d6",
+          "version": "1.0.4",
+          "definitions": 1529,
+          "imports": 458
+        },
+        {
+          "identifier": "com.apple.kec.corecrypto",
+          "header_offset": 52518912,
+          "uuid": "054c32e8708533fba9b81fd60cbf50c5",
+          "version": "26.0",
+          "definitions": 2207,
+          "imports": 43
+        },
+        {
+          "identifier": "com.apple.driver.iPodSBCDriver",
+          "header_offset": 53190656,
+          "uuid": "924bb083efb13bd99a0874ad7fb3e987",
+          "version": "1.7.1",
+          "definitions": 61,
+          "imports": 527
+        },
+        {
+          "identifier": "com.apple.filesystems.lifs",
+          "header_offset": 53207040,
+          "uuid": "7405a20add4136719cb3568a683e7aa7",
+          "version": "1",
+          "definitions": 700,
+          "imports": 622
+        },
+        {
+          "identifier": "com.apple.kec.pthread",
+          "header_offset": 53354496,
+          "uuid": "1258975d4fa338da9bbadeeb3d2c3ea5",
+          "version": "1",
+          "definitions": 79,
+          "imports": 58
+        },
+        {
+          "identifier": "com.apple.filesystems.tmpfs",
+          "header_offset": 53391360,
+          "uuid": "966e93844b163285a864574c8624145c",
+          "version": "1",
+          "definitions": 228,
+          "imports": 169
+        },
+        {
+          "identifier": "com.apple.driver.watchdog",
+          "header_offset": 53440512,
+          "uuid": "cb88fd0eeaf433c0bb8e6d2fd0897858",
+          "version": "1",
+          "definitions": 113,
+          "imports": 372
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\tahoe-abi\\extracted\\macOS Base System\\System\\Library\\KernelCollections\\BaseSystemKernelExtensions.kc",
+      "sha256": "60d3f43f1a23847aa8b60b7c57153fd93d20d0653c116d14da4875f09e5d2f04",
+      "uuid": "3104f133efa3e77d3d05d750c3330406",
+      "images": [
+        {
+          "identifier": "com.highpoint-tech.kext.HighPointIOP",
+          "header_offset": 1179648,
+          "uuid": "571aea6338453a83b37f5fd117c0ffde",
+          "version": "4.4.5",
+          "definitions": 283,
+          "imports": 416
+        },
+        {
+          "identifier": "com.highpoint-tech.kext.HighPointRR",
+          "header_offset": 1241088,
+          "uuid": "6df47b93db6536bd93920101cfddddff",
+          "version": "4.22.1",
+          "definitions": 2129,
+          "imports": 426
+        },
+        {
+          "identifier": "com.apple.kext.AMD10000Controller",
+          "header_offset": 1810432,
+          "uuid": "a592f91097dd3841a39ff71d314d24ea",
+          "version": "7.0.1",
+          "definitions": 2178,
+          "imports": 858
+        },
+        {
+          "identifier": "com.apple.kext.AMD9500Controller",
+          "header_offset": 2326528,
+          "uuid": "520be67a244a33e281e6bcbd45301f3d",
+          "version": "7.0.1",
+          "definitions": 2821,
+          "imports": 857
+        },
+        {
+          "identifier": "com.apple.kext.AMDFramebuffer",
+          "header_offset": 2805760,
+          "uuid": "d704e47b11733784bf3e5758979e461f",
+          "version": "7.0.1",
+          "definitions": 389,
+          "imports": 697
+        },
+        {
+          "identifier": "com.apple.kext.AMDRadeonX6000Framebuffer",
+          "header_offset": 2973696,
+          "uuid": "39d82c0d79bd3c308c1411e1d678b2a0",
+          "version": "7.0.1",
+          "definitions": 2785,
+          "imports": 529
+        },
+        {
+          "identifier": "com.apple.kext.AMDSupport",
+          "header_offset": 6217728,
+          "uuid": "3224bd9eaaf03a56ab6ee97f2000603a",
+          "version": "7.0.1",
+          "definitions": 6859,
+          "imports": 502
+        },
+        {
+          "identifier": "com.apple.driver.Apple16X50Serial",
+          "header_offset": 7188480,
+          "uuid": "9c40b0c1fdd33eda81128a4e493b76db",
+          "version": "3.2",
+          "definitions": 182,
+          "imports": 344
+        },
+        {
+          "identifier": "com.apple.driver.Apple16X50ACPI",
+          "header_offset": 7233536,
+          "uuid": "a5afba15944538528869e14aa10b9733",
+          "version": "3.2",
+          "definitions": 39,
+          "imports": 299
+        },
+        {
+          "identifier": "com.apple.driver.AppleAudioClockLibs",
+          "header_offset": 7245824,
+          "uuid": "b91c07e2157136a0b0b039daef96a356",
+          "version": "540.3",
+          "definitions": 30,
+          "imports": 7
+        },
+        {
+          "identifier": "com.apple.driver.AppleBacklight",
+          "header_offset": 7254016,
+          "uuid": "f99ee23abd383e4ea29a16a5939e2fb3",
+          "version": "180.12",
+          "definitions": 67,
+          "imports": 366
+        },
+        {
+          "identifier": "com.apple.driver.AppleBacklightExpert",
+          "header_offset": 7278592,
+          "uuid": "91ea1fbde9a639a180b78fe0e6a5f426",
+          "version": "180.12",
+          "definitions": 77,
+          "imports": 330
+        },
+        {
+          "identifier": "com.apple.driver.AppleEmbeddedOSSupportHost",
+          "header_offset": 7294976,
+          "uuid": "8037a634f4693914bb2463600372ac9c",
+          "version": "1",
+          "definitions": 93,
+          "imports": 365
+        },
+        {
+          "identifier": "com.apple.driver.AppleFIVRDriver",
+          "header_offset": 7327744,
+          "uuid": "c1556fbe56b7314786059fc02c7a5b1e",
+          "version": "4.1.0",
+          "definitions": 51,
+          "imports": 299
+        },
+        {
+          "identifier": "com.apple.driver.AppleGraphicsControl",
+          "header_offset": 7344128,
+          "uuid": "2123b373097d302990632e6821d16b10",
+          "version": "8.1.12",
+          "definitions": 30,
+          "imports": 289
+        },
+        {
+          "identifier": "com.apple.driver.AGDCBacklightControl",
+          "header_offset": 7356416,
+          "uuid": "9b0bb60a5821369b8e28ae44f448b289",
+          "version": "8.1.12",
+          "definitions": 1,
+          "imports": 382
+        },
+        {
+          "identifier": "com.apple.AGDCPluginDisplayMetrics",
+          "header_offset": 7380992,
+          "uuid": "b0806a56733a36229a8f08c925c49a2e",
+          "version": "8.1.12",
+          "definitions": 1,
+          "imports": 324
+        },
+        {
+          "identifier": "com.apple.AppleGPUWrangler",
+          "header_offset": 7397376,
+          "uuid": "91823f719aa4387bba74a129ecc8f1ac",
+          "version": "8.1.12",
+          "definitions": 1,
+          "imports": 428
+        },
+        {
+          "identifier": "com.apple.AppleGraphicsDeviceControl",
+          "header_offset": 7442432,
+          "uuid": "02fecf8a32273bbbb0eb1db31965adb9",
+          "version": "8.1.12",
+          "definitions": 98,
+          "imports": 369
+        },
+        {
+          "identifier": "com.apple.driver.AppleGraphicsDevicePolicy",
+          "header_offset": 7479296,
+          "uuid": "cea4c73b358b3e8e951e9e39f44d02d6",
+          "version": "8.1.12",
+          "definitions": 1,
+          "imports": 442
+        },
+        {
+          "identifier": "com.apple.driver.AppleMGPUPowerControl",
+          "header_offset": 7581696,
+          "uuid": "1801ce3849fd3413a7798c94f3784fb4",
+          "version": "8.1.12",
+          "definitions": 1,
+          "imports": 426
+        },
+        {
+          "identifier": "com.apple.driver.AppleMuxControl",
+          "header_offset": 7634944,
+          "uuid": "7c3e020f47e139e48fbb426fa6b4e955",
+          "version": "8.1.12",
+          "definitions": 1,
+          "imports": 458
+        },
+        {
+          "identifier": "com.apple.driver.AppleMuxControl2",
+          "header_offset": 7725056,
+          "uuid": "0a2028a387763a2bb81d89c8fc48e301",
+          "version": "8.1.12",
+          "definitions": 1,
+          "imports": 468
+        },
+        {
+          "identifier": "com.apple.driver.ApplePolicyControl",
+          "header_offset": 7819264,
+          "uuid": "4913fc179dd8305f9411ca4ccb5b614e",
+          "version": "8.1.12",
+          "definitions": 1,
+          "imports": 396
+        },
+        {
+          "identifier": "com.apple.driver.AGPM",
+          "header_offset": 7852032,
+          "uuid": "ba9615046cc633bfbf8163d1e04997d6",
+          "version": "137",
+          "definitions": 491,
+          "imports": 441
+        },
+        {
+          "identifier": "com.apple.driver.AppleHV",
+          "header_offset": 7999488,
+          "uuid": "3d8ed9ba2c513c31921b674ca3c940c1",
+          "version": "1",
+          "definitions": 688,
+          "imports": 402
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelCFLGraphicsFramebuffer",
+          "header_offset": 8097792,
+          "uuid": "137b60bfde0737f4808d36cf419deef7",
+          "version": "24.0.5",
+          "definitions": 2936,
+          "imports": 590
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelICLLPGraphicsFramebuffer",
+          "header_offset": 8867840,
+          "uuid": "7949b33549013b409eb63d9a34fe65c7",
+          "version": "24.0.5",
+          "definitions": 3214,
+          "imports": 598
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelKBLGraphicsFramebuffer",
+          "header_offset": 9723904,
+          "uuid": "a825ef23620b30d0a6ab9bf219d856eb",
+          "version": "24.0.5",
+          "definitions": 2895,
+          "imports": 590
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelLpssUARTCommon",
+          "header_offset": 10485760,
+          "uuid": "a7d8dcb1086838fab069a7f802d2e1da",
+          "version": "3.0.60",
+          "definitions": 51,
+          "imports": 319
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelLpssUARTv0",
+          "header_offset": 10502144,
+          "uuid": "e08a2d8eb5983f14b6e999e45249ce18",
+          "version": "3.0.60",
+          "definitions": 36,
+          "imports": 315
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelLpssUARTv1",
+          "header_offset": 10514432,
+          "uuid": "80ab70a5ac663b04a521e8428a3d0cc8",
+          "version": "3.0.60",
+          "definitions": 36,
+          "imports": 315
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelMCEReporter",
+          "header_offset": 10526720,
+          "uuid": "35d5393c734c3acf8574dfbfb1775c4b",
+          "version": "115",
+          "definitions": 308,
+          "imports": 377
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelPCHPMC",
+          "header_offset": 10604544,
+          "uuid": "f8a6a4175a7a3ae88866945fae8a6a50",
+          "version": "2.0.1",
+          "definitions": 135,
+          "imports": 309
+        },
+        {
+          "identifier": "com.apple.driver.AppleIntelSlowAdaptiveClocking",
+          "header_offset": 10633216,
+          "uuid": "e11d7eb974bf3021bb92844fc653b494",
+          "version": "4.0.0",
+          "definitions": 38,
+          "imports": 301
+        },
+        {
+          "identifier": "com.apple.driver.AppleLPC",
+          "header_offset": 10645504,
+          "uuid": "9ddb4b6baaac34ff8d67e1bc51d3c3bd",
+          "version": "3.1",
+          "definitions": 49,
+          "imports": 308
+        },
+        {
+          "identifier": "com.apple.driver.AppleMCCSControl",
+          "header_offset": 10661888,
+          "uuid": "a4d7e86f897c36259567016220257057",
+          "version": "1.17",
+          "definitions": 406,
+          "imports": 424
+        },
+        {
+          "identifier": "com.apple.driver.AppleMikeyHIDDriver",
+          "header_offset": 10731520,
+          "uuid": "916c13d3e27537489fef6ebace3b9060",
+          "version": "132",
+          "definitions": 74,
+          "imports": 356
+        },
+        {
+          "identifier": "com.apple.driver.AppleOnboardSerial",
+          "header_offset": 10747904,
+          "uuid": "73b6979b0c543716af2b6d7d404e9c56",
+          "version": "1.0",
+          "definitions": 582,
+          "imports": 595
+        },
+        {
+          "identifier": "com.apple.driver.ApplePlatformEnabler",
+          "header_offset": 10842112,
+          "uuid": "3545ffc4122f3be9b449d40ca0ac4997",
+          "version": "2.7.0d0",
+          "definitions": 68,
+          "imports": 344
+        },
+        {
+          "identifier": "com.apple.driver.AppleSMBusController",
+          "header_offset": 10862592,
+          "uuid": "02de9428f9c33ae0b003c15812c67c38",
+          "version": "1.0.18d1",
+          "definitions": 226,
+          "imports": 377
+        },
+        {
+          "identifier": "com.apple.driver.AppleSMBusPCI",
+          "header_offset": 10911744,
+          "uuid": "ed652daa701432538286664bf2422678",
+          "version": "1.0.14d1",
+          "definitions": 34,
+          "imports": 298
+        },
+        {
+          "identifier": "com.apple.driver.AppleSMCLMU",
+          "header_offset": 10924032,
+          "uuid": "66124ffbd3373c10bffade3766385eb9",
+          "version": "7400.2",
+          "definitions": 104,
+          "imports": 346
+        },
+        {
+          "identifier": "com.apple.security.SecureRemotePassword",
+          "header_offset": 10952704,
+          "uuid": "89211ce7f5e13c16ac6a8184b0ddc9fb",
+          "version": "1.0",
+          "definitions": 329,
+          "imports": 23
+        },
+        {
+          "identifier": "com.apple.driver.AppleThunderboltEDMSink",
+          "header_offset": 11010048,
+          "uuid": "236a866ef18f3d18a417ef89790849a6",
+          "version": "5.0.3",
+          "definitions": 122,
+          "imports": 387
+        },
+        {
+          "identifier": "com.apple.driver.AppleThunderboltEDMSource",
+          "header_offset": 11055104,
+          "uuid": "2968b125165b3a43a6074c66d8a641b5",
+          "version": "5.0.3",
+          "definitions": 290,
+          "imports": 534
+        },
+        {
+          "identifier": "com.apple.driver.AppleThunderboltIP",
+          "header_offset": 11104256,
+          "uuid": "512084c93e153dbd8040098477e8669e",
+          "version": "4.0.3",
+          "definitions": 1052,
+          "imports": 866
+        },
+        {
+          "identifier": "com.apple.driver.usb.cdc.acm",
+          "header_offset": 11517952,
+          "uuid": "741b12b09cd2361ea518797fec99dee5",
+          "version": "5.0.0",
+          "definitions": 102,
+          "imports": 381
+        },
+        {
+          "identifier": "com.apple.driver.AppleUSBAudio",
+          "header_offset": 11542528,
+          "uuid": "54ca2fdb64853e028b06247c7a1f523f",
+          "version": "850.5",
+          "definitions": 1462,
+          "imports": 733
+        },
+        {
+          "identifier": "com.apple.driver.usb.cdc.dmm",
+          "header_offset": 11931648,
+          "uuid": "2944d8b1e25d32d1a534163f94fa20a2",
+          "version": "5.0.0",
+          "definitions": 112,
+          "imports": 332
+        },
+        {
+          "identifier": "com.apple.driver.usb.cdc.eem",
+          "header_offset": 11956224,
+          "uuid": "88176c92e73f39779fd0741f0bc7948d",
+          "version": "5.0.0",
+          "definitions": 81,
+          "imports": 436
+        },
+        {
+          "identifier": "com.apple.driver.usb.serial",
+          "header_offset": 11976704,
+          "uuid": "e981ce6efd3e3fa0a108e0fbc52dfed6",
+          "version": "6.0.0",
+          "definitions": 129,
+          "imports": 378
+        },
+        {
+          "identifier": "com.apple.driver.usb.cdc.wcm",
+          "header_offset": 12009472,
+          "uuid": "9a38f8d1fc593b17abb65edcde4ce96a",
+          "version": "5.0.0",
+          "definitions": 39,
+          "imports": 296
+        },
+        {
+          "identifier": "com.apple.driver.AppleVirtualGraphics",
+          "header_offset": 12021760,
+          "uuid": "e80d3753b8953248948065b9e31a4e37",
+          "version": "248.160.1",
+          "definitions": 100,
+          "imports": 373
+        },
+        {
+          "identifier": "com.apple.driver.BridgeAudioCommunication",
+          "header_offset": 12042240,
+          "uuid": "0cf355346d0d311e8fdbb36299dc50b2",
+          "version": "650.1",
+          "definitions": 445,
+          "imports": 384
+        },
+        {
+          "identifier": "com.apple.driver.AppleBridgeAudioController",
+          "header_offset": 12099584,
+          "uuid": "3dfbea41069a35bebcb24d23d04bec99",
+          "version": "650.1",
+          "definitions": 459,
+          "imports": 362
+        },
+        {
+          "identifier": "com.apple.iokit.IOAVBFamily",
+          "header_offset": 12156928,
+          "uuid": "3d86587c211c3e0d8fa6a8c5f35a913e",
+          "version": "1440.7",
+          "definitions": 1372,
+          "imports": 514
+        },
+        {
+          "identifier": "com.apple.plugin.IOAVBControlPlugin",
+          "header_offset": 12337152,
+          "uuid": "eb51489cc3d5333292ec07a561c44823",
+          "version": "1440.7",
+          "definitions": 450,
+          "imports": 385
+        },
+        {
+          "identifier": "com.apple.plugin.IOAVBDiscoveryPlugin",
+          "header_offset": 12406784,
+          "uuid": "a2ec8149868133088b0f7836dd187dab",
+          "version": "1440.7",
+          "definitions": 319,
+          "imports": 375
+        },
+        {
+          "identifier": "com.apple.plugin.IOAVBStreamingPlugin",
+          "header_offset": 12464128,
+          "uuid": "ba133cb7b7373263af9043a4ab9de47e",
+          "version": "1440.7",
+          "definitions": 944,
+          "imports": 406
+        },
+        {
+          "identifier": "com.apple.plugin.IOMRPPlugin",
+          "header_offset": 12603392,
+          "uuid": "0137244f9e673cd59349ea8730ef514d",
+          "version": "1440.7",
+          "definitions": 905,
+          "imports": 380
+        },
+        {
+          "identifier": "com.apple.iokit.IOAcceleratorFamily2",
+          "header_offset": 12722176,
+          "uuid": "b77a42ec6b0c3a8d89a2b8f4cdbac8c9",
+          "version": "487.4.3",
+          "definitions": 4063,
+          "imports": 538
+        },
+        {
+          "identifier": "com.apple.iokit.IOAudioFamily",
+          "header_offset": 13266944,
+          "uuid": "c928ae679c17398abf87d215ee75130b",
+          "version": "740.1",
+          "definitions": 1420,
+          "imports": 406
+        },
+        {
+          "identifier": "com.apple.iokit.IOGraphicsFamily",
+          "header_offset": 13430784,
+          "uuid": "74aa64838ab43a9481435e306c16d7da",
+          "version": "600",
+          "definitions": 1579,
+          "imports": 524
+        },
+        {
+          "identifier": "com.apple.driver.DiskImages.CryptoEncoding",
+          "header_offset": 13701120,
+          "uuid": "14b949ba4fee3be88bca8379a6ca77ea",
+          "version": "493.0.0",
+          "definitions": 115,
+          "imports": 329
+        },
+        {
+          "identifier": "com.apple.iokit.IONDRVSupport",
+          "header_offset": 13729792,
+          "uuid": "7cd8b8f3acfe3104809b93f0b5736e69",
+          "version": "600",
+          "definitions": 262,
+          "imports": 444
+        },
+        {
+          "identifier": "com.apple.driver.IOPlatformPluginFamily",
+          "header_offset": 13778944,
+          "uuid": "8318eaaf19a13cf19a9b378e47d63702",
+          "version": "6.0.0d8",
+          "definitions": 147,
+          "imports": 322
+        },
+        {
+          "identifier": "com.apple.driver.ACPI_SMC_PlatformPlugin",
+          "header_offset": 13807616,
+          "uuid": "2a9a963111c9349d919dcb05182d5d6a",
+          "version": "1.0.0",
+          "definitions": 325,
+          "imports": 558
+        },
+        {
+          "identifier": "com.apple.driver.AppleSMCPDRC",
+          "header_offset": 13881344,
+          "uuid": "34c64765b98733958252b0522278f7ff",
+          "version": "1.0.0",
+          "definitions": 45,
+          "imports": 299
+        },
+        {
+          "identifier": "com.apple.driver.IOPlatformPluginLegacy",
+          "header_offset": 13897728,
+          "uuid": "af1b26db841c39d184b47d78103236f0",
+          "version": "1.0.0",
+          "definitions": 390,
+          "imports": 366
+        },
+        {
+          "identifier": "com.apple.driver.VMPlatformPlugin",
+          "header_offset": 13950976,
+          "uuid": "ed62774a988334dda34df066df7b4c2c",
+          "version": "1.0.0",
+          "definitions": 37,
+          "imports": 320
+        },
+        {
+          "identifier": "com.apple.driver.X86PlatformPlugin",
+          "header_offset": 13963264,
+          "uuid": "97fbaf0410363082bd97b3d9e58d6785",
+          "version": "1.0.0",
+          "definitions": 172,
+          "imports": 384
+        },
+        {
+          "identifier": "com.apple.driver.X86PlatformShim",
+          "header_offset": 14049280,
+          "uuid": "e2f9b506f7fb3c8aa0a33736e3fa9f06",
+          "version": "1.0.0",
+          "definitions": 82,
+          "imports": 327
+        },
+        {
+          "identifier": "com.apple.iokit.IOStreamFamily",
+          "header_offset": 14082048,
+          "uuid": "c2d38000ef0837749d3e7d21b5dad257",
+          "version": "1.1.0",
+          "definitions": 241,
+          "imports": 342
+        },
+        {
+          "identifier": "com.apple.plugin.IOgPTPPlugin",
+          "header_offset": 14127104,
+          "uuid": "9357ea397fc23964bf999b7d684b3c3c",
+          "version": "1460.2",
+          "definitions": 3806,
+          "imports": 662
+        },
+        {
+          "identifier": "com.apple.audio.TSNCaptureInterface",
+          "header_offset": 14778368,
+          "uuid": "694aeb0748bb3595a2da29efa0be9fce",
+          "version": "1460.2",
+          "definitions": 516,
+          "imports": 451
+        },
+        {
+          "identifier": "com.apple.driver.usb.AppleUSBOpticalMouse",
+          "header_offset": 14856192,
+          "uuid": "5db350910e883f5bbc2b60a2e19292fa",
+          "version": "1.2",
+          "definitions": 33,
+          "imports": 387
+        },
+        {
+          "identifier": "com.apple.iokit.IOUserEthernet",
+          "header_offset": 14868480,
+          "uuid": "bfa03cea73963b9e9d4875e792b38373",
+          "version": "1.0.1",
+          "definitions": 198,
+          "imports": 607
+        },
+        {
+          "identifier": "com.apple.driver.driverkit.serial",
+          "header_offset": 14905344,
+          "uuid": "3e1343cb019b33d2a269f6402816a2ea",
+          "version": "6.0.0",
+          "definitions": 153,
+          "imports": 373
+        },
+        {
+          "identifier": "com.apple.iokit.IOVideoFamily",
+          "header_offset": 14946304,
+          "uuid": "e9fa5781780338ce9d1d53a25f25e4ad",
+          "version": "1.2.1",
+          "definitions": 291,
+          "imports": 411
+        },
+        {
+          "identifier": "com.apple.kext.OSvKernDSPLib",
+          "header_offset": 14979072,
+          "uuid": "3e3500bf69db30a6b1a9e777e57b4595",
+          "version": "530",
+          "definitions": 153,
+          "imports": 7
+        },
+        {
+          "identifier": "com.apple.driver.SMCMotionSensor",
+          "header_offset": 15048704,
+          "uuid": "0fba41b59a4c397b815248d461ea1436",
+          "version": "3.0.4d1",
+          "definitions": 102,
+          "imports": 350
+        },
+        {
+          "identifier": "com.apple.driver.SoftRAID",
+          "header_offset": 15077376,
+          "uuid": "4d7c0a7f055033ae812dc5aa26daeed3",
+          "version": "8.6",
+          "definitions": 2083,
+          "imports": 661
+        },
+        {
+          "identifier": "com.apple.filesystems.autofs",
+          "header_offset": 15335424,
+          "uuid": "135a034f11173cc18ff36329bbd998a2",
+          "version": "3.0",
+          "definitions": 189,
+          "imports": 135
+        },
+        {
+          "identifier": "com.apple.filesystems.cd9660",
+          "header_offset": 15376384,
+          "uuid": "47ef0cf763fe366c8a3559a0658e9366",
+          "version": "1.4.4",
+          "definitions": 132,
+          "imports": 164
+        },
+        {
+          "identifier": "com.apple.filesystems.cddafs",
+          "header_offset": 15413248,
+          "uuid": "279419a49b973aa2b97da4ba3df35893",
+          "version": "2.6.1",
+          "definitions": 63,
+          "imports": 100
+        },
+        {
+          "identifier": "com.apple.filesystems.exfat",
+          "header_offset": 15437824,
+          "uuid": "fb50530558d53459b6849a7b321984f3",
+          "version": "1.4",
+          "definitions": 217,
+          "imports": 172
+        },
+        {
+          "identifier": "com.apple.kext.mcx.alr",
+          "header_offset": 15495168,
+          "uuid": "8de55a906980353cba3b97208ea29607",
+          "version": "2.0.1",
+          "definitions": 205,
+          "imports": 114
+        },
+        {
+          "identifier": "com.apple.filesystems.msdosfs",
+          "header_offset": 15532032,
+          "uuid": "a0ba2bfd9ed83774ac66f329197fef12",
+          "version": "1.10",
+          "definitions": 181,
+          "imports": 175
+        },
+        {
+          "identifier": "com.apple.filesystems.nfs",
+          "header_offset": 15597568,
+          "uuid": "12cd65c6a9553141980d48e16e085be2",
+          "version": "1",
+          "definitions": 1523,
+          "imports": 707
+        },
+        {
+          "identifier": "com.apple.driver.pmtelemetry",
+          "header_offset": 16416768,
+          "uuid": "eb5508d66de239adbd13c22a88ab5c3f",
+          "version": "1",
+          "definitions": 402,
+          "imports": 340
+        },
+        {
+          "identifier": "com.apple.filesystems.smbfs",
+          "header_offset": 16535552,
+          "uuid": "01c0ca519ba230948e9500a837f2922c",
+          "version": "6.0.1",
+          "definitions": 3422,
+          "imports": 395
+        },
+        {
+          "identifier": "com.apple.kext.triggers",
+          "header_offset": 17252352,
+          "uuid": "6510c8b094ba3bb6b88ec5e853132681",
+          "version": "1.0",
+          "definitions": 55,
+          "imports": 68
+        },
+        {
+          "identifier": "com.apple.filesystems.udf",
+          "header_offset": 17272832,
+          "uuid": "1fa4560e68603cc98599f4d967617df5",
+          "version": "2.5",
+          "definitions": 1007,
+          "imports": 216
+        },
+        {
+          "identifier": "com.apple.filesystems.webdav",
+          "header_offset": 17489920,
+          "uuid": "4d796888b34136d5aadf3a29c7091c0d",
+          "version": "3.0.1",
+          "definitions": 90,
+          "imports": 142
+        }
+      ]
+    }
+  ],
+  "cache_files": [
+    {
+      "path": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\tahoe-abi\\extracted\\macOS Base System\\System\\Library\\dyld\\dyld_shared_cache_x86_64",
+      "sha256": "e5f4c3ff1cd2d985d6c3d370aa34a22034f6f815bcc4a2f0a044093e39e7dceb",
+      "uuid": "3200c045cabd3383972fd3ab676f6da4",
+      "mappings": [
+        {
+          "address": 140703128616960,
+          "size": 544194560,
+          "offset": 0
+        },
+        {
+          "address": 140704202358784,
+          "size": 48267264,
+          "offset": 544194560
+        },
+        {
+          "address": 140704250626048,
+          "size": 15433728,
+          "offset": 592461824
+        },
+        {
+          "address": 140705276100608,
+          "size": 146997248,
+          "offset": 607895552
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\tahoe-abi\\extracted\\macOS Base System\\System\\Library\\dyld\\dyld_shared_cache_x86_64.01",
+      "sha256": "9db68bbe532a4d99babc588767b67ba58942e14c2b74f1082bad857f74e9b377",
+      "uuid": "087a5bfe59473426a238c921048163d2",
+      "mappings": [
+        {
+          "address": 140707423584256,
+          "size": 126353408,
+          "offset": 0
+        },
+        {
+          "address": 140708497326080,
+          "size": 16908288,
+          "offset": 126353408
+        },
+        {
+          "address": 140708514234368,
+          "size": 4521984,
+          "offset": 143261696
+        },
+        {
+          "address": 140709571067904,
+          "size": 82771968,
+          "offset": 147783680
+        }
+      ]
+    }
+  ],
+  "cache_images": [
+    {
+      "path": "/usr/lib/libobjc.A.dylib",
+      "address": 140703131832320
+    },
+    {
+      "path": "/usr/lib/system/libdyld.dylib",
+      "address": 140703132114944
+    },
+    {
+      "path": "/usr/lib/dyld",
+      "address": 140703132307456
+    },
+    {
+      "path": "/usr/lib/system/libsystem_blocks.dylib",
+      "address": 140703133016064
+    },
+    {
+      "path": "/usr/lib/system/libxpc.dylib",
+      "address": 140703133032448
+    },
+    {
+      "path": "/usr/lib/system/libsystem_trace.dylib",
+      "address": 140703133376512
+    },
+    {
+      "path": "/usr/lib/system/libcorecrypto.dylib",
+      "address": 140703133507584
+    },
+    {
+      "path": "/usr/lib/system/libsystem_malloc.dylib",
+      "address": 140703134322688
+    },
+    {
+      "path": "/usr/lib/system/libdispatch.dylib",
+      "address": 140703134658560
+    },
+    {
+      "path": "/usr/lib/system/libsystem_featureflags.dylib",
+      "address": 140703134953472
+    },
+    {
+      "path": "/usr/lib/system/libsystem_c.dylib",
+      "address": 140703134965760
+    },
+    {
+      "path": "/usr/lib/libc++.1.dylib",
+      "address": 140703135522816
+    },
+    {
+      "path": "/usr/lib/libc++abi.dylib",
+      "address": 140703136092160
+    },
+    {
+      "path": "/usr/lib/system/libsystem_kernel.dylib",
+      "address": 140703136190464
+    },
+    {
+      "path": "/usr/lib/system/libsystem_pthread.dylib",
+      "address": 140703136448512
+    },
+    {
+      "path": "/usr/lib/system/libsystem_platform.dylib",
+      "address": 140703136497664
+    },
+    {
+      "path": "/usr/lib/system/libsystem_info.dylib",
+      "address": 140703136538624
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+      "address": 140703136731136
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/LaunchServices",
+      "address": 140703141699584
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib",
+      "address": 140703144996864
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Lexicon.framework/Versions/A/Lexicon",
+      "address": 140703146954752
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libSparse.dylib",
+      "address": 140703148027904
+    },
+    {
+      "path": "/System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration",
+      "address": 140703149953024
+    },
+    {
+      "path": "/usr/lib/libCRFSuite.dylib",
+      "address": 140703150501888
+    },
+    {
+      "path": "/usr/lib/libmecabra.dylib",
+      "address": 140703150723072
+    },
+    {
+      "path": "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+      "address": 140703153528832
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LanguageModeling.framework/Versions/A/LanguageModeling",
+      "address": 140703170551808
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreDisplay.framework/Versions/A/CoreDisplay",
+      "address": 140703172296704
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AudioToolboxCore.framework/Versions/A/AudioToolboxCore",
+      "address": 140703173513216
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreText.framework/Versions/A/CoreText",
+      "address": 140703177502720
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio",
+      "address": 140703179845632
+    },
+    {
+      "path": "/System/Library/Frameworks/Security.framework/Versions/A/Security",
+      "address": 140703187865600
+    },
+    {
+      "path": "/usr/lib/libicucore.A.dylib",
+      "address": 140703192059904
+    },
+    {
+      "path": "/usr/lib/system/libsystem_darwin.dylib",
+      "address": 140703194906624
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/CarbonCore",
+      "address": 140703194951680
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreServicesInternal.framework/Versions/A/CoreServicesInternal",
+      "address": 140703198027776
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreServicesStore.framework/Versions/A/CoreServicesStore",
+      "address": 140703198298112
+    },
+    {
+      "path": "/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+      "address": 140703198552064
+    },
+    {
+      "path": "/usr/lib/system/libsystem_notify.dylib",
+      "address": 140703199395840
+    },
+    {
+      "path": "/usr/lib/libsandbox.1.dylib",
+      "address": 140703199469568
+    },
+    {
+      "path": "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+      "address": 140703199846400
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UIFoundation.framework/Versions/A/UIFoundation",
+      "address": 140703224999936
+    },
+    {
+      "path": "/System/Library/Frameworks/UniformTypeIdentifiers.framework/Versions/A/UniformTypeIdentifiers",
+      "address": 140703226986496
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DesktopServicesPriv.framework/Versions/A/DesktopServicesPriv",
+      "address": 140703227076608
+    },
+    {
+      "path": "/usr/lib/libboringssl.dylib",
+      "address": 140703229554688
+    },
+    {
+      "path": "/System/Library/Frameworks/CFNetwork.framework/Versions/A/CFNetwork",
+      "address": 140703230492672
+    },
+    {
+      "path": "/usr/lib/system/libsystem_networkextension.dylib",
+      "address": 140703234277376
+    },
+    {
+      "path": "/usr/lib/libenergytrace.dylib",
+      "address": 140703234383872
+    },
+    {
+      "path": "/usr/lib/libMobileGestalt.dylib",
+      "address": 140703234387968
+    },
+    {
+      "path": "/usr/lib/system/libsystem_asl.dylib",
+      "address": 140703234895872
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/TCC.framework/Versions/A/TCC",
+      "address": 140703234994176
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLight",
+      "address": 140703235133440
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics",
+      "address": 140703240753152
+    },
+    {
+      "path": "/System/Library/Frameworks/ColorSync.framework/Versions/A/ColorSync",
+      "address": 140703250300928
+    },
+    {
+      "path": "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/HIServices",
+      "address": 140703252037632
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreData.framework/Versions/A/CoreData",
+      "address": 140703252455424
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ProtocolBuffer.framework/Versions/A/ProtocolBuffer",
+      "address": 140703257219072
+    },
+    {
+      "path": "/usr/lib/libsqlite3.dylib",
+      "address": 140703257333760
+    },
+    {
+      "path": "/System/Library/Frameworks/Accounts.framework/Versions/A/Accounts",
+      "address": 140703259316224
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CommonUtilities.framework/Versions/A/CommonUtilities",
+      "address": 140703259881472
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BaseBoard.framework/Versions/A/BaseBoard",
+      "address": 140703259971584
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/RunningBoardServices.framework/Versions/A/RunningBoardServices",
+      "address": 140703260962816
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/AE",
+      "address": 140703261392896
+    },
+    {
+      "path": "/usr/lib/libdns_services.dylib",
+      "address": 140703261855744
+    },
+    {
+      "path": "/usr/lib/system/libsystem_symptoms.dylib",
+      "address": 140703261929472
+    },
+    {
+      "path": "/System/Library/Frameworks/Network.framework/Versions/A/Network",
+      "address": 140703261962240
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreAnalytics.framework/Versions/A/CoreAnalytics",
+      "address": 140703288119296
+    },
+    {
+      "path": "/usr/lib/libDiagnosticMessagesClient.dylib",
+      "address": 140703288307712
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MetadataUtilities.framework/Versions/A/MetadataUtilities",
+      "address": 140703288315904
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Metadata",
+      "address": 140703288745984
+    },
+    {
+      "path": "/System/Library/Frameworks/DiskArbitration.framework/Versions/A/DiskArbitration",
+      "address": 140703289311232
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vImage.framework/Versions/A/vImage",
+      "address": 140703289344000
+    },
+    {
+      "path": "/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore",
+      "address": 140703301525504
+    },
+    {
+      "path": "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/Resources/libFontRegistry.dylib",
+      "address": 140703305617408
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreUI.framework/Versions/A/CoreUI",
+      "address": 140703305928704
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ViewBridge.framework/Versions/A/ViewBridge",
+      "address": 140703307632640
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/PerformanceAnalysis.framework/Versions/A/PerformanceAnalysis",
+      "address": 140703308836864
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenDirectory.framework/Versions/A/OpenDirectory",
+      "address": 140703308881920
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenDirectory.framework/Versions/A/Frameworks/CFOpenDirectory.framework/Versions/A/CFOpenDirectory",
+      "address": 140703308931072
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/FSEvents.framework/Versions/A/FSEvents",
+      "address": 140703309090816
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/SharedFileList.framework/Versions/A/SharedFileList",
+      "address": 140703309148160
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreAutoLayout.framework/Versions/A/CoreAutoLayout",
+      "address": 140703309312000
+    },
+    {
+      "path": "/usr/lib/libxml2.2.dylib",
+      "address": 140703309611008
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo",
+      "address": 140703310532608
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/login.framework/Versions/A/Frameworks/loginsupport.framework/Versions/A/loginsupport",
+      "address": 140703311007744
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ApplePushService.framework/Versions/A/ApplePushService",
+      "address": 140703311020032
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UserManagement.framework/Versions/A/UserManagement",
+      "address": 140703311269888
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreLocation.framework/Versions/A/CoreLocation",
+      "address": 140703311441920
+    },
+    {
+      "path": "/usr/lib/system/libsystem_containermanager.dylib",
+      "address": 140703314288640
+    },
+    {
+      "path": "/System/Library/Frameworks/IOSurface.framework/Versions/A/IOSurface",
+      "address": 140703314513920
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IOAccelerator.framework/Versions/A/IOAccelerator",
+      "address": 140703314624512
+    },
+    {
+      "path": "/System/Library/Frameworks/Metal.framework/Versions/A/Metal",
+      "address": 140703314661376
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/caulk.framework/Versions/A/caulk",
+      "address": 140703317725184
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia",
+      "address": 140703317876736
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FontServices.framework/libFontParser.dylib",
+      "address": 140703319613440
+    },
+    {
+      "path": "/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/HIToolbox",
+      "address": 140703322558464
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DFRFoundation.framework/Versions/A/DFRFoundation",
+      "address": 140703325560832
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/XCTTargetBootstrap.framework/Versions/A/XCTTargetBootstrap",
+      "address": 140703325638656
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreSVG.framework/Versions/A/CoreSVG",
+      "address": 140703325659136
+    },
+    {
+      "path": "/System/Library/Frameworks/ImageIO.framework/Versions/A/ImageIO",
+      "address": 140703325900800
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreImage.framework/Versions/A/CoreImage",
+      "address": 140703329333248
+    },
+    {
+      "path": "/usr/lib/system/libsystem_configuration.dylib",
+      "address": 140703334916096
+    },
+    {
+      "path": "/usr/lib/system/libsystem_sandbox.dylib",
+      "address": 140703334932480
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AggregateDictionary.framework/Versions/A/AggregateDictionary",
+      "address": 140703334961152
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleSystemInfo.framework/Versions/A/AppleSystemInfo",
+      "address": 140703334965248
+    },
+    {
+      "path": "/usr/lib/liblangid.dylib",
+      "address": 140703334985728
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreNLP.framework/Versions/A/CoreNLP",
+      "address": 140703334993920
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LinguisticData.framework/Versions/A/LinguisticData",
+      "address": 140703336099840
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBNNS.dylib",
+      "address": 140703336124416
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvDSP.dylib",
+      "address": 140703355973632
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreEmoji.framework/Versions/A/CoreEmoji",
+      "address": 140703358177280
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IOMobileFramebuffer.framework/Versions/A/IOMobileFramebuffer",
+      "address": 140703358382080
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreWLAN.framework/Versions/A/CoreWLAN",
+      "address": 140703358619648
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreUtils.framework/Versions/A/CoreUtils",
+      "address": 140703359135744
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MobileKeyBag.framework/Versions/A/MobileKeyBag",
+      "address": 140703360630784
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AssertionServices.framework/Versions/A/AssertionServices",
+      "address": 140703360720896
+    },
+    {
+      "path": "/System/Library/Frameworks/SecurityFoundation.framework/Versions/A/SecurityFoundation",
+      "address": 140703360774144
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BackgroundTaskManagement.framework/Versions/A/BackgroundTaskManagement",
+      "address": 140703361359872
+    },
+    {
+      "path": "/System/Library/Frameworks/ServiceManagement.framework/Versions/A/ServiceManagement",
+      "address": 140703361556480
+    },
+    {
+      "path": "/usr/lib/system/libquarantine.dylib",
+      "address": 140703361597440
+    },
+    {
+      "path": "/usr/lib/libcoretls.dylib",
+      "address": 140703361609728
+    },
+    {
+      "path": "/usr/lib/libbsm.0.dylib",
+      "address": 140703361708032
+    },
+    {
+      "path": "/usr/lib/libmecab.dylib",
+      "address": 140703361773568
+    },
+    {
+      "path": "/usr/lib/libgermantok.dylib",
+      "address": 140703362146304
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLinearAlgebra.dylib",
+      "address": 140703362158592
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleFSCompression.framework/Versions/A/AppleFSCompression",
+      "address": 140703362244608
+    },
+    {
+      "path": "/usr/lib/libbz2.1.0.dylib",
+      "address": 140703362289664
+    },
+    {
+      "path": "/usr/lib/system/libsystem_coreservices.dylib",
+      "address": 140703362347008
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/OSServices.framework/Versions/A/OSServices",
+      "address": 140703362375680
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AuthKit.framework/Versions/A/AuthKit",
+      "address": 140703362560000
+    },
+    {
+      "path": "/usr/lib/libz.1.dylib",
+      "address": 140703365615616
+    },
+    {
+      "path": "/usr/lib/system/libsystem_m.dylib",
+      "address": 140703365697536
+    },
+    {
+      "path": "/usr/lib/libcharset.1.dylib",
+      "address": 140703366193152
+    },
+    {
+      "path": "/usr/lib/system/libmacho.dylib",
+      "address": 140703366197248
+    },
+    {
+      "path": "/usr/lib/system/libkxld.dylib",
+      "address": 140703366213632
+    },
+    {
+      "path": "/usr/lib/system/libcommonCrypto.dylib",
+      "address": 140703366307840
+    },
+    {
+      "path": "/usr/lib/system/libunwind.dylib",
+      "address": 140703366356992
+    },
+    {
+      "path": "/usr/lib/liboah.dylib",
+      "address": 140703366393856
+    },
+    {
+      "path": "/usr/lib/system/libcopyfile.dylib",
+      "address": 140703366426624
+    },
+    {
+      "path": "/usr/lib/system/libcompiler_rt.dylib",
+      "address": 140703366475776
+    },
+    {
+      "path": "/usr/lib/system/libsystem_collections.dylib",
+      "address": 140703366508544
+    },
+    {
+      "path": "/usr/lib/system/libsystem_secinit.dylib",
+      "address": 140703366529024
+    },
+    {
+      "path": "/usr/lib/system/libremovefile.dylib",
+      "address": 140703366545408
+    },
+    {
+      "path": "/usr/lib/system/libkeymgr.dylib",
+      "address": 140703366557696
+    },
+    {
+      "path": "/usr/lib/system/libsystem_dnssd.dylib",
+      "address": 140703366561792
+    },
+    {
+      "path": "/usr/lib/system/libcache.dylib",
+      "address": 140703366598656
+    },
+    {
+      "path": "/usr/lib/libSystem.B.dylib",
+      "address": 140703366623232
+    },
+    {
+      "path": "/usr/lib/libfakelink.dylib",
+      "address": 140703366631424
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SoftLinking.framework/Versions/A/SoftLinking",
+      "address": 140703366643712
+    },
+    {
+      "path": "/usr/lib/libpcap.A.dylib",
+      "address": 140703366647808
+    },
+    {
+      "path": "/usr/lib/libiconv.2.dylib",
+      "address": 140703366864896
+    },
+    {
+      "path": "/usr/lib/libcmph.dylib",
+      "address": 140703366893568
+    },
+    {
+      "path": "/usr/lib/libarchive.2.dylib",
+      "address": 140703366963200
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/SearchKit.framework/Versions/A/SearchKit",
+      "address": 140703367864320
+    },
+    {
+      "path": "/usr/lib/libThaiTokenizer.dylib",
+      "address": 140703368224768
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleSauce.framework/Versions/A/AppleSauce",
+      "address": 140703368257536
+    },
+    {
+      "path": "/usr/lib/libapple_nghttp2.dylib",
+      "address": 140703368396800
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libSparseBLAS.dylib",
+      "address": 140703368503296
+    },
+    {
+      "path": "/usr/lib/libpam.2.dylib",
+      "address": 140703369179136
+    },
+    {
+      "path": "/usr/lib/libcompression.dylib",
+      "address": 140703369203712
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libQuadrature.dylib",
+      "address": 140703370129408
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib",
+      "address": 140703370153984
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/DictionaryServices.framework/Versions/A/DictionaryServices",
+      "address": 140703389429760
+    },
+    {
+      "path": "/usr/lib/liblzma.5.dylib",
+      "address": 140703389753344
+    },
+    {
+      "path": "/usr/lib/libcoretls_cfhelpers.dylib",
+      "address": 140703389880320
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/APFS.framework/Versions/A/APFS",
+      "address": 140703389888512
+    },
+    {
+      "path": "/usr/lib/libxar.1.dylib",
+      "address": 140703390392320
+    },
+    {
+      "path": "/usr/lib/libutil.dylib",
+      "address": 140703390449664
+    },
+    {
+      "path": "/usr/lib/libxslt.1.dylib",
+      "address": 140703390466048
+    },
+    {
+      "path": "/usr/lib/libChineseTokenizer.dylib",
+      "address": 140703390638080
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvMisc.dylib",
+      "address": 140703390662656
+    },
+    {
+      "path": "/usr/lib/libate.dylib",
+      "address": 140703392346112
+    },
+    {
+      "path": "/usr/lib/libIOReport.dylib",
+      "address": 140703393574912
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CrashReporterSupport.framework/Versions/A/CrashReporterSupport",
+      "address": 140703393611776
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/PlugInKit.framework/Versions/A/PlugInKit",
+      "address": 140703393689600
+    },
+    {
+      "path": "/usr/lib/libMatch.1.dylib",
+      "address": 140703393964032
+    },
+    {
+      "path": "/usr/lib/libCoreStorage.dylib",
+      "address": 140703393996800
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleVA.framework/Versions/A/AppleVA",
+      "address": 140703394496512
+    },
+    {
+      "path": "/usr/lib/libexpat.1.dylib",
+      "address": 140703394811904
+    },
+    {
+      "path": "/usr/lib/libheimdal-asn1.dylib",
+      "address": 140703394926592
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IconFoundation.framework/Versions/A/IconFoundation",
+      "address": 140703394963456
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IconServices.framework/Versions/A/IconServices",
+      "address": 140703395360768
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MediaExperience.framework/Versions/A/MediaExperience",
+      "address": 140703396171776
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/PersistentConnection.framework/Versions/A/PersistentConnection",
+      "address": 140703396941824
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/GraphVisualizer.framework/Versions/A/GraphVisualizer",
+      "address": 140703397113856
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppServerSupport.framework/Versions/A/AppServerSupport",
+      "address": 140703397191680
+    },
+    {
+      "path": "/usr/lib/libspindump.dylib",
+      "address": 140703397249024
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Heimdal.framework/Versions/A/Heimdal",
+      "address": 140703397277696
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/login.framework/Versions/A/login",
+      "address": 140703397982208
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness",
+      "address": 140703398117376
+    },
+    {
+      "path": "/usr/lib/libodfde.dylib",
+      "address": 140703399636992
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Bom.framework/Versions/A/Bom",
+      "address": 140703399641088
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleJPEG.framework/Versions/A/AppleJPEG",
+      "address": 140703400153088
+    },
+    {
+      "path": "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libJP2.dylib",
+      "address": 140703400464384
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MultitouchSupport.framework/Versions/A/MultitouchSupport",
+      "address": 140703402323968
+    },
+    {
+      "path": "/System/Library/Frameworks/VideoToolbox.framework/Versions/A/VideoToolbox",
+      "address": 140703402606592
+    },
+    {
+      "path": "/usr/lib/libAudioToolboxUtility.dylib",
+      "address": 140703409377280
+    },
+    {
+      "path": "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libPng.dylib",
+      "address": 140703409516544
+    },
+    {
+      "path": "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libTIFF.dylib",
+      "address": 140703409704960
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IOPresentment.framework/Versions/A/IOPresentment",
+      "address": 140703410118656
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/GPUWrangler.framework/Versions/A/GPUWrangler",
+      "address": 140703410233344
+    },
+    {
+      "path": "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libRadiance.dylib",
+      "address": 140703410262016
+    },
+    {
+      "path": "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libJPEG.dylib",
+      "address": 140703410274304
+    },
+    {
+      "path": "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATSUI.framework/Versions/A/ATSUI",
+      "address": 140703410470912
+    },
+    {
+      "path": "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libGIF.dylib",
+      "address": 140703410659328
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CMCaptureCore.framework/Versions/A/CMCaptureCore",
+      "address": 140703410683904
+    },
+    {
+      "path": "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/Versions/A/PrintCore",
+      "address": 140703410753536
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/TextureIO.framework/Versions/A/TextureIO",
+      "address": 140703411224576
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/InternationalSupport.framework/Versions/A/InternationalSupport",
+      "address": 140703412002816
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DataDetectorsCore.framework/Versions/A/DataDetectorsCore",
+      "address": 140703415189504
+    },
+    {
+      "path": "/System/Library/Frameworks/MediaToolbox.framework/Versions/A/MediaToolbox",
+      "address": 140703415492608
+    },
+    {
+      "path": "/usr/lib/libusrtcp.dylib",
+      "address": 140703427125248
+    },
+    {
+      "path": "/usr/lib/swift/libswiftCore.dylib",
+      "address": 140703427608576
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LocationSupport.framework/Versions/A/LocationSupport",
+      "address": 140703433015296
+    },
+    {
+      "path": "/System/Library/Frameworks/AudioToolbox.framework/Versions/A/AudioToolbox",
+      "address": 140703433240576
+    },
+    {
+      "path": "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/SpeechSynthesis.framework/Versions/A/SpeechSynthesis",
+      "address": 140703435104256
+    },
+    {
+      "path": "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/ATS",
+      "address": 140703435280384
+    },
+    {
+      "path": "/usr/lib/libresolv.9.dylib",
+      "address": 140703435583488
+    },
+    {
+      "path": "/usr/lib/libsasl2.2.dylib",
+      "address": 140703435702272
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MultiverseSupport.framework/Versions/A/MultiverseSupport",
+      "address": 140703435780096
+    },
+    {
+      "path": "/usr/lib/libParallelCompression.dylib",
+      "address": 140703435833344
+    },
+    {
+      "path": "/System/Library/Frameworks/SecurityInterface.framework/Versions/A/SecurityInterface",
+      "address": 140703436271616
+    },
+    {
+      "path": "/usr/lib/libSMC.dylib",
+      "address": 140703436500992
+    },
+    {
+      "path": "/usr/lib/libcups.2.dylib",
+      "address": 140703437422592
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/NetAuth.framework/Versions/A/NetAuth",
+      "address": 140703437828096
+    },
+    {
+      "path": "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ColorSyncLegacy.framework/Versions/A/ColorSyncLegacy",
+      "address": 140703437877248
+    },
+    {
+      "path": "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/QD.framework/Versions/A/QD",
+      "address": 140703437893632
+    },
+    {
+      "path": "/System/Library/Frameworks/Kerberos.framework/Versions/A/Kerberos",
+      "address": 140703437934592
+    },
+    {
+      "path": "/System/Library/Frameworks/GSS.framework/Versions/A/GSS",
+      "address": 140703437996032
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CommonAuth.framework/Versions/A/CommonAuth",
+      "address": 140703438295040
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MobileAsset.framework/Versions/A/MobileAsset",
+      "address": 140703438356480
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CacheDelete.framework/Versions/A/CacheDelete",
+      "address": 140703439294464
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/KeychainCircle.framework/Versions/A/KeychainCircle",
+      "address": 140703439630336
+    },
+    {
+      "path": "/usr/lib/libTelephonyUtilDynamic.dylib",
+      "address": 140703439908864
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/SoftwareUpdate",
+      "address": 140703440429056
+    },
+    {
+      "path": "/usr/lib/system/liblaunch.dylib",
+      "address": 140703441227776
+    },
+    {
+      "path": "/System/Library/Frameworks/SystemExtensions.framework/Versions/A/SystemExtensions",
+      "address": 140703441231872
+    },
+    {
+      "path": "/System/Library/Frameworks/NetworkExtension.framework/Versions/A/NetworkExtension",
+      "address": 140703441305600
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Sharing.framework/Versions/A/Sharing",
+      "address": 140703444422656
+    },
+    {
+      "path": "/System/Library/Frameworks/IOBluetooth.framework/Versions/A/IOBluetooth",
+      "address": 140703448231936
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppContainer.framework/Versions/A/AppContainer",
+      "address": 140703448981504
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SecCodeWrapper.framework/Versions/A/SecCodeWrapper",
+      "address": 140703449083904
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ProtectedCloudStorage.framework/Versions/A/ProtectedCloudStorage",
+      "address": 140703449100288
+    },
+    {
+      "path": "/usr/lib/libxcselect.dylib",
+      "address": 140703449731072
+    },
+    {
+      "path": "/usr/lib/libdscsym.dylib",
+      "address": 140703449751552
+    },
+    {
+      "path": "/System/Library/Frameworks/Combine.framework/Versions/A/Combine",
+      "address": 140703449776128
+    },
+    {
+      "path": "/System/Library/Frameworks/DirectoryService.framework/Versions/A/DirectoryService",
+      "address": 140703450558464
+    },
+    {
+      "path": "/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/SpeechRecognition.framework/Versions/A/SpeechRecognition",
+      "address": 140703450603520
+    },
+    {
+      "path": "/System/Library/Frameworks/Accessibility.framework/Versions/A/Accessibility",
+      "address": 140703450619904
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/vecLib",
+      "address": 140703450750976
+    },
+    {
+      "path": "/System/Library/Frameworks/IOUSBHost.framework/Versions/A/IOUSBHost",
+      "address": 140703450755072
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices",
+      "address": 140703450923008
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate",
+      "address": 140703450927104
+    },
+    {
+      "path": "/usr/lib/libauditd.0.dylib",
+      "address": 140703450931200
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AssetCacheServices.framework/Versions/A/AssetCacheServices",
+      "address": 140703450943488
+    },
+    {
+      "path": "/System/Library/Frameworks/MediaAccessibility.framework/Versions/A/MediaAccessibility",
+      "address": 140703451074560
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleSRP.framework/Versions/A/AppleSRP",
+      "address": 140703451144192
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SystemAdministration.framework/Versions/A/SystemAdministration",
+      "address": 140703451164672
+    },
+    {
+      "path": "/usr/lib/swift/libswiftFoundation.dylib",
+      "address": 140703451418624
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreBluetooth.framework/Versions/A/CoreBluetooth",
+      "address": 140703451422720
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleIDAuthSupport.framework/Versions/A/AppleIDAuthSupport",
+      "address": 140703452545024
+    },
+    {
+      "path": "/System/Library/Frameworks/DiscRecording.framework/Versions/A/DiscRecording",
+      "address": 140703452598272
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MediaKit.framework/Versions/A/MediaKit",
+      "address": 140703453278208
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DiskManagement.framework/Versions/A/DiskManagement",
+      "address": 140703453487104
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreAUC.framework/Versions/A/CoreAUC",
+      "address": 140703454453760
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/OctagonTrust.framework/Versions/A/OctagonTrust",
+      "address": 140703458365440
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppSandbox.framework/Versions/A/AppSandbox",
+      "address": 140703458570240
+    },
+    {
+      "path": "/usr/lib/swift/libswiftDispatch.dylib",
+      "address": 140703458680832
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FrontBoardServices.framework/Versions/A/FrontBoardServices",
+      "address": 140703458766848
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BoardServices.framework/Versions/A/BoardServices",
+      "address": 140703459688448
+    },
+    {
+      "path": "/System/Library/Frameworks/CryptoTokenKit.framework/Versions/A/CryptoTokenKit",
+      "address": 140703460286464
+    },
+    {
+      "path": "/System/Library/Frameworks/LocalAuthentication.framework/Versions/A/LocalAuthentication",
+      "address": 140703460806656
+    },
+    {
+      "path": "/System/Library/Frameworks/LocalAuthentication.framework/Support/SharedUtils.framework/Versions/A/SharedUtils",
+      "address": 140703461216256
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BatteryUIKit.framework/Versions/A/BatteryUIKit",
+      "address": 140703461269504
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DebugSymbols.framework/Versions/A/DebugSymbols",
+      "address": 140703461302272
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreSymbolication.framework/Versions/A/CoreSymbolication",
+      "address": 140703461425152
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreTime.framework/Versions/A/CoreTime",
+      "address": 140703462883328
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Apple80211",
+      "address": 140703462924288
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreWiFi.framework/Versions/A/CoreWiFi",
+      "address": 140703462928384
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BackBoardServices.framework/Versions/A/BackBoardServices",
+      "address": 140703467732992
+    },
+    {
+      "path": "/System/Library/Frameworks/LDAP.framework/Versions/A/LDAP",
+      "address": 140703468195840
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/TrustEvaluationAgent.framework/Versions/A/TrustEvaluationAgent",
+      "address": 140703468433408
+    },
+    {
+      "path": "/usr/lib/libcrypto.44.dylib",
+      "address": 140703468441600
+    },
+    {
+      "path": "/usr/lib/libssl.46.dylib",
+      "address": 140703469514752
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DiskImages.framework/Versions/A/DiskImages",
+      "address": 140703469703168
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/EAP8021X.framework/Versions/A/EAP8021X",
+      "address": 140703470399488
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/RemoteServiceDiscovery.framework/Versions/A/RemoteServiceDiscovery",
+      "address": 140703470661632
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/RemoteXPC.framework/Versions/A/RemoteXPC",
+      "address": 140703470755840
+    },
+    {
+      "path": "/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/Help.framework/Versions/A/Help",
+      "address": 140703470850048
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/EFILogin.framework/Versions/A/EFILogin",
+      "address": 140703470866432
+    },
+    {
+      "path": "/usr/lib/libcsfde.dylib",
+      "address": 140703470882816
+    },
+    {
+      "path": "/usr/lib/libcurl.4.dylib",
+      "address": 140703470927872
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LoginUIKit.framework/Versions/A/Frameworks/LoginUICore.framework/Versions/A/LoginUICore",
+      "address": 140703471468544
+    },
+    {
+      "path": "/System/Library/Frameworks/KernelManagement.framework/Versions/A/KernelManagement",
+      "address": 140703471493120
+    },
+    {
+      "path": "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices",
+      "address": 140703471521792
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AuthKitUI.framework/Versions/A/AuthKitUI",
+      "address": 140703471525888
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CryptoKitCBridging.framework/Versions/A/CryptoKitCBridging",
+      "address": 140703472824320
+    },
+    {
+      "path": "/System/Library/Frameworks/Kerberos.framework/Versions/A/Libraries/libHeimdalProxy.dylib",
+      "address": 140703472840704
+    },
+    {
+      "path": "/System/Library/Frameworks/AudioUnit.framework/Versions/A/AudioUnit",
+      "address": 140703472844800
+    },
+    {
+      "path": "/usr/lib/libScreenReader.dylib",
+      "address": 140703472848896
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/NetFSServer.framework/Versions/A/NetFSServer",
+      "address": 140703472898048
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/StreamingZip.framework/Versions/A/StreamingZip",
+      "address": 140703472918528
+    },
+    {
+      "path": "/usr/lib/swift/libswiftObjectiveC.dylib",
+      "address": 140703473049600
+    },
+    {
+      "path": "/usr/lib/swift/libswiftos.dylib",
+      "address": 140703473065984
+    },
+    {
+      "path": "/System/Library/Frameworks/IOBluetoothUI.framework/Versions/A/IOBluetoothUI",
+      "address": 140703473184768
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreAccessories.framework/Versions/A/CoreAccessories",
+      "address": 140703473508352
+    },
+    {
+      "path": "/System/Library/Frameworks/WebKit.framework/Versions/A/Frameworks/WebKitLegacy.framework/Versions/A/WebKitLegacy",
+      "address": 140703473815552
+    },
+    {
+      "path": "/System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa",
+      "address": 140703476039680
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IOSurfaceAccelerator.framework/Versions/A/IOSurfaceAccelerator",
+      "address": 140703476043776
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UniversalAccess.framework/Versions/A/Libraries/libUAPreferences.dylib",
+      "address": 140703476064256
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FamilyControls.framework/Versions/A/FamilyControls",
+      "address": 140703476084736
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DisplayServices.framework/Versions/A/DisplayServices",
+      "address": 140703476228096
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LoginUIKit.framework/Versions/A/LoginUIKit",
+      "address": 140703476248576
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FMCoreLite.framework/Versions/A/FMCoreLite",
+      "address": 140703477207040
+    },
+    {
+      "path": "/usr/lib/libtidy.A.dylib",
+      "address": 140703477325824
+    },
+    {
+      "path": "/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/OpenScripting.framework/Versions/A/OpenScripting",
+      "address": 140703477530624
+    },
+    {
+      "path": "/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/SecurityHI.framework/Versions/A/SecurityHI",
+      "address": 140703477641216
+    },
+    {
+      "path": "/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/Ink.framework/Versions/A/Ink",
+      "address": 140703477653504
+    },
+    {
+      "path": "/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/CommonPanels.framework/Versions/A/CommonPanels",
+      "address": 140703477657600
+    },
+    {
+      "path": "/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/ImageCapture.framework/Versions/A/ImageCapture",
+      "address": 140703477673984
+    },
+    {
+      "path": "/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/JavaScriptCore",
+      "address": 140703477682176
+    },
+    {
+      "path": "/usr/lib/libUniversalAccess.dylib",
+      "address": 140703516393472
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/RenderBox.framework/Versions/A/RenderBox",
+      "address": 140703516422144
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CloudServices.framework/Versions/A/CloudServices",
+      "address": 140703518019584
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/HID.framework/Versions/A/HID",
+      "address": 140703518322688
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IASUtilities.framework/Versions/A/IASUtilities",
+      "address": 140703518396416
+    },
+    {
+      "path": "/System/Library/Frameworks/LatentSemanticMapping.framework/Versions/A/LatentSemanticMapping",
+      "address": 140703518547968
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/KerberosHelper.framework/Versions/A/KerberosHelper",
+      "address": 140703518674944
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/OSAServicesClient.framework/Versions/A/OSAServicesClient",
+      "address": 140703518728192
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/URLFormatting.framework/Versions/A/URLFormatting",
+      "address": 140703518760960
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AXCoreUtilities.framework/Versions/A/AXCoreUtilities",
+      "address": 140703518797824
+    },
+    {
+      "path": "/usr/lib/libAccessibility.dylib",
+      "address": 140703519776768
+    },
+    {
+      "path": "/System/Library/Frameworks/WebKit.framework/Versions/A/Frameworks/WebCore.framework/Versions/A/WebCore",
+      "address": 140703519973376
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/PackageKit.framework/Versions/A/PackageKit",
+      "address": 140703583584256
+    },
+    {
+      "path": "/System/Library/Frameworks/NetFS.framework/Versions/A/NetFS",
+      "address": 140703584481280
+    },
+    {
+      "path": "/usr/lib/libFosl_dynamic.dylib",
+      "address": 140703584542720
+    },
+    {
+      "path": "/usr/lib/swift/libswiftCoreGraphics.dylib",
+      "address": 140703585935360
+    },
+    {
+      "path": "/usr/lib/swift/libswiftDarwin.dylib",
+      "address": 140703585939456
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Restore.framework/Versions/A/Restore",
+      "address": 140703585951744
+    },
+    {
+      "path": "/System/Library/Frameworks/ExceptionHandling.framework/Versions/A/ExceptionHandling",
+      "address": 140703585959936
+    },
+    {
+      "path": "/System/Library/Frameworks/WebKit.framework/Versions/A/WebKit",
+      "address": 140703585968128
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CorePDF.framework/Versions/A/CorePDF",
+      "address": 140703609442304
+    },
+    {
+      "path": "/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon",
+      "address": 140703609446400
+    },
+    {
+      "path": "/usr/lib/libquit.dylib",
+      "address": 140703609450496
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/EmbeddedOSSupportHost.framework/Versions/A/EmbeddedOSSupportHost",
+      "address": 140703609462784
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SystemPolicy.framework/Versions/A/SystemPolicy",
+      "address": 140703609491456
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FindMyDevice.framework/Versions/A/FindMyDevice",
+      "address": 140703609659392
+    },
+    {
+      "path": "/usr/lib/libAccountPolicyTranslation.dylib",
+      "address": 140703609810944
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FeatureFlagsSupport.framework/Versions/A/FeatureFlagsSupport",
+      "address": 140703609815040
+    },
+    {
+      "path": "/usr/lib/libsystemstats.dylib",
+      "address": 140703609901056
+    },
+    {
+      "path": "/System/Library/Frameworks/LocalAuthentication.framework/Support/MechanismBase.framework/Versions/A/MechanismBase",
+      "address": 140703609978880
+    },
+    {
+      "path": "/System/Library/Frameworks/LocalAuthentication.framework/Support/DaemonUtils.framework/Versions/A/DaemonUtils",
+      "address": 140703610134528
+    },
+    {
+      "path": "/usr/lib/libstdc++.6.dylib",
+      "address": 140703610347520
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LoggingSupport.framework/Versions/A/LoggingSupport",
+      "address": 140703610675200
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/GPURawCounter.framework/Versions/A/GPURawCounter",
+      "address": 140703611285504
+    },
+    {
+      "path": "/usr/lib/swift/libswiftCoreAudio.dylib",
+      "address": 140703611301888
+    },
+    {
+      "path": "/usr/lib/swift/libswiftCoreFoundation.dylib",
+      "address": 140703611408384
+    },
+    {
+      "path": "/usr/lib/swift/libswiftXPC.dylib",
+      "address": 140703611432960
+    },
+    {
+      "path": "/usr/lib/swift/libswiftIOKit.dylib",
+      "address": 140703611711488
+    },
+    {
+      "path": "/System/Library/Frameworks/Quartz.framework/Versions/A/Frameworks/ImageKit.framework/Versions/A/ImageKit",
+      "address": 140703611715584
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/OnBoardingKit.framework/Versions/A/OnBoardingKit",
+      "address": 140703614128128
+    },
+    {
+      "path": "/System/Library/Frameworks/ImageCaptureCore.framework/Versions/A/ImageCaptureCore",
+      "address": 140703614398464
+    },
+    {
+      "path": "/usr/lib/libbootpolicy.dylib",
+      "address": 140703614935040
+    },
+    {
+      "path": "/System/Library/Frameworks/PDFKit.framework/Versions/A/PDFKit",
+      "address": 140703615008768
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BridgeXPC.framework/Versions/A/BridgeXPC",
+      "address": 140703616278528
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Install.framework/Frameworks/DistributionKit.framework/Versions/A/DistributionKit",
+      "address": 140703616319488
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/OSPersonalization.framework/Versions/A/OSPersonalization",
+      "address": 140703616454656
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ServerInformation.framework/Versions/A/ServerInformation",
+      "address": 140703616843776
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FMCore.framework/Versions/A/FMCore",
+      "address": 140703616868352
+    },
+    {
+      "path": "/usr/lib/swift/libswiftsimd.dylib",
+      "address": 140703617011712
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/TextInput.framework/Versions/A/TextInput",
+      "address": 140703617142784
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UniversalAccess.framework/Versions/A/UniversalAccess",
+      "address": 140703619063808
+    },
+    {
+      "path": "/usr/lib/libncurses.5.4.dylib",
+      "address": 140703619235840
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IOAccelMemoryInfo.framework/Versions/A/IOAccelMemoryInfo",
+      "address": 140703619477504
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/GPUInfo.framework/Versions/A/GPUInfo",
+      "address": 140703619518464
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BridgeOSSoftwareUpdate.framework/Versions/A/BridgeOSSoftwareUpdate",
+      "address": 140703619584000
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/InstallerDiagnostics.framework/Versions/A/InstallerDiagnostics",
+      "address": 140703619616768
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AOSKit.framework/Versions/A/AOSKit",
+      "address": 140703619686400
+    },
+    {
+      "path": "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vImage.framework/Versions/A/Libraries/libCGInterfaces.dylib",
+      "address": 140703621046272
+    },
+    {
+      "path": "/usr/lib/libcrypto.35.dylib",
+      "address": 140703621165056
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MSUDataAccessor.framework/Versions/A/MSUDataAccessor",
+      "address": 140703622197248
+    },
+    {
+      "path": "/usr/lib/libnfshared.dylib",
+      "address": 140703622225920
+    },
+    {
+      "path": "/usr/lib/libIASAuthReboot.dylib",
+      "address": 140703622414336
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SoftwareUpdateMacController.framework/Versions/A/SoftwareUpdateMacController",
+      "address": 140703622438912
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SoftwareUpdateCoreSupport.framework/Versions/A/SoftwareUpdateCoreSupport",
+      "address": 140703623536640
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AssetCacheServicesExtensions.framework/Versions/A/AssetCacheServicesExtensions",
+      "address": 140703623938048
+    },
+    {
+      "path": "/usr/lib/libprequelite.dylib",
+      "address": 140703624044544
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FindMyDeviceUI.framework/Versions/A/FindMyDeviceUI",
+      "address": 140703624130560
+    },
+    {
+      "path": "/System/Library/Frameworks/SwiftUI.framework/Versions/A/SwiftUI",
+      "address": 140703624183808
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AttributeGraph.framework/Versions/A/AttributeGraph",
+      "address": 140703643627520
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/OSASubmissionClient.framework/Versions/A/OSASubmissionClient",
+      "address": 140703643889664
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SoftwareUpdateCore.framework/Versions/A/SoftwareUpdateCore",
+      "address": 140703643914240
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MiniSoftwareUpdate.framework/Versions/A/MiniSoftwareUpdate",
+      "address": 140703645061120
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MobileBluetooth.framework/Versions/A/MobileBluetooth",
+      "address": 140703645134848
+    },
+    {
+      "path": "/usr/lib/libssl.35.dylib",
+      "address": 140703645384704
+    },
+    {
+      "path": "/usr/lib/libpmenergy.dylib",
+      "address": 140703645593600
+    },
+    {
+      "path": "/usr/lib/libFDR.dylib",
+      "address": 140703645609984
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/TextToSpeech.framework/Versions/A/TextToSpeech",
+      "address": 140703646429184
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MobileSoftwareUpdate.framework/Versions/A/MobileSoftwareUpdate",
+      "address": 140703649247232
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SoftwareUpdateCoreConnect.framework/Versions/A/SoftwareUpdateCoreConnect",
+      "address": 140703649329152
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/StorageKit.framework/Versions/A/StorageKit",
+      "address": 140703649415168
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreWLANKit.framework/Versions/A/CoreWLANKit",
+      "address": 140703649906688
+    },
+    {
+      "path": "/System/Library/Frameworks/InputMethodKit.framework/Versions/A/InputMethodKit",
+      "address": 140703650201600
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/TextInputMenuUI.framework/Versions/A/TextInputMenuUI",
+      "address": 140703651725312
+    },
+    {
+      "path": "/System/Library/Frameworks/LocalAuthentication.framework/Support/ModuleBase.framework/Versions/A/ModuleBase",
+      "address": 140703651848192
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/HIDPreferences.framework/Versions/A/HIDPreferences",
+      "address": 140703651917824
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AccountPolicy.framework/Versions/A/AccountPolicy",
+      "address": 140703651954688
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/OSAnalytics.framework/Versions/A/OSAnalytics",
+      "address": 140703652081664
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SMBClient.framework/Versions/A/SMBClient",
+      "address": 140703652540416
+    },
+    {
+      "path": "/usr/lib/swift/libswiftAppKit.dylib",
+      "address": 140703652708352
+    },
+    {
+      "path": "/usr/lib/swift/libswiftQuartzCore.dylib",
+      "address": 140703652712448
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/NetworkStatistics.framework/Versions/A/NetworkStatistics",
+      "address": 140703652724736
+    },
+    {
+      "path": "/usr/lib/libsysmon.dylib",
+      "address": 140703653076992
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/RunningBoard.framework/Versions/A/RunningBoard",
+      "address": 140703653089280
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AccessibilitySupport.framework/Versions/A/AccessibilitySupport",
+      "address": 140703653912576
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SharePointManagement.framework/Versions/A/SharePointManagement",
+      "address": 140703653916672
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BezelServices.framework/Versions/A/BezelServices",
+      "address": 140703653949440
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FindMyMac.framework/Versions/A/FindMyMac",
+      "address": 140703653978112
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MobileActivationMacOS.framework/Versions/A/MobileActivationMacOS",
+      "address": 140703654002688
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BridgeOSInstall.framework/Versions/A/BridgeOSInstall",
+      "address": 140703654060032
+    },
+    {
+      "path": "/usr/lib/libIASUnifiedProgress.dylib",
+      "address": 140703654387712
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SampleAnalysis.framework/Versions/A/SampleAnalysis",
+      "address": 140703654428672
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AccessibilitySupport.framework/Versions/A/Frameworks/AccessibilityFoundation.framework/Versions/A/AccessibilityFoundation",
+      "address": 140703656398848
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AXAssetLoader.framework/Versions/A/AXAssetLoader",
+      "address": 140703656894464
+    },
+    {
+      "path": "/usr/lib/libnfrestore.dylib",
+      "address": 140703657009152
+    },
+    {
+      "path": "/usr/lib/libauthinstall.dylib",
+      "address": 140703657066496
+    },
+    {
+      "path": "/usr/lib/libamsupport.dylib",
+      "address": 140703657967616
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/OSAnalyticsPrivate.framework/Versions/A/OSAnalyticsPrivate",
+      "address": 140703658106880
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UniversalAccess.framework/Versions/A/Frameworks/UniversalAccessCore.framework/Versions/A/UniversalAccessCore",
+      "address": 140703658258432
+    },
+    {
+      "path": "/usr/lib/libcrypto.42.dylib",
+      "address": 140703658520576
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AOSAccountsLite.framework/Versions/A/AOSAccountsLite",
+      "address": 140703659581440
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DeviceIdentity.framework/Versions/A/DeviceIdentity",
+      "address": 140703659589632
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/TrustedPeers.framework/Versions/A/TrustedPeers",
+      "address": 140703659798528
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/WiFiPolicy.framework/Versions/A/WiFiPolicy",
+      "address": 140703660126208
+    },
+    {
+      "path": "/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
+      "address": 140703661649920
+    },
+    {
+      "path": "/usr/lib/swift/libswiftAccelerate.dylib",
+      "address": 140703661711360
+    },
+    {
+      "path": "/usr/lib/libKernelCollectionBuilder.dylib",
+      "address": 140703662448640
+    },
+    {
+      "path": "/usr/lib/libpartition2_dynamic.dylib",
+      "address": 140703662829568
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AudioServerDriver.framework/Versions/A/AudioServerDriver",
+      "address": 140703662899200
+    },
+    {
+      "path": "/usr/lib/AppleConvergedTransport.dylib",
+      "address": 140703663472640
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UniversalAccess.framework/Versions/A/Frameworks/UAEHCommon.framework/Versions/A/Libraries/libUADaemon.dylib",
+      "address": 140703663554560
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FinderKit.framework/Versions/A/FinderKit",
+      "address": 140707423682560
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AccessibilitySupport.framework/Versions/A/Frameworks/AccessibilityKit.framework/Versions/A/AccessibilityKit",
+      "address": 140707429818368
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AccessibilitySupport.framework/Versions/A/Frameworks/AccessibilityVisuals.framework/Versions/A/AccessibilityVisuals",
+      "address": 140707430248448
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AccessibilitySupport.framework/Versions/A/Frameworks/AccessibilityEvents.framework/Versions/A/AccessibilityEvents",
+      "address": 140707430682624
+    },
+    {
+      "path": "/usr/lib/swift/libswiftOSLog.dylib",
+      "address": 140707430842368
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DCERPC.framework/Versions/A/DCERPC",
+      "address": 140707430850560
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Symbolication.framework/Versions/A/Symbolication",
+      "address": 140707431301120
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AXRuntime.framework/Versions/A/AXRuntime",
+      "address": 140707432443904
+    },
+    {
+      "path": "/usr/lib/libpmsample.dylib",
+      "address": 140707432837120
+    },
+    {
+      "path": "/System/Library/Frameworks/SyncServices.framework/Versions/A/SyncServices",
+      "address": 140707432849408
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SpeechObjects.framework/Versions/A/SpeechObjects",
+      "address": 140707434090496
+    },
+    {
+      "path": "/System/Library/Frameworks/OSLog.framework/Versions/A/OSLog",
+      "address": 140707434291200
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/InternalSwiftProtobuf.framework/Versions/A/InternalSwiftProtobuf",
+      "address": 140707434356736
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/HIDDisplay.framework/Versions/A/HIDDisplay",
+      "address": 140707435372544
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Bootability.framework/Versions/A/Bootability",
+      "address": 140707435421696
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MFAAuthentication.framework/Versions/A/MFAAuthentication",
+      "address": 140707435458560
+    },
+    {
+      "path": "/System/Library/Frameworks/CryptoKit.framework/Versions/A/CryptoKit",
+      "address": 140707436072960
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BluetoothManager.framework/Versions/A/BluetoothManager",
+      "address": 140707436724224
+    },
+    {
+      "path": "/usr/lib/libFDRDecode.dylib",
+      "address": 140707436822528
+    },
+    {
+      "path": "/usr/lib/libipsec.A.dylib",
+      "address": 140707436896256
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreCaptureControl.framework/Versions/A/CoreCaptureControl",
+      "address": 140707436916736
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AccountPolicy.framework/Frameworks/CFAccountPolicy.framework/Versions/A/CFAccountPolicy",
+      "address": 140707436929024
+    },
+    {
+      "path": "/usr/lib/libedit.3.dylib",
+      "address": 140707436941312
+    },
+    {
+      "path": "/usr/lib/swift/libswiftDemangle.dylib",
+      "address": 140707437064192
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SystemMigration.framework/Versions/A/SystemMigration",
+      "address": 140707437457408
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MonitorPanel.framework/Versions/A/MonitorPanel",
+      "address": 140707439230976
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FeatureFlags.framework/Versions/A/FeatureFlags",
+      "address": 140707439345664
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreCaptureDaemon.framework/Versions/A/CoreCaptureDaemon",
+      "address": 140707439349760
+    },
+    {
+      "path": "/usr/lib/libIOGTrace.dylib",
+      "address": 140707439767552
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DataDetectorsCore.framework/Versions/A/PlugIns/PhoneNumbers.plugin/Versions/A/PhoneNumbers",
+      "address": 140707439779840
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SystemMigrationUtils.framework/Versions/A/SystemMigrationUtils",
+      "address": 140707439783936
+    },
+    {
+      "path": "/usr/lib/swift/libswiftSwiftOnoneSupport.dylib",
+      "address": 140707439865856
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ScreenReaderCore.framework/Versions/A/ScreenReaderCore",
+      "address": 140707440017408
+    },
+    {
+      "path": "/usr/lib/ACIPCBTLib.dylib",
+      "address": 140707440431104
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/oncrpc.framework/Versions/A/oncrpc",
+      "address": 140707440455680
+    },
+    {
+      "path": "/usr/lib/libcryptex_interface.dylib",
+      "address": 140707440553984
+    },
+    {
+      "path": "/usr/lib/libcryptex_core.dylib",
+      "address": 140707440599040
+    },
+    {
+      "path": "/System/Library/Extensions/AppleMultitouchDriver.kext/Contents/PlugIns/MultitouchHID.plugin/Contents/MacOS/MultitouchHID",
+      "address": 140707440738304
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCoreFSCache.dylib",
+      "address": 140707441082368
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCoreVMClient.dylib",
+      "address": 140707441115136
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL",
+      "address": 140707441135616
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCVMSPluginSupport.dylib",
+      "address": 140707441201152
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGFXShared.dylib",
+      "address": 140707441213440
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLImage.dylib",
+      "address": 140707441250304
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib",
+      "address": 140707441467392
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib",
+      "address": 140707441729536
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libLLVMContainer.dylib",
+      "address": 140707441774592
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenCL.framework/Versions/A/OpenCL",
+      "address": 140707451498496
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenCL.framework/Versions/A/Libraries/libcldcpuengine.dylib",
+      "address": 140707451854848
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenCL.framework/Versions/A/Libraries/libcl2module.dylib",
+      "address": 140707451891712
+    },
+    {
+      "path": "/System/Library/Filesystems/exfat.fs/Contents/Resources/livefiles_exfat.dylib",
+      "address": 140707457392640
+    },
+    {
+      "path": "/System/Library/Filesystems/msdos.fs/Contents/Resources/livefiles_msdos.dylib",
+      "address": 140707457556480
+    },
+    {
+      "path": "/System/Library/Filesystems/ntfs.fs/Contents/Resources/livefiles_ntfs.dylib",
+      "address": 140707457712128
+    },
+    {
+      "path": "/System/Library/Frameworks/AVRouting.framework/Versions/A/AVRouting",
+      "address": 140707458154496
+    },
+    {
+      "path": "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/Resources/FontInfo_BaseSystem/libXTFontStaticRegistryData.dylib",
+      "address": 140707458629632
+    },
+    {
+      "path": "/System/Library/Frameworks/AudioToolbox.framework/libValidationCapsule.dylib",
+      "address": 140707459129344
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreHID.framework/Versions/A/CoreHID",
+      "address": 140707459260416
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreTransferable.framework/Versions/A/CoreTransferable",
+      "address": 140707459657728
+    },
+    {
+      "path": "/System/Library/Frameworks/DataDetection.framework/Versions/A/DataDetection",
+      "address": 140707459911680
+    },
+    {
+      "path": "/System/Library/Frameworks/DeveloperToolsSupport.framework/Versions/A/DeveloperToolsSupport",
+      "address": 140707459964928
+    },
+    {
+      "path": "/System/Library/Frameworks/ExtensionFoundation.framework/Versions/A/ExtensionFoundation",
+      "address": 140707460055040
+    },
+    {
+      "path": "/System/Library/Frameworks/FSKit.framework/Versions/A/FSKit",
+      "address": 140707461451776
+    },
+    {
+      "path": "/System/Library/Frameworks/InstallerPlugins.framework/Versions/A/InstallerPlugins",
+      "address": 140707461881856
+    },
+    {
+      "path": "/System/Library/Frameworks/LightweightCodeRequirements.framework/Versions/A/LightweightCodeRequirements",
+      "address": 140707461967872
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCoreVMClient.mono.dylib",
+      "address": 140707462217728
+    },
+    {
+      "path": "/System/Library/Frameworks/PCSC.framework/Versions/A/PCSC",
+      "address": 140707462258688
+    },
+    {
+      "path": "/System/Library/Frameworks/SwiftUICore.framework/Versions/A/SwiftUICore",
+      "address": 140707462299648
+    },
+    {
+      "path": "/System/Library/Frameworks/Symbols.framework/Versions/A/Symbols",
+      "address": 140707477749760
+    },
+    {
+      "path": "/System/Library/Frameworks/_LocationEssentials.framework/Versions/A/_LocationEssentials",
+      "address": 140707477827584
+    },
+    {
+      "path": "/System/Library/HIDPlugins/IOHIDEventSystemStatistics.plugin/Contents/MacOS/IOHIDEventSystemStatistics",
+      "address": 140707477999616
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AAAFoundation.framework/Versions/A/AAAFoundation",
+      "address": 140707478016000
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ACIAdapter.framework/Versions/A/ACIAdapter",
+      "address": 140707478142976
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AOSUILite.framework/Versions/A/AOSUILite",
+      "address": 140707478147072
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Admin.framework/Versions/A/Admin",
+      "address": 140707478335488
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AggregateDictionaryHistory.framework/Versions/A/AggregateDictionaryHistory",
+      "address": 140707478454272
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Airship.framework/Versions/A/Airship",
+      "address": 140707478458368
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AirshipCentauriHelper.framework/Versions/A/AirshipCentauriHelper",
+      "address": 140707479064576
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AlgorithmsInternal.framework/Versions/A/AlgorithmsInternal",
+      "address": 140707479138304
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AliroReader.framework/Versions/A/AliroReader",
+      "address": 140707479560192
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleConvergedFirmwareUpdater.framework/Versions/A/AppleConvergedFirmwareUpdater",
+      "address": 140707479744512
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleDeviceQuerySupport.framework/Versions/A/AppleDeviceQuerySupport",
+      "address": 140707480014848
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleDeviceQuerySupport.framework/Versions/A/libZhuGeArmory.dylib",
+      "address": 140707480104960
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleDeviceQuerySupport.framework/Versions/A/libZhuGeRoster.dylib",
+      "address": 140707480301568
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleDisplayTCONControl.framework/Versions/A/AppleDisplayTCONControl",
+      "address": 140707480305664
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleFirmwareUpdate.framework/Versions/A/AppleFirmwareUpdate",
+      "address": 140707480346624
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleKeyStore.framework/Versions/A/AppleKeyStore",
+      "address": 140707480440832
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleMobileFileIntegrity.framework/Versions/A/AppleMobileFileIntegrity",
+      "address": 140707480956928
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleNVMe.framework/Versions/A/AppleNVMe",
+      "address": 140707481059328
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AppleShareClientCore.framework/Versions/A/AppleShareClientCore",
+      "address": 140707481067520
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ApplicationFirewall.framework/Versions/A/ApplicationFirewall",
+      "address": 140707481321472
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ArgumentParserInternal.framework/Versions/A/ArgumentParserInternal",
+      "address": 140707481350144
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AssistiveControlSupport.framework/Versions/A/AssistiveControlSupport",
+      "address": 140707481853952
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AsyncAlgorithmsInternal.framework/Versions/A/AsyncAlgorithmsInternal",
+      "address": 140707482468352
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AtomicsInternal.framework/Versions/A/AtomicsInternal",
+      "address": 140707483029504
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/AudioServerApplication.framework/Versions/A/AudioServerApplication",
+      "address": 140707483099136
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BackBoardHIDEventFoundation.framework/Versions/A/BackBoardHIDEventFoundation",
+      "address": 140707483222016
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BinaryParsingInternal.framework/Versions/A/BinaryParsingInternal",
+      "address": 140707483529216
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BluetoothFirmware.framework/Versions/A/BluetoothFirmware",
+      "address": 140707483594752
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Bootability.framework/Versions/A/Frameworks/BootabilityBrain.framework/Versions/A/BootabilityBrain",
+      "address": 140707483598848
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BridgeOSInstallReporting.framework/Versions/A/BridgeOSInstallReporting",
+      "address": 140707486453760
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/BridgeOSObliteration.framework/Versions/A/BridgeOSObliteration",
+      "address": 140707486466048
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ByteMatrixVerification.framework/Versions/A/ByteMatrixVerification",
+      "address": 140707486474240
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ByteRangeLocking.framework/Versions/A/ByteRangeLocking",
+      "address": 140707486494720
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CMPhoto.framework/Versions/A/CMPhoto",
+      "address": 140707486519296
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CardioHealth.framework/Versions/A/CardioHealth",
+      "address": 140707488387072
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CentauriBooter.framework/Versions/A/CentauriBooter",
+      "address": 140707488473088
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Chirp.framework/Versions/A/Chirp",
+      "address": 140707488608256
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CollectionViewCore.framework/Versions/A/CollectionViewCore",
+      "address": 140707488714752
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CollectionsInternal.framework/Versions/A/CollectionsInternal",
+      "address": 140707488874496
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CombineCocoa.framework/Versions/A/CombineCocoa",
+      "address": 140707490029568
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ContainerManagerCommon.framework/Versions/A/ContainerManagerCommon",
+      "address": 140707490033664
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ContainerManagerSystem.framework/Versions/A/ContainerManagerSystem",
+      "address": 140707491344384
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ContainerManagerUser.framework/Versions/A/ContainerManagerUser",
+      "address": 140707491348480
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreBluetoothUI.framework/Versions/A/CoreBluetoothUI",
+      "address": 140707491352576
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreCapture.framework/Versions/A/CoreCapture",
+      "address": 140707491590144
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreChineseEngine.framework/Versions/A/CoreChineseEngine",
+      "address": 140707491602432
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreDiagnostics.framework/Versions/A/CoreDiagnostics",
+      "address": 140707492052992
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreJapaneseEngine.framework/Versions/A/CoreJapaneseEngine",
+      "address": 140707492610048
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CoreLocationTiles.framework/Versions/A/CoreLocationTiles",
+      "address": 140707493027840
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CryptexKit.framework/Versions/A/CryptexKit",
+      "address": 140707493048320
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CryptexServer.framework/Versions/A/CryptexServer",
+      "address": 140707493720064
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/CryptoKitPrivate.framework/Versions/A/CryptoKitPrivate",
+      "address": 140707497705472
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DesignLibrary.framework/Versions/A/DesignLibrary",
+      "address": 140707498479616
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DeviceRecovery.framework/Versions/A/DeviceRecovery",
+      "address": 140707499937792
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DeviceRecoveryBrainSupport.framework/Versions/A/DeviceRecoveryBrainSupport",
+      "address": 140707500019712
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DiskImages2.framework/Versions/A/DiskImages2",
+      "address": 140707500199936
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Dyld.framework/Versions/A/Dyld",
+      "address": 140707502370816
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/DynamicPrefetching.framework/Versions/A/DynamicPrefetching",
+      "address": 140707502768128
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/EXDisplayPipe.framework/Versions/A/EXDisplayPipe",
+      "address": 140707502874624
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FocusEngine.framework/Versions/A/FocusEngine",
+      "address": 140707502878720
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FontServices.framework/Versions/A/FontServices",
+      "address": 140707503226880
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/FrontBoard.framework/Versions/A/FrontBoard",
+      "address": 140707503243264
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Gestures.framework/Versions/A/Gestures",
+      "address": 140707504074752
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/HTTPTypesInternal.framework/Versions/A/HTTPTypesInternal",
+      "address": 140707504816128
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/HWAdapter.framework/Versions/A/HWAdapter",
+      "address": 140707504869376
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IASUtilitiesCore.framework/Versions/A/IASUtilitiesCore",
+      "address": 140707504873472
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IO80211.framework/Versions/A/IO80211",
+      "address": 140707505016832
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IOFastPath.framework/Versions/A/IOFastPath",
+      "address": 140707505446912
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IPConfiguration.framework/Versions/A/IPConfiguration",
+      "address": 140707505471488
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IconRendering.framework/Versions/A/IconRendering",
+      "address": 140707505516544
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ImageCaptureDevices.framework/Versions/A/ImageCaptureDevices",
+      "address": 140707505999872
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/Install.framework/Versions/A/Install",
+      "address": 140707506184192
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/KeyboardLayouts.framework/Versions/A/KeyboardLayouts",
+      "address": 140707506900992
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LiveFS.framework/Versions/A/LiveFS",
+      "address": 140707506946048
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LocalAuthenticationCore.framework/Versions/A/LocalAuthenticationCore",
+      "address": 140707507126272
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LocalAuthenticationCredentialServices.framework/Versions/A/LocalAuthenticationCredentialServices",
+      "address": 140707508572160
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LocalAuthenticationRecoveryUI.framework/Versions/A/LocalAuthenticationRecoveryUI",
+      "address": 140707508699136
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LocationAccessStore.framework/Versions/A/LocationAccessStore",
+      "address": 140707508748288
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LocationLogEncryption.framework/Versions/A/LocationLogEncryption",
+      "address": 140707508760576
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/LowPowerMode.framework/Versions/A/LowPowerMode",
+      "address": 140707508781056
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MessageSecurity.framework/Versions/A/MessageSecurity",
+      "address": 140707508813824
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MobileAccessoryUpdater.framework/Versions/A/MobileAccessoryUpdater",
+      "address": 140707509227520
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MobileAssetDaemon.framework/Versions/A/MobileAssetDaemon",
+      "address": 140707509276672
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MobileContainerManager.framework/Versions/A/MobileContainerManager",
+      "address": 140707513876480
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MobileObliteration.framework/Versions/A/MobileObliteration",
+      "address": 140707513896960
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MobileStorage.framework/Versions/A/MobileStorage",
+      "address": 140707513905152
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/MultitouchSessionFilterSupport.framework/Versions/A/MultitouchSessionFilterSupport",
+      "address": 140707514019840
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/NearFieldPrivateServices.framework/Versions/A/NearFieldPrivateServices",
+      "address": 140707514023936
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/OSASyncProxyClient.framework/Versions/A/OSASyncProxyClient",
+      "address": 140707514060800
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/OSInstaller.framework/Versions/A/OSInstaller",
+      "address": 140707514068992
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/PackageUIKit.framework/Versions/A/PackageUIKit",
+      "address": 140707514720256
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/PacketParser.framework/Versions/A/PacketParser",
+      "address": 140707514773504
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/PanicHelper.framework/Versions/A/PanicHelper",
+      "address": 140707514777600
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ParsingInternal.framework/Versions/A/ParsingInternal",
+      "address": 140707514793984
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/PhotosensitivityProcessing.framework/Versions/A/PhotosensitivityProcessing",
+      "address": 140707515547648
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/PlatformSSOCore.framework/Versions/A/PlatformSSOCore",
+      "address": 140707515686912
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ProDisplayLibrary.framework/Versions/A/ProDisplayLibrary",
+      "address": 140707516850176
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/RecoveryOS.framework/Versions/A/RecoveryOS",
+      "address": 140707518181376
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ReflectionInternal.framework/Versions/A/ReflectionInternal",
+      "address": 140707518222336
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/RuntimeInternal.framework/Versions/A/RuntimeInternal",
+      "address": 140707518255104
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SFSymbols.framework/Versions/A/SFSymbols",
+      "address": 140707518341120
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ScreenReader.framework/Versions/A/Frameworks/BrailleTranslation.framework/Versions/A/BrailleTranslation",
+      "address": 140707518881792
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ScreenReader.framework/Versions/A/Frameworks/ScreenReaderOutput.framework/Versions/A/ScreenReaderOutput",
+      "address": 140707519180800
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/ScreenReader.framework/Versions/A/ScreenReader",
+      "address": 140707519950848
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/StorageContainersPrivate.framework/Versions/A/StorageContainersPrivate",
+      "address": 140707524214784
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/StreamingExtractor.framework/Versions/A/StreamingExtractor",
+      "address": 140707524276224
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SwiftASN1.framework/Versions/A/SwiftASN1",
+      "address": 140707524354048
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SwiftASN1Internal.framework/Versions/A/SwiftASN1Internal",
+      "address": 140707524521984
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SwiftTLS.framework/Versions/A/SwiftTLS",
+      "address": 140707524689920
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SystemOverride.framework/Versions/A/SystemOverride",
+      "address": 140707525402624
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/SystemWake.framework/Versions/A/SystemWake",
+      "address": 140707525410816
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/TextToSpeechBundleSupport.framework/Versions/A/TextToSpeechBundleSupport",
+      "address": 140707525492736
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/TextToSpeechMauiSupport.framework/Versions/A/TextToSpeechMauiSupport",
+      "address": 140707525615616
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UIIntelligenceSupport.framework/Versions/A/UIIntelligenceSupport",
+      "address": 140707532173312
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UVFSXPCService.framework/Versions/A/UVFSXPCService",
+      "address": 140707533287424
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UniversalAccess.framework/Versions/A/Frameworks/UAEHCommon.framework/Versions/A/UAEHCommon",
+      "address": 140707533291520
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UniversalAccess.framework/Versions/A/Frameworks/Zoom.framework/Versions/A/Zoom",
+      "address": 140707533303808
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UpdateCycle.framework/Versions/A/UpdateCycle",
+      "address": 140707533508608
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UpdateCycleSupport.framework/Versions/A/UpdateCycleSupport",
+      "address": 140707533516800
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/UserFS.framework/Versions/A/UserFS",
+      "address": 140707533520896
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/WindowManagement.framework/Versions/A/WindowManagement",
+      "address": 140707533533184
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/XARTRecovery.framework/Versions/A/XARTRecovery",
+      "address": 140707533668352
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/XCTestSupport.framework/Versions/A/XCTestSupport",
+      "address": 140707533680640
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/XPCDistributed.framework/Versions/A/XPCDistributed",
+      "address": 140707533705216
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/XPCSupport.framework/Versions/A/XPCSupport",
+      "address": 140707534118912
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/apfs_boot_mount.framework/Versions/A/apfs_boot_mount",
+      "address": 140707534131200
+    },
+    {
+      "path": "/System/Library/SubFrameworks/UIUtilities.framework/Versions/A/UIUtilities",
+      "address": 140707534135296
+    },
+    {
+      "path": "/usr/lib/i18n/libUTF8.dylib",
+      "address": 140707534151680
+    },
+    {
+      "path": "/usr/lib/i18n/libiconv_std.dylib",
+      "address": 140707534155776
+    },
+    {
+      "path": "/usr/lib/i18n/libmapper_none.dylib",
+      "address": 140707534172160
+    },
+    {
+      "path": "/usr/lib/libAXSafeCategoryBundle.dylib",
+      "address": 140707534176256
+    },
+    {
+      "path": "/usr/lib/libAppleArchive.dylib",
+      "address": 140707534188544
+    },
+    {
+      "path": "/usr/lib/libBSDPClient.A.dylib",
+      "address": 140707534848000
+    },
+    {
+      "path": "/usr/lib/libCoreEntitlements.dylib",
+      "address": 140707534872576
+    },
+    {
+      "path": "/usr/lib/libCoreEntitlements_V2.dylib",
+      "address": 140707534917632
+    },
+    {
+      "path": "/usr/lib/libDiskUnlock.dylib",
+      "address": 140707534950400
+    },
+    {
+      "path": "/usr/lib/libInterpreterSecurity.dylib",
+      "address": 140707534970880
+    },
+    {
+      "path": "/usr/lib/libNFC_Comet.dylib",
+      "address": 140707534979072
+    },
+    {
+      "path": "/usr/lib/libNFC_HAL.dylib",
+      "address": 140707535613952
+    },
+    {
+      "path": "/usr/lib/libPN548_API.dylib",
+      "address": 140707535753216
+    },
+    {
+      "path": "/usr/lib/libRosetta.dylib",
+      "address": 140707536052224
+    },
+    {
+      "path": "/usr/lib/libSecureMAHelper.dylib",
+      "address": 140707536084992
+    },
+    {
+      "path": "/usr/lib/libSoftwareUpdateSSO.dylib",
+      "address": 140707536269312
+    },
+    {
+      "path": "/usr/lib/libTLE.dylib",
+      "address": 140707536293888
+    },
+    {
+      "path": "/usr/lib/libTelephonyCapabilities.dylib",
+      "address": 140707536330752
+    },
+    {
+      "path": "/usr/lib/libTelephonyDebugDynamic.dylib",
+      "address": 140707536490496
+    },
+    {
+      "path": "/usr/lib/libTelephonyIOKitDynamic.dylib",
+      "address": 140707536502784
+    },
+    {
+      "path": "/usr/lib/libcmark-gfm.dylib",
+      "address": 140707536576512
+    },
+    {
+      "path": "/usr/lib/libcryptex.dylib",
+      "address": 140707536760832
+    },
+    {
+      "path": "/usr/lib/libcryptex_trampoline.dylib",
+      "address": 140707536990208
+    },
+    {
+      "path": "/usr/lib/libcrypto.0.9.8.dylib",
+      "address": 140707536998400
+    },
+    {
+      "path": "/usr/lib/libcrypto.41.dylib",
+      "address": 140707537952768
+    },
+    {
+      "path": "/usr/lib/libcrypto.46.dylib",
+      "address": 140707539017728
+    },
+    {
+      "path": "/usr/lib/libcrypto.55.dylib",
+      "address": 140707540180992
+    },
+    {
+      "path": "/usr/lib/libcrypto.dylib",
+      "address": 140707541221376
+    },
+    {
+      "path": "/usr/lib/libemptyRecovery.dylib",
+      "address": 140707541229568
+    },
+    {
+      "path": "/usr/lib/libheimdalasn1.dylib",
+      "address": 140707541233664
+    },
+    {
+      "path": "/usr/lib/libhvf.dylib",
+      "address": 140707541266432
+    },
+    {
+      "path": "/usr/lib/libimage4.dylib",
+      "address": 140707541389312
+    },
+    {
+      "path": "/usr/lib/libmarisa.dylib",
+      "address": 140707541590016
+    },
+    {
+      "path": "/usr/lib/libmd.dylib",
+      "address": 140707541692416
+    },
+    {
+      "path": "/usr/lib/libmrc.dylib",
+      "address": 140707541716992
+    },
+    {
+      "path": "/usr/lib/libnwswifttls.dylib",
+      "address": 140707541749760
+    },
+    {
+      "path": "/usr/lib/libodaccesstoken.dylib",
+      "address": 140707542786048
+    },
+    {
+      "path": "/usr/lib/libssl.48.dylib",
+      "address": 140707542802432
+    },
+    {
+      "path": "/usr/lib/libssl.58.dylib",
+      "address": 140707543035904
+    },
+    {
+      "path": "/usr/lib/libssl.dylib",
+      "address": 140707543265280
+    },
+    {
+      "path": "/usr/lib/libswiftPrespecialized.dylib",
+      "address": 140707543273472
+    },
+    {
+      "path": "/usr/lib/libtls.18.dylib",
+      "address": 140707543289856
+    },
+    {
+      "path": "/usr/lib/libtls.20.dylib",
+      "address": 140707543318528
+    },
+    {
+      "path": "/usr/lib/libtls.31.dylib",
+      "address": 140707544731648
+    },
+    {
+      "path": "/usr/lib/libxo.dylib",
+      "address": 140707544768512
+    },
+    {
+      "path": "/usr/lib/libxpc_datastores.dylib",
+      "address": 140707544842240
+    },
+    {
+      "path": "/usr/lib/log/liblog_SystemConfiguration.dylib",
+      "address": 140707544854528
+    },
+    {
+      "path": "/usr/lib/log/liblog_srp.dylib",
+      "address": 140707544870912
+    },
+    {
+      "path": "/usr/lib/swift/libswiftDistributed.dylib",
+      "address": 140707544915968
+    },
+    {
+      "path": "/usr/lib/swift/libswiftObservation.dylib",
+      "address": 140707544981504
+    },
+    {
+      "path": "/usr/lib/swift/libswiftRegexBuilder.dylib",
+      "address": 140707545042944
+    },
+    {
+      "path": "/usr/lib/swift/libswiftRuntime.dylib",
+      "address": 140707545088000
+    },
+    {
+      "path": "/usr/lib/swift/libswiftSynchronization.dylib",
+      "address": 140707545677824
+    },
+    {
+      "path": "/usr/lib/swift/libswiftSystem.dylib",
+      "address": 140707545759744
+    },
+    {
+      "path": "/usr/lib/swift/libswiftSystem_Foundation.dylib",
+      "address": 140707545849856
+    },
+    {
+      "path": "/usr/lib/swift/libswift_Builtin_float.dylib",
+      "address": 140707545853952
+    },
+    {
+      "path": "/usr/lib/swift/libswift_Concurrency.dylib",
+      "address": 140707545858048
+    },
+    {
+      "path": "/usr/lib/swift/libswift_DarwinFoundation1.dylib",
+      "address": 140707546312704
+    },
+    {
+      "path": "/usr/lib/swift/libswift_DarwinFoundation2.dylib",
+      "address": 140707546329088
+    },
+    {
+      "path": "/usr/lib/swift/libswift_DarwinFoundation3.dylib",
+      "address": 140707546333184
+    },
+    {
+      "path": "/usr/lib/swift/libswift_RegexParser.dylib",
+      "address": 140707546337280
+    },
+    {
+      "path": "/usr/lib/swift/libswift_StringProcessing.dylib",
+      "address": 140707547033600
+    },
+    {
+      "path": "/usr/lib/swift/libswift_Volatile.dylib",
+      "address": 140707547561984
+    },
+    {
+      "path": "/usr/lib/swift/libswift_errno.dylib",
+      "address": 140707547574272
+    },
+    {
+      "path": "/usr/lib/swift/libswift_math.dylib",
+      "address": 140707547578368
+    },
+    {
+      "path": "/usr/lib/swift/libswift_signal.dylib",
+      "address": 140707547582464
+    },
+    {
+      "path": "/usr/lib/swift/libswift_stdio.dylib",
+      "address": 140707547586560
+    },
+    {
+      "path": "/usr/lib/swift/libswift_time.dylib",
+      "address": 140707547590656
+    },
+    {
+      "path": "/usr/lib/swift/libswiftsys_time.dylib",
+      "address": 140707547594752
+    },
+    {
+      "path": "/usr/lib/swift/libswiftunistd.dylib",
+      "address": 140707547598848
+    },
+    {
+      "path": "/usr/lib/system/libcorecrypto_noasm.dylib",
+      "address": 140707547602944
+    },
+    {
+      "path": "/usr/lib/system/libcorecrypto_trace.dylib",
+      "address": 140707548270592
+    },
+    {
+      "path": "/usr/lib/system/libsystem_darwindirectory.dylib",
+      "address": 140707549089792
+    },
+    {
+      "path": "/usr/lib/system/libsystem_eligibility.dylib",
+      "address": 140707549110272
+    },
+    {
+      "path": "/usr/lib/system/libsystem_sanitizers.dylib",
+      "address": 140707549155328
+    },
+    {
+      "path": "/usr/lib/system/libsystem_trial.dylib",
+      "address": 140707549188096
+    },
+    {
+      "path": "/usr/lib/system/libunc.dylib",
+      "address": 140707549192192
+    },
+    {
+      "path": "/usr/lib/updaters/libAppleTypeCRetimerUpdater.dylib",
+      "address": 140707549196288
+    },
+    {
+      "path": "/usr/lib/updaters/libCentauriUpdater.dylib",
+      "address": 140707549593600
+    },
+    {
+      "path": "/usr/lib/updaters/libPFXUpdater.dylib",
+      "address": 140707549704192
+    },
+    {
+      "path": "/usr/lib/updaters/libPS190Updater.dylib",
+      "address": 140707549835264
+    }
+  ],
+  "cache_image_count": 719,
+  "kernel_symbol_sets": [
+    {
+      "identifier": "com.apple.kpi.bsd",
+      "symbol_count": 876
+    },
+    {
+      "identifier": "com.apple.kpi.iokit",
+      "symbol_count": 2528
+    },
+    {
+      "identifier": "com.apple.kpi.libkern",
+      "symbol_count": 1010
+    },
+    {
+      "identifier": "com.apple.kpi.mach",
+      "symbol_count": 77
+    },
+    {
+      "identifier": "com.apple.kpi.dsep",
+      "symbol_count": 12
+    },
+    {
+      "identifier": "com.apple.kpi.unsupported",
+      "symbol_count": 255
+    },
+    {
+      "identifier": "com.apple.kpi.private",
+      "symbol_count": 1739
+    },
+    {
+      "identifier": "com.apple.kpi.kasan",
+      "symbol_count": 0
+    },
+    {
+      "identifier": "com.apple.kpi.kcov",
+      "symbol_count": 0
+    }
+  ],
+  "all_mellow_imports_statically_eligible": true,
+  "native_link_load_or_metal_tested": false,
+  "parser_sha256": "8f16d881f1009356a9b5ba8ff67e3052e5dcfc106a20230c786afa60164aaea4"
+}

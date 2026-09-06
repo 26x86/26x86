@@ -10,6 +10,11 @@ import shutil
 import subprocess
 from pathlib import Path
 
+# Packaged GUI executable CLI re-entry must precede legacy help/GUI imports.
+if sys.argv[1:2] == ["--x86-cli"]:
+    from x86.gui.entry import dispatch_cli
+    raise SystemExit(dispatch_cli(sys.argv[2:]))
+
 # Fast path: show CLI help without loading the full GUI stack
 if "--help" in sys.argv or "-h" in sys.argv:
     _lang = "en"

@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "validated_date": "2026-09-05",
+  "implementation": [
+    "Mellow/XeZebin.hpp",
+    "Mellow/XeZebin.cpp"
+  ],
+  "input_file": "compiler-evidence/mellow_evidence_mtl.bin",
+  "input_bytes": 6944,
+  "input_sha256": "fea5095ddad2a328b6216263a1ab0571778f6277058720b09318399196185a90",
+  "host_test_source": "tests/xe_zebin_tests.cpp",
+  "assertion_count": 21438,
+  "host_tests_passed": true,
+  "kernel_compile": {
+    "target": "x86_64-apple-macos13",
+    "compiler": "LLVM 20.1.8",
+    "sdk": "bundled MacKernelSDK",
+    "warnings_as_errors": true,
+    "compiled": true
+  },
+  "actual_relocations": [
+    {
+      "offset": 76,
+      "type": "R_ZE_SYM_ADDR_32",
+      "symbol": "__INTEL_PATCH_CROSS_THREAD_OFFSET_OFF_R0",
+      "resolved_value": 0
+    },
+    {
+      "offset": 236,
+      "type": "R_ZE_SYM_ADDR_32",
+      "symbol": "__INTEL_PATCH_CROSS_THREAD_OFFSET_OFF_R0",
+      "resolved_value": 0
+    }
+  ],
+  "actual_relocation_mode": "No debugger, stack calls or required implicit argument buffer; original zero immediates preserved. Per-thread offset is a different symbol/type.",
+  "source_sha256": {
+    "Mellow/XeZebin.hpp": "e51965d9e67269204b456e5968f16ceca5599524a02340be7cc0e685be9ef163",
+    "Mellow/XeZebin.cpp": "b83fa5ff530c240b22a1a081d4121a6a49037b725c7716a9905272ae2af68850",
+    "tests/xe_zebin_tests.cpp": "e3d7f939c984f3bcfa60898a582843227bd97204dd94282225bfd18f118177ed"
+  },
+  "gpu_executed": false,
+  "hardware_stepping_verified": false,
+  "actual_surface_heap_created": false,
+  "compute_walker_implemented": false,
+  "metal_compiler_abi_implemented": false,
+  "provenance_doc": "docs/XE-ZEBIN.md"
+}

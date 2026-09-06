@@ -18,6 +18,7 @@ ICON_ICO = SPEC_DIR / "payloads" / "Resources" / "AppIcons" / "26x86.ico"
 datas = [
     (str(WEB_DIR), "x86/gui/web"),
     (str(BRANDING_DIR), "resources/branding"),
+    (str(SPEC_DIR / "payloads/Mellow"), "payloads/Mellow"),
 ]
 
 a = Analysis(

@@ -1,0 +1,221 @@
+{
+  "utc": "2026-09-05T18:57:03.004173+00:00",
+  "passed": true,
+  "results": [
+    {
+      "name": "xe_memory_tests compile",
+      "command": [
+        "C:/msys64/mingw64/bin/g++.exe",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\xe_memory_tests.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\XeMemory.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\PortedXeBindings.cpp",
+        "-o",
+        "build\\ported-xe-kext-regression\\xe_memory_tests.exe"
+      ],
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "name": "xe_memory_tests",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\ported-xe-kext-regression\\xe_memory_tests.exe"
+      ],
+      "exit": 0,
+      "output": "PASS xe_memory: 79451 checks; hardware backend NOT executed\n"
+    },
+    {
+      "name": "xe_page_table_tests compile",
+      "command": [
+        "C:/msys64/mingw64/bin/g++.exe",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\xe_page_table_tests.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\XeMemory.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\XePageTable.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\PortedXeBindings.cpp",
+        "-o",
+        "build\\ported-xe-kext-regression\\xe_page_table_tests.exe"
+      ],
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "name": "xe_page_table_tests",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\ported-xe-kext-regression\\xe_page_table_tests.exe"
+      ],
+      "exit": 0,
+      "output": "PASS XePageTable: 30698 assertions; CPU buffers only, no GPU publication or execution\n"
+    },
+    {
+      "name": "xe_mmio_tests compile",
+      "command": [
+        "C:/msys64/mingw64/bin/g++.exe",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\xe_mmio_tests.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\XeMmioAccess.cpp",
+        "-o",
+        "build\\ported-xe-kext-regression\\xe_mmio_tests.exe"
+      ],
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "name": "xe_mmio_tests",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\ported-xe-kext-regression\\xe_mmio_tests.exe"
+      ],
+      "exit": 0,
+      "output": "PASS 3110 assertions; actual ForceWake code, simulated registers/time, hardware not executed\n"
+    },
+    {
+      "name": "xe_page_table_iokit_tests compile",
+      "command": [
+        "C:/msys64/mingw64/bin/g++.exe",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow",
+        "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\iokit_types",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\xe_page_table_iokit_tests.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\XeMemory.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\XePageTable.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\XePageTableIOKit.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\PortedXeBindings.cpp",
+        "-o",
+        "build\\ported-xe-kext-regression\\xe_page_table_iokit_tests.exe"
+      ],
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "name": "xe_page_table_iokit_tests",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\ported-xe-kext-regression\\xe_page_table_iokit_tests.exe"
+      ],
+      "exit": 0,
+      "output": "PASS 41 assertions; actual pinned-table lifecycle/tree, simulated IOKit boundary\n"
+    },
+    {
+      "name": "xe_zebin_tests compile",
+      "command": [
+        "C:/msys64/mingw64/bin/g++.exe",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\xe_zebin_tests.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\XeMemory.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\XeZebin.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\PortedXeBindings.cpp",
+        "-o",
+        "build\\ported-xe-kext-regression\\xe_zebin_tests.exe"
+      ],
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "name": "xe_zebin_tests",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\ported-xe-kext-regression\\xe_zebin_tests.exe",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\compiler-evidence\\mellow_evidence_mtl.bin"
+      ],
+      "exit": 0,
+      "output": "PASS xe_zebin: 21438 checks; actual 6944-byte Intel Zebin, GPU NOT executed\n"
+    },
+    {
+      "name": "xe_bridge_tests compile",
+      "command": [
+        "C:/msys64/mingw64/bin/g++.exe",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-IC:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\xe_bridge_tests.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\XeMemory.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\XeFirmware.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\XeSubmission.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\PortedXeBindings.cpp",
+        "-o",
+        "build\\ported-xe-kext-regression\\xe_bridge_tests.exe"
+      ],
+      "exit": 0,
+      "output": ""
+    },
+    {
+      "name": "xe_bridge_tests",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\build\\ported-xe-kext-regression\\xe_bridge_tests.exe"
+      ],
+      "exit": 0,
+      "output": "PASS xe_bridge: 123 checks; real VM/queue bridge, hardware callbacks are test mocks\n"
+    },
+    {
+      "name": "xe_submission_tests",
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\xe_submission_test.py",
+        "--compiler",
+        "C:/msys64/mingw64/bin/g++.exe",
+        "--report",
+        "build\\ported-xe-kext-regression\\xe-submission.json"
+      ],
+      "exit": 0,
+      "output": "{\n  \"assertion_groups\": 269,\n  \"hardware_backend\": \"explicit-test-mocks-only\",\n  \"status\": \"passed\",\n  \"scope\": \"host code execution; no GPU firmware load, DMA, IRQ or compute execution\"\n}\n"
+    },
+    {
+      "name": "xe_guc_tests",
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\xe_guc_test.py",
+        "--compiler",
+        "C:/msys64/mingw64/bin/g++.exe",
+        "--report",
+        "build\\ported-xe-kext-regression\\xe-guc.json"
+      ],
+      "exit": 0,
+      "output": "{\n  \"assertions\": 105073,\n  \"status\": \"passed\",\n  \"gpu_execution\": false,\n  \"scope\": \"Native actual protocol source with emulated peer/MMIO callbacks; no GPU upload, authentication, CTB, IRQ or execution tested on hardware\",\n  \"source_sha256\": {\n    \"Mellow\\\\XeGuCTransport.cpp\": \"bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd\",\n    \"tests\\\\xe_guc_tests.cpp\": \"7d93bb6755f754b9e347b1d462454b165d567e93af1216349adf624b8ad7dbd0\"\n  }\n}\n"
+    },
+    {
+      "name": "metal_evidence_tests",
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\metal_evidence_tests.py"
+      ],
+      "exit": 0,
+      "output": "test_complete_synthetic_fixture_only_tests_parser (__main__.EvidenceGateTests) ... ok\ntest_each_stage_registry_and_schema (__main__.EvidenceGateTests) ... ok\ntest_enumeration_cannot_pass (__main__.EvidenceGateTests) ... ok\ntest_fault_injection (__main__.EvidenceGateTests) ... ok\ntest_invalid_registry (__main__.EvidenceGateTests) ... ok\ntest_known_offscreen_hash_is_independently_reconstructed (__main__.EvidenceGateTests) ... ok\ntest_partial_duplicate_reordered_and_failed (__main__.EvidenceGateTests) ... ok\ntest_actual_intel_compiler_output (__main__.IntelContainerTests) ... ok\ntest_corrupt_machine_and_section_bounds (__main__.IntelContainerTests) ... ok\ntest_corrupt_relocation_or_notes_rejected (__main__.IntelContainerTests) ... ok\ntest_wrong_target_rejected (__main__.IntelContainerTests) ... ok\ntest_malformed_plist_and_executable_traversal (__main__.MachOInventoryTests) ... ok\ntest_missing_dependency_and_complete_fixture_stay_blocked (__main__.MachOInventoryTests) ... ok\ntest_real_crossbuilt_kext_inventory_not_abi_pass (__main__.MachOInventoryTests) ... ok\ntest_truncated_and_invalid_load_commands_rejected (__main__.MachOInventoryTests) ... ok\n\n----------------------------------------------------------------------\nRan 15 tests in 0.263s\n\nOK\n"
+    }
+  ],
+  "scope": "Actual software components with synthetic host backends and optional real firmware metadata; no GPU execution",
+  "iokit_pin_runtime_tested": false,
+  "gpu_page_table_publication_tested": false,
+  "guc_authentication_tested": false,
+  "metal_tested": false
+}

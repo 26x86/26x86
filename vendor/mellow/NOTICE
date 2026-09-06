@@ -1,0 +1,95 @@
+Mellow Attribution Notice
+=========================
+
+Platform 0.3.0 / kext 0.4.3 development additions, 2026-09-06
+----------------------------------------------------------
+Adds explicit portable C++ compute objects, original MSL/AIR subset translation,
+LLVM C API interoperability and an opt-in Tahoe IOKit diagnostic service.
+Existing repository and per-file licenses remain controlling. Original files
+that explicitly carry SPDX-License-Identifier: MIT use the standard MIT terms
+reproduced in LICENSES/Mellow-original-MIT.txt; this does not relicense existing
+Mellow, kernel, SDK, driver or combined-artifact code.
+
+The two SDL metallib test fixtures are retained upstream compiler artifacts,
+not locally compiled Apple output. Their source pin, hashes and zlib license
+are in tests/fixtures/air/provenance.json and LICENSE.SDL.txt. They are used
+for container decoding and unsupported-render rejection, not render support.
+The synthetic AIR fixture has separate synthetic-provenance.json. LLVM is
+an explicitly supplied external dependency, not bundled with this release.
+
+Retained attribution and development history
+-------------------------------------------
+
+Mellow is a modified derivative work based on:
+
+1. ChefKiss NootedGreen
+   https://github.com/ChefKissInc/NootedGreen
+
+2. The NootedGreen-UHD730 development line, including work maintained at
+   https://github.com/yanyantukebo1224/NootedGreen-UHD730
+   and the source baseline mirrored at
+   https://github.com/NiSeullent/NootedGreen-UHD730
+
+The retained source baseline was commit
+b504e723a83902a912c52f5889aad5bb5e1b7826. Mellow changes the product
+identity, limits the intended hardware scope to Intel Core Ultra iGPUs, and
+adds experimental Meteor Lake and Arrow Lake bring-up work. It is not an
+official release of, a drop-in replacement for, or endorsed by the upstream
+projects.
+
+Original copyright, attribution, and license notices remain in the source
+files and repository history from which this derivative was made. Notable
+upstream contributors credited by the source baseline include Visual
+Ehrmanntraut, Stefano Giammori, shl628, jalavoui, and the other ChefKiss and
+NootedGreen contributors. Copyright in Mellow-specific modifications remains
+with their respective contributors.
+
+Mellow is distributed under the unmodified Thou Shalt Not Profit License
+version 1.0 included in LICENSE. Consistent with section 17, the Mellow
+project represents and declares that it derives no revenue whatsoever from
+distribution of this work or derivative works, or from support or services
+relating to them. Redistributors must comply with sections 17 and 18 and all
+other license conditions.
+
+Third-party components
+----------------------
+
+The vendored Lilu development bundle is copyright vit9696 and contributors
+and is distributed under the BSD 3-Clause license reproduced in
+LICENSES/Lilu-BSD-3-Clause.txt.
+
+MacKernelSDK headers and the DisplayMergeNub source include Apple Public
+Source License 2.0 covered material. The APSL 2.0 text is reproduced in
+LICENSES/APSL-2.0.txt; the notices in the covered files remain controlling.
+These third-party components are not relicensed under TSNPL.
+
+Some retained upstream source headers (`DYLDPatches.*` and
+`kern_patcherplus.*`) historically name TSNPL version 1.5. Those notices are
+preserved as attribution; the complete TSNPL text actually supplied by this
+repository is the unmodified version 1.0 in the root LICENSE. Redistributors
+must review the retained per-file notices as well as the root license.
+
+Mellow does not redistribute the Apple GuC/HuC blobs present in the research
+baseline, nor modified or stripped Intel DMC firmware payloads. Firmware
+compatibility profiles currently use the Apple driver CSR initializer and
+experimental MMIO/power-well setup; they are not evidence of native Xe-LPG
+firmware support.
+
+Local 7D41 development snapshot, 2026-09-05
+-----------------------------------------
+This snapshot modifies NiSeullent/Mellow commit
+f895d89653ea5cad3a534cce46a62d0f59384d71. Local changes include checked hardware
+access, startup and pattern admission, honest command completion, guarded
+patches, host tests, and reproducible cross-build tools. Version 0.1.1 is a local
+development label, not an official upstream release or a hardware support claim.
+Original licenses and per-file notices are preserved. HDE64 test decoder source
+and its license/provenance are retained in tests/accel_hde.
+
+Local integration version 0.2.0, 2026-09-05: adds Xe VM/PTE/PDE, IOKit DMA pin adapter, private CPU page-table builder, CSS parser, queue/fence lifecycle, VM-to-queue bridge, actual Intel offline compiler evidence, and ABI/probe tooling. These changes do not implement a complete hardware submission or Metal userspace driver.
+
+Local integration version 0.3.0, 2026-09-05: adds actual BAR0/forcewake adapters,
+pinned page-table backing, GuC MMIO/CTB/HXG transport, Intel Zebin staging and
+actual Tahoe binary/export eligibility analysis. Hardware submission and Metal
+runtime remain incomplete. Pinned protocol references are documented in
+XE-MMIO.md, XE-GUC-TRANSPORT.md and XE-ZEBIN.md. Apple system binaries are
+analysis inputs and are not included in this driver development package.

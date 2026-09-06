@@ -1,0 +1,17 @@
+{
+  "assertion_groups": 269,
+  "hardware_backend": "explicit-test-mocks-only",
+  "firmware": {
+    "bytes": 320320,
+    "parse_status": "parsed-not-authenticated",
+    "release": "70.53.0",
+    "submission": "1.26.0",
+    "ucode_bytes": 319808,
+    "rsa_bytes": 384,
+    "private_data_bytes": 8392704,
+    "hardware_authenticated": false,
+    "sha256": "7794f0b6abe5fcd9c6f47035dafe2199f30a6e7d230bd5a53fbf8005a60e5911"
+  },
+  "status": "passed",
+  "scope": "host code execution; no GPU firmware load, DMA, IRQ or compute execution"
+}

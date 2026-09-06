@@ -1,0 +1,33 @@
+{
+  "scope": "actual parser/report regressions, no GPU or macOS execution",
+  "gpu_executed": false,
+  "tests": [
+    {
+      "path": "tests/air_decoder_tests.py",
+      "exit_code": 0,
+      "stdout": "{\"status\": \"FAIL\", \"gpu_executed\": false, \"shader_lowered\": false}\n",
+      "stderr": "test_all_truncations (__main__.Containers.test_all_truncations) ... ok\ntest_bad_wrappers (__main__.Containers.test_bad_wrappers) ... ok\ntest_bounded_file_read (__main__.Containers.test_bounded_file_read) ... ok\ntest_cli_output_failure_cannot_pass (__main__.Containers.test_cli_output_failure_cannot_pass) ... ok\ntest_cli_rejects_output_report_alias (__main__.Containers.test_cli_rejects_output_report_alias) ... usage: mellow_air.py [-h] [--entry ENTRY] --llvm-dis LLVM_DIS --output OUTPUT\n                     --report REPORT\n                     input\nmellow_air.py: error: output and report must be different paths\nok\ntest_container_and_entry (__main__.Containers.test_container_and_entry) ... ok\ntest_corruption_and_boundaries (__main__.Containers.test_corruption_and_boundaries) ... ok\ntest_declared_payload_hash (__main__.Containers.test_declared_payload_hash) ... ok\ntest_raw_and_wrapper (__main__.Containers.test_raw_and_wrapper) ... ok\ntest_real_sdl_containers (__main__.Containers.test_real_sdl_containers) ... ok\ntest_undocumented_section_gap (__main__.Containers.test_undocumented_section_gap) ... ok\ntest_failure_exit (__main__.ToolFailures.test_failure_exit) ... ok\ntest_input_change (__main__.ToolFailures.test_input_change) ... ok\ntest_ir_limit (__main__.ToolFailures.test_ir_limit) ... ok\ntest_log_limit (__main__.ToolFailures.test_log_limit) ... ok\ntest_missing_output (__main__.ToolFailures.test_missing_output) ... ok\ntest_timeout (__main__.ToolFailures.test_timeout) ... ok\n\n----------------------------------------------------------------------\nRan 17 tests in 0.268s\n\nOK\n"
+    },
+    {
+      "path": "tests/shader_cli_controls.py",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_duplicate_keys_and_nonfinite (__main__.Reports.test_duplicate_keys_and_nonfinite) ... ok\ntest_explicit_protocol_positive (__main__.Reports.test_explicit_protocol_positive) ... ok\ntest_input_change (__main__.Reports.test_input_change) ... ok\ntest_process_status_contradiction (__main__.Reports.test_process_status_contradiction) ... ok\ntest_rejected_contract (__main__.Reports.test_rejected_contract) ... ok\ntest_running_output_limit (__main__.Reports.test_running_output_limit) ... ok\ntest_scope_identity_and_type_mutations (__main__.Reports.test_scope_identity_and_type_mutations) ... ok\ntest_timeout (__main__.Reports.test_timeout) ... ok\ntest_untrusted_evidence_fields (__main__.Reports.test_untrusted_evidence_fields) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.647s\n\nOK\n"
+    },
+    {
+      "path": "tests/metal_objects_report_tests.py",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.019s\n\nOK\n"
+    }
+  ],
+  "source_sha256": {
+    "tests/air_decoder_tests.py": "49cfa17cfc137cf3e3c5e2a3aba76911066611b5f8d67310d1ea140b43cd94df",
+    "tests/shader_cli_controls.py": "babf5cdf41ae236c60d56da70439cee4508e6d5d818f0d075b302ab1ae6c9c72",
+    "tests/metal_objects_report_tests.py": "4c07fbd5e884864d939abd251525129bf95187c68c699f4183dd45de571aa851",
+    "Tools/mellow_air.py": "e7a80b440d55a536bbe59aad6c567dab59ab15824b17cd7e15971d940d7bd32c",
+    "Tools/mellow-shader.py": "5625200f047ad519640aded03dff4d7992deab8a2b1be5571d81960e0e39702e",
+    "Tools/run-metal-objects.py": "828abfbf72b0c144e6f84245365c2ea530d158d4a62ba9a86e3f73bf3f57cb3e"
+  },
+  "passed": true
+}

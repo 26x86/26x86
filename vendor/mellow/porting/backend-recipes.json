@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "recipes": {
+    "xe": {
+      "vendor": "Intel",
+      "source_prefixes": ["drivers/gpu/drm/xe/", "include/drm/", "include/linux/"],
+      "admission_prefixes": ["drivers/gpu/drm/xe/"],
+      "focus": ["GGTT/PPGTT memory ownership", "GuC firmware provenance and authentication", "context submission", "interrupt and fence completion"],
+      "pci_device_ids": [],
+      "hardware_admission": "Explicit hardware inventory and runtime evidence required; choosing xe does not admit any PCI device."
+    },
+    "amdgpu": {
+      "vendor": "AMD",
+      "source_prefixes": ["drivers/gpu/drm/amd/", "include/drm/", "include/linux/"],
+      "admission_prefixes": ["drivers/gpu/drm/amd/amdgpu/", "drivers/gpu/drm/amd/include/"],
+      "focus": ["GPUVM and GART ownership", "PSP/SMU firmware contracts", "ring submission", "interrupt and fence completion"],
+      "pci_device_ids": [],
+      "hardware_admission": "No RX 9070 or other device identity inferred; require measured PCI IDs and ASIC revision."
+    },
+    "nvidia-open": {
+      "vendor": "NVIDIA",
+      "source_prefixes": ["kernel-open/", "src/nvidia/", "src/common/"],
+      "admission_prefixes": ["kernel-open/", "src/nvidia/"],
+      "focus": ["GPU virtual memory ownership", "GSP firmware licensing and protocol", "channel submission", "interrupt and fence completion"],
+      "pci_device_ids": [],
+      "hardware_admission": "Open source kernel modules alone do not supply a macOS userspace driver or admit a GPU."
+    }
+  }
+}

@@ -22,6 +22,7 @@ datas = [
    (str(SPEC_DIR / 'Universal-Binaries.dmg'), '.'),
    (str(SPEC_DIR / 'x86/gui/web'), 'x86/gui/web'),
    (str(SPEC_DIR / 'resources/branding'), 'resources/branding'),
+   (str(SPEC_DIR / 'payloads/Mellow'), 'payloads/Mellow'),
 ]
 
 if (SPEC_DIR / "DortaniaInternalResources.dmg").exists():

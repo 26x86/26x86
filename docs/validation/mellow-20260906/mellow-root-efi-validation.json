@@ -1,0 +1,7 @@
+{
+  "deployment": "root-patch",
+  "lilu_route": "disk-only",
+  "ocvalidate": 0,
+  "matching_opencore_binary": true,
+  "config_sha256": "7a360eaf91d9d4444d5460bb0c952d0832621b57bc7814ba19ae967622e28286"
+}

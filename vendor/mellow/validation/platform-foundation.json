@@ -1,0 +1,191 @@
+{
+  "utc": "2026-09-05T18:40:49.666583+00:00",
+  "scope": "Portable policy and source intake only; no GPU execution, JIT or Darwin driver conversion",
+  "runtime": {
+    "schema_version": 1,
+    "evidence_scope": "software-policy-only-synthetic-adapters",
+    "created_utc": "2026-09-05T18:26:44.652361+00:00",
+    "physical_gpu_executed": false,
+    "metal_conformance_tested": false,
+    "compiler": "g++",
+    "source_sha256": {
+      "Runtime/PlatformRuntime.hpp": "145a6ab8e9fb8ab0f9dacb9d045e11e3855128047895e7d7bee332b7c26fef81",
+      "Runtime/PlatformRuntime.cpp": "6b92474e7dacf7a6dae6d41f2f1ad05cf9fa25c234a43c4498919f58a4a66930",
+      "tests/platform_runtime_test.cpp": "7036b5e95b7ba06d87083a7a3c024b5ef3b4de7f2db925dcce69c9e055dae1e9",
+      "Tools/run-platform-tests.py": "53155655075755cbd702c77b352546c6d1b375313006f78021db8f622d8b37e5"
+    },
+    "sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "build": {
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "test": {
+      "exit_code": 0,
+      "stdout": "PASS: 102 policy checks (synthetic adapters; no GPU execution or Metal conformance)\n",
+      "stderr": ""
+    },
+    "status": "PASS_SOFTWARE_POLICY_ONLY",
+    "compiler_version": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+  },
+  "source_intake_unittest": {
+    "exit_code": 0,
+    "output": "test_cli_exit_and_does_not_execute_source (test_mellow_port.PortTests) ... ok\ntest_comments_preserve_token_boundaries_and_source_lines (test_mellow_port.PortTests) ... ok\ntest_equal_named_identical_headers_keep_distinct_provenance (test_mellow_port.PortTests) ... ok\ntest_generation_is_deterministic_and_bounded (test_mellow_port.PortTests) ... ok\ntest_missing_and_gpl_license_are_not_approved (test_mellow_port.PortTests) ... ok\ntest_optional_real_pinned_xe_subset (test_mellow_port.PortTests) ... ok\ntest_output_never_overwrites_or_modifies_source (test_mellow_port.PortTests) ... ok\ntest_ready_gate_fails_after_emitting_review_artifacts (test_mellow_port.PortTests) ... ok\ntest_recipe_requires_explicit_backend_source (test_mellow_port.PortTests) ... ok\ntest_reject_binary_and_path_traversal (test_mellow_port.PortTests) ... ok\ntest_symlink_not_admitted (test_mellow_port.PortTests) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.208s\n\nOK\n"
+  },
+  "real_source_examples": [
+    {
+      "target": "xe",
+      "manifest": {
+        "content_pin_sha256": "62b78bcd53bf05f6c14702f0506729cb1860f10d0dea18424e2c6375f53ecd63",
+        "files": [
+          {
+            "license": {
+              "copyright_notices_observed": [
+                "Copyright \u00a9 2023 Intel Corporation"
+              ],
+              "gpl_component_review_required": false,
+              "license_compatibility_determined": false,
+              "missing_or_conflicting": false,
+              "note": "SPDX text is recorded, not legal clearance; preserve upstream notices and review distribution obligations.",
+              "single_expression": "MIT",
+              "spdx_expressions_observed": [
+                "MIT"
+              ]
+            },
+            "path": "drivers/gpu/drm/xe/regs/xe_gt_regs.h",
+            "sha256": "f2b8cbaf596679c2e86a7eccf2f7ceb188e8921769b6035c178a44d39eb055c3",
+            "size_bytes": 25984
+          }
+        ],
+        "recipe_sha256": "c807335534a3f52446fc581badb53aed9a751b9bd28e991b39adb5d27d6c513f",
+        "revision_membership_verified": false,
+        "revision_note": "The revision is a caller-supplied provenance label; per-file SHA256 pins are measured. A Git/archival attestation is still required.",
+        "schema_version": 1,
+        "source_revision_claim": "0d9ff90a5422cc7509258aaaba1e7481df4d332a",
+        "source_url_claim": "https://github.com/torvalds/linux",
+        "target": "xe"
+      },
+      "fetch_url": "https://raw.githubusercontent.com/torvalds/linux/0d9ff90a5422cc7509258aaaba1e7481df4d332a/drivers/gpu/drm/xe/regs/xe_gt_regs.h",
+      "literal_constants_observed": 17,
+      "literal_constants_generated": 17,
+      "unconverted_macros": 484,
+      "driver_ready": false,
+      "require_ready_exit_code": 2,
+      "artifacts": {
+        "files": [
+          {
+            "path": "CMakeLists.txt",
+            "sha256": "ee1ac2efacc10e2b8ac58247a42408d72a23a4048156a9d085561608969ef3d3"
+          },
+          {
+            "path": "backend.json",
+            "sha256": "fa4455ff30d2b77aea43f66f67cbd80ff5115caa230e8122a9560f788adb8b70"
+          },
+          {
+            "path": "gap-report.json",
+            "sha256": "fb1292c450ad73f520a559e4076849a1beb83809fa4917a27be4600b7f4c38b6"
+          },
+          {
+            "path": "generated/xe_gt_regs_5a25c6e90df5_f2b8cbaf5966.h",
+            "sha256": "c18cbc329e0ce9a5d41c40bcc65afd61b74a5a035eb80d29b216e34e2a03c4ac"
+          },
+          {
+            "path": "inventory.json",
+            "sha256": "f75b233816ee66db2076fff107b4d6fc5b54172882ddef806d83e82a757e01df"
+          },
+          {
+            "path": "plan.json",
+            "sha256": "483e7978df8294c543f4f4ead98ced5a29e4372263442ea89333beaed8c28e74"
+          },
+          {
+            "path": "source-manifest.json",
+            "sha256": "278da25d080ea27fb5f71b2b5e233fa6193e4118d3618e38d5c5072e478c2cfa"
+          }
+        ],
+        "operation": "generate",
+        "schema_version": 1,
+        "success_meaning": "Requested review artifacts generated; driver readiness remains false."
+      }
+    },
+    {
+      "target": "amdgpu",
+      "manifest": {
+        "content_pin_sha256": "f131aaa1062b079bca8223815f35ed2bb8cfe1ff5ef9d77909aae5ba742ac5fd",
+        "files": [
+          {
+            "license": {
+              "copyright_notices_observed": [
+                "Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.",
+                "The above copyright notice and this permission notice (including the next"
+              ],
+              "gpl_component_review_required": false,
+              "license_compatibility_determined": false,
+              "missing_or_conflicting": true,
+              "note": "SPDX text is recorded, not legal clearance; preserve upstream notices and review distribution obligations.",
+              "single_expression": null,
+              "spdx_expressions_observed": []
+            },
+            "path": "drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c",
+            "sha256": "88dd09d7310ed500a374457cd46427e414cc050950624550a75b28b99587582a",
+            "size_bytes": 104998
+          }
+        ],
+        "recipe_sha256": "c807335534a3f52446fc581badb53aed9a751b9bd28e991b39adb5d27d6c513f",
+        "revision_membership_verified": false,
+        "revision_note": "The revision is a caller-supplied provenance label; per-file SHA256 pins are measured. A Git/archival attestation is still required.",
+        "schema_version": 1,
+        "source_revision_claim": "0d9ff90a5422cc7509258aaaba1e7481df4d332a",
+        "source_url_claim": "https://github.com/torvalds/linux",
+        "target": "amdgpu"
+      },
+      "fetch_url": "https://raw.githubusercontent.com/torvalds/linux/0d9ff90a5422cc7509258aaaba1e7481df4d332a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c",
+      "literal_constants_observed": 3,
+      "literal_constants_generated": 0,
+      "unconverted_macros": 0,
+      "driver_ready": false,
+      "require_ready_exit_code": 2,
+      "artifacts": {
+        "files": [
+          {
+            "path": "CMakeLists.txt",
+            "sha256": "ee1ac2efacc10e2b8ac58247a42408d72a23a4048156a9d085561608969ef3d3"
+          },
+          {
+            "path": "backend.json",
+            "sha256": "4403878c8b40259a0e3a55e39011f08d6efe18c1130b1f10970db03bcb6faddc"
+          },
+          {
+            "path": "gap-report.json",
+            "sha256": "fdcca05b9e8de706233be139e0fb92a3159e5906798515ca21ddd50aa46495f7"
+          },
+          {
+            "path": "inventory.json",
+            "sha256": "dd5de1a05d776eea7e073ce0c2c27f046581f4f07c21dd9bea429f9f1ae7b301"
+          },
+          {
+            "path": "plan.json",
+            "sha256": "79847c60214afb89e22914aa66a097d5ce693cd0cf5e27134ea0c5c5308f32fd"
+          },
+          {
+            "path": "source-manifest.json",
+            "sha256": "fc402b6cb126eb22000a2e024b7a3f765bcc08f0f7889f30b76b7e40e8d2c8cf"
+          }
+        ],
+        "operation": "generate",
+        "schema_version": 1,
+        "success_meaning": "Requested review artifacts generated; driver readiness remains false."
+      }
+    }
+  ],
+  "physical_gpu_executed": false,
+  "metal_conformance_tested": false,
+  "implementation_sha256": {
+    "Tools/mellow-port.py": "2e88e7e3ed75c30cc8a6ab30dffd22e53b28b1cfa8431dff7ed6d954a5705711",
+    "Tools/mellow_port/core.py": "fa4c89fb5454985767d32db4405cc84b3ab7ece1811179a94eb01dd18188cd96",
+    "porting/backend-recipes.json": "c807335534a3f52446fc581badb53aed9a751b9bd28e991b39adb5d27d6c513f",
+    "tests/test_mellow_port.py": "d3acc9d4f34579ba30d822b6f86d9e608d485a20dd1812cae0aaf658c45e09a5"
+  }
+}

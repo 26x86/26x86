@@ -1,0 +1,17 @@
+{
+  "origin": "synthetic hand-authored uint compute ABI fixture, not an Apple compiler output",
+  "source": "synthetic-uint-affine.ll",
+  "bitcode": "synthetic-uint-affine.bc",
+  "assembler": "Ubuntu LLVM 18.1.3 llvm-as",
+  "assembler_command": [
+    "llvm-as",
+    "synthetic-uint-affine.ll",
+    "-o",
+    "synthetic-uint-affine.bc"
+  ],
+  "source_sha256": "9db450d2cb03bd96e874e7e2ff191de592acdab05d88b2b77b93fbae33981d08",
+  "bitcode_sha256": "6545f969698e98a1a4e09746df0beba0c18fb3136de4ccbadadc2c0ece8022b3",
+  "entry": "air_affine",
+  "operation": "uint32 x[i] = x[i] * 7 + 3",
+  "apple_compiler_origin_authenticated": false
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "source_commit": "72f3df08ff05c20bdbbada7723009b88f6ccd25e",
+  "required_boot_args": [
+    "-mellowdiag"
+  ],
+  "capabilities": {
+    "native_metal": false,
+    "gpu_submission": false,
+    "windowserver_acceleration": false
+  },
+  "components": [
+    {
+      "category": "kext",
+      "source": "root/Library/Extensions/Mellow.kext",
+      "destination": "/Library/Extensions/Mellow.kext",
+      "bundle_id": "com.NiSeullent.Mellow",
+      "version": "0.4.3"
+    }
+  ],
+  "files": {
+    "LICENSE": {
+      "sha256": "71406ea74cdb08d64bffcc4aa10c610ce1d8ec3eb0dfddf2170631ca404393a8",
+      "size": 10051
+    },
+    "LICENSES/APSL-2.0.txt": {
+      "sha256": "e5881019d8766c1e88a5fe1dbca4ba40c78011d41fcb18f6e9f50df60182685b",
+      "size": 19829
+    },
+    "LICENSES/Lilu-BSD-3-Clause.txt": {
+      "sha256": "74c3ca48189b796b0d262866e67de8efba77a71516667ce68dc3a8f13c2a3c57",
+      "size": 1483
+    },
+    "LICENSES/Mellow-original-MIT.txt": {
+      "sha256": "6ee010c14d1303600e4619998e523ea12a2bed9fe403b4039593a1effbb02963",
+      "size": 1241
+    },
+    "NOTICE": {
+      "sha256": "46b7c88c54476844ce4066eae2167cfc5a71610d09c9ffe332a4a689e4d3b6c3",
+      "size": 5293
+    },
+    "provenance.json": {
+      "sha256": "b15245b7f1d113e598b6ac43e17e65645cdda0aa9db265492164002faf7b8f0a",
+      "size": 163677
+    },
+    "README.md": {
+      "sha256": "1c14799d035a71821275fc711f7450f22580afad93263e892f7ab3557633417b",
+      "size": 1217
+    },
+    "root/Library/Extensions/Mellow.kext/Contents/Info.plist": {
+      "sha256": "f90a8c842cf5d381c2b3d76fee93d11ff99af703f22852333602b23f1a516ec5",
+      "size": 3712
+    },
+    "root/Library/Extensions/Mellow.kext/Contents/MacOS/Mellow": {
+      "sha256": "6932453a484ac62fb46f19b78f4a6424cef8ba907a3abe655b051bf03daed3c7",
+      "size": 474472
+    }
+  }
+}

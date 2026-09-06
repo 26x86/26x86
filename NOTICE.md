@@ -1,5 +1,11 @@
 # 고지 (NOTICE)
 
+Mellow source is vendored at commit `72f3df08ff05c20bdbbada7723009b88f6ccd25e`.
+Its original [license](vendor/mellow/LICENSE), [notice](vendor/mellow/NOTICE),
+and individual file/license notices remain applicable. The source snapshot and
+`payloads/Mellow` are separate components and are not relicensed under this
+repository's BSD license. See [integration scope](docs/MELLOW_INTEGRATION.md).
+
 ## 26x86
 
 26x86은 [OpenCore Legacy Patcher T2](https://github.com/albert-mueller/OpenCore-Legacy-Patcher-T2)에서 파생된 커뮤니티 포크이며, T2 프로젝트는 Dortania의 [OpenCore Legacy Patcher](https://github.com/dortania/OpenCore-Legacy-Patcher)를 기반으로 합니다.

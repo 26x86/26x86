@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "assertions": 132009,
+  "physical_irq_or_fence_tested": false,
+  "scope": "Actual production IRQ/fence source; emulated MMIO and host memory. No physical GPU interrupt, DMA or completion observed.",
+  "source_sha256": {
+    "Mellow/XeInterrupt.cpp": "804af667d214063f3faf0e4df41bc1875a0b6d365234fc16ec05123c4894edbc",
+    "Mellow/XeFence.cpp": "57e70e44b55be29c2f3e734223cbba03ef3d0c8a71c56ff57b77d0a346055989",
+    "Mellow/XeGuCTransport.cpp": "bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd",
+    "tests/xe_interrupt_tests.cpp": "631fa445f25599fae2f3f655189f0944e53fba9ac5dd141e82780154402a97b4",
+    "Mellow/XeInterrupt.hpp": "5c7d14f0e5cb7eaf1e29b3ec6050d3e8207499f93f2dd9696ce7caca91fad69c",
+    "Mellow/XeInterruptDispatch.hpp": "e96308c0f171afd298a660bedf62c3f318bb6adf739eaf2eb56a239de6554dca",
+    "Mellow/XeInterruptIOKit.hpp": "b6c688d1ab7dc4d9563115ee772c1eb872b47ef4c59ff1cf89b67c6492c67ee1",
+    "Mellow/XeFence.hpp": "1a2630e47da7dc412cbc0d6fce03d487152782c6f662acdb9743a9862e88cccd",
+    "Mellow/XeFenceIOKit.hpp": "b068782679ac923db2395faf31d5004cf45448abf59d136e57e864c2a358e3a4"
+  }
+}

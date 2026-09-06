@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-05T18:34:02.318364+00:00",
+  "scope": "installed-host-opencl-substrate-only",
+  "os": {
+    "system": "Windows",
+    "release": "10",
+    "version": "10.0.28000",
+    "machine": "AMD64",
+    "python_bits": 64
+  },
+  "compute_requested": true,
+  "status": "PASS_OPENCL_GPU_SUBSTRATE_ONLY",
+  "platforms": [
+    {
+      "index": 0,
+      "name": "Intel(R) OpenCL Graphics",
+      "vendor": "Intel(R) Corporation",
+      "version": "OpenCL 3.0 "
+    }
+  ],
+  "devices": [
+    {
+      "index": 0,
+      "platform_index": 0,
+      "pci_device_id": null,
+      "pci_bdf": null,
+      "name": "Intel(R) Graphics",
+      "vendor": "Intel(R) Corporation",
+      "driver_version": "32.0.101.6737",
+      "device_version": "OpenCL 3.0 NEO ",
+      "opencl_c_version": "OpenCL C 1.2 ",
+      "reported_type_bits": 4,
+      "reported_vendor_id": 32902,
+      "available": true,
+      "compiler_available": true,
+      "reported_gpu_without_cpu_type": true
+    }
+  ],
+  "opencl_gpu_compute_pass": true,
+  "mellow_runtime_used": false,
+  "mellow_jit_used": false,
+  "mellow_gpu_acceleration_pass": false,
+  "metal_tested": false,
+  "macos_driver_tested": false,
+  "physical_pci_identity_verified": false,
+  "identity_note": "GPU classification and names are reported by the installed OpenCL driver; no physical PCI mapping was established.",
+  "runtime_library": "OpenCL.dll",
+  "selected_device_index": 0,
+  "compute": {
+    "kernel_source": "__kernel void mellow_substrate(__global uint *values) {\n    const size_t i = get_global_id(0);\n    values[i] = values[i] * 7u + 3u;\n}\n",
+    "kernel_sha256": "d8dd07345be1dab45d93798407df197c29a2005afc84654986d82f5b2ae3af39",
+    "build_options": "-cl-std=CL1.2",
+    "build_log": "",
+    "submission_occurred": true,
+    "readback_verified": true,
+    "profiling_verified": true,
+    "runs": [
+      {
+        "repetition": 0,
+        "nonce": 3141758614,
+        "elements": 256,
+        "input_sha256": "ae10369db41ff1dc2a136a4268a718ab2665face181aae4ac3d4fd8eeaa9f97e",
+        "expected_sha256": "12e8ddbeb631bcb9e31392223a5f81d661641bece6949621f2381abcd2e296e8",
+        "readback_sha256": "12e8ddbeb631bcb9e31392223a5f81d661641bece6949621f2381abcd2e296e8",
+        "expected_sample": [
+          198173,
+          41548,
+          282943,
+          6702
+        ],
+        "readback_sample": [
+          198173,
+          41548,
+          282943,
+          6702
+        ],
+        "readback_matches": true,
+        "gpu_start_ns": 923504607708,
+        "gpu_end_ns": 923504620208,
+        "profiling_status": {
+          "start": 0,
+          "end": 0
+        },
+        "ordered_nonzero_gpu_timestamps": true
+      },
+      {
+        "repetition": 1,
+        "nonce": 1478265107,
+        "elements": 256,
+        "input_sha256": "1e5689db513fb9a4d2b28433e893d409f0b691fa41f18939b1c235e403b728c2",
+        "expected_sha256": "7cbfa926541f2c2920162ca4d38130dea1a9153b9d41f3e0bdb020eba8ea9719",
+        "readback_sha256": "7cbfa926541f2c2920162ca4d38130dea1a9153b9d41f3e0bdb020eba8ea9719",
+        "expected_sample": [
+          245640,
+          431273,
+          219306,
+          408971
+        ],
+        "readback_sample": [
+          245640,
+          431273,
+          219306,
+          408971
+        ],
+        "readback_matches": true,
+        "gpu_start_ns": 923505623437,
+        "gpu_end_ns": 923505632291,
+        "profiling_status": {
+          "start": 0,
+          "end": 0
+        },
+        "ordered_nonzero_gpu_timestamps": true
+      },
+      {
+        "repetition": 2,
+        "nonce": 47378800,
+        "elements": 256,
+        "input_sha256": "35dd572caf8069898bb0af3f41c4626830a863063be9128f89e1ce61aed26851",
+        "expected_sha256": "0bf900d116c76ce30c24edef76c73c5990702a02fadfe3a31f452c2167d89a89",
+        "readback_sha256": "0bf900d116c76ce30c24edef76c73c5990702a02fadfe3a31f452c2167d89a89",
+        "expected_sample": [
+          432659,
+          245122,
+          3601,
+          280192
+        ],
+        "readback_sample": [
+          432659,
+          245122,
+          3601,
+          280192
+        ],
+        "readback_matches": true,
+        "gpu_start_ns": 923506208541,
+        "gpu_end_ns": 923506214791,
+        "profiling_status": {
+          "start": 0,
+          "end": 0
+        },
+        "ordered_nonzero_gpu_timestamps": true
+      }
+    ],
+    "cleanup_errors": []
+  },
+  "worker_exit_code": 0,
+  "worker_deadline_seconds": 30,
+  "probe_source_sha256": {
+    "Tools/probe-opencl-substrate.py": "b85e079ffddbdf7cb649b9099851ce2d5e9f4db9d99e99277831ca5889ed85e1"
+  }
+}

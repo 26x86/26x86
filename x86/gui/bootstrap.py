@@ -27,14 +27,17 @@ def ensure_repo_on_path() -> Path:
     return root
 
 
-def get_constants(*, start_unpack: bool = True) -> constants.Constants:
+def get_constants(*, start_unpack: bool = True, settings=None) -> constants.Constants:
     """Return a process-wide Constants instance (lazy, thread-safe)."""
     global _constants
-    if _constants is not None:
+    from x86.mellow.integration import configuration, configure_constants
+    context, deployment, payload, efi = configuration(settings=settings)
+    key = (context.mode.value, deployment, str(payload), str(efi or ""))
+    if _constants is not None and getattr(_constants, "_gui_execution_key", None) == key:
         return _constants
 
     with _init_lock:
-        if _constants is not None:
+        if _constants is not None and getattr(_constants, "_gui_execution_key", None) == key:
             return _constants
 
         ensure_repo_on_path()
@@ -42,14 +45,17 @@ def get_constants(*, start_unpack: bool = True) -> constants.Constants:
         c.wxpython_variant = True
         c.gui_mode = True
         c.cli_mode = False
+        configure_constants(c, settings=settings)
+        c._gui_execution_key = key
 
-        if not is_macos():
+        if not is_macos() or not context.can_native_apply:
             # Preparation hosts must never import Security/IOKit or run macOS
             # probes and payload mounts just to render the wizard.
             from types import SimpleNamespace
             from x86.platform import non_mac_detect_payload
 
-            host = non_mac_detect_payload()
+            host = non_mac_detect_payload() if not is_macos() else {"model": (
+                "Apple Silicon Sandbox" if context.is_sandbox else "Native host verification unavailable")}
             c.computer = SimpleNamespace(real_model=host["model"], build_model=host["model"])
             c.detected_os = 25  # target Darwin; not a claim about the host OS
             c.detected_os_minor = 0

@@ -39,6 +39,10 @@
     settingsDialog: document.getElementById("settings-dialog"),
     settingAnalytics: document.getElementById("setting-analytics"),
     settingVerbose: document.getElementById("setting-verbose"),
+    settingMode: document.getElementById("setting-mode"),
+    settingMellow: document.getElementById("setting-mellow"),
+    settingPayload: document.getElementById("setting-mellow-payload"),
+    settingEfi: document.getElementById("setting-mellow-efi"),
   };
 
   const QT_BRIDGE_METHODS = [
@@ -53,6 +57,8 @@
     "get_status",
     "get_settings",
     "save_settings",
+    "prepare_mellow_efi",
+    "prepare_mellow_root_efi",
     "host_can_build",
     "launch_wx_action",
     "reveal_log",
@@ -291,6 +297,8 @@
         <h2>${escapeHtml(step.heading)}</h2>
         <p class="lead">${escapeHtml(step.desc)}</p>
         <p class="lead">버전 ${escapeHtml(state.appInfo?.version || "")} · ${escapeHtml(state.appInfo?.bundle_id || "")}</p>
+        <p class="lead">${state.appInfo?.execution?.is_sandbox ? "Apple Silicon Sandbox Mode · native 드라이버 사용 안 함" : "x86 Mode"} · Mellow: ${escapeHtml(state.appInfo?.mellow_deployment || "disabled")}</p>
+        ${state.appInfo?.execution_error ? `<p class="note">${escapeHtml(state.appInfo.execution_error)}<br />설정에서 실행 모드와 Mellow 배포 방식을 수정하세요.</p>` : ""}
       </div>
       <div class="actions">
         <button type="button" class="btn primary" id="action-start">시작하기</button>
@@ -372,6 +380,15 @@
   }
 
   function renderPatch(step) {
+    if (state.appInfo?.execution?.is_sandbox) return `<h2>Apple Silicon Sandbox Mode</h2>
+      <p class="lead">가상화용 모드입니다. Mellow.kext와 native EFI·루트 패치는 사용할 수 없습니다.</p>
+      <p>가상 GPU용 Mellow 런타임은 아직 제공되지 않습니다.</p>`;
+    if (state.appInfo?.mellow_deployment === "efi") return `<h2>Mellow EFI 준비</h2>
+      <p class="lead">선택한 EFI를 새 폴더로 복사하고 Mellow 진단 kext를 추가합니다.</p>
+      <div class="patch-summary">${escapeHtml(state.patchSummary)}</div>
+      <label for="mellow-output">새 출력 폴더</label><input class="field" id="mellow-output" placeholder="아직 존재하지 않는 폴더의 전체 경로" />
+      <button type="button" class="btn primary" id="action-mellow-efi">EFI 준비</button>
+      <pre class="patch-summary" id="mellow-result"></pre>`;
     if (isSurface()) return `<h2>Surface Pro 6 루트 패치</h2>
       <p>설치된 Tahoe에서 AppleHDA와 KDK 조건을 검사한 뒤 기존 26x86 패치 엔진을 실행합니다. 먼저 USB EFI로 macOS를 부팅하세요.</p>
       <div class="patch-summary" id="patch-summary">${escapeHtml(state.patchSummary)}</div>
@@ -428,6 +445,11 @@
 
     const html = (builders[step.id] || renderWelcome)(step);
     els.stepContent.innerHTML = html;
+    if (!state.appInfo?.execution?.can_native_apply) {
+      ["action-build", "action-install", "action-patch", "action-unpatch", "action-advanced", "action-model"].forEach((id) => {
+        const button = document.getElementById(id); if (button) button.disabled = true;
+      });
+    }
     bindStepActions(step.id);
     setStatus(step.title);
     renderStepper();
@@ -438,6 +460,15 @@
       const node = document.getElementById(id);
       if (node) node.addEventListener("click", handler);
     };
+    bind("action-mellow-efi", async () => {
+      const button = document.getElementById("action-mellow-efi");
+      button.disabled = true;
+      try {
+        const result = await api("prepare_mellow_efi", document.getElementById("mellow-output").value.trim());
+        document.getElementById("mellow-result").textContent = result.ok ? `준비됨: ${result.output}\n실제 부팅 및 Metal 가속은 미검증입니다.` : result.error;
+      } catch (err) { toast(String(err.message || err), "error"); }
+      finally { button.disabled = false; }
+    });
 
     if (stepId === "welcome") {
       const selectProfile = async (profile) => {
@@ -599,6 +630,12 @@
       const settings = result.settings || {};
       els.settingAnalytics.checked = !!settings.analytics;
       els.settingVerbose.checked = !!settings.verbose_logging;
+      els.settingMode.value = settings.execution_mode || "x86";
+      els.settingMode.disabled = !!state.appInfo?.execution?.environment_locked;
+      els.settingMellow.value = settings.mellow_deployment || "disabled";
+      els.settingPayload.value = settings.mellow_payload || "";
+      els.settingEfi.value = settings.mellow_efi || "";
+      updateModeControls();
       els.settingsDialog.showModal();
     } catch (err) {
       toast("설정을 불러올 수 없습니다.", "error");
@@ -611,9 +648,18 @@
       const result = await api("save_settings", {
         analytics: els.settingAnalytics.checked,
         verbose_logging: els.settingVerbose.checked,
+        execution_mode: els.settingMode.value,
+        mellow_deployment: els.settingMellow.value,
+        mellow_payload: els.settingPayload.value.trim(),
+        mellow_efi: els.settingEfi.value.trim(),
       });
       if (!result.ok) throw new Error(result.error || "save failed");
       els.settingsDialog.close();
+      state.appInfo = await api("get_app_info");
+      state.canBuild = (await api("host_can_build")).can_build;
+      state.buildCompleted = false;
+      state.patchSummary = (await api("get_patch_status")).summary || "";
+      renderStepContent();
       toast("설정을 저장했습니다.");
     } catch (err) {
       toast(String(err.message || err), "error");
@@ -621,6 +667,21 @@
   }
 
   function bindGlobalActions() {
+    els.settingMode.addEventListener("change", updateModeControls);
+    els.settingMellow.addEventListener("change", updateModeControls);
+    document.getElementById("setting-root-prepare").addEventListener("click", async () => {
+      const button = document.getElementById("setting-root-prepare");
+      const resultNode = document.getElementById("setting-root-result");
+      button.disabled = true;
+      try {
+        const result = await api("prepare_mellow_root_efi", els.settingEfi.value.trim(),
+          document.getElementById("setting-root-output").value.trim(), els.settingPayload.value.trim());
+        if (!result.ok) throw new Error(result.error || "EFI 준비 실패");
+        els.settingEfi.value = result.output;
+        resultNode.textContent = "새 EFI를 준비했습니다. 디스크 Lilu 조건을 확인한 뒤 설정을 저장하세요.";
+      } catch (err) { resultNode.textContent = String(err.message || err); }
+      finally { button.disabled = false; }
+    });
     els.btnPrev.addEventListener("click", () => goToStep(state.currentStep - 1));
     els.btnNext.addEventListener("click", () => goToStep(state.currentStep + 1));
     document.getElementById("btn-settings").addEventListener("click", openSettings);
@@ -636,6 +697,21 @@
         goToStep(Math.max(0, state.currentStep - 1));
       }
     });
+  }
+
+  function updateModeControls() {
+    const sandbox = els.settingMode.value === "apple-silicon-sandbox";
+    if (sandbox) els.settingMellow.value = "disabled";
+    [els.settingMellow, els.settingPayload, els.settingEfi].forEach((node) => { node.disabled = sandbox; });
+    document.getElementById("setting-root-preparation").hidden = sandbox || els.settingMellow.value !== "root-patch";
+    const rootPrepare = document.getElementById("setting-root-prepare");
+    rootPrepare.disabled = !!state.appInfo?.execution?.is_sandbox;
+    if (!sandbox && els.settingMellow.value === "root-patch" && rootPrepare.disabled) {
+      document.getElementById("setting-root-result").textContent = "현재 저장된 모드는 Sandbox입니다. 먼저 x86 Mode와 Mellow 사용 안 함을 저장한 뒤 EFI를 준비하세요.";
+    }
+    document.getElementById("setting-mode-note").textContent = sandbox
+      ? "Sandbox를 선택하면 Mellow native 배포가 사용 안 함으로 변경됩니다."
+      : "x86에서는 Mellow EFI·루트 패치를 준비할 수 있습니다.";
   }
 
   document.addEventListener("DOMContentLoaded", () => {

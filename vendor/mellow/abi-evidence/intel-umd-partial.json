@@ -1,0 +1,91 @@
+{
+  "scope": "Actual bundle metadata and helper Mach-O analysis, not a complete Intel Metal plugin",
+  "bundle_identifier": "com.apple.driver.AppleIntelICLGraphicsMTLDriver",
+  "bundle_version": "24.0.5",
+  "short_version": "24.5.8",
+  "principal_class": "MTLIGAccelDevice",
+  "declared_executable": "AppleIntelICLGraphicsMTLDriver",
+  "examined_binary_name": "libigdmd.dylib",
+  "examined_binary_is_declared_executable": false,
+  "main_executable_acquired": false,
+  "private_plugin_abi_verified": false,
+  "plugin_loaded": false,
+  "metal_executed": false,
+  "metadata_sha256": "a671703aba095edca1ad01b733cbf42ce3d2bfc9c4111890ed67ef53be23f0cb",
+  "binary_sha256": "0d3e31c7e3e2977d611b6c7febb4875a96779caf677c5187debf8b158fb5adcf",
+  "binary_bytes": 3285040,
+  "uuid": "2b38621ea956313ebc676ad8819f7ce0",
+  "defined_symbols": 1321,
+  "imports": 149,
+  "dependencies": [
+    {
+      "path": "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+      "kind": 12,
+      "current_version_raw": 329385479,
+      "compatible_version_raw": 19660800
+    },
+    {
+      "path": "/System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL",
+      "kind": 12,
+      "current_version_raw": 65536,
+      "compatible_version_raw": 65536
+    },
+    {
+      "path": "/System/Library/Frameworks/Metal.framework/Versions/A/Metal",
+      "kind": 12,
+      "current_version_raw": 24446720,
+      "compatible_version_raw": 65536
+    },
+    {
+      "path": "/System/Library/PrivateFrameworks/IOAccelerator.framework/Versions/A/IOAccelerator",
+      "kind": 12,
+      "current_version_raw": 65536,
+      "compatible_version_raw": 65536
+    },
+    {
+      "path": "/usr/lib/libobjc.A.dylib",
+      "kind": 12,
+      "current_version_raw": 14942208,
+      "compatible_version_raw": 65536
+    },
+    {
+      "path": "/usr/lib/libc++.1.dylib",
+      "kind": 12,
+      "current_version_raw": 137636608,
+      "compatible_version_raw": 65536
+    },
+    {
+      "path": "/usr/lib/libSystem.B.dylib",
+      "kind": 12,
+      "current_version_raw": 88866816,
+      "compatible_version_raw": 65536
+    },
+    {
+      "path": "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+      "kind": 12,
+      "current_version_raw": 329385479,
+      "compatible_version_raw": 9830400
+    }
+  ],
+  "selected_definitions": {
+    "_CloseMetricsDevice": {
+      "value": 803712,
+      "n_type": 15,
+      "external": true,
+      "private_external": false
+    },
+    "_OpenMetricsDevice": {
+      "value": 803344,
+      "n_type": 15,
+      "external": true,
+      "private_external": false
+    },
+    "_OpenPerformanceInterface": {
+      "value": 2814496,
+      "n_type": 15,
+      "external": true,
+      "private_external": false
+    }
+  },
+  "extraction_integrity": "HTTPS selected ZIP shards passed CRC and PBZX/XZ decoding; whole InstallAssistant signature not validated"
+}

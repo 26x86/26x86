@@ -1,0 +1,166 @@
+{
+  "status": "PASS",
+  "scope": "execution policy and real temporary-directory filesystem transaction tests",
+  "source_sha256": {
+    "x86/execution.py": "bd9b901339b2275714618f277587589481ec76e6ec9d5161aa666ad811c8267e",
+    "tests/test_execution.py": "2adf19c9476c3d493ad14c62400d078734ba9f53eb0bac5eae6800bc34c0731d",
+    "x86/mellow/transaction.py": "bd975936a56940f4f5b25efef7beb0d6720e3094adeb13e2e98e57927e4ac914",
+    "tests/test_mellow_transaction.py": "eab96bbed6b052a5817b0d78ba4444a3e1a0f6b349b10583f63d98a14787aa15"
+  },
+  "sources_stable": true,
+  "runs": [
+    {
+      "name": "windows-execution",
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_execution.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "tests": 28,
+      "skipped": 0,
+      "passed": true,
+      "log": "windows-execution.log",
+      "log_sha256": "18ab67ae85ed0b5de8769f8c70f14a7cdeabde6249257b1ade7f54e5835fdb4a"
+    },
+    {
+      "name": "windows-transaction",
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_mellow_transaction.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "tests": 32,
+      "skipped": 1,
+      "passed": true,
+      "log": "windows-transaction.log",
+      "log_sha256": "c6126e3741c913cb1e7a181ebcf999d63066eb0af5a465e5c137bc4b31bdc63c"
+    },
+    {
+      "name": "linux-transaction",
+      "command": [
+        "wsl",
+        "-d",
+        "Ubuntu-24.04",
+        "--cd",
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin",
+        "--exec",
+        "env",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_mellow_transaction.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "tests": 32,
+      "skipped": 1,
+      "passed": true,
+      "log": "linux-transaction.log",
+      "log_sha256": "e9fef3e8f3cc67cdd0511024addfb4736418a922c1469b41aa0e934c4f60d165"
+    },
+    {
+      "name": "linux-owner",
+      "command": [
+        "wsl",
+        "-d",
+        "Ubuntu-24.04",
+        "-u",
+        "root",
+        "--cd",
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin",
+        "--exec",
+        "env",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_mellow_transaction.py",
+        "-k",
+        "test_posix_original_owner_is_restored",
+        "-v"
+      ],
+      "exit_code": 0,
+      "tests": 1,
+      "skipped": 0,
+      "passed": true,
+      "log": "linux-owner.log",
+      "log_sha256": "f2435b3cd6f6f680e0031b6b03fe85e1a0c8cfae2800c5ab476aee2298a9620e"
+    }
+  ],
+  "real_windows_host_context": {
+    "mode": "x86",
+    "source": "host",
+    "environment_locked": false,
+    "is_sandbox": false,
+    "can_native_plan": true,
+    "can_native_apply": false,
+    "host": {
+      "system": "Windows",
+      "machine": "AMD64",
+      "hw_optional_arm64": null,
+      "proc_translated": null,
+      "probe_errors": [],
+      "probe_notes": [],
+      "is_apple_silicon": false,
+      "is_verified_native_x86_macos": false
+    }
+  },
+  "macos_execution_performed": false,
+  "apfs_or_kernel_cache_modified": false,
+  "native_kext_loaded": false,
+  "metal_acceleration_verified": false,
+  "active_efi_or_usb_modified": false,
+  "windows_python": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+  "intel_enoent_correction": {
+    "decision": "Accept exact C-locale hw.optional.arm64 ENOENT only on x86_64/amd64 with verified nontranslated probe; generic errors, timeouts and positive ARM/Rosetta evidence still deny native operations.",
+    "source": {
+      "repository": "https://github.com/apple-oss-distributions/xnu",
+      "tag": "xnu-12377.1.9",
+      "commit": "f6217f891ac0bb64f3d375211650a4c1ff8ca1ea",
+      "path": "bsd/kern/kern_mib.c",
+      "sha256": "c34d16dde6e3a1c588dada1d282a1f3ade898154c6b2b2978df5a9bfc29ead00",
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/bsd/kern/kern_mib.c",
+      "evidence_ranges": [
+        {
+          "lines": [
+            1030,
+            1036
+          ],
+          "meaning": "An absent optional feature may have no registered OID or return zero."
+        },
+        {
+          "lines": [
+            1131,
+            1210
+          ],
+          "meaning": "arm64_flag and hw.optional.arm64 registrations occur only inside __arm64__ conditional."
+        }
+      ]
+    },
+    "rosetta_reference": "https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment",
+    "sysctl_diagnostic_reference": "https://github.com/apple-oss-distributions/system_cmds/blob/main/sysctl/sysctl.c"
+  }
+}

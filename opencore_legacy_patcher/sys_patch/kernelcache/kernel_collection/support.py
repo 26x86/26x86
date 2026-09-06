@@ -136,6 +136,11 @@ class KernelCacheSupport:
                         if not location.endswith("Extensions"):
                             continue
                         for file in oclp_plist_data[key][install_type][location]:
+                            if file == "Mellow.kext":
+                                # Mellow's authenticated transaction owns its Data
+                                # files; generic cleanup must not erase a backup or
+                                # an independently replaced driver before validation.
+                                continue
                             if not file.endswith(".kext"):
                                 continue
                             if not Path(f"/Library/Extensions/{file}").exists():
@@ -154,6 +159,8 @@ class KernelCacheSupport:
             subprocess_wrapper.run_as_root(["/bin/mkdir", relocation_path])
 
         for file in Path("/Library/Extensions").glob("*.kext"):
+            if file.name == "Mellow.kext":
+                continue
             try:
                 if datetime.fromtimestamp(file.stat().st_mtime) < datetime(2021, 10, 1):
                     logging.info(f"  - Relocating {file.name} kext to {relocation_path}")

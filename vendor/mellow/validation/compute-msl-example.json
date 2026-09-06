@@ -1,0 +1,11 @@
+{
+  "scope": "explicit Mellow C++ API MSL compute subset on installed Windows OpenCL GPU driver",
+  "exit_code": 0,
+  "stdout": "Intel(R) Graphics via Mellow MSL/OpenCL compute subset\n10 17 24 31 \n",
+  "stderr": "",
+  "binary_sha256": "7d6ff050e3d71a5e2374f645d9de99ce09babbf4417de9966b96f7fa1b01b50b",
+  "example_sha256": "fead033f463162ceb0d4593e507d2d83dac857ec727857f32d99d3518e68acb5",
+  "expected_output_observed": true,
+  "native_macos_execution": false,
+  "apple_metal_abi": false
+}

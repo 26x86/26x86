@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "test_methods": 14,
+  "subcases": 47,
+  "gpu_execution_tested": false,
+  "native_swift_compilation_tested": false,
+  "scope": "host-side parser/evidence rejection tests, including actual offline Intel and Mach-O containers",
+  "input_sha256": {
+    "tests/metal_evidence_tests.py": "68e0bdff5e3ac2682e1e02dc15f9d861cd8f37bbb103ba88bbc68cc5129de90f",
+    "Tools/metal-run.py": "d515a94dfd247fc53344ed24e32058bc621f2e9666c1b720b93cf320255504a1",
+    "Tools/abi-inventory.py": "1dbbc0916d9509eb40bf9b14eeba3671cfda6bc65639b8ed8b86f157231b038b",
+    "Tools/metal-offline-compile.py": "50483a84203b8ce67f967534429ac31b36907e37c5b1d46caa5cf70e488766bf",
+    "compiler-evidence/mellow_evidence_mtl.bin": "fea5095ddad2a328b6216263a1ab0571778f6277058720b09318399196185a90",
+    "build/Release/Mellow.kext/Contents/MacOS/Mellow": "e3c1ce4f91d8288cee75b71126e1d72720392beffe6e3245c3580d7b07b3daa1"
+  }
+}

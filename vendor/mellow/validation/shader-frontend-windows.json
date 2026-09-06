@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "status": "PASS_SHADER_FRONTEND_AND_HOST_REFERENCE",
+  "hardware_execution": false,
+  "metal_driver_registered": false,
+  "air_fixture_origin": "synthetic",
+  "sanitizers_enabled": false,
+  "opencl_driver_jit_tested": false,
+  "opencl_syntax_checked": true,
+  "llvm_roundtrip_tested": false,
+  "phases": [
+    {
+      "name": "compile_frontend_tests",
+      "command": [
+        "C:\\msys64\\mingw64\\bin\\g++.exe",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Runtime\\ShaderJit.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Runtime\\AirDecoder.cpp",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\shader_jit_tests.cpp",
+        "-o",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\shader-jit-tests.exe"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "execute_frontend_tests",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\shader-jit-tests.exe",
+        "--emit-fixtures",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm"
+      ],
+      "returncode": 0,
+      "stdout": "{\"status\":\"PASS_SHADER_FRONTEND_SUBSET\",\"checks\":2269,\"hardware_execution\":false,\"air_fixture_origin\":\"synthetic\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "compile_generated_cpu_reference",
+      "command": [
+        "C:\\msys64\\mingw64\\bin\\g++.exe",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-variable",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\generated-host-tests.cpp",
+        "-o",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\generated-host-tests.exe"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "execute_generated_cpu_reference",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\generated-host-tests.exe"
+      ],
+      "returncode": 0,
+      "stdout": "{\"status\":\"PASS_GENERATED_SHADER_CPU_REFERENCE\",\"checks\":72}\n",
+      "stderr": ""
+    },
+    {
+      "name": "opencl_syntax_affine",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-build\\llvm-20.1.8\\bin\\clang.exe",
+        "-x",
+        "cl",
+        "-cl-std=CL1.2",
+        "-fsyntax-only",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\affine.cl"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "opencl_syntax_air_affine",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-build\\llvm-20.1.8\\bin\\clang.exe",
+        "-x",
+        "cl",
+        "-cl-std=CL1.2",
+        "-fsyntax-only",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\air_affine.cl"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "opencl_syntax_complement",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-build\\llvm-20.1.8\\bin\\clang.exe",
+        "-x",
+        "cl",
+        "-cl-std=CL1.2",
+        "-fsyntax-only",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\complement.cl"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "opencl_syntax_division",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-build\\llvm-20.1.8\\bin\\clang.exe",
+        "-x",
+        "cl",
+        "-cl-std=CL1.2",
+        "-fsyntax-only",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\division.cl"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "opencl_syntax_negate",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-build\\llvm-20.1.8\\bin\\clang.exe",
+        "-x",
+        "cl",
+        "-cl-std=CL1.2",
+        "-fsyntax-only",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\negate.cl"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "opencl_syntax_ordered",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-build\\llvm-20.1.8\\bin\\clang.exe",
+        "-x",
+        "cl",
+        "-cl-std=CL1.2",
+        "-fsyntax-only",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\ordered.cl"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "opencl_syntax_precedence",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-build\\llvm-20.1.8\\bin\\clang.exe",
+        "-x",
+        "cl",
+        "-cl-std=CL1.2",
+        "-fsyntax-only",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\precedence.cl"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "opencl_syntax_rotate_bits",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-build\\llvm-20.1.8\\bin\\clang.exe",
+        "-x",
+        "cl",
+        "-cl-std=CL1.2",
+        "-fsyntax-only",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\rotate_bits.cl"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "opencl_syntax_wrap",
+      "command": [
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-build\\llvm-20.1.8\\bin\\clang.exe",
+        "-x",
+        "cl",
+        "-cl-std=CL1.2",
+        "-fsyntax-only",
+        "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\shader-jit-windows-pinned-llvm\\wrap.cl"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "source_sha256": {
+    "Runtime/ShaderJit.cpp": "11020b2e42da1d5f8ff9f4d8fcfaa2cf502a628a1e12dd24a519294f79bae337",
+    "Runtime/AirDecoder.cpp": "75df73ea70176a6f64328bc00295644d6ef1540d17cee3be90963685478208ae",
+    "tests/shader_jit_tests.cpp": "76694850c95a9e33d5377c5ca304c78dd15046a8748b18e580e4ed6cf631763e",
+    "Runtime/ShaderJit.hpp": "71f796a723f4619be4092fe4e493642528e3ee07c3397441d26784570820748e",
+    "Runtime/AirDecoder.hpp": "6210c453f5c7a791f5f426ed1b7a3b049f140260def11a13dfe66b3147b4b34f",
+    "Tools/run-shader-jit-tests.py": "574d7254ecbecd863fd7edb647f176ddefbbcc26fe6f2a1a76985cf68ad1bbc4"
+  },
+  "test_executable_sha256": "79744ccbf41814ab7b29fae43532aada280891a70e080b5547f6b8b4ae07924e",
+  "frontend_result": {
+    "status": "PASS_SHADER_FRONTEND_SUBSET",
+    "checks": 2269,
+    "hardware_execution": false,
+    "air_fixture_origin": "synthetic"
+  },
+  "generated_host_executable_sha256": "741e4e865e9470be4baacd05a42e6e257259fc83404dd4c477d8b3cdccbcd53c",
+  "generated_cpu_reference": {
+    "status": "PASS_GENERATED_SHADER_CPU_REFERENCE",
+    "checks": 72
+  },
+  "opencl_syntax_fixtures": 9,
+  "generated_fixture_sha256": {
+    "affine.cl": "8d97b59e46ba02ee466e49fcf3ad2055ed2dcd0b9c747668d575c850ce9be870",
+    "affine.metal": "32698245e0c0e50b1ffd8cea4917dcc782e5364ccdc5c7a0565db9b3eaccd8c2",
+    "air_affine.cl": "6ec315fdee9aed7356d5b132e11c1dbf495c1706c2318700d250a1fdb6656fb9",
+    "complement.cl": "48378c21617dca7b56bdc66496989c965705dfbd0505506163dc6ebefe46f8d2",
+    "complement.metal": "1ca54ef801a2ba6e59efc32017e684cc11f75152120df21bed8167ef35be3091",
+    "division.cl": "df0978a06154c3205f24e8d9385ddb9da2114e7f4bee510ca00354a876e39c4f",
+    "division.metal": "e1f37cca59f3435096453e88c28d512083153100d059553420154f67c76f86cd",
+    "generated-host-tests.cpp": "d81ec5f85b4f3dfac531dbf65e107678a2712ec6da3ce7fab78ac90832e1287f",
+    "negate.cl": "39affde7ba1af168aa1ae7c0857c32b35cdc53ff3205329a57b9c6f029f3278a",
+    "negate.metal": "07a10786a8ec2db9e21a8078a22802a6f0e440c70271b2fb75a7aa86224f39f3",
+    "ordered.cl": "d6bfeeadbb5f1dea01474391bfa65a8cc41e6f75dcae9ae4410a1bf1fce1835f",
+    "ordered.metal": "a8b9dbefb3ee6f3aabbc0989205d56b699944ccee985ffa95dfa88567755e63a",
+    "precedence.cl": "fdd74431923aabbb434392e8cabbb16fde6c00361fb5b70cbf73fa9121792b1a",
+    "precedence.metal": "b99ac14d598cbc075fc3f3f8ad0a960868bd11c3f00ba0b8f6e319a2b27cf93b",
+    "rotate_bits.cl": "faa2ed91134ddd753f739430ea5bc7a3a1de0c4b3793d351152f06c5be3947f1",
+    "rotate_bits.metal": "e63b758bb503a107f55136b53679e22fa4758e12136fc686143492735550e9ab",
+    "synthetic-air-affine.ll": "9db450d2cb03bd96e874e7e2ff191de592acdab05d88b2b77b93fbae33981d08",
+    "wrap.cl": "28e718e430bb87f9ac6a8656824e57768ed9efe9a29bd6690b1a8071239a5642",
+    "wrap.metal": "4239646ebdb5a7bb45beaa6997485357927460b2f6b423a309068fe30acb6baa"
+  },
+  "source_changed": []
+}

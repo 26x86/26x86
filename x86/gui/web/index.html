@@ -86,6 +86,31 @@
   <dialog id="settings-dialog" class="dialog card elevated">
     <form method="dialog" class="dialog-body">
       <h2>설정</h2>
+      <label for="setting-mode">실행 모드</label>
+      <select class="field" id="setting-mode">
+        <option value="x86">x86 Mode</option>
+        <option value="apple-silicon-sandbox">Apple Silicon Sandbox Mode</option>
+      </select>
+      <p class="muted" id="setting-mode-note">x86에서는 Mellow EFI·루트 패치를 준비할 수 있습니다.</p>
+      <label for="setting-mellow">Mellow 배포 방식</label>
+      <select class="field" id="setting-mellow">
+        <option value="disabled">사용 안 함</option>
+        <option value="efi">EFI에 추가</option>
+        <option value="root-patch">루트 패치와 함께 설치</option>
+      </select>
+      <label for="setting-mellow-payload">Mellow 패키지 폴더</label>
+      <input class="field" id="setting-mellow-payload" autocomplete="off" spellcheck="false" />
+      <label for="setting-mellow-efi">대상 OpenCore EFI 폴더</label>
+      <input class="field" id="setting-mellow-efi" autocomplete="off" spellcheck="false" />
+      <div id="setting-root-preparation" hidden>
+        <p class="muted">루트 패치는 디스크의 /Library/Extensions에 동일한 Lilu가 설치되어 있어야 합니다. EFI의 Lilu는 비활성화하며 Mellow를 EFI에서 주입하지 않습니다.</p>
+        <p class="muted">처음 준비한다면 위 EFI 경로에 Lilu가 활성화된 원본을 지정하고 새 복사본을 만드세요. 준비 후 경로가 복사본으로 바뀝니다. 이 단계는 디스크에 Lilu를 설치하지 않습니다.</p>
+        <label for="setting-root-output">루트 패치용 새 EFI 출력 폴더</label>
+        <input class="field" id="setting-root-output" autocomplete="off" spellcheck="false" />
+        <button type="button" class="btn secondary" id="setting-root-prepare">루트 패치용 EFI 준비</button>
+        <p class="muted" id="setting-root-result" aria-live="polite"></p>
+      </div>
+      <p class="muted">현재 패키지는 7D41 진단용입니다. 설치가 Metal 가속 성공을 의미하지 않습니다.</p>
       <label class="checkbox-row"><input type="checkbox" id="setting-analytics" /><span>익명 사용 통계 보내기</span></label>
       <label class="checkbox-row"><input type="checkbox" id="setting-verbose" /><span>자세한 로그</span></label>
       <div class="dialog-actions">

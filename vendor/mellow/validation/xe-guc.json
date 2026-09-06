@@ -1,0 +1,10 @@
+{
+  "assertions": 105073,
+  "status": "passed",
+  "gpu_execution": false,
+  "scope": "Native actual protocol source with emulated peer/MMIO callbacks; no GPU upload, authentication, CTB, IRQ or execution tested on hardware",
+  "source_sha256": {
+    "Mellow\\XeGuCTransport.cpp": "bddcf62a86cd4ad42744469a1727046c30dbf57f603188455b21b5d92251b2fd",
+    "tests\\xe_guc_tests.cpp": "7d93bb6755f754b9e347b1d462454b165d567e93af1216349adf624b8ad7dbd0"
+  }
+}

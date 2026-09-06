@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "hardware_executed": false,
+  "context_checks": 3658796,
+  "dispatch_checks": 88716,
+  "execution_checks": 224,
+  "kernel_compile": "x86_64-apple-macos13; mkernel; fapple-kext; Wall Wextra Werror",
+  "intel_tag": "26.27.39122.11",
+  "intel_commit": "930b848261031928061f744020de30c104c0f207",
+  "linux_commit": "4d7d9486c04d917265f64c55bd23b2cc4fe7749c",
+  "files": [
+    {
+      "path": "Mellow/XeContext.cpp",
+      "sha256": "fa150dc82d085084ed438605ec48a96bb8e0b27805c1f59a9d96b7df5277b101"
+    },
+    {
+      "path": "Mellow/XeContext.hpp",
+      "sha256": "ca0f3b2e8ddd1561958c08066583c0e82e90ba463deeed3df425c58c7b22c0d1"
+    },
+    {
+      "path": "Mellow/XeDispatch.cpp",
+      "sha256": "5434ffef73bb8337b2dd91fce4649732c96e9f6d5e38f5c788ef5752e43a45fc"
+    },
+    {
+      "path": "Mellow/XeDispatch.hpp",
+      "sha256": "9a4bea95eeba1e9a9c6e544cc9a155f784987673e54d9a7f8ac3ddfa8dacb481"
+    },
+    {
+      "path": "Mellow/XeContextExecution.cpp",
+      "sha256": "01c8b0e4dcad01f9b11565c798b5b8787e45efdc93dac79cde656fa9536e0a97"
+    },
+    {
+      "path": "Mellow/XeContextExecution.hpp",
+      "sha256": "dd052f230aff12db1dcfbf330e2ac0b823a74740b7f0e9cbbf03c7a048400ab9"
+    },
+    {
+      "path": "tests/xe_dispatch_intel_reference.inl",
+      "sha256": "2e372f6415dc9d84ef6d2fd611ac8f409c8d48e9c3b793896f2b7ebf82f3b5fc"
+    },
+    {
+      "path": "compiler-evidence/mellow_evidence_mtl.bin",
+      "sha256": "fea5095ddad2a328b6216263a1ab0571778f6277058720b09318399196185a90"
+    }
+  ]
+}

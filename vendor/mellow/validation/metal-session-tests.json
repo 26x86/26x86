@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "methods": 19,
+  "native_metal_tested": false,
+  "scope": "Actual Python session lifecycle; explicit fake Objective-C/Metal boundary"
+}

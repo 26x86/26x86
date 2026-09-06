@@ -1,0 +1,32 @@
+{
+  "scope": "synthetic-ICD-provider-lifecycle-only",
+  "gpu_work_executed": false,
+  "passed": true,
+  "source_sha256": {
+    "Runtime/OpenCLAbi.hpp": "4281a4deb971d1f11e57618d96a8ac53b0997c5b059f3dcd5589208e425dc278",
+    "Runtime/OpenCLProvider.hpp": "9c0055d99b758ea5dd17f725cbdc5167db1766ca08caa4f9543b9dad29b65267",
+    "Runtime/OpenCLProvider.cpp": "5bbb12674bfc769bf1818300e1638d4bb3631074bcb21ab420518d86fc1f6683",
+    "Runtime/PlatformRuntime.hpp": "b1e0ac06ea3bf74b25f39369968491039ef2c62396f2b4c3f86e0f60cf6e7b52",
+    "Runtime/PlatformRuntime.cpp": "20d3209308a48afc143fd3c1432c8442d6fb04f0a4d947a2ea00347e5ad3634f",
+    "tests/opencl_runtime_regression.cpp": "4ee765083d026c999cda012d524074a3baea70dab3435ad23032359f137abdbe",
+    "Tools/run-opencl-runtime-regressions.py": "5a797fe2f2c383135c5e0703e50768dc2a9a34245b2cb106e52102b26016b861"
+  },
+  "build": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "test": {
+    "exit_code": 0,
+    "stdout": "PASS: 45 synthetic ICD state/cleanup regressions; no hardware GPU execution\n",
+    "stderr": ""
+  },
+  "post_test_binary_inspection": {
+    "sha256": "ab3ec3077a58512e69e862078f48928f37d6b8ce58d93274c0eb7c976fe185fa",
+    "observed_sanitizer_dependencies": [
+      "libasan.so.8",
+      "libubsan.so.1"
+    ],
+    "method": "readelf -d on retained tested Linux binary; not a fresh test execution"
+  }
+}

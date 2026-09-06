@@ -8,11 +8,16 @@ from x86.platform import is_macos, MACOS_ONLY_MESSAGE
 from x86.surface import PROFILE_ID, configure_surface_constants
 
 
-def _context(profile=None, payload_dir=None):
+def _context(profile=None, payload_dir=None, **mellow_options):
+    from x86.mellow.integration import configuration, configure_constants
+    if "mellow_payload" in mellow_options:
+        mellow_options["payload_dir"] = mellow_options.pop("mellow_payload")
+    configuration(**mellow_options)[0].require_native_apply()
     from opencore_legacy_patcher.constants import Constants
     from opencore_legacy_patcher.detections import device_probe, os_probe
 
     c = Constants()
+    configure_constants(c, **mellow_options)
     from x86.paths import Paths
     c.payload_path = Paths.repo_root() / "payloads"
     probe = os_probe.OSProbe()
@@ -30,14 +35,16 @@ def _context(profile=None, payload_dir=None):
     return c
 
 
-def preflight(profile=None, payload_dir=None, *, constants=None):
+def preflight(profile=None, payload_dir=None, *, constants=None, **mellow_options):
     """No root writes, payload mounts, or privileges requested by this entry."""
     if not is_macos():
         return {"ok": False, "status": "unsupported_platform", "can_patch": False, "error": MACOS_ONLY_MESSAGE}
     if profile not in (None, PROFILE_ID):
         return {"ok": False, "status": "invalid_profile", "can_patch": False, "error": "Unknown root patch profile"}
     try:
-        c = constants or _context(profile, payload_dir)
+        c = constants or _context(profile, payload_dir, **mellow_options)
+        from x86.mellow.integration import validate_live
+        validate_live(c)
         if profile == PROFILE_ID:
             configure_surface_constants(c)
             if c.detected_os != 25:
@@ -47,7 +54,7 @@ def preflight(profile=None, payload_dir=None, *, constants=None):
         detected = HardwarePatchsetDetection(c)
         patches = list(detected.patches)
         blockers = []
-        if profile == PROFILE_ID and any(name != "Modern Audio" for name in patches):
+        if profile == PROFILE_ID and any(name not in ("Modern Audio", "Mellow") for name in patches):
             blockers.append("Unexpected patch set for UHD 620. This profile permits only Modern Audio: " + ", ".join(patches))
         if not detected.can_patch:
             blockers.append("Live SIP / AMFI / FileVault / update / security validation rejected patching.")
@@ -69,7 +76,7 @@ def preflight(profile=None, payload_dir=None, *, constants=None):
             elif not kdk_report["exact_build_match"]:
                 warnings.append("The existing engine selected a nearby KDK build, not an exact match. Review the KDK report before applying.")
         payload = Path(c.payload_local_binaries_root_path_dmg)
-        if patches and not payload.is_file():
+        if any(name != "Mellow" for name in patches) and not payload.is_file():
             blockers.append(f"Missing published support payload: {payload}. See docs/SURFACE_PRO6.md.")
         return {"ok": not blockers, "status": "blocked" if blockers else ("ready" if patches else "not_required"),
                 "can_patch": not blockers and bool(patches), "patches": patches, "blockers": blockers,
@@ -80,11 +87,11 @@ def preflight(profile=None, payload_dir=None, *, constants=None):
         return {"ok": False, "status": "preflight_failed", "can_patch": False, "error": str(exc)}
 
 
-def apply(profile=None, payload_dir=None):
+def apply(profile=None, payload_dir=None, **mellow_options):
     if not is_macos():
-        return preflight(profile, payload_dir)
+        return preflight(profile, payload_dir, **mellow_options)
     try:
-        c = _context(profile, payload_dir)
+        c = _context(profile, payload_dir, **mellow_options)
         report = preflight(profile, payload_dir, constants=c)
         if not report.get("can_patch"):
             return report
@@ -101,3 +108,20 @@ def apply(profile=None, payload_dir=None):
                 "reboot_required": succeeded, "hardware_verified": False}
     except Exception as exc:
         return {"ok": False, "status": "patch_failed", "error": str(exc)}
+
+
+def unpatch(profile=None, payload_dir=None, **mellow_options):
+    if not is_macos():
+        return {"ok": False, "status": "unsupported_platform", "error": MACOS_ONLY_MESSAGE}
+    try:
+        c = _context(profile, payload_dir, **mellow_options)
+        if os.geteuid() != 0:
+            raise PermissionError("Run patch --unpatch through sudo on the installed macOS")
+        from opencore_legacy_patcher.sys_patch.sys_patch import PatchSysVolume
+        engine = PatchSysVolume(c.computer.real_model, c)
+        engine.start_unpatch()
+        succeeded = bool(c.root_patcher_succeeded)
+        return {"ok": succeeded, "status": "unpatched_reboot_required" if succeeded else "unpatch_failed",
+                "reboot_required": succeeded, "hardware_verified": False}
+    except Exception as exc:
+        return {"ok": False, "status": "unpatch_failed", "error": str(exc)}

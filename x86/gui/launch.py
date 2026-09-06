@@ -41,6 +41,8 @@ def _strip_x86_subcommand() -> None:
 
 
 def _launch_legacy_wx(advanced: bool = False) -> None:
+    from x86.mellow.integration import configuration
+    configuration()[0].require_native_apply("Legacy native GUI")
     _ensure_repo_root()
     _strip_x86_subcommand()
     if advanced:

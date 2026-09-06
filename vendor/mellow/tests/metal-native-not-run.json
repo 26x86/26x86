@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "host": "Windows-10-10.0.28000-SP0",
+  "native_probe_compiled": false,
+  "small_target_metal_probe_passed": false,
+  "full_metal_conformance_verified": false,
+  "process_timeout": false,
+  "events": [],
+  "source_sha256": "f3f3812232b0a8f07eb1e577ca37c974c76f5fe7dd30821608436be3fb634e09",
+  "error": "Metal.framework is required; native probe not compiled/run on this host"
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "stage": 0,
+    "explicit_unload": false,
+    "returncode": 0,
+    "stdout": "library_retained\n",
+    "stderr": ""
+  },
+  {
+    "stage": 0,
+    "explicit_unload": true,
+    "returncode": 3221225477,
+    "stdout": "library_freed\n",
+    "stderr": ""
+  },
+  {
+    "stage": 1,
+    "explicit_unload": false,
+    "returncode": 0,
+    "stdout": "version=20.1.8\nlibrary_retained\n",
+    "stderr": ""
+  },
+  {
+    "stage": 1,
+    "explicit_unload": true,
+    "returncode": 3221225477,
+    "stdout": "version=20.1.8\nlibrary_freed\n",
+    "stderr": ""
+  },
+  {
+    "stage": 2,
+    "explicit_unload": false,
+    "returncode": 0,
+    "stdout": "version=20.1.8\ncontext_disposed\nlibrary_retained\n",
+    "stderr": ""
+  },
+  {
+    "stage": 2,
+    "explicit_unload": true,
+    "returncode": 3221225477,
+    "stdout": "version=20.1.8\ncontext_disposed\nlibrary_freed\n",
+    "stderr": ""
+  }
+]

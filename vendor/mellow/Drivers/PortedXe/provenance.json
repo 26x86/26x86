@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/torvalds/linux",
+  "revision": "0d9ff90a5422cc7509258aaaba1e7481df4d332a",
+  "files": [
+    {
+      "path": "drivers/gpu/drm/xe/regs/xe_gtt_defs.h",
+      "sha256": "eccce0f3010e0986377cf9270fdf92a6c85c6d860f52dfe8cf81b7763b4649cc",
+      "bytes": 1082,
+      "url": "https://raw.githubusercontent.com/torvalds/linux/0d9ff90a5422cc7509258aaaba1e7481df4d332a/drivers/gpu/drm/xe/regs/xe_gtt_defs.h",
+      "license": "MIT"
+    },
+    {
+      "path": "drivers/gpu/drm/xe/xe_ggtt.c",
+      "sha256": "df7be73a42e13c47ecfb6a723a0c3673116b215ad3ed98552a1d8ed1303a7983",
+      "bytes": 31954,
+      "url": "https://raw.githubusercontent.com/torvalds/linux/0d9ff90a5422cc7509258aaaba1e7481df4d332a/drivers/gpu/drm/xe/xe_ggtt.c",
+      "license": "MIT"
+    },
+    {
+      "path": "drivers/gpu/drm/xe/xe_vm.c",
+      "sha256": "cdc3e7195c62a4ff3771801ba5ca0d164467034fc100a0737a0b5b266a76635d",
+      "bytes": 126138,
+      "url": "https://raw.githubusercontent.com/torvalds/linux/0d9ff90a5422cc7509258aaaba1e7481df4d332a/drivers/gpu/drm/xe/xe_vm.c",
+      "license": "MIT"
+    },
+    {
+      "path": "LICENSES/preferred/MIT",
+      "sha256": "323c587d0ccf10e376f8bf9a7f31fb4ca6078105194b42e0b1e0ee2bc9bde71f",
+      "bytes": 1372,
+      "url": "https://raw.githubusercontent.com/torvalds/linux/0d9ff90a5422cc7509258aaaba1e7481df4d332a/LICENSES/preferred/MIT",
+      "license": "MIT license text"
+    }
+  ],
+  "ported_functions": [
+    {
+      "function": "xelp_ggtt_pte_flags",
+      "file": "drivers/gpu/drm/xe/xe_ggtt.c",
+      "start_line": 146,
+      "end_line": 154,
+      "source_fragment_sha256": "4f2cad4095cc6e9dc9ffbb08b7902aacf63645b904267bb2528da5c0f67cc06a"
+    },
+    {
+      "function": "xelpg_ggtt_pte_flags",
+      "file": "drivers/gpu/drm/xe/xe_ggtt.c",
+      "start_line": 156,
+      "end_line": 172,
+      "source_fragment_sha256": "06e319706f4c227bf222d020163bdeb65eab0870686754910529549606b7a680"
+    },
+    {
+      "function": "pde_encode_pat_index",
+      "file": "drivers/gpu/drm/xe/xe_vm.c",
+      "start_line": 1375,
+      "end_line": 1386,
+      "source_fragment_sha256": "22e57df6e713acde4447e0b534cef2e96f967fdb701533847a91af6b7d6fc39f"
+    },
+    {
+      "function": "pte_encode_pat_index",
+      "file": "drivers/gpu/drm/xe/xe_vm.c",
+      "start_line": 1388,
+      "end_line": 1412,
+      "source_fragment_sha256": "cdf72b8a9e24f4423a9b83d0f17b1742a9b3bf07072718dc29c9e38111b6cfbf"
+    },
+    {
+      "function": "pte_encode_ps",
+      "file": "drivers/gpu/drm/xe/xe_vm.c",
+      "start_line": 1414,
+      "end_line": 1424,
+      "source_fragment_sha256": "545777d2c670b15e991e8fb31a94befd0cceda241ad6d868526885a8721087c8"
+    },
+    {
+      "function": "xelp_pte_encode_addr",
+      "file": "drivers/gpu/drm/xe/xe_vm.c",
+      "start_line": 1505,
+      "end_line": 1525,
+      "source_fragment_sha256": "8058d7645c9d92b9dff4140711a399d7aa1b99e2b3fc6504f2b3d8d44fcec870"
+    }
+  ],
+  "modifications": "Function bodies preserved verbatim. Portable type/BO predicate/assert shims and rejecting public wrappers are new. GGTT scatter/gather loops and clear-before-invalidate lifetime adapter are source-derived new code, not the complete Linux DRM/TTM VM.",
+  "physical_gpu_tested": false,
+  "additional_source_policies": [
+    {
+      "name": "VMA read-only policy",
+      "file": "drivers/gpu/drm/xe/xe_vm.c",
+      "start_line": 1485,
+      "end_line": 1488,
+      "source_fragment_sha256": "6f77b359377d3703a7379a732adf50f14872680f445727bc713b3a95b852f6a1",
+      "adaptation": "Address helper grants RW unconditionally; rejecting wrapper clears RW when writable=false, matching the VMA helper branch. No GGTT or PAT bit is modified."
+    }
+  ]
+}

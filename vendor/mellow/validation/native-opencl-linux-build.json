@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-05T19:13:29.709888+00:00",
+  "scope": "native-MellowRuntime-host-OpenCL-C-provider-only",
+  "os": {
+    "system": "Linux",
+    "release": "6.18.33.2-microsoft-standard-WSL2",
+    "version": "#1 SMP PREEMPT_DYNAMIC Thu Jun 18 21:54:43 UTC 2026",
+    "machine": "x86_64"
+  },
+  "source_sha256": {
+    "Runtime/PlatformRuntime.hpp": "b1e0ac06ea3bf74b25f39369968491039ef2c62396f2b4c3f86e0f60cf6e7b52",
+    "Runtime/PlatformRuntime.cpp": "20d3209308a48afc143fd3c1432c8442d6fb04f0a4d947a2ea00347e5ad3634f",
+    "Runtime/OpenCLAbi.hpp": "4281a4deb971d1f11e57618d96a8ac53b0997c5b059f3dcd5589208e425dc278",
+    "Runtime/OpenCLProvider.hpp": "9c0055d99b758ea5dd17f725cbdc5167db1766ca08caa4f9543b9dad29b65267",
+    "Runtime/OpenCLProvider.cpp": "5bbb12674bfc769bf1818300e1638d4bb3631074bcb21ab420518d86fc1f6683",
+    "tests/opencl_runtime_hardware.cpp": "048fa1546a90736869e0f35e42c936d3727137447de78ad0e14c803aa0f539f6",
+    "tests/opencl_runtime_sha256.hpp": "c5a42c0d06992a7bf20b433e6448a26866651090b35b6ba438074c6c7a31038c",
+    "Tools/run-opencl-runtime.py": "98601f6dca944659d642945e89c0fdf8c03067f1f9a9e2b59a591402edf19a0a"
+  },
+  "compute_requested": false,
+  "gpu_work_executed": false,
+  "native_runtime_gpu_compute_pass": false,
+  "metal_tested": false,
+  "mellow_jit_used": false,
+  "linux_driver_port_loaded": false,
+  "status": "BUILT_ONLY",
+  "worker_deadline_seconds": 45,
+  "requested_iterations": 3,
+  "compiler_version": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "build": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "binary_sha256": "1c9828952ff35cbba2f881292cb01593fe2ae047ee009bae75cf81eb35220779"
+}

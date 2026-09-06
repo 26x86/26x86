@@ -1,0 +1,386 @@
+{
+  "schema_version": 1,
+  "frontend": "OpenCL C 2.0",
+  "compiler": "Intel IGC 2.38.2",
+  "ocloc": "26.27.39122.11",
+  "requested_device_id": "0x7d41",
+  "gpu_executed": false,
+  "metal_msl_frontend": false,
+  "metal_driver_abi_implemented": false,
+  "offline_compilation_validated": true,
+  "packages": [
+    {
+      "name": "intel-ocloc_26.27.39122.11-0_amd64.deb",
+      "size": 533464,
+      "url": "https://github.com/intel/compute-runtime/releases/download/26.27.39122.11/intel-ocloc_26.27.39122.11-0_amd64.deb",
+      "sha256": "794a77217b3fd4c3f1381c2bb2c3c11a7f81e338b55b8a11e6c3b5070d138f98",
+      "verified": true
+    },
+    {
+      "name": "intel-igc-core-2_2.38.2+22051_amd64.deb",
+      "size": 36148132,
+      "url": "https://github.com/intel/intel-graphics-compiler/releases/download/v2.38.2/intel-igc-core-2_2.38.2%2B22051_amd64.deb",
+      "sha256": "3dbcbe4e716d62e9bd43a4a476d724cf772b4581dbcdd096d70df382e7ccad7e",
+      "verified": true
+    },
+    {
+      "name": "intel-igc-opencl-2_2.38.2+22051_amd64.deb",
+      "size": 52592076,
+      "url": "https://github.com/intel/intel-graphics-compiler/releases/download/v2.38.2/intel-igc-opencl-2_2.38.2%2B22051_amd64.deb",
+      "sha256": "e265d191590efd5491bfbbd148c144fdd40aea51e0b57f8651130d2da20b8186",
+      "verified": true
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu-24.04",
+        "--",
+        "dpkg-deb",
+        "-x",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-packages/intel-ocloc_26.27.39122.11-0_amd64.deb",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-prefix"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu-24.04",
+        "--",
+        "dpkg-deb",
+        "-x",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-packages/intel-igc-core-2_2.38.2+22051_amd64.deb",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-prefix"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu-24.04",
+        "--",
+        "dpkg-deb",
+        "-x",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-packages/intel-igc-opencl-2_2.38.2+22051_amd64.deb",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-prefix"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu-24.04",
+        "--",
+        "env",
+        "LD_LIBRARY_PATH=/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-prefix/usr/lib/x86_64-linux-gnu:/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-prefix/usr/local/lib",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-prefix/usr/bin/ocloc-26.27.1",
+        "compile",
+        "-file",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/outputs/Mellow-7D41-integration/Tools/metal-evidence.cl",
+        "-device",
+        "0x7d41",
+        "-output",
+        "mellow_evidence",
+        "-out_dir",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/outputs/Mellow-7D41-integration/compiler-evidence",
+        "-options",
+        "-cl-std=CL2.0 -cl-kernel-arg-info"
+      ],
+      "returncode": 0,
+      "stdout": "Auto-detected target based on 0x7d41 device id: mtl-u-a0\nBuild succeeded.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu-24.04",
+        "--",
+        "env",
+        "LD_LIBRARY_PATH=/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-prefix/usr/lib/x86_64-linux-gnu:/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-prefix/usr/local/lib",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-prefix/usr/bin/ocloc-26.27.1",
+        "validate",
+        "-file",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/outputs/Mellow-7D41-integration/compiler-evidence/mellow_evidence_mtl.bin"
+      ],
+      "returncode": 0,
+      "stdout": "Validating : /mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/outputs/Mellow-7D41-integration/compiler-evidence/mellow_evidence_mtl.bin (6944 bytes).\nValidator detected potential problems :\nDeviceBinaryFormat::zebin : Unhandled SHT_NOTE section : .note.intelgt.metrics currently supports only : .note.intelgt.compat.\n\nBinary is VALID (decoded successfully).\nStatistics : \nBinary contains 1 kernels.\n\nKernel #0 named mellow_evidence:\n * Number of binding table entries 0:\n * Cross-thread data size 64:\n * Per-thread data size 192:\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu-24.04",
+        "--",
+        "env",
+        "LD_LIBRARY_PATH=/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-prefix/usr/lib/x86_64-linux-gnu:/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-prefix/usr/local/lib",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-build/ocloc-prefix/usr/bin/ocloc-26.27.1",
+        "disasm",
+        "-file",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/outputs/Mellow-7D41-integration/compiler-evidence/mellow_evidence_mtl.bin",
+        "-dump",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/outputs/Mellow-7D41-integration/compiler-evidence/disassembly",
+        "-device",
+        "0x7d41"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "local_tool_inputs": {
+    "usr/bin/ocloc-26.27.1": "69bf5963729db3953aa344577c778ba7e8b12f454bb01f8d7e38283caddaafe4",
+    "usr/lib/x86_64-linux-gnu/libocloc.so": "3c9d1d287832794a633086b4d99a17cad746df59bf7a5514fc5d7d7a09b812f0",
+    "usr/local/lib/igc2/NOTICES.txt": "3c9d5dffed3faf89159e3cc714c5512dee5e9c554faf57a5b00823f4356e2cf9",
+    "usr/local/lib/libiga64.so.2": "7ba9425b6d2138c4693e90f6b5f64eec95fe0cc861b0621b8f38e5dd658a99e6",
+    "usr/local/lib/libiga64.so.2.38.2+1782393643": "7ba9425b6d2138c4693e90f6b5f64eec95fe0cc861b0621b8f38e5dd658a99e6",
+    "usr/local/lib/libigc.so.2": "ff0cc269af1b2f843521b9207c54370fddab25caa404b1322cbdb4598452da33",
+    "usr/local/lib/libigc.so.2.38.2+1782393643": "ff0cc269af1b2f843521b9207c54370fddab25caa404b1322cbdb4598452da33",
+    "usr/local/lib/libigdfcl.so.2": "edd0cc3c73fee76ce156b8a8281d5a747f2634bc81a95da0ca1af9e72abd8de2",
+    "usr/local/lib/libigdfcl.so.2.38.2+1782393643": "edd0cc3c73fee76ce156b8a8281d5a747f2634bc81a95da0ca1af9e72abd8de2",
+    "usr/local/lib/libopencl-clang2.so.17": "5ad86d1aa4c4b92ca5ff96cbe2ca96d888b5afc5517e3c23b1772983c4dec63b",
+    "usr/share/doc/intel-ocloc/changelog.Debian.gz": "5409a147a9ce373a39c40ae1f6e0601a164053408ec0a2205e1aaa763df40109",
+    "usr/share/doc/intel-ocloc/copyright": "8d4b4c883e2e68e2dcf2085a6835867d7d45326e2c7711211e2ef826253f0af6"
+  },
+  "source_sha256": "3820d5c05000a924746684d66c9f9a7c9fc1dc7e4be61a211cbab4313e761d87",
+  "compiler_selected_target": "mtl-u-a0",
+  "zebin": {
+    "filetype": 1,
+    "machine": 205,
+    "sections": [
+      {
+        "index": 0,
+        "type": 0,
+        "flags": 0,
+        "offset": 64,
+        "size": 0,
+        "link": 0,
+        "info": 0,
+        "entry_size": 0,
+        "name": ""
+      },
+      {
+        "index": 1,
+        "type": 1,
+        "flags": 6,
+        "offset": 64,
+        "size": 1216,
+        "link": 0,
+        "info": 0,
+        "entry_size": 0,
+        "name": ".text.mellow_evidence"
+      },
+      {
+        "index": 2,
+        "type": 2,
+        "flags": 0,
+        "offset": 1280,
+        "size": 96,
+        "link": 9,
+        "info": 3,
+        "entry_size": 24,
+        "name": ".symtab"
+      },
+      {
+        "index": 3,
+        "type": 4278190089,
+        "flags": 0,
+        "offset": 1376,
+        "size": 1636,
+        "link": 0,
+        "info": 0,
+        "entry_size": 0,
+        "name": ".spv"
+      },
+      {
+        "index": 4,
+        "type": 4278190100,
+        "flags": 0,
+        "offset": 3016,
+        "size": 33,
+        "link": 0,
+        "info": 0,
+        "entry_size": 0,
+        "name": ".misc.buildOptions"
+      },
+      {
+        "index": 5,
+        "type": 7,
+        "flags": 0,
+        "offset": 3056,
+        "size": 3,
+        "link": 0,
+        "info": 0,
+        "entry_size": 0,
+        "name": ".note.intelgt.metrics"
+      },
+      {
+        "index": 6,
+        "type": 9,
+        "flags": 0,
+        "offset": 3128,
+        "size": 32,
+        "link": 2,
+        "info": 1,
+        "entry_size": 16,
+        "name": ".rel.text.mellow_evidence"
+      },
+      {
+        "index": 7,
+        "type": 4278190097,
+        "flags": 0,
+        "offset": 3160,
+        "size": 2760,
+        "link": 0,
+        "info": 0,
+        "entry_size": 0,
+        "name": ".ze_info"
+      },
+      {
+        "index": 8,
+        "type": 7,
+        "flags": 0,
+        "offset": 5920,
+        "size": 172,
+        "link": 0,
+        "info": 0,
+        "entry_size": 0,
+        "name": ".note.intelgt.compat"
+      },
+      {
+        "index": 9,
+        "type": 3,
+        "flags": 0,
+        "offset": 6096,
+        "size": 205,
+        "link": 0,
+        "info": 0,
+        "entry_size": 0,
+        "name": ".strtab"
+      }
+    ],
+    "symbols": [
+      {
+        "name": "",
+        "info": 0,
+        "section_index": 0,
+        "value": 0,
+        "size": 0
+      },
+      {
+        "name": "_entry",
+        "info": 0,
+        "section_index": 1,
+        "value": 256,
+        "size": 0
+      },
+      {
+        "name": "mellow_evidence",
+        "info": 2,
+        "section_index": 1,
+        "value": 0,
+        "size": 1040
+      },
+      {
+        "name": "__INTEL_PATCH_CROSS_THREAD_OFFSET_OFF_R0",
+        "info": 16,
+        "section_index": 0,
+        "value": 0,
+        "size": 0
+      }
+    ],
+    "relocations": [
+      {
+        "section": ".text.mellow_evidence",
+        "offset": 76,
+        "symbol_index": 3,
+        "type": 2
+      },
+      {
+        "section": ".text.mellow_evidence",
+        "offset": 236,
+        "symbol_index": 3,
+        "type": 2
+      }
+    ],
+    "intelgt_compatibility_notes": {
+      "1": 1272,
+      "2": 3079,
+      "3": 2097152,
+      "4": "1.73",
+      "6": 51478528,
+      "7": 10,
+      "8": 1
+    },
+    "ze_info": "---\nversion:         '1.73'\nkernels:\n  - name:            mellow_evidence\n    user_attributes:\n      intel_reqd_workgroup_walk_order: [ 0, 1, 2 ]\n    execution_env:\n      disable_mid_thread_preemption: true\n      grf_count:       128\n      has_no_stateless_write: true\n      inline_data_payload_size: 32\n      offset_to_skip_per_thread_data_load: 192\n      simd_size:       32\n      subgroup_independent_forward_progress: true\n      eu_thread_count: 8\n    payload_arguments:\n      - arg_type:        global_id_offset\n        offset:          0\n        size:            12\n      - arg_type:        enqueued_local_size\n        offset:          12\n        size:            12\n      - arg_type:        arg_bypointer\n        offset:          24\n        size:            8\n        arg_index:       0\n        addrmode:        stateless\n        addrspace:       global\n        access_type:     readonly\n      - arg_type:        arg_bypointer\n        offset:          32\n        size:            8\n        arg_index:       1\n        addrmode:        stateless\n        addrspace:       global\n        access_type:     readwrite\n      - arg_type:        arg_byvalue\n        offset:          40\n        size:            4\n        arg_index:       2\n      - arg_type:        arg_byvalue\n        offset:          44\n        size:            4\n        arg_index:       3\n      - arg_type:        arg_bypointer\n        offset:          48\n        size:            4\n        arg_index:       0\n        addrmode:        bindless\n        addrspace:       global\n        access_type:     readonly\n      - arg_type:        arg_bypointer\n        offset:          52\n        size:            4\n        arg_index:       1\n        addrmode:        bindless\n        addrspace:       global\n        access_type:     readwrite\n    per_thread_payload_arguments:\n      - arg_type:        local_id\n        offset:          0\n        size:            192\nkernels_misc_info:\n  - name:            mellow_evidence\n    args_info:\n      - index:           0\n        name:            input\n        address_qualifier: __global\n        access_qualifier: NONE\n        type_name:       'uint*;8'\n        type_qualifiers: const\n      - index:           1\n        name:            output\n        address_qualifier: __global\n        access_qualifier: NONE\n        type_name:       'uint*;8'\n        type_qualifiers: NONE\n      - index:           2\n        name:            nonce\n        address_qualifier: __private\n        access_qualifier: NONE\n        type_name:       'uint;4'\n        type_qualifiers: NONE\n      - index:           3\n        name:            count\n        address_qualifier: __private\n        access_qualifier: NONE\n        type_name:       'uint;4'\n        type_qualifiers: NONE\n...\n",
+    "machine_code_bytes": 1216,
+    "machine_code_sha256": "32abbcbdec2edbe07e7b9a2332ae74ce1c6c157f19ff4ea03edd47abcc33616a",
+    "embedded_spirv_sha256": "97d420c607b73abdf9b9d5101e72d96ef8dd1258267b38e8aea82562492ecc62",
+    "runtime_relocations_applied": false,
+    "instructions_executed": false,
+    "hardware_stepping_verified": false
+  },
+  "artifacts": {
+    "disassembly/.misc.buildOptions": {
+      "bytes": 33,
+      "sha256": "3d6c47cc0bf16f1060b694ed68e405a66e761d1b681cd45ae41d8a1c49abe9e2"
+    },
+    "disassembly/.note.intelgt.compat": {
+      "bytes": 172,
+      "sha256": "75899aa5e3e846914961f7b57cc4ce63415d73ec5af9ef9ebc386236e3d1ece4"
+    },
+    "disassembly/.note.intelgt.metrics": {
+      "bytes": 3,
+      "sha256": "709e80c88487a2411e1ee4dfb9f22a861492d20c4765150c0c794abd70f8147c"
+    },
+    "disassembly/.rel.text.mellow_evidence": {
+      "bytes": 43,
+      "sha256": "f5f4d89d2073da0f4a2c187e97c66e456f2acc7b52dabd1982e4cb23eea3eb79"
+    },
+    "disassembly/.spv": {
+      "bytes": 1636,
+      "sha256": "97d420c607b73abdf9b9d5101e72d96ef8dd1258267b38e8aea82562492ecc62"
+    },
+    "disassembly/.symtab": {
+      "bytes": 244,
+      "sha256": "88d24db240eb428da43fc699757584ced31997cac159208052b8d05622433086"
+    },
+    "disassembly/.text.mellow_evidence.asm": {
+      "bytes": 7159,
+      "sha256": "0b57df5a73c37df65a853c5009cfab3dfda38ed2675db90835dcd28914d89ed4"
+    },
+    "disassembly/.ze_info": {
+      "bytes": 2760,
+      "sha256": "5dddf8c692c76e2d1bae3915eb594029870f56f4117971718c5ec75a2f7f7663"
+    },
+    "disassembly/sections.txt": {
+      "bytes": 222,
+      "sha256": "a5e5e83e2580655fbe8b6f55f867c26619716206a71360a8882c5e6604a709f2"
+    },
+    "mellow_evidence_mtl.bin": {
+      "bytes": 6944,
+      "sha256": "fea5095ddad2a328b6216263a1ab0571778f6277058720b09318399196185a90"
+    },
+    "mellow_evidence_mtl.spv": {
+      "bytes": 1636,
+      "sha256": "97d420c607b73abdf9b9d5101e72d96ef8dd1258267b38e8aea82562492ecc62"
+    },
+    "metal-evidence.cl": {
+      "bytes": 529,
+      "sha256": "3820d5c05000a924746684d66c9f9a7c9fc1dc7e4be61a211cbab4313e761d87"
+    }
+  }
+}

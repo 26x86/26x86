@@ -1,0 +1,53 @@
+{
+  "status": "PASS_TAHOE_DIAGNOSTIC_PROTOCOL_HOST",
+  "scope": "production diagnostic protocol with simulated memory callbacks",
+  "iokit_runtime_tested": false,
+  "physical_gpu_tested": false,
+  "metal_tested": false,
+  "source_sha256": {
+    "Mellow/TahoeDiagnostic.cpp": "388c7b7db2ec3813c21b337ffe5cc4bdcbd8469fb82badec59e2682dc72e67c6",
+    "Mellow/TahoeDiagnostic.hpp": "90a023068c2a26e81177047377ef3793a504eeba45980444b3ac706c026c200b",
+    "Mellow/TahoeDiagnosticABI.h": "1d6b643a573476dcb14dc0159fd14442a722913185cae2f3da4582b8a1e35528",
+    "Mellow/TahoeDiagnosticProtocol.cpp": "247150a1a14def331e1523796488e1118b53d55e8231471722248de05292bc07",
+    "Mellow/TahoeDiagnosticProtocol.hpp": "25bae352f5340bfcff72ef4cc5edb7f41158a7516511e357da4342d5e2e49d74",
+    "Mellow/XeMemory.hpp": "6da839cc46a9901c04908e42c73d426df879c0c4d566d42fb124c4b55bb4376d",
+    "Mellow/RuntimeReadiness.hpp": "b64104a68f8274d37c154393da618e6ac3e0183434c382e1259c534cc22b6a5c",
+    "tests/tahoe_diagnostic_test.cpp": "7fc87050fa42131af3d4eb0459a2d71508555b77d5f9a02691044ea943a07322",
+    "Tools/run-tahoe-diagnostic-tests.py": "0b4e628b96b37a8dc6a845552e30eedaf5875b2904d3f601c6ed9623ce790925"
+  },
+  "sanitizers_requested": false,
+  "compile": {
+    "command": [
+      "C:/msys64/mingw64/bin/g++.exe",
+      "-std=c++17",
+      "-O1",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\Mellow\\TahoeDiagnosticProtocol.cpp",
+      "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\mellow-publish\\tests\\tahoe_diagnostic_test.cpp",
+      "-o",
+      "C:\\Users\\Admin\\Documents\\Codex\\2026-09-05\\1-2\\work\\tahoe-diag-implementation\\host-final2\\diagnostic-tests.exe"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "binary_sha256": "c0b856604c7d7ed4ff16dabb29b007794d703bff7d556f0f5a002bab8e22fe45",
+  "execution": {
+    "returncode": 0,
+    "stdout": "{\"status\":\"PASS_TAHOE_DIAGNOSTIC_PROTOCOL_HOST\",\"checks\":6328,\"iokit_runtime_tested\":false,\"physical_gpu_tested\":false,\"metal_tested\":false}\n",
+    "stderr": ""
+  },
+  "source_hashes_unchanged": true,
+  "binary_unchanged": true,
+  "result": {
+    "status": "PASS_TAHOE_DIAGNOSTIC_PROTOCOL_HOST",
+    "checks": 6328,
+    "iokit_runtime_tested": false,
+    "physical_gpu_tested": false,
+    "metal_tested": false
+  }
+}

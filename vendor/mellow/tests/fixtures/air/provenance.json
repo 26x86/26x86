@@ -1,0 +1,28 @@
+{
+  "source_repository": "https://github.com/libsdl-org/SDL",
+  "commit": "c1ef7793c75c2bde6321ec0c9894ea0b2a7694fe",
+  "source_url": "https://github.com/libsdl-org/SDL/blob/c1ef7793c75c2bde6321ec0c9894ea0b2a7694fe/src/gpu/metal/Metal_Blit.h",
+  "source_header_sha256": "a396652365bb8bfa757ea927c4c07283bad853c164e04c016c20caddfd5b40f8",
+  "license": "SDL zlib license; preserved in LICENSE.SDL.txt",
+  "scope": "Public upstream compiler artifacts; container/LLVM decoding and unsupported render-stage rejection, not supported GPU execution. No local Apple compiler invocation.",
+  "artifacts": [
+    {
+      "path": "sdl-fullscreen-vertex.metallib",
+      "sha256": "360c244bf2b62ad0c956e4cd43217f55bebcf615febab18d7e8e1afffdadeced",
+      "bitcode_sha256": "d57de46697dd9a7955e92d8687e329b668d54e54f414a8ecdf04a0ddabc0f163",
+      "entry": "FullscreenVert",
+      "kind": 0,
+      "array": "FullscreenVert_metallib",
+      "variant": "macOS, final branch of Metal_Blit.h"
+    },
+    {
+      "path": "sdl-blit-fragment.metallib",
+      "sha256": "9f29868d6d058a0b05513f00b01231400f96f36df24caa703543775c50a60dea",
+      "bitcode_sha256": "0f72299b133c413c87ecabe9d6b11767eb3ecf04f5d76376f43788ae70297b71",
+      "entry": "BlitFrom2D",
+      "kind": 1,
+      "array": "BlitFrom2D_metallib",
+      "variant": "macOS, final branch of Metal_Blit.h"
+    }
+  ]
+}

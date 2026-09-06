@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-05T21:03:55.961144+00:00",
+  "scope": "portable-Mellow-MSL-render-objects-native-Windows-OpenGL-GPU",
+  "os": {
+    "system": "Linux",
+    "release": "6.18.33.2-microsoft-standard-WSL2",
+    "version": "#1 SMP PREEMPT_DYNAMIC Thu Jun 18 21:54:43 UTC 2026"
+  },
+  "source_sha256": {
+    "Runtime/RenderObjects.hpp": "54d5120b64915c910080e2f8077f88ae4e8a18b154810a256c28ec3331dc5ee4",
+    "Runtime/RenderObjects.cpp": "01ed091395b769ab4c953621eb869c0c30951c93fef2e525153e6645d9e9e24f",
+    "Runtime/RenderShaderJit.hpp": "c10154f87a45d9b4ac0ee2a35fcb70b3763c27597823763c394a8bd0231d4075",
+    "Runtime/RenderShaderJit.cpp": "642dca070cfc7e602cc7c9ed606b0ee30fec158e22f3915e38cb0216323e9669",
+    "Runtime/OpenGLProvider.hpp": "0a77bcb3b3da00ced84358123f3173d0cddc644fb0b153c9c336e4c39f589071",
+    "Runtime/OpenGLProvider.cpp": "3fb92c197063170d6b49c4f975cb0822c24168f963a6d137a10293621edbb5e5",
+    "Runtime/MetalObjects.hpp": "186439e8f38fca649dffd1aac7d048fb05f477c4f170e89a05a0b6cbc68d84f9",
+    "Runtime/OpenCLProvider.hpp": "4c2b31293eca44ce57f61c9a791e4361699fa40444fb799158086984b0017d62",
+    "Runtime/PlatformRuntime.hpp": "b1e0ac06ea3bf74b25f39369968491039ef2c62396f2b4c3f86e0f60cf6e7b52",
+    "Runtime/ShaderJit.hpp": "71f796a723f4619be4092fe4e493642528e3ee07c3397441d26784570820748e",
+    "tests/render_fixture.hpp": "21619fff21231fbb835628a9cd917170a86b3ce6967d7c5408839ea6b4c1b483",
+    "tests/render_objects_gpu_tests.cpp": "0410e313630b391a90c8f456c202fd9981fa80da1d80fe2ece218433809f543b",
+    "tests/opencl_runtime_sha256.hpp": "c5a42c0d06992a7bf20b433e6448a26866651090b35b6ba438074c6c7a31038c",
+    "Tools/run-render-objects.py": "87abdf7f57f8fb9cdf2d3686da5f77bd38b51bbe63876f992b7510019165ac94"
+  },
+  "requested_frames": 1000,
+  "visible_requested": false,
+  "gpu_work_executed": false,
+  "passed": false,
+  "status": "BUILT_ONLY",
+  "apple_metal_abi_registered": false,
+  "native_macos_execution": false,
+  "windowserver_acceleration_verified": false,
+  "display_scanout_verified": false,
+  "fixture_origin": "original MSL source, not Apple-produced AIR",
+  "compiler_version": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "build": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "binary_sha256": "800d59b2646283f52baeafbb91bcc4df948cc1dc399077f2311898efaa9cb0b7",
+  "source_changed_during_run": []
+}

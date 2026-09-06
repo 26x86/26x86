@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-05T20:51:37.778083+00:00",
+  "status": "PASS_RENDER_SHADER_FRONTEND",
+  "gpu_executed": false,
+  "apple_compiler_used": false,
+  "sanitizers_enabled": true,
+  "source_sha256": {
+    "Runtime/RenderShaderJit.hpp": "c10154f87a45d9b4ac0ee2a35fcb70b3763c27597823763c394a8bd0231d4075",
+    "Runtime/RenderShaderJit.cpp": "642dca070cfc7e602cc7c9ed606b0ee30fec158e22f3915e38cb0216323e9669",
+    "tests/render_fixture.hpp": "21619fff21231fbb835628a9cd917170a86b3ce6967d7c5408839ea6b4c1b483",
+    "tests/render_shader_tests.cpp": "63d5167811a2588cc237870ac50aca03153a4adb1e34f3ddc9b22433b9f80652",
+    "Tools/run-render-shader-tests.py": "da1c6bf9316feb40a1413820918857dfb9a91909ac8a4427b926d2de79a95976"
+  },
+  "build": {
+    "command": [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-O1",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-publish/Runtime/RenderShaderJit.cpp",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-publish/tests/render_shader_tests.cpp",
+      "-o",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-05/1-2/work/mellow-publish/build/render-shader-linux-final/render-shader-tests"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "binary_sha256": "32b3c04d3c990aea8dcbc7d544cc23e5a801045d729bfdd1d1464f629a997b78",
+  "test": {
+    "exit_code": 0,
+    "stdout": "{\"checks\":969,\"failures\":0,\"hardware_execution\":false,\"apple_compiler_used\":false}\n",
+    "stderr": ""
+  },
+  "result": {
+    "checks": 969,
+    "failures": 0,
+    "hardware_execution": false,
+    "apple_compiler_used": false
+  },
+  "generated_glsl_sha256": {
+    "triangle.vert": "c9459f070029fcb6f8a267180a385ed5770f78153379233c363b7308107eaf17",
+    "gradient.frag": "3424da523c49dea34cd5437386bac41824faf164e3f10463b85a2f4453d6524f"
+  },
+  "source_changed": []
+}

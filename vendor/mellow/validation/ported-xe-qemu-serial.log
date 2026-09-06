@@ -1,0 +1,5 @@
+MELLOW_EMULATOR: LINUX_INIT_STARTED
+MELLOW_EMULATOR: SCOPE=EMULATED_CPU_ALGORITHMS_NO_XE_GPU
+{"status":"PASS_PORTED_XE_ALGORITHMS_SIMULATED_BOUNDARIES","checks":18721,"upstream_functions_executed":6,"simulated_mmio_dma":true,"hardware_execution":false,"darwin_driver_loaded":false,"metal_tested":false}
+MELLOW_EMULATOR: TEST_EXIT=0
+MELLOW_EMULATOR: PASS_GUEST_TEST_PROCESS
