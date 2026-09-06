@@ -6,6 +6,10 @@ import struct
 import tempfile
 import unittest
 import os
+import base64
+import json
+import hashlib
+import plistlib
 from pathlib import Path
 from unittest.mock import patch
 import zlib
@@ -95,6 +99,116 @@ class VMappleOfflineTest(unittest.TestCase):
             self.assertIn("NXSB", report["markers"])
             self.assertIsNone(report["installer_ui_possible"])
 
+    def test_macosvm_json_resolves_ecid_and_storage_atomically(self) -> None:
+        from x86.vmapple import VMappleConfig, load_macosvm_configuration
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            aux = root / "aux.img"
+            disk = root / "disk.img"
+            aux.write_bytes(b"A" * (0x4000 + 4096))
+            disk.write_bytes(b"R" * 8192)
+            machine_id = base64.b64encode(
+                plistlib.dumps({"ECID": 0x1234}, fmt=plistlib.FMT_BINARY)
+            ).decode("ascii")
+            hardware_model = base64.b64encode(
+                plistlib.dumps({"hardware": b"m1"}, fmt=plistlib.FMT_BINARY)
+            ).decode("ascii")
+            vm_json = root / "macosvm.json"
+            vm_json.write_text(json.dumps({
+                "machineId": machine_id,
+                "hardwareModel": hardware_model,
+                "storage": [
+                    {"type": "aux", "file": "aux.img"},
+                    {"type": "disk", "file": "disk.img"},
+                ],
+            }))
+            bundle = load_macosvm_configuration(vm_json)
+            self.assertEqual(bundle.uuid, 0x1234)
+            self.assertEqual(bundle.aux, aux.resolve())
+            self.assertEqual(bundle.root, disk.resolve())
+            config = VMappleConfig(
+                target_major=27, qemu="qemu", qemu_img="qemu-img", firmware="firmware",
+                ibss="", aux="", root="", vm_json=str(vm_json), research_only=True,
+                boot_selection="macos",
+            )
+            resolved, receipt = config.resolve_vm_configuration()
+            self.assertEqual(resolved.uuid, 0x1234)
+            self.assertEqual(resolved.aux, str(aux.resolve()))
+            self.assertEqual(resolved.root, str(disk.resolve()))
+            self.assertEqual(resolved.aux_offset, 0x4000)
+            self.assertEqual(receipt["uuid"], 0x1234)
+            self.assertEqual(receipt["aux_offset"], 0x4000)
+            self.assertEqual(receipt["json_sha256"], hashlib.sha256(vm_json.read_bytes()).hexdigest())
+
+    def test_macosvm_storage_inspection_applies_read_only_aux_trim(self) -> None:
+        from x86.vmapple import inspect_macosvm_storage
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            aux = root / "aux.img"
+            disk = root / "disk.img"
+            aux.write_bytes(b"M" * (0x4000 + 4096))
+            disk.write_bytes(b"R" * 8192)
+            encode = lambda value: base64.b64encode(
+                plistlib.dumps(value, fmt=plistlib.FMT_BINARY)
+            ).decode("ascii")
+            vm_json = root / "macosvm.json"
+            vm_json.write_text(json.dumps({
+                "machineId": encode({"ECID": 9}),
+                "hardwareModel": encode({"hardware": b"m1"}),
+                "storage": [
+                    {"type": "disk", "file": "disk.img", "readOnly": False},
+                    {"type": "aux", "file": "aux.img", "readOnly": False},
+                ],
+            }))
+            before = (aux.read_bytes(), disk.read_bytes())
+            report = inspect_macosvm_storage(vm_json)
+            self.assertEqual(report["aux"]["view_offset"], 0x4000)
+            self.assertEqual(report["vm_bundle"]["aux_offset"], 0x4000)
+            self.assertEqual((aux.read_bytes(), disk.read_bytes()), before)
+
+    def test_macosvm_json_rejects_mismatched_manual_uuid_or_disk(self) -> None:
+        from x86.vmapple import VMappleConfig
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            aux = root / "aux.img"
+            disk = root / "disk.img"
+            other = root / "other.img"
+            for path in (aux, disk, other):
+                path.write_bytes(b"x" * 4096)
+            encode = lambda value: base64.b64encode(
+                plistlib.dumps(value, fmt=plistlib.FMT_BINARY)
+            ).decode("ascii")
+            vm_json = root / "macosvm.json"
+            vm_json.write_text(json.dumps({
+                "machineId": encode({"ECID": 7}),
+                "hardwareModel": encode({"hardware": b"m1"}),
+                "storage": [
+                    {"type": "aux", "file": "aux.img"},
+                    {"type": "disk", "file": "disk.img"},
+                ],
+            }))
+            with self.assertRaisesRegex(ValueError, "uuid conflicts"):
+                VMappleConfig(
+                    target_major=27, qemu="qemu", qemu_img="qemu-img", firmware="firmware",
+                    ibss="", aux="", root="", vm_json=str(vm_json), uuid=8,
+                    research_only=True, boot_selection="macos",
+                ).resolve_vm_configuration()
+            with self.assertRaisesRegex(ValueError, "root conflicts"):
+                VMappleConfig(
+                    target_major=27, qemu="qemu", qemu_img="qemu-img", firmware="firmware",
+                    ibss="", aux="", root=str(other), vm_json=str(vm_json),
+                    research_only=True, boot_selection="macos",
+                ).resolve_vm_configuration()
+            with self.assertRaisesRegex(ValueError, "AUX offset conflicts"):
+                VMappleConfig(
+                    target_major=27, qemu="qemu", qemu_img="qemu-img", firmware="firmware",
+                    ibss="", aux="", root="", vm_json=str(vm_json), aux_offset=512,
+                    research_only=True, boot_selection="macos",
+                ).resolve_vm_configuration()
+
     def test_input_integrity_rehashes_files(self) -> None:
         from x86.vmapple import _inputs_intact, _sha256
 
@@ -162,6 +276,15 @@ class VMappleOfflineTest(unittest.TestCase):
         ])
         self.assertEqual(parsed.vmapple_action, "inspect-storage")
         self.assertEqual(parsed.aux_offset, 0x200)
+
+    def test_cli_parser_accepts_macosvm_json_for_direct_run(self) -> None:
+        from x86.cli import build_parser
+
+        parsed = build_parser().parse_args([
+            "vmapple", "run", "--research-only", "--boot-selection", "macos",
+            "--vm-json", "/tmp/macosvm.json",
+        ])
+        self.assertEqual(parsed.vm_json, "/tmp/macosvm.json")
 
     def test_apple_silicon_profile_keeps_t8030_as_macOS_safe_reference(self) -> None:
         from x86.vmapple import apple_silicon_profile
@@ -436,6 +559,31 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertTrue(result["ok"])
         self.assertEqual(result["provisioning_status"], "unprovisioned-zero")
 
+    def test_bridge_storage_preflight_accepts_macosvm_bundle(self) -> None:
+        from x86.gui.bridge import WizardBridge
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            aux = root / "aux.img"
+            disk = root / "disk.img"
+            aux.write_bytes(b"A" * (0x4000 + 4096))
+            disk.write_bytes(b"R" * 4096)
+            encode = lambda value: base64.b64encode(
+                plistlib.dumps(value, fmt=plistlib.FMT_BINARY)
+            ).decode("ascii")
+            vm_json = root / "macosvm.json"
+            vm_json.write_text(json.dumps({
+                "machineId": encode({"ECID": 11}),
+                "hardwareModel": encode({"hardware": b"m1"}),
+                "storage": [
+                    {"type": "aux", "file": "aux.img"},
+                    {"type": "disk", "file": "disk.img"},
+                ],
+            }))
+            result = WizardBridge().inspect_vmapple_storage({"vm_json": str(vm_json)})
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["aux"]["view_offset"], 0x4000)
+
     def test_bridge_spawns_shell_free_native_worker(self) -> None:
         from x86.gui.bridge import WizardBridge
 
@@ -500,6 +648,33 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertIn("--boot-selection", command)
         self.assertIn("macos", command)
         self.assertNotIn("--ibss", command)
+
+    def test_bridge_direct_macos_worker_accepts_vm_json_without_manual_storage(self) -> None:
+        from x86.gui.bridge import WizardBridge
+
+        bridge = WizardBridge()
+        bridge._settings.read = lambda key, default=None: "sandbox"  # type: ignore[method-assign]
+        config = {
+            "qemu": "C:/tools/qemu-system-aarch64.exe",
+            "qemu_img": "C:/tools/qemu-img.exe",
+            "firmware": "C:/assets/AVPBooter.bin",
+            "vm_json": "C:/assets/macosvm.json",
+            "output": "C:/runs/vmapple-direct",
+            "target_major": 27,
+            "display": "gtk",
+            "research_only": True,
+            "boot_selection": "macos",
+        }
+        fake_process = type("Process", (), {"pid": 3456})()
+        with patch("x86.gui.bridge.is_windows", return_value=False), patch(
+            "x86.gui.bridge.subprocess.Popen", return_value=fake_process
+        ) as popen:
+            result = bridge.launch_vmapple(config)
+        self.assertTrue(result["ok"])
+        command = popen.call_args.args[0]
+        self.assertIn("--vm-json", command)
+        self.assertNotIn("--aux", command)
+        self.assertNotIn("--root", command)
 
     def test_bridge_reexecs_linux_qemu_in_wslg(self) -> None:
         if os.name != "nt":

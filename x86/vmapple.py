@@ -12,7 +12,9 @@ forces an iBSS-to-iBEC transition.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+import base64
+import binascii
 from copy import deepcopy
 import hashlib
 import json
@@ -20,6 +22,7 @@ import math
 import os
 from pathlib import Path
 import platform
+import plistlib
 import shutil
 import socket
 import struct
@@ -52,6 +55,14 @@ DFU_BLOCK_BYTES = 2048
 DFU_SUFFIX = bytes.fromhex("ffffffffac05000155464410")
 MAX_TRANSITION_ATTEMPTS = 240
 MAX_LOG_BYTES = 16 * 1024 * 1024
+MAX_VM_JSON_BYTES = 1 * 1024 * 1024
+MAX_VM_PLIST_DEPTH = 32
+# QEMU's VMApple machine consumes the AUX payload after the 0x4000-byte
+# Virtualization.framework metadata prefix.  ``macosvm.json`` points at the
+# original, untrimmed ``aux.img``; keeping this offset in the bundle contract
+# prevents a normal direct launch from silently presenting the wrong pflash
+# view to AVPBooter.
+MACOSVM_AUX_METADATA_BYTES = 0x4000
 DEFAULT_AVPBOOTER_PATH = Path(
     "/System/Library/Frameworks/Virtualization.framework/Resources/AVPBooter.vmapple2.bin"
 )
@@ -278,6 +289,142 @@ def _regular(value: str | Path, label: str, *, limit: int | None = None) -> Path
     if limit is not None and size > limit:
         raise ValueError(f"{label} exceeds the {limit} byte limit")
     return path
+
+
+def _decode_vm_plist(value: object, label: str) -> tuple[object, bytes]:
+    """Decode one macosvm base64 binary plist without invoking host tools."""
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"macosvm.json {label} must be a non-empty base64 string")
+    try:
+        raw = base64.b64decode(value.encode("ascii"), validate=True)
+    except (UnicodeEncodeError, ValueError, binascii.Error) as error:
+        raise ValueError(f"macosvm.json {label} is not valid base64") from error
+    if not raw or len(raw) > MAX_VM_JSON_BYTES:
+        raise ValueError(f"macosvm.json {label} payload is empty or too large")
+    try:
+        document = plistlib.loads(raw)
+    except (plistlib.InvalidFileException, ValueError, TypeError) as error:
+        raise ValueError(f"macosvm.json {label} is not a binary plist") from error
+    return document, raw
+
+
+def _find_ecid(value: object, depth: int = 0) -> int | None:
+    """Find the VM ECID in the decoded machineIdentifier plist."""
+    if depth > MAX_VM_PLIST_DEPTH:
+        return None
+    if isinstance(value, dict):
+        for key, child in value.items():
+            if key == "ECID":
+                if isinstance(child, bool):
+                    return None
+                if isinstance(child, int):
+                    return child if 0 <= child < 2**64 else None
+                if isinstance(child, bytes) and 0 < len(child) <= 8:
+                    return int.from_bytes(child, "little")
+                if isinstance(child, str):
+                    try:
+                        parsed = int(child, 0)
+                    except ValueError:
+                        try:
+                            parsed = int(child, 10)
+                        except ValueError:
+                            return None
+                    return parsed if 0 <= parsed < 2**64 else None
+            found = _find_ecid(child, depth + 1)
+            if found is not None:
+                return found
+    elif isinstance(value, (list, tuple)):
+        for child in value:
+            found = _find_ecid(child, depth + 1)
+            if found is not None:
+                return found
+    return None
+
+
+@dataclass(frozen=True)
+class MacOSVMConfiguration:
+    """Validated, read-only inputs from a Virtualization.framework VM JSON."""
+
+    path: Path
+    uuid: int
+    aux: Path
+    root: Path
+    aux_offset: int
+    hardware_model_sha256: str
+    machine_id_sha256: str
+    json_sha256: str
+
+    def report(self) -> dict[str, object]:
+        return {
+            "path": str(self.path),
+            "uuid": self.uuid,
+            "aux": str(self.aux),
+            "root": str(self.root),
+            "aux_offset": self.aux_offset,
+            "aux_view": "original aux.img with Virtualization.framework metadata prefix skipped",
+            "hardware_model_sha256": self.hardware_model_sha256,
+            "machine_id_sha256": self.machine_id_sha256,
+            "json_sha256": self.json_sha256,
+            "inputs_read_only": True,
+            "source": "macosvm.json storage/machineId/hardwareModel",
+        }
+
+
+def load_macosvm_configuration(value: str | Path) -> MacOSVMConfiguration:
+    """Load and validate the macosvm JSON contract used by VMApple.
+
+    The function never writes the JSON or its referenced images.  It resolves
+    exactly one AUX and one root disk, decodes the ECID from the binary plist
+    machine identifier, and requires the hardware model blob to be present.
+    """
+    path = _regular(value, "macosvm.json", limit=MAX_VM_JSON_BYTES)
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ValueError(f"macosvm.json cannot be parsed: {path}") from error
+    if not isinstance(document, dict):
+        raise ValueError("macosvm.json root must be an object")
+    machine_id, machine_id_raw = _decode_vm_plist(document.get("machineId"), "machineId")
+    hardware_model, hardware_model_raw = _decode_vm_plist(
+        document.get("hardwareModel"), "hardwareModel"
+    )
+    uuid = _find_ecid(machine_id)
+    if uuid is None:
+        raise ValueError("macosvm.json machineId does not contain a valid ECID")
+    if not isinstance(hardware_model, (dict, list, tuple)):
+        raise ValueError("macosvm.json hardwareModel plist has an unexpected shape")
+    storage = document.get("storage")
+    if not isinstance(storage, list):
+        raise ValueError("macosvm.json storage must be an array")
+    aux_paths: list[Path] = []
+    root_paths: list[Path] = []
+    for entry in storage:
+        if not isinstance(entry, dict) or not isinstance(entry.get("type"), str):
+            raise ValueError("macosvm.json storage entries must contain a type")
+        file_name = entry.get("file")
+        if not isinstance(file_name, str) or not file_name.strip():
+            raise ValueError("macosvm.json storage entries must contain a file")
+        image = (path.parent / file_name).resolve(strict=True)
+        if not image.is_file():
+            raise ValueError(f"macosvm.json storage path is not a regular file: {image}")
+        if entry["type"] == "aux":
+            aux_paths.append(image)
+        elif entry["type"] == "disk":
+            root_paths.append(image)
+    if len(aux_paths) != 1 or len(root_paths) != 1:
+        raise ValueError(
+            "macosvm.json must contain exactly one aux and one disk storage entry"
+        )
+    return MacOSVMConfiguration(
+        path=path,
+        uuid=uuid,
+        aux=aux_paths[0],
+        root=root_paths[0],
+        aux_offset=MACOSVM_AUX_METADATA_BYTES,
+        hardware_model_sha256=hashlib.sha256(hardware_model_raw).hexdigest(),
+        machine_id_sha256=hashlib.sha256(machine_id_raw).hexdigest(),
+        json_sha256=_sha256(path),
+    )
 
 
 def _to_wsl_path(path: Path) -> str:
@@ -647,6 +794,24 @@ def inspect_storage(*, aux: str | Path, root: str | Path, aux_offset: int = 0) -
             "an install target. Byte markers alone cannot establish either condition."
         ),
     }
+
+
+def inspect_macosvm_storage(value: str | Path) -> dict[str, object]:
+    """Inspect the exact read-only storage view described by ``macosvm.json``.
+
+    ``macosvm.json`` references the original AUX file, so this helper applies
+    QEMU's documented metadata trim as a view offset without creating a
+    trimmed copy or modifying either input image.
+    """
+    bundle = load_macosvm_configuration(value)
+    report = inspect_storage(
+        aux=bundle.aux,
+        root=bundle.root,
+        aux_offset=bundle.aux_offset,
+    )
+    report["vm_bundle"] = bundle.report()
+    report["aux_offset_source"] = "macosvm.json documented metadata trim"
+    return report
 
 
 @dataclass(frozen=True)
@@ -1359,6 +1524,7 @@ class VMappleConfig:
     aux: str
     root: str
     output: str | None = None
+    vm_json: str | None = None
     ibec: str | None = None
     qemu_img: str | None = None
     display: str = "auto"
@@ -1387,7 +1553,52 @@ class VMappleConfig:
     boot_selection: str = RECOVERY_ENTRY_ID
     boot_picker_trigger: str = "runner-default-recovery"
 
+    def resolve_vm_configuration(self) -> tuple["VMappleConfig", dict[str, object] | None]:
+        """Resolve one macosvm.json atomically before QEMU capability probing."""
+        if not self.vm_json:
+            return self, None
+        bundle = load_macosvm_configuration(self.vm_json)
+
+        # The JSON contract identifies the original aux.img, not the trimmed
+        # pflash view used by QEMU.  A non-zero caller value is accepted only
+        # when it agrees with the documented metadata prefix; silently using a
+        # different offset would bind the ECID to the wrong guest storage.
+        if self.aux_offset not in (0, bundle.aux_offset):
+            raise ValueError(
+                "AUX offset conflicts with macosvm.json; expected "
+                f"0x{bundle.aux_offset:x} for the untrimmed aux.img"
+            )
+
+        def compatible_path(label: str, explicit: str, bundled: Path) -> str:
+            if explicit:
+                try:
+                    candidate = Path(explicit).expanduser().resolve(strict=True)
+                except OSError as error:
+                    raise ValueError(f"{label} path cannot be resolved") from error
+                if candidate != bundled:
+                    raise ValueError(
+                        f"{label} conflicts with macosvm.json; refusing to mix VM inputs"
+                    )
+            return str(bundled)
+
+        if self.uuid and self.uuid != bundle.uuid:
+            raise ValueError(
+                f"uuid conflicts with macosvm.json ECID ({self.uuid} != {bundle.uuid})"
+            )
+        resolved = replace(
+            self,
+            uuid=bundle.uuid,
+            aux=compatible_path("AUX", self.aux, bundle.aux),
+            root=compatible_path("root", self.root, bundle.root),
+            aux_offset=bundle.aux_offset,
+            vm_json=None,
+        )
+        return resolved, bundle.report()
+
     def validate(self) -> tuple[Executable, Executable, dict[str, Path]]:
+        if self.vm_json:
+            resolved, _ = self.resolve_vm_configuration()
+            return resolved.validate()
         # Scope is checked before resolving executables or opening any caller
         # supplied firmware/storage input.  An iOS/iPadOS request therefore
         # cannot reach the DFU uploader even when all paths are valid.
@@ -1566,6 +1777,7 @@ def run(config: VMappleConfig) -> dict[str, object]:
     payload bytes are wrapped without edits.  No marker or transport
     acknowledgement is promoted to an installation claim.
     """
+    config, vm_bundle = config.resolve_vm_configuration()
     personality = config.personality_report()
     qemu, qemu_img, paths = config.validate()
     backend = probe_backend(qemu, direct_macos=config.boot_selection == MACOS_ENTRY_ID)
@@ -1605,6 +1817,16 @@ def run(config: VMappleConfig) -> dict[str, object]:
         )
         inputs = {name: {"path": str(path), "bytes": path.stat().st_size, "sha256": _sha256(path)}
                   for name, path in paths.items()}
+        if isinstance(vm_bundle, dict):
+            bundle_path = vm_bundle.get("path")
+            bundle_digest = vm_bundle.get("json_sha256")
+            if isinstance(bundle_path, str) and isinstance(bundle_digest, str):
+                bundle_file = Path(bundle_path)
+                inputs["macosvm_json"] = {
+                    "path": bundle_path,
+                    "bytes": bundle_file.stat().st_size,
+                    "sha256": bundle_digest,
+                }
         report = {
             "schema": "26x86.vmapple-gui/1", "target_major": config.target_major,
             "target_name": "Tahoe" if config.target_major == 26 else "Golden Gate",
@@ -1639,6 +1861,7 @@ def run(config: VMappleConfig) -> dict[str, object]:
             "host": {"system": platform.system(), "architecture": platform.machine(),
                      "physical_mac_verified": False},
             "direct_macos_host": direct_macos_host_report(),
+            "vm_bundle": vm_bundle,
             "backend": backend, "command": command, "inputs": inputs,
             "output": str(output),
             "cow_storage": True, "storage_session": str(storage.directory / "storage"),
@@ -2046,6 +2269,7 @@ def run(config: VMappleConfig) -> dict[str, object]:
                 "virtual_model": VIRTUAL_MODEL,
                 "virtual_identity_mode": "metadata-only",
                 "hardware_attestation_verified": False,
+                "vm_bundle": vm_bundle,
                 "forced_transition": False, "signature_acceptance_verified": False,
                 "macos_boot_verified": False, "physical_mac_verified": False,
             }
@@ -2110,6 +2334,7 @@ def configured_from_environment() -> dict[str, object]:
     values = {
         "qemu": os.environ.get("X86_VMAPLE_QEMU", ""),
         "firmware": firmware_env,
+        "vm_json": os.environ.get("X86_VMAPLE_JSON", ""),
         "ibss": os.environ.get("X86_VMAPLE_IBSS", ""),
         "ibec": os.environ.get("X86_VMAPLE_IBEC", ""),
         "aux": os.environ.get("X86_VMAPLE_AUX", ""),
@@ -2122,12 +2347,13 @@ def configured_from_environment() -> dict[str, object]:
         "original_ibec": os.environ.get("X86_VMAPLE_ORIGINAL_IBEC", ""),
         "restore_role_dir": os.environ.get("X86_VMAPLE_RESTORE_ROLE_DIR", ""),
     }
-    base_required = ("qemu", "firmware", "aux", "root", "qemu_img")
+    base_required = ("qemu", "firmware", "qemu_img")
     present = {name: bool(value) for name, value in values.items()}
-    legacy_configured = all(present[name] for name in (*base_required, "ibss"))
-    direct_configured = all(present[name] for name in base_required)
+    storage_configured = present["vm_json"] or (present["aux"] and present["root"])
+    legacy_configured = all(present[name] for name in (*base_required, "ibss")) and storage_configured
+    direct_configured = all(present[name] for name in base_required) and storage_configured
     live_required = (*base_required, "build_manifest", "tss_helper", "original_ibss", "original_ibec")
-    live_configured = all(present[name] for name in live_required)
+    live_configured = all(present[name] for name in live_required) and storage_configured
     boot_picker = validate_boot_picker_config(target_major=27)
     boot_picker["selection"] = RECOVERY_ENTRY_ID
     boot_picker["selection_source"] = "runner-default-recovery"
@@ -2156,5 +2382,5 @@ def configured_from_environment() -> dict[str, object]:
         "live_personalization_configured": live_configured,
         "personalization_default": "live-tss",
         "values": values, "macos_boot_verified": False,
-        "note": "Paths are caller-supplied. The GUI never bundles Apple firmware or writes an existing ESP.",
+        "note": "Paths or macosvm.json are caller-supplied. The GUI never bundles Apple firmware or writes an existing ESP.",
     }

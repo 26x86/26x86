@@ -488,6 +488,7 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
         VMappleConfig,
         apple_silicon_profile,
         configured_from_environment,
+        inspect_macosvm_storage,
         inspect_storage,
         run,
     )
@@ -500,11 +501,14 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
         return 0
     if args.vmapple_action == "inspect-storage":
         try:
-            result = inspect_storage(
-                aux=args.aux,
-                root=args.root,
-                aux_offset=args.aux_offset,
-            )
+            if args.vm_json:
+                result = inspect_macosvm_storage(args.vm_json)
+            else:
+                result = inspect_storage(
+                    aux=args.aux,
+                    root=args.root,
+                    aux_offset=args.aux_offset,
+                )
         except (ValueError, OSError) as exc:
             _emit_json({"ok": False, "error": str(exc), "installer_ui_verified": False})
             return 2
@@ -523,6 +527,7 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
         aux=args.aux,
         root=args.root,
         output=args.output,
+        vm_json=args.vm_json,
         qemu_img=args.qemu_img,
         display=args.display,
         uuid=args.uuid,
@@ -649,7 +654,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     vmapple_inspect_storage.add_argument(
         "--aux", default=os.environ.get("X86_VMAPLE_AUX", ""), required=False,
-        help="AUX raw image (the optional --aux-offset view is inspected)",
+        help="AUX raw image (or use --vm-json)",
     )
     vmapple_inspect_storage.add_argument(
         "--root", default=os.environ.get("X86_VMAPLE_ROOT", ""), required=False,
@@ -658,6 +663,10 @@ def build_parser() -> argparse.ArgumentParser:
     vmapple_inspect_storage.add_argument(
         "--aux-offset", type=lambda value: int(value, 0), default=0,
         help="AUX metadata offset in bytes (512-byte aligned)",
+    )
+    vmapple_inspect_storage.add_argument(
+        "--vm-json", default=os.environ.get("X86_VMAPLE_JSON", ""),
+        help="macosvm.json; applies the documented 0x4000-byte AUX metadata trim",
     )
     vmapple_inspect_storage.add_argument("--json", action="store_true")
     vmapple_inspect_storage.set_defaults(handler=cmd_vmapple)
@@ -668,6 +677,10 @@ def build_parser() -> argparse.ArgumentParser:
     vmapple_run.add_argument("--qemu", default=os.environ.get("X86_VMAPLE_QEMU"))
     vmapple_run.add_argument("--qemu-img", default=os.environ.get("X86_VMAPLE_QEMU_IMG"))
     vmapple_run.add_argument("--firmware", default=os.environ.get("X86_VMAPLE_AVPBOOTER", ""))
+    vmapple_run.add_argument(
+        "--vm-json", default=os.environ.get("X86_VMAPLE_JSON", ""),
+        help="macosvm.json; atomically supplies ECID, hardwareModel, AUX, and root paths",
+    )
     vmapple_run.add_argument("--ibss", default=os.environ.get("X86_VMAPLE_IBSS", ""))
     vmapple_run.add_argument("--ibec", default=os.environ.get("X86_VMAPLE_IBEC"))
     vmapple_run.add_argument("--aux", default=os.environ.get("X86_VMAPLE_AUX", ""))

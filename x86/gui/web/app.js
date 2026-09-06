@@ -28,6 +28,7 @@
       qemu: "",
       qemu_img: "",
       firmware: "",
+      vm_json: "",
       build_manifest: "",
       tss_helper: "",
       original_ibss: "",
@@ -383,6 +384,7 @@
       ["qemu", "VMApple QEMU", "/home/developer/.../qemu-system-aarch64"],
       ["qemu_img", "qemu-img", "/usr/bin/qemu-img"],
       ["firmware", "AVPBooter EFI", "원본 AVPBooter.vmapple2.bin 경로"],
+      ["vm_json", "macosvm.json 번들", "Virtualization.framework VM의 macosvm.json 경로"],
       ["build_manifest", "공식 BuildManifest.plist", "Golden Gate IPSW의 BuildManifest.plist"],
       ["tss_helper", "로컬 TSS 요청 도구", "libtatsu 호환 TSS request helper 경로"],
       ["original_ibss", "원본 iBSS IM4P", "변경하지 않은 iBSS.vma2.RELEASE.im4p"],
@@ -395,14 +397,15 @@
       ["ibss", "기존 개인화 iBSS (진단용)", "이미 개인화된 iBSS.img4"],
       ["ibec", "기존 개인화 iBEC (선택)", "이미 개인화된 iBEC.img4"],
     ].map(([key, label, placeholder]) => `<div><label for="vmapple-${key}">${label}</label><input class="field" id="vmapple-${key}" value="${escapeHtml(vmConfig[key] || "")}" placeholder="${escapeHtml(placeholder)}" /></div>`).join("");
-    const requiredVmFields = ["qemu", "qemu_img", "firmware", "aux", "root", "output"].concat(
+    const storageFields = String(vmConfig.vm_json || "").trim() ? ["vm_json"] : ["aux", "root"];
+    const requiredVmFields = ["qemu", "qemu_img", "firmware", "output"].concat(storageFields).concat(
       directRequested ? [] : livePersonalize
         ? ["build_manifest", "tss_helper", "original_ibss", "original_ibec"]
         : ["ibss"]
     ).concat(!directRequested && restoreChain ? ["restore_role_dir"] : []);
     const vmReady = requiredVmFields.every((key) => String(vmConfig[key] || "").trim());
     const vmConfigured = directRequested
-      ? (vm.direct_macos_configured ? "직접 macOS 입력 확인됨" : "QEMU·AVPBooter·AUX/root 입력 필요")
+      ? (vm.direct_macos_configured ? "직접 macOS 입력 확인됨" : (String(vmConfig.vm_json || "").trim() ? "QEMU·AVPBooter·macosvm.json 입력 필요" : "QEMU·AVPBooter·AUX/root 입력 필요"))
       : livePersonalize
       ? (vm.live_personalization_configured ? "실시간 TSS 경로 확인됨" : "공식 원본·TSS 경로 입력 필요")
       : (vm.legacy_configured ? "기존 개인화 경로 확인됨" : "경로 입력 필요");
@@ -453,7 +456,7 @@
       <div class="actions"><button class="btn secondary" id="sandbox-refresh">준비 상태 다시 확인</button><button class="btn primary" id="sandbox-prepare" ${report.stageable && state.bridgeReady ? "" : "disabled"}>EFI 자체 검사 패키지 준비</button></div>
       ${receipt ? `<pre class="patch-summary" role="status">${escapeHtml(JSON.stringify(receipt, null, 2))}</pre>` : ""}
       <details class="vm-panel" open><summary>실제 보이는 VMApple 복구 VM · <span class="badge${vmConfigured.includes("확인됨") ? " good" : " warning"}">${vmConfigured}</span></summary>
-        <p class="support-note">WSLg GTK 창을 표시하는 연구용 실행 경로입니다. 아래 기본 경로는 공식 BuildManifest와 현재 USB nonce로 Apple TSS 티켓을 요청하고, 변경하지 않은 원본 iBSS/iBEC를 새 출력 폴더에만 IMG4로 감쌉니다. IPSW·설치 파일·기존 ESP는 수정하지 않습니다. 실제 USB descriptor가 bulk endpoint 4를 광고할 때만 iBSS→iBEC를 시도하며 전환을 강제하지 않습니다.</p>
+        <p class="support-note">WSLg GTK 창을 표시하는 연구용 실행 경로입니다. 직접 macOS 선택에서는 Virtualization.framework의 <code>macosvm.json</code> 번들을 우선 사용하고, Recovery 선택에서는 공식 BuildManifest와 현재 USB nonce로 Apple TSS 티켓을 요청합니다. 변경하지 않은 원본 iBSS/iBEC는 새 출력 폴더에만 IMG4로 감쌉니다. IPSW·설치 파일·기존 ESP는 수정하지 않습니다. 실제 USB descriptor가 bulk endpoint 4를 광고할 때만 iBSS→iBEC를 시도하며 전환을 강제하지 않습니다.</p>
         <label class="check-row" for="vmapple-live"><input type="checkbox" id="vmapple-live" ${livePersonalize ? "checked" : ""} ${directRequested ? "disabled" : ""} /> <span><strong>실시간 Apple TSS 개인화</strong><small>${directRequested ? "직접 macOS 부팅에서는 사용하지 않음" : "현재 USB nonce에 묶인 티켓을 새 폴더에 생성 (권장)"}</small></span></label>
         <label class="check-row" for="vmapple-rpc"><input type="checkbox" id="vmapple-rpc" ${optionalRpcUnavailable ? "checked" : ""} /> <span><strong>Golden Gate Stage2 연구 경로</strong><small>원본 iBEC의 선택 RPC 주소를 무서비스 상태로 매핑합니다. 게스트 서비스나 서명 우회가 아니며 연구 산출물로만 남습니다.</small></span></label>
         <div class="vm-fields">${vmFields}</div>
@@ -681,12 +684,12 @@
         state.sandboxTarget = Number(target.value); state.sandboxPlan = null; state.sandboxReceipt = null; state.vmappleStorage = null;
         await refreshSandbox();
       });
-      const vmFieldNames = ["qemu", "qemu_img", "firmware", "build_manifest", "tss_helper", "original_ibss", "original_ibec", "ibss", "ibec", "aux", "root", "output"];
+      const vmFieldNames = ["qemu", "qemu_img", "firmware", "vm_json", "build_manifest", "tss_helper", "original_ibss", "original_ibec", "ibss", "ibec", "aux", "root", "output"];
       vmFieldNames.forEach((name) => {
         const field = document.getElementById(`vmapple-${name}`);
         if (field) field.addEventListener("input", () => {
           state.vmappleConfig[name] = field.value;
-          if (name === "aux" || name === "root") state.vmappleStorage = null;
+          if (name === "vm_json" || name === "aux" || name === "root") state.vmappleStorage = null;
         });
       });
       const liveToggle = document.getElementById("vmapple-live");
@@ -712,6 +715,7 @@
       bind("vmapple-refresh", refreshVmapple);
       bind("vmapple-storage-inspect", async () => {
         const result = await api("inspect_vmapple_storage", {
+          vm_json: state.vmappleConfig.vm_json,
           aux: state.vmappleConfig.aux,
           root: state.vmappleConfig.root,
           aux_offset: Number(state.vmappleConfig.aux_offset || 0),

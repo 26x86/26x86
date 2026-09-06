@@ -157,12 +157,42 @@ iBSS/iBEC 입력과 DFU/IPSW 체인을 요구합니다.
 직접 macOS 부팅은 다음처럼 호출할 수 있습니다. `--ibss`, `--ibec`,
 `--live-personalize`, `--restore-chain`은 이 모드에서 사용하지 않습니다.
 
+Virtualization.framework로 만든 VM은 `macosvm.json`과 같은 디렉터리에 있는
+`machineId`, `hardwareModel`, `aux.img`, `disk.img`를 하나의 입력 계약으로
+사용하는 것이 권장됩니다. 런너는 두 plist를 읽기 전용으로 해시하고 ECID를
+검증한 뒤, JSON이 가리키는 AUX/root와 다른 수동 경로를 섞지 않습니다. 원본
+`aux.img`의 첫 `0x4000` 바이트는 VMApple 메타데이터이므로 JSON 경로에서는
+QEMU의 문서화된 AUX 뷰 오프셋 `0x4000`을 자동 적용합니다. 원본 이미지를
+자르거나 덮어쓰지 않으며, 실행 중에는 두 원본 위에 새 qcow2 COW overlay만
+만듭니다. 이 동작은 [QEMU VMApple 문서](https://www.qemu.org/docs/master/system/arm/vmapple.html)의
+`dd ... bs=0x4000 skip=1` 요구사항과 일치합니다.
+
+```sh
+python3 -m x86 vmapple run --target 27 --display auto \
+  --qemu /path/to/qemu-system-aarch64 \
+  --qemu-img /usr/bin/qemu-img \
+  --firmware /System/Library/Frameworks/Virtualization.framework/Resources/AVPBooter.vmapple2.bin \
+  --vm-json /path/to/macosvm.json \
+  --output /tmp/26x86-goldengate-direct --boot-selection macos \
+  --boot-delay 2 --duration 600 --research-only --json
+```
+
+JSON을 사용하지 않는 경우에는 기존처럼 이미 올바른 AUX 뷰를 가리키는
+`--aux`와 `--root`를 직접 지정하고, 원본 AUX를 직접 지정할 때만
+`--aux-offset 0x4000`을 명시합니다. 읽기 전용 사전 검사는 다음처럼 같은
+번들 계약을 사용할 수 있습니다.
+
+```sh
+python3 -m x86 vmapple inspect-storage --vm-json /path/to/macosvm.json --json
+```
+
 ```sh
 python3 -m x86 vmapple run --target 27 --display auto \
   --qemu /path/to/qemu-system-aarch64 \
   --qemu-img /usr/bin/qemu-img \
   --firmware /System/Library/Frameworks/Virtualization.framework/Resources/AVPBooter.vmapple2.bin \
   --aux /path/to/provisioned-aux.raw --root /path/to/provisioned-root.raw \
+  --aux-offset 0 \
   --output /tmp/26x86-goldengate-direct --boot-selection macos \
   --boot-delay 2 --duration 600 --research-only --json
 ```

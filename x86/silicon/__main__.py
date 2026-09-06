@@ -4,7 +4,7 @@ CLI for the Apple Silicon sandbox simulation and explicit VMApple direct path.
 Usage:
   python -m x86.silicon session [--host ID] [--json]
   python -m x86.silicon hosts [--json]
-  python -m x86.silicon direct --firmware ... --aux ... --root ... --research-only
+  python -m x86.silicon direct --firmware ... --vm-json ... --research-only
 """
 
 from __future__ import annotations
@@ -61,8 +61,12 @@ def main(argv: Optional[list[str]] = None) -> int:
     p_direct.add_argument("--qemu")
     p_direct.add_argument("--qemu-img")
     p_direct.add_argument("--firmware", default="", help="AVPBooter; native Apple Silicon macOS uses the system default when omitted")
-    p_direct.add_argument("--aux", required=True)
-    p_direct.add_argument("--root", required=True)
+    p_direct.add_argument("--aux", default="", help="AUX raw image (or use --vm-json)")
+    p_direct.add_argument("--root", default="", help="root raw image (or use --vm-json)")
+    p_direct.add_argument(
+        "--vm-json", default="",
+        help="macosvm.json; atomically supplies ECID, AUX, root, and hardware-model receipt",
+    )
     p_direct.add_argument("--output")
     p_direct.add_argument(
         "--display", choices=["auto", "gtk", "sdl", "cocoa", "none", "dbus"], default="auto",
@@ -126,6 +130,7 @@ def main(argv: Optional[list[str]] = None) -> int:
                 aux=args.aux,
                 root=args.root,
                 output=args.output,
+                vm_json=args.vm_json or None,
                 display=args.display,
                 uuid=args.uuid,
                 aux_offset=args.aux_offset,

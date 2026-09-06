@@ -152,6 +152,32 @@ TCG research-headless path. No marker is promoted to `macos_boot_verified` until
 both XNU and userspace evidence are present, and a Golden Gate installation is
 still a separate receipt/UI claim.
 
+For a VM created by Virtualization.framework, pass its `macosvm.json` directly:
+
+```sh
+python3 -m x86 vmapple run --target 27 --boot-selection macos \
+  --qemu /path/to/qemu-system-aarch64 \
+  --qemu-img /usr/bin/qemu-img \
+  --firmware /System/Library/Frameworks/Virtualization.framework/Resources/AVPBooter.vmapple2.bin \
+  --vm-json /path/to/macosvm.json \
+  --output /tmp/26x86-goldengate-direct --duration 600 \
+  --research-only --json
+```
+
+`macosvm.json` is treated as an atomic, read-only bundle: the ECID comes from
+the binary-plist `machineId`, the hardware-model digest comes from
+`hardwareModel`, and exactly one `aux` plus one `disk` storage entry is
+required. The runner applies the official VMApple `0x4000` AUX metadata view
+offset to the original `aux.img`, then creates only qcow2 copy-on-write
+overlays. It refuses a manually supplied UUID, AUX, root, or offset that does
+not match the bundle. This implements the trim documented by
+[QEMU's VMApple guide](https://www.qemu.org/docs/master/system/arm/vmapple.html)
+without modifying the source image. A read-only preflight is available with:
+
+```sh
+python3 -m x86 vmapple inspect-storage --vm-json /path/to/macosvm.json --json
+```
+
 ## Licensing and scope
 
 The project follows the existing OCLP-derived `LICENSE.txt`, including its four

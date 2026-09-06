@@ -135,16 +135,31 @@ class WizardBridge:
         """
         if not isinstance(config, dict):
             return {"ok": False, "error": "VMApple 저장장치 설정은 JSON 객체여야 합니다."}
+        vm_json = config.get("vm_json", "")
         aux = config.get("aux", "")
         root = config.get("root", "")
-        if not isinstance(aux, str) or not isinstance(root, str) or not aux.strip() or not root.strip():
-            return {"ok": False, "error": "AUX와 root 원본 경로를 모두 입력하세요."}
+        if not isinstance(vm_json, str) or not isinstance(aux, str) or not isinstance(root, str):
+            return {"ok": False, "error": "VMApple 저장장치 경로는 문자열이어야 합니다."}
+        vm_json = vm_json.strip()
+        aux = aux.strip()
+        root = root.strip()
+        if not vm_json and (not aux or not root):
+            return {"ok": False, "error": "macosvm.json 또는 AUX와 root 원본 경로를 입력하세요."}
         offset = config.get("aux_offset", config.get("aux-offset", 0))
         if isinstance(offset, bool) or not isinstance(offset, int):
             return {"ok": False, "error": "VMApple aux_offset은 정수여야 합니다."}
-        from x86.vmapple import inspect_storage
+        from x86.vmapple import MACOSVM_AUX_METADATA_BYTES, inspect_macosvm_storage, inspect_storage
+        if vm_json and offset not in (0, MACOSVM_AUX_METADATA_BYTES):
+            return {
+                "ok": False,
+                "error": f"macosvm.json AUX 오프셋은 0x{MACOSVM_AUX_METADATA_BYTES:x}만 허용됩니다.",
+            }
         try:
-            result = inspect_storage(aux=aux.strip(), root=root.strip(), aux_offset=offset)
+            result = (
+                inspect_macosvm_storage(vm_json)
+                if vm_json
+                else inspect_storage(aux=aux, root=root, aux_offset=offset)
+            )
         except (ValueError, OSError) as exc:
             return {"ok": False, "error": str(exc), "installer_ui_verified": False}
         result["ok"] = True
@@ -336,7 +351,7 @@ class WizardBridge:
         # Keep the bridge surface deliberately narrow: callers can provide
         # paths and bounded scalar values, never arbitrary QEMU arguments.
         string_fields = (
-            "qemu", "qemu_img", "firmware", "ibss", "ibec", "aux", "root", "output",
+            "qemu", "qemu_img", "firmware", "vm_json", "ibss", "ibec", "aux", "root", "output",
             "build_manifest", "tss_helper", "original_ibss", "original_ibec", "restore_role_dir",
         )
         values: dict[str, Any] = {}
@@ -347,12 +362,13 @@ class WizardBridge:
             if not isinstance(value, str):
                 return {"ok": False, "error": f"VMApple {name} 경로는 문자열이어야 합니다."}
             values[name] = value.strip()
-        required = ("qemu", "qemu_img", "firmware", "aux", "root", "output")
+        required = ("qemu", "qemu_img", "firmware", "output")
         if boot_selection == "macos":
             # AVPBooter reads the provisioned guest disk directly.  iBSS and
             # iBEC are recovery transport inputs and must not be mandatory for
             # the normal macOS entry.
-            pass
+            if not values["vm_json"]:
+                required += ("aux", "root")
         elif live_personalize:
             required += ("build_manifest", "tss_helper", "original_ibss", "original_ibec")
         else:
@@ -410,7 +426,7 @@ class WizardBridge:
         from x86.vmapple import VIRTUAL_MODEL, VIRTUAL_SOC_NAME
 
         repo = bootstrap.ensure_repo_on_path()
-        input_names = ("qemu", "qemu_img", "firmware", "ibss", "ibec", "aux", "root", "output",
+        input_names = ("qemu", "qemu_img", "firmware", "vm_json", "ibss", "ibec", "aux", "root", "output",
                        "build_manifest", "tss_helper", "original_ibss", "original_ibec", "restore_role_dir")
         needs_wsl = is_windows() and any(values[name].startswith("/") for name in input_names if values[name])
         if needs_wsl:
@@ -439,6 +455,7 @@ class WizardBridge:
         add("--qemu", "qemu")
         add("--qemu-img", "qemu_img")
         add("--firmware", "firmware")
+        add("--vm-json", "vm_json")
         add("--ibss", "ibss")
         add("--ibec", "ibec")
         add("--aux", "aux")
