@@ -1,0 +1,25 @@
+vmapple-machine options:
+  append=<string>        - Linux kernel command line
+  aux-ram-share=<bool>   - Use anonymous shared memory for auxiliary guest RAMs
+  boot=<BootConfiguration> - Boot configuration
+  confidential-guest-support=<link<confidential-guest-support>> - Set confidential guest scheme to support
+  dt-compatible=<string> - Overrides the "compatible" property of the dt root node
+  dtb=<string>           - Linux kernel device tree file
+  dump-guest-core=<bool> - Include guest memory in a core dump
+  dumpdtb=<string>       - Dump current dtb to a file and quit
+  firmware=<string>      - Firmware image
+  graphics=<bool>        - Set on/off to enable/disable graphics emulation
+  initrd=<string>        - Linux initial ramdisk file
+  kernel=<string>        - Linux kernel image file
+  mem-merge=<bool>       - Enable/disable memory merge support
+  memory-backend=<link<memory-backend>> - Set RAM backendValid value is ID of hostmem based backend
+  memory-encryption=<string> - Set memory encryption object to use
+  memory=<MemorySizeConfiguration> - Memory size configuration
+  phandle-start=<int>    - The first phandle ID we may generate dynamically
+  research-headless=<bool> - Opt in to TCG research without PV graphics; requires an explicit emulated -cpu
+  shim=<string>          - shim.efi file
+  smp-cache=<SmpCachePropertiesWrapper> - Cache properties list for SMP machine
+  smp=<SMPConfiguration> - CPU topology
+  suppress-vmdesc=<bool> - Set on to disable self-describing migration
+  usb=<bool>             - Set on/off to enable/disable usb
+  x-change-vmfd-on-reset=<bool> - Set on/off to enable/disable generating new accelerator guest handle on guest reset. Default: off (used only for testing/debugging).

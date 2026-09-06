@@ -44,6 +44,36 @@ class BridgeSmokeTest(unittest.TestCase):
         status = bridge.get_status()
         self.assertTrue(status["ok"])
 
+        vmapple = bridge.get_vmapple_status()
+        self.assertTrue(vmapple["ok"])
+        self.assertIn("configured", vmapple)
+        self.assertEqual(vmapple["machine_type"], "iBoot(AArch64)")
+        self.assertEqual(vmapple["guest_os_policy"], "macOS-only")
+        self.assertEqual(vmapple["recovery_scope"]["default_image_name"], "_default.ipsw")
+
+    def test_boot_picker_alt_recovery_roundtrip(self) -> None:
+        from x86.gui.bridge import WizardBridge
+
+        bridge = WizardBridge()
+        armed = bridge.start_boot_picker(
+            target_major=27,
+            recovery_protocol="DFU/IPSW",
+            recovery_image_name="_default.ipsw",
+        )
+        self.assertTrue(armed["ok"])
+        self.assertEqual(armed["state"], "armed")
+        shown = bridge.boot_picker_key("Alt")
+        self.assertTrue(shown["ok"])
+        self.assertEqual(shown["state"], "picker")
+        moved = bridge.boot_picker_key("ArrowDown")
+        self.assertEqual(moved["selected_entry"], "recovery")
+        selected = bridge.boot_picker_key("Enter")
+        self.assertEqual(selected["selection"], "recovery")
+        self.assertEqual(selected["trigger"], "alt-enter")
+        status = bridge.get_boot_picker_status()
+        self.assertEqual(status["selection"], "recovery")
+        self.assertTrue(status["picker_visible"] is False)
+
     def test_webview_smoke_helper(self) -> None:
         from x86.gui.webview_app import smoke_test_bridge
         from x86.platform import is_macos
@@ -93,6 +123,10 @@ class BridgeSmokeTest(unittest.TestCase):
                 payload = json.loads(resp.read().decode("utf-8"))
             self.assertTrue(payload["ok"])
             self.assertEqual(payload["result"]["bundle_id"], "com.niseullent.26x86")
+            with urlopen(f"{base}/api/get_vmapple_status", timeout=30) as resp:
+                vm_payload = json.loads(resp.read().decode("utf-8"))
+            self.assertTrue(vm_payload["ok"])
+            self.assertIn("configured", vm_payload["result"])
         finally:
             httpd.shutdown()
             httpd.server_close()

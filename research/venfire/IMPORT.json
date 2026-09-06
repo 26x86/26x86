@@ -1,0 +1,629 @@
+{
+  "schema": 1,
+  "product": "26x86",
+  "internal_namespace": "venfire",
+  "role": "historical host research and reusable integrity tools",
+  "not_sandbox_runtime": true,
+  "files": [
+    {
+      "path": "venfire/artifacts.py",
+      "source_sha256": "6b808e6eea252c66305d40cf76de5e3d4c47be2e750c05c9e46b20d1f60c3293",
+      "imported_sha256": "6b808e6eea252c66305d40cf76de5e3d4c47be2e750c05c9e46b20d1f60c3293"
+    },
+    {
+      "path": "venfire/backend.py",
+      "source_sha256": "80ad0a4f73307f0e37c651cef70286c196621b4b8aac822ecb00aaa138d4131a",
+      "imported_sha256": "80ad0a4f73307f0e37c651cef70286c196621b4b8aac822ecb00aaa138d4131a"
+    },
+    {
+      "path": "venfire/boot.py",
+      "source_sha256": "d8dadcc3cc2c3ffb90439c57bf1df9e0f06e5cbb943fb04ff2f78a4813ed6819",
+      "imported_sha256": "d8dadcc3cc2c3ffb90439c57bf1df9e0f06e5cbb943fb04ff2f78a4813ed6819"
+    },
+    {
+      "path": "venfire/cli.py",
+      "source_sha256": "65b77231efe6925dbb891ab348925c62b3244b5560798efe562928e6891020c4",
+      "imported_sha256": "30b6dc601594dcb88e17d480ee2e07061abd2fa79eb2a80b7f9d387a589fa0c8"
+    },
+    {
+      "path": "venfire/conformance.py",
+      "source_sha256": "9a113a5fc723022d2af91c64a326bcdd84f4c5598307ef30a95c880e88f3cf84",
+      "imported_sha256": "b21b4752f8d277e731b8de7d3c61a513bd9f5cbda3ef0a855a84913e90b5e89f"
+    },
+    {
+      "path": "venfire/host.py",
+      "source_sha256": "b693d72f481f24b9a3b1ccc2cb9db1ca555b4ebe238bc87b7eb9ad4ac331bb95",
+      "imported_sha256": "58c647d19f4e154a58ff0a013a5284fa101d471bd6e4c93658251e4402d43637"
+    },
+    {
+      "path": "venfire/media.py",
+      "source_sha256": "c5d20a8f26bdaa78f1fd155d2fc419c116fa8be410c7caafa8fa0b068da58e03",
+      "imported_sha256": "c5d20a8f26bdaa78f1fd155d2fc419c116fa8be410c7caafa8fa0b068da58e03"
+    },
+    {
+      "path": "venfire/personalization.py",
+      "source_sha256": "0acd58fb542f34161164233db1535f78b4a967e894aa184290389dafd3612051",
+      "imported_sha256": "55a5ca583a11981d16f15ccfe4c7612e10c57cd9eb19958cbbac5646699966cc"
+    },
+    {
+      "path": "venfire/policy.py",
+      "source_sha256": "94f18c768f5180774b42d8c466dae021f86b620e995efb92d99e9d3ec9e5fae4",
+      "imported_sha256": "94f18c768f5180774b42d8c466dae021f86b620e995efb92d99e9d3ec9e5fae4"
+    },
+    {
+      "path": "venfire/process.py",
+      "source_sha256": "f2434e544a2650cf43a670e2ac0a242fd78856a44deae2adf93bd826a73d1360",
+      "imported_sha256": "f2434e544a2650cf43a670e2ac0a242fd78856a44deae2adf93bd826a73d1360"
+    },
+    {
+      "path": "venfire/recovery.py",
+      "source_sha256": "39afa0278dab081777e044160e369da634447b5ba143bcc7846e5a5adf19c496",
+      "imported_sha256": "39afa0278dab081777e044160e369da634447b5ba143bcc7846e5a5adf19c496"
+    },
+    {
+      "path": "venfire/restore.py",
+      "source_sha256": "008b54a82d0f70dcb6685db2ba28a4697a949a6528f4525b90b9d6d992af9d09",
+      "imported_sha256": "008b54a82d0f70dcb6685db2ba28a4697a949a6528f4525b90b9d6d992af9d09"
+    },
+    {
+      "path": "venfire/restore_chain.py",
+      "source_sha256": "250b05c3297052232fbc523e71ebfc1711bc6ca7b7211ae72bf7f96d7a4caa1b",
+      "imported_sha256": "250b05c3297052232fbc523e71ebfc1711bc6ca7b7211ae72bf7f96d7a4caa1b"
+    },
+    {
+      "path": "venfire/storage.py",
+      "source_sha256": "70b73331beb663429b0962e898dd6e95886a9ef0204148953b8f9e6c9a55878b",
+      "imported_sha256": "7672dc898542b6283ebb9126591ab430405ce0a547709c5e96427ef4f86708ee"
+    },
+    {
+      "path": "venfire/_build_profile.py",
+      "source_sha256": "ade7a14ccf15eec463fb82a14529c395e3453669da8bb0bd648bc78e232a15f6",
+      "imported_sha256": "ade7a14ccf15eec463fb82a14529c395e3453669da8bb0bd648bc78e232a15f6"
+    },
+    {
+      "path": "venfire/__init__.py",
+      "source_sha256": "7a3de462bccaca8feb39391f487d8ef15f6e4d6e92cbaa5ef584ba033d20d8d5",
+      "imported_sha256": "9a02602ac30a47848517cc81db57148253bdd2ac5da8ec28fd4079565e15bcb0"
+    },
+    {
+      "path": "venfire/__main__.py",
+      "source_sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+      "imported_sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d"
+    },
+    {
+      "path": "venfire/certs/AppleIncRootCertificate.cer",
+      "source_sha256": "b0b1730ecbc7ff4505142c49f1295e6eda6bcaed7e2c68c5be91b5a11001f024",
+      "imported_sha256": "b0b1730ecbc7ff4505142c49f1295e6eda6bcaed7e2c68c5be91b5a11001f024"
+    },
+    {
+      "path": "venfire/certs/README.md",
+      "source_sha256": "3451353c11a87b701f568e5e587af91cdb996e30d92d13ae573f32c7faeb2265",
+      "imported_sha256": "3451353c11a87b701f568e5e587af91cdb996e30d92d13ae573f32c7faeb2265"
+    },
+    {
+      "path": "tools/apple_assets.py",
+      "source_sha256": "0a89fd260303e1ca391185414e533ee2cb0026c7818296b65b9d7b54d8aee907",
+      "imported_sha256": "0a89fd260303e1ca391185414e533ee2cb0026c7818296b65b9d7b54d8aee907"
+    },
+    {
+      "path": "tools/backend_audit.py",
+      "source_sha256": "a0e407a03fa318c40516d48e917bbf9000a64fc5fe9692b5639064312038b7d9",
+      "imported_sha256": "a0e407a03fa318c40516d48e917bbf9000a64fc5fe9692b5639064312038b7d9"
+    },
+    {
+      "path": "tools/build_backend.py",
+      "source_sha256": "a8c691232d5473b8a14f670e5867e45b72101d9105b17d0168ae69fb5eca97f8",
+      "imported_sha256": "f853c8b7a7030c04b4aa0d6e44b5c95dc2c3152c214e4377dfc27886b7efdf3f"
+    },
+    {
+      "path": "tools/build_graphics_backend.py",
+      "source_sha256": "262e6788696990aefee137dc66287d50f42b984ee24b0018dcba00ef0da93613",
+      "imported_sha256": "262e6788696990aefee137dc66287d50f42b984ee24b0018dcba00ef0da93613"
+    },
+    {
+      "path": "tools/build_restore_tools.py",
+      "source_sha256": "718608edc9eaeb28cea253bb187fee54a2e4c7f65724f021b4234580962aed19",
+      "imported_sha256": "718608edc9eaeb28cea253bb187fee54a2e4c7f65724f021b4234580962aed19"
+    },
+    {
+      "path": "tools/build_usb.py",
+      "source_sha256": "11cc5bca49a422efac718e9c351d5bd058b8d9b9ee775029e600ffc9c244cb06",
+      "imported_sha256": "c69e9f8b2ede8ebd0fe3c3e9e50af76962e14fd54bf3ea65280703eb76bb0d06"
+    },
+    {
+      "path": "tools/create_developer_tree.py",
+      "source_sha256": "3f63f1b312705054ed8f5e35953d9aff2f42b57ff1a788e25baf766f44b43ce3",
+      "imported_sha256": "3f63f1b312705054ed8f5e35953d9aff2f42b57ff1a788e25baf766f44b43ce3"
+    },
+    {
+      "path": "tools/extract_restore.py",
+      "source_sha256": "1cfa03516539afac22fdd9fd3bd483eb52f65eda31b663e709250aff06fa4372",
+      "imported_sha256": "1cfa03516539afac22fdd9fd3bd483eb52f65eda31b663e709250aff06fa4372"
+    },
+    {
+      "path": "tools/restore_stage.py",
+      "source_sha256": "ed66d49476414c9a749273e7c45493835f0e095d02f400f22491647b9519573e",
+      "imported_sha256": "ed66d49476414c9a749273e7c45493835f0e095d02f400f22491647b9519573e"
+    },
+    {
+      "path": "tools/verify.py",
+      "source_sha256": "c72050f4057da2f7c888d51a02214e4ccd6cc531f9a4b53ef2cd6999475f0296",
+      "imported_sha256": "c72050f4057da2f7c888d51a02214e4ccd6cc531f9a4b53ef2cd6999475f0296"
+    },
+    {
+      "path": "tools/verify_arm_timer.py",
+      "source_sha256": "d057ab1061ad45101049bee5f190183e60f14c8ca242a566765723ea4de2fbef",
+      "imported_sha256": "d057ab1061ad45101049bee5f190183e60f14c8ca242a566765723ea4de2fbef"
+    },
+    {
+      "path": "tools/verify_arm_timer_math.py",
+      "source_sha256": "46ccaa762c0b6c8fe8746031da5a392d34f39ea1a12f94fa6dfb321c6f5b6bf4",
+      "imported_sha256": "46ccaa762c0b6c8fe8746031da5a392d34f39ea1a12f94fa6dfb321c6f5b6bf4"
+    },
+    {
+      "path": "tools/verify_barrier.py",
+      "source_sha256": "360b9c18cccfc7a31a1c84a6417ac346994c052f5fce937de25e7cb44eef03ea",
+      "imported_sha256": "360b9c18cccfc7a31a1c84a6417ac346994c052f5fce937de25e7cb44eef03ea"
+    },
+    {
+      "path": "tools/verify_bdif_storage.py",
+      "source_sha256": "f0f5282164618bf0a5a38e9cfcd39ba4bfa832af8e7260c198572b495a652533",
+      "imported_sha256": "fe64a413f7c48e89e3763ac8118497912433810330ff88a1ab4991dfcfa025ec"
+    },
+    {
+      "path": "tools/verify_optional_rpc.py",
+      "source_sha256": "89b51991ed5e8862cea260ee12c84db0f58b94b01e2253d8efd8b5374f42755b",
+      "imported_sha256": "6ad07bcf9b2a3f5c5a7ce52823663f08b823f0c634ff6c82a554062dadf99f27"
+    },
+    {
+      "path": "tools/verify_recovery.py",
+      "source_sha256": "cf2400892c134742a1b2ef97ca40cbb8ca1bd6e21d0cb3a0901c48ec6238f919",
+      "imported_sha256": "2274b9ed21ccd1a2bd4909394d6117aacee01b8ec483bd6ddbc19b7d0aa24ecd"
+    },
+    {
+      "path": "tools/verify_storage.py",
+      "source_sha256": "628b29ad3468abd189c4c51bd5610c8282d21cdad975f1c197da4d18304514e1",
+      "imported_sha256": "628b29ad3468abd189c4c51bd5610c8282d21cdad975f1c197da4d18304514e1"
+    },
+    {
+      "path": "tests/test_artifacts.py",
+      "source_sha256": "73af2a60d959ac82ac21989e382ab5751ff83811732563f58567e5d4731b6895",
+      "imported_sha256": "73af2a60d959ac82ac21989e382ab5751ff83811732563f58567e5d4731b6895"
+    },
+    {
+      "path": "tests/test_boot.py",
+      "source_sha256": "95259f95443beec27504ea6e8cabe3a8298f5c6a13fda936cfff1f7bdb9e5097",
+      "imported_sha256": "95259f95443beec27504ea6e8cabe3a8298f5c6a13fda936cfff1f7bdb9e5097"
+    },
+    {
+      "path": "tests/test_cli_recovery.py",
+      "source_sha256": "b45b8499f7b909ab36661fe1884f399382d5fa02acabe0dc16fafe4eca11e536",
+      "imported_sha256": "b45b8499f7b909ab36661fe1884f399382d5fa02acabe0dc16fafe4eca11e536"
+    },
+    {
+      "path": "tests/test_conformance.py",
+      "source_sha256": "199786538324e0c721cd85693199dd8db1259ad078b586c92df03f89c90b3aaf",
+      "imported_sha256": "66a458790529c029459cd945eaa39a628f12d827bb7e8b4b5438515242d23721"
+    },
+    {
+      "path": "tests/test_distribution.py",
+      "source_sha256": "fe585adc7c973a4b069aa28d02d4f288d231ef93c4e11e723bd9336641967f0a",
+      "imported_sha256": "fe585adc7c973a4b069aa28d02d4f288d231ef93c4e11e723bd9336641967f0a"
+    },
+    {
+      "path": "tests/test_extract_restore.py",
+      "source_sha256": "c3fd3c139df18d866bb592d19874db20562c0a4e500e333905c3c014528248d5",
+      "imported_sha256": "c3fd3c139df18d866bb592d19874db20562c0a4e500e333905c3c014528248d5"
+    },
+    {
+      "path": "tests/test_host.py",
+      "source_sha256": "74d7f0ef6a48e8e3f9a4e16ad04c5b5928c8c39ae24fe72a9b87033ba0529ca2",
+      "imported_sha256": "74d7f0ef6a48e8e3f9a4e16ad04c5b5928c8c39ae24fe72a9b87033ba0529ca2"
+    },
+    {
+      "path": "tests/test_media.py",
+      "source_sha256": "1c9a50983de8b4c308c330b851e03a25af6b701f9edded00ef4ebe72bd805573",
+      "imported_sha256": "1c9a50983de8b4c308c330b851e03a25af6b701f9edded00ef4ebe72bd805573"
+    },
+    {
+      "path": "tests/test_personalization.py",
+      "source_sha256": "467e1613bfa4646a3d31d502b8f296c970d8e0a0855f5c34e5c5b642f770221a",
+      "imported_sha256": "467e1613bfa4646a3d31d502b8f296c970d8e0a0855f5c34e5c5b642f770221a"
+    },
+    {
+      "path": "tests/test_policy.py",
+      "source_sha256": "785f2afb4da9dd39959af02c4592d8e6763f8985d4a5a98d4ab7a9ff5496726e",
+      "imported_sha256": "785f2afb4da9dd39959af02c4592d8e6763f8985d4a5a98d4ab7a9ff5496726e"
+    },
+    {
+      "path": "tests/test_process.py",
+      "source_sha256": "2726246a06859c89f4cb4755e52df1478db51bfea15cdbbfaeea28ecb05fac1f",
+      "imported_sha256": "2726246a06859c89f4cb4755e52df1478db51bfea15cdbbfaeea28ecb05fac1f"
+    },
+    {
+      "path": "tests/test_recovery.py",
+      "source_sha256": "472fe89020ad50f0467cd54ad167bd0511f574155a0bcf77e5ada9538013301a",
+      "imported_sha256": "472fe89020ad50f0467cd54ad167bd0511f574155a0bcf77e5ada9538013301a"
+    },
+    {
+      "path": "tests/test_restore_chain.py",
+      "source_sha256": "004a3e0f6a9035d1ba6b79e8c7ec52a1571c083d4e1e8fefc8cb32307c466391",
+      "imported_sha256": "004a3e0f6a9035d1ba6b79e8c7ec52a1571c083d4e1e8fefc8cb32307c466391"
+    },
+    {
+      "path": "tests/test_restore_runtime.py",
+      "source_sha256": "dd5fc6ea99caa2db8d7726b795d5ad067bb6eca6999c540c3025a22de384ee55",
+      "imported_sha256": "dd5fc6ea99caa2db8d7726b795d5ad067bb6eca6999c540c3025a22de384ee55"
+    },
+    {
+      "path": "tests/test_restore_stage.py",
+      "source_sha256": "ee02cfdb248286c2e400f4c4bed4d45e60404c4458897a835537bb3f9e21e393",
+      "imported_sha256": "ee02cfdb248286c2e400f4c4bed4d45e60404c4458897a835537bb3f9e21e393"
+    },
+    {
+      "path": "tests/test_storage.py",
+      "source_sha256": "87ddc2eba9aac9fec221fdb0ded8c99a9c1fd7969312b33c377364f337344398",
+      "imported_sha256": "87ddc2eba9aac9fec221fdb0ded8c99a9c1fd7969312b33c377364f337344398"
+    },
+    {
+      "path": "tests/test_usb.py",
+      "source_sha256": "842fa454883152eab8893966cd06a135f91a6b1ef448510504cab8cc7e4e981a",
+      "imported_sha256": "842fa454883152eab8893966cd06a135f91a6b1ef448510504cab8cc7e4e981a"
+    },
+    {
+      "path": "patches/0001-vmapple-explicit-tcg-research.patch",
+      "source_sha256": "da55f660a551e66e6e5ae9affd8410f72b17cf0b633d09db2816700b7d131897",
+      "imported_sha256": "da55f660a551e66e6e5ae9affd8410f72b17cf0b633d09db2816700b7d131897"
+    },
+    {
+      "path": "patches/0002-vmapple-block-barrier.patch",
+      "source_sha256": "58e8a2a42656647f7e3f8393e1b032fc260b99760ce37576c00b7af0938473cc",
+      "imported_sha256": "58e8a2a42656647f7e3f8393e1b032fc260b99760ce37576c00b7af0938473cc"
+    },
+    {
+      "path": "patches/0003-vmapple-recovery-usb.patch",
+      "source_sha256": "29faaa21e284e82fb3e7848574730627c9c7d55f60a5a2e8bdb3310bad4acd0c",
+      "imported_sha256": "29faaa21e284e82fb3e7848574730627c9c7d55f60a5a2e8bdb3310bad4acd0c"
+    },
+    {
+      "path": "patches/0004-vmapple-bdif-cow-write.patch",
+      "source_sha256": "1d4639c0e845ad0d5a8d9f542c6ed104897f5a69eba95998373770e691a3e541",
+      "imported_sha256": "1d4639c0e845ad0d5a8d9f542c6ed104897f5a69eba95998373770e691a3e541"
+    },
+    {
+      "path": "patches/0005-arm-exact-generic-timer.patch",
+      "source_sha256": "2dd30fa3b37a3e3502e54f6f0bd8b57a99b9a2a65f7d3d02df9ae7be4922525a",
+      "imported_sha256": "2dd30fa3b37a3e3502e54f6f0bd8b57a99b9a2a65f7d3d02df9ae7be4922525a"
+    },
+    {
+      "path": "patches/0007-vmapple-optional-rpc-unavailable.patch",
+      "source_sha256": "424bbce49c56c11526e667f007ec4e82b41fb9b56f7521258da570cc8cb0f3e1",
+      "imported_sha256": "424bbce49c56c11526e667f007ec4e82b41fb9b56f7521258da570cc8cb0f3e1"
+    },
+    {
+      "path": "patches/README.md",
+      "source_sha256": "ab28b624595dca6bc2c75d08618f68554ff874756be6030e07530e8176076df6",
+      "imported_sha256": "ab28b624595dca6bc2c75d08618f68554ff874756be6030e07530e8176076df6"
+    },
+    {
+      "path": "patches/series",
+      "source_sha256": "4b67624ef9f911a3504864a0b64aee9d9bfb217bbfcffdd8fa2c0b5682a29cd5",
+      "imported_sha256": "4b67624ef9f911a3504864a0b64aee9d9bfb217bbfcffdd8fa2c0b5682a29cd5"
+    },
+    {
+      "path": "patches/graphics/0001-reims-portable-host-glue.patch",
+      "source_sha256": "4199ca844835a7038bc443010cff835930730bfa948f9f3387b38130d7797c98",
+      "imported_sha256": "4199ca844835a7038bc443010cff835930730bfa948f9f3387b38130d7797c98"
+    },
+    {
+      "path": "patches/graphics/0002-reims-current-arm-vcpu.patch",
+      "source_sha256": "21c2b921de42d762228ed2d0b0433e630fa46b3028900ccc345e8aab63761251",
+      "imported_sha256": "21c2b921de42d762228ed2d0b0433e630fa46b3028900ccc345e8aab63761251"
+    },
+    {
+      "path": "patches/graphics/0003-reims-mmio-firmware-console.patch",
+      "source_sha256": "866d6242669d0f3606460d856a15d8f7b9a1ad6de304b3dac7755011451dfd24",
+      "imported_sha256": "866d6242669d0f3606460d856a15d8f7b9a1ad6de304b3dac7755011451dfd24"
+    },
+    {
+      "path": "patches/graphics/evidence-core3.json",
+      "source_sha256": "7dac1840dfe6580284df2f2a891e227f4e5daf07513b3f173d8703f16aa070b9",
+      "imported_sha256": "7dac1840dfe6580284df2f2a891e227f4e5daf07513b3f173d8703f16aa070b9"
+    },
+    {
+      "path": "patches/graphics/evidence-core4.json",
+      "source_sha256": "f55df2e3c1dc9d05489ea4f1c5b233e782a74352047c06299916ad90be07bb3a",
+      "imported_sha256": "f55df2e3c1dc9d05489ea4f1c5b233e782a74352047c06299916ad90be07bb3a"
+    },
+    {
+      "path": "patches/graphics/lock.json",
+      "source_sha256": "7c8673b55774eab7b84b453e21204153f4ed78539c766ef9e0b325be63178037",
+      "imported_sha256": "7c8673b55774eab7b84b453e21204153f4ed78539c766ef9e0b325be63178037"
+    },
+    {
+      "path": "patches/graphics/README.md",
+      "source_sha256": "f810e927768cbcf459610f9b65912117fa40104a436f8e538099b6d766f32ae1",
+      "imported_sha256": "f810e927768cbcf459610f9b65912117fa40104a436f8e538099b6d766f32ae1"
+    },
+    {
+      "path": "patches/graphics/series",
+      "source_sha256": "155765036beba99bbbd0e4df8797fd4d4798841823446bb2b24d29d2711e0141",
+      "imported_sha256": "155765036beba99bbbd0e4df8797fd4d4798841823446bb2b24d29d2711e0141"
+    },
+    {
+      "path": "patches/graphics/test_builder.py",
+      "source_sha256": "82c3763b53812e935fe62cdc9e44bb54b0ab0cd821179e9e9c92092f85e3a609",
+      "imported_sha256": "82c3763b53812e935fe62cdc9e44bb54b0ab0cd821179e9e9c92092f85e3a609"
+    },
+    {
+      "path": "patches/graphics/probes/cpu_startup.py",
+      "source_sha256": "7b6a3cb5820f83ae8d9bf9bd4a03a3aad755c12dddcaf8af835c5c5090f859ec",
+      "imported_sha256": "7b6a3cb5820f83ae8d9bf9bd4a03a3aad755c12dddcaf8af835c5c5090f859ec"
+    },
+    {
+      "path": "patches/graphics/probes/firmware_console.py",
+      "source_sha256": "32eaf5c52330223913d398cc7c10ab3f3a16e9defd401c4c058afbd0f7e16a4f",
+      "imported_sha256": "32eaf5c52330223913d398cc7c10ab3f3a16e9defd401c4c058afbd0f7e16a4f"
+    },
+    {
+      "path": "patches/graphics/probes/mapper_handoff.ld",
+      "source_sha256": "06757b29923599a2410a4b4a41149a550d6d98b8fda49f0dac6d1a8930d6451b",
+      "imported_sha256": "06757b29923599a2410a4b4a41149a550d6d98b8fda49f0dac6d1a8930d6451b"
+    },
+    {
+      "path": "patches/graphics/probes/mapper_handoff.py",
+      "source_sha256": "fed4650441f209aebbfc9728b6e76bc29f999bd492ca666f5521efb12be78d5a",
+      "imported_sha256": "fed4650441f209aebbfc9728b6e76bc29f999bd492ca666f5521efb12be78d5a"
+    },
+    {
+      "path": "patches/graphics/probes/mapper_handoff.S",
+      "source_sha256": "ba4202da803b4e22a69a7ef4a1555e4fa6810d70e3e0b781afb370eb8fe86777",
+      "imported_sha256": "ba4202da803b4e22a69a7ef4a1555e4fa6810d70e3e0b781afb370eb8fe86777"
+    },
+    {
+      "path": "patches/graphics/probes/qtest.py",
+      "source_sha256": "ae8ce289e286a2f8a008d4fdb65049f5fcd69c3a9b862f17b112e0153a2a971a",
+      "imported_sha256": "ae8ce289e286a2f8a008d4fdb65049f5fcd69c3a9b862f17b112e0153a2a971a"
+    },
+    {
+      "path": "patches/graphics/probes/verify.py",
+      "source_sha256": "71a28008be28cfec88bc97da61781a15d43aa8bf2c86608c739fa595a3c7f7ba",
+      "imported_sha256": "71a28008be28cfec88bc97da61781a15d43aa8bf2c86608c739fa595a3c7f7ba"
+    },
+    {
+      "path": "guests/conformance.S",
+      "source_sha256": "484379768788a88892ed0ee9bb61a87abb3ee00186f76a9f0cc6f7ddc23acda7",
+      "imported_sha256": "484379768788a88892ed0ee9bb61a87abb3ee00186f76a9f0cc6f7ddc23acda7"
+    },
+    {
+      "path": "guests/manifest.json",
+      "source_sha256": "5869812ccdf4406e4534238f188a8b4ab6802ebe9845eae27cf676efd6b3dd95",
+      "imported_sha256": "5869812ccdf4406e4534238f188a8b4ab6802ebe9845eae27cf676efd6b3dd95"
+    },
+    {
+      "path": "guests/README.md",
+      "source_sha256": "a4a4a31437caac1931f782a068949b1a33db91b62d1cc745f0ba93b5d31f8c0f",
+      "imported_sha256": "a4a4a31437caac1931f782a068949b1a33db91b62d1cc745f0ba93b5d31f8c0f"
+    },
+    {
+      "path": "guests/timer_precision.S",
+      "source_sha256": "d73f384e7e2610963f8b6e53d4b481c2df7e4c7ed0919a78f93e571d3df54b74",
+      "imported_sha256": "d73f384e7e2610963f8b6e53d4b481c2df7e4c7ed0919a78f93e571d3df54b74"
+    },
+    {
+      "path": "guests/virt.ld",
+      "source_sha256": "b07373501929df8d56c431579d509361a12c327e9961009cd66ae5471e52bfe7",
+      "imported_sha256": "b07373501929df8d56c431579d509361a12c327e9961009cd66ae5471e52bfe7"
+    },
+    {
+      "path": "guests/vmapple.ld",
+      "source_sha256": "5df1482adaeea47986bfac28baa3fd96f8fb757197a2bba667175c525523f6d6",
+      "imported_sha256": "5df1482adaeea47986bfac28baa3fd96f8fb757197a2bba667175c525523f6d6"
+    },
+    {
+      "path": "guests/verification-virt/report.json",
+      "source_sha256": "a13c9272306483dd69de4af3cb0339268c1bfa5fc61c73de5455c15dc435b7c4",
+      "imported_sha256": "a13c9272306483dd69de4af3cb0339268c1bfa5fc61c73de5455c15dc435b7c4"
+    },
+    {
+      "path": "docs/apple-boot.md",
+      "source_sha256": "2172e3809869e3231207a19d0120e8c217612b276c2a190bf61368fcf2b50e2e",
+      "imported_sha256": "2172e3809869e3231207a19d0120e8c217612b276c2a190bf61368fcf2b50e2e"
+    },
+    {
+      "path": "docs/backend.md",
+      "source_sha256": "d666e7824d9aab7013a0fac1ad9f79dbe26cc3a6e8b0b2023a17be3c64a08123",
+      "imported_sha256": "30eaa46e24f934e94bf8d78c4f122f37db9baddaccfce0efb416277d69414e85"
+    },
+    {
+      "path": "docs/development-policy.md",
+      "source_sha256": "819e2eacfd669ab17abef2b08519d13e7b0f799cb66bdbf023f749ee99b01615",
+      "imported_sha256": "6912f42517ecd0419f71ee8047aab6a51825c29ab4e7f5a3f26861a898eb5327"
+    },
+    {
+      "path": "docs/graphics.md",
+      "source_sha256": "709470285e74a5d4f28da6403a5d39109ff85e2cf2fe7186e3c724703531ebfc",
+      "imported_sha256": "1d2f46e9716dcd98807803b668b350b1cdf2ddfae78d21058cdb7c67a8baa5a0"
+    },
+    {
+      "path": "docs/kernel-watchdog.md",
+      "source_sha256": "de7c169beb3ab45d9b89814db8d5da14e4e6c66bafce385d6010842332b9a5b1",
+      "imported_sha256": "de7c169beb3ab45d9b89814db8d5da14e4e6c66bafce385d6010842332b9a5b1"
+    },
+    {
+      "path": "docs/personalization.md",
+      "source_sha256": "7eed83cf349db35a100b7369adbc15a272fbdb42d09088d6b0583fe1620e305f",
+      "imported_sha256": "7eed83cf349db35a100b7369adbc15a272fbdb42d09088d6b0583fe1620e305f"
+    },
+    {
+      "path": "docs/storage-barrier.md",
+      "source_sha256": "17b279beda85167f11a24a7d8e937bbfa8c6698220841ad297830bb4a62bf4ee",
+      "imported_sha256": "17b279beda85167f11a24a7d8e937bbfa8c6698220841ad297830bb4a62bf4ee"
+    },
+    {
+      "path": "docs/storage.md",
+      "source_sha256": "69a69f12388443993e1d3d28cfdd953bc3f76eb94edf1886a2a6d5e636206d72",
+      "imported_sha256": "69a69f12388443993e1d3d28cfdd953bc3f76eb94edf1886a2a6d5e636206d72"
+    },
+    {
+      "path": "docs/target.md",
+      "source_sha256": "9f948a93b7adb80333d1fb7b4a960d01e4f3f6f43ccc4667921be6c28ef168ef",
+      "imported_sha256": "8aa7b9fe31437af857b0cb73d85f39b8dbfd5a0dfd80903500f5c9b4d8534ee1"
+    },
+    {
+      "path": "docs/usb.md",
+      "source_sha256": "ea360daa773fe64eb7a2c04f3152f0ed2d05e7a3cae2f2edbb293f904b437aaa",
+      "imported_sha256": "4c4d6dac60aed9fb12599cb46e9750f6cf6c0a3c0219421201581030cb6783a1"
+    },
+    {
+      "path": "evidence/apple-ibec-27-rpc-fault.json",
+      "source_sha256": "2301f210293011b9b96866ee1a25cfbbb93d8a49bdb5e4f62a1fb96da76f64d4",
+      "imported_sha256": "2301f210293011b9b96866ee1a25cfbbb93d8a49bdb5e4f62a1fb96da76f64d4"
+    },
+    {
+      "path": "evidence/apple-ibec.json",
+      "source_sha256": "9800590555a18091f4b5ab9a69f3246e1d699458f135e0b5d64f85699ef05b2b",
+      "imported_sha256": "9800590555a18091f4b5ab9a69f3246e1d699458f135e0b5d64f85699ef05b2b"
+    },
+    {
+      "path": "evidence/apple-ibss-27.json",
+      "source_sha256": "ce69ff2a8e65fa0003772f28c415d1e9ed95fdcb60f468cc56b16514b1cac0c8",
+      "imported_sha256": "ce69ff2a8e65fa0003772f28c415d1e9ed95fdcb60f468cc56b16514b1cac0c8"
+    },
+    {
+      "path": "evidence/apple-ibss.json",
+      "source_sha256": "a1e984e841696ebc6ca6174a1a50a93871646aa0bd53db7e9d7f3544b0e231f6",
+      "imported_sha256": "a1e984e841696ebc6ca6174a1a50a93871646aa0bd53db7e9d7f3544b0e231f6"
+    },
+    {
+      "path": "evidence/apple-kernel-entry.json",
+      "source_sha256": "b031dbd939478a14e3a4d03aeeec41359d56dc3eec1a3b07e3056e129e21602c",
+      "imported_sha256": "b031dbd939478a14e3a4d03aeeec41359d56dc3eec1a3b07e3056e129e21602c"
+    },
+    {
+      "path": "evidence/apple-personalization.json",
+      "source_sha256": "fb065399e980792dfcae9ed69eddd5fd63f83bd7b0ace2b02a8746a30e68d958",
+      "imported_sha256": "fb065399e980792dfcae9ed69eddd5fd63f83bd7b0ace2b02a8746a30e68d958"
+    },
+    {
+      "path": "evidence/backend-core4.json",
+      "source_sha256": "b8194d792aa370b28b4c1f876c80428b3d83db2451b92ca0893967222696db5f",
+      "imported_sha256": "b8194d792aa370b28b4c1f876c80428b3d83db2451b92ca0893967222696db5f"
+    },
+    {
+      "path": "evidence/backend-source-audit.json",
+      "source_sha256": "11ff1ecb006648fd12b9969f135745bc22fbae8474846420d809733f5babddfa",
+      "imported_sha256": "11ff1ecb006648fd12b9969f135745bc22fbae8474846420d809733f5babddfa"
+    },
+    {
+      "path": "evidence/bdif-storage.json",
+      "source_sha256": "f75d86329302e1f5e8d10a7ae68088e96d8e6e8a84e6450718c39fe93a47b756",
+      "imported_sha256": "f75d86329302e1f5e8d10a7ae68088e96d8e6e8a84e6450718c39fe93a47b756"
+    },
+    {
+      "path": "evidence/final-run-console.json",
+      "source_sha256": "d3e3ee1387d88bc8de1ddab4a86f4711b98c61c03b36a0bec71d168eddcabfaf",
+      "imported_sha256": "d3e3ee1387d88bc8de1ddab4a86f4711b98c61c03b36a0bec71d168eddcabfaf"
+    },
+    {
+      "path": "evidence/host-windows.json",
+      "source_sha256": "f1a177bb083a4eb184e1633c83c7a3c3d1c6ead541d16bf5578f7b24ef913e05",
+      "imported_sha256": "f1a177bb083a4eb184e1633c83c7a3c3d1c6ead541d16bf5578f7b24ef913e05"
+    },
+    {
+      "path": "evidence/kernel-watchdog.json",
+      "source_sha256": "fdbbd65c6fe7360186e9be46a87e8dd32e07e119cc88cd2b658bc6e014bdefd0",
+      "imported_sha256": "fdbbd65c6fe7360186e9be46a87e8dd32e07e119cc88cd2b658bc6e014bdefd0"
+    },
+    {
+      "path": "evidence/optional-rpc-unavailable.json",
+      "source_sha256": "a93332b07b219707c7dc6e2136849479f9b82cef61937db68a6929853115ceb4",
+      "imported_sha256": "a93332b07b219707c7dc6e2136849479f9b82cef61937db68a6929853115ceb4"
+    },
+    {
+      "path": "evidence/readonly-block-view.json",
+      "source_sha256": "06872cbe4d3736bb992a5d14692ddc3b1837450e2b046f4a9caf7fff931794bc",
+      "imported_sha256": "06872cbe4d3736bb992a5d14692ddc3b1837450e2b046f4a9caf7fff931794bc"
+    },
+    {
+      "path": "evidence/recovery-lifecycle.json",
+      "source_sha256": "5a39654017a7f84a087ffb12a2c5f9fa81dd5fb1432b93c235aac56e71c576a2",
+      "imported_sha256": "5a39654017a7f84a087ffb12a2c5f9fa81dd5fb1432b93c235aac56e71c576a2"
+    },
+    {
+      "path": "evidence/restore-role-metadata.json",
+      "source_sha256": "6e17077ab4fb47a759b61f8f09b4326c7cffb810c7253af3f48797338fcf8775",
+      "imported_sha256": "6e17077ab4fb47a759b61f8f09b4326c7cffb810c7253af3f48797338fcf8775"
+    },
+    {
+      "path": "evidence/storage-barrier.json",
+      "source_sha256": "f662405c90f87612c593b6b52c864fe1fd365f0ed6d9496b590355014b13396b",
+      "imported_sha256": "f662405c90f87612c593b6b52c864fe1fd365f0ed6d9496b590355014b13396b"
+    },
+    {
+      "path": "evidence/unit-windows.txt",
+      "source_sha256": "8ffb7f411b4c8d631f05c73c550a63dd1c471e94f678fa03f4f4ab31af165154",
+      "imported_sha256": "8ffb7f411b4c8d631f05c73c550a63dd1c471e94f678fa03f4f4ab31af165154"
+    },
+    {
+      "path": "evidence/vmapple-machine-help.txt",
+      "source_sha256": "cc53fdad324ca617f49064e2155549540dbfdab9733b47bcdb7cfb5b4cd5c7de",
+      "imported_sha256": "cc53fdad324ca617f49064e2155549540dbfdab9733b47bcdb7cfb5b4cd5c7de"
+    },
+    {
+      "path": "evidence/final/summary.json",
+      "source_sha256": "d3e3ee1387d88bc8de1ddab4a86f4711b98c61c03b36a0bec71d168eddcabfaf",
+      "imported_sha256": "d3e3ee1387d88bc8de1ddab4a86f4711b98c61c03b36a0bec71d168eddcabfaf"
+    },
+    {
+      "path": "evidence/final/unit-tests.txt",
+      "source_sha256": "0fb8f22f7b5e0d775a8551e570bc4bde44be8a2004b7b389ea911dc21e8a2d03",
+      "imported_sha256": "0fb8f22f7b5e0d775a8551e570bc4bde44be8a2004b7b389ea911dc21e8a2d03"
+    },
+    {
+      "path": "evidence/final/virt/report.json",
+      "source_sha256": "a39f29cd4b9c6061f74f989b77626300785ab0ce71645aaa2f62558e62a69004",
+      "imported_sha256": "a39f29cd4b9c6061f74f989b77626300785ab0ce71645aaa2f62558e62a69004"
+    },
+    {
+      "path": "evidence/final/vmapple/report.json",
+      "source_sha256": "fb6ce754ef72449cf02fc5f688146c2df9dbe4cfdd77e89df3dc5686ef8bb2dd",
+      "imported_sha256": "fb6ce754ef72449cf02fc5f688146c2df9dbe4cfdd77e89df3dc5686ef8bb2dd"
+    },
+    {
+      "path": "evidence/virt-final/report.json",
+      "source_sha256": "7c5c4a0bbd7ea6dfc6e37e7c60874fe265630d7bed3fa46637d7111c988afd58",
+      "imported_sha256": "7c5c4a0bbd7ea6dfc6e37e7c60874fe265630d7bed3fa46637d7111c988afd58"
+    },
+    {
+      "path": "evidence/vmapple-first/report.json",
+      "source_sha256": "abb07c4dbb1cbce85a5e472df9a7fbe45133baf4e1cf04d99c53c19ce492b01b",
+      "imported_sha256": "abb07c4dbb1cbce85a5e472df9a7fbe45133baf4e1cf04d99c53c19ce492b01b"
+    },
+    {
+      "path": "usb/data_partition.py",
+      "source_sha256": "60a787bf91e636e3e87a0a3ef7535d119674d6fe8363189e9d562efa7e76204a",
+      "imported_sha256": "60a787bf91e636e3e87a0a3ef7535d119674d6fe8363189e9d562efa7e76204a"
+    },
+    {
+      "path": "usb/dhcp_hook.py",
+      "source_sha256": "c32e7ca9989b3177058dbfe994e34045d47fc1c9b60465948fce16299b7346d9",
+      "imported_sha256": "c32e7ca9989b3177058dbfe994e34045d47fc1c9b60465948fce16299b7346d9"
+    },
+    {
+      "path": "usb/live_menu.py",
+      "source_sha256": "e429c4aa67de606f8d9ad136c3c08759e61c3afe2ba1af7e4dbe7a34db986e21",
+      "imported_sha256": "e429c4aa67de606f8d9ad136c3c08759e61c3afe2ba1af7e4dbe7a34db986e21"
+    },
+    {
+      "path": "usb/network.py",
+      "source_sha256": "5f832ba554d28961aecc9cb9997e9d4be2934b5c2d0b7c462d9f8ff9e7e716f5",
+      "imported_sha256": "7e4aa08228130430677b64bf4ec374864117a28b0285ef89c1cc504ef2e7753b"
+    },
+    {
+      "path": "usb/verify_uefi.py",
+      "source_sha256": "38ceedf80c60cc07707a78b1cf1b6ea827b32fce36ade6e4b9fb339f59bbe43d",
+      "imported_sha256": "38ceedf80c60cc07707a78b1cf1b6ea827b32fce36ade6e4b9fb339f59bbe43d"
+    }
+  ]
+}

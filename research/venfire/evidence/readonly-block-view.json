@@ -1,0 +1,124 @@
+{
+  "command": [
+    "/usr/bin/qemu-system-aarch64",
+    "-machine",
+    "virt",
+    "-accel",
+    "tcg",
+    "-cpu",
+    "max",
+    "-S",
+    "-display",
+    "none",
+    "-nodefaults",
+    "-nic",
+    "none",
+    "-drive",
+    "if=pflash,index=0,readonly=on,file=json:{\"driver\":\"raw\",,\"file\":{\"driver\":\"file\",,\"filename\":\"/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/work/raw-view-fixtures/comma,, and space.raw\"},,\"offset\":512,,\"read-only\":true}",
+    "-qmp",
+    "stdio"
+  ],
+  "qmp": [
+    {
+      "QMP": {
+        "version": {
+          "qemu": {
+            "micro": 2,
+            "minor": 2,
+            "major": 8
+          },
+          "package": "Debian 1:8.2.2+ds-0ubuntu1.18"
+        },
+        "capabilities": [
+          "oob"
+        ]
+      }
+    },
+    {
+      "return": {}
+    },
+    {
+      "return": [
+        {
+          "iops_rd": 0,
+          "detect_zeroes": "off",
+          "image": {
+            "virtual-size": 67108864,
+            "filename": "json:{\"offset\": 512, \"driver\": \"raw\", \"file\": {\"driver\": \"file\", \"filename\": \"/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/work/raw-view-fixtures/comma, and space.raw\"}}",
+            "format": "raw",
+            "actual-size": 67112960,
+            "dirty-flag": false
+          },
+          "iops_wr": 0,
+          "ro": true,
+          "node-name": "#block137",
+          "backing_file_depth": 0,
+          "drv": "raw",
+          "iops": 0,
+          "bps_wr": 0,
+          "write_threshold": 0,
+          "encrypted": false,
+          "bps": 0,
+          "bps_rd": 0,
+          "cache": {
+            "no-flush": false,
+            "direct": false,
+            "writeback": true
+          },
+          "file": "json:{\"offset\": 512, \"driver\": \"raw\", \"file\": {\"driver\": \"file\", \"filename\": \"/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/work/raw-view-fixtures/comma, and space.raw\"}}"
+        },
+        {
+          "iops_rd": 0,
+          "detect_zeroes": "off",
+          "image": {
+            "virtual-size": 67109376,
+            "filename": "/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/work/raw-view-fixtures/comma, and space.raw",
+            "format": "file",
+            "actual-size": 67112960,
+            "format-specific": {
+              "type": "file",
+              "data": {}
+            },
+            "dirty-flag": false
+          },
+          "iops_wr": 0,
+          "ro": true,
+          "node-name": "#block035",
+          "backing_file_depth": 0,
+          "drv": "file",
+          "iops": 0,
+          "bps_wr": 0,
+          "write_threshold": 0,
+          "encrypted": false,
+          "bps": 0,
+          "bps_rd": 0,
+          "cache": {
+            "no-flush": false,
+            "direct": false,
+            "writeback": true
+          },
+          "file": "/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/work/raw-view-fixtures/comma, and space.raw"
+        }
+      ]
+    },
+    {
+      "timestamp": {
+        "seconds": 1788635556,
+        "microseconds": 673286
+      },
+      "event": "SHUTDOWN",
+      "data": {
+        "guest": false,
+        "reason": "host-qmp-quit"
+      }
+    },
+    {
+      "return": {}
+    }
+  ],
+  "stderr": "",
+  "returncode": 0,
+  "input_sha256": "1b014082a31395af7773f64c548d8bebdcf6c1653f31c48c139b34462dfeeaee",
+  "input_unchanged": true,
+  "layer": "QemuOpts and block-backend parsing only; no guest execution"
+}

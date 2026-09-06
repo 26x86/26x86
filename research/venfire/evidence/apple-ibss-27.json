@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "experiment": "goldengate-preflight-004",
+  "layer": "Original Apple 27 iBSS under x86_64 TCG with real BDIF writes and COW storage",
+  "qemu_sha256": "f2488db869b71ed910c9804bdc68cb64315628e242e530714e4f5a47ce1772e7",
+  "original_ibss_sha256": "149111b580f1e7572348551a31af0001543d4eacdb9b662f620b2710734dbc8c",
+  "official_manifest_sha256": "4137196616826e4e8eca265eedea52bc59c925113dd96bf2a59460075080a364",
+  "product_version": "27.0",
+  "product_build": "26A5425a",
+  "original_manifest_digest_verified": true,
+  "official_tss_status": "0",
+  "actual_live_nonce_used": true,
+  "verified_https": true,
+  "original_guest_payload_preserved": true,
+  "guest_signature_bypass": false,
+  "serial_markers": [
+    "Microkernel iBootStage1 for vma2",
+    "BUILD_TAG: mBoot-20457.1.29",
+    "Entering iBootStage1 recovery mode, starting command prompt"
+  ],
+  "ibss_execution_verified": true,
+  "ibss_recovery_prompt_verified": true,
+  "kernel_execution_verified": false,
+  "macos_boot_verified": false,
+  "bdif": {
+    "guest_writes_enabled": true,
+    "write_event_count": 3,
+    "successful_write_event_count": 3,
+    "failed_write_event_count": 0,
+    "sample_actual_write_events": [
+      "bdif_vblk_write dev=aux addr=0x70045080 off=0x1000000 size=0x200 r=0",
+      "bdif_vblk_write dev=aux addr=0xe85f4200 off=0x1000000 size=0x200 r=0",
+      "bdif_vblk_write dev=aux addr=0xe8570000 off=0xa00000 size=0x80000 r=0"
+    ],
+    "storage": "Separate guest-writable COW overlays sharing the same AUX/root block nodes with virtio; blank original bases preserved"
+  },
+  "input_integrity": {
+    "valid": true,
+    "checked_count": 4,
+    "issues": []
+  },
+  "session_duration_seconds": 408.5694204680003,
+  "subsequent_ibec": {
+    "apple_tss_status": "0",
+    "apple_policy_tss_status": "0",
+    "lpolrestore_acknowledged": true,
+    "go_acknowledged": true,
+    "stage2_started": true,
+    "stage2_recovery_prompt_verified": false,
+    "panic": "4962211b03d706d:203",
+    "error_layer": "Original iBEC general exception handler; subsequent 24 MHz experiment captured unmapped config-RPC write at 0x4ffff8"
+  },
+  "limitations": [
+    "This is an authorized private Windows/WSL developer run, not a physical Mac acceptance test",
+    "AUX/root bases are unprovisioned; the resulting COW images are diagnostic state",
+    "This experiment used the historical 1 GHz CPU timer, corrected to 24 MHz in experiment005"
+  ],
+  "source": "https://updates.cdn-apple.com/2026SummerSeed/b3d7996f-4f91-4586-842a-345c550d7d47/UniversalMac_27.0_26A5425a_Restore.ipsw"
+}

@@ -1,0 +1,109 @@
+--- a/hw/display/reims-vgpu-mmio.c
++++ b/hw/display/reims-vgpu-mmio.c
+@@ -103,6 +103,7 @@
+      * pages (that dual-mid A/B thrash / dock-band mid-composite).
+      */
+     bool new_frame_ready;
++    uint8_t *efi_staging;
+     /* Device poll stays on QEMU's background emulation loop. */
+     QEMUTimer *poll_timer;
+ 
+@@ -502,6 +503,63 @@
+         qemu_console_set_surface(s->con, s->surface);
+     }
+     trace_reims_vgpu_mmio_mode_change(width, height);
++}
++
++/*
++ * The pinned Rust ABI copies a guest-programmed EFI RAM framebuffer as BGRA8.
++ * Keep an unsuccessful copy from changing the last valid display surface.
++ * Source registers mirror model/regs.rs; zero depth/length/stride are the
++ * pinned model's initial unspecified values, not an alternate pixel format.
++ */
++static bool reims_vgpu_mmio_copy_early_console(ReimsVGPUMMIOState *s)
++{
++    const uint32_t w = REIMS_VGPU_EFI_BOOT_WIDTH;
++    const uint32_t h = REIMS_VGPU_EFI_BOOT_HEIGHT;
++    uint64_t fb, stride, depth, length, span;
++    size_t bytes;
++    int dst_stride;
++
++    if (!s->rust_handle ||
++        reims_vgpu_qemu_gfx_read(s->rust_handle, 0x1210, 8, &fb) != REIMS_VGPU_QEMU_OK ||
++        reims_vgpu_qemu_gfx_read(s->rust_handle, 0x1228, 4, &stride) != REIMS_VGPU_QEMU_OK ||
++        reims_vgpu_qemu_gfx_read(s->rust_handle, 0x1218, 4, &depth) != REIMS_VGPU_QEMU_OK ||
++        reims_vgpu_qemu_gfx_read(s->rust_handle, 0x1214, 4, &length) != REIMS_VGPU_QEMU_OK ||
++        !fb || (depth != 0 && depth != 32)) {
++        return false;
++    }
++    stride = stride ? stride : w * 4u;
++    /* Bound row padding by the backend's existing maximum pixel-row width. */
++    if (stride < w * 4u || stride > REIMS_VGPU_MAX_SCANOUT_DIM * 4u) {
++        return false;
++    }
++    span = (h - 1u) * stride + w * 4u;
++    if (fb > UINT64_MAX - span || (length && length < span)) {
++        return false;
++    }
++    reims_vgpu_mmio_set_mode(s, w, h);
++    if (!s->surface || HOST_BIG_ENDIAN ||
++        surface_format(s->surface) != PIXMAN_x8r8g8b8 ||
++        surface_width(s->surface) != w || surface_height(s->surface) != h) {
++        return false;
++    }
++    dst_stride = surface_stride(s->surface);
++    if (dst_stride != w * 4u || h > SIZE_MAX / dst_stride) {
++        return false;
++    }
++    bytes = (size_t)dst_stride * h;
++    if (!s->efi_staging) {
++        s->efi_staging = g_malloc0(bytes);
++    }
++    /* Rust checks every source page is RAM before reading any row. This also
++     * prevents a framebuffer aimed at our own MMIO from reentering the device.
++     */
++    if (reims_vgpu_qemu_efi_console_copy(s->rust_handle, s->efi_staging,
++                                        dst_stride, w, h) != REIMS_VGPU_QEMU_OK) {
++        return false;
++    }
++    memcpy(surface_data(s->surface), s->efi_staging, bytes);
++    trace_reims_vgpu_mmio_firmware_copy(fb, stride, w, h);
++    return true;
+ }
+ 
+ /*
+@@ -778,13 +836,11 @@
+         return true;
+     }
+     if (kind == REIMS_VGPU_CONSOLE_FEED_FIRMWARE) {
+-        /*
+-         * The guest is still on its firmware console and there is no BAR1 GOP on
+-         * this pathway to copy from, so nothing is painted. Return rather than
+-         * fall through: the pending frame below is a product one, and pushing it
+-         * while Rust says the firmware console owns the screen is the
+-         * pre-boundary steal this feed exists to prevent.
+-         */
++        if (reims_vgpu_mmio_copy_early_console(s)) {
++            qemu_console_update_full(s->con);
++            s->new_frame_ready = false;
++        }
++        /* Do not publish a product frame while firmware owns the console. */
+         return true;
+     }
+ 
+@@ -1106,6 +1162,7 @@
+     s->dirty = NULL;
+     reims_vgpu_mmio_free_page_views(s);
+     g_clear_pointer(&s->page_views, g_array_unref);
++    g_clear_pointer(&s->efi_staging, g_free);
+     if (s->con) {
+         qemu_console_set_surface(s->con, NULL);
+     }
+--- a/hw/display/trace-events
++++ b/hw/display/trace-events
+@@ -246,3 +246,5 @@
+ reims_vgpu_pci_mode_change(uint64_t width, uint64_t height) "mode=%"PRIu64"x%"PRIu64
+ 
+ reims_vgpu_mmio_read_xreg(int cpu_index, uint32_t index, uint64_t value) "cpu=%d x%u=0x%"PRIx64
++
++reims_vgpu_mmio_firmware_copy(uint64_t fb, uint64_t stride, uint32_t width, uint32_t height) "fb=0x%"PRIx64" stride=%"PRIu64" %ux%u"

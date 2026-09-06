@@ -1,0 +1,73 @@
+--- a/hw/display/reims-vgpu-mmio.c
++++ b/hw/display/reims-vgpu-mmio.c
+@@ -23,6 +23,8 @@
+ #include "qemu/memalign.h"
+ #include "qemu/module.h"
+ #include "qemu/timer.h"
++#include "qemu/bswap.h"
++#include "qemu/target-info.h"
+ #include "qemu/main-loop.h"
+ #include "qemu/aio.h"
+ #include "qapi/error.h"
+@@ -43,10 +45,10 @@
+ #include "reims-vgpu-shim.h"
+ 
+ /*
+- * Guest X-regs and mach_vm page aliasing are Darwin product paths (arm guest
+- * under HVF). TARGET_* macros are poisoned in common softmmu objects, so these
+- * paths are gated on CONFIG_DARWIN only. On Linux/x86 the callbacks fail closed;
+- * protocol/decode still runs through the Rust staticlib (Metal host stubs).
++ * mach_vm page aliasing remains a Darwin product path (ARM guest under HVF).
++ * TARGET_* macros are poisoned in common softmmu objects. Other hosts use the
++ * target-neutral CPUClass register interface for the synchronous mapper handoff;
++ * the Rust engine uses GPA copies where page aliasing is unavailable.
+  */
+ #if defined(CONFIG_DARWIN)
+ #include <dispatch/dispatch.h>
+@@ -186,10 +188,34 @@
+     *out = cpu->env.xregs[index];
+     return 0;
+ #else
+-    (void)ctx;
+-    (void)index;
+-    (void)out;
+-    return -1;
++    CPUState *cs = current_cpu;
++    CPUClass *cc;
++    g_autoptr(GByteArray) value = NULL;
++    int size;
++
++    /* Read only the vCPU that is synchronously publishing this MMIO write.
++     * This common device object must not include target/arm/cpu.h. The ARM
++     * core GDB register interface supplies x0..x30/SP in target byte order.
++     * AArch32 callbacks return four bytes and are rejected below. No GDB
++     * server is started and no CPU register is written by this operation.
++     */
++    if (!out || index >= 32 || !cs || !target_aarch64() ||
++        !object_dynamic_cast(OBJECT(cs), "arm-cpu")) {
++        return -1;
++    }
++    cc = CPU_GET_CLASS(cs);
++    if (!cc->gdb_read_register) {
++        return -1;
++    }
++    cpu_synchronize_state(cs);
++    value = g_byte_array_sized_new(sizeof(uint64_t));
++    size = cc->gdb_read_register(cs, value, index);
++    if (size != sizeof(uint64_t) || value->len != sizeof(uint64_t)) {
++        return -1;
++    }
++    *out = target_big_endian() ? ldq_be_p(value->data) : ldq_le_p(value->data);
++    trace_reims_vgpu_mmio_read_xreg(cs->cpu_index, index, *out);
++    return 0;
+ #endif
+ }
+ 
+--- a/hw/display/trace-events
++++ b/hw/display/trace-events
+@@ -244,3 +244,5 @@
+ reims_vgpu_pci_irq_gfx(void) "msi vector 0"
+ reims_vgpu_pci_scanout(uint64_t mapping_id, uint64_t width, uint64_t height) "mapping=%"PRIu64" %"PRIu64"x%"PRIu64
+ reims_vgpu_pci_mode_change(uint64_t width, uint64_t height) "mode=%"PRIu64"x%"PRIu64
++
++reims_vgpu_mmio_read_xreg(int cpu_index, uint32_t index, uint64_t value) "cpu=%d x%u=0x%"PRIx64

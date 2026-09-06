@@ -1,0 +1,2 @@
+# Host-only release bundle signing dependency; never linked into VSK.
+cryptography==50.0.1

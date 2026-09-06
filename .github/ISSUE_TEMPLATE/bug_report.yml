@@ -3,6 +3,23 @@ description: Report a boot, panic, or patching issue with 26x86 / Melden Sie ein
 title: "[Bug]: "
 labels: ["bug"]
 body:
+  - type: checkboxes
+    id: apple-hardware-support
+    attributes:
+      label: Apple hardware support policy
+      description: Non-Apple machines have no operation guarantee and issues from them are not accepted. 비 Apple 기기는 동작을 보증하지 않으며 이슈를 받지 않습니다.
+      options:
+        - label: This hardware issue concerns a genuine Apple Mac.
+          required: true
+  - type: dropdown
+    id: execution-mode
+    attributes:
+      label: Execution mode
+      options:
+        - Native Patch
+        - Apple Silicon Sandbox (EFI / AIC / iBoot)
+    validations:
+      required: true
   - type: markdown
     attributes:
       value: |

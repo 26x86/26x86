@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "target": "vmapple",
+  "acceleration": "tcg",
+  "layer": "emulated AArch64 CPU and EL1 MMU",
+  "guest_sha256": "2aafe4392c9b30b04d0509efb0f3a15cca09278153b69e934a862de035eed594",
+  "guest_path": "/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/outputs/venfire/guests/vmapple.bin",
+  "limitations": [
+    "Self-authored guest only; no macOS, XNU, Apple boot chain, or Apple firmware executed.",
+    "Single emulated CPU; one GICv3 virtual-timer PPI27 delivery/EOI path is checked.",
+    "4KiB/16KiB granules use block mappings, not a complete VM subsystem or stage 2.",
+    "16 negative PAC contexts are finite checks, not a cryptographic audit or Apple PAC match.",
+    "Self-modifying code checks TCG coherency, not physical CPU cache behavior.",
+    "GPU, Metal, SMP, DMA, storage drivers, suspend and real-Mac boot are untested."
+  ],
+  "macos_boot_verified": false,
+  "qemu_version": "QEMU emulator version 11.1.50",
+  "command": [
+    "/home/developer/work/venfire-20260906/qemu-build/qemu-system-aarch64",
+    "-accel",
+    "tcg",
+    "-m",
+    "128M",
+    "-smp",
+    "1",
+    "-display",
+    "none",
+    "-monitor",
+    "none",
+    "-serial",
+    "stdio",
+    "-net",
+    "none",
+    "-semihosting-config",
+    "enable=on,target=native",
+    "-cpu",
+    "max,pauth-qarma5=on",
+    "-M",
+    "vmapple,research-headless=on",
+    "-bios",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/outputs/venfire/guests/vmapple.bin",
+    "-drive",
+    "if=pflash,unit=0,format=raw,readonly=on,file=/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/outputs/venfire/evidence/vmapple-first/synthetic-aux.bin",
+    "-drive",
+    "if=pflash,unit=1,format=raw,readonly=on,file=/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/outputs/venfire/evidence/vmapple-first/synthetic-root.bin"
+  ],
+  "cpu": "max,pauth-qarma5=on",
+  "passed": true,
+  "completed": true,
+  "cases": [
+    {
+      "name": "el1_entry",
+      "status": "pass"
+    },
+    {
+      "name": "integer_memory",
+      "status": "pass"
+    },
+    {
+      "name": "pauth_roundtrip",
+      "status": "pass"
+    },
+    {
+      "name": "pauth_wrong_context",
+      "status": "pass"
+    },
+    {
+      "name": "exception_svc",
+      "status": "pass"
+    },
+    {
+      "name": "mmu_4k_permissions",
+      "status": "pass"
+    },
+    {
+      "name": "mmu_4k_translation",
+      "status": "pass"
+    },
+    {
+      "name": "mmu_16k_permissions",
+      "status": "pass"
+    },
+    {
+      "name": "mmu_16k_translation",
+      "status": "pass"
+    },
+    {
+      "name": "timer_deadline",
+      "status": "pass"
+    },
+    {
+      "name": "gicv3_timer_irq",
+      "status": "pass"
+    },
+    {
+      "name": "self_modify",
+      "status": "pass"
+    }
+  ],
+  "errors": [],
+  "passed_count": 12,
+  "case_count": 12,
+  "duration_seconds": 0.082581,
+  "returncode": 0,
+  "timed_out": false,
+  "attempts": [
+    {
+      "cpu": "max,pauth-qarma5=on",
+      "returncode": 0,
+      "stderr": "qemu-system-aarch64: warning: vmapple research mode: no Apple PV graphics; macOS boot is unverified\n"
+    }
+  ],
+  "serial_log": "/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/outputs/venfire/evidence/vmapple-first/serial.log",
+  "stderr_log": "/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/outputs/venfire/evidence/vmapple-first/stderr.log"
+}

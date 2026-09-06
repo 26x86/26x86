@@ -5,27 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://127.0.0.1:* http://localhost:* 'unsafe-inline' 'unsafe-eval' data: blob: file: qrc:; script-src 'self' http://127.0.0.1:* http://localhost:* 'unsafe-inline' 'unsafe-eval' file: qrc:; style-src 'self' http://127.0.0.1:* http://localhost:* 'unsafe-inline' file:; img-src 'self' data: file: https: http://127.0.0.1:* http://localhost:*;" />
   <title>26x86</title>
-  <style>
-    html, body { margin: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; color: #1a2332; background: #e8edf3; }
-    .app { display: grid; grid-template-rows: auto 1fr auto; height: 100vh; padding: 16px; gap: 14px; box-sizing: border-box; }
-    .card { border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgba(163,177,198,.35); padding: 16px 18px; }
-    .header { display: flex; align-items: center; gap: 14px; }
-    .logo-fallback { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg,#34c759,#007aff); color: #fff; font-weight: 700; }
-    .app-title { margin: 0; font-size: 1.35rem; }
-    .app-subtitle, .tagline, .lead, .muted, .step-counter { color: #5c6b7f; margin: 4px 0 0; }
-    .main { display: grid; grid-template-columns: 200px 1fr; gap: 14px; min-height: 0; }
-    .sidebar { background: #f4f7fb; }
-    .content { display: flex; flex-direction: column; min-height: 0; }
-    .step-content { flex: 1; overflow: auto; }
-    .nav-footer { display: flex; justify-content: space-between; margin-top: 16px; gap: 10px; }
-    .btn { border: 0; border-radius: 10px; padding: 10px 16px; font-size: 0.95rem; cursor: pointer; }
-    .btn.primary { background: linear-gradient(135deg,#34c759,#007aff); color: #fff; }
-    .btn.secondary, .btn.ghost { background: #e8edf3; color: #1a2332; }
-    .status-bar { display: flex; justify-content: space-between; font-size: 0.85rem; color: #5c6b7f; padding: 0 4px; }
-    .boot-banner { padding: 12px 14px; border-radius: 12px; background: #fff8e6; color: #6b4e00; margin-bottom: 14px; }
-    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #a3b1c6; border-top-color: #007aff; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: -2px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -38,47 +17,47 @@
       <div class="header-text">
         <h1 id="app-title" class="app-title">26x86</h1>
         <p id="app-subtitle" class="app-subtitle">com.niseullent.26x86</p>
-        <p class="tagline">오래된 Mac, 새 macOS</p>
+        <p class="tagline">Mac compatibility workspace</p>
       </div>
-      <div class="header-actions">
+      <div class="header-actions"><span id="connection-badge" class="badge">연결 대기</span>
         <button type="button" class="btn ghost" id="btn-settings" title="설정">설정</button>
         <button type="button" class="btn ghost" id="btn-help" title="도움말">도움말</button>
       </div>
     </header>
     <div class="main">
       <aside class="sidebar card surface">
-        <nav id="stepper" class="stepper" aria-label="마법사 단계">
+        <p class="eyebrow sidebar-label">WORKSPACE</p><nav id="stepper" class="stepper" aria-label="마법사 단계">
           <button type="button" class="step-btn active" disabled>시작</button>
           <button type="button" class="step-btn" disabled>1. 내 Mac 확인</button>
           <button type="button" class="step-btn" disabled>2. 패치 생성</button>
           <button type="button" class="step-btn" disabled>3. 설치·패치</button>
           <button type="button" class="step-btn" disabled>4. 완료</button>
         </nav>
-        <div class="sidebar-footer">
+        <div class="sidebar-footer"><div class="host-card"><span class="eyebrow">대상 기기</span><strong id="sidebar-host">확인 대기</strong><span id="sidebar-mode">Native Patch</span></div>
           <div class="progress-track" aria-hidden="true"><div id="progress-bar" class="progress-fill" style="width:20%"></div></div>
           <p id="step-counter" class="step-counter">1 / 5</p>
         </div>
       </aside>
-      <section class="content card elevated">
-        <div id="step-content" class="step-content">
+      <section class="content card elevated" aria-label="작업 공간">
+        <div id="step-content" class="step-content" tabindex="-1">
           <div class="boot-banner" id="boot-banner">
             <span class="spinner" aria-hidden="true"></span>
-            마법사 화면을 준비하는 중… Python 연결을 기다리는 동안에도 이 창은 정상입니다.
+            로컬 작업 엔진에 연결하는 중…
           </div>
           <div class="welcome-hero">
-            <div class="hero-icon">26</div>
-            <h2>26x86에 오신 것을 환영합니다</h2>
-            <p class="lead">오래된 Mac에서 최신 macOS를 사용할 수 있도록 단계별로 안내합니다.</p>
+            <span class="eyebrow">26x86 / CONTROL CENTER</span>
+            <h2>당신의 Mac, 다음 장으로.</h2>
+            <p class="lead">기기를 확인하고, 실행 방식을 선택하고, 검증 결과를 확인하세요.</p>
           </div>
         </div>
-        <footer class="nav-footer">
+        <footer class="nav-footer"><span id="navigation-context" class="muted">단계를 이동해도 작업은 자동 실행되지 않습니다.</span>
           <button type="button" class="btn secondary" id="btn-prev" disabled>← 이전</button>
           <button type="button" class="btn primary" id="btn-next" disabled>다음 →</button>
         </footer>
       </section>
     </div>
     <footer class="status-bar">
-      <span id="status-text">UI 로딩 중…</span>
+      <span id="status-text" role="status" aria-live="polite">UI 로딩 중…</span>
       <span id="version-text" class="muted"></span>
     </footer>
   </div>

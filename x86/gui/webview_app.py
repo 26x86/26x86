@@ -31,6 +31,40 @@ class WebviewApi:
     def get_app_info(self) -> dict[str, Any]:
         return self._bridge.get_app_info()
 
+    def get_sandbox_status(self):
+        return self._bridge.get_sandbox_status()
+
+    def set_execution_mode(self, mode: str):
+        return self._bridge.set_execution_mode(mode)
+
+    def get_sandbox_plan(self, target_major: int):
+        return self._bridge.get_sandbox_plan(target_major)
+
+    def prepare_sandbox(self, target_major: int, output_path: str):
+        return self._bridge.prepare_sandbox(target_major, output_path)
+
+    def get_vmapple_status(self):
+        return self._bridge.get_vmapple_status()
+
+    def get_boot_picker_status(self):
+        return self._bridge.get_boot_picker_status()
+
+    def start_boot_picker(self, target_major: int = 27, recovery_protocol: str = "DFU/IPSW",
+                          recovery_image_name: str = "_default.ipsw"):
+        return self._bridge.start_boot_picker(target_major, recovery_protocol, recovery_image_name)
+
+    def tick_boot_picker(self):
+        return self._bridge.tick_boot_picker()
+
+    def boot_picker_key(self, key: object, pressed: bool = True):
+        return self._bridge.boot_picker_key(key, pressed)
+
+    def select_boot_entry(self, entry_id: object):
+        return self._bridge.select_boot_entry(entry_id)
+
+    def launch_vmapple(self, config: dict[str, Any]):
+        return self._bridge.launch_vmapple(config)
+
     def set_hardware_profile(self, profile=None) -> dict[str, Any]:
         return self._bridge.set_hardware_profile(profile)
 
@@ -210,8 +244,8 @@ def _launch_pywebview_wizard(*, advanced: bool, requested: str, smoke_report=Non
                 title,
                 url=url,
                 js_api=api,
-                width=960,
-                height=720,
+                width=1180,
+                height=820,
                 min_size=(760, 560),
                 resizable=True,
                 text_select=True,

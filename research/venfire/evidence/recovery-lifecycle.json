@@ -1,0 +1,86 @@
+{
+  "checks": [
+    {
+      "name": "disabled after device reset",
+      "passed": true
+    },
+    {
+      "name": "enable readback",
+      "passed": true
+    },
+    {
+      "name": "disable completes with control zero",
+      "passed": true
+    },
+    {
+      "name": "disable disconnects partial old frame",
+      "passed": true
+    },
+    {
+      "name": "disabled queue has no completion",
+      "passed": true
+    },
+    {
+      "name": "partial old frame never DMA written",
+      "passed": true
+    },
+    {
+      "name": "old RX ownership canceled across disable",
+      "passed": true
+    },
+    {
+      "name": "new descriptor receives exact current frame",
+      "passed": true
+    },
+    {
+      "name": "RX completion is consumed once",
+      "passed": true
+    },
+    {
+      "name": "iBSS 1 MiB plus header capacity accepts actual short frame",
+      "passed": true
+    },
+    {
+      "name": "descriptor above supported capacity does not DMA or complete",
+      "passed": true
+    },
+    {
+      "name": "second disable readback",
+      "passed": true
+    }
+  ],
+  "qtest_commands": 34,
+  "max_frame": 1048582,
+  "generated_input_hashes": [
+    {
+      "name": "own-halted-fixture.bin",
+      "size_bytes": 16,
+      "sha256": "1cc16549fe634448aa3f9499bf4b20fb6d3da3c765c4a0c73d3c4cd97255c950"
+    },
+    {
+      "name": "aux.raw",
+      "size_bytes": 67108864,
+      "sha256": "3b6a07d0d404fab4e23b6d34bc6696a6a312dd92821332385e5af7c01c421351"
+    },
+    {
+      "name": "root.raw",
+      "size_bytes": 134217728,
+      "sha256": "254bcc3fc4f27172636df4bf32de9f107f620d559b20d760197e452b97453917"
+    }
+  ],
+  "inputs_unchanged": true,
+  "schema_version": 1,
+  "layer": "QEMU BDIF USB device MMIO and DMA",
+  "passed": true,
+  "guest_code_executed": false,
+  "apple_assets_used": false,
+  "qemu": {
+    "size_bytes": 121083728,
+    "sha256": "d3735b9c16699be006f746062618adb70d2c6dc995ce154620ddada0957ce651"
+  },
+  "not_established": [
+    "Apple firmware acceptance",
+    "macOS boot",
+    "bounded synchronous TX latency under peer backpressure"
+  ]
+}

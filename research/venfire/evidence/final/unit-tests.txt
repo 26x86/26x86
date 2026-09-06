@@ -1,0 +1,61 @@
+test_change_while_hashing_is_rejected (test_artifacts.ArtifactTests.test_change_while_hashing_is_rejected) ... ok
+test_device_and_fifo_are_rejected_without_blocking (test_artifacts.ArtifactTests.test_device_and_fifo_are_rejected_without_blocking) ... ok
+test_directory_is_rejected_before_read (test_artifacts.ArtifactTests.test_directory_is_rejected_before_read) ... ok
+test_duplicate_json_keys_and_oversized_manifest_rejected (test_artifacts.ArtifactTests.test_duplicate_json_keys_and_oversized_manifest_rejected) ... ok
+test_empty_single_string_or_duplicate_input_list_is_rejected (test_artifacts.ArtifactTests.test_empty_single_string_or_duplicate_input_list_is_rejected) ... ok
+test_file_symlink_is_rejected (test_artifacts.ArtifactTests.test_file_symlink_is_rejected) ... ok
+test_hash_manifest_roundtrip_does_not_modify_source (test_artifacts.ArtifactTests.test_hash_manifest_roundtrip_does_not_modify_source) ... ok
+test_manifest_never_overwrites_input_or_existing_output (test_artifacts.ArtifactTests.test_manifest_never_overwrites_input_or_existing_output) ... ok
+test_parent_symlink_is_rejected (test_artifacts.ArtifactTests.test_parent_symlink_is_rejected) ... ok
+test_parent_traversal_is_rejected_before_normalization (test_artifacts.ArtifactTests.test_parent_traversal_is_rejected_before_normalization) ... ok
+test_read_regular_checks_identity_even_when_consumer_raises (test_artifacts.ArtifactTests.test_read_regular_checks_identity_even_when_consumer_raises) ... ok
+test_same_size_corruption_is_detected (test_artifacts.ArtifactTests.test_same_size_corruption_is_detected) ... ok
+test_schema_and_digest_validation (test_artifacts.ArtifactTests.test_schema_and_digest_validation) ... ok
+test_truncation_and_missing_file_are_detected (test_artifacts.ArtifactTests.test_truncation_and_missing_file_are_detected) ... ok
+test_unc_device_namespace_and_alternate_streams_rejected (test_artifacts.ArtifactTests.test_unc_device_namespace_and_alternate_streams_rejected) ... skipped 'Windows path namespace'
+test_cancellation_terminates_backend_and_preserves_postcheck (test_boot.BootIntegrityTests.test_cancellation_terminates_backend_and_preserves_postcheck) ... ok
+test_mutation_during_backend_execution_invalidates_result (test_boot.BootIntegrityTests.test_mutation_during_backend_execution_invalidates_result) ... ok
+test_original_inputs_and_backend_are_verified_and_never_marked_macos_booted (test_boot.BootIntegrityTests.test_original_inputs_and_backend_are_verified_and_never_marked_macos_booted) ... ok
+test_prelaunch_change_denies_process_and_records_postcheck (test_boot.BootIntegrityTests.test_prelaunch_change_denies_process_and_records_postcheck) ... ok
+test_spawn_error_still_verifies_inputs_and_records_failure (test_boot.BootIntegrityTests.test_spawn_error_still_verifies_inputs_and_records_failure) ... ok
+test_host_check_precedes_backend_and_input_access (test_boot.BootPolicyTests.test_host_check_precedes_backend_and_input_access) ... ok
+test_invalid_offset_fails (test_boot.BootPolicyTests.test_invalid_offset_fails) ... ok
+test_readonly_json_view_preserves_comma_path (test_boot.BootPolicyTests.test_readonly_json_view_preserves_comma_path) ... ok
+test_actual_guest_completes_all_required_cases (test_conformance.ActualTCGTests.test_actual_guest_completes_all_required_cases) ... skipped 'set VENFIRE_TEST_QEMU for actual TCG execution'
+test_bundled_guest_matches_reviewable_source (test_conformance.ConformanceSafetyTests.test_bundled_guest_matches_reviewable_source) ... ok
+test_existing_output_is_not_modified (test_conformance.ConformanceSafetyTests.test_existing_output_is_not_modified) ... ok
+test_generated_drive_paths_escape_commas (test_conformance.ConformanceSafetyTests.test_generated_drive_paths_escape_commas) ... ok
+test_guest_symlink_is_rejected (test_conformance.ConformanceSafetyTests.test_guest_symlink_is_rejected) ... ok
+test_mutated_guest_is_rejected_before_execution (test_conformance.ConformanceSafetyTests.test_mutated_guest_is_rejected_before_execution) ... ok
+test_timeout_is_bounded_and_finite (test_conformance.ConformanceSafetyTests.test_timeout_is_bounded_and_finite) ... ok
+test_complete_success_requires_clean_exit (test_conformance.EvidenceParsingTests.test_complete_success_requires_clean_exit) ... ok
+test_duplicate_and_contradictory_evidence_fail_closed (test_conformance.EvidenceParsingTests.test_duplicate_and_contradictory_evidence_fail_closed) ... ok
+test_incomplete_serial_never_becomes_success (test_conformance.EvidenceParsingTests.test_incomplete_serial_never_becomes_success) ... ok
+test_unsupported_is_not_success (test_conformance.EvidenceParsingTests.test_unsupported_is_not_success) ... ok
+test_any_missing_required_probe_denies (test_host.HostTests.test_any_missing_required_probe_denies) ... ok
+test_arm_mac_denied_without_probes (test_host.HostTests.test_arm_mac_denied_without_probes) ... ok
+test_diagnostics_are_serial_free (test_host.HostTests.test_diagnostics_are_serial_free) ... ok
+test_eligible_intel_mac_with_avx2_and_independent_evidence (test_host.HostTests.test_eligible_intel_mac_with_avx2_and_independent_evidence) ... ok
+test_feature_token_must_be_exact (test_host.HostTests.test_feature_token_must_be_exact) ... ok
+test_invalid_xml_denies_and_has_no_raw_output_in_report (test_host.HostTests.test_invalid_xml_denies_and_has_no_raw_output_in_report) ... ok
+test_mac_pro_2009_without_avx2_is_denied (test_host.HostTests.test_mac_pro_2009_without_avx2_is_denied) ... ok
+test_mismatching_registry_model_or_manufacturer_denies (test_host.HostTests.test_mismatching_registry_model_or_manufacturer_denies) ... ok
+test_missing_smc_or_invalid_board_id_denies (test_host.HostTests.test_missing_smc_or_invalid_board_id_denies) ... ok
+test_no_environment_override_and_error_carries_report (test_host.HostTests.test_no_environment_override_and_error_carries_report) ... ok
+test_separate_nodes_cannot_combine_into_positive_identity (test_host.HostTests.test_separate_nodes_cannot_combine_into_positive_identity) ... ok
+test_vm_flag_and_vm_identifiers_deny_even_apple_shaped_platform (test_host.HostTests.test_vm_flag_and_vm_identifiers_deny_even_apple_shaped_platform) ... ok
+test_windows_is_diagnostic_only_and_runs_no_apple_probes (test_host.HostTests.test_windows_is_diagnostic_only_and_runs_no_apple_probes) ... ok
+test_probe_timeout_is_fail_closed (test_host.ProbeTests.test_probe_timeout_is_fail_closed) ... ok
+test_probe_uses_read_only_absolute_tool_and_never_shell (test_host.ProbeTests.test_probe_uses_read_only_absolute_tool_and_never_shell) ... ok
+test_corrupt_deflate_stream_returns_cli_json (test_media.RestoreInspectionTests.test_corrupt_deflate_stream_returns_cli_json) ... ok
+test_invalid_archive_and_xml_return_cli_json_errors (test_media.RestoreInspectionTests.test_invalid_archive_and_xml_return_cli_json_errors) ... ok
+test_malformed_nested_plist_types_fail_cleanly (test_media.RestoreInspectionTests.test_malformed_nested_plist_types_fail_cleanly) ... ok
+test_missing_manifest_fails (test_media.RestoreInspectionTests.test_missing_manifest_fails) ... ok
+test_real_metadata_and_no_extraction (test_media.RestoreInspectionTests.test_real_metadata_and_no_extraction) ... ok
+test_symlink_archive_is_rejected_without_resolving (test_media.RestoreInspectionTests.test_symlink_archive_is_rejected_without_resolving) ... ok
+test_unsafe_component_reported_without_extracting (test_media.RestoreInspectionTests.test_unsafe_component_reported_without_extracting) ... ok
+
+----------------------------------------------------------------------
+Ran 56 tests in 0.442s
+
+OK (skipped=2)

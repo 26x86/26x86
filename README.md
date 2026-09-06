@@ -15,6 +15,8 @@
 | **[위키 홈](docs/wiki/Home.md)** | 주의사항, 설치, 설정, 이전 패처에서 전환 |
 | [Releases](https://github.com/NiSeullent/26x86/releases) | 안정 빌드 |
 | [SOURCE.md](SOURCE.md) | 소스 실행·빌드 |
+| [iBoot Personality 범위](docs/IBOOT_PERSONALITY.md) | macOS 전용 게스트·DFU/IPSW 정책 |
+| [부트 피커·복구](docs/BOOT_PICKER_RECOVERY.md) | 2초 Alt/Option 입력과 macOS Recovery 경로 |
 
 영문: [docs/README.en.md](docs/README.en.md)
 
@@ -56,3 +58,49 @@ Surface Pro 6 i5-8250U / Tahoe 준비·검사와 macOS 루트 패치 경로:
 ## 법적
 
 [DISCLAIMER.md](DISCLAIMER.md) · [LICENSE.txt](LICENSE.txt) · [NOTICE.md](NOTICE.md) · [원본 저장소](docs/wiki/Upstream-Repositories.md) · [CREDITS.md](CREDITS.md)
+
+## Apple Silicon Sandbox integration
+
+EFI-native AArch64 translation, AIC and iBoot integration for macOS 26/27 is in development. See [architecture and actual validation status](docs/APPLE_SILICON_SANDBOX.md) and the adopted [VSK isolation design and implementation](docs/VSK.md). VSK product admission is fixed to approved Intel Macs and requires VMX/EPT, VT-d and interrupt remapping. The existing EFI self-test is not a VSK kernel or macOS boot environment.
+
+The reproducible QEMU GUI commands and their result boundaries are documented
+in [QEMU Golden Gate GUI validation](docs/QEMU_GOLDEN_GATE_GUI.md). A visible
+QEMU window is diagnostic evidence only; it does not certify iBoot, XNU or
+physical-Mac boot.
+
+The Sandbox screen in the 26x86 GUI exposes a visible `GTK VM 창 열기` action
+and the complete live-personalization path. It accepts the official
+`BuildManifest.plist`, a local TSS request helper and unchanged original iBSS/iBEC
+components. Fresh IMG4 outputs are written to a new directory for the current
+USB nonce; the IPSW, installer files, existing ESP and source components are
+never modified. A legacy pre-personalized input mode remains available only for
+diagnostic runs. On Windows, a Linux VMApple QEMU path is re-executed in WSLg
+with a shell-free `wsl.exe` command; the CLI equivalent is
+`python3 -m x86 vmapple run --live-personalize --research-only`.
+
+The VMApple config device is explicitly set to the guest metadata
+`Apple M1 (Virtual)` / `VM0001`. This makes the intended iBoot personality
+observable in the report; it is metadata only and is not Apple hardware
+attestation. Both paths preserve immutable firmware and use COW overlays, and
+stop at the real post-reset USB descriptor boundary instead of forcing iBEC
+admission.
+
+The iBoot(AArch64) personality is deliberately macOS-only: macOS is supported,
+while iOS, iPadOS and other mobile Apple OS requests are rejected before DFU.
+Its DFU/IPSW recovery scope uses `_default.ipsw` for Local Recovery. Inspect the
+enforced matrix without starting a VM with
+`python3 -m x86 personality validate --guest-os macOS`.
+
+The GUI now arms a two-second boot picker. Press Alt/Option during that window,
+choose `macOS Recovery · _default.ipsw`, and then open the visible Recovery VM.
+The picker and its input source are recorded in `launch.json`; a Golden Gate
+installation is reported only after iBEC, XNU and macOS UI evidence exists. The
+latest live TSS Alt→Recovery GTK run is summarized in
+[integration/vmapple-gui-bootpicker-report.json](integration/vmapple-gui-bootpicker-report.json);
+it records successful iBSS personalization, DFU reset, re-enumeration as
+`05ac:1281` with bulk endpoint 4, LocalPolicy/iBEC uploads and `go`. The
+original iBEC reaches the Stage2 command prompt. The restore chain then sends
+the five official restore roles, records the expected pre-boot notification
+STALL, and receives a `bootx` acknowledgement before iBoot emits a panic. XNU,
+graphics and the Golden Gate installer UI remain unverified. No transition is
+forced and installation verification remains false.

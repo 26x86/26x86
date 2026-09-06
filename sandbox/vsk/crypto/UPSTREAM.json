@@ -1,0 +1,102 @@
+{
+  "schema": "26x86.crypto-sources/1",
+  "monocypher": {
+    "version": "4.0.3",
+    "revision": "ab2b16dd619ad5f6979a4fbe69cfa324a6fcc35f",
+    "url": "https://monocypher.org/download/monocypher-4.0.3.tar.gz",
+    "archive_sha256": "8cc9bc341a66249016db9bd70e9142d8d0aef9945973744b1ac05dbc55d8ee66",
+    "archive_sha512": "40904ada5c7ee4f7741733e38b69a30a4b0561cbffba5ffe7c2dce16136d540251ec0d9056ff606510d3b5b708fb8a40db7e0870d4a0b2dc17ba2bfb880f8965",
+    "published_sha512_verified": true,
+    "license": "BSD-2-Clause OR CC0-1.0",
+    "git_tag_source_comparison_verified": true
+  },
+  "bearssl": {
+    "version": "0.6",
+    "revision": "8ef7680081c61b486622f2d983c0d3d21e83caad",
+    "url": "https://www.bearssl.org/bearssl-0.6.tar.gz",
+    "archive_sha256": "6705bba1714961b41a728dfc5debbe348d2966c117649392f8c8139efc83ff14",
+    "published_checksum_available": false,
+    "license": "MIT",
+    "git_tag_source_comparison_verified": true
+  },
+  "files": {
+    "monocypher/monocypher.c": {
+      "upstream_path": "src/monocypher.c",
+      "sha256": "57eb914fc88136119bd41655cccb8c250048bf54d470540625186f8ab16f64be",
+      "modified": false,
+      "git_sha256": "f1f838cdd483bdebe0df0ff5c5ed60535e496f769c6a2f933ac4c0b114207123",
+      "upstream_release_transform": "Only first-line __git__ version label replaced by 4.0.3 by upstream release tooling",
+      "pinned_git_content_verified": true
+    },
+    "monocypher/monocypher.h": {
+      "upstream_path": "src/monocypher.h",
+      "sha256": "c494da712122da7ff679fdcf318a5317e84972b6c950fe9d896212947797facd",
+      "modified": false,
+      "git_sha256": "fcaf6ed771358bb4f40fba016f6518ae86ec02b1b877d2cc35ad92d3a26fd7b3",
+      "upstream_release_transform": "Only first-line __git__ version label replaced by 4.0.3 by upstream release tooling",
+      "pinned_git_content_verified": true
+    },
+    "monocypher/monocypher-ed25519.c": {
+      "upstream_path": "src/optional/monocypher-ed25519.c",
+      "sha256": "60fce3578fb00b00da96490653d993c4cb427b1e1be38183285c66e04d22cc18",
+      "modified": false,
+      "git_sha256": "ce0d2f8e32ca8f66398ba5b3456cc74327c3eff14e7b950ce7d57be9025cc453",
+      "upstream_release_transform": "Only first-line __git__ version label replaced by 4.0.3 by upstream release tooling",
+      "pinned_git_content_verified": true
+    },
+    "monocypher/monocypher-ed25519.h": {
+      "upstream_path": "src/optional/monocypher-ed25519.h",
+      "sha256": "abc4fad381879f5c29176ebe014b9189956b3dfe0a3e36459b6990bc57212380",
+      "modified": false,
+      "git_sha256": "3a3035181f991a158d0e1c7567258f0bae8ba0f1f23c5512b4a1db1b3c9730ce",
+      "upstream_release_transform": "Only first-line __git__ version label replaced by 4.0.3 by upstream release tooling",
+      "pinned_git_content_verified": true
+    },
+    "monocypher/LICENCE.md": {
+      "upstream_path": "LICENCE.md",
+      "sha256": "5f8360e4c06ddcc584bdb4b210c6af824c4bb301e6a9a521869b6d90795ca4b3",
+      "modified": false,
+      "git_sha256": "a5781770269d2516e52ba4863f790c10a16da4089a1e81823aee19ff1e9026b0",
+      "upstream_release_transform": "Release archive omits special note for tests/externals, which is not distributed in this subset",
+      "pinned_git_content_verified": true
+    },
+    "bearssl/sha2small.c": {
+      "upstream_path": "src/hash/sha2small.c",
+      "sha256": "9e54f88610a5cc3adc92ab5a91cd21989695566d792a439c84ff176e5c6c0b0f",
+      "modified": false,
+      "git_sha256": "9e54f88610a5cc3adc92ab5a91cd21989695566d792a439c84ff176e5c6c0b0f",
+      "pinned_git_content_verified": true
+    },
+    "bearssl/bearssl_hash.h": {
+      "upstream_path": "inc/bearssl_hash.h",
+      "sha256": "adfe3039fe48962c7fd74a1031f6d9dde951fb12a6acdae65a39f4d8537d2ef9",
+      "modified": false,
+      "git_sha256": "adfe3039fe48962c7fd74a1031f6d9dde951fb12a6acdae65a39f4d8537d2ef9",
+      "pinned_git_content_verified": true
+    },
+    "bearssl/dec32be.c": {
+      "upstream_path": "src/codec/dec32be.c",
+      "sha256": "ebd7bf469655a9e4de4b3d1d01d4c54f19117def3e3b918242629c150979bd9c",
+      "modified": false,
+      "git_sha256": "ebd7bf469655a9e4de4b3d1d01d4c54f19117def3e3b918242629c150979bd9c",
+      "pinned_git_content_verified": true
+    },
+    "bearssl/enc32be.c": {
+      "upstream_path": "src/codec/enc32be.c",
+      "sha256": "8090b5bd6959586e769814e9d3698ac1c454e31ee4dfd5a2b2eb95a805063ae4",
+      "modified": false,
+      "git_sha256": "8090b5bd6959586e769814e9d3698ac1c454e31ee4dfd5a2b2eb95a805063ae4",
+      "pinned_git_content_verified": true
+    },
+    "bearssl/LICENSE.txt": {
+      "upstream_path": "LICENSE.txt",
+      "sha256": "771bf18c8633ea69ec9b07d2e604c4b99b7bef41b0f5ce6385d24df4448f61ca",
+      "modified": false,
+      "git_sha256": "771bf18c8633ea69ec9b07d2e604c4b99b7bef41b0f5ce6385d24df4448f61ca",
+      "pinned_git_content_verified": true
+    }
+  },
+  "local_adapters": {
+    "bearssl/inner.h": "Narrow byte-copy/zero and portable endian adapter; SHA256 rounds/padding unchanged from upstream"
+  }
+}

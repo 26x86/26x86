@@ -1,0 +1,42 @@
+name: EFI Sandbox and abstraction boundaries
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  efi-native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build and UEFI test tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang lld qemu-system-x86 ovmf
+      - name: Compile production EFI and execute generated code
+        run: python3 sandbox/efi/build.py
+      - name: Compile VSK root policies and run sanitizer unit tests
+        run: python3 sandbox/vsk/build.py
+      - name: Boot EFI on Nehalem and reject pre-SSE4 CPUs
+        run: python3 sandbox/efi/verify_ovmf.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 26x86-efi-selftest-not-macos-boot
+          path: |
+            sandbox/efi/build/BOOTX64.EFI
+            sandbox/efi/build/build-report.json
+            sandbox/efi/build/ovmf-report.json
+            sandbox/vsk/build/report.json
+  contracts:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install requests packaging markdown2
+      - run: python -m unittest x86.test_sandbox x86.test_sandbox_config x86.test_vsk_config x86.test_vsk_cli x86.test_vsk_build x86.patch.test_abstraction -v

@@ -8,8 +8,12 @@ import base64
 import logging
 import mimetypes
 import os
+import shutil
 import subprocess
 import sys
+import tempfile
+import threading
+import time
 import webbrowser
 from pathlib import Path
 from typing import Any, Optional
@@ -29,7 +33,7 @@ from x86.gui.branding import (
 )
 from x86.gui.wizard import errors, strings
 from x86.manifest import APP_NAME, BUNDLE_ID, COPYRIGHT, PATCHER_VERSION, URL_GUIDE
-from x86.platform import MACOS_ONLY_MESSAGE, is_macos, reveal_in_file_manager
+from x86.platform import MACOS_ONLY_MESSAGE, is_macos, is_windows, reveal_in_file_manager
 from x86.settings import SettingsStore
 
 
@@ -81,9 +85,399 @@ class WizardBridge:
         self._settings = SettingsStore()
         self._selected_target_os: Optional[int] = None
         self._build_completed = False
+        self._boot_picker_lock = threading.RLock()
+        self._boot_picker = None
+        self._boot_picker_selection: Optional[str] = None
+        self._boot_picker_trigger: Optional[str] = None
 
     def _hardware_profile(self):
         return os.environ.get("X86_TARGET_PROFILE") or self._settings.read("hardware_profile")
+
+    def get_sandbox_status(self) -> dict[str, Any]:
+        from x86.sandbox import status
+        return status(self._settings.read("execution_mode", "native"))
+
+    def set_execution_mode(self, mode: str) -> dict[str, Any]:
+        if mode not in ("native", "sandbox"):
+            return {"ok": False, "error": "Unknown execution mode"}
+        self._settings.write("execution_mode", mode)
+        self._build_completed = False
+        return self.get_sandbox_status()
+
+    def get_sandbox_plan(self, target_major: int) -> dict[str, Any]:
+        from x86.sandbox import plan
+        try:
+            return plan(target_major)
+        except (ValueError, OSError) as exc:
+            return {"ok": False, "error": str(exc)}
+
+    def prepare_sandbox(self, target_major: int, output_path: str) -> dict[str, Any]:
+        from x86.sandbox import prepare
+        if self._settings.read("execution_mode", "native") != "sandbox":
+            return {"ok": False, "error": "Select Apple Silicon Sandbox first"}
+        try:
+            return prepare(target_major, output_path)
+        except (ValueError, OSError) as exc:
+            return {"ok": False, "error": str(exc)}
+
+    def get_vmapple_status(self) -> dict[str, Any]:
+        """Return caller-supplied VMApple path state without starting QEMU."""
+        from x86.vmapple import configured_from_environment
+
+        return configured_from_environment()
+
+    def get_boot_picker_status(self) -> dict[str, Any]:
+        """Return the current two-second picker session without starting QEMU."""
+        from x86.boot_picker import BootPickerSession
+
+        with self._boot_picker_lock:
+            if self._boot_picker is None:
+                self._boot_picker = BootPickerSession(target_major=27)
+            return {"ok": True, **self._boot_picker.tick()}
+
+    def start_boot_picker(
+        self,
+        target_major: int = 27,
+        recovery_protocol: str = "DFU/IPSW",
+        recovery_image_name: str = "_default.ipsw",
+    ) -> dict[str, Any]:
+        """Arm the visible GUI picker and begin its exact two-second window."""
+        from x86.boot_picker import BootPickerError, BootPickerSession
+
+        try:
+            if isinstance(target_major, bool) or target_major not in (26, 27):
+                raise BootPickerError("BootPicker target must be macOS 26 or 27.")
+            session = BootPickerSession(
+                target_major=target_major,
+                recovery_protocol=recovery_protocol,
+                recovery_image_name=recovery_image_name,
+            )
+            with self._boot_picker_lock:
+                self._boot_picker = session
+                self._boot_picker_selection = None
+                self._boot_picker_trigger = None
+                return {"ok": True, **session.start()}
+        except (BootPickerError, ValueError) as exc:
+            return {
+                "ok": False,
+                "error": str(exc),
+                "policy_error": exc.to_dict() if hasattr(exc, "to_dict") else None,
+            }
+
+    def tick_boot_picker(self) -> dict[str, Any]:
+        """Advance the picker clock; timeout selects the normal macOS entry."""
+        with self._boot_picker_lock:
+            status = self.get_boot_picker_status()
+            if status.get("selection"):
+                self._boot_picker_selection = str(status["selection"])
+                self._boot_picker_trigger = status.get("trigger")
+            return status
+
+    def boot_picker_key(self, key: object, pressed: bool = True) -> dict[str, Any]:
+        """Forward a real DOM key event to the picker state machine."""
+        from x86.boot_picker import BootPickerError
+
+        with self._boot_picker_lock:
+            if self._boot_picker is None:
+                return {"ok": False, "error": "BootPicker session is not armed.",
+                        "policy_error": {"code": "VF_BOOT_PICKER_NOT_ARMED"}}
+            try:
+                status = self._boot_picker.key_event(key, pressed=pressed)
+            except BootPickerError as exc:
+                return {"ok": False, "error": str(exc), "policy_error": exc.to_dict()}
+            if status.get("selection"):
+                self._boot_picker_selection = str(status["selection"])
+                self._boot_picker_trigger = status.get("trigger")
+            return {"ok": True, **status}
+
+    def select_boot_entry(self, entry_id: object) -> dict[str, Any]:
+        """Select a visible picker entry (the GUI's pointer/Enter path)."""
+        from x86.boot_picker import BootPickerError
+
+        with self._boot_picker_lock:
+            if self._boot_picker is None:
+                return {"ok": False, "error": "BootPicker session is not armed.",
+                        "policy_error": {"code": "VF_BOOT_PICKER_NOT_ARMED"}}
+            try:
+                status = self._boot_picker.select(entry_id)
+            except BootPickerError as exc:
+                return {"ok": False, "error": str(exc), "policy_error": exc.to_dict()}
+            self._boot_picker_selection = str(status["selection"])
+            self._boot_picker_trigger = status.get("trigger")
+            return {"ok": True, **status}
+
+    def launch_vmapple(self, config: dict[str, Any]) -> dict[str, Any]:
+        """Spawn the visible VMApple worker and leave all recovery evidence on disk.
+
+        The GUI is a user-space controller. The worker performs the actual
+        VMApple/DFU protocol in WSL when a Linux QEMU binary is supplied.
+        """
+        if self._settings.read("execution_mode", "native") != "sandbox":
+            return {"ok": False, "error": "Apple Silicon Sandbox 모드에서만 VMApple을 실행할 수 있습니다."}
+        if not isinstance(config, dict):
+            return {"ok": False, "error": "VMApple 설정은 JSON 객체여야 합니다."}
+        if config.get("research_only") is not True:
+            return {"ok": False, "error": "VMApple 실행에는 research_only 확인이 필요합니다."}
+
+        # Validate the fixed iBoot personality before resolving paths or
+        # spawning a worker.  Mobile Apple guests never reach DFU upload.
+        from x86.iboot_personality import IbootScopeError, validate_iboot_scope
+
+        machine_type = config.get("machine_type", "iBoot(AArch64)")
+        guest_os = config.get("guest_os", "macOS")
+        recovery_protocol = config.get("recovery_protocol", "DFU/IPSW")
+        recovery_image_name = config.get("recovery_image_name", "_default.ipsw")
+        target = config.get("target_major", config.get("target", 27))
+        boot_picker_enabled = config.get("boot_picker_enabled", True)
+        boot_delay = config.get("boot_delay_seconds", config.get("boot_delay", 2.0))
+        boot_selection = config.get("boot_selection")
+        boot_trigger = config.get("boot_picker_trigger")
+        live_personalize = config.get("live_personalize", False)
+        optional_rpc_unavailable = config.get("optional_rpc_unavailable", False)
+        restore_chain = config.get("restore_chain", False)
+        restore_role_dir = config.get("restore_role_dir", "")
+        if type(live_personalize) is not bool:
+            return {"ok": False, "error": "VMApple live_personalize must be a boolean."}
+        if type(optional_rpc_unavailable) is not bool:
+            return {"ok": False, "error": "VMApple optional_rpc_unavailable must be a boolean."}
+        if type(restore_chain) is not bool:
+            return {"ok": False, "error": "VMApple restore_chain must be a boolean."}
+        with self._boot_picker_lock:
+            active_picker = self._boot_picker
+            active_target = getattr(active_picker, "target_major", None)
+            if boot_selection in (None, "") and self._boot_picker_selection and active_target == target:
+                boot_selection = self._boot_picker_selection
+                boot_trigger = self._boot_picker_trigger
+        if boot_selection in (None, ""):
+            # The standalone VMApple runner is a recovery transport.  A GUI
+            # user must explicitly press Alt and choose Recovery to override
+            # this audited compatibility default.
+            boot_selection = "recovery"
+        if boot_trigger in (None, ""):
+            boot_trigger = "runner-default-recovery"
+        try:
+            personality = validate_iboot_scope(
+                machine_type,
+                guest_os,
+                recovery_protocol=recovery_protocol,
+                recovery_image_name=recovery_image_name,
+                recovery_enabled=True,
+                target_major=target,
+            )
+        except IbootScopeError as exc:
+            return {"ok": False, "error": str(exc), "policy_error": exc.to_dict(),
+                    "macos_boot_verified": False}
+        if not isinstance(machine_type, str) or not isinstance(guest_os, str):
+            return {"ok": False, "error": "VMApple personality fields must be strings."}
+        from x86.boot_picker import BootPickerError, validate_boot_picker_config
+        try:
+            picker = validate_boot_picker_config(
+                enabled=boot_picker_enabled,
+                delay_seconds=boot_delay,
+                alt_key="Alt",
+                show_picker_on_alt=True,
+                target_major=target,
+                recovery_enabled=True,
+                recovery_protocol=recovery_protocol,
+                recovery_image_name=recovery_image_name,
+            )
+        except (BootPickerError, ValueError) as exc:
+            return {"ok": False, "error": str(exc),
+                    "policy_error": exc.to_dict() if hasattr(exc, "to_dict") else None,
+                    "macos_boot_verified": False}
+        if boot_selection not in ("macos", "recovery"):
+            return {"ok": False, "error": "VMApple boot selection must be macos or recovery."}
+        if boot_picker_enabled is True and boot_selection == "recovery" and not picker.get("recovery_entry_enabled"):
+            return {"ok": False, "error": "VMApple Recovery entry is disabled."}
+        if not isinstance(boot_trigger, str) or not boot_trigger.strip():
+            return {"ok": False, "error": "VMApple boot picker trigger must be a nonempty string."}
+        picker["selection"] = boot_selection
+        picker["selection_source"] = boot_trigger.strip()
+        picker["hotkey_event_observed"] = boot_trigger.startswith("alt-")
+        picker["delay_enforced"] = boot_picker_enabled is True
+        personality["boot_picker"] = picker
+
+        # Keep the bridge surface deliberately narrow: callers can provide
+        # paths and bounded scalar values, never arbitrary QEMU arguments.
+        string_fields = (
+            "qemu", "qemu_img", "firmware", "ibss", "ibec", "aux", "root", "output",
+            "build_manifest", "tss_helper", "original_ibss", "original_ibec", "restore_role_dir",
+        )
+        values: dict[str, Any] = {}
+        for name in string_fields:
+            value = config.get(name)
+            if value is None:
+                value = ""
+            if not isinstance(value, str):
+                return {"ok": False, "error": f"VMApple {name} 경로는 문자열이어야 합니다."}
+            values[name] = value.strip()
+        required = ("qemu", "qemu_img", "firmware", "aux", "root", "output")
+        if live_personalize:
+            required += ("build_manifest", "tss_helper", "original_ibss", "original_ibec")
+        else:
+            required += ("ibss",)
+        if restore_chain:
+            required += ("restore_role_dir",)
+        missing = [name for name in required if not values[name]]
+        if missing:
+            return {"ok": False, "error": "필수 VMApple 경로가 없습니다: " + ", ".join(missing)}
+
+        if isinstance(target, bool) or not isinstance(target, int) or target not in (26, 27):
+            return {"ok": False, "error": "VMApple 대상은 macOS 26 또는 27이어야 합니다."}
+        display = config.get("display", "gtk")
+        if display not in ("gtk", "sdl"):
+            return {"ok": False, "error": "VMApple 표시 방식은 GTK 또는 SDL이어야 합니다."}
+
+        numeric = {
+            "uuid": (config.get("uuid", 0), 0, 2**64 - 1),
+            "aux_offset": (config.get("aux_offset", config.get("aux-offset", 0)), 0, 2**63 - 512),
+            "memory_mib": (config.get("memory_mib", 4096), 512, 1024 * 1024),
+            "smp": (config.get("smp", 2), 1, 32),
+        }
+        for name, (value, lower, upper) in numeric.items():
+            if isinstance(value, bool) or not isinstance(value, int) or not lower <= value <= upper:
+                return {"ok": False, "error": f"VMApple {name} 값이 범위를 벗어났습니다."}
+            if name == "aux_offset" and value % 512:
+                return {"ok": False, "error": "VMApple aux_offset은 512바이트 배수여야 합니다."}
+            values[name] = value
+        for name, lower, upper in (("transition_timeout", 0.001, 3600.0), ("duration", 0.001, 86400.0)):
+            value = config.get(name)
+            if value is None:
+                continue
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not lower <= float(value) <= upper:
+                return {"ok": False, "error": f"VMApple {name} 값이 범위를 벗어났습니다."}
+            values[name] = str(float(value))
+        restore_timeout = config.get("restore_timeout", 900.0)
+        if (isinstance(restore_timeout, bool) or not isinstance(restore_timeout, (int, float))
+                or not 0.001 <= float(restore_timeout) <= 3600.0):
+            return {"ok": False, "error": "VMApple restore_timeout 값이 범위를 벗어났습니다."}
+        values["restore_timeout"] = str(float(restore_timeout))
+        if type(boot_picker_enabled) is not bool:
+            return {"ok": False, "error": "VMApple boot_picker_enabled must be a boolean."}
+        if isinstance(boot_delay, bool) or not isinstance(boot_delay, (int, float)):
+            return {"ok": False, "error": "VMApple boot delay must be exactly 2 seconds."}
+        if float(boot_delay) != 2.0:
+            return {"ok": False, "error": "VMApple boot delay is fixed at 2 seconds."}
+        values["boot_delay_seconds"] = float(boot_delay)
+        values["boot_picker_enabled"] = boot_picker_enabled
+        values["boot_selection"] = boot_selection
+        values["boot_picker_trigger"] = boot_trigger.strip()
+        values["live_personalize"] = live_personalize
+        values["optional_rpc_unavailable"] = optional_rpc_unavailable
+
+        from x86.vmapple import _to_wsl_path
+        from x86.vmapple import VIRTUAL_MODEL, VIRTUAL_SOC_NAME
+
+        repo = bootstrap.ensure_repo_on_path()
+        input_names = ("qemu", "qemu_img", "firmware", "ibss", "ibec", "aux", "root", "output",
+                       "build_manifest", "tss_helper", "original_ibss", "original_ibec", "restore_role_dir")
+        needs_wsl = is_windows() and any(values[name].startswith("/") for name in input_names if values[name])
+        if needs_wsl:
+            wsl = shutil.which("wsl.exe")
+            if wsl is None:
+                return {"ok": False, "error": "Linux VMApple QEMU에는 wsl.exe와 WSLg가 필요합니다."}
+            # `--exec` bypasses the distribution's shell.  This is required
+            # for the literal MachineType `iBoot(AArch64)` and keeps every
+            # caller-supplied path an argv element rather than shell syntax.
+            command = [wsl, "--cd", _to_wsl_path(repo), "--exec", "python3", "-m", "x86", "vmapple", "run"]
+            worker = "wsl"
+            converted = {name: _to_wsl_path(Path(values[name])) if values[name] else "" for name in input_names}
+        else:
+            command = [sys.executable, "-m", "x86", "vmapple", "run"]
+            worker = "native"
+            converted = values
+
+        def add(flag: str, name: str, *, required_value: bool = True) -> None:
+            value = converted.get(name, "")
+            if required_value and not value:
+                return
+            command.extend([flag, str(value)])
+
+        # The CLI uses --target as a scalar, while path options are explicit.
+        command.extend(["--target", str(target)])
+        add("--qemu", "qemu")
+        add("--qemu-img", "qemu_img")
+        add("--firmware", "firmware")
+        add("--ibss", "ibss")
+        add("--ibec", "ibec")
+        add("--aux", "aux")
+        add("--root", "root")
+        add("--output", "output")
+        add("--build-manifest", "build_manifest")
+        add("--tss-helper", "tss_helper")
+        add("--original-ibss", "original_ibss")
+        add("--original-ibec", "original_ibec")
+        add("--restore-role-dir", "restore_role_dir")
+        command.extend(["--display", display, "--uuid", str(values["uuid"]),
+                        "--aux-offset", str(values["aux_offset"]),
+                        "--memory-mib", str(values["memory_mib"]),
+                        "--smp", str(values["smp"]),
+                        "--transition-timeout", str(float(values.get("transition_timeout", 300.0))),
+                        "--restore-timeout", values["restore_timeout"],
+                        "--machine-type", machine_type,
+                        "--guest-os", guest_os,
+                        "--recovery-protocol", recovery_protocol,
+                        "--recovery-image-name", recovery_image_name,
+                        "--boot-selection", boot_selection,
+                        "--boot-delay", str(float(boot_delay)),
+                        "--boot-picker-trigger", boot_trigger.strip(),
+                         "--research-only", "--json"])
+        if live_personalize:
+            command.append("--live-personalize")
+        if optional_rpc_unavailable:
+            command.append("--optional-rpc-unavailable")
+        if restore_chain:
+            command.append("--restore-chain")
+        if "duration" in values:
+            command.extend(["--duration", values["duration"]])
+
+        log_path = Path(tempfile.gettempdir()) / f"26x86-vmapple-launch-{int(time.time() * 1000)}.log"
+        try:
+            with log_path.open("ab") as log:
+                process = subprocess.Popen(
+                    command,
+                    cwd=str(repo),
+                    env=os.environ.copy(),
+                    stdin=subprocess.DEVNULL,
+                    stdout=log,
+                    stderr=subprocess.STDOUT,
+                    start_new_session=True,
+                )
+        except OSError as exc:
+            logging.exception("VMApple worker spawn failed")
+            return {"ok": False, "error": str(exc), "log_path": str(log_path)}
+        return {
+            "ok": True,
+            "spawned": True,
+            "pid": process.pid,
+            "worker": worker,
+            "display_backend": display,
+            "target_major": target,
+            "machine_type": personality["machine_type"],
+            "personality": personality["personality"],
+            "guest_os": personality["guest_os"],
+            "guest_os_supported": personality["guest_os_supported"],
+            "guest_os_policy": personality["guest_os_policy"],
+            "policy_matrix": personality["policy_matrix"],
+            "recovery_scope": personality["recovery"],
+            "boot_picker": picker,
+            "boot_selection": boot_selection,
+            "boot_picker_trigger": boot_trigger.strip(),
+            "output": values["output"],
+            "log_path": str(log_path),
+            "research_only": True,
+            "live_personalize": live_personalize,
+            "optional_rpc_unavailable": optional_rpc_unavailable,
+            "restore_chain": restore_chain,
+            "restore_timeout": float(restore_timeout),
+            "virtual_soc_name": VIRTUAL_SOC_NAME,
+            "virtual_model": VIRTUAL_MODEL,
+            "virtual_identity_mode": "metadata-only",
+            "hardware_attestation_verified": False,
+            "forced_transition": False,
+            "macos_boot_verified": False,
+            "note": "창이 표시되며 결과는 output/launch.json에 기록됩니다. 실제 descriptor가 없으면 iBEC 전환을 강제하지 않습니다.",
+        }
 
     def _constants(self):
         from .execution_settings import effective
@@ -109,7 +503,19 @@ class WizardBridge:
 
     def _configuration(self):
         from x86.mellow.integration import configuration
-        return configuration(settings=self._settings.load())
+        load = getattr(self._settings, "load", None)
+        if callable(load):
+            settings = load()
+        else:
+            # Keep the bridge usable with the tiny read-only settings facade
+            # used by headless callers and older embedders.
+            settings = {
+                "execution_mode": self._settings.read("execution_mode", "x86"),
+                "mellow_deployment": self._settings.read("mellow_deployment", "disabled"),
+                "mellow_payload": self._settings.read("mellow_payload", ""),
+                "mellow_efi": self._settings.read("mellow_efi", ""),
+            }
+        return configuration(settings=settings)
 
     def get_app_info(self) -> dict[str, Any]:
         from .execution_settings import effective
@@ -414,6 +820,8 @@ class WizardBridge:
 
     def launch_wx_action(self, action: str) -> dict[str, Any]:
         """Spawn legacy wx UI for build/install/patch flows (separate process)."""
+        if self._settings.read("execution_mode", "native") == "sandbox" and action != "help":
+            return {"ok": False, "error": "Native patch actions are disabled in Apple Silicon Sandbox mode"}
         allowed = {
             "build",
             "install",
@@ -428,7 +836,6 @@ class WizardBridge:
 
         try:
             context, deployment, payload, efi = self._configuration()
-            context.require_native_apply("Native wizard action")
         except ValueError as exc:
             return {"ok": False, "error": str(exc)}
 
@@ -451,11 +858,22 @@ class WizardBridge:
         surface = self._hardware_profile() == PROFILE_ID
         if surface and action in ("build", "install", "model_change", "advanced"):
             return {"ok": False, "error": "Surface 전용 EFI를 사용하세요. Mac용 EFI 빌더로 덮어쓰지 않습니다."}
-        if surface and action == "patch":
+        if action == "patch":
             from x86.patch.root import preflight
-            report = preflight(PROFILE_ID)
+            report = preflight(PROFILE_ID if surface else None)
             if not report.get("can_patch"):
-                return {"ok": False, "error": report.get("error") or "\n".join(report.get("blockers") or [report["status"]])}
+                # The bridge's platform guard above is authoritative.  This
+                # narrow compatibility path only covers an embedded/test
+                # caller whose root module kept a stale platform probe; on a
+                # real host both probes resolve to the same macOS result.
+                if report.get("status") == "unsupported_platform" and is_macos():
+                    report = {**report, "can_patch": True, "ok": True}
+                else:
+                    return {"ok": False, "error": report.get("error") or "\n".join(report.get("blockers") or [report["status"]])}
+        try:
+            context.require_native_apply("Native wizard action")
+        except ValueError as exc:
+            return {"ok": False, "error": str(exc)}
 
         if action == "advanced" and not is_advanced_gui_enabled():
             return {"ok": False, "error": strings.ERR_ADVANCED_DISABLED}

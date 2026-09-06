@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "real_http_bridge": true,
+  "host": "Windows",
+  "staged_output": "C:\\Users\\Admin\\Documents\\Codex\\2026-09-06\\new-chat-2\\work\\gui-staging-1788653946808",
+  "receipt": {
+    "schema": 1,
+    "product": "26x86",
+    "feature": "Apple Silicon Sandbox",
+    "artifact_kind": "efi-jit-self-test",
+    "target_major": 27,
+    "minimum_cpu": "SSE4.1 + SSE4.2",
+    "boot_verified": false,
+    "macos_boot_ready": false,
+    "sha256": "dd6729e38f4d25870085caabaed547d9a419371d7f77714ed6550dab4ff4bce8",
+    "support_policy": "Apple 정품 Mac만 지원합니다. 비 Apple 기기는 동작을 보증하지 않으며 이슈를 받지 않습니다.",
+    "blockers": [
+      "전체 AArch64 특권 ISA·MMU·예외·PAC 실행 경로가 완성되지 않았습니다.",
+      "AIC 기반 Apple SoC 장치 모델과 원본 macOS 26/27 iBoot 체인의 EFI 실행 검증이 남아 있습니다.",
+      "GPU/Metal 및 macOS 사용자 공간 진입은 검증되지 않았습니다."
+    ]
+  },
+  "frontend_errors": []
+}

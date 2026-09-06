@@ -1,0 +1,386 @@
+diff --git a/README.md b/README.md
+index a4f132d..60c9096 100644
+--- a/README.md
++++ b/README.md
+@@ -1,96 +1,120 @@
+-# MetallibSupportPkg
+-
+-A collection of utilities related to patching Metal Libraries (`.metallib`) in macOS, specifically with the goal of restoring support for legacy hardware (namely Metal 3802-based GPUs on macOS Sequoia).
+-
+-## Logic
+-
+-MetallibSupportPkg houses the `metal_libraries` python library, which was developed to streamline Metal Library patching through the following:
+-
+-1. Programmatically fetching the latest macOS Sequoia IPSW.
+-2. Extract the system volume DMG from the IPSW.
+-3. If the disk image is AEA encrypted, decrypt using [`aastuff`](https://github.com/dhinakg/aeota).
+-4. Mount the disk image, and extract all supported `.metallib` files.
+-5. Patch the `.metallib` files to support Metal 3802 GPUs.
+-6. Convert the directory into a macOS Distribution Package (PKG).
+-
+-Notes regarding patching individual `.metallib` files:
+-1. Each `.metallib` file is actually a collection of `.air` files. Need to extract them using [zhouwei's format](https://github.com/zhuowei/MetalShaderTools).
+-    - [metallib/patch.py: `_unpack_metallib_to_air()`](./metal_libraries/metallib/patch.py#L127-L187)
+-2. Certain `.metallib` files are actually FAT Mach-O files. Thus they need to be thinned manually (Apple's `lipo` utility does not support the AIR64 architecture we need).
+-    - [metallib/patch.py: `_thin_file()`](./metal_libraries/metallib/patch.py#L218-L270)
+-3. `.air` files need to be next decompiled to `.ll` (LLVM IR) using Apple's `metal-objdump` utility.
+-    - [metallib/patch.py: `_decompile_air_to_ll()`](./metal_libraries/metallib/patch.py#L77-L109)
+-4. With the LLVM IR, we can begin patching the AIR version to v26 (compared to Sequoia's v27) as well as other necessary changes.
+-    - [metallib/patch.py: `_patch_ll()`](./metal_libraries/metallib/patch.py#L190-L215)
+-5. To compile IR to `.air`, we use Apple's `metal` utility.
+-    - [metallib/patch.py: `_recompile_ll_to_air()`](./metal_libraries/metallib/patch.py#L60-L74)
+-7. To pack each `.air` to a `.metallib` collection, we use Apple's `metallib` utility.
+-    - [metallib/patch.py: `_pack_air_to_metallib()`](./metal_libraries/metallib/patch.py#L112-L124)
+-
+-Once finished, the resulting `.metallib` files should work with Metal 3802-based GPUs in macOS Sequoia.
+-
+-## Usage
+-
+-MetallibSupportPkg is not meant to be used by general users, the following is intended for developers.
+-
+-Install the required dependencies:
+-```bash
+-python3 -m pip install -r requirements.txt
+-# Note Xcode is required to be installed for the `metal` and `metal-objdump` utilities
+-```
+-
+-Fetch IPSW URL:
+-```bash
+-python3 metallib.py -d
+-# Example result: UniversalMac_15.0_24A5279h_Restore.ipsw
+-```
+-
+-Extract system volume from IPSW:
+-```bash
+-python3 metallib.py -e <path_to_ipsw>
+-# Example result: 090-49684-056.dmg
+-```
+-
+-Fetch Metal libraries from system volume, will extract to `15.x-<build>`:
+-```bash
+-python3 metallib.py -f <path_to_system_volume>
+-# Example result: 15.0-24A5279h
+-```
+-
+-Patch Metal libraries:
+-```bash
+-# Directory containing the Metal libraries
+-python3 metallib.py -p <path_to_metallib_dir>
+-# Individual Metal library
+-python3 metallib.py -p <path_to_metallib>
+-```
+-
+-Convert Metal libraries to macOS package:
+-```bash
+-python3 metallib.py -z <path_to_metallib_dir>
+-# Example result: MetallibSupportPkg-15.0-24A5279h.pkg
+-```
+-
+------------
+-
+-```
+-usage: metallib.py [-h] [-d] [-e EXTRACT] [-f FETCH] [-p PATCH] [-b BUILD_SYS_PATCH] [-z BUILD_PKG] [-c]
+-
+-Download, extract, fetch, and patch Metal libraries.
+-
+-options:
+-  -h, --help            show this help message and exit
+-  -d, --download        Download the latest IPSW.
+-  -e EXTRACT, --extract EXTRACT
+-                        Extract the system volume from an IPSW.
+-  -f FETCH, --fetch FETCH
+-                        Fetch Metal libraries from the system volume.
+-  -p PATCH, --patch PATCH
+-                        Patch Metal libraries.
+-  -b BUILD_SYS_PATCH, --build-sys-patch BUILD_SYS_PATCH
+-                        Build a system patch dictionary.
+-  -z BUILD_PKG, --build-pkg BUILD_PKG
+-                        Build a macOS package.
+-  -c, --continuous-integration
+-                        Run in continuous integration mode.
+-```
++# MetallibSupportPkg
++
++A collection of utilities related to patching Metal Libraries (`.metallib`) in macOS, specifically with the goal of restoring support for legacy hardware (namely Metal 3802-based GPUs on macOS Sequoia).
++
++## Logic
++
++MetallibSupportPkg houses the `metal_libraries` python library, which was developed to streamline Metal Library patching through the following:
++
++1. Programmatically fetching the latest macOS Sequoia IPSW.
++2. Extract the system volume DMG from the IPSW.
++3. If the disk image is AEA encrypted, decrypt using [`aastuff`](https://github.com/dhinakg/aeota).
++4. Mount the disk image, and extract all supported `.metallib` files.
++5. Patch the `.metallib` files to support Metal 3802 GPUs.
++6. Convert the directory into a macOS Distribution Package (PKG).
++
++Notes regarding patching individual `.metallib` files:
++1. Each `.metallib` file is actually a collection of `.air` files. Need to extract them using [zhouwei's format](https://github.com/zhuowei/MetalShaderTools).
++    - [metallib/patch.py: `_unpack_metallib_to_air()`](./metal_libraries/metallib/patch.py#L127-L187)
++2. Certain `.metallib` files are actually FAT Mach-O files. Thus they need to be thinned manually (Apple's `lipo` utility does not support the AIR64 architecture we need).
++    - [metallib/patch.py: `_thin_file()`](./metal_libraries/metallib/patch.py#L218-L270)
++3. `.air` files need to be next decompiled to `.ll` (LLVM IR) using Apple's `metal-objdump` utility.
++    - [metallib/patch.py: `_decompile_air_to_ll()`](./metal_libraries/metallib/patch.py#L77-L109)
++4. With the LLVM IR, we can begin patching the AIR version to v26 (compared to Sequoia's v27) as well as other necessary changes.
++    - [metallib/patch.py: `_patch_ll()`](./metal_libraries/metallib/patch.py#L190-L215)
++5. To compile IR to `.air`, we use Apple's `metal` utility.
++    - [metallib/patch.py: `_recompile_ll_to_air()`](./metal_libraries/metallib/patch.py#L60-L74)
++7. To pack each `.air` to a `.metallib` collection, we use Apple's `metallib` utility.
++    - [metallib/patch.py: `_pack_air_to_metallib()`](./metal_libraries/metallib/patch.py#L112-L124)
++
++Once finished, the resulting `.metallib` files should work with Metal 3802-based GPUs in macOS Sequoia.
++
++## Usage
++
++MetallibSupportPkg is not meant to be used by general users, the following is intended for developers.
++
++Install the required dependencies:
++```bash
++python3 -m pip install -r requirements.txt
++# Note Xcode is required to be installed for the `metal` and `metal-objdump` utilities
++```
++
++Fetch IPSW URL:
++```bash
++python3 metallib.py -d
++# Example result: UniversalMac_15.0_24A5279h_Restore.ipsw
++```
++
++Extract system volume from IPSW:
++```bash
++python3 metallib.py -e <path_to_ipsw>
++# Example result: 090-49684-056.dmg
++```
++
++Fetch Metal libraries from system volume, will extract to `15.x-<build>`:
++```bash
++python3 metallib.py -f <path_to_system_volume>
++# Example result: 15.0-24A5279h
++```
++
++Patch Metal libraries:
++```bash
++# Directory containing the Metal libraries
++python3 metallib.py -p <path_to_metallib_dir>
++# Individual Metal library
++python3 metallib.py -p <path_to_metallib>
++```
++
++Convert Metal libraries to macOS package:
++```bash
++python3 metallib.py -z <path_to_metallib_dir>
++# Example result: MetallibSupportPkg-15.0-24A5279h.pkg
++```
++
++-----------
++
++```
++usage: metallib.py [-h] [-d] [-e EXTRACT] [-f FETCH] [-p PATCH] [-b BUILD_SYS_PATCH] [-z BUILD_PKG] [-c]
++
++Download, extract, fetch, and patch Metal libraries.
++
++options:
++  -h, --help            show this help message and exit
++  -d, --download        Download the latest IPSW.
++  -e EXTRACT, --extract EXTRACT
++                        Extract the system volume from an IPSW.
++  -f FETCH, --fetch FETCH
++                        Fetch Metal libraries from the system volume.
++  -p PATCH, --patch PATCH
++                        Patch Metal libraries.
++  -b BUILD_SYS_PATCH, --build-sys-patch BUILD_SYS_PATCH
++                        Build a system patch dictionary.
++  -z BUILD_PKG, --build-pkg BUILD_PKG
++                        Build a macOS package.
++  -c, --continuous-integration
++                        Run in continuous integration mode.
++```
++
++
++## Optional 26x86 artifact receipt
++
++The receipt path records an already-produced local artifact; it does not run
++payload cleanup, binary signing, shader patching, or macOS installation.
++All target values are explicit. A receipt never claims compatibility or boot.
++
++```sh
++python3 metallib.py --artifact-receipt --artifact /path/to/existing.pkg --output /path/to/new-receipt.json --role gpu-compiler-abi --macos-major 26 --os-build 25A354 --architecture x86_64 --runtime-abi verified-adapter-or-compiler-abi --license-file /path/to/payload-license.txt --compiler-file /path/to/metal
++```
++
++The `26x86.support-artifact/1` schema binds the artifact SHA-256, exact macOS
++build, declared host architecture, runtime ABI, current source revision and
++license text SHA-256. Source working-tree modifications are reported. The
++license argument describes the actual payload terms; this tool grants no
++redistribution rights and does not copy the payload. Output creation is
++exclusive. Existing receipts are not overwritten.
++
++For `gpu-compiler-abi`, the actual compiler binary is mandatory and hashed.
++GPU bytecode is not a native CPU kext/dylib abstraction. The receipt can be
++checked with `artifact_receipt.verify_receipt` or the identical consumer in
++26x86 `x86.patch.artifact_receipt`, using independently selected build/ABI
++values and local artifact/license/compiler files.
+diff --git a/artifact_receipt.py b/artifact_receipt.py
+new file mode 100644
+index 0000000..9847b24
+--- /dev/null
++++ b/artifact_receipt.py
+@@ -0,0 +1,132 @@
++"""26x86 support artifact identity receipts; first-party BSD-4-Clause code.
++
++Receipts bind an existing payload to declared deployment metadata. They do not
++claim that the payload implements that architecture or that macOS boots.
++"""
++from __future__ import annotations
++import argparse
++import hashlib
++import json
++import re
++import subprocess
++from pathlib import Path
++
++SCHEMA = "26x86.support-artifact/1"
++ROLES = ("root-support-package", "gpu-compiler-abi")
++
++
++def identity(path):
++    path = Path(path)
++    if not path.is_file() or path.is_symlink():
++        raise ValueError("Identity input must be a regular file")
++    before = path.stat()
++    digest = hashlib.sha256()
++    with path.open("rb") as stream:
++        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
++            digest.update(chunk)
++    after = path.stat()
++    if (before.st_size, before.st_mtime_ns) != (after.st_size, after.st_mtime_ns):
++        raise ValueError("Input changed while hashing")
++    if not after.st_size:
++        raise ValueError("Empty identity input")
++    return {"name": path.name, "size": after.st_size, "sha256": digest.hexdigest()}
++
++
++def _target(major, build, architecture, abi):
++    if type(major) is not int or major not in (26, 27):
++        raise ValueError("Target must be macOS 26 or 27")
++    if not isinstance(build, str) or not re.fullmatch(r"[0-9]{2}[A-Z][0-9]+[a-z]?", build):
++        raise ValueError("Exact macOS build is required")
++    if not build.startswith(str(major - 1)):
++        raise ValueError("macOS major and Darwin build prefix disagree")
++    if architecture not in ("x86_64", "arm64"):
++        raise ValueError("Target host architecture must be x86_64 or arm64")
++    if not isinstance(abi, str) or not abi.strip() or len(abi) > 256:
++        raise ValueError("Explicit runtime/compiler ABI identifier is required")
++    return {"macos_major": major, "os_build": build,
++            "architecture": architecture, "runtime_abi": abi}
++
++
++def create_receipt(artifact, *, source_repo, role, macos_major, os_build,
++                   architecture, runtime_abi, license_file, compiler_file=None):
++    if role not in ROLES:
++        raise ValueError("Unknown artifact role")
++    target = _target(macos_major, os_build, architecture, runtime_abi)
++    if role == "gpu-compiler-abi" and compiler_file is None:
++        raise ValueError("GPU compiler ABI receipts require the actual compiler binary")
++    repo = Path(source_repo).resolve()
++    def git(*args):
++        return subprocess.check_output(["git", "-C", str(repo), *args], text=True, timeout=15).strip()
++    revision = git("rev-parse", "HEAD")
++    url = git("remote", "get-url", "origin")
++    if not re.fullmatch(r"[0-9a-f]{40,64}", revision) or not re.fullmatch(r"https://[^@\s]+", url):
++        raise ValueError("Source repository requires an immutable revision and public HTTPS origin")
++    result = {"schema": SCHEMA, "role": role, "target": target,
++        "artifact": identity(artifact), "license": identity(license_file),
++        "source": {"url": url, "revision": revision, "working_tree_dirty": bool(git("status", "--porcelain"))},
++        "architecture_observation": "declared-deployment-target",
++        "compatibility_verified": False, "hardware_verified": False, "can_apply": False}
++    if compiler_file is not None:
++        result["compiler"] = identity(compiler_file)
++    return result
++
++
++def verify_receipt(receipt_path, artifact, *, macos_major, os_build,
++                   architecture, runtime_abi, license_file, compiler_file=None):
++    """Verify expected host/build/ABI and bytes; no payload execution or install."""
++    report = {"ok": False, "can_apply": False, "errors": []}
++    try:
++        receipt = Path(receipt_path)
++        if receipt.stat().st_size > 1024 * 1024:
++            raise ValueError("Receipt exceeds size limit")
++        data = json.loads(receipt.read_text(encoding="utf-8"))
++        if data.get("schema") != SCHEMA or data.get("role") not in ROLES:
++            raise ValueError("Unknown artifact receipt schema or role")
++        if data.get("target") != _target(macos_major, os_build, architecture, runtime_abi):
++            raise ValueError("Artifact receipt target/build/ABI mismatch")
++        if data.get("artifact") != identity(artifact) or data.get("license") != identity(license_file):
++            raise ValueError("Artifact or license identity mismatch")
++        source = data.get("source", {})
++        if not re.fullmatch(r"[0-9a-f]{40,64}", source.get("revision", "")) or not re.fullmatch(r"https://[^@\s]+", source.get("url", "")):
++            raise ValueError("Missing source revision or provenance")
++        if data["role"] == "gpu-compiler-abi" and compiler_file is None:
++            raise ValueError("Compiler binary required to verify GPU ABI receipt")
++        if "compiler" in data and (compiler_file is None or data["compiler"] != identity(compiler_file)):
++            raise ValueError("Compiler identity mismatch")
++        if data["role"] == "gpu-compiler-abi" and "compiler" not in data:
++            raise ValueError("Compiler identity missing")
++        report.update(ok=True, role=data["role"], target=data["target"],
++                      compatibility_verified=False, hardware_verified=False)
++    except (OSError, ValueError, TypeError, AttributeError) as exc:
++        report["errors"].append(str(exc))
++    return report
++
++
++def main(argv=None):
++    parser = argparse.ArgumentParser(description="Record existing support artifact bytes and exact target; never patch or install")
++    parser.add_argument("--artifact", required=True)
++    parser.add_argument("--output", required=True)
++    parser.add_argument("--source-repo", default=str(Path(__file__).resolve().parent))
++    parser.add_argument("--role", choices=ROLES, required=True)
++    parser.add_argument("--macos-major", type=int, choices=(26,27), required=True)
++    parser.add_argument("--os-build", required=True)
++    parser.add_argument("--architecture", choices=("x86_64","arm64"), required=True)
++    parser.add_argument("--runtime-abi", required=True)
++    parser.add_argument("--license-file", required=True)
++    parser.add_argument("--compiler-file")
++    args = parser.parse_args(argv)
++    try:
++        data = create_receipt(args.artifact, source_repo=args.source_repo, role=args.role,
++            macos_major=args.macos_major, os_build=args.os_build, architecture=args.architecture,
++            runtime_abi=args.runtime_abi, license_file=args.license_file, compiler_file=args.compiler_file)
++        # Exclusive creation keeps an existing build receipt immutable.
++        with Path(args.output).open("x", encoding="utf-8") as stream:
++            json.dump(data, stream, ensure_ascii=False, indent=2)
++            stream.write("\n")
++    except (OSError, ValueError, subprocess.SubprocessError) as exc:
++        parser.error(str(exc))
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/metallib.py b/metallib.py
+index 0b8be76..6ab8616 100644
+--- a/metallib.py
++++ b/metallib.py
+@@ -1,8 +1,14 @@
+-"""
+-metallib.py: Wrapper for MetallibSupportPkg patching utilities
+-"""
+-
+-import metal_libraries
+-
+-if __name__ == "__main__":
++"""
++metallib.py: Wrapper for MetallibSupportPkg patching utilities
++"""
++
++import sys
++
++if __name__ == "__main__" and "--artifact-receipt" in sys.argv[1:]:
++    from artifact_receipt import main
++    raise SystemExit(main([arg for arg in sys.argv[1:] if arg != "--artifact-receipt"]))
++
++import metal_libraries
++
++if __name__ == "__main__":
+     metal_libraries.main()
+\ No newline at end of file

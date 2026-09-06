@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "target": "virt",
+  "acceleration": "tcg",
+  "layer": "emulated AArch64 CPU and EL1 MMU",
+  "guest_sha256": "28695ce852b286260617a3846ae66973f73bd5d12c086b1bb388f9a770bd954b",
+  "guest_path": "/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/outputs/venfire/guests/virt.elf",
+  "limitations": [
+    "Self-authored guest only; no macOS, XNU, Apple boot chain, or Apple firmware executed.",
+    "Single emulated CPU; one GICv3 virtual-timer PPI27 delivery/EOI path is checked.",
+    "4KiB/16KiB granules use block mappings, not a complete VM subsystem or stage 2.",
+    "16 negative PAC contexts are finite checks, not a cryptographic audit or Apple PAC match.",
+    "Self-modifying code checks TCG coherency, not physical CPU cache behavior.",
+    "GPU, Metal, SMP, DMA, storage drivers, suspend and real-Mac boot are untested."
+  ],
+  "macos_boot_verified": false,
+  "qemu_version": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+  "command": [
+    "qemu-system-aarch64",
+    "-accel",
+    "tcg",
+    "-m",
+    "128M",
+    "-smp",
+    "1",
+    "-display",
+    "none",
+    "-monitor",
+    "none",
+    "-serial",
+    "stdio",
+    "-net",
+    "none",
+    "-semihosting-config",
+    "enable=on,target=native",
+    "-cpu",
+    "max,pauth-impdef=off",
+    "-M",
+    "virt,virtualization=off,secure=off,gic-version=3",
+    "-kernel",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/outputs/venfire/guests/virt.elf"
+  ],
+  "cpu": "max,pauth-impdef=off",
+  "passed": true,
+  "completed": true,
+  "cases": [
+    {
+      "name": "el1_entry",
+      "status": "pass"
+    },
+    {
+      "name": "integer_memory",
+      "status": "pass"
+    },
+    {
+      "name": "pauth_roundtrip",
+      "status": "pass"
+    },
+    {
+      "name": "pauth_wrong_context",
+      "status": "pass"
+    },
+    {
+      "name": "exception_svc",
+      "status": "pass"
+    },
+    {
+      "name": "mmu_4k_permissions",
+      "status": "pass"
+    },
+    {
+      "name": "mmu_4k_translation",
+      "status": "pass"
+    },
+    {
+      "name": "mmu_16k_permissions",
+      "status": "pass"
+    },
+    {
+      "name": "mmu_16k_translation",
+      "status": "pass"
+    },
+    {
+      "name": "timer_deadline",
+      "status": "pass"
+    },
+    {
+      "name": "gicv3_timer_irq",
+      "status": "pass"
+    },
+    {
+      "name": "self_modify",
+      "status": "pass"
+    }
+  ],
+  "errors": [],
+  "passed_count": 12,
+  "case_count": 12,
+  "duration_seconds": 0.136609,
+  "returncode": 0,
+  "timed_out": false,
+  "attempts": [
+    {
+      "cpu": "max,pauth-qarma5=on",
+      "returncode": 1,
+      "stderr": "qemu-system-aarch64: can't apply global max-arm-cpu.pauth-qarma5=on: Property 'max-arm-cpu.pauth-qarma5' not found\n"
+    },
+    {
+      "cpu": "max,pauth-impdef=off",
+      "returncode": 0,
+      "stderr": ""
+    }
+  ],
+  "serial_log": "/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/outputs/venfire/guests/verification-virt/serial.log",
+  "stderr_log": "/mnt/c/Users/Admin/Documents/Codex/2026-09-06/new-chat-2/outputs/venfire/guests/verification-virt/stderr.log"
+}

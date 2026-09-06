@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "qemu": {
+    "url": "https://github.com/qemu/qemu.git",
+    "commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd"
+  },
+  "reims": {
+    "url": "https://github.com/steelbrain-bot/reims-vgpu.git",
+    "commit": "2844274c34baa1043d37995f5b1a9f1d265eae03"
+  },
+  "reims_qemu": {
+    "url": "https://github.com/steelbrain/qemu-reims-vgpu.git",
+    "commit": "e17ddb98f71df5697daf2f830587f672a8f4f5a7"
+  },
+  "metal2vulkan": {
+    "url": "https://github.com/steelbrain/metal2vulkan",
+    "commit": "8b78eaca3be72b4e596aa1c790a4cd114ac1e9ec"
+  },
+  "core_patches": {
+    "0001-vmapple-explicit-tcg-research.patch": "da55f660a551e66e6e5ae9affd8410f72b17cf0b633d09db2816700b7d131897",
+    "0002-vmapple-block-barrier.patch": "58e8a2a42656647f7e3f8393e1b032fc260b99760ce37576c00b7af0938473cc",
+    "0003-vmapple-recovery-usb.patch": "29faaa21e284e82fb3e7848574730627c9c7d55f60a5a2e8bdb3310bad4acd0c",
+    "0004-vmapple-bdif-cow-write.patch": "1d4639c0e845ad0d5a8d9f542c6ed104897f5a69eba95998373770e691a3e541"
+  },
+  "imported_files": {
+    "hw/display/reims-vgpu-mmio.c": "5246b19cdeeaebbb59b96dc6cc578827f89b5d573c7050f6448a0bce86056d20",
+    "hw/display/reims-vgpu-pci.c": "9b46f53d0d2d71efd41fe3ba3bd03daa3b2d42e8e70fb59b2515e55c4f81d56f",
+    "hw/display/reims-vgpu-dirty.c": "7cb91ec8a959fafdb621a8d10b380f9dec338e856a919555e2d3595f32212388",
+    "hw/display/reims-vgpu-dirty.h": "19de6bbb86e9e3c48c6ddffa6157b0b522f125084d7a45fdbf1579ad528f503b",
+    "hw/display/reims-vgpu-shim.c": "82714f4d64f194ff29e60583525d96ddc605845adc2b5b04dcc4e6918cfd1c48",
+    "hw/display/reims-vgpu-shim.h": "86fe80ff49220fe45477fbd52bad301318b7738b3637aca5c68d2f4c5dac3cae"
+  },
+  "trace_events_sha256": "0e703d4728213b7389ad7ae512f86426f4dbf71363f5f9850faf7c1f20d013f5",
+  "optional_patches": {
+    "0001-reims-portable-host-glue.patch": "4199ca844835a7038bc443010cff835930730bfa948f9f3387b38130d7797c98",
+    "0002-reims-current-arm-vcpu.patch": "21c2b921de42d762228ed2d0b0433e630fa46b3028900ccc345e8aab63761251",
+    "0003-reims-mmio-firmware-console.patch": "866d6242669d0f3606460d856a15d8f7b9a1ad6de304b3dac7755011451dfd24"
+  },
+  "cargo_lock_sha256": "496e3740604c82f46299155e764f10623f5629cf957e6704dea2e9bf53b1b984",
+  "rust_features": [
+    "backend-vulkan",
+    "host-window"
+  ],
+  "guest_modifications_imported": false,
+  "probes": {
+    "air_compute.rs": "98a66dc8978a18e919b5d7b3d0de012b0077f5bfbfdc2f3b6b0e30f24263969f",
+    "cpu_startup.py": "7b6a3cb5820f83ae8d9bf9bd4a03a3aad755c12dddcaf8af835c5c5090f859ec",
+    "firmware_console.py": "32eaf5c52330223913d398cc7c10ab3f3a16e9defd401c4c058afbd0f7e16a4f",
+    "mapper_handoff.ld": "06757b29923599a2410a4b4a41149a550d6d98b8fda49f0dac6d1a8930d6451b",
+    "mapper_handoff.py": "fed4650441f209aebbfc9728b6e76bc29f999bd492ca666f5521efb12be78d5a",
+    "mapper_handoff.S": "ba4202da803b4e22a69a7ef4a1555e4fa6810d70e3e0b781afb370eb8fe86777",
+    "qtest.py": "ae8ce289e286a2f8a008d4fdb65049f5fcd69c3a9b862f17b112e0153a2a971a",
+    "verify.py": "71a28008be28cfec88bc97da61781a15d43aa8bf2c86608c739fa595a3c7f7ba"
+  },
+  "air_fixture_sha256": "92fc46a2f22f55a2fc3f492d6bd4528c045408ab399c9f8558e551dfa9b87374"
+}

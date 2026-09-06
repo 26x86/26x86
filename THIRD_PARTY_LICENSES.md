@@ -6,7 +6,7 @@
 
 ## 26x86 (본 저장소)
 
-- **라이선스:** BSD 3-Clause
+- **라이선스:** OCLP-derived license; see the four numbered conditions in LICENSE.txt
 - **저작권:** Copyright (c) 2026 NiSeullent and 26x86 contributors.
 - **업스트림:** OpenCore Legacy Patcher T2 및 OpenCore Legacy Patcher에서 파생
 - **라이선스 전문:** [LICENSE.txt](./LICENSE.txt)
@@ -15,7 +15,7 @@
 
 ## BSD 3-Clause 전문 (참조)
 
-아래는 26x86 및 대부분의 OCLP/Acidanthera 구성 요소에 적용되는 BSD 3-Clause License 전문입니다. 원본 저장소의 LICENSE 파일이 우선합니다.
+아래는 일반 BSD 3-Clause 참고 전문이며, 본 저장소 LICENSE.txt의 네 조건을 대체하지 않습니다. 원본 저장소의 LICENSE 파일이 우선합니다.
 
 ```
 Copyright (c) <year> <copyright holder>.

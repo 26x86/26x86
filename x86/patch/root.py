@@ -35,7 +35,8 @@ def _context(profile=None, payload_dir=None, **mellow_options):
     return c
 
 
-def preflight(profile=None, payload_dir=None, *, constants=None, **mellow_options):
+def preflight(profile=None, payload_dir=None, *, constants=None,
+              abstraction_manifest=None, **mellow_options):
     """No root writes, payload mounts, or privileges requested by this entry."""
     if not is_macos():
         return {"ok": False, "status": "unsupported_platform", "can_patch": False, "error": MACOS_ONLY_MESSAGE}
@@ -43,6 +44,18 @@ def preflight(profile=None, payload_dir=None, *, constants=None, **mellow_option
         return {"ok": False, "status": "invalid_profile", "can_patch": False, "error": "Unknown root patch profile"}
     try:
         c = constants or _context(profile, payload_dir, **mellow_options)
+        abstraction = None
+        if c.detected_os >= 26 or abstraction_manifest is not None:
+            from x86.patch.abstraction import deployment_gate
+            abstraction = deployment_gate(c, abstraction_manifest)
+            if not abstraction["ok"]:
+                return {"ok": False, "status": "abstraction_blocked", "can_patch": False,
+                        "blockers": abstraction["errors"], "abstraction": abstraction,
+                        "os_build": c.detected_os_build, "hardware_verified": False}
+        # The legacy detector and all live Mellow checks run only after the
+        # future-build abstraction contract has accepted this target.  This
+        # keeps a missing/unregistered adapter from reaching payload or KDK
+        # inspection.
         from x86.mellow.integration import validate_live
         validate_live(c)
         if profile == PROFILE_ID:
@@ -87,12 +100,15 @@ def preflight(profile=None, payload_dir=None, *, constants=None, **mellow_option
         return {"ok": False, "status": "preflight_failed", "can_patch": False, "error": str(exc)}
 
 
-def apply(profile=None, payload_dir=None, **mellow_options):
+def apply(profile=None, payload_dir=None, *, abstraction_manifest=None, **mellow_options):
     if not is_macos():
-        return preflight(profile, payload_dir, **mellow_options)
+        return preflight(profile, payload_dir, abstraction_manifest=abstraction_manifest,
+                         **mellow_options)
     try:
         c = _context(profile, payload_dir, **mellow_options)
-        report = preflight(profile, payload_dir, constants=c)
+        report = preflight(profile, payload_dir, constants=c,
+                           abstraction_manifest=abstraction_manifest,
+                           **mellow_options)
         if not report.get("can_patch"):
             return report
         if os.geteuid() != 0:
@@ -110,7 +126,12 @@ def apply(profile=None, payload_dir=None, **mellow_options):
         return {"ok": False, "status": "patch_failed", "error": str(exc)}
 
 
-def unpatch(profile=None, payload_dir=None, **mellow_options):
+def unpatch(profile=None, payload_dir=None, *, abstraction_manifest=None, **mellow_options):
+    # Unpatch is a recovery operation and must remain available even when a
+    # build-specific abstraction package is no longer present.  Keep accepting
+    # the CLI keyword so one parser shape can serve apply/preflight/unpatch;
+    # no new payload or root writes are authorized by this argument.
+    del abstraction_manifest
     if not is_macos():
         return {"ok": False, "status": "unsupported_platform", "error": MACOS_ONLY_MESSAGE}
     try:

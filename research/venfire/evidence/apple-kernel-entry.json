@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "experiment": "021",
+  "layer": "Original Apple restore iBootStage2 to ARM64e XNU EL1 execution",
+  "qemu_sha256": "d3735b9c16699be006f746062618adb70d2c6dc995ce154620ddada0957ce651",
+  "host": "Windows Intel AVX2 / WSL x86_64, explicitly authorized private developer build",
+  "kernel_version": "Darwin Kernel Version 21.6.0: Thu Sep 29 20:13:21 PDT 2022; root:xnu-8020.240.7~1/RELEASE_ARM64_VMAPPLE",
+  "original_kernel_octet_sha256": "1f02d37eb5c897f77bed075b33b14924feabdd6143fb69864bf073d5ac05c8de",
+  "original_kernel_octet_size_bytes": 60325888,
+  "role_metadata_proof": "restore-role-metadata.json",
+  "guest_code_payload_modified": false,
+  "guest_signature_validation_bypassed": false,
+  "ticket_chain": {
+    "source": "Same live VM iBEC Apple TSS ticket already bound by accepted restore LocalPolicy",
+    "same_live_nonce_and_identity_checked": true,
+    "local_policy_next_stage_ticket_sha384_checked": true,
+    "ticket_sha256": "f0d5836766c97275d0c132533b40f9f943c461a9f6c7900ebe2170e12e9f2c08",
+    "fresh_unbound_batch_ticket_experiment": "Guest rejected the ramdisk; no rejection was replaced with success"
+  },
+  "bootx_command_acknowledged": true,
+  "preboot_notification": {
+    "acknowledged": false,
+    "original_stall_hex": "0200",
+    "handling": "result not inspected by primary recovery.c"
+  },
+  "loaded_ramdisk_size_bytes": 167548928,
+  "loaded_device_tree_allocation_bytes": 1048576,
+  "kernel_execution_verified": true,
+  "xnu_boot_completed": false,
+  "macos_boot_verified": false,
+  "restore_userspace_verified": false,
+  "kernel_runtime": {
+    "exception_level": "EL1t",
+    "pstate": "0x804033c4",
+    "pc": "0xfffffe00224e8f80",
+    "kaslr_slide": "0x1adc8000",
+    "kaslr_method": "Guest unique constant string matches the original Mach-O at file offset 0x4f70a5",
+    "instruction_identity": [
+      {
+        "address": "0xfffffe00224e8f60",
+        "file_offset": "0x71cf60",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "de62e516fdedef755cf6032a459972e6cba4ab5c9166d9af026a547a971808fb",
+        "original_sha256": "de62e516fdedef755cf6032a459972e6cba4ab5c9166d9af026a547a971808fb"
+      },
+      {
+        "address": "0xfffffe00223aef58",
+        "file_offset": "0x5e2f58",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "bef13963b50389523afd676baa7824c50edd082c7197804bac6d51d53bcbe56d",
+        "original_sha256": "bef13963b50389523afd676baa7824c50edd082c7197804bac6d51d53bcbe56d"
+      },
+      {
+        "address": "0xfffffe00223ae9a8",
+        "file_offset": "0x5e29a8",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "931818bd0bc398e52ccba3e80de0b025fd1f84e66bfeb04096785ca2e221666c",
+        "original_sha256": "931818bd0bc398e52ccba3e80de0b025fd1f84e66bfeb04096785ca2e221666c"
+      },
+      {
+        "address": "0xfffffe00224f39c4",
+        "file_offset": "0x7279c4",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "3de81589c29f1ab73e16f0bea340fd807cd6dc378f08d72d8b802f0082d1c90f",
+        "original_sha256": "3de81589c29f1ab73e16f0bea340fd807cd6dc378f08d72d8b802f0082d1c90f"
+      },
+      {
+        "address": "0xfffffe00224e6998",
+        "file_offset": "0x71a998",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "f4a667e82e94e157046b4e4e76f6c9c2c1736e5fbe7f8c3400d6106986660331",
+        "original_sha256": "f4a667e82e94e157046b4e4e76f6c9c2c1736e5fbe7f8c3400d6106986660331"
+      },
+      {
+        "address": "0xfffffe00224e4898",
+        "file_offset": "0x718898",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "b748cd660616b99bae41addcbb71746c6bb9bcb3de44a384f90fff7ec9bae6c2",
+        "original_sha256": "b748cd660616b99bae41addcbb71746c6bb9bcb3de44a384f90fff7ec9bae6c2"
+      },
+      {
+        "address": "0xfffffe0022364778",
+        "file_offset": "0x598778",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "b013131b83e4227cf7876ee25da7392b68ad00a1c88284b6cccaf838e9258074",
+        "original_sha256": "b013131b83e4227cf7876ee25da7392b68ad00a1c88284b6cccaf838e9258074"
+      },
+      {
+        "address": "0xfffffe00223ae630",
+        "file_offset": "0x5e2630",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "3939d0ec9974a69e3dee1b1058bced1a7db7c7208f5a0c2d68d90fb48c46fad5",
+        "original_sha256": "3939d0ec9974a69e3dee1b1058bced1a7db7c7208f5a0c2d68d90fb48c46fad5"
+      },
+      {
+        "address": "0xfffffe00223ae630",
+        "file_offset": "0x5e2630",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "3939d0ec9974a69e3dee1b1058bced1a7db7c7208f5a0c2d68d90fb48c46fad5",
+        "original_sha256": "3939d0ec9974a69e3dee1b1058bced1a7db7c7208f5a0c2d68d90fb48c46fad5"
+      },
+      {
+        "address": "0xfffffe0022bc3650",
+        "file_offset": "0xdf7650",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "0939702d0bda2eda5819afcbb53ce84c19e752d131465132e3b855652275c99d",
+        "original_sha256": "0939702d0bda2eda5819afcbb53ce84c19e752d131465132e3b855652275c99d"
+      },
+      {
+        "address": "0xfffffe0022ab5910",
+        "file_offset": "0xce9910",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "bfd6b3892a1e02535b33c236b9eb8bd618ccb1c93d0e658cf8d51425adeaf24f",
+        "original_sha256": "bfd6b3892a1e02535b33c236b9eb8bd618ccb1c93d0e658cf8d51425adeaf24f"
+      },
+      {
+        "address": "0xfffffe00224001d0",
+        "file_offset": "0x6341d0",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "af3abef4cd793ead4aade79f093af794954ecc4c7337314fa0369d85cfedcc11",
+        "original_sha256": "af3abef4cd793ead4aade79f093af794954ecc4c7337314fa0369d85cfedcc11"
+      },
+      {
+        "address": "0xfffffe002240133c",
+        "file_offset": "0x63533c",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "174cfd7ec7c55aae0f273de1f344ada665bd469ae8d388e308b516d5b10a8aea",
+        "original_sha256": "174cfd7ec7c55aae0f273de1f344ada665bd469ae8d388e308b516d5b10a8aea"
+      },
+      {
+        "address": "0xfffffe0022367588",
+        "file_offset": "0x59b588",
+        "length": 96,
+        "matches_original": true,
+        "actual_sha256": "05a4cfb7ef3410264b4105d6dd65606c1f21b4635d1201143dc06680bf4ef3b1",
+        "original_sha256": "05a4cfb7ef3410264b4105d6dd65606c1f21b4635d1201143dc06680bf4ef3b1"
+      }
+    ]
+  },
+  "kernel_console": {
+    "collection": "Read-only QMP memsave of 16384-byte console ring located through original printf console code",
+    "ring_sha256": "586773ac6308661edf384849c8b5efbc8c8950019dba585b060faca163140f31",
+    "verified_markers": [
+      "Darwin Image4 Validator Version 4.2.0",
+      "AMFI: UDID enforcement enabled",
+      "Security policy loaded: Apple Mobile File Integrity (AMFI)",
+      "Security policy loaded: Seatbelt sandbox policy (Sandbox)",
+      "Security policy loaded: Quarantine policy (Quarantine)",
+      "external trust cache module 0 with 424 entries"
+    ],
+    "remaining_messages": [
+      "AppleImage4 nonce-seeds NVRAM data absent",
+      "IOResources: not registry member at registerService()"
+    ]
+  },
+  "failure": {
+    "layer": "XNU IOKit power management watchdog",
+    "panic_format": "Sleep/Wake hang detected @%s:%d",
+    "source_file": "IOPMrootDomain.cpp",
+    "source_line_from_original_binary": 12600,
+    "panic_call_runtime": "0xfffffe0022ab5930",
+    "panic_symbol_runtime": "0xfffffe0022bc363c",
+    "halt_instruction": "b . (0x14000000)",
+    "halt_instruction_matches_original": true,
+    "underlying_delayed_device_or_transition": "A 1 GHz versus 24 MHz counter mismatch was independently observed; a corrected XNU run is needed to verify causality. No specific delayed device was established.",
+    "observed_counter_mismatch": {
+      "qemu_cpu_cntfrq_hz": 1000000000,
+      "original_devicetree_timebase_hz": 24000000,
+      "guest_xnu_timebase_hz": 24000000,
+      "guest_ns_numerator": 125,
+      "guest_ns_denominator": 3,
+      "ratio": 41.666666666666664,
+      "corrected_xnu_run_verified": false
+    }
+  },
+  "fixture_limitations": [
+    "Blank unprovisioned AUX and root original bases were read-only in this experiment",
+    "No virtio root/AUX PCI block devices in this old launcher",
+    "Second CPU still reset/powered-off at final observation",
+    "Apple PV graphics absent"
+  ],
+  "input_integrity": {
+    "valid": true,
+    "checked_count": 5,
+    "issues": []
+  },
+  "primary_restore_source": "https://github.com/libimobiledevice/idevicerestore/blob/540c352c4c44896f7415abef87a166e8bbaea9b0/src/recovery.c",
+  "related_public_xnu_source": {
+    "url": "https://github.com/apple-oss-distributions/xnu/blob/27b03b360a988dfd3dfdf34262bb0042026747cc/iokit/Kernel/IOPMrootDomain.cpp#L12569",
+    "version": "8020.140.41, related public release; not the exact 8020.240.7 guest build",
+    "use": "Corroborates ARM sleepWakeDebugTrig watchdog role; exact PC/line/bytes come from original guest binary"
+  },
+  "session_final_original_integrity": {
+    "valid": true,
+    "checked_count": 4,
+    "issues": []
+  },
+  "session_duration_seconds": 3448.421002785999
+}

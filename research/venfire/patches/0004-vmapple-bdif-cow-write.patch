@@ -1,0 +1,114 @@
+--- a/hw/vmapple/bdif.c
++++ b/hw/vmapple/bdif.c
+@@ -29,6 +29,7 @@
+ 
+     BlockBackend *aux;
+     BlockBackend *root;
++    bool allow_block_writes;
+     MemoryRegion mmio;
+     CharFrontend usbdev;
+     GByteArray *usb_input;
+@@ -174,9 +175,9 @@
+ }
+ 
+ static void vblk_cmd(uint64_t devid, BlockBackend *blk, uint64_t gp_addr,
+-                     uint64_t static_off)
+-{
+-    VblkReq req;
++                     uint64_t static_off, bool allow_writes)
++{
++    VblkReq req = { 0 };
+     VblkSector sector;
+     uint64_t off = 0;
+     g_autofree char *buf = NULL;
+@@ -187,10 +188,13 @@
+     dma_result = dma_memory_read(&address_space_memory, gp_addr,
+                                  &req, sizeof(req), MEMTXATTRS_UNSPECIFIED);
+     if (dma_result != MEMTX_OK) {
+-        goto out;
++        return;
+     }
+ 
+     le2cpu_req(&req);
++    if (req.retval.len != 1) {
++        return;
++    }
+ 
+     if (req.sector.len != sizeof(sector)) {
+         goto out;
+@@ -228,7 +232,27 @@
+         }
+         break;
+     case VBLK_DATA_FLAGS_WRITE:
+-        /* Not needed, iBoot only reads */
++        /* Newer original iBSS initializes AUX through the BDIF interface.
++         * Only an explicitly enabled writable overlay may receive those writes.
++         * Never turn permission, DMA or storage errors into successful status.
++         */
++        if (!allow_writes || !blk_is_writable(blk)) {
++            break;
++        }
++        dma_result = dma_memory_read(&address_space_memory, req.data.addr, buf,
++                                     req.data.len, MEMTXATTRS_UNSPECIFIED);
++        if (dma_result != MEMTX_OK) {
++            break;
++        }
++        r = blk_pwrite(blk, off, req.data.len, buf, 0);
++        if (r == 0) {
++            r = blk_flush(blk);
++        }
++        trace_bdif_vblk_write(devid == DEVID_AUX ? "aux" : "root",
++                              req.data.addr, off, req.data.len, r);
++        if (r == 0) {
++            ret = VBLK_RET_SUCCESS;
++        }
+         break;
+     default:
+         break;
+@@ -440,10 +464,10 @@
+     case REG_CMD:
+         switch (devid) {
+         case DEVID_ROOT:
+-            vblk_cmd(devid, s->root, value, 0x0);
++            vblk_cmd(devid, s->root, value, 0x0, s->allow_block_writes);
+             break;
+         case DEVID_AUX:
+-            vblk_cmd(devid, s->aux, value, 0x0);
++            vblk_cmd(devid, s->aux, value, 0x0, s->allow_block_writes);
+             break;
+         case DEVID_USB:
+             vusb_cmd(s, value);
+@@ -481,6 +505,18 @@
+ {
+     VMAppleBdifState *s = VMAPPLE_BDIF(dev);
+ 
++    BlockBackend *disks[] = { s->aux, s->root };
++
++    for (size_t i = 0; i < ARRAY_SIZE(disks); i++) {
++        uint64_t perm = BLK_PERM_CONSISTENT_READ;
++        if (s->allow_block_writes && blk_supports_write_perm(disks[i])) {
++            perm |= BLK_PERM_WRITE;
++        }
++        if (blk_set_perm(disks[i], perm, BLK_PERM_ALL, errp) < 0) {
++            return;
++        }
++    }
++
+     if (qemu_chr_fe_backend_connected(&s->usbdev)) {
+         qemu_chr_fe_set_handlers(&s->usbdev, vusb_can_receive, vusb_receive,
+                                  vusb_event, NULL, s, NULL, true);
+@@ -496,6 +532,7 @@
+ }
+ 
+ static const Property bdif_properties[] = {
++    DEFINE_PROP_BOOL("allow-block-writes", VMAppleBdifState, allow_block_writes, false),
+     DEFINE_PROP_DRIVE("aux", VMAppleBdifState, aux),
+     DEFINE_PROP_DRIVE("root", VMAppleBdifState, root),
+     DEFINE_PROP_CHR("usbdev", VMAppleBdifState, usbdev),
+--- a/hw/vmapple/trace-events
++++ b/hw/vmapple/trace-events
+@@ -21,3 +21,4 @@
+ bdif_vblk_read(const char *dev, uint64_t addr, uint64_t offset, uint32_t len, int r) "dev=%s addr=0x%"PRIx64" off=0x%"PRIx64" size=0x%x r=%d"
+ bdif_usb_descriptor(uint32_t queue, uint64_t descriptor, uint64_t addr, uint32_t len, uint16_t flags) "queue=%u desc=0x%"PRIx64" addr=0x%"PRIx64" len=0x%x flags=0x%x"
+ bdif_usb_transfer(uint32_t queue, uint64_t addr, uint32_t len, bool complete) "queue=%u addr=0x%"PRIx64" len=0x%x complete=%d"
++bdif_vblk_write(const char *dev, uint64_t addr, uint64_t off, uint32_t size, int r) "dev=%s addr=0x%"PRIx64" off=0x%"PRIx64" size=0x%x r=%d"

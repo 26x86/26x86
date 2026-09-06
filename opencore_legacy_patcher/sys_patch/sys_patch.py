@@ -1036,6 +1036,21 @@ class PatchSysVolume:
         5. Executes patching
         """
         logging.info("- Starting Patch Process")
+        # All callers, including advanced wx and direct legacy entry points,
+        # share the abstraction gate before payload or writable root mounts.
+        # A validated manifest is still not an executable adapter; the gate
+        # deliberately fails closed until a registered native implementation
+        # exists for the exact installed build.
+        from x86.patch.abstraction import deployment_gate
+        abstraction = deployment_gate(self.constants)
+        if not abstraction["ok"]:
+            self.constants.root_patcher_succeeded = False
+            for error in abstraction["errors"]:
+                logging.error("- 26x86 abstraction: %s", error)
+            return False
+        # Mellow validation is deliberately after the shared abstraction gate:
+        # a future Darwin build must stop before any payload, KDK, or journal
+        # inspection, even when this direct legacy entry point is invoked.
         from x86.mellow.integration import validate_live, selected_payload
         validate_live(self.constants)
         from x86.mellow.integration import require_journal_privileges

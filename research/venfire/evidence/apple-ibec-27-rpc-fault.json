@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "experiment": "goldengate-preflight-005",
+  "layer": "Original iBEC optional configuration RPC MMIO Data Abort",
+  "product_version": "27.0",
+  "product_build": "26A5425a",
+  "qemu_sha256": "f2488db869b71ed910c9804bdc68cb64315628e242e530714e4f5a47ce1772e7",
+  "cpu_cntfrq_hz": 24000000,
+  "original_ibec_sha256": "b872a987ebd1bf46b2a6add8c869d187268bcf1034ae52152759cd8d57726d6d",
+  "decoded_original_sha256": "6f86fdabb6123a9b1935f51efcf18293c9b684f79e77ef880d190a45bed5621c",
+  "apple_tss_status": "0",
+  "apple_policy_tss_status": "0",
+  "guest_payload_modified": false,
+  "guest_signature_bypass": false,
+  "stage2_started": true,
+  "stage2_recovery_prompt_verified": false,
+  "exception": {
+    "kind": "Data Abort",
+    "from_el": 0,
+    "to_el": 1,
+    "esr": "0x92000050",
+    "far": "0x4ffff8",
+    "elr": "0x700b0200",
+    "instruction": "str x0,[x8]",
+    "subsequent_original_panic": "4962211b03d706d:203"
+  },
+  "original_instruction_windows": [
+    {
+      "runtime_address": "0x700b0170",
+      "size": 272,
+      "matches_original": true,
+      "sha256": "a8ce59c5f9e01ae6acdb13638f1b3f1232f2da9dff179585e9bf667ddee68050"
+    },
+    {
+      "runtime_address": "0x700d9110",
+      "size": 92,
+      "matches_original": true,
+      "sha256": "457bb2c141e0560d1d06c5a2f5b522bbe25ecc4f3ba9ffa5a9c7af289e0f5b92"
+    },
+    {
+      "runtime_address": "0x70086a74",
+      "size": 80,
+      "matches_original": true,
+      "sha256": "0ca3def0ad034302d111e3e7d80385583260cd260420b630e0314c7193bb5f16"
+    }
+  ],
+  "observed_request": {
+    "interface_base": "0x4fc000",
+    "doorbell": "0x4ffff8",
+    "header_bytes": 24,
+    "first_word": "0x00010001",
+    "opcode": 2,
+    "offset8": "input physical pointer",
+    "offset16": "0x500000",
+    "completion_offset": 3,
+    "initial_completion": 0,
+    "original_completion_zero_behavior": "Return -1 and enter legacy SCfg construction",
+    "full_host_rpc_abi_established": false
+  },
+  "input_integrity": {
+    "valid": true,
+    "checked_count": 4,
+    "issues": []
+  },
+  "session_duration_seconds": 1059.825922252001,
+  "kernel_execution_verified": false,
+  "macos_boot_verified": false,
+  "not_established": [
+    "Exact Apple host RPC implementation",
+    "Original27 iBEC recovery prompt",
+    "Original27 XNU execution"
+  ],
+  "source": "https://updates.cdn-apple.com/2026SummerSeed/b3d7996f-4f91-4586-842a-345c550d7d47/UniversalMac_27.0_26A5425a_Restore.ipsw"
+}

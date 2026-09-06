@@ -1,0 +1,13 @@
+{
+  "document_id": "VF-SPEC-001",
+  "version": "0.1",
+  "adopted": "2026-09-06",
+  "source_file": "Venfire_sandboxOS_Implementation_Spec_v0.1.ko.md",
+  "sha256": "f7a6f1b9eb644287d33ed700321d0a36d950324ecd9fef8e7387d58fb038fb32",
+  "bytes": 57329,
+  "reference_code_bundle_provided": false,
+  "product_name": "26x86",
+  "internal_kernel_name": "VSK",
+  "implementation": "sandbox/vsk",
+  "product_boot_authorized": false
+}

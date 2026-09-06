@@ -227,8 +227,16 @@ def cmd_build(args: argparse.Namespace) -> int:
 
 def cmd_patch(args: argparse.Namespace) -> int:
     from x86.patch.root import apply, preflight, unpatch
-    result = (unpatch if args.unpatch else apply if args.apply else preflight)(args.profile, args.payload_dir,
-        mode=args.mode, deployment=args.mellow, mellow_payload=args.mellow_payload, efi=args.efi)
+    operation = unpatch if args.unpatch else apply if args.apply else preflight
+    result = operation(
+        args.profile,
+        args.payload_dir,
+        mode=args.mode,
+        deployment=args.mellow,
+        mellow_payload=args.mellow_payload,
+        efi=args.efi,
+        abstraction_manifest=args.abstraction_manifest,
+    )
     _emit_json(result)
     return 0 if result.get("ok") else 2
 
@@ -243,6 +251,7 @@ def cmd_mellow(args: argparse.Namespace) -> int:
             result = plan(deployment=args.deployment, **options)
     except (ValueError, OSError, KeyError) as exc:
         result = {"ok": False, "status": "mellow_rejected", "error": str(exc)}
+
     _emit_json(result)
     return 0 if result.get("ok") else 2
 
@@ -418,6 +427,142 @@ def cmd_wizard(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_assets(args: argparse.Namespace) -> int:
+    # Keep the proven internal namespace while exposing the 26x86 command.
+    from research.venfire.venfire.artifacts import create_manifest, write_manifest, load_manifest, verify_manifest
+    from research.venfire.venfire.media import inspect_restore
+    try:
+        if args.asset_action == "inspect-restore":
+            result = inspect_restore(args.path, hash_archive=args.sha256)
+        elif args.asset_action == "manifest":
+            manifest = create_manifest(args.files)
+            write_manifest(manifest, args.output)
+            result = manifest.to_dict()
+        else:
+            result = verify_manifest(load_manifest(args.path)).to_dict()
+        _emit_json(result)
+        return 0 if result.get("valid", True) else 2
+    except (ValueError, OSError) as exc:
+        _emit_json({"ok": False, "error": str(exc)})
+        return 2
+
+
+def cmd_vsk(args: argparse.Namespace) -> int:
+    from x86.vsk_config import load_config
+    # ASCII JSON is valid UTF-8 on Windows pipes regardless of the console code
+    # page; JSON decoding restores Unicode config strings without data loss.
+    def emit(result):
+        print(json.dumps(result, ensure_ascii=True, indent=2))
+    try:
+        result = load_config(args.config)
+        emit({"ok": True, **result})
+        return 0
+    except (ValueError, OSError) as exc:
+        emit({"ok": False, "error": str(exc), "boot_authorized": False,
+              "validation_level": "UNIT"})
+        return 2
+
+
+def cmd_sandbox(args: argparse.Namespace) -> int:
+    from x86.sandbox import plan, prepare, prepare_vsk
+    try:
+        if args.config:
+            from x86.sandbox_config import read
+            result = read(args.config)
+        elif args.vsk_bundle or args.trusted_public_key or args.vsk_efi:
+            if not args.output or not args.vsk_bundle or not args.trusted_public_key:
+                raise ValueError("VSK staging requires --output, --vsk-bundle and --trusted-public-key")
+            result = prepare_vsk(args.target, args.output, args.vsk_bundle,
+                                 args.trusted_public_key, efi_path=args.vsk_efi)
+        else:
+            result = prepare(args.target, args.output) if args.output else plan(args.target)
+    except (ValueError, OSError) as exc:
+        _emit_json({"ok": False, "error": str(exc)})
+        return 1
+    _emit_json(result)
+    return 0 if result.get("ok") else 2
+
+
+def cmd_vmapple(args: argparse.Namespace) -> int:
+    from x86.vmapple import VMappleConfig, configured_from_environment, run
+
+    if args.vmapple_action == "status":
+        _emit_json(configured_from_environment())
+        return 0
+
+    config = VMappleConfig(
+        target_major=args.target,
+        qemu=args.qemu,
+        firmware=args.firmware,
+        ibss=args.ibss,
+        ibec=args.ibec,
+        aux=args.aux,
+        root=args.root,
+        output=args.output,
+        qemu_img=args.qemu_img,
+        display=args.display,
+        uuid=args.uuid,
+        aux_offset=args.aux_offset,
+        memory_mib=args.memory_mib,
+        smp=args.smp,
+        transition_timeout=args.transition_timeout,
+        duration=args.duration,
+        research_only=args.research_only,
+        build_manifest=args.build_manifest,
+        tss_helper=args.tss_helper,
+        original_ibss=args.original_ibss,
+        original_ibec=args.original_ibec,
+        live_personalize=args.live_personalize,
+        optional_rpc_unavailable=args.optional_rpc_unavailable,
+        restore_chain=args.restore_chain,
+        restore_role_dir=args.restore_role_dir,
+        restore_timeout=args.restore_timeout,
+        machine_type=args.machine_type,
+        guest_os=args.guest_os,
+        recovery_protocol=args.recovery_protocol,
+        recovery_image_name=args.recovery_image_name,
+        boot_picker_enabled=args.boot_picker_enabled,
+        boot_delay_seconds=args.boot_delay,
+        boot_selection=args.boot_selection,
+        boot_picker_trigger=args.boot_picker_trigger,
+    )
+    try:
+        result = run(config)
+    except (ValueError, OSError, TimeoutError, RuntimeError) as exc:
+        if args.json:
+            payload: dict[str, Any] = {"ok": False, "error": str(exc), "macos_boot_verified": False}
+            policy = getattr(exc, "to_dict", None)
+            if callable(policy):
+                payload["policy_error"] = policy()
+            _emit_json(payload)
+        else:
+            logging.error("VMApple launch failed: %s", exc)
+        return 2
+    _emit_json(result)
+    return 0 if result.get("error") is None else 2
+
+
+def cmd_personality(args: argparse.Namespace) -> int:
+    """Validate the iBoot guest/recovery scope without touching any inputs."""
+    from x86.iboot_personality import IbootScopeError, policy_matrix, validate_iboot_scope
+
+    try:
+        report = validate_iboot_scope(
+            args.machine_type,
+            args.guest_os,
+            recovery_protocol=args.recovery_protocol,
+            recovery_image_name=args.recovery_image_name,
+            recovery_enabled=args.recovery_enabled,
+            target_major=args.target,
+        )
+    except IbootScopeError as exc:
+        _emit_json({"ok": False, "error": str(exc), "policy_error": exc.to_dict(),
+                    "policy_matrix": policy_matrix()})
+        return 2
+    _emit_json({"ok": True, **report, "policy_matrix": policy_matrix()})
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="x86",
@@ -430,6 +575,145 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    vsk = subparsers.add_parser("vsk", help="Validate VSK configuration offline; never authorize boot")
+    vsk.add_argument("--config", required=True, help="Strict UTF-8 XML VSK config.plist")
+    vsk.set_defaults(handler=cmd_vsk)
+
+    assets = subparsers.add_parser("assets", help="Read-only original guest asset inspection and integrity")
+    asset_commands = assets.add_subparsers(dest="asset_action", required=True)
+    inspect = asset_commands.add_parser("inspect-restore", help="Inspect original IPSW BuildManifest in place")
+    inspect.add_argument("path")
+    inspect.add_argument("--sha256", action="store_true")
+    inspect.set_defaults(handler=cmd_assets)
+    manifest = asset_commands.add_parser("manifest", help="Record immutable input hashes")
+    manifest.add_argument("--output", required=True)
+    manifest.add_argument("files", nargs="+")
+    manifest.set_defaults(handler=cmd_assets)
+    verify = asset_commands.add_parser("verify", help="Verify recorded inputs")
+    verify.add_argument("path")
+    verify.set_defaults(handler=cmd_assets)
+
+    sandbox = subparsers.add_parser("sandbox", help="Apple Silicon Sandbox EFI status and self-test staging")
+    sandbox.add_argument("--target", type=int, choices=[26, 27], default=26)
+    sandbox_mode = sandbox.add_mutually_exclusive_group()
+    sandbox_mode.add_argument("--output", help="Stage EFI self-test or authenticated VSK inputs into a new folder")
+    sandbox_mode.add_argument("--config", help="Validate OpenCore Sandbox config.plist without writes")
+    sandbox.add_argument("--vsk-bundle", help="Signed VSK bundle directory for authenticated staging")
+    sandbox.add_argument("--trusted-public-key", help="External raw32 VSK Ed25519 public key")
+    sandbox.add_argument("--vsk-efi", help="Production VSKBOOT.EFI path (defaults to the local build receipt)")
+    sandbox.add_argument("--json", action="store_true")
+    sandbox.set_defaults(handler=cmd_sandbox)
+
+    vmapple = subparsers.add_parser(
+        "vmapple",
+        help="Run the caller-supplied VMApple research VM with a visible GTK/SDL window",
+    )
+    vmapple_actions = vmapple.add_subparsers(dest="vmapple_action", required=True)
+    vmapple_status = vmapple_actions.add_parser(
+        "status", help="Show configured VMApple paths without launching a guest"
+    )
+    vmapple_status.set_defaults(handler=cmd_vmapple)
+    vmapple_run = vmapple_actions.add_parser(
+        "run", help="Launch VMApple, upload iBSS, and record the real DFU boundary"
+    )
+    vmapple_run.add_argument("--target", type=int, choices=[26, 27], default=27)
+    vmapple_run.add_argument("--qemu", default=os.environ.get("X86_VMAPLE_QEMU"))
+    vmapple_run.add_argument("--qemu-img", default=os.environ.get("X86_VMAPLE_QEMU_IMG"))
+    vmapple_run.add_argument("--firmware", default=os.environ.get("X86_VMAPLE_AVPBOOTER", ""))
+    vmapple_run.add_argument("--ibss", default=os.environ.get("X86_VMAPLE_IBSS", ""))
+    vmapple_run.add_argument("--ibec", default=os.environ.get("X86_VMAPLE_IBEC"))
+    vmapple_run.add_argument("--aux", default=os.environ.get("X86_VMAPLE_AUX", ""))
+    vmapple_run.add_argument("--root", default=os.environ.get("X86_VMAPLE_ROOT", ""))
+    vmapple_run.add_argument("--output", default=os.environ.get("X86_VMAPLE_OUTPUT"))
+    vmapple_run.add_argument("--display", choices=["gtk", "sdl"], default="gtk")
+    vmapple_run.add_argument("--uuid", type=lambda value: int(value, 0), default=0)
+    vmapple_run.add_argument("--aux-offset", type=lambda value: int(value, 0), default=0)
+    vmapple_run.add_argument("--memory-mib", type=int, default=4096)
+    vmapple_run.add_argument("--smp", type=int, default=2)
+    vmapple_run.add_argument("--transition-timeout", type=float, default=300.0)
+    vmapple_run.add_argument("--duration", type=float)
+    vmapple_run.add_argument(
+        "--build-manifest", default=os.environ.get("X86_VMAPLE_BUILD_MANIFEST"),
+        help="Official BuildManifest.plist; required for --live-personalize",
+    )
+    vmapple_run.add_argument(
+        "--tss-helper", default=os.environ.get("X86_VMAPLE_TSS_HELPER"),
+        help="Local libtatsu-compatible TSS request encoder",
+    )
+    vmapple_run.add_argument(
+        "--original-ibss", default=os.environ.get("X86_VMAPLE_ORIGINAL_IBSS"),
+        help="Unchanged Apple iBSS IM4P; never modified by the runner",
+    )
+    vmapple_run.add_argument(
+        "--original-ibec", default=os.environ.get("X86_VMAPLE_ORIGINAL_IBEC"),
+        help="Unchanged Apple iBEC IM4P; never modified by the runner",
+    )
+    vmapple_run.add_argument(
+        "--live-personalize", action="store_true",
+        help="Request fresh Apple TSS tickets for the live USB nonce",
+    )
+    vmapple_run.add_argument(
+        "--optional-rpc-unavailable", action="store_true",
+        help="Opt into the negative optional-RPC experiment (normally omitted)",
+    )
+    vmapple_run.add_argument(
+        "--restore-chain", action="store_true",
+        help="After a real Stage2 prompt, send the official restore-role sequence",
+    )
+    vmapple_run.add_argument(
+        "--restore-role-dir", default=os.environ.get("X86_VMAPLE_RESTORE_ROLE_DIR"),
+        help="Directory containing unchanged Restore*.im4p role inputs",
+    )
+    vmapple_run.add_argument(
+        "--restore-timeout", type=float, default=900.0,
+        help="Bounded timeout for the Stage2 restore-role sequence",
+    )
+    vmapple_run.add_argument("--machine-type", default="iBoot(AArch64)")
+    vmapple_run.add_argument("--guest-os", default="macOS",
+                             help="iBoot guest scope; only macOS is accepted")
+    vmapple_run.add_argument("--recovery-protocol", default="DFU/IPSW",
+                             help="iBoot recovery scope: Auto, DFU, IPSW or DFU/IPSW")
+    vmapple_run.add_argument("--recovery-image-name", default="_default.ipsw",
+                             help="macOS Local Recovery image name")
+    vmapple_run.add_argument(
+        "--boot-selection", choices=["macos", "recovery"], default="recovery",
+        help="BootPicker entry to execute after the two-second gate (recovery is the verified path)",
+    )
+    vmapple_run.add_argument(
+        "--boot-delay", type=float, default=2.0,
+        help="Fixed BootPicker delay; only 2 seconds is accepted",
+    )
+    vmapple_run.add_argument(
+        "--boot-picker-trigger", default="cli",
+        help="Audited selection source, for example alt-enter or runner-default-recovery",
+    )
+    vmapple_run.add_argument(
+        "--no-boot-picker", dest="boot_picker_enabled", action="store_false",
+        help="Disable the two-second gate for a control-plane experiment",
+    )
+    vmapple_run.set_defaults(boot_picker_enabled=True)
+    vmapple_run.add_argument(
+        "--research-only", action="store_true", required=True,
+        help="Required acknowledgement that this is a non-redistributable research run",
+    )
+    vmapple_run.add_argument("--json", action="store_true")
+    vmapple_run.set_defaults(handler=cmd_vmapple)
+
+    personality = subparsers.add_parser(
+        "personality", help="Validate the iBoot(AArch64) macOS-only guest policy"
+    )
+    personality_action = personality.add_subparsers(dest="personality_action", required=True)
+    personality_validate = personality_action.add_parser(
+        "validate", help="Check guest and DFU/IPSW recovery scope without I/O"
+    )
+    personality_validate.add_argument("--machine-type", default="iBoot(AArch64)")
+    personality_validate.add_argument("--guest-os", default="macOS")
+    personality_validate.add_argument("--recovery-protocol", default="Auto")
+    personality_validate.add_argument("--recovery-image-name", default="_default.ipsw")
+    personality_validate.add_argument("--target", type=int, choices=[26, 27], default=27)
+    personality_validate.add_argument("--recovery-enabled", action="store_true")
+    personality_validate.set_defaults(handler=cmd_personality)
 
     detect = subparsers.add_parser("detect", help="Mac 모델 및 하드웨어 정보 확인")
     detect.add_argument("--json", action="store_true", help="JSON 형식으로 결과 출력")
@@ -454,6 +738,7 @@ def build_parser() -> argparse.ArgumentParser:
     patch.add_argument("--mellow", choices=["disabled", "efi", "root-patch"])
     patch.add_argument("--mellow-payload", help="검증된 Mellow manifest 디렉터리")
     patch.add_argument("--efi", help="실제 대상 OpenCore EFI 경로 (중복 주입 검사)")
+    patch.add_argument("--abstraction-manifest", help="Exact OS build / architecture abstraction-binary manifest")
     patch.add_argument("--json", action="store_true", help="JSON 형식으로 결과 출력")
     patch.set_defaults(handler=cmd_patch)
 

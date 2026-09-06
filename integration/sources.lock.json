@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "repositories": [
+    {
+      "name": "26x86",
+      "url": "https://github.com/NiSeullent/26x86",
+      "commit": "d47409b992795ed2c1375a35d65980bdf7d791af",
+      "licenses": [
+        {
+          "path": "LICENSE.txt",
+          "sha256": "77c458ccb6116400cf960f8951630bc3b8b34731b56ffbd736b95c2b78449104"
+        },
+        {
+          "path": "THIRD_PARTY_LICENSES.md",
+          "sha256": "f774c2c4ba8afb195e38e4f34dfa4ea48f56eac5761e5b027ad7ee77a4a3e4b0"
+        }
+      ],
+      "source_only": true
+    },
+    {
+      "name": "26x86-OpenCorePkg",
+      "url": "https://github.com/NiSeullent/26x86-OpenCorePkg",
+      "commit": "6a65d9bd39bbb5d843b1f2d42b0f16e8d3a44e0e",
+      "licenses": [
+        {
+          "path": "LICENSE.txt",
+          "sha256": "4ca709aac88e7b297e794f464d6557203b23a4e92e792b579bb968fef2bce4c4"
+        }
+      ],
+      "source_only": true
+    },
+    {
+      "name": "26x86-MetallibSupportPkg",
+      "url": "https://github.com/NiSeullent/26x86-MetallibSupportPkg",
+      "commit": "0057b6da215f752d25c3d1a93a3a25c30915c1f9",
+      "licenses": [],
+      "source_only": true
+    },
+    {
+      "name": "26x86-PatcherSupportPkg",
+      "url": "https://github.com/NiSeullent/26x86-PatcherSupportPkg",
+      "commit": "b746031849c9dcc77841b06875583bb3bf13bd85",
+      "licenses": [
+        {
+          "path": "LICENSE.txt",
+          "sha256": "5c870bcb12fb3fbf86511ba3520c38a4120961082636f1d74931a9b0e8b8ad8d"
+        }
+      ],
+      "source_only": true
+    }
+  ],
+  "apple_binaries_bundled": false,
+  "references": [
+    {
+      "name": "Mellow",
+      "url": "https://github.com/NiSeullent/Mellow",
+      "commit": "72f3df08ff05c20bdbbada7723009b88f6ccd25e",
+      "role": "design reference; source not relicensed or bundled",
+      "license_sha256": "71406ea74cdb08d64bffcc4aa10c610ce1d8ec3eb0dfddf2170631ca404393a8"
+    }
+  ]
+}

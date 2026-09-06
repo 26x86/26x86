@@ -1,0 +1,24 @@
+{
+  "eligible": false,
+  "system": "Windows",
+  "architecture": "AMD64",
+  "hardware_model": null,
+  "cpu_vendor": null,
+  "evidence": [
+    {
+      "name": "darwin",
+      "passed": false,
+      "detail": "Darwin host required"
+    },
+    {
+      "name": "x86_64",
+      "passed": false,
+      "detail": "x86_64 host process required"
+    }
+  ],
+  "reasons": [
+    "Darwin host required",
+    "x86_64 host process required"
+  ],
+  "assurance": "Best-effort local hardware evidence; not cryptographic attestation."
+}
