@@ -167,6 +167,23 @@ QEMU의 문서화된 AUX 뷰 오프셋 `0x4000`을 자동 적용합니다. 원�
 만듭니다. 이 동작은 [QEMU VMApple 문서](https://www.qemu.org/docs/master/system/arm/vmapple.html)의
 `dd ... bs=0x4000 skip=1` 요구사항과 일치합니다.
 
+아직 `macosvm.json` 번들이 없다면 실제 Apple-Silicon macOS 호스트에서만
+다음처럼 새 번들을 만들 수 있습니다. IPSW는 호출자가 준비하며, 도구는
+다운로드·복호화·수정하지 않습니다.
+
+```sh
+python3 -m x86 vmapple provision \
+  --ipsw /path/to/UniversalMac_26...ipsw \
+  --output /path/to/new-goldengate-vm \
+  --disk-size 32g --timeout 86400 --json
+```
+
+이 명령은 Linux/WSL, AVPBooter가 없는 호스트, 기존 출력 디렉터리, 잘못된
+용량을 거부하고 생성한 디렉터리에 `provision-report.json`과 실행 로그를
+남깁니다. 프로비저닝 영수증은 direct-run 입력 검증을 충족하지만 macOS
+부팅 성공을 의미하지 않으며, 이후 `--vm-json` 직접 실행에서 XNU와
+userspace UART 증거를 별도로 확인해야 합니다.
+
 ```sh
 python3 -m x86 vmapple run --target 27 --display auto \
   --qemu /path/to/qemu-system-aarch64 \

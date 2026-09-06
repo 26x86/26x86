@@ -168,6 +168,161 @@ class VMappleOfflineTest(unittest.TestCase):
             self.assertEqual(report["vm_bundle"]["aux_offset"], 0x4000)
             self.assertEqual((aux.read_bytes(), disk.read_bytes()), before)
 
+    def test_macosvm_provision_command_is_argv_only(self) -> None:
+        from x86.vmapple import Executable, macosvm_provision_command
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            ipsw = root / "GoldenGate.ipsw"
+            output = root / "vm"
+            ipsw.write_bytes(b"caller supplied IPSW")
+            output.mkdir()
+            command = macosvm_provision_command(
+                Executable("/usr/local/bin/macosvm"),
+                ipsw=ipsw,
+                output=output,
+                disk_size="64g",
+            )
+        self.assertEqual(command, [
+            "/usr/local/bin/macosvm",
+            "--disk", f"{output / 'disk.img'},size=64g",
+            "--aux", str(output / "aux.img"),
+            "--restore", str(ipsw),
+            str(output / "macosvm.json"),
+        ])
+        self.assertNotIn("shell", command)
+
+        for invalid in ("0g", "32", "5p", "4097g"):
+            with self.subTest(invalid=invalid):
+                with tempfile.TemporaryDirectory() as invalid_directory:
+                    invalid_root = Path(invalid_directory)
+                    invalid_ipsw = invalid_root / "GoldenGate.ipsw"
+                    invalid_output = invalid_root / "vm"
+                    invalid_ipsw.write_bytes(b"caller supplied IPSW")
+                    invalid_output.mkdir()
+                    with self.assertRaises(ValueError):
+                        macosvm_provision_command(
+                            Executable("/usr/local/bin/macosvm"),
+                            ipsw=invalid_ipsw,
+                            output=invalid_output,
+                            disk_size=invalid,
+                        )
+
+    def test_macosvm_provision_is_host_gated_without_creating_output(self) -> None:
+        from x86.vmapple import provision_macosvm
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            ipsw = root / "GoldenGate.ipsw"
+            output = root / "vm"
+            ipsw.write_bytes(b"caller supplied IPSW")
+            with patch(
+                "x86.vmapple.direct_macos_host_report",
+                return_value={"apple_silicon_macos": False},
+            ):
+                with self.assertRaisesRegex(ValueError, "Apple-Silicon macOS"):
+                    provision_macosvm(
+                        macosvm="/bin/echo", ipsw=ipsw, output=output,
+                    )
+            self.assertFalse(output.exists())
+
+            output.mkdir()
+            with patch(
+                "x86.vmapple.direct_macos_host_report",
+                return_value={
+                    "apple_silicon_macos": True,
+                    "default_avpbooter_present": True,
+                },
+            ):
+                with self.assertRaisesRegex(ValueError, "must be new"):
+                    provision_macosvm(
+                        macosvm="/bin/echo", ipsw=ipsw, output=output,
+                    )
+
+    def test_macosvm_provision_runs_new_bundle_and_writes_receipt(self) -> None:
+        from x86.vmapple import provision_macosvm
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            ipsw = root / "GoldenGate.ipsw"
+            macosvm = root / "macosvm"
+            output = root / "vm"
+            ipsw.write_bytes(b"caller supplied IPSW")
+            macosvm.write_text(
+                "#!/usr/bin/env python3\n"
+                "import base64, json, pathlib, plistlib, sys\n"
+                "args = sys.argv[1:]\n"
+                "aux = pathlib.Path(args[args.index('--aux') + 1])\n"
+                "disk = pathlib.Path(args[args.index('--disk') + 1].split(',')[0])\n"
+                "vm_json = pathlib.Path(args[-1])\n"
+                "aux.write_bytes(b'A' * (0x4000 + 512))\n"
+                "disk.write_bytes(b'R' * 512)\n"
+                "enc = lambda value: base64.b64encode(plistlib.dumps(value, fmt=plistlib.FMT_BINARY)).decode('ascii')\n"
+                "vm_json.write_text(json.dumps({'machineId': enc({'ECID': 42}), 'hardwareModel': enc({'hardware': b'm1'}), 'storage': [{'type': 'aux', 'file': str(aux)}, {'type': 'disk', 'file': str(disk)}]}))\n"
+            )
+            macosvm.chmod(0o755)
+            host = {
+                "apple_silicon_macos": True,
+                "default_avpbooter_present": True,
+                "direct_macos_ready": True,
+            }
+            with patch("x86.vmapple.direct_macos_host_report", return_value=host):
+                report = provision_macosvm(
+                    macosvm=macosvm,
+                    ipsw=ipsw,
+                    output=output,
+                    disk_size="1g",
+                    timeout=30,
+                )
+            self.assertTrue(report["provisioning_completed"])
+            self.assertEqual(report["vm_bundle"]["uuid"], 42)
+            self.assertTrue((output / "provision-report.json").is_file())
+            self.assertTrue((output / "macosvm.stdout.log").is_file())
+            self.assertTrue((output / "macosvm.stderr.log").is_file())
+
+    def test_macosvm_provision_rejects_ipsw_mutation(self) -> None:
+        from x86.vmapple import provision_macosvm
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            ipsw = root / "GoldenGate.ipsw"
+            macosvm = root / "macosvm"
+            output = root / "vm"
+            ipsw.write_bytes(b"caller supplied IPSW")
+            macosvm.write_text(
+                "#!/usr/bin/env python3\n"
+                "from pathlib import Path\n"
+                "import sys\n"
+                "Path(sys.argv[sys.argv.index('--restore') + 1]).write_bytes(b'mutated')\n"
+            )
+            macosvm.chmod(0o755)
+            with patch(
+                "x86.vmapple.direct_macos_host_report",
+                return_value={
+                    "apple_silicon_macos": True,
+                    "default_avpbooter_present": True,
+                },
+            ):
+                with self.assertRaisesRegex(ValueError, "changed during provisioning"):
+                    provision_macosvm(macosvm=macosvm, ipsw=ipsw, output=output)
+            self.assertTrue(output.is_dir())
+            self.assertFalse((output / "provision-report.json").exists())
+
+    def test_cli_parser_exposes_macosvm_provisioning(self) -> None:
+        from x86.cli import build_parser
+
+        parsed = build_parser().parse_args([
+            "vmapple", "provision", "--ipsw", "/tmp/GoldenGate.ipsw",
+            "--output", "/tmp/golden-vm", "--disk-size", "64g",
+            "--timeout", "120", "--json",
+        ])
+        self.assertEqual(parsed.vmapple_action, "provision")
+        self.assertEqual(parsed.ipsw, "/tmp/GoldenGate.ipsw")
+        self.assertEqual(parsed.output, "/tmp/golden-vm")
+        self.assertEqual(parsed.disk_size, "64g")
+        self.assertEqual(parsed.timeout, 120.0)
+        self.assertTrue(parsed.json)
+
     def test_macosvm_json_rejects_mismatched_manual_uuid_or_disk(self) -> None:
         from x86.vmapple import VMappleConfig
 

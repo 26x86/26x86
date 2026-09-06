@@ -178,6 +178,38 @@ without modifying the source image. A read-only preflight is available with:
 python3 -m x86 vmapple inspect-storage --vm-json /path/to/macosvm.json --json
 ```
 
+### Native Apple-Silicon VM provisioning
+
+The repository does not download, decrypt, patch, or overwrite an IPSW. On the
+actual Apple-Silicon macOS host that owns the Virtualization.framework restore
+workflow, a caller can create a new VM bundle with the locally installed
+`macosvm` tool:
+
+```sh
+python3 -m x86 vmapple provision \
+  --ipsw /path/to/UniversalMac_26...ipsw \
+  --output /path/to/new-goldengate-vm \
+  --disk-size 32g \
+  --timeout 86400 \
+  --json
+```
+
+`X86_MACOSVM` may name the `macosvm` executable and `X86_VMAPLE_IPSW` may
+provide the IPSW path. The command is intentionally fail-closed unless the
+host is Apple-Silicon macOS and the standard
+`Virtualization.framework/Resources/AVPBooter.vmapple2.bin` is present. It
+rejects WSL/Linux execution, invalid disk sizes (the bounded range is `1k` to
+`4t`), a non-regular IPSW, and an existing output directory. The output is
+created as a new directory, and contains the tool's `macosvm.json`, AUX/disk
+images, stdout/stderr logs, and a `provision-report.json` receipt. The receipt
+re-validates `machineId`, `hardwareModel`, and the exact AUX/root storage
+entries through the same immutable loader used by direct boot.
+
+Provisioning success is only a valid VM-input receipt. It is not XNU,
+userspace, installer, display, or Golden Gate boot evidence. Run the direct
+entry separately with `--vm-json` and require both Darwin/XNU and userspace
+UART markers before treating `macos_boot_verified` as true.
+
 ## Licensing and scope
 
 The project follows the existing OCLP-derived `LICENSE.txt`, including its four

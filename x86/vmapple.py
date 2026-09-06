@@ -23,6 +23,7 @@ import os
 from pathlib import Path
 import platform
 import plistlib
+import re
 import shutil
 import socket
 import struct
@@ -63,6 +64,9 @@ MAX_VM_PLIST_DEPTH = 32
 # prevents a normal direct launch from silently presenting the wrong pflash
 # view to AVPBooter.
 MACOSVM_AUX_METADATA_BYTES = 0x4000
+MACOSVM_DEFAULT_DISK_SIZE = "32g"
+MACOSVM_MAX_DISK_BYTES = 4 * 1024**4
+MACOSVM_MAX_PROVISION_TIMEOUT = 172800.0
 DEFAULT_AVPBOOTER_PATH = Path(
     "/System/Library/Frameworks/Virtualization.framework/Resources/AVPBooter.vmapple2.bin"
 )
@@ -811,6 +815,153 @@ def inspect_macosvm_storage(value: str | Path) -> dict[str, object]:
     )
     report["vm_bundle"] = bundle.report()
     report["aux_offset_source"] = "macosvm.json documented metadata trim"
+    return report
+
+
+def _macosvm_disk_size_bytes(value: str) -> int:
+    """Validate macosvm's sparse disk-size syntax and bound allocation."""
+    if not isinstance(value, str) or not re.fullmatch(r"[1-9][0-9]{0,8}[kKmMgGtT]", value.strip()):
+        raise ValueError("macosvm disk size must be a positive number with k, m, g, or t suffix")
+    match = re.fullmatch(r"([1-9][0-9]{0,8})([kKmMgGtT])", value.strip())
+    assert match is not None
+    multipliers = {"k": 1024, "m": 1024**2, "g": 1024**3, "t": 1024**4}
+    size = int(match.group(1)) * multipliers[match.group(2).lower()]
+    if size > MACOSVM_MAX_DISK_BYTES:
+        raise ValueError("macosvm disk size exceeds the 4 TiB provisioning limit")
+    return size
+
+
+def macosvm_provision_command(
+    executable: Executable,
+    *,
+    ipsw: Path,
+    output: Path,
+    disk_size: str = MACOSVM_DEFAULT_DISK_SIZE,
+) -> list[str]:
+    """Build the argv-only macosvm restore command for a new VM directory."""
+    _macosvm_disk_size_bytes(disk_size)
+    if not ipsw.is_file():
+        raise ValueError(f"macOS IPSW must be a regular file: {ipsw}")
+    if output.is_symlink() or not output.is_dir():
+        raise ValueError(f"macosvm provisioning output must be an existing directory: {output}")
+    json_path = output / "macosvm.json"
+    aux_path = output / "aux.img"
+    disk_path = output / "disk.img"
+    return executable.command(
+        "--disk", f"{disk_path},size={disk_size.strip()}",
+        "--aux", str(aux_path),
+        "--restore", str(ipsw),
+        str(json_path),
+    )
+
+
+def provision_macosvm(
+    *,
+    macosvm: str | Path | None,
+    ipsw: str | Path,
+    output: str | Path | None,
+    disk_size: str = MACOSVM_DEFAULT_DISK_SIZE,
+    timeout: float = 86400.0,
+) -> dict[str, object]:
+    """Provision a Virtualization.framework VM bundle on a native Apple host.
+
+    The operation is intentionally host-gated and creates a new directory. It
+    never edits an existing VM, IPSW, ESP, or caller-supplied storage image.
+    ``macosvm`` performs Apple's restore/provisioning work; the resulting JSON
+    is immediately re-read through the same immutable bundle validator used by
+    direct VMApple boot.
+    """
+    host = direct_macos_host_report()
+    if host.get("apple_silicon_macos") is not True:
+        raise ValueError(
+            "macosvm provisioning requires an Apple-Silicon macOS host; "
+            "the current host is recovery/TCG-only"
+        )
+    if host.get("default_avpbooter_present") is not True:
+        raise ValueError("Virtualization.framework AVPBooter is not present on this host")
+    if (
+        isinstance(timeout, bool)
+        or not isinstance(timeout, (int, float))
+        or not math.isfinite(float(timeout))
+        or not 0 < float(timeout) <= MACOSVM_MAX_PROVISION_TIMEOUT
+    ):
+        raise ValueError("macosvm provisioning timeout must be between 0 and 172800 seconds")
+    _macosvm_disk_size_bytes(disk_size)
+    ipsw_path = _regular(ipsw, "macOS IPSW")
+    ipsw_before = {
+        "path": str(ipsw_path),
+        "bytes": ipsw_path.stat().st_size,
+        "sha256": _sha256(ipsw_path),
+    }
+    executable = _resolve_executable(macosvm, "X86_MACOSVM", "macosvm")
+    if executable.is_wsl:
+        raise ValueError("macosvm provisioning must run natively on Apple-Silicon macOS")
+    destination = _new_directory(output)
+    command = macosvm_provision_command(
+        executable,
+        ipsw=ipsw_path,
+        output=destination,
+        disk_size=disk_size,
+    )
+    stdout_path = destination / "macosvm.stdout.log"
+    stderr_path = destination / "macosvm.stderr.log"
+    try:
+        with stdout_path.open("xb") as stdout, stderr_path.open("xb") as stderr:
+            completed = subprocess.run(
+                command,
+                cwd=str(destination),
+                stdin=subprocess.DEVNULL,
+                stdout=stdout,
+                stderr=stderr,
+                timeout=float(timeout),
+                check=False,
+            )
+    except subprocess.TimeoutExpired as error:
+        try:
+            unchanged = (
+                ipsw_path.stat().st_size == ipsw_before["bytes"]
+                and _sha256(ipsw_path) == ipsw_before["sha256"]
+            )
+        except OSError:
+            unchanged = False
+        if not unchanged:
+            raise ValueError(
+                f"macOS IPSW changed during provisioning; output preserved at {destination}"
+            ) from error
+        raise TimeoutError(
+            f"macosvm provisioning timed out; output preserved at {destination}"
+        ) from error
+    try:
+        ipsw_unchanged = (
+            ipsw_path.stat().st_size == ipsw_before["bytes"]
+            and _sha256(ipsw_path) == ipsw_before["sha256"]
+        )
+    except OSError:
+        ipsw_unchanged = False
+    if not ipsw_unchanged:
+        raise ValueError(
+            f"macOS IPSW changed during provisioning; output preserved at {destination}"
+        )
+    if completed.returncode:
+        tail = stderr_path.read_text(encoding="utf-8", errors="replace")[-4096:]
+        raise ValueError(
+            f"macosvm provisioning failed with status {completed.returncode}; "
+            f"output preserved at {destination}: {tail.strip()}"
+        )
+    bundle = load_macosvm_configuration(destination / "macosvm.json")
+    report = {
+        "schema": "26x86.macosvm-provision/1",
+        "provisioning_completed": True,
+        "host": host,
+        "output": str(destination),
+        "command": command,
+        "ipsw": {**ipsw_before, "unchanged": True},
+        "vm_bundle": bundle.report(),
+        "logs": {"stdout": str(stdout_path), "stderr": str(stderr_path)},
+    }
+    (destination / "provision-report.json").write_text(
+        json.dumps(report, indent=2) + "\n", encoding="utf-8"
+    )
     return report
 
 

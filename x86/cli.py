@@ -490,6 +490,7 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
         configured_from_environment,
         inspect_macosvm_storage,
         inspect_storage,
+        provision_macosvm,
         run,
     )
 
@@ -498,6 +499,24 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
         return 0
     if args.vmapple_action == "capabilities":
         _emit_json(apple_silicon_profile())
+        return 0
+    if args.vmapple_action == "provision":
+        try:
+            result = provision_macosvm(
+                macosvm=args.macosvm,
+                ipsw=args.ipsw,
+                output=args.output,
+                disk_size=args.disk_size,
+                timeout=args.timeout,
+            )
+        except (ValueError, OSError, TimeoutError, RuntimeError) as exc:
+            _emit_json({
+                "ok": False,
+                "error": str(exc),
+                "provisioning_completed": False,
+            })
+            return 2
+        _emit_json({"ok": True, **result})
         return 0
     if args.vmapple_action == "inspect-storage":
         try:
@@ -648,6 +667,33 @@ def build_parser() -> argparse.ArgumentParser:
         help="Show the qemu-t8030-derived Apple Silicon device profile without launching a guest",
     )
     vmapple_capabilities.set_defaults(handler=cmd_vmapple)
+    vmapple_provision = vmapple_actions.add_parser(
+        "provision",
+        help="Provision a new Virtualization.framework macOS VM bundle on Apple Silicon macOS",
+    )
+    vmapple_ipsw = os.environ.get("X86_VMAPLE_IPSW")
+    vmapple_provision.add_argument(
+        "--macosvm", default=os.environ.get("X86_MACOSVM"),
+        help="macosvm executable (or X86_MACOSVM)",
+    )
+    vmapple_provision.add_argument(
+        "--ipsw", default=vmapple_ipsw, required=not bool(vmapple_ipsw),
+        help="caller-supplied macOS IPSW; never downloaded or modified by 26x86",
+    )
+    vmapple_provision.add_argument(
+        "--output", default=os.environ.get("X86_VMAPLE_PROVISION_OUTPUT"),
+        help="new output directory; existing directories are rejected",
+    )
+    vmapple_provision.add_argument(
+        "--disk-size", default="32g",
+        help="macosvm sparse disk size, for example 32g (maximum 4t)",
+    )
+    vmapple_provision.add_argument(
+        "--timeout", type=float, default=86400.0,
+        help="provisioning timeout in seconds (maximum 172800)",
+    )
+    vmapple_provision.add_argument("--json", action="store_true")
+    vmapple_provision.set_defaults(handler=cmd_vmapple)
     vmapple_inspect_storage = vmapple_actions.add_parser(
         "inspect-storage",
         help="Read-only AUX/root readiness inspection; never starts QEMU or writes inputs",
