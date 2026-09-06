@@ -33,6 +33,13 @@ from .iboot_personality import (
     default_scope,
     validate_iboot_scope,
 )
+from .boot_picker import (
+    BOOT_DELAY_SECONDS,
+    DEFAULT_ALT_KEY,
+    MACOS_ENTRY_ID,
+    RECOVERY_ENTRY_ID,
+    validate_boot_picker_config,
+)
 
 
 MAX_FIRMWARE_BYTES = 1 * 1024 * 1024
@@ -659,6 +666,10 @@ class VMappleConfig:
     guest_os: str = MACOS_GUEST_OS
     recovery_protocol: str = "DFU/IPSW"
     recovery_image_name: str = DEFAULT_RECOVERY_IMAGE
+    boot_picker_enabled: bool = True
+    boot_delay_seconds: float = BOOT_DELAY_SECONDS
+    boot_selection: str = RECOVERY_ENTRY_ID
+    boot_picker_trigger: str = "runner-default-recovery"
 
     def validate(self) -> tuple[Executable, Executable, dict[str, Path]]:
         # Scope is checked before resolving executables or opening any caller
@@ -672,6 +683,24 @@ class VMappleConfig:
             recovery_enabled=True,
             target_major=self.target_major,
         )
+        picker = validate_boot_picker_config(
+            enabled=self.boot_picker_enabled,
+            delay_seconds=self.boot_delay_seconds,
+            alt_key=DEFAULT_ALT_KEY,
+            show_picker_on_alt=True,
+            target_major=self.target_major,
+            recovery_enabled=True,
+            recovery_protocol=self.recovery_protocol,
+            recovery_image_name=self.recovery_image_name,
+        )
+        if type(self.boot_picker_enabled) is not bool:
+            raise ValueError("VMApple boot_picker_enabled must be a boolean")
+        if self.boot_selection not in (MACOS_ENTRY_ID, RECOVERY_ENTRY_ID):
+            raise ValueError("VMApple boot selection must be macos or recovery")
+        if not isinstance(self.boot_picker_trigger, str) or not self.boot_picker_trigger.strip():
+            raise ValueError("VMApple boot picker trigger must be a nonempty string")
+        if self.boot_picker_enabled and self.boot_selection == RECOVERY_ENTRY_ID and not picker.get("recovery_entry_enabled"):
+            raise ValueError("VMApple Recovery entry is disabled")
         if self.target_major not in (26, 27):
             raise ValueError("VMApple target must be macOS 26 or 27")
         if not self.research_only:
@@ -706,7 +735,7 @@ class VMappleConfig:
 
     def personality_report(self) -> dict[str, object]:
         """Return the validated iBoot/macOS policy metadata for reports."""
-        return validate_iboot_scope(
+        personality = validate_iboot_scope(
             self.machine_type,
             self.guest_os,
             recovery_protocol=self.recovery_protocol,
@@ -714,6 +743,22 @@ class VMappleConfig:
             recovery_enabled=True,
             target_major=self.target_major,
         )
+        personality["boot_picker"] = validate_boot_picker_config(
+            enabled=self.boot_picker_enabled,
+            delay_seconds=self.boot_delay_seconds,
+            alt_key=DEFAULT_ALT_KEY,
+            show_picker_on_alt=True,
+            target_major=self.target_major,
+            recovery_enabled=True,
+            recovery_protocol=self.recovery_protocol,
+            recovery_image_name=self.recovery_image_name,
+        )
+        personality["boot_picker"]["selection"] = self.boot_selection
+        trigger = self.boot_picker_trigger.strip() if isinstance(self.boot_picker_trigger, str) else ""
+        personality["boot_picker"]["selection_source"] = trigger
+        personality["boot_picker"]["hotkey_event_observed"] = trigger.startswith("alt-")
+        personality["boot_picker"]["delay_enforced"] = self.boot_picker_enabled
+        return personality
 
 
 def run(config: VMappleConfig) -> dict[str, object]:
@@ -749,6 +794,7 @@ def run(config: VMappleConfig) -> dict[str, object]:
             "unsupported_guest_os": personality["unsupported_guest_os"],
             "policy_matrix": personality["policy_matrix"],
             "recovery_scope": personality["recovery"],
+            "boot_picker": personality["boot_picker"],
             "validation_level": "RECOVERY-PROTOCOL", "display_backend": config.display,
             "research_only": True, "developer_host_bypass": True,
             "distribution_status": "NONREDISTRIBUTABLE DEVELOPMENT ARTIFACT",
@@ -772,6 +818,22 @@ def run(config: VMappleConfig) -> dict[str, object]:
         report["pid"] = process.pid
         _write_report(output, report)
         _wait_for_socket(socket_path, process, 30)
+        # The gate starts when QEMU has exposed its recovery socket, which is
+        # the first point at which the guest is powered and input can be
+        # observed by this runner.  The GUI picker records the real Alt event
+        # separately; this bounded sleep enforces the same two-second policy
+        # before any DFU transfer is attempted.
+        if config.boot_picker_enabled:
+            report["boot_picker"]["gate_started_monotonic"] = round(time.monotonic() - started, 3)  # type: ignore[index]
+            time.sleep(config.boot_delay_seconds)
+            report["boot_picker"]["gate_released_monotonic"] = round(time.monotonic() - started, 3)  # type: ignore[index]
+        report["boot_picker"]["gate_released"] = True  # type: ignore[index]
+        _write_report(output, report)
+        if config.boot_selection == MACOS_ENTRY_ID:
+            raise VMappleError(
+                "The macOS BootPicker entry was selected, but direct macOS boot is not implemented; "
+                "choose macOS Recovery for the verified DFU/IPSW path."
+            )
         with RecoveryTransport(socket_path, timeout=10) as transport:
             initial = transport.probe()
             report["initial_device"] = initial
@@ -838,6 +900,7 @@ def run(config: VMappleConfig) -> dict[str, object]:
                 "guest_os_policy": personality["guest_os_policy"],
                 "policy_matrix": personality["policy_matrix"],
                 "recovery_scope": personality["recovery"],
+                "boot_picker": personality["boot_picker"],
                 "validation_level": "RECOVERY-PROTOCOL", "display_backend": config.display,
                 "forced_transition": False, "signature_acceptance_verified": False,
                 "macos_boot_verified": False, "physical_mac_verified": False,
@@ -870,6 +933,11 @@ def configured_from_environment() -> dict[str, object]:
     }
     required = ("qemu", "firmware", "ibss", "aux", "root", "qemu_img")
     present = {name: bool(value) for name, value in values.items()}
+    boot_picker = validate_boot_picker_config(target_major=27)
+    boot_picker["selection"] = RECOVERY_ENTRY_ID
+    boot_picker["selection_source"] = "runner-default-recovery"
+    boot_picker["hotkey_event_observed"] = False
+    boot_picker["delay_enforced"] = True
     return {
         "ok": True, "research_only_required": True, "display_backend": "gtk",
         "machine_type": IBOOT_MACHINE_TYPE, "personality": "iBoot",
@@ -878,6 +946,7 @@ def configured_from_environment() -> dict[str, object]:
         "unsupported_guest_os": ["iOS", "iPadOS", "tvOS", "watchOS", "visionOS"],
         "policy_matrix": default_scope(recovery_enabled=True)["policy_matrix"],
         "recovery_scope": default_scope(recovery_enabled=True)["recovery"],
+        "boot_picker": boot_picker,
         "configured": all(present[name] for name in required), "fields": present,
         "values": values, "macos_boot_verified": False,
         "note": "Paths are caller-supplied. The GUI never bundles Apple firmware or writes an existing ESP.",

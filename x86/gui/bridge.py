@@ -12,6 +12,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 import webbrowser
 from pathlib import Path
@@ -84,6 +85,10 @@ class WizardBridge:
         self._settings = SettingsStore()
         self._selected_target_os: Optional[int] = None
         self._build_completed = False
+        self._boot_picker_lock = threading.RLock()
+        self._boot_picker = None
+        self._boot_picker_selection: Optional[str] = None
+        self._boot_picker_trigger: Optional[str] = None
 
     def _hardware_profile(self):
         return os.environ.get("X86_TARGET_PROFILE") or self._settings.read("hardware_profile")
@@ -121,6 +126,86 @@ class WizardBridge:
 
         return configured_from_environment()
 
+    def get_boot_picker_status(self) -> dict[str, Any]:
+        """Return the current two-second picker session without starting QEMU."""
+        from x86.boot_picker import BootPickerSession
+
+        with self._boot_picker_lock:
+            if self._boot_picker is None:
+                self._boot_picker = BootPickerSession(target_major=27)
+            return {"ok": True, **self._boot_picker.tick()}
+
+    def start_boot_picker(
+        self,
+        target_major: int = 27,
+        recovery_protocol: str = "DFU/IPSW",
+        recovery_image_name: str = "_default.ipsw",
+    ) -> dict[str, Any]:
+        """Arm the visible GUI picker and begin its exact two-second window."""
+        from x86.boot_picker import BootPickerError, BootPickerSession
+
+        try:
+            if isinstance(target_major, bool) or target_major not in (26, 27):
+                raise BootPickerError("BootPicker target must be macOS 26 or 27.")
+            session = BootPickerSession(
+                target_major=target_major,
+                recovery_protocol=recovery_protocol,
+                recovery_image_name=recovery_image_name,
+            )
+            with self._boot_picker_lock:
+                self._boot_picker = session
+                self._boot_picker_selection = None
+                self._boot_picker_trigger = None
+                return {"ok": True, **session.start()}
+        except (BootPickerError, ValueError) as exc:
+            return {
+                "ok": False,
+                "error": str(exc),
+                "policy_error": exc.to_dict() if hasattr(exc, "to_dict") else None,
+            }
+
+    def tick_boot_picker(self) -> dict[str, Any]:
+        """Advance the picker clock; timeout selects the normal macOS entry."""
+        with self._boot_picker_lock:
+            status = self.get_boot_picker_status()
+            if status.get("selection"):
+                self._boot_picker_selection = str(status["selection"])
+                self._boot_picker_trigger = status.get("trigger")
+            return status
+
+    def boot_picker_key(self, key: object, pressed: bool = True) -> dict[str, Any]:
+        """Forward a real DOM key event to the picker state machine."""
+        from x86.boot_picker import BootPickerError
+
+        with self._boot_picker_lock:
+            if self._boot_picker is None:
+                return {"ok": False, "error": "BootPicker session is not armed.",
+                        "policy_error": {"code": "VF_BOOT_PICKER_NOT_ARMED"}}
+            try:
+                status = self._boot_picker.key_event(key, pressed=pressed)
+            except BootPickerError as exc:
+                return {"ok": False, "error": str(exc), "policy_error": exc.to_dict()}
+            if status.get("selection"):
+                self._boot_picker_selection = str(status["selection"])
+                self._boot_picker_trigger = status.get("trigger")
+            return {"ok": True, **status}
+
+    def select_boot_entry(self, entry_id: object) -> dict[str, Any]:
+        """Select a visible picker entry (the GUI's pointer/Enter path)."""
+        from x86.boot_picker import BootPickerError
+
+        with self._boot_picker_lock:
+            if self._boot_picker is None:
+                return {"ok": False, "error": "BootPicker session is not armed.",
+                        "policy_error": {"code": "VF_BOOT_PICKER_NOT_ARMED"}}
+            try:
+                status = self._boot_picker.select(entry_id)
+            except BootPickerError as exc:
+                return {"ok": False, "error": str(exc), "policy_error": exc.to_dict()}
+            self._boot_picker_selection = str(status["selection"])
+            self._boot_picker_trigger = status.get("trigger")
+            return {"ok": True, **status}
+
     def launch_vmapple(self, config: dict[str, Any]) -> dict[str, Any]:
         """Spawn the visible VMApple worker and leave all recovery evidence on disk.
 
@@ -142,6 +227,24 @@ class WizardBridge:
         guest_os = config.get("guest_os", "macOS")
         recovery_protocol = config.get("recovery_protocol", "DFU/IPSW")
         recovery_image_name = config.get("recovery_image_name", "_default.ipsw")
+        target = config.get("target_major", config.get("target", 27))
+        boot_picker_enabled = config.get("boot_picker_enabled", True)
+        boot_delay = config.get("boot_delay_seconds", config.get("boot_delay", 2.0))
+        boot_selection = config.get("boot_selection")
+        boot_trigger = config.get("boot_picker_trigger")
+        with self._boot_picker_lock:
+            active_picker = self._boot_picker
+            active_target = getattr(active_picker, "target_major", None)
+            if boot_selection in (None, "") and self._boot_picker_selection and active_target == target:
+                boot_selection = self._boot_picker_selection
+                boot_trigger = self._boot_picker_trigger
+        if boot_selection in (None, ""):
+            # The standalone VMApple runner is a recovery transport.  A GUI
+            # user must explicitly press Alt and choose Recovery to override
+            # this audited compatibility default.
+            boot_selection = "recovery"
+        if boot_trigger in (None, ""):
+            boot_trigger = "runner-default-recovery"
         try:
             personality = validate_iboot_scope(
                 machine_type,
@@ -149,13 +252,40 @@ class WizardBridge:
                 recovery_protocol=recovery_protocol,
                 recovery_image_name=recovery_image_name,
                 recovery_enabled=True,
-                target_major=config.get("target_major", config.get("target", 27)),
+                target_major=target,
             )
         except IbootScopeError as exc:
             return {"ok": False, "error": str(exc), "policy_error": exc.to_dict(),
                     "macos_boot_verified": False}
         if not isinstance(machine_type, str) or not isinstance(guest_os, str):
             return {"ok": False, "error": "VMApple personality fields must be strings."}
+        from x86.boot_picker import BootPickerError, validate_boot_picker_config
+        try:
+            picker = validate_boot_picker_config(
+                enabled=boot_picker_enabled,
+                delay_seconds=boot_delay,
+                alt_key="Alt",
+                show_picker_on_alt=True,
+                target_major=target,
+                recovery_enabled=True,
+                recovery_protocol=recovery_protocol,
+                recovery_image_name=recovery_image_name,
+            )
+        except (BootPickerError, ValueError) as exc:
+            return {"ok": False, "error": str(exc),
+                    "policy_error": exc.to_dict() if hasattr(exc, "to_dict") else None,
+                    "macos_boot_verified": False}
+        if boot_selection not in ("macos", "recovery"):
+            return {"ok": False, "error": "VMApple boot selection must be macos or recovery."}
+        if boot_picker_enabled is True and boot_selection == "recovery" and not picker.get("recovery_entry_enabled"):
+            return {"ok": False, "error": "VMApple Recovery entry is disabled."}
+        if not isinstance(boot_trigger, str) or not boot_trigger.strip():
+            return {"ok": False, "error": "VMApple boot picker trigger must be a nonempty string."}
+        picker["selection"] = boot_selection
+        picker["selection_source"] = boot_trigger.strip()
+        picker["hotkey_event_observed"] = boot_trigger.startswith("alt-")
+        picker["delay_enforced"] = boot_picker_enabled is True
+        personality["boot_picker"] = picker
 
         # Keep the bridge surface deliberately narrow: callers can provide
         # paths and bounded scalar values, never arbitrary QEMU arguments.
@@ -175,7 +305,6 @@ class WizardBridge:
         if missing:
             return {"ok": False, "error": "필수 VMApple 경로가 없습니다: " + ", ".join(missing)}
 
-        target = config.get("target_major", config.get("target", 27))
         if isinstance(target, bool) or not isinstance(target, int) or target not in (26, 27):
             return {"ok": False, "error": "VMApple 대상은 macOS 26 또는 27이어야 합니다."}
         display = config.get("display", "gtk")
@@ -201,6 +330,16 @@ class WizardBridge:
             if isinstance(value, bool) or not isinstance(value, (int, float)) or not lower <= float(value) <= upper:
                 return {"ok": False, "error": f"VMApple {name} 값이 범위를 벗어났습니다."}
             values[name] = str(float(value))
+        if type(boot_picker_enabled) is not bool:
+            return {"ok": False, "error": "VMApple boot_picker_enabled must be a boolean."}
+        if isinstance(boot_delay, bool) or not isinstance(boot_delay, (int, float)):
+            return {"ok": False, "error": "VMApple boot delay must be exactly 2 seconds."}
+        if float(boot_delay) != 2.0:
+            return {"ok": False, "error": "VMApple boot delay is fixed at 2 seconds."}
+        values["boot_delay_seconds"] = float(boot_delay)
+        values["boot_picker_enabled"] = boot_picker_enabled
+        values["boot_selection"] = boot_selection
+        values["boot_picker_trigger"] = boot_trigger.strip()
 
         from x86.vmapple import _to_wsl_path
 
@@ -247,6 +386,9 @@ class WizardBridge:
                         "--guest-os", guest_os,
                         "--recovery-protocol", recovery_protocol,
                         "--recovery-image-name", recovery_image_name,
+                        "--boot-selection", boot_selection,
+                        "--boot-delay", str(float(boot_delay)),
+                        "--boot-picker-trigger", boot_trigger.strip(),
                         "--research-only", "--json"])
         if "duration" in values:
             command.extend(["--duration", values["duration"]])
@@ -280,6 +422,9 @@ class WizardBridge:
             "guest_os_policy": personality["guest_os_policy"],
             "policy_matrix": personality["policy_matrix"],
             "recovery_scope": personality["recovery"],
+            "boot_picker": picker,
+            "boot_selection": boot_selection,
+            "boot_picker_trigger": boot_trigger.strip(),
             "output": values["output"],
             "log_path": str(log_path),
             "research_only": True,

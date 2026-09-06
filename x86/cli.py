@@ -480,6 +480,10 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
         guest_os=args.guest_os,
         recovery_protocol=args.recovery_protocol,
         recovery_image_name=args.recovery_image_name,
+        boot_picker_enabled=args.boot_picker_enabled,
+        boot_delay_seconds=args.boot_delay,
+        boot_selection=args.boot_selection,
+        boot_picker_trigger=args.boot_picker_trigger,
     )
     try:
         result = run(config)
@@ -595,6 +599,23 @@ def build_parser() -> argparse.ArgumentParser:
                              help="iBoot recovery scope: Auto, DFU, IPSW or DFU/IPSW")
     vmapple_run.add_argument("--recovery-image-name", default="_default.ipsw",
                              help="macOS Local Recovery image name")
+    vmapple_run.add_argument(
+        "--boot-selection", choices=["macos", "recovery"], default="recovery",
+        help="BootPicker entry to execute after the two-second gate (recovery is the verified path)",
+    )
+    vmapple_run.add_argument(
+        "--boot-delay", type=float, default=2.0,
+        help="Fixed BootPicker delay; only 2 seconds is accepted",
+    )
+    vmapple_run.add_argument(
+        "--boot-picker-trigger", default="cli",
+        help="Audited selection source, for example alt-enter or runner-default-recovery",
+    )
+    vmapple_run.add_argument(
+        "--no-boot-picker", dest="boot_picker_enabled", action="store_false",
+        help="Disable the two-second gate for a control-plane experiment",
+    )
+    vmapple_run.set_defaults(boot_picker_enabled=True)
     vmapple_run.add_argument(
         "--research-only", action="store_true", required=True,
         help="Required acknowledgement that this is a non-redistributable research run",

@@ -15,6 +15,7 @@ from .iboot_personality import (
     policy_matrix,
     validate_iboot_scope,
 )
+from .boot_picker import default_boot_picker_config, validate_boot_picker_config
 
 
 def default_config(target_major: int = 26) -> dict[str, Any]:
@@ -25,9 +26,16 @@ def default_config(target_major: int = 26) -> dict[str, Any]:
             "MachineType": IBOOT_MACHINE_TYPE,
             "GuestOS": MACOS_GUEST_OS,
             "Recovery": {
-                "Enabled": False,
+                "Enabled": True,
                 "Protocol": "Auto",
                 "LocalRecovery": {"ImageName": DEFAULT_RECOVERY_IMAGE},
+            },
+            "BootPicker": {
+                "Enabled": True,
+                "DelaySeconds": 2,
+                "AltKey": "Alt",
+                "ShowPickerOnAlt": True,
+                "RecoveryEntry": {"Enabled": True},
             },
         },
         "AppleSiliconSandbox": {
@@ -66,6 +74,14 @@ def validate(config: dict[str, Any]) -> dict[str, Any]:
         recovery_enabled=False,
     )
     venfire = config.get("Venfire")
+    boot_picker_policy: dict[str, Any] = {
+        "enabled": False,
+        "delay_seconds": 2.0,
+        "alt_key": "Alt",
+        "show_picker_on_alt": True,
+        "entries": [],
+        "recovery_entry_enabled": False,
+    }
     if venfire is not None and not isinstance(venfire, dict):
         errors.append("Venfire must be a dictionary")
     elif isinstance(venfire, dict):
@@ -116,10 +132,38 @@ def validate(config: dict[str, Any]) -> dict[str, Any]:
             except ValueError as exc:
                 code = getattr(exc, "code", "VF_CONFIG_SCOPE_VIOLATION")
                 errors.append(f"{code}: {exc}")
+
+        boot_picker = venfire.get("BootPicker", {})
+        if not isinstance(boot_picker, dict):
+            errors.append("Venfire.BootPicker must be a dictionary")
+            boot_picker = {}
+        recovery_entry = boot_picker.get("RecoveryEntry", {})
+        if not isinstance(recovery_entry, dict):
+            errors.append("Venfire.BootPicker.RecoveryEntry must be a dictionary")
+            recovery_entry = {}
+        picker_enabled = boot_picker.get("Enabled", False)
+        picker_recovery_enabled = recovery_entry.get("Enabled", recovery_enabled)
+        try:
+            boot_picker_policy = validate_boot_picker_config(
+                enabled=picker_enabled,
+                delay_seconds=boot_picker.get("DelaySeconds", 2),
+                alt_key=boot_picker.get("AltKey", "Alt"),
+                show_picker_on_alt=boot_picker.get("ShowPickerOnAlt", True),
+                target_major=sandbox.get("TargetMajor"),
+                recovery_enabled=picker_recovery_enabled,
+                recovery_protocol=recovery.get("Protocol", "Auto"),
+                recovery_image_name=local_recovery.get("ImageName", DEFAULT_RECOVERY_IMAGE),
+            )
+        except ValueError as exc:
+            code = getattr(exc, "code", "VF_BOOT_PICKER_CONFIG_INVALID")
+            errors.append(f"{code}: {exc}")
     elif enabled is True:
         # No Venfire root is a legacy fragment.  Enabling this Sandbox still
         # implies the fixed iBoot/macOS policy and keeps the result auditable.
         policy = default_scope(target_major=sandbox.get("TargetMajor"), recovery_enabled=False)
+        boot_picker_policy = default_boot_picker_config(
+            target_major=sandbox.get("TargetMajor", 27)
+        ) if type(sandbox.get("TargetMajor")) is int and sandbox.get("TargetMajor") in (26, 27) else boot_picker_policy
     enabled = sandbox.get("Enabled")
     if type(enabled) is not bool:
         errors.append("AppleSiliconSandbox.Enabled must be a boolean")
@@ -186,7 +230,8 @@ def validate(config: dict[str, Any]) -> dict[str, Any]:
             "guest_os_policy": policy["guest_os_policy"],
             "supported_guest_os": policy["supported_guest_os"],
             "unsupported_guest_os": policy["unsupported_guest_os"],
-            "recovery": policy["recovery"], "policy_matrix": policy_matrix()}
+            "recovery": policy["recovery"], "boot_picker": boot_picker_policy,
+            "policy_matrix": policy_matrix()}
 
 
 def read(path: str | Path) -> dict[str, Any]:

@@ -46,6 +46,22 @@ class WebviewApi:
     def get_vmapple_status(self):
         return self._bridge.get_vmapple_status()
 
+    def get_boot_picker_status(self):
+        return self._bridge.get_boot_picker_status()
+
+    def start_boot_picker(self, target_major: int = 27, recovery_protocol: str = "DFU/IPSW",
+                          recovery_image_name: str = "_default.ipsw"):
+        return self._bridge.start_boot_picker(target_major, recovery_protocol, recovery_image_name)
+
+    def tick_boot_picker(self):
+        return self._bridge.tick_boot_picker()
+
+    def boot_picker_key(self, key: object, pressed: bool = True):
+        return self._bridge.boot_picker_key(key, pressed)
+
+    def select_boot_entry(self, entry_id: object):
+        return self._bridge.select_boot_entry(entry_id)
+
     def launch_vmapple(self, config: dict[str, Any]):
         return self._bridge.launch_vmapple(config)
 

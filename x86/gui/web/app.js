@@ -37,8 +37,14 @@
       guest_os: "macOS",
       recovery_protocol: "DFU/IPSW",
       recovery_image_name: "_default.ipsw",
+      boot_picker_enabled: true,
+      boot_delay_seconds: 2,
+      boot_selection: null,
+      boot_picker_trigger: null,
     },
     vmappleReceipt: null,
+    bootPicker: null,
+    bootPickerPoll: null,
     activity: [],
     globalActionsBound: false,
     buildCompleted: false,
@@ -71,6 +77,11 @@
     "get_sandbox_plan",
     "prepare_sandbox",
     "get_vmapple_status",
+    "get_boot_picker_status",
+    "start_boot_picker",
+    "tick_boot_picker",
+    "boot_picker_key",
+    "select_boot_entry",
     "launch_vmapple",
     "get_app_info",
     "set_hardware_profile",
@@ -353,12 +364,20 @@
     const vmReady = requiredVmFields.every((key) => String(vmConfig[key] || "").trim());
     const vmConfigured = vm.configured ? "환경 변수 경로 확인됨" : "경로 입력 필요";
     const vmReceipt = state.vmappleReceipt;
+    const picker = state.bootPicker || report.boot_picker || {
+      state: "idle", delay_seconds: 2, remaining_seconds: 0, alt_key: "Alt",
+      picker_visible: false, selected_entry: null, selection: null, entries: [],
+    };
+    const pickerEntries = (picker.entries || []).map((entry) => `<button type="button" class="boot-entry${picker.selected_entry === entry.id ? " selected" : ""}" data-boot-entry="${escapeHtml(entry.id)}"><span><strong>${escapeHtml(entry.label)}</strong><small>${escapeHtml(entry.kind)} · macOS ${escapeHtml(entry.target_major)}</small></span><span class="badge${entry.id === "recovery" ? " warning" : ""}">${entry.id === "recovery" ? "복구" : "일반"}</span></button>`).join("");
+    const recoverySelected = picker.selection === "recovery" || vmConfig.boot_selection === "recovery";
+    const pickerStateLabel = picker.state === "armed" ? `Alt/Option 대기 · ${Number(picker.remaining_seconds || 0).toFixed(2)}초` : picker.state === "picker" ? "부트 피커 표시 중" : picker.state === "selected" && recoverySelected ? "macOS Recovery 선택됨" : picker.state === "default" ? "시간 만료 · macOS 기본 항목" : "대기하지 않음";
     return `<span class="eyebrow">EFI NATIVE / APPLE SILICON SANDBOX</span><h2>${stage === "patch" ? "EFI 준비 결과" : "Sandbox 준비"}</h2>
       <p class="lead">macOS 게스트 부팅에 필요한 구성 요소와 현재 구현 상태를 확인합니다.</p>
       <div class="metric-grid"><div class="metric"><span>실행 계층</span><strong>EFI · AIC · ARM64 JIT</strong></div><div class="metric"><span>최소 CPU</span><strong>SSE4.1 + SSE4.2</strong></div><div class="metric"><span>macOS 실제 부팅</span><strong>미검증</strong></div></div>
       <div class="form-row"><div><label for="sandbox-target">대상 macOS</label><select class="field" id="sandbox-target"><option value="26" ${state.sandboxTarget === 26 ? "selected" : ""}>macOS Tahoe 26</option><option value="27" ${state.sandboxTarget === 27 ? "selected" : ""}>macOS Golden Gate 27</option></select></div><div><label for="sandbox-output">새 출력 폴더 경로</label><input class="field" id="sandbox-output" value="${escapeHtml(state.sandboxOutput)}" placeholder="예: C:/26x86-Sandbox 또는 /Users/me/26x86-Sandbox" /></div></div>
       <div class="policy-grid"><div class="policy-card"><span>MachineType</span><strong>${escapeHtml(vm.machine_type || vmConfig.machine_type || "iBoot(AArch64)")}</strong></div><div class="policy-card"><span>게스트 OS</span><strong class="good-text">${escapeHtml(vm.guest_os || vmConfig.guest_os || "macOS")}</strong></div><div class="policy-card"><span>복구</span><strong>${escapeHtml(vm.recovery_scope?.protocol || vmConfig.recovery_protocol || "DFU/IPSW")} · ${escapeHtml(vm.recovery_scope?.default_image_name || vmConfig.recovery_image_name || "_default.ipsw")}</strong></div></div>
       <p class="support-note policy-note"><strong>iBoot(AArch64) 범위:</strong> macOS만 지원합니다. iOS · iPadOS · 기타 모바일 Apple OS는 부팅·DFU·<code>_default.ipsw</code> 복구 대상으로 받지 않습니다.</p>
+      <section class="boot-picker-card" aria-labelledby="boot-picker-heading"><div class="boot-picker-heading"><div><span class="eyebrow">POWER ON / 2.0 SEC WINDOW</span><h3 id="boot-picker-heading">부트 피커 · macOS Recovery</h3></div><span class="badge${picker.state === "picker" || picker.state === "selected" ? " good" : " warning"}">${escapeHtml(pickerStateLabel)}</span></div><p class="support-note">전원 인가 후 정확히 2초 동안 <kbd>Alt</kbd>/<kbd>Option</kbd>을 누르면 피커가 표시됩니다. Recovery를 선택한 뒤에만 DFU/IPSW 복구 VM을 시작합니다.</p><div class="boot-picker-status">${infoRow("선택 항목", picker.selection === "recovery" ? "macOS Recovery · _default.ipsw" : picker.selection === "macos" ? `macOS ${state.sandboxTarget}` : "선택 대기")} ${infoRow("입력 기록", picker.trigger || "—")}</div><div class="boot-entries" ${picker.picker_visible ? "" : "hidden"}>${pickerEntries || '<span class="muted">표시할 부트 항목이 없습니다.</span>'}</div><div class="actions"><button type="button" class="btn secondary" id="vmapple-boot-start" ${state.busy ? "disabled" : ""}>2초 부트 피커 시작</button><button type="button" class="btn primary" id="vmapple-launch" ${vmReady && state.bridgeReady && recoverySelected ? "" : "disabled"}>Recovery VM 창 열기</button></div>${picker.state === "default" ? '<p class="support-note warning-text">시간이 만료되어 macOS 기본 항목이 선택되었습니다. 현재 VMApple 엔진은 직접 macOS 부팅을 인증하지 않으므로 Recovery를 실행하려면 다시 Alt를 누르세요.</p>' : ""}</section>
       <div class="proof-list"><div class="proof-item"><span>EFI 자체 검사 파일</span><span class="badge${report.artifact_available ? " good" : " warning"}">${report.artifact_available ? "파일 존재" : "미생성"}</span></div><div class="proof-item"><span>VSK 생산 EFI · 외부 trust anchor</span><span class="badge${report.vsk_artifact_available ? " good" : " warning"}">${report.vsk_artifact_available ? "생성됨 · EBS 미호출" : "미생성"}</span></div><div class="proof-item"><span>원본 macOS 부팅</span><span class="badge warning">아직 준비되지 않음</span></div><div class="proof-item"><span>실제 Mac USB 부팅</span><span class="badge warning">실기 검증 필요</span></div></div>
       ${blockers.length ? `<div class="note"><strong>남은 구현 항목</strong><ul>${blockers.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
       <p class="support-note">구성: OpenCore config.plist · iBoot 엔진 · SandboxSMBIOS · Hardware/DevProp. 현재 준비 기능은 EFI 자체 검사 패키지를 생성합니다. macOS 설치 또는 부팅을 시작하지 않습니다. 기존 디스크에 자동으로 기록하지 않습니다.</p>
@@ -367,7 +386,7 @@
       <details class="vm-panel" open><summary>실제 보이는 VMApple 복구 VM · <span class="badge${vmConfigured === "환경 변수 경로 확인됨" ? " good" : " warning"}">${vmConfigured}</span></summary>
         <p class="support-note">WSLg GTK 창을 표시하는 연구용 실행 경로입니다. 원본 입력은 read-only로 열고 새 COW overlay에만 기록합니다. 실제 USB descriptor가 bulk endpoint 4를 광고할 때만 iBSS→iBEC를 시도하며 전환을 강제하지 않습니다. iBoot Personality는 macOS 전용입니다.</p>
         <div class="vm-fields">${vmFields}</div>
-        <div class="actions"><button class="btn secondary" id="vmapple-refresh">VMApple 경로 다시 읽기</button><button class="btn primary" id="vmapple-launch" ${vmReady && state.bridgeReady ? "" : "disabled"}>GTK VM 창 열기</button></div>
+        <div class="actions"><button type="button" class="btn secondary" id="vmapple-refresh">VMApple 경로 다시 읽기</button></div>
         ${vmReceipt ? `<pre class="patch-summary" role="status">${escapeHtml(JSON.stringify(vmReceipt, null, 2))}</pre>` : ""}
       </details>`;
   }
@@ -498,6 +517,45 @@
     renderStepper();
   }
 
+  function applyBootPickerSnapshot(snapshot) {
+    if (!snapshot || typeof snapshot !== "object") return;
+    state.bootPicker = snapshot;
+    if (snapshot.selection === "recovery" || snapshot.selection === "macos") {
+      state.vmappleConfig.boot_selection = snapshot.selection;
+      state.vmappleConfig.boot_picker_trigger = snapshot.trigger || null;
+    }
+  }
+
+  function stopBootPickerPolling() {
+    if (state.bootPickerPoll !== null) {
+      window.clearInterval(state.bootPickerPoll);
+      state.bootPickerPoll = null;
+    }
+  }
+
+  function startBootPickerPolling() {
+    stopBootPickerPolling();
+    state.bootPickerPoll = window.setInterval(async () => {
+      if (!state.bootPicker || !["armed", "picker"].includes(state.bootPicker.state)) {
+        stopBootPickerPolling();
+        return;
+      }
+      try {
+        const snapshot = await api("tick_boot_picker");
+        applyBootPickerSnapshot(snapshot);
+        if (["armed", "picker"].includes(snapshot.state)) {
+          if (["build", "patch"].includes(state.steps[state.currentStep]?.id) && state.mode === "sandbox") renderStepContent();
+        } else {
+          stopBootPickerPolling();
+          renderStepContent();
+        }
+      } catch (err) {
+        stopBootPickerPolling();
+        toast(String(err.message || err), "error");
+      }
+    }, 80);
+  }
+
   async function bindStepActions(stepId) {
     const bind = (id, handler) => {
       const node = document.getElementById(id);
@@ -524,7 +582,35 @@
       });
       bind("sandbox-refresh", refreshSandbox);
       bind("vmapple-refresh", refreshVmapple);
+      bind("vmapple-boot-start", async () => {
+        const result = await api("start_boot_picker", state.sandboxTarget, state.vmappleConfig.recovery_protocol, state.vmappleConfig.recovery_image_name);
+        if (!result.ok) throw new Error(result.error || "부트 피커를 시작하지 못했습니다.");
+        state.vmappleConfig.boot_selection = null;
+        state.vmappleConfig.boot_picker_trigger = null;
+        applyBootPickerSnapshot(result);
+        startBootPickerPolling();
+        state.busy = false;
+        renderStepContent();
+        toast("2초 부트 피커를 시작했습니다. 지금 Alt/Option을 누르세요.");
+      });
+      document.querySelectorAll("[data-boot-entry]").forEach((entry) => {
+        entry.addEventListener("click", async () => {
+          if (state.busy) return;
+          const result = await api("select_boot_entry", entry.dataset.bootEntry);
+          if (!result.ok) {
+            toast(result.error || "부트 항목을 선택하지 못했습니다.", "error");
+            return;
+          }
+          stopBootPickerPolling();
+          applyBootPickerSnapshot(result);
+          renderStepContent();
+          toast(result.selection === "recovery" ? "macOS Recovery 선택 · _default.ipsw" : "macOS 기본 항목 선택");
+        });
+      });
       bind("vmapple-launch", async () => {
+        if (state.vmappleConfig.boot_selection !== "recovery") {
+          throw new Error("먼저 Alt/Option으로 부트 피커를 열고 macOS Recovery를 선택하세요.");
+        }
         const config = {
           ...state.vmappleConfig,
           target_major: state.sandboxTarget,
@@ -791,6 +877,23 @@
     document.getElementById("settings-save").addEventListener("click", saveSettings);
 
     document.addEventListener("keydown", (event) => {
+      const pickerNavigationKey = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Enter", "Return", "Escape", "Esc"].includes(event.key);
+      const pickerHotkey = state.bootPicker && state.bootPicker.state === "armed" && (event.key === "Alt" || event.key === "Option");
+      const pickerNavigation = state.bootPicker && state.bootPicker.state === "picker" && pickerNavigationKey;
+      if (pickerHotkey || pickerNavigation) {
+        event.preventDefault();
+        api("boot_picker_key", event.key, true).then((snapshot) => {
+          if (!snapshot || snapshot.ok === false) {
+            toast(snapshot?.error || "Alt 입력을 처리하지 못했습니다.", "error");
+            return;
+          }
+          applyBootPickerSnapshot(snapshot);
+          startBootPickerPolling();
+          renderStepContent();
+          toast(pickerHotkey ? "Alt/Option 입력 확인 · 부트 피커를 표시했습니다." : "부트 피커 키 입력을 반영했습니다.");
+        }).catch((err) => toast(String(err.message || err), "error"));
+        return;
+      }
       if (event.key === "ArrowRight" && (event.metaKey || event.ctrlKey)) {
         goToStep(Math.min(state.steps.length - 1, state.currentStep + 1));
       }

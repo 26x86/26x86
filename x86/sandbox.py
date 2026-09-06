@@ -17,6 +17,7 @@ from .iboot_personality import (
     default_scope,
     policy_matrix,
 )
+from .boot_picker import default_boot_picker_config
 
 REPO = Path(__file__).resolve().parent.parent
 TARGETS = (26, 27)
@@ -226,6 +227,7 @@ def prepare_vsk(target_major: int, output_path: str, bundle_path: str,
             "machine_type": IBOOT_MACHINE_TYPE, "personality": "iBoot",
             "guest_os": MACOS_GUEST_OS, "guest_os_policy": "macOS-only",
             "recovery_scope": default_scope(target_major=major, recovery_enabled=True)["recovery"],
+            "boot_picker": default_boot_picker_config(target_major=major),
             "efi_sha256": efi_report["sha256"],
             "trusted_public_key_sha256": public_hash,
             "release_epoch_floor": efi_report["minimum_release_epoch"],
@@ -275,6 +277,7 @@ def status(mode: str = "native", *, root: Path = REPO) -> dict[str, Any]:
         "guest_os_policy": "macOS-only", "supported_guest_os": [MACOS_GUEST_OS],
         "unsupported_guest_os": list(UNSUPPORTED_GUEST_OSES),
         "recovery_scope": default_scope(recovery_enabled=True)["recovery"],
+        "boot_picker": default_boot_picker_config(),
         "policy_matrix": policy_matrix(),
         "aic_v1_model_max_cpus": 32,
         "supported_targets": list(TARGETS), "artifact_available": available,
@@ -296,10 +299,11 @@ def status(mode: str = "native", *, root: Path = REPO) -> dict[str, Any]:
 def plan(target_major: int, *, root: Path = REPO) -> dict[str, Any]:
     major = _target(target_major)
     result = status("sandbox", root=root)
+    result["boot_picker"] = default_boot_picker_config(target_major=major)
     result.update(target_major=major, target_name="Tahoe" if major == 26 else "Golden Gate",
                   components=["OpenCore UEFI x86_64 loader", "AArch64 to x86_64 JIT EFI engine",
                               "AIC Apple SoC devices (incomplete)", "Original iBoot (not bundled)",
-                              "config.plist: Venfire iBoot/macOS scope / SandboxSMBIOS / Hardware / DeviceProperties"])
+                              "config.plist: Venfire iBoot/macOS scope / BootPicker / SandboxSMBIOS / Hardware / DeviceProperties"])
     return result
 
 
@@ -325,6 +329,7 @@ def prepare(target_major: int, output_path: str, *, root: Path = REPO) -> dict[s
                    "machine_type": IBOOT_MACHINE_TYPE, "personality": "iBoot",
                    "guest_os": MACOS_GUEST_OS, "guest_os_policy": "macOS-only",
                    "recovery_scope": default_scope(target_major=major, recovery_enabled=True)["recovery"],
+                   "boot_picker": default_boot_picker_config(target_major=major),
                    "minimum_cpu": "SSE4.1 + SSE4.2", "boot_verified": False,
                    "macos_boot_ready": False, "sha256": report["sha256"],
                    "support_policy": SUPPORT_POLICY, "blockers": list(GAPS)}

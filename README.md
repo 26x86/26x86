@@ -16,6 +16,7 @@
 | [Releases](https://github.com/NiSeullent/26x86/releases) | 안정 빌드 |
 | [SOURCE.md](SOURCE.md) | 소스 실행·빌드 |
 | [iBoot Personality 범위](docs/IBOOT_PERSONALITY.md) | macOS 전용 게스트·DFU/IPSW 정책 |
+| [부트 피커·복구](docs/BOOT_PICKER_RECOVERY.md) | 2초 Alt/Option 입력과 macOS Recovery 경로 |
 
 영문: [docs/README.en.md](docs/README.en.md)
 
@@ -74,3 +75,12 @@ while iOS, iPadOS and other mobile Apple OS requests are rejected before DFU.
 Its DFU/IPSW recovery scope uses `_default.ipsw` for Local Recovery. Inspect the
 enforced matrix without starting a VM with
 `python3 -m x86 personality validate --guest-os macOS`.
+
+The GUI now arms a two-second boot picker. Press Alt/Option during that window,
+choose `macOS Recovery · _default.ipsw`, and then open the visible Recovery VM.
+The picker and its input source are recorded in `launch.json`; a Golden Gate
+installation is reported only after iBEC, XNU and macOS UI evidence exists. The
+latest Alt→Recovery GTK run is summarized in
+[integration/vmapple-gui-bootpicker-report.json](integration/vmapple-gui-bootpicker-report.json);
+it records the real DFU transition blocker and deliberately keeps installation
+verification false.

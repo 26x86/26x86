@@ -90,6 +90,13 @@ vmapple run --research-only --json`을 시작하며 WSLg의 GTK 창을 사용합
 실행 결과는 입력 폴더의 `launch.json`에 기록되며, GUI 응답의 PID와 로그 경로로
 프로세스를 추적할 수 있습니다.
 
+실행 전에 GUI의 `2초 부트 피커 시작`을 누르고 2초 안에 Alt/Option을 입력해야
+합니다. 피커에서 `macOS Recovery · _default.ipsw`를 선택하면 `Recovery VM 창
+열기`가 활성화되고, 브리지는 실제 DOM 입력 기록을
+`--boot-picker-trigger alt-enter`로 worker에 전달합니다. 시간 안에 Alt를
+누르지 않으면 정상 macOS 항목이 선택되며, 현재 VMApple 엔진이 직접 macOS
+부팅을 인증하지 않으므로 Recovery 실행은 다시 피커를 열어야 합니다.
+
 동일한 경로는 CLI에서도 다음처럼 호출할 수 있습니다.
 
 ```sh
@@ -100,7 +107,9 @@ python3 -m x86 vmapple run --target 27 --display gtk \
   --ibss /path/to/iBSS.personalized.img4 \
   --ibec /path/to/iBEC.personalized.img4 \
   --aux /path/to/aux.raw --root /path/to/root.raw \
-  --output /tmp/26x86-vmapple-run --research-only --json
+  --output /tmp/26x86-vmapple-run --boot-selection recovery \
+  --boot-picker-trigger alt-enter --boot-delay 2 \
+  --research-only --json
 ```
 
 `--research-only`는 배포 금지 개발 플래그이며 생략할 수 없습니다. 런너는
@@ -122,7 +131,10 @@ suffix 포함),
 따라서 VMApple 창이 열렸거나 DFU 전송이 완료되어도 Golden Gate 부팅
 성공으로 판정하지 않습니다. 재현 실험의 요약은
 [`integration/vmapple-gui-recovery-report.json`](../integration/vmapple-gui-recovery-report.json)에
-고정되어 있습니다.
+고정되어 있습니다. 2초 게이트에서 실제 Alt→Recovery 입력을 포함한 최신
+실행은 [`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json)에
+별도로 기록되어 있으며, 원본 전체 `launch.json`은 보고서의
+`source_report` 경로에서 확인할 수 있습니다.
 
 ## 결과 판정
 

@@ -80,6 +80,20 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertEqual(parsed.vmapple_action, "run")
         self.assertTrue(parsed.research_only)
 
+    def test_cli_parser_exposes_boot_picker_selection(self) -> None:
+        from x86.cli import build_parser
+
+        parsed = build_parser().parse_args([
+            "vmapple", "run", "--research-only",
+            "--boot-selection", "recovery",
+            "--boot-delay", "2",
+            "--boot-picker-trigger", "alt-enter",
+        ])
+        self.assertEqual(parsed.boot_selection, "recovery")
+        self.assertEqual(parsed.boot_delay, 2.0)
+        self.assertEqual(parsed.boot_picker_trigger, "alt-enter")
+        self.assertTrue(parsed.boot_picker_enabled)
+
     def test_bridge_rejects_native_mode_and_unsafe_launch(self) -> None:
         from x86.gui.bridge import WizardBridge
 
@@ -119,6 +133,12 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertIn("--research-only", command)
         self.assertIn("--display", command)
         self.assertIn("gtk", command)
+        self.assertIn("--boot-selection", command)
+        self.assertIn("recovery", command)
+        self.assertIn("--boot-delay", command)
+        self.assertIn("2.0", command)
+        self.assertIn("--boot-picker-trigger", command)
+        self.assertIn("runner-default-recovery", command)
 
     def test_bridge_reexecs_linux_qemu_in_wslg(self) -> None:
         if os.name != "nt":
