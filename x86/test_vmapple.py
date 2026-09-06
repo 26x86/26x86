@@ -308,6 +308,117 @@ class VMappleOfflineTest(unittest.TestCase):
             self.assertTrue(output.is_dir())
             self.assertFalse((output / "provision-report.json").exists())
 
+    def test_native_macosvm_command_is_ephemeral_and_argv_only(self) -> None:
+        from x86.vmapple import Executable, macosvm_run_command
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            vm_json = root / "macosvm.json"
+            vm_json.write_text("{}")
+            pid_file = root / "macosvm.pid"
+            command = macosvm_run_command(
+                Executable("/usr/local/bin/macosvm"),
+                vm_json=vm_json,
+                pid_file=pid_file,
+                gui=True,
+            )
+        self.assertEqual(command, [
+            "/usr/local/bin/macosvm", "--ephemeral", "--gui", "--pid-file",
+            str(pid_file), str(vm_json),
+        ])
+        self.assertNotIn("shell", command)
+
+    def test_native_macosvm_is_host_gated_before_output_creation(self) -> None:
+        from x86.vmapple import run_macosvm_native
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            vm_json = root / "macosvm.json"
+            with patch(
+                "x86.vmapple.native_macosvm_host_report",
+                return_value={"apple_silicon_macos": False},
+            ):
+                with self.assertRaisesRegex(ValueError, "Apple-Silicon macOS"):
+                    run_macosvm_native(
+                        macosvm="/bin/echo",
+                        vm_json=vm_json,
+                        output=root / "native-run",
+                        research_only=True,
+                    )
+            self.assertFalse((root / "native-run").exists())
+
+    def test_native_macosvm_launch_records_boot_markers_and_input_integrity(self) -> None:
+        from x86.vmapple import run_macosvm_native
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            aux = root / "aux.img"
+            disk = root / "disk.img"
+            aux.write_bytes(b"A" * (0x4000 + 4096))
+            disk.write_bytes(b"R" * 4096)
+            encode = lambda value: base64.b64encode(
+                plistlib.dumps(value, fmt=plistlib.FMT_BINARY)
+            ).decode("ascii")
+            vm_json = root / "macosvm.json"
+            vm_json.write_text(json.dumps({
+                "machineId": encode({"ECID": 99}),
+                "hardwareModel": encode({"hardware": b"m1"}),
+                "storage": [
+                    {"type": "aux", "file": "aux.img"},
+                    {"type": "disk", "file": "disk.img"},
+                ],
+            }))
+            macosvm = root / "macosvm"
+            macosvm.write_text(
+                "#!/usr/bin/env python3\n"
+                "import os, pathlib, sys, time\n"
+                "pid = pathlib.Path(sys.argv[sys.argv.index('--pid-file') + 1])\n"
+                "pid.write_text(str(os.getpid()))\n"
+                "print('Darwin Kernel Version 27.0', flush=True)\n"
+                "print('launchd: userspace ready', flush=True)\n"
+                "time.sleep(0.05)\n"
+            )
+            macosvm.chmod(0o755)
+            with patch(
+                "x86.vmapple.native_macosvm_host_report",
+                return_value={
+                    "apple_silicon_macos": True,
+                    "native_macosvm_ready": True,
+                },
+            ):
+                report = run_macosvm_native(
+                    macosvm=macosvm,
+                    vm_json=vm_json,
+                    output=root / "native-run",
+                    duration=2.0,
+                    observation_timeout=2.0,
+                    research_only=True,
+                )
+            self.assertTrue(report["native_runtime_started"])
+            self.assertTrue(report["pid_file_observed"])
+            self.assertTrue(report["xnu_executed"])
+            self.assertTrue(report["macos_userspace_reached"])
+            self.assertTrue(report["macos_boot_verified"])
+            self.assertTrue(report["input_integrity"])
+            self.assertIsNone(report["error"])
+            self.assertTrue((root / "native-run" / "macosvm.log").is_file())
+            self.assertEqual(aux.read_bytes(), b"A" * (0x4000 + 4096))
+            self.assertEqual(disk.read_bytes(), b"R" * 4096)
+
+    def test_cli_parser_exposes_native_macosvm_run(self) -> None:
+        from x86.cli import build_parser
+
+        parsed = build_parser().parse_args([
+            "vmapple", "run-native", "--research-only", "--vm-json", "/tmp/macosvm.json",
+            "--duration", "120", "--observation-timeout", "90", "--gui",
+        ])
+        self.assertEqual(parsed.vmapple_action, "run-native")
+        self.assertEqual(parsed.vm_json, "/tmp/macosvm.json")
+        self.assertEqual(parsed.duration, 120.0)
+        self.assertEqual(parsed.observation_timeout, 90.0)
+        self.assertTrue(parsed.gui)
+        self.assertTrue(parsed.research_only)
+
     def test_cli_parser_exposes_macosvm_provisioning(self) -> None:
         from x86.cli import build_parser
 
@@ -456,6 +567,8 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertEqual(profile["scope"]["supported_guest_os"], ["macOS"])
         self.assertIn("iOS", profile["scope"]["unsupported_guest_os"])
         self.assertFalse(profile["claims"]["macos_boot_verified"])
+        self.assertEqual(profile["direct_boot_engines"]["qemu_vmapple_max_documented_guest_major"], 12)
+        self.assertIn("native_macosvm", profile["direct_boot_engines"])
 
     def test_apple_silicon_profile_returns_independent_data(self) -> None:
         from x86.vmapple import apple_silicon_profile
@@ -593,7 +706,7 @@ class VMappleOfflineTest(unittest.TestCase):
             with patch(
                 "x86.vmapple._resolve_executable",
                 side_effect=[Executable("qemu-system-aarch64"), Executable("qemu-img")],
-            ):
+            ), patch("x86.vmapple.QEMU_VMAPPLE_MAX_MACOS_GUEST_MAJOR", 27):
                 config = VMappleConfig(
                     target_major=27,
                     qemu=None,
@@ -608,6 +721,22 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertEqual(qemu.program, "qemu-system-aarch64")
         self.assertEqual(qemu_img.program, "qemu-img")
         self.assertNotIn("ibss", paths)
+
+    def test_qemu_direct_latest_guest_fails_closed_to_native_macosvm(self) -> None:
+        from x86.vmapple import VMappleConfig
+
+        config = VMappleConfig(
+            target_major=27,
+            qemu="missing",
+            firmware="missing",
+            ibss="",
+            aux="missing",
+            root="missing",
+            research_only=True,
+            boot_selection="macos",
+        )
+        with self.assertRaisesRegex(ValueError, "run-native"):
+            config.validate()
 
     def test_direct_macos_rejects_recovery_personalization(self) -> None:
         from x86.vmapple import VMappleConfig, MACOS_ENTRY_ID
@@ -830,6 +959,39 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertIn("--vm-json", command)
         self.assertNotIn("--aux", command)
         self.assertNotIn("--root", command)
+
+    def test_bridge_native_macosvm_worker_uses_native_engine(self) -> None:
+        from x86.gui.bridge import WizardBridge
+
+        bridge = WizardBridge()
+        bridge._settings.read = lambda key, default=None: "sandbox"  # type: ignore[method-assign]
+        config = {
+            "engine": "native-macosvm",
+            "macosvm": "/usr/local/bin/macosvm",
+            "vm_json": "/Users/test/goldengate/macosvm.json",
+            "output": "/Users/test/runs/native",
+            "target_major": 27,
+            "boot_selection": "macos",
+            "boot_picker_trigger": "alt-enter",
+            "boot_picker_enabled": True,
+            "boot_delay": 2.0,
+            "research_only": True,
+        }
+        fake_process = type("Process", (), {"pid": 4567})()
+        with patch(
+            "x86.vmapple.native_macosvm_host_report",
+            return_value={"apple_silicon_macos": True},
+        ), patch("x86.gui.bridge.subprocess.Popen", return_value=fake_process) as popen:
+            result = bridge.launch_vmapple(config)
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["worker"], "native-macosvm")
+        command = popen.call_args.args[0]
+        self.assertIn("run-native", command)
+        self.assertIn("--macosvm", command)
+        self.assertIn("/usr/local/bin/macosvm", command)
+        self.assertIn("--vm-json", command)
+        self.assertIn("/Users/test/goldengate/macosvm.json", command)
+        self.assertNotIn("--qemu", command)
 
     def test_bridge_reexecs_linux_qemu_in_wslg(self) -> None:
         if os.name != "nt":

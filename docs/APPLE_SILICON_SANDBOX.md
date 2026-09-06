@@ -152,17 +152,11 @@ TCG research-headless path. No marker is promoted to `macos_boot_verified` until
 both XNU and userspace evidence are present, and a Golden Gate installation is
 still a separate receipt/UI claim.
 
-For a VM created by Virtualization.framework, pass its `macosvm.json` directly:
-
-```sh
-python3 -m x86 vmapple run --target 27 --boot-selection macos \
-  --qemu /path/to/qemu-system-aarch64 \
-  --qemu-img /usr/bin/qemu-img \
-  --firmware /System/Library/Frameworks/Virtualization.framework/Resources/AVPBooter.vmapple2.bin \
-  --vm-json /path/to/macosvm.json \
-  --output /tmp/26x86-goldengate-direct --duration 600 \
-  --research-only --json
-```
+For a VM created by Virtualization.framework, pass its `macosvm.json` to the
+native worker described below. The legacy QEMU direct command is intentionally
+rejected for target 26/27 because QEMU's documented VMApple guest support does
+not cover those modern macOS versions; QEMU remains available for the separate
+recovery/protocol research path.
 
 `macosvm.json` is treated as an atomic, read-only bundle: the ECID comes from
 the binary-plist `machineId`, the hardware-model digest comes from
@@ -209,6 +203,42 @@ Provisioning success is only a valid VM-input receipt. It is not XNU,
 userspace, installer, display, or Golden Gate boot evidence. Run the direct
 entry separately with `--vm-json` and require both Darwin/XNU and userspace
 UART markers before treating `macos_boot_verified` as true.
+
+### Native Golden Gate launch
+
+For macOS 26/27, use the native Virtualization.framework runner after a
+bundle has been provisioned on the Apple-Silicon host. The QEMU VMApple path
+is retained as a research/compatibility harness; the upstream QEMU guide
+currently documents guest support through macOS 12.x and says newer guest
+versions are not supported by its guest-side implementation. Do not interpret
+a QEMU process start or a Cocoa window as modern macOS boot evidence.
+
+The native worker runs the caller's `macosvm.json` with `macosvm --ephemeral`,
+so AUX/root are APFS-cloned for the session. It never rewrites the bundle,
+uses the default serial channel (PTY mode is intentionally not enabled because
+the tool requires an interactive newline for PTY attachment), and stores a
+combined `macosvm.log` plus `launch.json` evidence receipt in a new output
+directory:
+
+```sh
+python3 -m x86 vmapple run-native \
+  --target 27 \
+  --macosvm /usr/local/bin/macosvm \
+  --vm-json /path/to/goldengate-vm/macosvm.json \
+  --output /tmp/26x86-goldengate-native \
+  --observation-timeout 900 \
+  --duration 900 \
+  --research-only --json
+```
+
+`run-native` is host-gated to Apple-Silicon macOS and requires the explicit
+`--research-only` acknowledgement. The report distinguishes
+`native_runtime_started`, `xnu_executed`, `macos_userspace_reached`,
+`macos_boot_verified`, and `installation_verified`. Only the first two boot
+layers are observable from serial evidence; a successful process exit,
+Virtualization.framework configuration, or installer marker does not by itself
+prove a completed Golden Gate installation. Use `native`, `native-run`, and
+`run-native` as equivalent CLI spellings.
 
 ## Licensing and scope
 

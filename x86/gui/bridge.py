@@ -275,6 +275,9 @@ class WizardBridge:
         optional_rpc_unavailable = config.get("optional_rpc_unavailable", False)
         restore_chain = config.get("restore_chain", False)
         restore_role_dir = config.get("restore_role_dir", "")
+        engine = config.get("engine", "qemu")
+        if engine not in ("qemu", "native-macosvm"):
+            return {"ok": False, "error": "VMApple engine은 qemu 또는 native-macosvm이어야 합니다."}
         if type(live_personalize) is not bool:
             return {"ok": False, "error": "VMApple live_personalize must be a boolean."}
         if type(optional_rpc_unavailable) is not bool:
@@ -348,10 +351,92 @@ class WizardBridge:
         picker["delay_enforced"] = boot_picker_enabled is True
         personality["boot_picker"] = picker
 
+        if engine == "native-macosvm":
+            if boot_selection != "macos":
+                return {
+                    "ok": False,
+                    "error": "native-macosvm은 프로비저닝된 macOS 항목만 실행합니다. Recovery는 qemu engine을 사용하세요.",
+                    "macos_boot_verified": False,
+                }
+            from x86.vmapple import native_macosvm_host_report
+
+            native_host = native_macosvm_host_report()
+            if native_host.get("apple_silicon_macos") is not True:
+                return {
+                    "ok": False,
+                    "error": "native-macosvm은 Apple-Silicon macOS host에서만 실행할 수 있습니다.",
+                    "host": native_host,
+                    "macos_boot_verified": False,
+                }
+            native_paths: dict[str, str] = {}
+            for name in ("macosvm", "vm_json", "output"):
+                value = config.get(name, "")
+                if value is None:
+                    value = ""
+                if not isinstance(value, str):
+                    return {"ok": False, "error": f"native-macosvm {name} 경로는 문자열이어야 합니다."}
+                native_paths[name] = value.strip()
+            missing = [name for name in ("macosvm", "vm_json", "output") if not native_paths[name]]
+            if missing:
+                return {"ok": False, "error": "native-macosvm 필수 경로가 없습니다: " + ", ".join(missing)}
+            duration = config.get("duration")
+            observation_timeout = config.get("observation_timeout", 600.0)
+            if duration is not None and (
+                isinstance(duration, bool) or not isinstance(duration, (int, float))
+                or not 0.001 <= float(duration) <= 86400.0
+            ):
+                return {"ok": False, "error": "native-macosvm duration 값이 범위를 벗어났습니다."}
+            if (
+                isinstance(observation_timeout, bool)
+                or not isinstance(observation_timeout, (int, float))
+                or not 0.001 <= float(observation_timeout) <= 86400.0
+            ):
+                return {"ok": False, "error": "native-macosvm observation_timeout 값이 범위를 벗어났습니다."}
+            command = [sys.executable, "-m", "x86", "vmapple", "run-native"]
+            command.extend(["--target", str(target), "--macosvm", native_paths["macosvm"],
+                            "--vm-json", native_paths["vm_json"], "--output", native_paths["output"],
+                            "--observation-timeout", str(float(observation_timeout)),
+                            "--research-only", "--json"])
+            if duration is not None:
+                command.extend(["--duration", str(float(duration))])
+            if config.get("gui") is True:
+                command.append("--gui")
+            log_path = Path(tempfile.gettempdir()) / f"26x86-macosvm-launch-{int(time.time() * 1000)}.log"
+            try:
+                with log_path.open("ab") as log:
+                    process = subprocess.Popen(
+                        command,
+                        cwd=str(bootstrap.ensure_repo_on_path()),
+                        env=os.environ.copy(),
+                        stdin=subprocess.DEVNULL,
+                        stdout=log,
+                        stderr=subprocess.STDOUT,
+                        start_new_session=True,
+                    )
+            except OSError as exc:
+                logging.exception("native macosvm worker spawn failed")
+                return {"ok": False, "error": str(exc), "log_path": str(log_path)}
+            return {
+                "ok": True,
+                "spawned": True,
+                "pid": process.pid,
+                "worker": "native-macosvm",
+                "engine": engine,
+                "target_major": target,
+                "boot_selection": boot_selection,
+                "boot_picker": picker,
+                "output": native_paths["output"],
+                "log_path": str(log_path),
+                "research_only": True,
+                "macos_boot_verified": False,
+                "host": native_host,
+                "note": "native macosvm worker는 launch.json에서 XNU/userspace marker와 입력 무결성을 별도로 기록합니다.",
+            }
+
         # Keep the bridge surface deliberately narrow: callers can provide
         # paths and bounded scalar values, never arbitrary QEMU arguments.
         string_fields = (
-            "qemu", "qemu_img", "firmware", "vm_json", "ibss", "ibec", "aux", "root", "output",
+            "qemu", "qemu_img", "firmware", "macosvm", "vm_json", "ibss", "ibec", "aux", "root", "output",
             "build_manifest", "tss_helper", "original_ibss", "original_ibec", "restore_role_dir",
         )
         values: dict[str, Any] = {}
@@ -426,7 +511,7 @@ class WizardBridge:
         from x86.vmapple import VIRTUAL_MODEL, VIRTUAL_SOC_NAME
 
         repo = bootstrap.ensure_repo_on_path()
-        input_names = ("qemu", "qemu_img", "firmware", "vm_json", "ibss", "ibec", "aux", "root", "output",
+        input_names = ("qemu", "qemu_img", "firmware", "macosvm", "vm_json", "ibss", "ibec", "aux", "root", "output",
                        "build_manifest", "tss_helper", "original_ibss", "original_ibec", "restore_role_dir")
         needs_wsl = is_windows() and any(values[name].startswith("/") for name in input_names if values[name])
         if needs_wsl:

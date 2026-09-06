@@ -4,7 +4,7 @@ CLI for the Apple Silicon sandbox simulation and explicit VMApple direct path.
 Usage:
   python -m x86.silicon session [--host ID] [--json]
   python -m x86.silicon hosts [--json]
-  python -m x86.silicon direct --firmware ... --vm-json ... --research-only
+  python -m x86.silicon direct --engine native-macosvm --macosvm ... --vm-json ... --research-only
 """
 
 from __future__ import annotations
@@ -55,9 +55,11 @@ def main(argv: Optional[list[str]] = None) -> int:
 
     p_direct = sub.add_parser(
         "direct",
-        help="Run the real ARM-only VMApple macOS entry (never a DFU/personalization path)",
+        help="Run the real ARM-only VMApple macOS entry (QEMU or native macosvm; never DFU)",
     )
     p_direct.add_argument("--target", type=int, choices=[26, 27], default=27)
+    p_direct.add_argument("--engine", choices=["qemu", "native-macosvm"], default="qemu")
+    p_direct.add_argument("--macosvm", help="native macosvm executable (native-macosvm engine)")
     p_direct.add_argument("--qemu")
     p_direct.add_argument("--qemu-img")
     p_direct.add_argument("--firmware", default="", help="AVPBooter; native Apple Silicon macOS uses the system default when omitted")
@@ -78,6 +80,8 @@ def main(argv: Optional[list[str]] = None) -> int:
     p_direct.add_argument("--smp", type=int, default=2)
     p_direct.add_argument("--timeout", type=float, default=300.0)
     p_direct.add_argument("--duration", type=float)
+    p_direct.add_argument("--observation-timeout", type=float, default=600.0)
+    p_direct.add_argument("--gui", action="store_true", help="request the native macosvm GUI")
     p_direct.add_argument("--research-only", action="store_true", required=True)
     p_direct.add_argument("--json", action="store_true")
 
@@ -124,6 +128,8 @@ def main(argv: Optional[list[str]] = None) -> int:
         try:
             payload = run_direct_macos(
                 target_os=args.target,
+                engine=args.engine,
+                macosvm=args.macosvm,
                 qemu=args.qemu,
                 qemu_img=args.qemu_img,
                 firmware=args.firmware,
@@ -138,6 +144,8 @@ def main(argv: Optional[list[str]] = None) -> int:
                 smp=args.smp,
                 timeout=args.timeout,
                 duration=args.duration,
+                observation_timeout=args.observation_timeout,
+                gui=args.gui,
                 research_only=args.research_only,
             )
         except (ValueError, OSError, TimeoutError, RuntimeError) as exc:

@@ -67,6 +67,9 @@ MACOSVM_AUX_METADATA_BYTES = 0x4000
 MACOSVM_DEFAULT_DISK_SIZE = "32g"
 MACOSVM_MAX_DISK_BYTES = 4 * 1024**4
 MACOSVM_MAX_PROVISION_TIMEOUT = 172800.0
+MACOSVM_DEFAULT_RUN_TIMEOUT = 600.0
+MACOSVM_MAX_RUN_TIMEOUT = 86400.0
+QEMU_VMAPPLE_MAX_MACOS_GUEST_MAJOR = 12
 DEFAULT_AVPBOOTER_PATH = Path(
     "/System/Library/Frameworks/Virtualization.framework/Resources/AVPBooter.vmapple2.bin"
 )
@@ -213,6 +216,11 @@ _APPLE_SILICON_PROFILE = {
         "reference_devices": ["m1_fb", "xnu_ramfb"],
         "current_research_status": "Apple PV graphics unavailable in TCG research-headless",
         "verified": False,
+    },
+    "direct_boot_engines": {
+        "native_macosvm": "required for macOS 26/27 Golden Gate/Tahoe",
+        "qemu_vmapple_max_documented_guest_major": QEMU_VMAPPLE_MAX_MACOS_GUEST_MAJOR,
+        "qemu_vmapple_modern_guest_policy": "fail-closed; recovery/protocol research only",
     },
     "reference": QEMU_T8030_REFERENCE,
     "scope": {
@@ -963,6 +971,281 @@ def provision_macosvm(
         json.dumps(report, indent=2) + "\n", encoding="utf-8"
     )
     return report
+
+
+def native_macosvm_host_report() -> dict[str, object]:
+    """Describe the host gate for the Virtualization.framework runner.
+
+    This is intentionally separate from :func:`direct_macos_host_report`.
+    The latter describes QEMU's private VMApple/AVPBooter path and therefore
+    requires the AVPBooter binary to be discoverable.  ``macosvm`` asks
+    Virtualization.framework to construct the virtual Mac itself and does not
+    require the caller to pass that private firmware path.
+    """
+    system = platform.system()
+    machine = platform.machine().lower()
+    native = _direct_macos_hvf_host()
+    blockers: list[str] = []
+    if not native:
+        blockers.append(
+            "native macosvm requires an Apple-Silicon macOS host; "
+            "the current host cannot provide Virtualization.framework"
+        )
+    return {
+        "system": system,
+        "architecture": machine,
+        "apple_silicon_macos": native,
+        "virtualization_framework_required": True,
+        "native_virtualization_selected": native,
+        "blockers": blockers,
+        "native_macosvm_ready": not blockers,
+    }
+
+
+def macosvm_run_command(
+    executable: Executable,
+    *,
+    vm_json: Path,
+    pid_file: Path,
+    gui: bool = False,
+    ephemeral: bool = True,
+) -> list[str]:
+    """Build an argv-only native ``macosvm`` launch command.
+
+    The base bundle is always launched with ``--ephemeral`` by the runner so
+    Virtualization.framework uses temporary APFS clones instead of writing
+    the caller's provisioned AUX/root images.  PTY mode is deliberately not
+    selected here: the upstream tool waits for an interactive newline before
+    attaching a PTY, which is unsuitable for a bounded, auditable worker.
+    """
+    if not isinstance(vm_json, Path) or not vm_json.is_file() or vm_json.is_symlink():
+        raise ValueError(f"macosvm configuration must be a regular file: {vm_json}")
+    if not isinstance(pid_file, Path) or pid_file.is_symlink():
+        raise ValueError(f"macosvm pid file must not be a symlink: {pid_file}")
+    if not isinstance(gui, bool) or not isinstance(ephemeral, bool):
+        raise ValueError("macosvm gui and ephemeral flags must be booleans")
+    arguments: list[str] = []
+    if ephemeral:
+        arguments.append("--ephemeral")
+    if gui:
+        arguments.append("--gui")
+    arguments.extend(["--pid-file", str(pid_file), str(vm_json)])
+    return executable.command(*arguments)
+
+
+def _native_macosvm_input_manifest(bundle: MacOSVMConfiguration) -> dict[str, dict[str, object]]:
+    """Snapshot every file that the native runner is allowed to read."""
+    result: dict[str, dict[str, object]] = {}
+    for name, path in (
+        ("macosvm_json", bundle.path),
+        ("aux", bundle.aux),
+        ("root", bundle.root),
+    ):
+        result[name] = {
+            "path": str(path),
+            "bytes": path.stat().st_size,
+            "sha256": _sha256(path),
+        }
+    return result
+
+
+def run_macosvm_native(
+    *,
+    macosvm: str | Path | None,
+    vm_json: str | Path,
+    output: str | Path | None,
+    target_major: int = 27,
+    duration: float | None = None,
+    observation_timeout: float = MACOSVM_DEFAULT_RUN_TIMEOUT,
+    gui: bool = False,
+    research_only: bool = False,
+) -> dict[str, object]:
+    """Run an existing ``macosvm.json`` bundle through Virtualization.framework.
+
+    This is the native Apple-Silicon path for modern macOS guests.  It owns
+    process/log orchestration only; it does not patch IPSW contents, rewrite
+    the bundle, or infer a successful boot from process startup.  The result
+    is a structured evidence report and ``macos_boot_verified`` becomes true
+    only when both the Darwin/XNU and userspace marker sets are observed.
+    """
+    if target_major not in (26, 27):
+        raise ValueError("native macosvm target must be macOS 26 or 27")
+    if research_only is not True:
+        raise ValueError("native macosvm launch requires the explicit --research-only flag")
+    host = native_macosvm_host_report()
+    if host.get("apple_silicon_macos") is not True:
+        raise ValueError(
+            "native macosvm requires an Apple-Silicon macOS host; "
+            "the current host cannot provide Virtualization.framework"
+        )
+    if type(gui) is not bool:
+        raise ValueError("native macosvm gui must be a boolean")
+    if (
+        isinstance(observation_timeout, bool)
+        or not isinstance(observation_timeout, (int, float))
+        or not math.isfinite(float(observation_timeout))
+        or not 0 < float(observation_timeout) <= MACOSVM_MAX_RUN_TIMEOUT
+    ):
+        raise ValueError("native macosvm observation timeout must be between 0 and 86400 seconds")
+    if (
+        duration is not None
+        and (
+            isinstance(duration, bool)
+            or not isinstance(duration, (int, float))
+            or not math.isfinite(float(duration))
+            or not 0 < float(duration) <= MACOSVM_MAX_RUN_TIMEOUT
+        )
+    ):
+        raise ValueError("native macosvm duration must be between 0 and 86400 seconds")
+
+    bundle = load_macosvm_configuration(vm_json)
+    executable = _resolve_executable(macosvm, "X86_MACOSVM", "macosvm")
+    if executable.is_wsl:
+        raise ValueError("native macosvm launch must run natively on Apple-Silicon macOS")
+    destination = _new_directory(output)
+    pid_file = destination / "macosvm.pid"
+    log_path = destination / "macosvm.log"
+    command = macosvm_run_command(
+        executable,
+        vm_json=bundle.path,
+        pid_file=pid_file,
+        gui=gui,
+        ephemeral=True,
+    )
+    inputs = _native_macosvm_input_manifest(bundle)
+    run_timeout = float(duration if duration is not None else observation_timeout)
+    started = time.monotonic()
+    report: dict[str, object] = {
+        "schema": "26x86.macosvm-native/1",
+        "engine": "macosvm",
+        "validation_level": "NATIVE-VIRTUALIZATION-FRAMEWORK",
+        "target_major": target_major,
+        "target_name": "Tahoe" if target_major == 26 else "Golden Gate",
+        "host": host,
+        "vm_bundle": bundle.report(),
+        "command": command,
+        "gui_requested": gui,
+        "ephemeral_storage": True,
+        "storage_isolation": "macosvm --ephemeral APFS clones; base inputs remain read-only",
+        "inputs": inputs,
+        "output": str(destination),
+        "log": str(log_path),
+        "pid_file": str(pid_file),
+        "pid_file_observed": False,
+        "native_runtime_started": False,
+        "xnu_executed": False,
+        "macos_userspace_reached": False,
+        "macos_boot_verified": False,
+        "installer_ui_visible": False,
+        "installation_verified": False,
+        "hardware_attestation_verified": False,
+        "physical_mac_verified": False,
+        "termination": None,
+        "returncode": None,
+        "duration_seconds": None,
+        "input_integrity": False,
+        "error": None,
+    }
+    process: subprocess.Popen[bytes] | None = None
+
+    def write_report() -> None:
+        _write_report(destination, report)
+
+    write_report()
+    try:
+        with log_path.open("xb") as log:
+            process = subprocess.Popen(
+                command,
+                cwd=str(bundle.path.parent),
+                stdin=subprocess.DEVNULL,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+            )
+        report["pid"] = process.pid
+        report["native_runtime_started"] = True
+        write_report()
+
+        startup_deadline = time.monotonic() + min(30.0, run_timeout)
+        while time.monotonic() < startup_deadline:
+            if pid_file.is_file():
+                try:
+                    pid_value = pid_file.read_text(encoding="ascii").strip()
+                    report["macosvm_pid"] = int(pid_value)
+                    report["pid_file_observed"] = True
+                except (OSError, UnicodeDecodeError, ValueError):
+                    report["pid_file_error"] = "macosvm pid file was not an ASCII integer"
+                break
+            if process.poll() is not None:
+                break
+            time.sleep(0.05)
+
+        remaining = max(0.1, min(float(observation_timeout), run_timeout - (time.monotonic() - started)))
+        observation = _observe_direct_macos_boot(log_path, remaining, process)
+        report.update({
+            "direct_boot": {
+                "requested": True,
+                "engine": "macosvm",
+                "dfu_entered": False,
+                "recovery_transport_used": False,
+                "observation": observation,
+            },
+            "xnu_executed": bool(observation["xnu_executed"]),
+            "macos_userspace_reached": bool(observation["macos_userspace_reached"]),
+            "macos_boot_verified": bool(observation["macos_boot_verified"]),
+            "installer_ui_visible": bool(observation["installer_ui_visible"]),
+            "installation_verified": False,
+            "observed_markers": observation["observed_markers"],
+        })
+        write_report()
+
+        deadline = started + run_timeout
+        if process.poll() is None:
+            if not observation["macos_boot_verified"]:
+                report["termination"] = "native-boot-evidence-timeout"
+                process.terminate()
+            else:
+                while process.poll() is None:
+                    if time.monotonic() >= deadline:
+                        report["termination"] = "time_budget"
+                        process.terminate()
+                        break
+                    if (destination / "stop").exists():
+                        report["termination"] = "stop_file"
+                        process.terminate()
+                        break
+                    time.sleep(0.1)
+        if process.poll() is None:
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                report["termination"] = "forced_kill"
+                process.kill()
+                process.wait(timeout=5)
+        report["returncode"] = process.returncode
+        if report.get("termination") is None:
+            report["termination"] = "guest_exit"
+        report["duration_seconds"] = round(time.monotonic() - started, 3)
+        report["input_integrity"] = _inputs_intact(report["inputs"])
+        if not report["input_integrity"]:
+            report["error"] = "One or more macosvm bundle inputs changed during the run"
+        elif not report["macos_boot_verified"]:
+            report["error"] = observation["direct_boot_blocker"]
+        write_report()
+        return report
+    except BaseException as error:
+        if process is not None and process.poll() is None:
+            process.terminate()
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=5)
+        report["duration_seconds"] = round(time.monotonic() - started, 3)
+        report["returncode"] = process.returncode if process is not None else None
+        report["input_integrity"] = _inputs_intact(report["inputs"])
+        report["error"] = f"{type(error).__name__}: {error}"
+        write_report()
+        raise
 
 
 @dataclass(frozen=True)
@@ -1820,6 +2103,11 @@ class VMappleConfig:
             raise ValueError("Live TSS personalization is a recovery-only operation; direct macOS boot uses the provisioned guest inputs")
         if self.boot_selection == MACOS_ENTRY_ID and self.restore_chain:
             raise ValueError("The restore-role chain is recovery-only; select macOS direct boot without --restore-chain")
+        if self.boot_selection == MACOS_ENTRY_ID and self.target_major > QEMU_VMAPPLE_MAX_MACOS_GUEST_MAJOR:
+            raise ValueError(
+                "QEMU VMApple direct macOS boot is not supported for macOS 26/27; "
+                "use `vmapple run-native` with the provisioned macosvm.json bundle"
+            )
         if (
             isinstance(self.restore_timeout, bool)
             or not isinstance(self.restore_timeout, (int, float))
@@ -2483,11 +2771,13 @@ def run(config: VMappleConfig) -> dict[str, object]:
 def configured_from_environment() -> dict[str, object]:
     """Return GUI-safe availability information without launching a guest."""
     host = direct_macos_host_report()
+    native_host = native_macosvm_host_report()
     default_firmware = host.get("default_avpbooter")
     firmware_env = os.environ.get("X86_VMAPLE_AVPBOOTER", "")
     if not firmware_env and isinstance(default_firmware, str):
         firmware_env = default_firmware
     values = {
+        "macosvm": os.environ.get("X86_MACOSVM", ""),
         "qemu": os.environ.get("X86_VMAPLE_QEMU", ""),
         "firmware": firmware_env,
         "vm_json": os.environ.get("X86_VMAPLE_JSON", ""),
@@ -2508,6 +2798,7 @@ def configured_from_environment() -> dict[str, object]:
     storage_configured = present["vm_json"] or (present["aux"] and present["root"])
     legacy_configured = all(present[name] for name in (*base_required, "ibss")) and storage_configured
     direct_configured = all(present[name] for name in base_required) and storage_configured
+    native_configured = present["macosvm"] and present["vm_json"] and present["output"]
     live_required = (*base_required, "build_manifest", "tss_helper", "original_ibss", "original_ibec")
     live_configured = all(present[name] for name in live_required) and storage_configured
     boot_picker = validate_boot_picker_config(target_major=27)
@@ -2528,15 +2819,17 @@ def configured_from_environment() -> dict[str, object]:
         "recovery_scope": default_scope(recovery_enabled=True)["recovery"],
         "boot_picker": boot_picker,
         "direct_macos_host": host,
+        "native_macosvm_host": native_host,
         "soc_profile": apple_silicon_profile(),
         # Either an explicitly personalized legacy input or the preferred
         # live-TSS set is usable.  The GUI defaults to live mode and exposes
         # this distinction instead of claiming that a partial path is ready.
-        "configured": live_configured or legacy_configured or direct_configured, "fields": present,
+        "configured": live_configured or legacy_configured or direct_configured or bool(native_configured), "fields": present,
         "legacy_configured": legacy_configured,
         "direct_macos_configured": direct_configured,
+        "native_macosvm_configured": bool(native_configured),
         "live_personalization_configured": live_configured,
         "personalization_default": "live-tss",
         "values": values, "macos_boot_verified": False,
-        "note": "Paths or macosvm.json are caller-supplied. The GUI never bundles Apple firmware or writes an existing ESP.",
+        "note": "Paths, macosvm, and macosvm.json are caller-supplied. The GUI never bundles Apple firmware or writes an existing ESP.",
     }

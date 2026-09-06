@@ -5,7 +5,8 @@ macOS adapter.
 The default ``session``/``hosts`` commands remain deterministic simulations and
 never claim a real boot.  The separate ``direct`` command delegates to the real
 VMApple runner when the caller supplies an Apple Silicon/macOS HVF environment and
-unchanged AVPBooter/AUX/root inputs.
+unchanged AVPBooter/AUX/root inputs, or selects the native ``macosvm``/
+Virtualization.framework engine with an immutable ``macosvm.json`` bundle.
 
 Two facts constrain everything in this package:
 
@@ -35,6 +36,7 @@ Entry points:
     python -m x86.silicon session [--host ID] [--json]
     python -m x86.silicon hosts [--json]
     python -m x86.silicon direct --firmware ... --aux ... --root ... --research-only
+    python -m x86.silicon direct --engine native-macosvm --macosvm ... --vm-json ... --research-only
     python -m x86.silicon.validation [--gates-only] [--quiet]
 """
 

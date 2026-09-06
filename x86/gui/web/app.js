@@ -25,9 +25,11 @@
     sandboxReceipt: null,
     vmapple: null,
     vmappleConfig: {
+      engine: "qemu",
       qemu: "",
       qemu_img: "",
       firmware: "",
+      macosvm: "",
       vm_json: "",
       build_manifest: "",
       tss_helper: "",
@@ -377,10 +379,12 @@
     const vm = state.vmapple || {};
     const vmConfig = state.vmappleConfig;
     const directRequested = vmConfig.boot_selection === "macos";
+    const nativeEngine = vmConfig.engine === "native-macosvm";
     const livePersonalize = vmConfig.live_personalize !== false && !directRequested;
     const optionalRpcUnavailable = vmConfig.optional_rpc_unavailable === true;
     const restoreChain = vmConfig.restore_chain === true;
     const vmFields = [
+      ["macosvm", "macosvm 실행 도구", "/usr/local/bin/macosvm (Apple-Silicon macOS)"],
       ["qemu", "VMApple QEMU", "/home/developer/.../qemu-system-aarch64"],
       ["qemu_img", "qemu-img", "/usr/bin/qemu-img"],
       ["firmware", "AVPBooter EFI", "원본 AVPBooter.vmapple2.bin 경로"],
@@ -398,13 +402,17 @@
       ["ibec", "기존 개인화 iBEC (선택)", "이미 개인화된 iBEC.img4"],
     ].map(([key, label, placeholder]) => `<div><label for="vmapple-${key}">${label}</label><input class="field" id="vmapple-${key}" value="${escapeHtml(vmConfig[key] || "")}" placeholder="${escapeHtml(placeholder)}" /></div>`).join("");
     const storageFields = String(vmConfig.vm_json || "").trim() ? ["vm_json"] : ["aux", "root"];
-    const requiredVmFields = ["qemu", "qemu_img", "firmware", "output"].concat(storageFields).concat(
-      directRequested ? [] : livePersonalize
-        ? ["build_manifest", "tss_helper", "original_ibss", "original_ibec"]
-        : ["ibss"]
-    ).concat(!directRequested && restoreChain ? ["restore_role_dir"] : []);
+    const requiredVmFields = nativeEngine && directRequested
+      ? ["macosvm", "vm_json", "output"]
+      : ["qemu", "qemu_img", "firmware", "output"].concat(storageFields).concat(
+        directRequested ? [] : livePersonalize
+          ? ["build_manifest", "tss_helper", "original_ibss", "original_ibec"]
+          : ["ibss"]
+      ).concat(!directRequested && restoreChain ? ["restore_role_dir"] : []);
     const vmReady = requiredVmFields.every((key) => String(vmConfig[key] || "").trim());
-    const vmConfigured = directRequested
+    const vmConfigured = nativeEngine && directRequested
+      ? (vmConfig.macosvm && vmConfig.vm_json && vmConfig.output ? "native macosvm 입력 확인됨" : "macosvm·macosvm.json·새 출력 경로 입력 필요")
+      : directRequested
       ? (vm.direct_macos_configured ? "직접 macOS 입력 확인됨" : (String(vmConfig.vm_json || "").trim() ? "QEMU·AVPBooter·macosvm.json 입력 필요" : "QEMU·AVPBooter·AUX/root 입력 필요"))
       : livePersonalize
       ? (vm.live_personalization_configured ? "실시간 TSS 경로 확인됨" : "공식 원본·TSS 경로 입력 필요")
@@ -442,6 +450,9 @@
       && !["unprovisioned-zero", "partially-unprovisioned"].includes(storage?.provisioning_status);
     const pickerStateLabel = picker.state === "armed" ? `Alt/Option 대기 · ${Number(picker.remaining_seconds || 0).toFixed(2)}초` : picker.state === "picker" ? "부트 피커 표시 중" : picker.state === "selected" && recoverySelected ? "macOS Recovery 선택됨" : picker.state === "selected" && macosSelected ? "macOS 기본 항목 선택됨" : picker.state === "default" ? "시간 만료 · macOS 기본 항목" : "대기하지 않음";
     const launchLabel = recoverySelected ? "Recovery VM 창 열기" : "macOS VM 창 열기";
+    const engineNote = nativeEngine
+      ? "native macosvm은 Apple-Silicon macOS host에서 Virtualization.framework를 직접 사용하고 macosvm --ephemeral로 입력 저장소를 clone합니다."
+      : "QEMU 연구 경로는 WSLg/TCG 또는 native HVF를 사용하며, 최신 macOS 게스트의 부팅 성공을 자동으로 주장하지 않습니다.";
     return `<span class="eyebrow">EFI NATIVE / APPLE SILICON SANDBOX</span><h2>${stage === "patch" ? "EFI 준비 결과" : "Sandbox 준비"}</h2>
       <p class="lead">macOS 게스트 부팅에 필요한 구성 요소와 현재 구현 상태를 확인합니다.</p>
       <div class="metric-grid"><div class="metric"><span>실행 계층</span><strong>EFI · AIC · ARM64 JIT</strong></div><div class="metric"><span>최소 CPU</span><strong>SSE4.1 + SSE4.2</strong></div><div class="metric"><span>macOS 실제 부팅</span><strong>미검증</strong></div></div>
@@ -455,8 +466,9 @@
       <p class="support-note">구성: OpenCore config.plist · iBoot 엔진 · SandboxSMBIOS · Hardware/DevProp. 현재 준비 기능은 EFI 자체 검사 패키지를 생성합니다. macOS 설치 또는 부팅을 시작하지 않습니다. 기존 디스크에 자동으로 기록하지 않습니다.</p>
       <div class="actions"><button class="btn secondary" id="sandbox-refresh">준비 상태 다시 확인</button><button class="btn primary" id="sandbox-prepare" ${report.stageable && state.bridgeReady ? "" : "disabled"}>EFI 자체 검사 패키지 준비</button></div>
       ${receipt ? `<pre class="patch-summary" role="status">${escapeHtml(JSON.stringify(receipt, null, 2))}</pre>` : ""}
-      <details class="vm-panel" open><summary>실제 보이는 VMApple 복구 VM · <span class="badge${vmConfigured.includes("확인됨") ? " good" : " warning"}">${vmConfigured}</span></summary>
-        <p class="support-note">WSLg GTK 창을 표시하는 연구용 실행 경로입니다. 직접 macOS 선택에서는 Virtualization.framework의 <code>macosvm.json</code> 번들을 우선 사용하고, Recovery 선택에서는 공식 BuildManifest와 현재 USB nonce로 Apple TSS 티켓을 요청합니다. 변경하지 않은 원본 iBSS/iBEC는 새 출력 폴더에만 IMG4로 감쌉니다. IPSW·설치 파일·기존 ESP는 수정하지 않습니다. 실제 USB descriptor가 bulk endpoint 4를 광고할 때만 iBSS→iBEC를 시도하며 전환을 강제하지 않습니다.</p>
+      <details class="vm-panel" open><summary>실제 보이는 VMApple 복구 VM · <span class="badge${vmConfigured.includes("확인됨") || vmConfigured.includes("입력 확인") ? " good" : " warning"}">${vmConfigured}</span></summary>
+        <div class="form-row"><div><label for="vmapple-engine">실행 엔진</label><select class="field" id="vmapple-engine"><option value="qemu" ${!nativeEngine ? "selected" : ""}>QEMU VMApple 연구 경로</option><option value="native-macosvm" ${nativeEngine ? "selected" : ""}>native macosvm · Virtualization.framework</option></select></div><div><label for="vmapple-observation_timeout">네이티브 증거 제한 시간(초)</label><input class="field" id="vmapple-observation_timeout" value="${escapeHtml(vmConfig.observation_timeout || 600)}" inputmode="numeric" /></div></div>
+        <p class="support-note">${engineNote} Recovery 선택에서는 공식 BuildManifest와 현재 USB nonce로 Apple TSS 티켓을 요청합니다. 변경하지 않은 원본 iBSS/iBEC는 새 출력 폴더에만 IMG4로 감쌉니다. IPSW·설치 파일·기존 ESP는 수정하지 않습니다. 실제 USB descriptor가 bulk endpoint 4를 광고할 때만 iBSS→iBEC를 시도하며 전환을 강제하지 않습니다.</p>
         <label class="check-row" for="vmapple-live"><input type="checkbox" id="vmapple-live" ${livePersonalize ? "checked" : ""} ${directRequested ? "disabled" : ""} /> <span><strong>실시간 Apple TSS 개인화</strong><small>${directRequested ? "직접 macOS 부팅에서는 사용하지 않음" : "현재 USB nonce에 묶인 티켓을 새 폴더에 생성 (권장)"}</small></span></label>
         <label class="check-row" for="vmapple-rpc"><input type="checkbox" id="vmapple-rpc" ${optionalRpcUnavailable ? "checked" : ""} /> <span><strong>Golden Gate Stage2 연구 경로</strong><small>원본 iBEC의 선택 RPC 주소를 무서비스 상태로 매핑합니다. 게스트 서비스나 서명 우회가 아니며 연구 산출물로만 남습니다.</small></span></label>
         <div class="vm-fields">${vmFields}</div>
@@ -684,7 +696,7 @@
         state.sandboxTarget = Number(target.value); state.sandboxPlan = null; state.sandboxReceipt = null; state.vmappleStorage = null;
         await refreshSandbox();
       });
-      const vmFieldNames = ["qemu", "qemu_img", "firmware", "vm_json", "build_manifest", "tss_helper", "original_ibss", "original_ibec", "ibss", "ibec", "aux", "root", "output"];
+      const vmFieldNames = ["macosvm", "qemu", "qemu_img", "firmware", "vm_json", "build_manifest", "tss_helper", "original_ibss", "original_ibec", "ibss", "ibec", "aux", "root", "output"];
       vmFieldNames.forEach((name) => {
         const field = document.getElementById(`vmapple-${name}`);
         if (field) field.addEventListener("input", () => {
@@ -728,6 +740,16 @@
         } else {
           toast("저장장치 읽기 검사 완료 · 프로비저닝은 별도 확인이 필요합니다.");
         }
+      });
+      const engine = document.getElementById("vmapple-engine");
+      if (engine) engine.addEventListener("change", () => {
+        state.vmappleConfig.engine = engine.value;
+        renderStepContent();
+      });
+      const observationTimeout = document.getElementById("vmapple-observation_timeout");
+      if (observationTimeout) observationTimeout.addEventListener("input", () => {
+        const numeric = Number(observationTimeout.value);
+        if (Number.isFinite(numeric)) state.vmappleConfig.observation_timeout = numeric;
       });
       bind("vmapple-boot-start", async () => {
         const result = await api("start_boot_picker", state.sandboxTarget, state.vmappleConfig.recovery_protocol, state.vmappleConfig.recovery_image_name);

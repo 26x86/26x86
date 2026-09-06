@@ -184,7 +184,32 @@ python3 -m x86 vmapple provision \
 부팅 성공을 의미하지 않으며, 이후 `--vm-json` 직접 실행에서 XNU와
 userspace UART 증거를 별도로 확인해야 합니다.
 
+macOS 26/27의 실제 실행은 QEMU direct entry와 분리된 native
+Virtualization.framework 경로를 사용한다. `macosvm`이 기본 serial을
+표준 출력에 연결하고 `--ephemeral`로 storage clone을 만들기 때문에, 26x86은
+그 경로를 다음처럼 bounded worker로 감싼다. PTY는 upstream tool이 연결 전
+표준 입력의 newline을 요구하므로 자동 실행에서는 사용하지 않는다.
+
 ```sh
+python3 -m x86 vmapple run-native \
+  --target 27 \
+  --macosvm /usr/local/bin/macosvm \
+  --vm-json /path/to/goldengate-vm/macosvm.json \
+  --output /tmp/26x86-goldengate-native \
+  --observation-timeout 900 --duration 900 \
+  --research-only --json
+```
+
+이 명령은 Apple-Silicon macOS host에서만 실행되며, `macosvm.log`의 Darwin/XNU
+marker와 `launchd`/`loginwindow`/`WindowServer` userspace marker를 각각 기록한다.
+둘 다 관찰될 때만 `macos_boot_verified=true`가 되고, 설치 완료 영수증이
+없으면 `installation_verified=false`로 남는다. QEMU의 VMApple 문서가 최신
+게스트 버전을 지원하지 않는다고 명시하는 범위에서는 QEMU direct 경로를
+Golden Gate 부팅 경로로 사용하지 않는다.
+
+```sh
+# Legacy QEMU direct-entry shape (target 27 is rejected by the runner;
+# use `vmapple run-native` above for the real macOS 26/27 path).
 python3 -m x86 vmapple run --target 27 --display auto \
   --qemu /path/to/qemu-system-aarch64 \
   --qemu-img /usr/bin/qemu-img \
@@ -204,6 +229,8 @@ python3 -m x86 vmapple inspect-storage --vm-json /path/to/macosvm.json --json
 ```
 
 ```sh
+# Legacy raw-input QEMU shape; this is a protocol/compatibility experiment,
+# not a supported Golden Gate boot command.
 python3 -m x86 vmapple run --target 27 --display auto \
   --qemu /path/to/qemu-system-aarch64 \
   --qemu-img /usr/bin/qemu-img \

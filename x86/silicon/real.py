@@ -15,6 +15,8 @@ from typing import Any
 def run_direct_macos(
     *,
     target_os: int,
+    engine: str = "qemu",
+    macosvm: str | None = None,
     qemu: str | None,
     qemu_img: str | None,
     firmware: str,
@@ -29,6 +31,8 @@ def run_direct_macos(
     smp: int = 2,
     timeout: float = 300.0,
     duration: float | None = None,
+    observation_timeout: float = 600.0,
+    gui: bool = False,
     research_only: bool = False,
 ) -> dict[str, Any]:
     """Run the normal macOS entry with no DFU/personalization stage.
@@ -37,6 +41,26 @@ def run_direct_macos(
     VMApple owns process/storage orchestration, while this adapter only selects
     the ARM-only direct boot contract.
     """
+    if engine == "native-macosvm":
+        from x86.vmapple import run_macosvm_native
+
+        if not vm_json:
+            raise ValueError("native-macosvm direct mode requires --vm-json")
+        report = run_macosvm_native(
+            macosvm=macosvm,
+            vm_json=vm_json,
+            output=output,
+            target_major=target_os,
+            duration=duration,
+            observation_timeout=observation_timeout,
+            gui=gui,
+            research_only=research_only,
+        )
+        report.setdefault("layer", "Apple Silicon user-space native macosvm -> Virtualization.framework -> XNU/userspace UART")
+        return report
+    if engine != "qemu":
+        raise ValueError("direct engine must be qemu or native-macosvm")
+
     from x86.vmapple import VMappleConfig, run
 
     report = run(

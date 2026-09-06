@@ -489,6 +489,7 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
         apple_silicon_profile,
         configured_from_environment,
         inspect_macosvm_storage,
+        run_macosvm_native,
         inspect_storage,
         provision_macosvm,
         run,
@@ -536,6 +537,32 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
         # needs a hardware-model provisioning receipt, so it is reported as
         # unverified rather than being advertised as bootable.
         return 2 if result.get("provisioned") is False else 0
+
+    if args.vmapple_action in ("run-native", "native", "native-run"):
+        try:
+            result = run_macosvm_native(
+                macosvm=args.macosvm,
+                vm_json=args.vm_json,
+                output=args.output,
+                target_major=args.target,
+                duration=args.duration,
+                observation_timeout=args.observation_timeout,
+                gui=args.gui,
+                research_only=args.research_only,
+            )
+        except (ValueError, OSError, TimeoutError, RuntimeError) as exc:
+            _emit_json({
+                "ok": False,
+                "error": str(exc),
+                "native_runtime_started": False,
+                "macos_boot_verified": False,
+            })
+            return 2
+        _emit_json({
+            "ok": bool(result.get("macos_boot_verified")),
+            **result,
+        })
+        return 0 if result.get("macos_boot_verified") else 2
 
     config = VMappleConfig(
         target_major=args.target,
@@ -694,6 +721,41 @@ def build_parser() -> argparse.ArgumentParser:
     )
     vmapple_provision.add_argument("--json", action="store_true")
     vmapple_provision.set_defaults(handler=cmd_vmapple)
+    vmapple_native = vmapple_actions.add_parser(
+        "run-native", aliases=["native", "native-run"],
+        help="Run an existing macosvm.json through native Apple-Silicon Virtualization.framework",
+    )
+    vmapple_native.add_argument("--target", type=int, choices=[26, 27], default=27)
+    vmapple_native.add_argument(
+        "--macosvm", default=os.environ.get("X86_MACOSVM"),
+        help="macosvm executable (or X86_MACOSVM)",
+    )
+    vmapple_native.add_argument(
+        "--vm-json", default=os.environ.get("X86_VMAPLE_JSON"), required=not bool(os.environ.get("X86_VMAPLE_JSON")),
+        help="macosvm.json produced by native provisioning",
+    )
+    vmapple_native.add_argument(
+        "--output", default=os.environ.get("X86_VMAPLE_OUTPUT"),
+        help="new output directory; existing directories are rejected",
+    )
+    vmapple_native.add_argument(
+        "--duration", type=float, default=None,
+        help="maximum native VM runtime in seconds (default: observation timeout)",
+    )
+    vmapple_native.add_argument(
+        "--observation-timeout", type=float, default=600.0,
+        help="bounded XNU/userspace UART observation timeout (maximum 86400)",
+    )
+    vmapple_native.add_argument(
+        "--gui", action="store_true",
+        help="request the macosvm Virtualization.framework window",
+    )
+    vmapple_native.add_argument(
+        "--research-only", action="store_true", required=True,
+        help="Required acknowledgement that this is a non-redistributable research run",
+    )
+    vmapple_native.add_argument("--json", action="store_true")
+    vmapple_native.set_defaults(handler=cmd_vmapple)
     vmapple_inspect_storage = vmapple_actions.add_parser(
         "inspect-storage",
         help="Read-only AUX/root readiness inspection; never starts QEMU or writes inputs",
