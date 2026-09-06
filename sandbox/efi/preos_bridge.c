@@ -15,6 +15,12 @@ static int zero_words(const uint64_t *words, size_t count) {
     return 1;
 }
 
+static int abi_prefix_valid(const void *pointer, size_t expected_size) {
+    const uint32_t *words = pointer;
+    return pointer && !((uintptr_t)pointer & 7) &&
+           words[0] == VF_PREOS_ABI_VERSION && words[1] == expected_size;
+}
+
 static int valid_span(const void *pointer, uint64_t bytes, uint64_t minimum,
                       uint64_t maximum, uint64_t alignment) {
     uint64_t address = (uint64_t)(uintptr_t)pointer;
@@ -37,15 +43,13 @@ static uint32_t termination_from_status(int status) {
 }
 
 static int result_valid(const VF_JIT_RESULT *result) {
-    return result && !((uintptr_t)result & (_Alignof(VF_JIT_RESULT) - 1)) &&
-           result->abi_version == VF_PREOS_ABI_VERSION &&
+    return abi_prefix_valid(result, sizeof(*result)) &&
            result->struct_size == sizeof(*result) && !result->reserved0 &&
            zero_words(result->reserved, 3);
 }
 
 static int request_valid(const VF_JIT_REQUEST *request) {
-    if (!request || ((uintptr_t)request & (_Alignof(VF_JIT_REQUEST) - 1)) ||
-        request->abi_version != VF_PREOS_ABI_VERSION ||
+    if (!abi_prefix_valid(request, sizeof(*request)) ||
         request->struct_size != sizeof(*request) ||
         request->machine_profile != VF_MACHINE_PROFILE_M1_DIAGNOSTIC ||
         request->flags || !zero_words(request->reserved, 3) ||

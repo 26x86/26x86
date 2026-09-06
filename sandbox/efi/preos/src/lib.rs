@@ -285,6 +285,19 @@ fn failure_trace_is_safe(context: &VfPreosContext) -> bool {
         && context.trace.is_some()
 }
 
+unsafe fn abi_pointer_valid<T>(pointer: *const T) -> bool {
+    !pointer.is_null() && (pointer as usize & 7) == 0
+}
+
+unsafe fn abi_prefix_valid<T>(pointer: *const T, expected_size: usize) -> bool {
+    if !abi_pointer_valid(pointer) {
+        return false;
+    }
+    let words = pointer.cast::<u32>();
+    ptr::read(words) == ABI_VERSION
+        && ptr::read(words.add(1)) as usize == expected_size
+}
+
 fn empty_jit_result() -> VfJitResult {
     VfJitResult {
         abi_version: ABI_VERSION,
@@ -388,16 +401,23 @@ pub unsafe extern "C" fn vf_preos_run(
     context_pointer: *const VfPreosContext,
     result_pointer: *mut VfPreosResult,
 ) -> i32 {
-    if result_pointer.is_null() || ((result_pointer as usize) & 7) != 0 {
+    if !abi_pointer_valid(result_pointer.cast_const()) {
         return E_CONTEXT;
+    }
+    if !abi_prefix_valid(result_pointer.cast_const(), size_of::<VfPreosResult>()) {
+        return E_ABI;
     }
     let result = &mut *result_pointer;
     if !result_storage_valid(result) {
         return E_ABI;
     }
-    if context_pointer.is_null() || ((context_pointer as usize) & 7) != 0 {
+    if !abi_pointer_valid(context_pointer) {
         assign_error(result, E_CONTEXT, TERMINATION_NONE);
         return E_CONTEXT;
+    }
+    if !abi_prefix_valid(context_pointer, size_of::<VfPreosContext>()) {
+        assign_error(result, E_ABI, TERMINATION_NONE);
+        return E_ABI;
     }
     let context = &*context_pointer;
     let validation = validate_context(context);

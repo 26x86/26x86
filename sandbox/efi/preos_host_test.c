@@ -158,6 +158,13 @@ int main(void) {
     CHECK(vf_preos_run(&context, &result) == VF_PREOS_E_CONTEXT);
     CHECK(result.code == VF_PREOS_E_CONTEXT);
 
+    /* A caller that only supplies the ABI prefix must be rejected before the
+     * Rust entry reads reserved fields or pointer spans beyond that prefix. */
+    uint32_t short_context[2] = {VF_PREOS_ABI_VERSION, 8};
+    zero_result(&result);
+    CHECK(vf_preos_run((const VF_PREOS_CONTEXT *)(void *)short_context, &result) == VF_PREOS_E_ABI);
+    CHECK(result.code == VF_PREOS_E_ABI);
+
     /* Architectural system state is not silently interpreted by the Phase-1
      * user-mode subset.  The stable feature request is rejected before the
      * C wrapper/JIT boundary. */
