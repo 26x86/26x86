@@ -12,3 +12,4 @@
 # Exported patches and historical evidence have byte-identity receipts.
 integration/patches/*.patch -text -whitespace
 research/venfire/** -text -whitespace
+sandbox/vsk/crypto/** -text -whitespace

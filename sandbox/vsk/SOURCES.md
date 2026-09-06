@@ -23,6 +23,11 @@ VF-SPEC-001 v0.1, not from measurements of completed hardware support.
   A copied memory map and structurally valid handoff do not establish ownership
   unless the caller obtained buffers through the trusted loader allocator.
 
+The `vf_efi` adapter uses only the UEFI status values and callback signatures
+needed for the final-map/`ExitBootServices` boundary. Its unit callbacks are
+synthetic; the production EFI entry does not invoke EBS until a post-EBS root
+kernel and ownership transfer are available.
+
 These references establish hardware facts, not VSK implementation completion.
 First-party code uses the repository license; third-party code or firmware
 imports require their own provenance and retained license terms.

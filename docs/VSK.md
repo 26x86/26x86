@@ -48,6 +48,11 @@ unmeasured. SMBIOS text alone is not authentic hardware evidence.
   ranges. Ordered states fail closed where a real signature verifier or
   hardware executor is not implemented. There is no externally supplied
   "verified" boolean that can turn a unit test into boot authorization.
+- `vf_efi` provides the next M1 boundary: it captures a final caller-owned EFI
+  memory map, validates descriptor shape, and retries `ExitBootServices` only
+  for the UEFI stale-map-key error. The adapter is unit-tested with synthetic
+  callbacks and is not invoked by the diagnostic EFI image yet; therefore an
+  EFI build still reports `exit_boot_services_called=false`.
 - `vf_dmar` decodes a copied DMAR table, checks checksum and structure bounds,
   records DRHD/RMRR/ATSR/RHSA and device paths, and rejects RMRR/register overlap
   with protected acquired ranges. It never dereferences a reported physical
@@ -87,16 +92,47 @@ it explicitly says that no EFI image or hardware validation was produced.
 The Python build-guard tests use fake tools to verify receipt rejection; only
 the native build report proves that the C compiler and sanitizer tests ran.
 
+After a production `VSKBOOT.EFI` has been built with an external release trust
+key, a signed bundle can be assembled into a new USB staging directory. The
+stager verifies the bundle with the caller-supplied raw32 public key, binds its
+SHA-256 to the EFI's embedded trust-anchor receipt, copies only the expected
+`EFI/26x86/VSK` inputs, and re-verifies the copied bytes:
+
+```sh
+python -m x86 sandbox --target 27 \
+  --output /path/to/new-media \
+  --vsk-bundle /path/to/signed-bundle \
+  --trusted-public-key /path/to/release-public.key
+```
+
+`--vsk-efi` can point at a separately built production `VSKBOOT.EFI`; test
+instrumented EFI images are rejected. The output is boot-media input only:
+the stager never writes an existing ESP, alters a guest image, calls
+`ExitBootServices`, or reports macOS/physical-Mac success. The GUI exposes the
+same production-EFI receipt and shows when its final-map adapter is present,
+while keeping the self-test path visibly separate.
+
+For a visible OVMF/QEMU diagnostic, use the valid signed-input case with
+`sandbox/vsk/tools/verify_efi_inputs.py --gui`. This selects the GTK backend and
+records `display_backend: "gtk"` in the execution report. The window displays
+the EFI diagnostic path only; `macos_boot_verified` remains false until a
+post-EBS VSK runtime and a real, authorized guest path exist. The harness accepts
+`--qemu`, `--ovmf-code` and `--ovmf-vars` (or the corresponding environment
+variables) and records their resolved version/hash evidence. This keeps the GUI
+check reproducible when the host's OVMF or QEMU package is outside the default
+Ubuntu path.
+
 VSK configuration is currently a separate offline contract. The older OpenCore
 `AppleSiliconSandbox` / `SandboxSMBIOS` schema and 64-byte EFI LoadOptions are
 preserved as the diagnostic transport. The new physical-memory handoff is a
-different ABI and must not be cast to that structure. Connecting the validated
-VSK config to a signed bundle and an actual post-EBS kernel remains M1 work.
+different ABI and must not be cast to that structure. The host-side VSK config
+and signed-bundle verifier are now separate validated inputs; connecting them
+to a trusted release-key store and an actual post-EBS kernel remains M1 work.
 
 ## Remaining release requirements
 
-Pinned trust keys and a real signed-bundle verifier, EFI allocation/snapshot and
-ExitBootServices, GDT/IDT/APIC/SMP/XSTATE, VMXON/VMCS/EPT, VT-d/IRQ remapping and
+Release trust-key provisioning, VSK config-to-bundle admission, EFI allocation/
+snapshot ownership transfer after EBS, GDT/IDT/APIC/SMP/XSTATE, VMXON/VMCS/EPT, VT-d/IRQ remapping and
 native storage/display drivers are not implemented here. Then M2 requires a
 reference interpreter and differential DBT tests for privileged ARM execution,
 MMU, exceptions, atomics and timers. Apple guests retain the requested AIC/iBoot

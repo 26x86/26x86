@@ -323,7 +323,7 @@
       <p class="lead">macOS 게스트 부팅에 필요한 구성 요소와 현재 구현 상태를 확인합니다.</p>
       <div class="metric-grid"><div class="metric"><span>실행 계층</span><strong>EFI · AIC · ARM64 JIT</strong></div><div class="metric"><span>최소 CPU</span><strong>SSE4.1 + SSE4.2</strong></div><div class="metric"><span>macOS 실제 부팅</span><strong>미검증</strong></div></div>
       <div class="form-row"><div><label for="sandbox-target">대상 macOS</label><select class="field" id="sandbox-target"><option value="26" ${state.sandboxTarget === 26 ? "selected" : ""}>macOS Tahoe 26</option><option value="27" ${state.sandboxTarget === 27 ? "selected" : ""}>macOS Golden Gate 27</option></select></div><div><label for="sandbox-output">새 출력 폴더 경로</label><input class="field" id="sandbox-output" value="${escapeHtml(state.sandboxOutput)}" placeholder="예: C:/26x86-Sandbox 또는 /Users/me/26x86-Sandbox" /></div></div>
-      <div class="proof-list"><div class="proof-item"><span>EFI 자체 검사 파일</span><span class="badge${report.artifact_available ? " good" : " warning"}">${report.artifact_available ? "파일 존재" : "미생성"}</span></div><div class="proof-item"><span>원본 macOS 부팅</span><span class="badge warning">아직 준비되지 않음</span></div><div class="proof-item"><span>실제 Mac USB 부팅</span><span class="badge warning">실기 검증 필요</span></div></div>
+      <div class="proof-list"><div class="proof-item"><span>EFI 자체 검사 파일</span><span class="badge${report.artifact_available ? " good" : " warning"}">${report.artifact_available ? "파일 존재" : "미생성"}</span></div><div class="proof-item"><span>VSK 생산 EFI · 외부 trust anchor</span><span class="badge${report.vsk_artifact_available ? " good" : " warning"}">${report.vsk_artifact_available ? "생성됨 · EBS 미호출" : "미생성"}</span></div><div class="proof-item"><span>원본 macOS 부팅</span><span class="badge warning">아직 준비되지 않음</span></div><div class="proof-item"><span>실제 Mac USB 부팅</span><span class="badge warning">실기 검증 필요</span></div></div>
       ${blockers.length ? `<div class="note"><strong>남은 구현 항목</strong><ul>${blockers.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
       <p class="support-note">구성: OpenCore config.plist · iBoot 엔진 · SandboxSMBIOS · Hardware/DevProp. 현재 준비 기능은 EFI 자체 검사 패키지를 생성합니다. macOS 설치 또는 부팅을 시작하지 않습니다. 기존 디스크에 자동으로 기록하지 않습니다.</p>
       <div class="actions"><button class="btn secondary" id="sandbox-refresh">준비 상태 다시 확인</button><button class="btn primary" id="sandbox-prepare" ${report.stageable && state.bridgeReady ? "" : "disabled"}>EFI 자체 검사 패키지 준비</button></div>
@@ -447,6 +447,10 @@
 
     const html = (builders[step.id] || renderWelcome)(step);
     els.stepContent.innerHTML = html;
+    // A refreshed Sandbox plan can replace a long step while the user is
+    // scrolled near its bottom. Keep each step navigation anchored at its
+    // heading so the status and action controls never appear clipped.
+    els.stepContent.scrollTop = 0;
     bindStepActions(step.id);
     setStatus(step.title);
     renderStepper();

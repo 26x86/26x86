@@ -41,6 +41,48 @@ the original macOS iBoot-to-userspace path are not yet verified.
 After an EFI build, `python -m x86 sandbox --target 26 --output <new-folder>`
 stages the verified EFI self-test and its SHA-256 receipt. It refuses an existing
 folder. The receipt and GUI explicitly distinguish this from macOS boot media.
+For the VSK path, pass a production `VSKBOOT.EFI` receipt, a signed bundle and
+the external raw32 public key to the same command (`--vsk-bundle` and
+`--trusted-public-key`; use `--vsk-efi` for a non-default EFI path). The stager
+binds the key hash to the EFI trust anchor, re-verifies the copied bundle, and
+places the inputs under `EFI/26x86/VSK`. It still stops before EBS/VMX and makes
+no claim about macOS or physical-Mac boot.
+
+The OVMF input harness can also run the valid case in a visible QEMU window:
+
+```sh
+python3 sandbox/vsk/tools/verify_efi_inputs.py \
+  --bundle /path/to/signed-bundle \
+  --output /tmp/26x86-vsk-gui-run \
+  --gui
+```
+
+`--gui` selects QEMU's GTK display backend and intentionally runs one case so
+that validation does not open three windows. This is an EFI/VSK input diagnostic
+only: it does not load `iBoot`, start a macOS guest, or turn a target-27 label
+into Golden Gate boot evidence. Headless `--display none` remains the default
+for repeatable CI checks; `--display gtk|sdl` is available for an explicit
+single-case run. On WSL or a non-default QEMU installation, pass `--qemu`,
+`--ovmf-code` and `--ovmf-vars` explicitly (or set `QEMU_SYSTEM_X86_64`,
+`OVMF_CODE` and `OVMF_VARS`). The resulting report records the resolved QEMU
+version and SHA-256 hashes of both OVMF inputs so a visible run can be compared
+with a headless run without treating the window itself as boot evidence.
+
+An external lab run also exercised the Apple VMApple recovery path with a GTK
+build of QEMU 11.1.50. It used the unchanged macOS 27.0 (26A5425a) personalized
+`iBSS` input, a COW overlay over empty AUX/root fixtures, and the developer-only
+host bypass. The GTK window was created and the real firmware completed 172 DFU
+data blocks, reached `WAIT_RESET`, and acknowledged the USB reset. The saved
+report recorded `input_integrity: true`, `signature_acceptance_verified: false`,
+and `macos_boot_verified: false`. The host was Linux/x86_64 under WSL rather
+than a physical Apple Intel Mac, so this is recovery-protocol evidence only; it
+does not establish iBoot-to-XNU or Golden Gate user-space execution. A follow-up
+developer-only probe kept the device at the iBSS DFU identity (`05ac:1227`)
+after the reset, so no iBEC bulk endpoint was advertised and no iBEC/XNU claim
+was recorded. The harness intentionally stops there instead of fabricating
+signature acceptance or adding a release bypass.
+The sanitized result is retained in
+[`integration/vmapple-gui-recovery-report.json`](../integration/vmapple-gui-recovery-report.json).
 
 The prior Linux research directory includes useful original-image hashing,
 normal personalization and device experiments. It retains its historical CPU

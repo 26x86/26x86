@@ -1,0 +1,23 @@
+{
+  "schema": "26x86.vsk-efi-gui/1",
+  "recorded_at": "2026-09-06T02:54:32.0630613Z",
+  "evidence_path": "/tmp/26x86-goldengate-gui-report-014/report.json",
+  "target_major": 27,
+  "target_name": "Golden Gate",
+  "validation_level": "SIMULATED",
+  "passed": true,
+  "actual_efi_executed": true,
+  "display_backend": "gtk",
+  "gui_requested": true,
+  "qemu_path": "/usr/bin/qemu-system-x86_64",
+  "qemu_version": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+  "ovmf_code_sha256": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+  "ovmf_vars_template_sha256": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e",
+  "original_inputs_unchanged": true,
+  "exit_boot_services_called": false,
+  "boot_authorized": false,
+  "macos_boot_verified": false,
+  "physical_mac_verified": false,
+  "guest_profile": "arm64-conformance-v1 (macOS target label; iBoot/XNU not executed)",
+  "note": "GTK OVMF executed the 26x86 VSK EFI diagnostic. It did not execute iBoot, XNU, or a physical Mac."
+}

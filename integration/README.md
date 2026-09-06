@@ -27,3 +27,12 @@ The subsequently adopted VSK design is tracked by `vsk-spec.json` and
 OpenCore binaries and handoff receipt remain diagnostic evidence and do not
 incorporate a VSK kernel or provide VMX/VT-d isolation. VSK unit receipts must
 remain separate from the existing EFI and physical-Mac acceptance fields.
+
+The visible EFI check is `sandbox/vsk/tools/verify_efi_inputs.py --gui`. It
+executes the authored EFI under GTK OVMF and records QEMU/OVMF hashes in
+`vsk-efi-gui-report.json`, while keeping `boot_authorized`,
+`macos_boot_verified` and `physical_mac_verified` false. The GUI run is a
+reproducibility check for the EFI input boundary, not a Golden Gate or
+physical-Mac boot result. The separate GTK VMApple recovery observation is
+summarized in `vmapple-gui-recovery-report.json`; it ends at iBSS DFU because
+signature acceptance and iBEC transition were not verified.

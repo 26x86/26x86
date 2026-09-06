@@ -14,15 +14,20 @@ class VskBuildReceiptTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         original = Path(__file__).resolve().parent.parent / 'sandbox/vsk/build.py'
         (self.root / 'build.py').write_bytes(original.read_bytes())
-        for directory in ('src', 'tests', 'include'):
-            (self.root / directory).mkdir()
-        for name in ('boot', 'dmar', 'policy'):
-            (self.root / 'src' / f'vf_{name}.c').write_text('synthetic source fixture')
-            (self.root / 'tests' / f'test_{name}.c').write_text('synthetic test fixture')
-        (self.root / 'tests/test_cpu.c').write_text('synthetic CPU policy test fixture')
         spec = importlib.util.spec_from_file_location('vsk_build_receipt_fixture', self.root / 'build.py')
         self.module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(self.module)
+        for directory in ('src', 'tests', 'include'):
+            (self.root / directory).mkdir()
+        for name in self.module.REQUIRED_SOURCES:
+            (self.root / 'src' / name).write_text('synthetic source fixture')
+        for name in self.module.REQUIRED_TESTS:
+            (self.root / 'tests' / name).write_text('synthetic test fixture')
+        for name in self.module.CRYPTO_SOURCES:
+            path = self.root / 'crypto' / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text('synthetic crypto fixture')
+        (self.root / 'crypto/UPSTREAM.json').write_text('{"files":{}}')
 
     def failed_receipt(self):
         report = json.loads((self.root / 'build/report.json').read_text())

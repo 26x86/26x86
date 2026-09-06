@@ -81,7 +81,26 @@
     "screenshots": [
       "gui-overview-live.png",
       "gui-sandbox-live.png"
-    ]
+    ],
+    "qemu_efi_gui": {
+      "report": "vsk-efi-gui-report.json",
+      "passed": true,
+      "target_major": 27,
+      "display_backend": "gtk",
+      "actual_efi_executed": true,
+      "macos_boot_verified": false,
+      "physical_mac_verified": false
+    },
+    "vmapple_recovery_gui": {
+      "report": "vmapple-gui-recovery-report.json",
+      "passed": true,
+      "validation_level": "RECOVERY-PROTOCOL",
+      "target_major": 27,
+      "display_backend": "gtk",
+      "dfu_data_blocks": 172,
+      "signature_acceptance_verified": false,
+      "macos_boot_verified": false
+    }
   },
   "macos_26_boot_verified": false,
   "macos_27_boot_verified": false,

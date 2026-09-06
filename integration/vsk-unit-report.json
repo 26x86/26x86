@@ -22,6 +22,14 @@
       "hardware_verified": false
     },
     {
+      "test": "vsk-bundle",
+      "level": "UNIT",
+      "passed": true,
+      "checks": 4943,
+      "hardware_verified": false,
+      "boot_authorized": false
+    },
+    {
       "test": "cpu",
       "level": "UNIT",
       "passed": true,
@@ -36,6 +44,23 @@
       "hardware_verified": false
     },
     {
+      "test": "efi-handoff",
+      "level": "UNIT",
+      "passed": true,
+      "checks": 28,
+      "hardware_verified": false,
+      "exit_boot_services_called": false
+    },
+    {
+      "test": "elf",
+      "level": "UNIT",
+      "passed": true,
+      "checks": 454,
+      "hardware_verified": false,
+      "own_compiled_native_execution": false,
+      "boot_authorized": false
+    },
+    {
       "test": "vsk-policy",
       "level": "UNIT",
       "passed": true,
@@ -45,20 +70,45 @@
   ],
   "compiler": "Ubuntu clang version 18.1.3 (1ubuntu1)",
   "source_sha256": {
-    "build.py": "ab2cdc203ba93a6b41be563e02b76d90276756a87212388532e31d083bf12b0e",
+    "build.py": "20beb69e97bd05b62d7156ac6eb8a4afef49bb83d00083a4e6e96bdbf8605b84",
+    "crypto/UPSTREAM.json": "46edb82b40219dd9ccdb8cd5d7c8ef09316f15c3487d6cd71bcb620b96759057",
+    "crypto/bearssl/LICENSE.txt": "771bf18c8633ea69ec9b07d2e604c4b99b7bef41b0f5ce6385d24df4448f61ca",
+    "crypto/bearssl/bearssl_hash.h": "adfe3039fe48962c7fd74a1031f6d9dde951fb12a6acdae65a39f4d8537d2ef9",
+    "crypto/bearssl/dec32be.c": "ebd7bf469655a9e4de4b3d1d01d4c54f19117def3e3b918242629c150979bd9c",
+    "crypto/bearssl/enc32be.c": "8090b5bd6959586e769814e9d3698ac1c454e31ee4dfd5a2b2eb95a805063ae4",
+    "crypto/bearssl/inner.h": "fa58e1eeb31e0e6ce8480e2dc7f37a885d2ded95cb2d881b97f79ff192c7bb51",
+    "crypto/bearssl/sha2small.c": "9e54f88610a5cc3adc92ab5a91cd21989695566d792a439c84ff176e5c6c0b0f",
+    "crypto/monocypher/LICENCE.md": "5f8360e4c06ddcc584bdb4b210c6af824c4bb301e6a9a521869b6d90795ca4b3",
+    "crypto/monocypher/monocypher-ed25519.c": "60fce3578fb00b00da96490653d993c4cb427b1e1be38183285c66e04d22cc18",
+    "crypto/monocypher/monocypher-ed25519.h": "abc4fad381879f5c29176ebe014b9189956b3dfe0a3e36459b6990bc57212380",
+    "crypto/monocypher/monocypher.c": "57eb914fc88136119bd41655cccb8c250048bf54d470540625186f8ab16f64be",
+    "crypto/monocypher/monocypher.h": "c494da712122da7ff679fdcf318a5317e84972b6c950fe9d896212947797facd",
+    "crypto/vectors/hashes.h": "9ae43a345eb4e23c70b543b5a988a86ba547430cca7f53644bd9d6cf58081e7a",
+    "crypto/vectors/rfc8032.h": "922de8649ababb4b76310145918b60f77bff9faa88ca6d9bee1b1c8fa3c9e8ce",
+    "crypto/vectors/rfc8032.json": "3c4c3ec87aef3e50b7854986c6318b869351a150c8029a6eb5cc704e0216d595",
     "include/vf_abi.h": "5064f990dfe6da50f06da7fd1e4a9ff642fcf9d69141e39babea680bcdaf0de8",
     "include/vf_boot.h": "805aa256b06299410084ca4c03cb0a5072373d3d784434783f24c4b52f43c5a5",
+    "include/vf_bundle.h": "e0fd914ea6bffabc085bd112022f58c11f0a5da83b6ae1173f5aa47044b01f78",
     "include/vf_dmar.h": "61c69715bf98ec679bd04724f80a1b6c072a7229f809fa36cd09314b45fbc348",
+    "include/vf_efi.h": "2b671b881427d853bec8f38d5cc52b3dd5eb83868c3af65cdb3cff7886a73a77",
+    "include/vf_elf.h": "5062bc6394b9190f69966fcdcec57fcabf102175112666f988fdacd77db6c2bf",
     "include/vf_policy.h": "61717d0025e174eca2c4d1ad3e87371dee8e83f0cfe66f2d3874802bcf6cc07f",
     "src/vf_boot.c": "2f2b3f042c4f75c022274aaa6a085c52e69f5ebba3c69d6df76b49cd5cb773a5",
+    "src/vf_bundle.c": "2761aa8f604157bed8511927023ee75fdd108abb1a21ed758214b9c5febb71b3",
     "src/vf_dmar.c": "f58861aafc34938c8165e7350876858f688acc44b51266a9b61b960443c18f39",
+    "src/vf_efi.c": "50c798db278aad61cb42e42c7b0492cb43c106506302a87284bfdf45d2fb3c99",
+    "src/vf_elf.c": "04f2b8165e99795a83493a8fb919c1003abef2f44794350765735f0af3b76ad3",
     "src/vf_policy.c": "3dd7aab6b20d0127cabc7eec1f4c6ddb1146a4427e591db81da1f6b7c126e8db",
+    "src/vf_runtime.c": "9d87b60c784897516592d42920bbee7cdf1f946cc198932ff54272908dfa7ec6",
     "tests/test_boot.c": "f098e4e191422cea18f0cc1e9b10c8c979c90074d38238d085b1324bd770b2b4",
+    "tests/test_bundle.c": "dfe8bdcf65022c444b2c01105688fa3100b9bea5750d7cf00431db07dd3caf8d",
     "tests/test_cpu.c": "270b73dd8a4b7f1d69e3038dda9f0d515f46df0e987291a50afca323fa40cea3",
     "tests/test_dmar.c": "c73b332a94800fe4864c94c29fa38d62a41174d0a21a8013efd1f62b8d6f6d0c",
+    "tests/test_efi.c": "274fbf77d2d145a7278cefb2427d3c18ba930d7ce7efe1197edc0a26d808a1b0",
+    "tests/test_elf.c": "b68b7f18096a14278ebd0c00d935eae25525b233550a8dc2f58e2744c47d9b2a",
     "tests/test_policy.c": "4690c10f7f450424c953bfa0a2a9dff26aca4e0e9e1dada3c103980da423388d"
   },
-  "root_policy_object_bytes": 14944,
-  "root_policy_object_sha256": "f079eaebd3dd5ed553da7cf73c04124e7bbcc2b341f7ed50f16d9027adbda790",
+  "root_policy_object_bytes": 124696,
+  "root_policy_object_sha256": "391313f0a100996c47ac54044a851169bc009580b4c4af78e1d3ffcb5944a4aa",
   "note": "Relocatable policy object size is not a linked kernel or resident-memory measurement."
 }

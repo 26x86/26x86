@@ -55,3 +55,8 @@ Surface Pro 6 i5-8250U / Tahoe 준비·검사와 macOS 루트 패치 경로:
 ## Apple Silicon Sandbox integration
 
 EFI-native AArch64 translation, AIC and iBoot integration for macOS 26/27 is in development. See [architecture and actual validation status](docs/APPLE_SILICON_SANDBOX.md) and the adopted [VSK isolation design and implementation](docs/VSK.md). VSK product admission is fixed to approved Intel Macs and requires VMX/EPT, VT-d and interrupt remapping. The existing EFI self-test is not a VSK kernel or macOS boot environment.
+
+The reproducible QEMU GUI commands and their result boundaries are documented
+in [QEMU Golden Gate GUI validation](docs/QEMU_GOLDEN_GATE_GUI.md). A visible
+QEMU window is diagnostic evidence only; it does not certify iBoot, XNU or
+physical-Mac boot.

@@ -432,11 +432,16 @@ def cmd_vsk(args: argparse.Namespace) -> int:
 
 
 def cmd_sandbox(args: argparse.Namespace) -> int:
-    from x86.sandbox import plan, prepare
+    from x86.sandbox import plan, prepare, prepare_vsk
     try:
         if args.config:
             from x86.sandbox_config import read
             result = read(args.config)
+        elif args.vsk_bundle or args.trusted_public_key or args.vsk_efi:
+            if not args.output or not args.vsk_bundle or not args.trusted_public_key:
+                raise ValueError("VSK staging requires --output, --vsk-bundle and --trusted-public-key")
+            result = prepare_vsk(args.target, args.output, args.vsk_bundle,
+                                 args.trusted_public_key, efi_path=args.vsk_efi)
         else:
             result = prepare(args.target, args.output) if args.output else plan(args.target)
     except (ValueError, OSError) as exc:
@@ -480,8 +485,11 @@ def build_parser() -> argparse.ArgumentParser:
     sandbox = subparsers.add_parser("sandbox", help="Apple Silicon Sandbox EFI status and self-test staging")
     sandbox.add_argument("--target", type=int, choices=[26, 27], default=26)
     sandbox_mode = sandbox.add_mutually_exclusive_group()
-    sandbox_mode.add_argument("--output", help="Stage EFI self-test into a new folder")
+    sandbox_mode.add_argument("--output", help="Stage EFI self-test or authenticated VSK inputs into a new folder")
     sandbox_mode.add_argument("--config", help="Validate OpenCore Sandbox config.plist without writes")
+    sandbox.add_argument("--vsk-bundle", help="Signed VSK bundle directory for authenticated staging")
+    sandbox.add_argument("--trusted-public-key", help="External raw32 VSK Ed25519 public key")
+    sandbox.add_argument("--vsk-efi", help="Production VSKBOOT.EFI path (defaults to the local build receipt)")
     sandbox.add_argument("--json", action="store_true")
     sandbox.set_defaults(handler=cmd_sandbox)
 
