@@ -54,6 +54,7 @@
     "get_macos_choices",
     "set_target_os",
     "get_patch_status",
+    "get_silicon_sandbox_demo",
     "get_status",
     "get_settings",
     "save_settings",
@@ -382,7 +383,11 @@
   function renderPatch(step) {
     if (state.appInfo?.execution?.is_sandbox) return `<h2>Apple Silicon Sandbox Mode</h2>
       <p class="lead">가상화용 모드입니다. Mellow.kext와 native EFI·루트 패치는 사용할 수 없습니다.</p>
-      <p>가상 GPU용 Mellow 런타임은 아직 제공되지 않습니다.</p>`;
+      <p>아래는 공개된 Apple Silicon 부트 체인 개념을 <strong>시뮬레이션</strong>한 것입니다. 실제 부팅도, 실제 QEMU·USB 실행도 아닙니다.</p>
+      <div class="actions">
+        <button type="button" class="btn secondary" id="action-silicon-demo">부트 체인 시뮬레이션 실행</button>
+      </div>
+      <pre class="patch-summary" id="silicon-demo"></pre>`;
     if (state.appInfo?.mellow_deployment === "efi") return `<h2>Mellow EFI 준비</h2>
       <p class="lead">선택한 EFI를 새 폴더로 복사하고 Mellow 진단 kext를 추가합니다.</p>
       <div class="patch-summary">${escapeHtml(state.patchSummary)}</div>

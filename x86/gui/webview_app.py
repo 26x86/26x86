@@ -52,6 +52,9 @@ class WebviewApi:
     def get_patch_status(self) -> dict[str, Any]:
         return self._bridge.get_patch_status()
 
+    def get_silicon_sandbox_demo(self) -> dict[str, Any]:
+        return self._bridge.get_silicon_sandbox_demo()
+
     def get_status(self) -> dict[str, Any]:
         return self._bridge.get_status()
 

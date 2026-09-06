@@ -220,9 +220,9 @@ class Constants:
         ## OpenCore Settings
         self.opencore_debug: bool = False # Enable OpenCore debug
         self.boot_efi:       bool = False # Use EFI/BOOT/BOOTx64.efi vs boot.efi bootstrap
-        self.showpicker:     bool = True  # Show or Hide OpenCore's Boot Picker
+        self.showpicker:     bool = False  # Show or Hide OpenCore's Boot Picker (hidden by default; Option/Alt during the timeout window reveals it, via PollAppleHotKeys)
         self.nvram_write:    bool = True  # Write to hardware NVRAM
-        self.oc_timeout:      int = 5  #    Set OpenCore timeout
+        self.oc_timeout:      int = 2  #    Set OpenCore timeout (seconds to poll for Option/Alt before auto-booting the default entry)
 
         ## Kext Settings
         self.kext_debug:  bool = False  # Enables Lilu debug and DebugEnhancer

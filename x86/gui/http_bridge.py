@@ -27,6 +27,7 @@ API_METHODS = frozenset(
         "get_macos_choices",
         "set_target_os",
         "get_patch_status",
+        "get_silicon_sandbox_demo",
         "get_status",
         "get_settings",
         "save_settings",

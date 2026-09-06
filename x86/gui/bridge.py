@@ -245,13 +245,31 @@ class WizardBridge:
         self._settings.record_detect(payload["model"], extra=detect_extra)
         return {"ok": True, "detect": payload}
 
+    def get_silicon_sandbox_demo(self) -> dict[str, Any]:
+        """Simulated Apple Silicon boot-chain / DFU trace — never a real boot.
+
+        See x86.silicon for the safety contract (simulated/real_boot_verified/
+        xnu_executed). This never touches a subprocess, USB device, or hypervisor.
+        """
+        try:
+            from x86.silicon.session import run_install_session
+            return {"ok": True, "demo": run_install_session().as_dict()}
+        except Exception as exc:
+            logging.exception("silicon sandbox demo failed")
+            return {"ok": False, "error": errors.user_message(exc)}
+
     def get_patch_status(self) -> dict[str, Any]:
         try:
             context, deployment, payload, efi = self._configuration()
             if context.is_sandbox:
+                demo = self.get_silicon_sandbox_demo()
+                summary = "Apple Silicon Sandbox Mode · native kext 및 루트 패치 사용 불가."
+                if demo.get("ok"):
+                    summary += " ⚠ 시뮬레이션 — 실제 macOS 부팅이 아닙니다 (SIMULATED — NOT A REAL macOS BOOT)."
                 return {"ok": True, "execution": context.as_dict(),
-                    "patch": {"can_patch": False, "can_unpatch": False, "patches_available": []},
-                    "summary": "Apple Silicon Sandbox Mode · native kext 및 루트 패치 사용 불가. 가상 GPU 런타임은 아직 제공되지 않습니다."}
+                    "patch": {"can_patch": False, "can_unpatch": False, "patches_available": [],
+                              "silicon_demo": demo.get("demo")},
+                    "summary": summary}
             if deployment == "root-patch":
                 from x86.patch.root import preflight
                 report = preflight(self._hardware_profile(), constants=self._constants())

@@ -141,6 +141,10 @@ def launch_qt_chromium_wizard(*, advanced: bool = False) -> None:
             return api.get_patch_status()
 
         @Slot(result="QVariant")
+        def get_silicon_sandbox_demo(self):
+            return api.get_silicon_sandbox_demo()
+
+        @Slot(result="QVariant")
         def get_status(self):
             return api.get_status()
 
@@ -254,7 +258,7 @@ _BRIDGE_INJECT_JS = """
   function promisifyBridge(bridge) {
     var names = [
       "get_app_info", "get_steps", "detect", "get_macos_choices", "set_target_os",
-      "get_patch_status", "get_status", "get_settings", "save_settings", "prepare_mellow_efi", "prepare_mellow_root_efi",
+      "get_patch_status", "get_silicon_sandbox_demo", "get_status", "get_settings", "save_settings", "prepare_mellow_efi", "prepare_mellow_root_efi",
       "host_can_build", "launch_wx_action", "reveal_log", "open_guide"
     ];
     var wrapped = { __qtWrapped: true };

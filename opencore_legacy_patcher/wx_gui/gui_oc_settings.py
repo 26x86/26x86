@@ -445,12 +445,12 @@ class OCSettingsFrame(wx.Frame):
                     "value": self.constants.showpicker,
                     "variable": "showpicker",
                     "description": [
-                        "When disabled, users can hold ESC to",
-                        "show picker in the firmware.",
-                        "Disable this to not show the",
-                        "boot picker every time you",
-                        "boot into OpenCore"
-                        
+                        "When disabled, OpenCore boots the",
+                        "default entry automatically and",
+                        "stays silent unless you hold",
+                        "Option (Alt) or Esc during the",
+                        "timeout window below, which brings",
+                        "up the picker (Recovery included)."
                     ],
                 },
                 "Boot Picker Timeout": {
@@ -459,7 +459,9 @@ class OCSettingsFrame(wx.Frame):
                     "variable": "oc_timeout",
                     "description": [
                         "Timeout before boot picker selects default",
-                        "entry in seconds.",
+                        "entry in seconds. Also how long OpenCore",
+                        "polls for Option/Alt when the picker is",
+                        "hidden above.",
                         "Set to 0 for no timeout.",
                     ],
 

@@ -402,13 +402,17 @@ class BuildMiscellaneous:
             if obj: obj["Enabled"] = True
 
         self.config.setdefault("Misc", {}).setdefault("Boot", {})
+        # ShowPicker/Timeout are written unconditionally (not only when they diverge from a
+        # hardcoded prior default) so re-enabling the picker via GUI/CLI actually takes effect
+        # against the template's own default, instead of silently no-opping.
         if self.constants.showpicker is False:
-            logging.info("- Hiding OpenCore picker")
-            self.config["Misc"]["Boot"]["ShowPicker"] = False
+            logging.info("- Hiding OpenCore picker (Option/Alt during the timeout window reveals it)")
+        else:
+            logging.info("- Showing OpenCore picker on every boot")
+        self.config["Misc"]["Boot"]["ShowPicker"] = self.constants.showpicker
 
-        if self.constants.oc_timeout != 5:
-            logging.info(f"- Setting custom OpenCore picker timeout to {self.constants.oc_timeout} seconds")
-            self.config["Misc"]["Boot"]["Timeout"] = self.constants.oc_timeout
+        logging.info(f"- Setting OpenCore picker timeout to {self.constants.oc_timeout} seconds")
+        self.config["Misc"]["Boot"]["Timeout"] = self.constants.oc_timeout
 
         if self.constants.vault is True:
             logging.info("- Setting Vault configuration")
