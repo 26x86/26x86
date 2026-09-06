@@ -12,9 +12,12 @@ VMApple의 MachineType은 `iBoot(AArch64)`로 고정되어 macOS 게스트에만
 정책 검증 단계에서 DFU 업로드 전에 거부됩니다. 이 계층의 복구 범위는
 macOS용 DFU/IPSW이고 Local Recovery 기본 파일명은 `_default.ipsw`입니다.
 
-둘 다 `macos_boot_verified`를 `false`로 유지합니다. OVMF 테스트는 iBoot나
-XNU를 로드하지 않고, VMApple 테스트는 Apple 복구 프로토콜까지의 관찰만
-기록합니다.
+OVMF 테스트는 항상 `macos_boot_verified=false`입니다. VMApple은 이제
+`--boot-selection macos`에서 복구 전송을 건너뛰고 AVPBooter의 정상 macOS
+항목을 직접 관찰합니다. 다만 `Darwin Kernel Version`과 `launchd`,
+`loginwindow`, `WindowServer` UART 증거가 모두 확인될 때만
+`macos_boot_verified=true`가 되며, Recovery 선택은 기존처럼 복구
+프로토콜 경계만 기록합니다.
 
 ## qemu-t8030에서 가져온 Apple Silicon 장치 프로필
 
@@ -95,7 +98,10 @@ python3 sandbox/vsk/tools/verify_efi_inputs.py \
 ## VMApple 복구 창(연구용)
 
 VMApple은 OVMF와 다른 AArch64 머신입니다. 별도로 빌드한 연구용 QEMU가
-`vmapple` 머신과 GTK를 제공할 때만 다음 형태로 실행합니다.
+`vmapple` 머신을 제공해야 합니다. 표시 백엔드는 `auto`를 기본으로 사용하며,
+native Apple Silicon/macOS에서는 Cocoa를 선택하고 Linux/WSL 연구 빌드에서는
+QEMU가 광고한 headless 백엔드(`none` 등)를 선택합니다. GTK/SDL은 해당 빌드가
+실제로 광고할 때만 명시적으로 선택할 수 있습니다.
 
 ```sh
 qemu-system-aarch64 \
@@ -106,11 +112,16 @@ qemu-system-aarch64 \
   -bios /path/to/AVPBooter.vmapple2.bin \
   -global vmapple-cfg.soc_name='Apple M1 (Virtual)' \
   -global vmapple-cfg.model=VM0001 \
-  -display gtk -monitor none -nic none -no-reboot \
-  -global vmapple-bdif.allow-block-writes=on \
+  -display none -monitor none -nic none -no-reboot \
   -blockdev '<COW overlay over an immutable AUX fixture>' \
   -blockdev '<COW overlay over an immutable root fixture>'
 ```
+
+`allow-block-writes`는 26x86 write-enabled BDIF 패치가 `-device
+vmapple-bdif,help`에서 광고할 때만 런너가 자동으로 추가합니다. upstream BDIF가
+그 속성을 제공하지 않으면 알 수 없는 `-global`을 전달하지 않고 읽기/부팅
+관찰을 계속하며, 보고서의 `backend.bdif_block_writes=false`로 기능 차이를
+명시합니다.
 
 복구 입력은 반드시 원본 파일을 별도로 해시하고, AUX/root는 빈 raw 기반의
 COW overlay를 사용합니다. 원본 IPSW, 기존 ESP 또는 물리 디스크를 QEMU의
@@ -124,7 +135,7 @@ COW overlay를 사용합니다. 원본 IPSW, 기존 ESP 또는 물리 디스크�
 26x86 GUI의 `Apple Silicon Sandbox` 단계에서 같은 런너를 사용할 수 있습니다.
 `VMApple QEMU`, `qemu-img`, `AVPBooter`, 공식 BuildManifest, TSS 요청 도구,
 변경하지 않은 원본 iBSS/iBEC, AUX/root 원본과 새 출력 폴더를 입력하고
-`GTK VM 창 열기`를 누르면 로컬 브리지의 `launch_vmapple`이 실행됩니다.
+`VM 창 열기`를 누르면 로컬 브리지의 `launch_vmapple`이 실행됩니다.
 GUI 기본 경로는 현재 USB nonce를 읽어 Apple TSS에 요청하고 새 출력 폴더에만
 개인화 IMG4를 만듭니다. Windows GUI에서 QEMU나 입력이 `/home/...` 같은 WSL
 경로이면 브리지는 셸을 거치지 않고 `wsl.exe --cd ... --exec python3 -m x86
@@ -138,13 +149,34 @@ vmapple run --live-personalize --research-only --json`을 시작하며 WSLg의 G
 합니다. 피커에서 `macOS Recovery · _default.ipsw`를 선택하면 `Recovery VM 창
 열기`가 활성화되고, 브리지는 실제 DOM 입력 기록을
 `--boot-picker-trigger alt-enter`로 worker에 전달합니다. 시간 안에 Alt를
-누르지 않으면 정상 macOS 항목이 선택되며, 현재 VMApple 엔진이 직접 macOS
-부팅을 인증하지 않으므로 Recovery 실행은 다시 피커를 열어야 합니다.
+누르지 않으면 정상 macOS 항목이 선택됩니다. 직접 macOS 선택에서는
+iBSS/iBEC 개인화나 DFU 전송을 수행하지 않고, AVPBooter가 프로비저닝된
+AUX/root에서 부팅하는 동안 UART 증거를 관찰합니다. Recovery 선택만
+iBSS/iBEC 입력과 DFU/IPSW 체인을 요구합니다.
+
+직접 macOS 부팅은 다음처럼 호출할 수 있습니다. `--ibss`, `--ibec`,
+`--live-personalize`, `--restore-chain`은 이 모드에서 사용하지 않습니다.
+
+```sh
+python3 -m x86 vmapple run --target 27 --display auto \
+  --qemu /path/to/qemu-system-aarch64 \
+  --qemu-img /usr/bin/qemu-img \
+  --firmware /System/Library/Frameworks/Virtualization.framework/Resources/AVPBooter.vmapple2.bin \
+  --aux /path/to/provisioned-aux.raw --root /path/to/provisioned-root.raw \
+  --output /tmp/26x86-goldengate-direct --boot-selection macos \
+  --boot-delay 2 --duration 600 --research-only --json
+```
+
+직접 실행의 `launch.json`에는 `direct_boot.dfu_entered=false`와 각 UART
+marker의 절대 offset이 남습니다. marker가 없으면 런너는
+`direct-boot-evidence-timeout`으로 종료하고 `macos_boot_verified=false`를
+유지합니다. AUX/root가 zero-filled이거나 hardware-model provisioning
+receipt가 없다는 사실은 별도의 storage blocker로 함께 기록됩니다.
 
 동일한 경로는 CLI에서도 다음처럼 호출할 수 있습니다.
 
 ```sh
-python3 -m x86 vmapple run --target 27 --display gtk \
+python3 -m x86 vmapple run --target 27 --display auto \
   --qemu /home/developer/.../qemu-system-aarch64 \
   --qemu-img /usr/bin/qemu-img \
   --firmware /path/to/AVPBooter.vmapple2.bin \

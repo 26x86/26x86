@@ -14,7 +14,11 @@ not install anything on a boot disk or upload changes to GitHub.
 The OpenCore source patch supplies the config parser and EFI handoff. Patcher
 Support and Metallib Support add explicit artifact identity receipt modes.
 These receipts describe exact OS/build/architecture/compiler identity; they
-do not certify unimplemented macOS 27 adapters or Metal acceleration.
+do not certify unimplemented macOS 27 adapters or Metal acceleration. The committed
+`integration/opencore/handoff-report.json` is a historical C-only handoff receipt
+whose `EFI_UNSUPPORTED` result predates the Phase-1 Rust micro-preOS; generate a
+fresh report with `scripts/verify-sandbox-opencore.py --diagnostic-fixture` when
+testing the current linked EFI artifact.
 
 Native EFI engine sources live in `sandbox/efi`, the AIC device model in
 `sandbox/devices`, and the imported internal platform research in

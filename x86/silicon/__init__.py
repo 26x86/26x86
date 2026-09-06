@@ -1,9 +1,11 @@
 """
-x86.silicon — Apple Silicon boot-chain / DFU handshake SIMULATION, never a real boot.
+x86.silicon — Apple Silicon boot-chain simulation plus an explicit VMApple direct
+macOS adapter.
 
-This package exists to answer one request honestly: "show a Golden Gate (macOS 27)
-install progressing" from inside apple-silicon-sandbox mode, without pretending that
-is achievable. It is not.
+The default ``session``/``hosts`` commands remain deterministic simulations and
+never claim a real boot.  The separate ``direct`` command delegates to the real
+VMApple runner when the caller supplies an Apple Silicon/macOS HVF environment and
+unchanged AVPBooter/AUX/root inputs.
 
 Two facts constrain everything in this package:
 
@@ -13,15 +15,15 @@ Two facts constrain everything in this package:
    iPhones/iPads for iOS — macOS has never run on that silicon. QEMU's real
    ``vmapple`` machine type emulates the ABI Apple's Virtualization.framework exposes
    to a *Linux* guest, not a way to boot macOS as a QEMU guest.
-2. ``x86.execution``'s ``apple-silicon-sandbox`` mode has a strict, tested contract:
-   it never loads a kext, patches a volume, starts a VM, or reads settings from disk.
-   This package must stay additive to that contract, never wired into
-   ``resolve_execution()``, and must never spawn a real subprocess/hypervisor.
+2. ``x86.execution``'s ``apple-silicon-sandbox`` mode retains its strict, tested
+   simulation contract.  The explicit ``x86.silicon direct`` command is not wired
+   into that default mode; it is a separately audited user-space VMApple entry.
 
-Given both constraints, every module here is pure Python, deterministic, and zero-I/O:
-data models of the Apple Silicon boot chain (``boot_chain``) and a DFU-like recovery
-handshake (``dfu_handshake``), composed by ``session.run_install_session()`` into a
-stage-by-stage trace that is structurally prevented from claiming a real boot
+Given both constraints, the default simulation modules are pure Python,
+deterministic, and zero-I/O: data models of the Apple Silicon boot chain
+(``boot_chain``) and a DFU-like recovery handshake (``dfu_handshake``), composed
+by ``session.run_install_session()`` into a stage-by-stage trace that is
+structurally prevented from claiming a real boot
 (``InstallSessionResult.simulated`` is always ``True``; ``real_boot_verified`` and
 ``xnu_executed`` are always ``False`` — computed properties, not settable fields).
 
@@ -32,6 +34,7 @@ DFU USB handshake shape) informs the *naming and shape* of the simulated stages 
 Entry points:
     python -m x86.silicon session [--host ID] [--json]
     python -m x86.silicon hosts [--json]
+    python -m x86.silicon direct --firmware ... --aux ... --root ... --research-only
     python -m x86.silicon.validation [--gates-only] [--quiet]
 """
 

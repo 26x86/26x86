@@ -662,7 +662,7 @@ def build_parser() -> argparse.ArgumentParser:
     vmapple_inspect_storage.add_argument("--json", action="store_true")
     vmapple_inspect_storage.set_defaults(handler=cmd_vmapple)
     vmapple_run = vmapple_actions.add_parser(
-        "run", help="Launch VMApple, upload iBSS, and record the real DFU boundary"
+        "run", help="Launch VMApple direct macOS or Recovery mode and record observed boot boundaries"
     )
     vmapple_run.add_argument("--target", type=int, choices=[26, 27], default=27)
     vmapple_run.add_argument("--qemu", default=os.environ.get("X86_VMAPLE_QEMU"))
@@ -673,7 +673,10 @@ def build_parser() -> argparse.ArgumentParser:
     vmapple_run.add_argument("--aux", default=os.environ.get("X86_VMAPLE_AUX", ""))
     vmapple_run.add_argument("--root", default=os.environ.get("X86_VMAPLE_ROOT", ""))
     vmapple_run.add_argument("--output", default=os.environ.get("X86_VMAPLE_OUTPUT"))
-    vmapple_run.add_argument("--display", choices=["gtk", "sdl"], default="gtk")
+    vmapple_run.add_argument(
+        "--display", choices=["auto", "gtk", "sdl", "cocoa", "none", "dbus"], default="auto",
+        help="Display backend; auto selects Cocoa on native Apple Silicon and headless on research hosts",
+    )
     vmapple_run.add_argument("--uuid", type=lambda value: int(value, 0), default=0)
     vmapple_run.add_argument("--aux-offset", type=lambda value: int(value, 0), default=0)
     vmapple_run.add_argument("--memory-mib", type=int, default=4096)
@@ -725,7 +728,7 @@ def build_parser() -> argparse.ArgumentParser:
                              help="macOS Local Recovery image name")
     vmapple_run.add_argument(
         "--boot-selection", choices=["macos", "recovery"], default="recovery",
-        help="BootPicker entry to execute after the two-second gate (recovery is the verified path)",
+        help="BootPicker entry after the two-second gate (macos uses provisioned AUX/root; recovery uploads iBSS)",
     )
     vmapple_run.add_argument(
         "--boot-delay", type=float, default=2.0,

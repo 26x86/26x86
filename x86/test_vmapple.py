@@ -238,6 +238,181 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertIn("vmapple-cfg.optional-rpc-unavailable=on", command)
         self.assertTrue(any("enable=vmapple_optional_rpc_*,file=" in item for item in command))
 
+    def test_direct_macos_command_can_select_native_hvf_on_arm_mac(self) -> None:
+        from x86.vmapple import Executable, VMappleConfig, _command_for
+
+        class EmptyStorage:
+            def arguments(self, executable, **kwargs):
+                return []
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            firmware = root / "AVPBooter.bin"
+            firmware.write_bytes(b"firmware")
+            config = VMappleConfig(
+                target_major=27, qemu="qemu", firmware=str(firmware), ibss="",
+                aux="aux", root="root", output=str(root), research_only=True,
+                boot_selection="macos",
+            )
+            with patch("x86.vmapple._direct_macos_hvf_host", return_value=True):
+                command = _command_for(config, Executable("qemu-system-aarch64"), EmptyStorage(),
+                                       "/tmp/vmapple.sock", root)
+        self.assertIn("vmapple,uuid=0", command)
+        self.assertIn("hvf", command)
+        self.assertIn("host", command)
+        self.assertNotIn("research-headless=on", command)
+        self.assertNotIn("vmapple-bdif.usbdev=vusb", command)
+        self.assertFalse(any(item.startswith("socket,id=vusb") for item in command))
+
+    def test_direct_macos_observer_requires_xnu_and_userspace_evidence(self) -> None:
+        from x86.vmapple import _observe_direct_macos_boot
+
+        class ExitedProcess:
+            def poll(self):
+                return 0
+
+        with tempfile.TemporaryDirectory() as directory:
+            serial = Path(directory) / "serial.log"
+            serial.write_bytes(
+                b"iBoot direct entry\n"
+                b"Darwin Kernel Version 27.0: root device\n"
+                b"launchd: completed\nWindowServer ready\n"
+            )
+            result = _observe_direct_macos_boot(serial, 1.0, ExitedProcess())
+        self.assertTrue(result["xnu_executed"])
+        self.assertTrue(result["macos_userspace_reached"])
+        self.assertTrue(result["macos_boot_verified"])
+        self.assertIsNone(result["direct_boot_blocker"])
+        self.assertGreaterEqual(len(result["observed_markers"]["xnu"]), 1)
+        self.assertGreaterEqual(len(result["observed_markers"]["userspace"]), 1)
+
+    def test_direct_macos_observer_keeps_missing_xnu_fail_closed(self) -> None:
+        from x86.vmapple import _observe_direct_macos_boot
+
+        class ExitedProcess:
+            def poll(self):
+                return 1
+
+        with tempfile.TemporaryDirectory() as directory:
+            serial = Path(directory) / "serial.log"
+            serial.write_bytes(b"AVPBooter started\n")
+            result = _observe_direct_macos_boot(serial, 1.0, ExitedProcess())
+        self.assertFalse(result["xnu_executed"])
+        self.assertFalse(result["macos_boot_verified"])
+        self.assertIn("Darwin/XNU", result["direct_boot_blocker"])
+
+    def test_direct_macos_validation_does_not_require_ibss(self) -> None:
+        from x86.vmapple import Executable, MACOS_ENTRY_ID, VMappleConfig
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            firmware = root / "AVPBooter.bin"
+            aux = root / "aux.raw"
+            disk = root / "root.raw"
+            firmware.write_bytes(b"firmware")
+            aux.write_bytes(b"A" * 512)
+            disk.write_bytes(b"R" * 512)
+            with patch(
+                "x86.vmapple._resolve_executable",
+                side_effect=[Executable("qemu-system-aarch64"), Executable("qemu-img")],
+            ):
+                config = VMappleConfig(
+                    target_major=27,
+                    qemu=None,
+                    firmware=str(firmware),
+                    ibss="",
+                    aux=str(aux),
+                    root=str(disk),
+                    research_only=True,
+                    boot_selection=MACOS_ENTRY_ID,
+                )
+                qemu, qemu_img, paths = config.validate()
+        self.assertEqual(qemu.program, "qemu-system-aarch64")
+        self.assertEqual(qemu_img.program, "qemu-img")
+        self.assertNotIn("ibss", paths)
+
+    def test_direct_macos_rejects_recovery_personalization(self) -> None:
+        from x86.vmapple import VMappleConfig, MACOS_ENTRY_ID
+
+        config = VMappleConfig(
+            target_major=27,
+            qemu=None,
+            firmware="missing",
+            ibss="missing",
+            aux="missing",
+            root="missing",
+            research_only=True,
+            boot_selection=MACOS_ENTRY_ID,
+            live_personalize=True,
+        )
+        with self.assertRaisesRegex(ValueError, "recovery-only"):
+            config.validate()
+
+    def test_direct_macos_host_report_never_confuses_tcg_with_hvf(self) -> None:
+        from x86.vmapple import direct_macos_host_report
+
+        report = direct_macos_host_report()
+        self.assertIn("apple_silicon_macos", report)
+        self.assertTrue(report["hvf_required"])
+        if not report["apple_silicon_macos"]:
+            self.assertFalse(report["direct_macos_ready"])
+            self.assertTrue(report["blockers"])
+
+    def test_auto_display_is_headless_on_non_native_host(self) -> None:
+        from x86.vmapple import _effective_display_backend
+
+        with patch("x86.vmapple._direct_macos_hvf_host", return_value=False):
+            self.assertEqual(
+                _effective_display_backend("auto", direct_macos=True, available=["none", "dbus"]),
+                "none",
+            )
+
+    def test_auto_display_prefers_cocoa_on_native_arm_mac(self) -> None:
+        from x86.vmapple import _effective_display_backend
+
+        with patch("x86.vmapple._direct_macos_hvf_host", return_value=True):
+            self.assertEqual(
+                _effective_display_backend("auto", direct_macos=True, available=["cocoa", "none"]),
+                "cocoa",
+            )
+
+    def test_unpatched_qemu_command_omits_unknown_bdif_write_property(self) -> None:
+        from x86.vmapple import Executable, VMappleConfig, _command_for
+
+        class EmptyStorage:
+            def arguments(self, executable, **kwargs):
+                self.kwargs = kwargs
+                return []
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            firmware = root / "AVPBooter.bin"
+            firmware.write_bytes(b"firmware")
+            storage = EmptyStorage()
+            config = VMappleConfig(
+                target_major=27,
+                qemu="qemu",
+                firmware=str(firmware),
+                ibss="",
+                aux="aux",
+                root="root",
+                output=str(root),
+                research_only=True,
+                boot_selection="macos",
+                display="auto",
+            )
+            command = _command_for(
+                config,
+                Executable("qemu-system-aarch64"),
+                storage,
+                "/tmp/vmapple.sock",
+                root,
+                bdif_block_writes=False,
+            )
+        self.assertFalse(storage.kwargs["allow_bdif_writes"])
+        self.assertNotIn("vmapple-bdif.allow-block-writes=on", command)
+        self.assertIn("none", command)
+
     def test_bridge_rejects_native_mode_and_unsafe_launch(self) -> None:
         from x86.gui.bridge import WizardBridge
 
@@ -297,6 +472,34 @@ class VMappleOfflineTest(unittest.TestCase):
         self.assertIn("2.0", command)
         self.assertIn("--boot-picker-trigger", command)
         self.assertIn("runner-default-recovery", command)
+
+    def test_bridge_direct_macos_worker_does_not_require_ibss(self) -> None:
+        from x86.gui.bridge import WizardBridge
+
+        bridge = WizardBridge()
+        bridge._settings.read = lambda key, default=None: "sandbox"  # type: ignore[method-assign]
+        config = {
+            "qemu": "C:/tools/qemu-system-aarch64.exe",
+            "qemu_img": "C:/tools/qemu-img.exe",
+            "firmware": "C:/assets/AVPBooter.bin",
+            "aux": "C:/assets/aux.raw",
+            "root": "C:/assets/root.raw",
+            "output": "C:/runs/vmapple-direct",
+            "target_major": 27,
+            "display": "gtk",
+            "research_only": True,
+            "boot_selection": "macos",
+        }
+        fake_process = type("Process", (), {"pid": 2345})()
+        with patch("x86.gui.bridge.is_windows", return_value=False), patch(
+            "x86.gui.bridge.subprocess.Popen", return_value=fake_process
+        ) as popen:
+            result = bridge.launch_vmapple(config)
+        self.assertTrue(result["ok"])
+        command = popen.call_args.args[0]
+        self.assertIn("--boot-selection", command)
+        self.assertIn("macos", command)
+        self.assertNotIn("--ibss", command)
 
     def test_bridge_reexecs_linux_qemu_in_wslg(self) -> None:
         if os.name != "nt":

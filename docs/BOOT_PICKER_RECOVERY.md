@@ -42,11 +42,14 @@ Windows 또는 macOS GUI의 `Apple Silicon Sandbox` 단계는
    받으면 상태가 `picker`로 바뀝니다.
 3. `macOS Recovery · _default.ipsw`를 클릭하거나 아래 화살표 후 Enter를
    누르면 `selected`가 되고, 선택 결과와 입력 시각이 브리지에 보존됩니다.
-4. `Recovery VM 창 열기`는 이 선택 결과를 `--boot-selection recovery`와
-   `--boot-picker-trigger alt-enter`로 VMApple worker에 전달합니다.
-5. worker는 QEMU가 복구 소켓을 연 뒤 2초 게이트를 완료하고 나서만 iBSS
-   DFU 전송을 시작합니다. reset 뒤 실제 USB descriptor에 bulk OUT endpoint
-   4가 나타나지 않으면 `transition-blocked`로 멈춥니다.
+4. `Recovery VM 창 열기`는 Recovery 선택 결과를 `--boot-selection recovery`와
+   `--boot-picker-trigger alt-enter`로 VMApple worker에 전달합니다. 일반
+   macOS 선택은 `--boot-selection macos`로 직접 전달됩니다.
+5. Recovery worker는 QEMU가 복구 소켓을 연 뒤 2초 게이트를 완료하고 나서만
+   iBSS DFU 전송을 시작합니다. 직접 macOS worker는 DFU/복구 전송을 건너뛰고
+   AVPBooter의 AUX/root 부팅을 관찰합니다. Recovery reset 뒤 실제 USB
+   descriptor에 bulk OUT endpoint 4가 나타나지 않으면 `transition-blocked`로
+   멈춥니다.
 
 상태 머신의 입력 이벤트는 `get_boot_picker_status`, `start_boot_picker`,
 `tick_boot_picker`, `boot_picker_key`, `select_boot_entry` HTTP/pywebview
@@ -79,6 +82,13 @@ restore role을 전송하고 pre-boot 알림의 실제 `0200` STALL을 기록했
 장치가 없으므로 그래픽 UI도 검증할 수 없습니다. 상세 결과는
 [`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json)에
 고정되어 있습니다.
+
+직접 macOS 경로에서는 이 복구 판정표를 재사용하지 않습니다. 런너는
+`Darwin Kernel Version` 또는 `Darwin Kernel`을 XNU 실행 증거로, `launchd`,
+`loginwindow`, `WindowServer`를 macOS userspace 증거로 각각 기록하고 두
+종류가 모두 있을 때만 `macos_boot_verified=true`를 설정합니다. 증거가
+없으면 `direct-boot-evidence-timeout`으로 종료하며, 설치 완료
+(`installation_verified`)와 Apple 하드웨어 인증은 별도로 `false`입니다.
 
 ## 구성 예시
 

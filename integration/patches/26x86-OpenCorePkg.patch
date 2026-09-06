@@ -164,7 +164,7 @@ new file mode 100644
 index 0000000..64e60ad
 --- /dev/null
 +++ b/Docs/Sandbox.md
-@@ -0,0 +1,176 @@
+@@ -0,0 +1,204 @@
 +# Native Apple Silicon Sandbox integration
 +
 +This change belongs to the EFI loader and configuration layers. It selects a
@@ -256,10 +256,12 @@ index 0000000..64e60ad
 +[Loaded Image protocol](https://uefi.org/specs/UEFI/2.9_A/09_Protocols_EFI_Loaded_Image.html)
 +and [image services](https://uefi.org/specs/UEFI/2.10_A/07_Services_Boot_Services.html).
 +
-+The current engine returns **EFI_UNSUPPORTED** for the configured iBoot/AIC
-+platform runtime. CPU subset/JIT or AIC model tests are separate acceptance
-+results. An image load or return does not establish original iBoot execution,
-+macOS boot, a supported device tree, display acceleration, or native Mac support.
++The Phase-1 engine validates the configured handoff but does not open or
++execute the iBoot input. It returns **EFI_SUCCESS** only after its bounded
++Rust/JIT diagnostic guest completes. CPU subset/JIT or AIC model tests are
++separate acceptance results. An image load or successful diagnostic return does
++not establish original iBoot execution, macOS boot, a supported device tree,
++display acceleration, or native Mac support.
 +Failure stays in the selected mode; it does not select a different OS silently.
 +
 +## Reproduce the build and parser tests
@@ -317,8 +319,34 @@ index 0000000..64e60ad
 +identity/path, invalid resource bounds, and oversized serialized XML.
 +`Tests/SandboxHandoff.plist` is a **synthetic test configuration**, with explicitly
 +synthetic identity and a `.fixture` input. It is not an Apple boot profile. It is
-+used only to check the OpenCore-to-engine handoff and expected unsupported status
-+under an x86 EFI firmware test environment.
++used only to check the OpenCore-to-engine handoff and the Phase-1 diagnostic
++`EFI_SUCCESS` return under an x86 EFI firmware test environment. The engine
++success is not guest-OS or Apple boot-chain success.
++
++The checked-in `integration/opencore/Sample.plist` deliberately keeps the
++Sandbox disabled and its ordinary Secure vault defaults. To run the handoff
++verifier without editing that source file, use its explicit synthetic-fixture
++mode:
++
++```sh
++python3 scripts/verify-sandbox-opencore.py \
++  --opencore integration/opencore/OpenCore.efi \
++  --bootstrap integration/opencore/BOOTX64.EFI \
++  --config integration/opencore/Sample.plist \
++  --diagnostic-fixture --require-caller-return \
++  --output /tmp/26x86-opencore-handoff
++```
++
++The option derives an enabled configuration with a synthetic identity, a
++read-only non-Apple fixture path, `Vault=Optional`, and diagnostic logging; it
++records both input and effective configuration hashes and never writes the
++source plist. Without this opt-in, the verifier uses the supplied configuration
++as-is and records a disabled or vault-protected sample as a configuration
++precondition failure rather than silently changing its meaning.
++The report is explicitly handoff-scoped: this OpenCore build may log its normal
++“Failed to boot” terminal message after the diagnostic engine returns, because
++no guest boot completion is claimed. That does not turn the verified
++`LoadImage`/`StartImage` and EFI return into an iBoot, XNU, or macOS result.
 +
 +`Tests/NativeSourceAudit.py` verifies the resolved native package path against
 +this checkout, hashes every C/header/assembly/build-description source (including

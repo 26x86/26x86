@@ -52,8 +52,26 @@ DFU_BLOCK_BYTES = 2048
 DFU_SUFFIX = bytes.fromhex("ffffffffac05000155464410")
 MAX_TRANSITION_ATTEMPTS = 240
 MAX_LOG_BYTES = 16 * 1024 * 1024
+DEFAULT_AVPBOOTER_PATH = Path(
+    "/System/Library/Frameworks/Virtualization.framework/Resources/AVPBooter.vmapple2.bin"
+)
+# ``auto`` is the safe default for a mixed Windows/WSL/Linux/macOS control
+# plane.  The actual QEMU backend may expose only ``none``/``dbus`` on a
+# headless research build, while a native macOS build normally exposes
+# ``cocoa``.  GTK/SDL remain explicit opt-in values for builds that actually
+# provide them; selecting a GUI name must never make the runner guess that a
+# display server exists.
+DISPLAY_BACKENDS = ("auto", "gtk", "sdl", "cocoa", "none", "dbus")
 STAGE1_PROMPT = b"Entering iBootStage1 recovery mode, starting command prompt"
 STAGE2_PROMPT = b"Entering iBootStage2 recovery mode, starting command prompt"
+# Direct macOS boot is a separate path from the DFU/IPSW recovery transport.
+# These markers are deliberately conservative: a Darwin banner proves that
+# XNU reached the UART, while a userspace marker is required before this
+# runner reports a completed macOS boot.  A QEMU exit, a display window, or an
+# iBoot acknowledgement alone is never promoted to a macOS claim.
+DIRECT_XNU_MARKERS = (b"Darwin Kernel Version", b"Darwin Kernel")
+DIRECT_USERSPACE_MARKERS = (b"launchd:", b"launchd ", b"loginwindow", b"WindowServer")
+DIRECT_INSTALLER_MARKERS = (b"macOS Utilities", b"Install macOS", b"RecoveryOS")
 # These values are the guest-facing VMApple metadata written by the QEMU
 # config device.  They are deliberately labelled virtual in every report:
 # metadata can make iBoot take the M1 personality path, but it cannot create
@@ -308,8 +326,104 @@ def _guest_path(path: Path, executable: Executable) -> str:
     return _to_wsl_path(path) if executable.is_wsl else str(path)
 
 
-def probe_backend(executable: Executable) -> dict[str, object]:
-    """Require the VMApple research machine without treating help as boot evidence."""
+def _direct_macos_hvf_host() -> bool:
+    """Return whether the host can use QEMU's native VMApple HVF path."""
+    return platform.system() == "Darwin" and platform.machine().lower() in {"arm64", "aarch64"}
+
+
+def direct_macos_host_report() -> dict[str, object]:
+    """Describe the host-side requirements for the real macOS entry.
+
+    The normal VMApple path is an Apple-Silicon/macOS + HVF path.  Linux/x86
+    TCG remains useful for the separately-scoped recovery protocol, but it is
+    not a substitute for the ARM-only Golden Gate entry and is never promoted
+    to a direct-boot claim.
+    """
+    system = platform.system()
+    machine = platform.machine().lower()
+    native_hvf = _direct_macos_hvf_host()
+    blockers: list[str] = []
+    if not native_hvf:
+        blockers.append(
+            "Direct macOS requires an Apple-Silicon macOS host with QEMU HVF; "
+            "the current host is recovery/TCG-only."
+        )
+    firmware = DEFAULT_AVPBOOTER_PATH if native_hvf else None
+    if firmware is not None and not firmware.is_file():
+        blockers.append(f"Virtualization.framework AVPBooter is missing: {firmware}")
+    return {
+        "system": system,
+        "architecture": machine,
+        "apple_silicon_macos": native_hvf,
+        "hvf_required": True,
+        "native_hvf_selected": native_hvf,
+        "default_avpbooter": str(firmware) if firmware is not None else None,
+        "default_avpbooter_present": bool(firmware and firmware.is_file()),
+        "blockers": blockers,
+        "direct_macos_ready": not blockers,
+    }
+
+
+def _available_display_backends(executable: Executable) -> list[str]:
+    """Return display backends advertised by this exact QEMU binary.
+
+    QEMU's ``-display help`` is a capability listing, not runtime evidence.
+    A failed help probe therefore yields an empty list and is recorded by the
+    caller; it does not make a firmware boot claim or silently select GTK.
+    """
+    try:
+        result = subprocess.run(
+            executable.command("-display", "help"),
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return []
+    if result.returncode:
+        return []
+    backends: list[str] = []
+    for line in result.stdout.splitlines():
+        value = line.strip().split(None, 1)[0] if line.strip() else ""
+        if value and value not in backends and value in DISPLAY_BACKENDS[1:]:
+            backends.append(value)
+    return backends
+
+
+def _effective_display_backend(
+    requested: str,
+    *,
+    direct_macos: bool,
+    available: list[str] | tuple[str, ...] | None = None,
+) -> str:
+    """Resolve the portable ``auto`` display request without probing a guest.
+
+    Native Apple-Silicon macOS prefers Cocoa.  Every non-native/research
+    launch prefers headless output because it is valid on WSL and on QEMU
+    builds with no GTK/SDL support.  If capability output is available, pick a
+    backend actually advertised by this binary; otherwise keep the platform
+    default and let QEMU produce an explicit error for an invalid build.
+    """
+    if requested != "auto":
+        return requested
+    candidates = ("cocoa", "none") if direct_macos and _direct_macos_hvf_host() else ("none", "dbus")
+    advertised = set(available or ())
+    if advertised:
+        for candidate in candidates:
+            if candidate in advertised:
+                return candidate
+    return candidates[0]
+
+
+def probe_backend(executable: Executable, *, direct_macos: bool = False) -> dict[str, object]:
+    """Require VMApple without treating capability help as boot evidence.
+
+    Recovery remains pinned to the bounded TCG research backend.  A direct
+    macOS selection on an Apple-Silicon macOS host is allowed to use HVF and
+    the backend's normal PV graphics path; every other host stays on the
+    explicit research-headless TCG path.
+    """
     version = subprocess.run(executable.command("--version"), capture_output=True,
                              text=True, timeout=15, check=False)
     machines = subprocess.run(executable.command("-machine", "help"), capture_output=True,
@@ -319,19 +433,45 @@ def probe_backend(executable: Executable) -> dict[str, object]:
     if version.returncode or machines.returncode or accelerators.returncode:
         raise ValueError("QEMU capability probe failed")
     machine_names = {line.split()[0] for line in machines.stdout.splitlines() if line.strip()}
-    if "vmapple" not in machine_names or "tcg" not in accelerators.stdout.split():
-        raise ValueError("QEMU must expose vmapple and TCG")
+    if "vmapple" not in machine_names:
+        raise ValueError("QEMU must expose vmapple")
+    accelerator_names = set(accelerators.stdout.split())
+    if not direct_macos and "tcg" not in accelerator_names:
+        raise ValueError("QEMU recovery backend must expose TCG")
+    if direct_macos and _direct_macos_hvf_host() and "hvf" not in accelerator_names:
+        raise ValueError("Direct macOS boot on Apple Silicon requires QEMU HVF")
     research = subprocess.run(executable.command("-machine", "vmapple,help"),
                               capture_output=True, text=True, timeout=15, check=False)
-    if research.returncode or "research-headless" not in research.stdout:
-        raise ValueError("QEMU VMApple backend does not advertise research-headless")
+    if research.returncode:
+        raise ValueError("QEMU VMApple backend capability probe failed")
+    if not direct_macos and "research-headless" not in research.stdout:
+        raise ValueError("QEMU VMApple recovery backend does not advertise research-headless")
+    research_headless = "research-headless" in research.stdout
+    research_graphics = "research-graphics" in research.stdout
+    bdif = subprocess.run(executable.command("-device", "vmapple-bdif,help"),
+                          capture_output=True, text=True, timeout=15, check=False)
+    bdif_block_writes = bool(
+        bdif.returncode == 0 and "allow-block-writes" in (bdif.stdout + bdif.stderr)
+    )
+    display_backends = _available_display_backends(executable)
     first_line = (version.stdout or version.stderr).splitlines()
     return {
         "executable": executable.program,
         "version": first_line[0] if first_line else "",
         "vmapple": True,
-        "tcg": True,
-        "research_headless": True,
+        "tcg": "tcg" in accelerator_names,
+        "hvf": "hvf" in accelerator_names,
+        "direct_macos": direct_macos,
+        "native_hvf_selected": bool(direct_macos and _direct_macos_hvf_host()),
+        "direct_host": direct_macos_host_report() if direct_macos else None,
+        "research_headless": research_headless,
+        "research_graphics": research_graphics,
+        "bdif_block_writes": bdif_block_writes,
+        "display_backends": display_backends,
+        "display_backend_requested": "auto",
+        "display_backend_effective": _effective_display_backend(
+            "auto", direct_macos=direct_macos, available=display_backends
+        ),
         "virtual_soc_name": VIRTUAL_SOC_NAME,
         "virtual_model": VIRTUAL_MODEL,
         "virtual_identity_mode": "metadata-only",
@@ -518,8 +658,17 @@ class StorageSession:
     root_overlay: Path
     aux_offset: int
 
-    def arguments(self, executable: Executable) -> list[str]:
-        """Build an explicit raw-read-only base + qcow2-writable graph."""
+    def arguments(self, executable: Executable, *, allow_bdif_writes: bool = True) -> list[str]:
+        """Build an explicit immutable-base + qcow2-writable graph.
+
+        The optional BDIF property exists only in the project write-enabled
+        QEMU patch.  The upstream VMApple device is read-only at the BDIF
+        command layer, so omitting the property is still a valid read/boot
+        experiment and, crucially, avoids passing an unknown ``-global`` to an
+        otherwise usable upstream binary.
+        """
+        if type(allow_bdif_writes) is not bool:
+            raise ValueError("allow_bdif_writes must be an explicit boolean")
         aux_size = self.aux_base.stat().st_size - self.aux_offset
         root_size = self.root_base.stat().st_size
         if aux_size <= 0 or root_size <= 0 or aux_size % 512 or root_size % 512:
@@ -527,7 +676,9 @@ class StorageSession:
         if _qcow_size(self.aux_overlay) != aux_size or _qcow_size(self.root_overlay) != root_size:
             raise ValueError("COW overlay size does not match its immutable base view")
 
-        result: list[str] = ["-global", "vmapple-bdif.allow-block-writes=on"]
+        result: list[str] = []
+        if allow_bdif_writes:
+            result.extend(["-global", "vmapple-bdif.allow-block-writes=on"])
         for index, (role, base, overlay, size) in enumerate((
             ("aux", self.aux_base, self.aux_overlay, aux_size),
             ("root", self.root_base, self.root_overlay, root_size),
@@ -1053,15 +1204,102 @@ def _wait_serial_marker(path: Path, marker: bytes, timeout: float,
             "reason": "UART marker was not observed before the guest exited or deadline"}
 
 
+def _observe_direct_macos_boot(
+    path: Path,
+    timeout: float,
+    process: subprocess.Popen[bytes] | None = None,
+) -> dict[str, object]:
+    """Observe the direct AVPBooter -> XNU -> macOS userspace boundary.
+
+    This is intentionally a UART observer rather than a synthetic boot
+    success hook.  The current VMApple QEMU research backend may expose only a
+    serial channel, and macOS may not print every marker on every build.  The
+    report therefore keeps each observed marker and byte offset, and only
+    raises ``macos_boot_verified`` after both an XNU and a userspace marker are
+    present in the same run.
+    """
+    if not 0 < timeout <= 3600:
+        raise ValueError("Direct macOS observation timeout must be between 0 and 3600 seconds")
+    categories = (
+        ("xnu", DIRECT_XNU_MARKERS),
+        ("userspace", DIRECT_USERSPACE_MARKERS),
+        ("installer", DIRECT_INSTALLER_MARKERS),
+    )
+    observed: dict[str, list[dict[str, object]]] = {name: [] for name, _ in categories}
+    seen_offsets: set[tuple[str, int]] = set()
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        try:
+            start, data = _read_log_tail(path)
+        except OSError:
+            start, data = 0, b""
+        for category, markers in categories:
+            for marker in markers:
+                position = data.find(marker)
+                if position < 0:
+                    continue
+                absolute = start + position
+                key = (category, absolute)
+                if key in seen_offsets:
+                    continue
+                seen_offsets.add(key)
+                observed[category].append({
+                    "marker": marker.decode("ascii"),
+                    "byte_offset": absolute,
+                })
+        if observed["xnu"] and observed["userspace"]:
+            break
+        if process is not None and process.poll() is not None:
+            break
+        time.sleep(min(0.1, max(0.0, deadline - time.monotonic())))
+
+    xnu_executed = bool(observed["xnu"])
+    userspace_reached = bool(observed["userspace"])
+    macos_boot_verified = xnu_executed and userspace_reached
+    if macos_boot_verified:
+        blocker = None
+    elif not xnu_executed:
+        blocker = "Direct macOS path did not emit a Darwin/XNU UART marker"
+    elif not userspace_reached:
+        blocker = "XNU UART evidence was observed, but macOS userspace did not reach launchd/loginwindow/WindowServer"
+    else:  # defensive branch for future marker policy changes
+        blocker = "Direct macOS boot evidence was incomplete"
+    return {
+        "xnu_executed": xnu_executed,
+        "macos_userspace_reached": userspace_reached,
+        "macos_boot_verified": macos_boot_verified,
+        "installer_ui_visible": bool(observed["installer"]),
+        # Reaching userspace is not proof that a Golden Gate installation was
+        # performed; an installation receipt or an explicit installer UI
+        # observation is required for that separate claim.
+        "installation_verified": False,
+        "observed_markers": observed,
+        "direct_boot_blocker": blocker,
+        "observation_timeout_seconds": timeout,
+    }
+
+
 def _command_for(config: "VMappleConfig", executable: Executable, storage: StorageSession,
-                 socket_path: str, output: Path) -> list[str]:
+                 socket_path: str, output: Path, *,
+                 bdif_block_writes: bool = True,
+                 display_backend: str | None = None) -> list[str]:
     guest_firmware = _guest_path(config.firmware, executable)
     guest_serial = _guest_path(output / "serial.log", executable)
     guest_trace = _guest_path(output / "transport.log", executable)
+    use_hvf = config.boot_selection == MACOS_ENTRY_ID and _direct_macos_hvf_host()
+    machine = f"vmapple,uuid={config.uuid}"
+    accelerator = "hvf" if use_hvf else "tcg,thread=single"
+    cpu = "host" if use_hvf else "max,pauth=on,pauth-qarma5=on,cntfrq=24000000"
+    if not use_hvf:
+        machine = f"vmapple,research-headless=on,uuid={config.uuid}"
+    direct_macos = config.boot_selection == MACOS_ENTRY_ID
+    effective_display = display_backend or _effective_display_backend(
+        config.display, direct_macos=direct_macos
+    )
     args: list[str] = [
-        "-M", f"vmapple,research-headless=on,uuid={config.uuid}",
-        "-accel", "tcg,thread=single",
-        "-cpu", "max,pauth=on,pauth-qarma5=on,cntfrq=24000000",
+        "-M", machine,
+        "-accel", accelerator,
+        "-cpu", cpu,
         "-m", f"{config.memory_mib}M", "-smp", str(config.smp),
         "-bios", guest_firmware,
         # Pin the guest-facing M1 identity explicitly instead of relying only
@@ -1069,18 +1307,40 @@ def _command_for(config: "VMappleConfig", executable: Executable, storage: Stora
         # not a claim that the host is Apple silicon.
         "-global", f"vmapple-cfg.soc_name={VIRTUAL_SOC_NAME}",
         "-global", f"vmapple-cfg.model={VIRTUAL_MODEL}",
-        *storage.arguments(executable),
-        "-display", config.display, "-monitor", "none",
-        "-serial", f"file:{guest_serial}", "-nic", "none", "-no-reboot",
-        "-chardev", f"socket,id=vusb,path={socket_path},server=on,wait=off",
-        "-global", "vmapple-bdif.usbdev=vusb",
-        "-d", "guest_errors,unimp",
     ]
-    # This switch is an explicit negative-capability experiment.  It is
-    # deliberately absent from the normal path because the original iBSS
-    # faults when the optional region is advertised as unavailable.
-    args.extend(["-trace", f"enable=bdif_*,file={guest_trace}"])
-    if config.optional_rpc_unavailable:
+    try:
+        storage_arguments = storage.arguments(
+            executable, allow_bdif_writes=bdif_block_writes
+        )
+    except TypeError as error:
+        # Keep small third-party/test storage adapters source-compatible
+        # with the pre-capability API.  The project StorageSession above
+        # always accepts the keyword, so a genuine storage failure is not
+        # hidden here.
+        if "allow_bdif_writes" not in str(error):
+            raise
+        storage_arguments = storage.arguments(executable)
+    args.extend(storage_arguments)
+    args.extend([
+        "-display", effective_display, "-monitor", "none",
+        "-serial", f"file:{guest_serial}", "-nic", "none", "-no-reboot",
+        "-d", "guest_errors,unimp",
+    ])
+    if not direct_macos:
+        # Recovery alone owns the USB chardev.  Direct AVPBooter entry must
+        # expose the same device graph as the documented normal VMApple
+        # launch; attaching a DFU socket here can change the BDIF config that
+        # iBoot sees before it ever reads the installed guest disk.
+        args.extend([
+            "-chardev", f"socket,id=vusb,path={socket_path},server=on,wait=off",
+            "-global", "vmapple-bdif.usbdev=vusb",
+            # This switch is an explicit negative-capability experiment.  It
+            # is deliberately absent from the normal path because the
+            # original iBSS faults when the optional region is advertised as
+            # unavailable.
+            "-trace", f"enable=bdif_*,file={guest_trace}",
+        ])
+    if config.optional_rpc_unavailable and not direct_macos:
         args.extend([
             "-global", "vmapple-cfg.optional-rpc-unavailable=on",
             # QEMU's trace parser treats commas as option separators, so the
@@ -1101,7 +1361,7 @@ class VMappleConfig:
     output: str | None = None
     ibec: str | None = None
     qemu_img: str | None = None
-    display: str = "gtk"
+    display: str = "auto"
     uuid: int = 0
     aux_offset: int = 0
     memory_mib: int = 4096
@@ -1161,8 +1421,8 @@ class VMappleConfig:
             raise ValueError("VMApple target must be macOS 26 or 27")
         if not self.research_only:
             raise ValueError("VMApple launch requires the explicit --research-only flag")
-        if self.display not in ("gtk", "sdl"):
-            raise ValueError("VMApple display must be gtk or sdl")
+        if self.display not in DISPLAY_BACKENDS:
+            raise ValueError("VMApple display must be auto, GTK, SDL, Cocoa, none, or dbus")
         if type(self.uuid) is not int or not 0 <= self.uuid < 2**64:
             raise ValueError("VMApple uuid must fit an unsigned 64-bit integer")
         if type(self.aux_offset) is not int or self.aux_offset < 0 or self.aux_offset % 512:
@@ -1194,6 +1454,10 @@ class VMappleConfig:
             raise ValueError("VMApple optional_rpc_unavailable must be a boolean")
         if type(self.restore_chain) is not bool:
             raise ValueError("VMApple restore_chain must be a boolean")
+        if self.boot_selection == MACOS_ENTRY_ID and self.live_personalize:
+            raise ValueError("Live TSS personalization is a recovery-only operation; direct macOS boot uses the provisioned guest inputs")
+        if self.boot_selection == MACOS_ENTRY_ID and self.restore_chain:
+            raise ValueError("The restore-role chain is recovery-only; select macOS direct boot without --restore-chain")
         if (
             isinstance(self.restore_timeout, bool)
             or not isinstance(self.restore_timeout, (int, float))
@@ -1203,18 +1467,34 @@ class VMappleConfig:
             raise ValueError("Restore timeout must be between 0 and 3600 seconds")
         qemu = _resolve_executable(self.qemu, "X86_VMAPLE_QEMU", "qemu-system-aarch64")
         qemu_img = _resolve_executable(self.qemu_img, "X86_VMAPLE_QEMU_IMG", "qemu-img")
+        firmware_value = self.firmware
+        if not firmware_value and self.boot_selection == MACOS_ENTRY_ID:
+            discovered = direct_macos_host_report().get("default_avpbooter")
+            if isinstance(discovered, str) and discovered:
+                firmware_value = discovered
+        if not firmware_value:
+            raise ValueError(
+                "AVPBooter firmware path is required; native Apple-Silicon macOS "
+                "can omit it only when the system Virtualization.framework path is present"
+            )
         paths = {
-            "firmware": _regular(self.firmware, "AVPBooter firmware", limit=MAX_FIRMWARE_BYTES),
+            "firmware": _regular(firmware_value, "AVPBooter firmware", limit=MAX_FIRMWARE_BYTES),
             "aux": _regular(self.aux, "AUX base image"),
             "root": _regular(self.root, "root base image"),
         }
-        if not self.live_personalize:
+        # Direct macOS boot starts AVPBooter against the provisioned AUX/root
+        # pair and does not enter the DFU uploader.  iBSS/iBEC are therefore
+        # required only for the recovery selection (or for live recovery
+        # personalization, which supplies the original images separately).
+        needs_recovery_inputs = self.boot_selection == RECOVERY_ENTRY_ID
+        if not self.live_personalize and needs_recovery_inputs:
             paths["ibss"] = _regular(self.ibss, "personalized iBSS", limit=MAX_DFU_BYTES)
             if self.ibec:
                 paths["ibec"] = _regular(self.ibec, "personalized iBEC", limit=MAX_RECOVERY_BYTES)
-        elif self.ibss:
+        elif not self.live_personalize and self.ibss:
             # An optional legacy path is accepted for diagnostics, but the
-            # live path below always uploads the newly personalized original.
+            # direct path never uploads it.  Keep it in the input receipt only
+            # when the caller explicitly supplies it.
             paths["legacy_ibss"] = _regular(self.ibss, "legacy iBSS", limit=MAX_DFU_BYTES)
         if self.ibec and self.live_personalize:
             paths["legacy_ibec"] = _regular(self.ibec, "legacy iBEC", limit=MAX_RECOVERY_BYTES)
@@ -1277,17 +1557,18 @@ class VMappleConfig:
 
 
 def run(config: VMappleConfig) -> dict[str, object]:
-    """Start VMApple and drive only the observed macOS recovery protocol.
+    """Start VMApple and drive the selected direct-macOS or recovery path.
 
-    In live mode the caller supplies an unchanged BuildManifest/iBSS/iBEC and
-    a request encoder.  Apple TSS tickets are generated into a fresh output
-    directory and the original payload bytes are wrapped without edits.  A
-    Stage2 UART marker is the strongest result this runner can currently
-    report; it is still not a claim that XNU or the installer UI rendered.
+    Direct mode starts AVPBooter against the caller's provisioned AUX/root
+    pair and observes XNU/userspace UART markers.  Recovery live mode supplies
+    an unchanged BuildManifest/iBSS/iBEC and a request encoder; Apple TSS
+    tickets are generated into a fresh output directory and the original
+    payload bytes are wrapped without edits.  No marker or transport
+    acknowledgement is promoted to an installation claim.
     """
     personality = config.personality_report()
     qemu, qemu_img, paths = config.validate()
-    backend = probe_backend(qemu)
+    backend = probe_backend(qemu, direct_macos=config.boot_selection == MACOS_ENTRY_ID)
     # Inspect the caller-supplied bases before QEMU starts.  This is a
     # read-only diagnostic: the runner still permits a zero fixture for a
     # recovery-protocol experiment, but records that it cannot be an install
@@ -1308,7 +1589,20 @@ def run(config: VMappleConfig) -> dict[str, object]:
             pass
         storage = create_storage(aux=paths["aux"], root=paths["root"], directory=output,
                                  qemu_img=qemu_img, aux_offset=config.aux_offset)
-        command = _command_for(config, qemu, storage, socket_path, output)
+        effective_display = _effective_display_backend(
+            config.display,
+            direct_macos=config.boot_selection == MACOS_ENTRY_ID,
+            available=backend.get("display_backends") if isinstance(backend.get("display_backends"), list) else None,
+        )
+        command = _command_for(
+            config,
+            qemu,
+            storage,
+            socket_path,
+            output,
+            bdif_block_writes=bool(backend.get("bdif_block_writes")),
+            display_backend=effective_display,
+        )
         inputs = {name: {"path": str(path), "bytes": path.stat().st_size, "sha256": _sha256(path)}
                   for name, path in paths.items()}
         report = {
@@ -1324,8 +1618,15 @@ def run(config: VMappleConfig) -> dict[str, object]:
             "policy_matrix": personality["policy_matrix"],
             "recovery_scope": personality["recovery"],
             "boot_picker": personality["boot_picker"],
-            "validation_level": "RECOVERY-PROTOCOL", "display_backend": config.display,
-            "graphics_device_enabled": False,
+            "boot_mode": "direct-macos" if config.boot_selection == MACOS_ENTRY_ID else "recovery",
+            "direct_boot_requested": config.boot_selection == MACOS_ENTRY_ID,
+            "recovery_inputs_required": config.boot_selection == RECOVERY_ENTRY_ID,
+            "validation_level": (
+                "DIRECT-MACOS-BOOT" if config.boot_selection == MACOS_ENTRY_ID else "RECOVERY-PROTOCOL"
+            ),
+            "display_backend_requested": config.display,
+            "display_backend": effective_display,
+            "graphics_device_enabled": bool(backend.get("native_hvf_selected")),
             "virtual_soc_name": VIRTUAL_SOC_NAME,
             "virtual_model": VIRTUAL_MODEL,
             "virtual_identity_mode": "metadata-only",
@@ -1337,7 +1638,9 @@ def run(config: VMappleConfig) -> dict[str, object]:
             "restore_chain_completed": False,
             "host": {"system": platform.system(), "architecture": platform.machine(),
                      "physical_mac_verified": False},
+            "direct_macos_host": direct_macos_host_report(),
             "backend": backend, "command": command, "inputs": inputs,
+            "output": str(output),
             "cow_storage": True, "storage_session": str(storage.directory / "storage"),
             "storage_diagnostics": storage_diagnostics,
             "forced_transition": False, "signature_acceptance_verified": False,
@@ -1358,7 +1661,17 @@ def run(config: VMappleConfig) -> dict[str, object]:
             stderr.close()
         report["pid"] = process.pid
         _write_report(output, report)
-        _wait_for_socket(socket_path, process, 30)
+        if config.boot_selection == RECOVERY_ENTRY_ID:
+            _wait_for_socket(socket_path, process, 30)
+        else:
+            # The direct macOS entry does not consume the recovery USB
+            # transport.  Do not make its startup contingent on a recovery
+            # socket; only ensure that QEMU did not exit immediately.
+            time.sleep(0.2)
+            if process.poll() is not None:
+                raise VMappleError(
+                    f"QEMU exited before direct macOS observation began: {process.returncode}"
+                )
         # The gate starts when QEMU has exposed its recovery socket, which is
         # the first point at which the guest is powered and input can be
         # observed by this runner.  The GUI picker records the real Alt event
@@ -1371,10 +1684,110 @@ def run(config: VMappleConfig) -> dict[str, object]:
         report["boot_picker"]["gate_released"] = True  # type: ignore[index]
         _write_report(output, report)
         if config.boot_selection == MACOS_ENTRY_ID:
-            raise VMappleError(
-                "The macOS BootPicker entry was selected, but direct macOS boot is not implemented; "
-                "choose macOS Recovery for the verified DFU/IPSW path."
+            # Direct boot must not enter the DFU/IPSW path.  AVPBooter owns the
+            # normal macOS entry and reads the caller's provisioned AUX/root
+            # pair; this runner only observes the UART boundary and keeps the
+            # process alive after a successful userspace marker so a visible
+            # GUI can remain available.
+            observation_timeout = min(
+                config.transition_timeout,
+                config.duration if config.duration is not None else config.transition_timeout,
             )
+            direct = _observe_direct_macos_boot(
+                output / "serial.log", observation_timeout, process
+            )
+            report.update({
+                "direct_boot": {
+                    "requested": True,
+                    "selection": MACOS_ENTRY_ID,
+                    "dfu_entered": False,
+                    "recovery_transport_used": False,
+                    "observation": direct,
+                },
+                "xnu_executed": bool(direct["xnu_executed"]),
+                "macos_boot_verified": bool(direct["macos_boot_verified"]),
+                "installer_ui_visible": bool(direct["installer_ui_visible"]),
+                "installation_verified": bool(direct["installation_verified"]),
+            })
+            storage_blockers = storage_diagnostics.get("blockers", [])
+            if not isinstance(storage_blockers, list):
+                storage_blockers = []
+            blocker = direct.get("direct_boot_blocker")
+            if not isinstance(blocker, str):
+                blocker = ""
+            if storage_diagnostics.get("provisioning_status") in (
+                "unprovisioned-zero", "partially-unprovisioned"
+            ):
+                storage_note = (
+                    " Storage preflight found a zero-filled AUX/root fixture; a "
+                    "hardware-model-matched provisioned storage pair is required."
+                )
+                blocker += storage_note
+            if not blocker:
+                blocker = None
+            stage_reached = (
+                "macOS userspace" if direct["macos_boot_verified"] else
+                "XNU kernel" if direct["xnu_executed"] else
+                "AVPBooter direct entry"
+            )
+            report["golden_gate_installation"] = {
+                "stage_reached": stage_reached,
+                "boot_mode": "direct-macos",
+                "signature_acceptance_verified": False,
+                "ibec_executed": False,
+                "stage2_execution_observed": False,
+                "xnu_executed": bool(direct["xnu_executed"]),
+                "macos_boot_verified": bool(direct["macos_boot_verified"]),
+                "installer_ui_visible": bool(direct["installer_ui_visible"]),
+                "installation_verified": False,
+                "blocker": blocker,
+                "storage_provisioning_status": storage_diagnostics.get("provisioning_status"),
+                "storage_blockers": storage_blockers,
+                "observed_markers": direct["observed_markers"],
+            }
+            _write_report(output, report)
+
+            # A missing direct-boot marker is a bounded blocker, not a reason
+            # to leave an invisible research process running indefinitely.
+            if not direct["macos_boot_verified"] and process.poll() is None:
+                report["termination"] = "direct-boot-evidence-timeout"
+                process.terminate()
+            deadline = time.monotonic() + config.duration if config.duration is not None else None
+            while process.poll() is None:
+                if deadline is not None and time.monotonic() >= deadline:
+                    report["termination"] = "time_budget"
+                    process.terminate()
+                    break
+                if (output / "stop").exists():
+                    report["termination"] = "stop_file"
+                    process.terminate()
+                    break
+                time.sleep(0.1)
+            if process.poll() is None:
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait(timeout=5)
+            report["returncode"] = process.returncode
+            if report.get("termination") is None:
+                report["termination"] = "guest_exit"
+            try:
+                log_start, log_data = _read_log_tail(output / "serial.log")
+            except OSError:
+                log_start, log_data = 0, b""
+            panic_position = log_data.rfind(b"iBoot Panic:")
+            report["guest_panic"] = {
+                "observed": panic_position >= 0,
+                "marker": "iBoot Panic:",
+                **({"byte_offset": log_start + panic_position} if panic_position >= 0 else {}),
+            }
+            report["duration_seconds"] = round(time.monotonic() - started, 3)
+            report["input_integrity"] = _inputs_intact(report.get("inputs"))
+            if not report["input_integrity"]:
+                report["error"] = "One or more caller-supplied inputs changed during the run"
+            _write_report(output, report)
+            return report
         if config.live_personalize:
             from .vmapple_personalization import personalize_firmware
 
@@ -1623,7 +2036,12 @@ def run(config: VMappleConfig) -> dict[str, object]:
                 "policy_matrix": personality["policy_matrix"],
                 "recovery_scope": personality["recovery"],
                 "boot_picker": personality["boot_picker"],
-                "validation_level": "RECOVERY-PROTOCOL", "display_backend": config.display,
+                "validation_level": "RECOVERY-PROTOCOL",
+                "display_backend_requested": config.display,
+                "display_backend": _effective_display_backend(
+                    config.display,
+                    direct_macos=config.boot_selection == MACOS_ENTRY_ID,
+                ),
                 "virtual_soc_name": VIRTUAL_SOC_NAME,
                 "virtual_model": VIRTUAL_MODEL,
                 "virtual_identity_mode": "metadata-only",
@@ -1637,6 +2055,43 @@ def run(config: VMappleConfig) -> dict[str, object]:
         report["duration_seconds"] = round(time.monotonic() - started, 3)
         report["input_integrity"] = _inputs_intact(report.get("inputs"))
         _write_report(output, report)
+        if config.boot_selection == MACOS_ENTRY_ID:
+            # Direct mode is an observable boot attempt, so return its
+            # structured evidence even when QEMU exits before the UART
+            # observer starts.  The CLI still returns a non-zero status when
+            # ``error`` is present, but callers receive the exact blocker and
+            # output directory instead of a lossy exception-only message.
+            report.setdefault("direct_boot", {
+                "requested": True,
+                "selection": MACOS_ENTRY_ID,
+                "dfu_entered": False,
+                "recovery_transport_used": False,
+                "observation": {
+                    "xnu_executed": False,
+                    "macos_userspace_reached": False,
+                    "macos_boot_verified": False,
+                    "installer_ui_visible": False,
+                    "installation_verified": False,
+                    "observed_markers": {"xnu": [], "userspace": [], "installer": []},
+                    "direct_boot_blocker": f"Direct macOS QEMU start failed: {type(error).__name__}: {error}",
+                },
+            })
+            report.setdefault("golden_gate_installation", {
+                "stage_reached": "direct macOS launch",
+                "boot_mode": "direct-macos",
+                "signature_acceptance_verified": False,
+                "ibec_executed": False,
+                "stage2_execution_observed": False,
+                "xnu_executed": False,
+                "macos_boot_verified": False,
+                "installer_ui_visible": False,
+                "installation_verified": False,
+                "blocker": f"Direct macOS QEMU start failed: {type(error).__name__}: {error}",
+                "storage_provisioning_status": storage_diagnostics.get("provisioning_status"),
+                "storage_blockers": storage_diagnostics.get("blockers", []),
+            })
+            _write_report(output, report)
+            return report
         raise
     finally:
         try:
@@ -1647,9 +2102,14 @@ def run(config: VMappleConfig) -> dict[str, object]:
 
 def configured_from_environment() -> dict[str, object]:
     """Return GUI-safe availability information without launching a guest."""
+    host = direct_macos_host_report()
+    default_firmware = host.get("default_avpbooter")
+    firmware_env = os.environ.get("X86_VMAPLE_AVPBOOTER", "")
+    if not firmware_env and isinstance(default_firmware, str):
+        firmware_env = default_firmware
     values = {
         "qemu": os.environ.get("X86_VMAPLE_QEMU", ""),
-        "firmware": os.environ.get("X86_VMAPLE_AVPBOOTER", ""),
+        "firmware": firmware_env,
         "ibss": os.environ.get("X86_VMAPLE_IBSS", ""),
         "ibec": os.environ.get("X86_VMAPLE_IBEC", ""),
         "aux": os.environ.get("X86_VMAPLE_AUX", ""),
@@ -1665,6 +2125,7 @@ def configured_from_environment() -> dict[str, object]:
     base_required = ("qemu", "firmware", "aux", "root", "qemu_img")
     present = {name: bool(value) for name, value in values.items()}
     legacy_configured = all(present[name] for name in (*base_required, "ibss"))
+    direct_configured = all(present[name] for name in base_required)
     live_required = (*base_required, "build_manifest", "tss_helper", "original_ibss", "original_ibec")
     live_configured = all(present[name] for name in live_required)
     boot_picker = validate_boot_picker_config(target_major=27)
@@ -1673,7 +2134,10 @@ def configured_from_environment() -> dict[str, object]:
     boot_picker["hotkey_event_observed"] = False
     boot_picker["delay_enforced"] = True
     return {
-        "ok": True, "research_only_required": True, "display_backend": "gtk",
+        "ok": True, "research_only_required": True, "display_backend": "auto",
+        "display_backend_effective": _effective_display_backend(
+            "auto", direct_macos=host.get("apple_silicon_macos") is True
+        ),
         "machine_type": IBOOT_MACHINE_TYPE, "personality": "iBoot",
         "guest_os": MACOS_GUEST_OS, "guest_os_supported": True,
         "guest_os_policy": "macOS-only", "supported_guest_os": [MACOS_GUEST_OS],
@@ -1681,12 +2145,14 @@ def configured_from_environment() -> dict[str, object]:
         "policy_matrix": default_scope(recovery_enabled=True)["policy_matrix"],
         "recovery_scope": default_scope(recovery_enabled=True)["recovery"],
         "boot_picker": boot_picker,
+        "direct_macos_host": host,
         "soc_profile": apple_silicon_profile(),
         # Either an explicitly personalized legacy input or the preferred
         # live-TSS set is usable.  The GUI defaults to live mode and exposes
         # this distinction instead of claiming that a partial path is ready.
-        "configured": live_configured or legacy_configured, "fields": present,
+        "configured": live_configured or legacy_configured or direct_configured, "fields": present,
         "legacy_configured": legacy_configured,
+        "direct_macos_configured": direct_configured,
         "live_personalization_configured": live_configured,
         "personalization_default": "live-tss",
         "values": values, "macos_boot_verified": False,

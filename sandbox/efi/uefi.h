@@ -11,6 +11,7 @@ typedef struct { uint32_t a;uint16_t b,c;uint8_t d[8]; } EFI_GUID;
 #define EFI_INVALID_PARAMETER (EFI_ERROR_BIT|2)
 #define EFI_BUFFER_TOO_SMALL (EFI_ERROR_BIT|5)
 #define EFI_NOT_FOUND (EFI_ERROR_BIT|14)
+#define EFI_ABORTED (EFI_ERROR_BIT|21)
 #define EFI_MEMORY_XP UINT64_C(0x4000)
 #define EFI_MEMORY_RO UINT64_C(0x20000)
 typedef struct { uint64_t Signature; uint32_t Revision, HeaderSize, CRC32, Reserved; } EFI_TABLE_HEADER;

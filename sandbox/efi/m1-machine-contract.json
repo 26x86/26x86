@@ -1,0 +1,115 @@
+{
+  "schema": "venfire-m1-machine-contract/1",
+  "target_machine_profile": "M1-only",
+  "fallbacks_forbidden": [
+    "generic-arm-virt",
+    "qemu-t8030",
+    "gicv3",
+    "m2-or-later",
+    "iphone-or-ipad",
+    "u-boot",
+    "windows-arm"
+  ],
+  "acceptance_rule": "A component is runtime-tested only after an exact source revision, guest-visible contract, and applicable differential evidence are recorded.",
+  "components": [
+    {
+      "name": "cpu-topology-and-system-state",
+      "phase": 3,
+      "guest_visible_purpose": "AArch64 exception levels, system registers, translation, atomics, SMP, timer, and PAuth state",
+      "state": "blocked",
+      "source": {"project": "Arm Architecture Reference Manual", "upstream_commit": "not recorded", "provenance_status": "unavailable"},
+      "venfire_destination": "sandbox/efi/preos/src/machine.rs (descriptor gate only)",
+      "known_gap": "The shipped translator is a bounded user-mode subset; the requested feature bits are rejected before JIT entry."
+    },
+    {
+      "name": "memory-map-and-reset",
+      "phase": 4,
+      "guest_visible_purpose": "M1-specific reset vector, RAM map, reserved ranges, and reset ordering",
+      "state": "blocked",
+      "source": {"project": "Apple M1/t8103 public boot evidence", "upstream_commit": "not recorded", "provenance_status": "unavailable"},
+      "venfire_destination": "not started; Phase-2 fixed diagnostic RAM is not an M1 map",
+      "known_gap": "No exact M1 guest memory map/reset trace is pinned."
+    },
+    {
+      "name": "apple-interrupt-controller",
+      "phase": 4,
+      "guest_visible_purpose": "M1 interrupt routing, masking, acknowledgement, affinity, and reset state",
+      "state": "blocked",
+      "source": {"project": "Apple AIC public driver/source references", "upstream_commit": "not recorded", "provenance_status": "reference-only"},
+      "venfire_destination": "sandbox/devices/aic_v1.c (standalone reference model; not wired into an M1 graph)",
+      "known_gap": "The AIC v1 self-test is not proof of M1 register identity or guest device-tree wiring. GIC is forbidden as a fallback."
+    },
+    {
+      "name": "timer-and-counter",
+      "phase": 4,
+      "guest_visible_purpose": "Architectural timer/counter frequency, interrupts, and reset behavior",
+      "state": "blocked",
+      "source": {"project": "Arm A-profile architecture plus M1 firmware traces", "upstream_commit": "not recorded", "provenance_status": "unavailable"},
+      "venfire_destination": "not started",
+      "known_gap": "No M1 timer frequency, interrupt routing, or boot-time trace is available."
+    },
+    {
+      "name": "firmware-identity-and-handoff",
+      "phase": 4,
+      "guest_visible_purpose": "M1-only firmware identity, device-tree/firmware handoff, and boot contract",
+      "state": "blocked",
+      "source": {"project": "Apple virtual-Mac or physical M1 boot contract", "upstream_commit": "not recorded", "provenance_status": "unavailable"},
+      "venfire_destination": "not started",
+      "known_gap": "An OpenCore iBoot pointer handoff is diagnostic metadata only and is not this contract."
+    },
+    {
+      "name": "serial-and-diagnostic-channel",
+      "phase": 4,
+      "guest_visible_purpose": "Guest-visible M1 serial/recovery diagnostic transport",
+      "state": "blocked",
+      "source": {"project": "M1 boot/recovery trace", "upstream_commit": "not recorded", "provenance_status": "unavailable"},
+      "venfire_destination": "EFI console trace only; no M1 UART device",
+      "known_gap": "EFI debug output must not be relabeled as an Apple guest UART."
+    },
+    {
+      "name": "storage-controller-and-provisioning",
+      "phase": 4,
+      "guest_visible_purpose": "M1 storage namespace, controller, provisioning, and error semantics",
+      "state": "blocked",
+      "source": {"project": "Apple ANS/NVMe or VMApple storage contract", "upstream_commit": "not recorded", "provenance_status": "unavailable"},
+      "venfire_destination": "not started",
+      "known_gap": "No target-matched storage image/controller contract is supplied to the EFI package."
+    },
+    {
+      "name": "dma-and-iommu",
+      "phase": 4,
+      "guest_visible_purpose": "M1 DMA addressability, isolation, faulting, and invalidation",
+      "state": "blocked",
+      "source": {"project": "Apple DART/SART public behavior", "upstream_commit": "not recorded", "provenance_status": "reference-only"},
+      "venfire_destination": "not started",
+      "known_gap": "The repository's x86 VSK DMAR validators are not an M1 DART implementation."
+    },
+    {
+      "name": "recovery-transport",
+      "phase": 4,
+      "guest_visible_purpose": "M1 recovery/reset transport and signed recovery input boundary",
+      "state": "blocked",
+      "source": {"project": "Apple recovery protocol", "upstream_commit": "not recorded", "provenance_status": "unavailable"},
+      "venfire_destination": "not started",
+      "known_gap": "The separate VMApple research transport is not part of this EFI runtime and has no M1 native evidence here."
+    },
+    {
+      "name": "display-path",
+      "phase": 4,
+      "guest_visible_purpose": "M1 framebuffer/display discovery, allocation, and presentation",
+      "state": "blocked",
+      "source": {"project": "Apple display/firmware contract", "upstream_commit": "not recorded", "provenance_status": "unavailable"},
+      "venfire_destination": "not started",
+      "known_gap": "No framebuffer or display device is exposed by the diagnostic machine."
+    },
+    {
+      "name": "iboot-xnu-macos-boot-chain",
+      "phase": 5,
+      "guest_visible_purpose": "Immutable firmware input, iBoot-to-XNU handoff, runtime, installer, and reboot evidence",
+      "state": "blocked",
+      "source": {"project": "Apple signed firmware and recovery inputs", "upstream_commit": "not recorded", "provenance_status": "unavailable"},
+      "venfire_destination": "not started; Phase-1 explicitly does not open iBoot input",
+      "known_gap": "No Apple trust root, signed input set, target-matched storage, or M1 runtime is present. All boot-success fields remain false."
+    }
+  ]
+}

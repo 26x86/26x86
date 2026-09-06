@@ -1,0 +1,18 @@
+[package]
+name = "venfire-preos"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "venfire_preos"
+crate-type = ["staticlib"]
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+strip = "symbols"

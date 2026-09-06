@@ -1,85 +1,331 @@
-# 26x86 native EFI translation engine
+# Venfire Sandbox EFI — Phase-1 micro-preOS contract
 
-This is a freestanding x86-64 EFI application and an original AArch64 subset
-JIT. It emits executable x86 machine instructions directly. The installed boot
-path starts neither Linux nor a QEMU process. QEMU/OVMF is used only as a test
-fixture for the actual EFI executable.
+## Scope and evidence boundary
 
-**It does not yet boot macOS, iBoot, or an Apple Silicon machine.** An OpenCore
-iBoot/AIC handoff is validated and returns `EFI_UNSUPPORTED`, rather than passing
-a CPU demonstration off as a macOS launch. macOS 26/27 are accepted target
-identifiers, not verified guest compatibility claims.
+Venfire's Phase-1 preOS is an **EFI-integrated micro-runtime**, not a second
+operating system. The unit under test is one x86-64 PE/COFF EFI application:
 
-## Build and verification
-
-On a system with Python 3, clang, lld, and a POSIX native compiler runtime:
-
-```sh
-python3 sandbox/efi/build.py
-python3 sandbox/efi/verify_ovmf.py
+```text
+x86-64 UEFI firmware (or x86-64 QEMU + OVMF)
+  -> Venfire EFI package
+       -> existing C EFI entry and firmware preparation
+       -> statically linked Rust micro-preOS
+       -> C-owned AArch64 diagnostic-JIT wrapper
+       -> bounded AArch64 diagnostic guest
+       -> C EFI cleanup and EFI_STATUS return
 ```
 
-The second command also requires `qemu-system-x86_64` and Ubuntu's OVMF paths.
-`build/BOOTX64.EFI` is the production application. `build/TESTX64.EFI` includes
-test-only debug-console output and a QEMU exit port; it is never staged as the
-production engine. JSON reports identify both hashes and keep macOS/physical
-Mac acceptance false. The Nehalem test has no AVX, and the Conroe negative test
-must reject its missing SSE4 before JIT execution.
+The host is an **x86-64 EFI/OVMF environment**. The guest is a deliberately
+small AArch64 diagnostic payload executed by the repository's AArch64 subset
+JIT. QEMU/OVMF is a development and validation fixture for that EFI
+application; it is not a Venfire runtime dependency and no QEMU executable is
+started by the EFI image.
 
-For standalone own-code diagnostics, place `BOOTX64.EFI` at the removable-media
-fallback path `EFI/BOOT/BOOTX64.EFI`. An optional `EFI/26x86/guest.a64` contains
-4..65536 bytes of little-endian A64 instructions. Its initial PC and X registers
-are zero, RAM is a separate zeroed 64 KiB buffer, and execution is limited to
-100000 retired instructions. `HLT #0` is a diagnostic monitor exit convention,
-not a simulated architectural exception. No Apple binaries are included.
+This phase does **not** claim any of the following:
 
-## Current architecture
+- physical Apple M1/t8103 compatibility or hardware validation;
+- an Apple virtual-Mac ABI, device tree, recovery transport, or firmware
+  contract;
+- iBoot execution, an iBoot-to-XNU handoff, XNU execution, macOS boot, macOS
+  installation, storage, display, or recovery success; or
+- `ExitBootServices` ownership, a bare-metal kernel, or a general-purpose VM
+  monitor.
 
-- Host minimum is x86-64 with both SSE4.1 and SSE4.2 (Nehalem/Mac Pro 2009 CPU
-  baseline). AVX/AVX2 are disabled at compilation. Real Mac firmware remains
-  untested; non-Apple operation is not guaranteed and is outside issue support.
-- Supported A64 operations: 32/64-bit MOVZ/MOVK, ADD/SUB immediate without flags,
-  ADD/SUB unshifted register without flags, CBZ/CBNZ, B, NOP, and unsigned-offset
-  64-bit LDR/STR. SP versus ZR and W-register zero extension are explicit.
-- Generated functions use Microsoft x64 ABI and modify only volatile registers.
-  Guest RAM bounds and address overflow are checked before every load/store.
-  Fetch/data/unsupported faults preserve the faulting PC and retired count.
-- Generated pages alternate RW+NX and RO+X. The UEFI Memory Attribute Protocol
-  is preferred. Older firmware can use the PI CPU Architectural Protocol;
-  effective page permissions, CR0.WP and EFER.NXE are checked independently.
-  No page tables are modified directly. Unsupported protection capabilities
-  stop execution. CPUID serializes generated code before entry.
-- Blocks contain at most 32 guest instructions and are rebuilt in one reusable
-  code buffer. There is no persistent translation cache or self-modifying guest
-  code support yet. Guest instruction storage is distinct from guest data RAM.
-- The virtual platform contract is **AIC only and iBoot only**. GIC, Windows ARM,
-  and ARM UEFI guest boot are outside this ABI. Apple hardware device properties
-  and `SandboxSMBIOS` come from OpenCore's config through `handoff.h`.
+`VF_MACHINE_PROFILE_M1_DIAGNOSTIC` (`M1_DIAGNOSTIC`) is only a fail-closed
+Phase-1 machine-policy seed for the diagnostic path. It is not evidence that
+the EFI host, diagnostic guest, or its device model is an M1. A passed build,
+unit test, or OVMF boot remains evidence only for the named layer in the
+validation matrix below.
 
-## OpenCore handoff
+## One package, not a boot chain
 
-OpenCore loads `\EFI\26x86\Sandbox.efi` from its own ESP with `LoadImage`, sets
-the loaded image's `LoadOptions` to the 64-byte `vf_handoff` in `handoff.h`, and
-calls `StartImage`. Pointers remain valid until it returns. The v1 input has
-4096..1048576 MiB RAM in whole MiB, 1..64 CPUs, target major 26 or 27, zero flags,
-an absolute iBoot path of at most 191 UTF-16 code units plus NUL, and SMBIOS/device
-property XML dictionaries of at most 1 MiB each including the terminating NUL.
-Device properties use OpenCore-normalized base64 `<data>` values. Root
-`SandboxSMBIOS` supplies the four string identity keys. These are a transport
-contract; this milestone does not dereference and execute the iBoot image.
+The deployable production artifact is one EFI application, normally placed at
+the removable-media fallback path:
 
-Remaining macOS-critical work is full privileged A64 translation and MMU/TLB,
-exceptions/EL transitions/PAC, coherent SMP and atomics, AIC interrupt delivery,
-Apple timer/device MMIO, immutable iBoot loading and authentic restore/policy,
-storage, display, and hardware acceptance. Existing GIC/vmapple research cannot
-serve as evidence for the AIC-based platform.
+```text
+EFI/BOOT/BOOTX64.EFI
+```
+
+When OpenCore owns the preceding boot-picker step, the same application can be
+loaded as:
+
+```text
+EFI/26x86/Sandbox.efi
+```
+
+The Rust crate is built as a `staticlib` and linked into that existing PE/COFF
+image. A build-time archive is an input to the linker, not another deployable
+program. Rust, C, and any future read-only resources are modules of the same
+Venfire EFI package.
+
+Phase 1 must not stage or boot any of the following:
+
+- a separate Rust `.efi` image, executable, kernel image, or ELF payload;
+- a stage-2 EFI loader or another boot protocol;
+- an initramfs, Linux root filesystem, service manager, shell, VFS, or package
+  manager;
+- a QEMU system-emulator process, generic VM-monitor host environment, or a
+  reimplemented general-purpose boot manager.
+
+A companion resource is allowed only when Venfire directly owns and validates
+it. Examples are a bounded diagnostic AArch64 guest, a minimal configuration
+resource, a signed machine profile, or a future read-only firmware-input
+manifest. No Apple binary is a Phase-1 guest input.
+
+`build/BOOTX64.EFI` is the production artifact. `build/TESTX64.EFI` may add
+test-console and QEMU-exit instrumentation, but is never the production image.
+The repository build report and OVMF report are the authoritative evidence for
+the artifacts and tests actually run.
+
+## Layer ownership
+
+The ownership boundary is intentionally narrow. It prevents a Rust runtime
+from accidentally becoming another UEFI application or a hidden kernel.
+
+| Layer | Owner in Phase 1 | Owns | Explicitly does not own |
+| --- | --- | --- | --- |
+| **A — UEFI firmware / EFI application** | Existing C EFI entry | EFI entry ABI; protocol lookup; Boot Services page allocation/free; W^X transitions and verification; EFI image lifetime; console/trace emission; final `EFI_STATUS` | Rust does not take `EFI_SYSTEM_TABLE`, arbitrary protocol pointers, or Boot Services ownership. |
+| **B — micro-preOS runtime** | Rust `no_std` static library | Context/ABI validation; machine-policy selection; bounded-execution policy; machine seed validation; JIT-request validation; result/error normalization | No process model, scheduler, VFS, shell, userspace ABI, driver manager, package manager, async runtime, generic allocator, or firmware lifecycle. |
+| **C — AArch64 diagnostic execution** | C JIT wrapper plus existing JIT | Existing JIT structs and `vf_run(...)` ABI; code buffer; guest RAM; W^X callback; instruction budget; host-code execution; raw JIT result collection | Rust must not call or depend on the internal `vf_run(...)` ABI directly. |
+| **D — native machine / device model** | Future Venfire work | A future `VfMachine`, guest physical address space, RAM/MMIO regions, interrupt/timer/device topology, storage, display, DMA/IOMMU policy, and target boot contract | Phase 1 has no claim that an M1 machine graph or Apple device semantics exist. |
+
+The Phase-1 normal path remains inside the EFI application interval. It does
+not call `ExitBootServices`. Therefore C retains responsibility for all
+firmware-owned allocations and returns control to firmware after cleanup. A
+post-`ExitBootServices` runtime, if ever needed, is a separate transition
+milestone with a new allocation, return-path, and protocol-ownership review.
+
+## Stable C/Rust boundary
+
+The public call boundary is deliberately limited to these C ABI entry points:
+
+```c
+int vf_preos_run(const VF_PREOS_CONTEXT *context, VF_PREOS_RESULT *result);
+
+int vf_preos_jit_execute(const VF_JIT_REQUEST *request,
+                         VF_JIT_RESULT *result);
+```
+
+The first call enters the statically linked Rust micro-preOS. The second is a
+C wrapper invoked by Rust; it owns the existing JIT's internal structures and
+calls `vf_run(...)` on Rust's behalf. The C EFI entry is the sole creator and
+final consumer of the context/result chain:
+
+```text
+C EFI entry
+  -> C-validated VF_PREOS_CONTEXT
+  -> vf_preos_run(context, preos_result)              [Rust]
+  -> vf_preos_jit_execute(jit_request, jit_result)    [C wrapper]
+  -> existing vf_run(...)                             [existing C JIT]
+  -> Rust normalizes VF_PREOS_RESULT
+  -> C cleans pages and maps the result to EFI_STATUS
+```
+
+`sandbox/efi/preos_abi.h` is the C-side source of truth for that boundary. Its
+Rust counterpart must use `#[repr(C)]` for every shared structure; no Rust
+layout, enum representation, or pointer-width assumption may be implicit.
+`VF_PREOS_ABI` is the platform-compatible C ABI: the EFI COFF target uses the
+Microsoft x64 ABI, while the native host-only ABI test uses its native C ABI.
+Both sides must reject, before dereferencing caller data:
+
+- an unsupported `abi_version` or invalid `struct_size`;
+- non-zero reserved/unused fields;
+- an invalid machine profile or execution budget;
+- a null pointer when a non-zero byte length is required, or an invalid
+  pointer/length pair for an optional empty span;
+- integer overflow in size, address, range-end, or alignment calculations; and
+- misaligned pointers, unbounded spans, or result buffers too small for the
+  selected ABI version.
+
+### Context, lifetime, and ownership
+
+`VF_PREOS_CONTEXT` carries only C-validated, bounded data: ABI/version fields,
+the `VF_MACHINE_PROFILE_M1_DIAGNOSTIC` policy seed, an instruction budget, a
+guest-byte pointer/length pair, a guest-RAM pointer/length pair, an opaque
+C-owned execution handle, a C-owned trace callback/opaque value, and optional
+golden-result expectations. It must not expose an `EFI_SYSTEM_TABLE`, raw UEFI
+protocol pointer, unbounded allocation, or the JIT's private CPU/code-buffer
+layout.
+
+`VF_JIT_REQUEST` is the even smaller request assembled by Rust after policy
+validation. `VF_JIT_RESULT` reports only the information Rust needs to
+normalize the guest outcome: status, termination reason, retired-instruction
+count, guest PC, faulting instruction where applicable, and x0/x1/x3 result
+registers. `VF_PREOS_RESULT` is the Rust-to-C normalized final result, which C
+initializes as ABI v1 and all-zero before the call.
+
+All pointer-backed memory is caller-owned C memory. It remains valid only for
+the synchronous duration of the call that receives it, is not retained by Rust,
+and is released only by the C EFI owner after the entire call chain returns.
+Guest bytes are read-only to the runtime; guest RAM is mutable only through the
+validated JIT request. The opaque handle is never decoded, freed, or retained
+by Rust. The trace endpoint is also C-owned: Rust passes only immutable static,
+NUL-terminated messages through it and never observes a firmware pointer.
+These rules also apply on every failure path.
+
+Expected, non-panic failures use explicit, bounded return codes. The status
+taxonomy includes success plus distinguishable ABI, context, profile,
+guest-input, machine-initialization, JIT, budget, protection, and internal
+failure classes (for example `VF_PREOS_E_ABI`, `VF_PREOS_E_CONTEXT`,
+`VF_PREOS_E_PROFILE`, `VF_PREOS_E_GUEST_INPUT`, `VF_PREOS_E_MACHINE_INIT`,
+`VF_PREOS_E_JIT`, `VF_PREOS_E_BUDGET`, `VF_PREOS_E_PROTECTION`,
+`VF_PREOS_E_INTERNAL`, and `VF_PREOS_E_RESULT`). A budget exhaustion, unsupported instruction,
+fetch/data fault, or failed W^X transition must not be normalized into success.
+C maps the normalized result to its final `EFI_STATUS` only after cleanup.
+
+## Rust static-library rules
+
+The micro-runtime is intentionally constrained:
+
+```text
+crate type: staticlib
+language surface: no_std
+panic policy: abort
+unwinding across the C/EFI boundary: forbidden
+allocator: not introduced
+runtime dynamic allocation: forbidden
+Rust EFI/PE executable: forbidden
+```
+
+All normal error handling returns through the ABI; a Rust panic must never cross
+into C or UEFI. The initial design must use stack storage or caller-owned fixed
+buffers. Before any allocation is introduced, the implementation must document
+why those options cannot work, the maximum allocation, lifetime, failure
+behaviour, EFI memory owner, and cleanup owner. Until then the expected Rust
+dynamic-allocation count and byte total are both zero.
+
+## Diagnostic guest contract
+
+The initial guest is a short, Venfire-owned AArch64 diagnostic payload, not an
+operating system or Apple boot component. The ABI bounds it to 4..65,536 bytes,
+four-byte instruction alignment, one fixed 65,536-byte guest-RAM span, and an
+execution budget of 1..100,000 retired instructions. It uses only instructions
+already supported by the existing JIT and proves all of the following in one
+bounded run:
+
+- an arithmetic result;
+- a guest-RAM write followed by a read;
+- a checked retired-instruction count;
+- an explicit diagnostic halt convention; and
+- the Rust -> C wrapper -> JIT -> Rust result-return chain.
+
+At least two negative runs are required: an unsupported AArch64 instruction and
+instruction-budget exhaustion (for example, a bounded loop). Unsupported,
+fetch, data, and budget failures retain their actual termination reason and
+never become `GUEST_HALT`.
+
+The normal trace has distinct evidence markers equivalent to:
+
+```text
+VF: EFI_ENTRY
+VF: EFI_MEMORY_READY
+VF: PREOS_CONTEXT_READY
+VF: RUST_ENTER
+VF: RUST_POLICY_OK
+VF: MACHINE_READY
+VF: JIT_ENTER
+VF: GUEST_HALT
+VF: RUST_RETURN_OK
+VF: EFI_RETURN_OK
+```
+
+Failure output must instead preserve its layer and reason, such as
+`VF: GUEST_STOP reason=BAD_INSTRUCTION`, `FETCH_FAULT`, `DATA_FAULT`, or
+`BUDGET_EXHAUSTED`, followed by `VF: PREOS_FAIL code=...` and an EFI error
+return. Exact text can change, but the stage boundaries and failure/success
+distinction cannot.
+
+## Required validation matrix
+
+Run the repository-defined build and OVMF verifier (currently
+`python3 sandbox/efi/build.py` and `python3 sandbox/efi/verify_ovmf.py`) only
+as evidence for the checks they actually perform. The Phase-1 acceptance matrix
+is:
+
+| Check | Required evidence | Layer proved | Does **not** prove |
+| --- | --- | --- | --- |
+| Build verification | One PE/COFF EFI image links the Rust `staticlib`; artifact hashes/sizes are recorded | build/package | EFI runtime behaviour or Apple compatibility |
+| Static ABI verification | C/Rust size, offset, alignment, version, reserved-field, null/span, and overflow negatives pass | C/Rust boundary | JIT execution |
+| Existing C JIT regression | Current unit tests preserve supported operations, faults, W^X, and host-code ABI behaviour | JIT | Rust integration |
+| Rust unit tests | Policy, context, request, and result normalization test success and explicit failures | Rust micro-preOS | firmware interaction |
+| C/Rust ABI integration | A C-built context reaches Rust, Rust uses the C wrapper, and C receives a normalized result | boundary integration | OVMF firmware execution |
+| OVMF normal guest | x86-64 OVMF log contains EFI entry, Rust entry, machine-ready, JIT, halt, return, cleanup | EFI + Rust + JIT diagnostic path | M1, iBoot, XNU, macOS, storage, or display |
+| Invalid-instruction guest | Actual unsupported-instruction reason returns as failure | guest/JIT error path | guest OS exception support |
+| Budget-exhaustion guest | Actual exhausted-budget reason returns as failure | bounded-execution policy | scheduler/timer semantics |
+| Size/allocation measurement | Required metrics below are emitted or marked `unknown`/`not measured` | footprint accounting | any unmeasured value |
+
+The OVMF verifier uses an x86-64 virtual firmware host. It must not label an
+OVMF screen or an EFI return as AArch64 hardware, physical M1, iBoot, XNU, or
+macOS evidence. Reports should present each result explicitly as:
+
+```text
+firmware / EFI layer:       passed | failed
+Rust preOS layer:           passed | failed
+JIT execution layer:        passed | failed
+native machine layer:       not implemented | partial | passed
+Apple boot-chain layer:     not attempted | blocked | runtime-tested
+macOS layer:                not attempted | blocked | runtime-tested
+```
+
+For Phase 1, only the first three layers can become passing acceptance targets.
+The later rows remain scoped claims, not an implied roadmap completion.
+
+## Footprint and allocation metrics
+
+Every relevant build record must contain measured values, rather than estimates:
+
+| Metric | Required recording rule | Phase-1 expected value where defined |
+| --- | --- | --- |
+| Baseline EFI image size | bytes before Rust linkage | measured baseline |
+| EFI image size after linkage | bytes in the linked production EFI | measured |
+| EFI growth | after-link bytes minus baseline bytes | measured |
+| Rust `staticlib` size | linker input archive byte size | measured |
+| Separate companion executable count | staged deployable executables other than the EFI package | `0` |
+| Separate kernel-image count | staged kernel/ELF/initramfs images | `0` |
+| Fixed Rust stack requirement | record only if toolchain analysis provides it | `unknown` / `not measured` otherwise |
+| Fixed guest RAM size | exact byte value supplied to the diagnostic run | measured |
+| JIT code-buffer size | exact byte capacity supplied to the JIT | measured |
+| Rust dynamic-allocation count / bytes | allocations after runtime entry | `0` / `0` |
+| Boot Services allocation count / bytes | EFI page allocations made for the run | measured; not assumed zero |
+| Host OS dependency | dependency needed by the deployed EFI runtime | `0` |
+| External QEMU-process dependency | process needed by the deployed EFI runtime | `0` |
+
+`unknown` and `not measured` are valid values when a tool cannot establish a
+metric. They are not interchangeable with zero and must not be silently
+replaced by estimates.
+
+## Native M1 work is future source-port work
+
+The Phase-1 diagnostic profile is not an implementation of an M1 machine.
+Future work must implement an explicitly M1-only target contract that joins CPU
+topology, memory map, interrupt and timer contracts, MMIO, storage, firmware
+identity, device-tree/firmware handoff, recovery transport, display, DMA/IOMMU
+policy, and boot contract. It must fail closed for another SoC, board identity,
+device tree, or firmware contract; generic QEMU `virt`, iPhone t8030, and an
+Apple name string are not substitutes.
+
+QEMU and other public source trees may be used as target-specific behaviour
+references or, where provenance and licensing permit, as source-port inputs.
+They are not a runtime dependency. In particular, qemu-t8030 can be a
+device-semantics reference, but its iPhone/iOS machine and firmware contract
+must never be treated as an M1/macOS contract. A GIC model is not evidence of
+an Apple Interrupt Controller implementation.
+
+The future registry is [M1_SOURCE_PORT_MANIFEST.md](M1_SOURCE_PORT_MANIFEST.md).
+It currently records a **future-only schema and no completed M1 source port**.
+Every device or machine behaviour later considered for the M1 graph must have a
+manifest entry before it is claimed as native, adapted, or behaviour-preserving.
+The entry must distinguish confirmed evidence from inference, references, and
+unavailable behaviour.
 
 ## Sources and license
 
-This new emitter is specification-based original code under the repository's
-BSD-4-Clause/OCLP-derived license. No QEMU or Linux driver code is incorporated;
-using QEMU as a test harness does not relicense it. Any future source import
-must retain its original license and compatible distribution obligations.
+The existing subset emitter is repository-owned, specification-based code. A
+future direct port must retain its upstream file provenance, exact revision, and
+license obligations; an adapted port and a clean-room reimplementation must be
+described honestly and independently tested against their cited behaviour. Do
+not call directly imported source clean-room, and do not call an unverified
+independent implementation behaviour-equivalent.
 
 - [UEFI 2.11 memory protection protocol](https://uefi.org/specs/UEFI/2.11/37_Secure_Technologies.html#memory-protection)
 - [PI 1.9 CPU architectural protocol](https://uefi.org/specs/PI/1.9/V2_DXE_Architectural_Protocols.html)

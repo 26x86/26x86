@@ -311,6 +311,18 @@ class WizardBridge:
                     "macos_boot_verified": False}
         if boot_selection not in ("macos", "recovery"):
             return {"ok": False, "error": "VMApple boot selection must be macos or recovery."}
+        if boot_selection == "macos" and live_personalize:
+            return {
+                "ok": False,
+                "error": "직접 macOS 부팅은 이미 프로비저닝된 AUX/root를 사용하며 live TSS 복구 개인화를 수행하지 않습니다.",
+                "macos_boot_verified": False,
+            }
+        if boot_selection == "macos" and restore_chain:
+            return {
+                "ok": False,
+                "error": "restore-role 체인은 Recovery 전용입니다. 직접 macOS 부팅에서는 복구 체인을 끄십시오.",
+                "macos_boot_verified": False,
+            }
         if boot_picker_enabled is True and boot_selection == "recovery" and not picker.get("recovery_entry_enabled"):
             return {"ok": False, "error": "VMApple Recovery entry is disabled."}
         if not isinstance(boot_trigger, str) or not boot_trigger.strip():
@@ -336,7 +348,12 @@ class WizardBridge:
                 return {"ok": False, "error": f"VMApple {name} 경로는 문자열이어야 합니다."}
             values[name] = value.strip()
         required = ("qemu", "qemu_img", "firmware", "aux", "root", "output")
-        if live_personalize:
+        if boot_selection == "macos":
+            # AVPBooter reads the provisioned guest disk directly.  iBSS and
+            # iBEC are recovery transport inputs and must not be mandatory for
+            # the normal macOS entry.
+            pass
+        elif live_personalize:
             required += ("build_manifest", "tss_helper", "original_ibss", "original_ibec")
         else:
             required += ("ibss",)
@@ -348,9 +365,9 @@ class WizardBridge:
 
         if isinstance(target, bool) or not isinstance(target, int) or target not in (26, 27):
             return {"ok": False, "error": "VMApple 대상은 macOS 26 또는 27이어야 합니다."}
-        display = config.get("display", "gtk")
-        if display not in ("gtk", "sdl"):
-            return {"ok": False, "error": "VMApple 표시 방식은 GTK 또는 SDL이어야 합니다."}
+        display = config.get("display", "auto")
+        if display not in ("auto", "gtk", "sdl", "cocoa", "none", "dbus"):
+            return {"ok": False, "error": "VMApple 표시 방식은 auto, GTK, SDL, Cocoa, none 또는 dbus여야 합니다."}
 
         numeric = {
             "uuid": (config.get("uuid", 0), 0, 2**64 - 1),

@@ -1,51 +1,158 @@
 #!/usr/bin/env python3
-"""Boot the test-instrumented EFI under x86 QEMU firmware, never a guest Linux OS."""
+"""Execute the single EFI package under OVMF; QEMU is validation-only."""
 import hashlib
 import json
 import pathlib
+import re
 import shutil
 import struct
 import subprocess
 import tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parent
+ALLOCATION_PATTERN = re.compile(
+    r"VF: EFI_ALLOCATIONS count=(0x[0-9a-f]+) bytes=(0x[0-9a-f]+)", re.IGNORECASE
+)
+NORMAL_TRACE = [
+    "VF: EFI_ENTRY",
+    "VF: EFI_MEMORY_READY",
+    "VF: PREOS_CONTEXT_READY",
+    "VF: RUST_ENTER",
+    "VF: RUST_POLICY_OK",
+    "VF: MACHINE_RESET",
+    "VF: MACHINE_READY",
+    "VF: JIT_ENTER",
+    "VF: GUEST_HALT",
+    "VF: RUST_RETURN_OK",
+    "VF: EFI_RETURN_OK",
+]
+
+
+def ordered(log, markers):
+    position = -1
+    for marker in markers:
+        position = log.find(marker, position + 1)
+        if position < 0:
+            return False
+    return True
+
+
+def allocation_measurement(log):
+    match = ALLOCATION_PATTERN.search(log)
+    if not match:
+        return None
+    return {"count": int(match.group(1), 16), "bytes": int(match.group(2), 16)}
+
+
+def fixture_words(kind):
+    if kind == "normal":
+        return [0xd2800140, 0xd1000400, 0xb5ffffe0, 0xd4400000]
+    if kind == "bad-instruction":
+        return [0xffffffff]
+    if kind == "budget-exhaustion":
+        return [0x14000000]
+    return None
+
+
+def run_case(case):
+    with tempfile.TemporaryDirectory(prefix="26x86-efi-") as tmp:
+        root = pathlib.Path(tmp)
+        boot = root / "esp" / "EFI" / "BOOT"
+        boot.mkdir(parents=True)
+        shutil.copyfile(ROOT / "build" / "TESTX64.EFI", boot / "BOOTX64.EFI")
+        words = fixture_words(case["guest"])
+        if words is not None:
+            guest = root / "esp" / "EFI" / "26x86" / "guest.a64"
+            guest.parent.mkdir()
+            guest.write_bytes(struct.pack("<" + "I" * len(words), *words))
+        shutil.copyfile("/usr/share/OVMF/OVMF_VARS_4M.fd", root / "vars.fd")
+        command = [
+            "qemu-system-x86_64", "-machine", "q35,accel=tcg", "-cpu", case["cpu"], "-m", "512",
+            "-smp", "1", "-display", "none", "-serial", "none", "-monitor", "none",
+            "-drive", "if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd",
+            "-drive", f"if=pflash,format=raw,file={root / 'vars.fd'}",
+            "-drive", f"format=raw,file=fat:rw:{root / 'esp'}",
+            "-debugcon", f"file:{root / 'debug.log'}", "-device",
+            "isa-debug-exit,iobase=0xf4,iosize=0x04", "-net", "none", "-no-reboot",
+        ]
+        completed = subprocess.run(command, capture_output=True, text=True, timeout=60)
+        log = (root / "debug.log").read_text(errors="replace")
+    measured = allocation_measurement(log)
+    passed = completed.returncode == case["exit"]
+    if case["kind"] == "normal":
+        passed = passed and ordered(log, NORMAL_TRACE)
+        passed = passed and "VF: EFI_RETURN_ERROR" not in log
+        if case["guest"] is None:
+            passed = passed and "JIT SELFTEST PASS" in log
+        else:
+            passed = passed and "GUEST HALT: own-code A64 guest completed." in log
+        passed = passed and measured == {"count": 3, "bytes": 0x25000}
+    elif case["kind"] == "guest-failure":
+        failure_trace = [
+            "VF: EFI_ENTRY", "VF: EFI_MEMORY_READY", "VF: PREOS_CONTEXT_READY", "VF: RUST_ENTER",
+            "VF: RUST_POLICY_OK", "VF: MACHINE_READY", "VF: JIT_ENTER", case["stop_marker"],
+            case["preos_marker"], "VF: EFI_RETURN_ERROR",
+        ]
+        passed = passed and ordered(log, failure_trace)
+        passed = passed and "VF: GUEST_HALT" not in log and "VF: RUST_RETURN_OK" not in log
+        passed = passed and "VF: EFI_RETURN_OK" not in log
+        passed = passed and measured == {"count": 3, "bytes": 0x25000}
+    else:
+        passed = passed and "UNSUPPORTED CPU" in log and "VF: RUST_ENTER" not in log
+    return {
+        "name": case["name"],
+        "cpu_model": case["cpu"],
+        "guest_case": case["guest"] or "built-in-golden",
+        "qemu_exit": completed.returncode,
+        "expected_qemu_exit": case["exit"],
+        "boot_services_allocations": measured,
+        "passed": passed,
+        "log": log,
+        "stderr": completed.stderr,
+    }
 
 
 def main():
-    results = []
-    for cpu_model, own_guest in [("Nehalem", False), ("Nehalem", True), ("Conroe", False)]:
-        with tempfile.TemporaryDirectory(prefix="26x86-efi-") as tmp:
-            p = pathlib.Path(tmp)
-            boot = p / "esp" / "EFI" / "BOOT"
-            boot.mkdir(parents=True)
-            shutil.copyfile(ROOT / "build/TESTX64.EFI", boot / "BOOTX64.EFI")
-            if own_guest:
-                guest = p / "esp/EFI/26x86/guest.a64"
-                guest.parent.mkdir()
-                guest.write_bytes(struct.pack("<4I", 0xd2800140, 0xd1000400, 0xb5ffffe0, 0xd4400000))
-            shutil.copyfile("/usr/share/OVMF/OVMF_VARS_4M.fd", p / "vars.fd")
-            command = ["qemu-system-x86_64", "-machine", "q35,accel=tcg", "-cpu", cpu_model,
-                       "-m", "512", "-smp", "1", "-display", "none", "-serial", "none", "-monitor", "none",
-                       "-drive", "if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd",
-                       "-drive", f"if=pflash,format=raw,file={p / 'vars.fd'}",
-                       "-drive", f"format=raw,file=fat:rw:{p / 'esp'}",
-                       "-debugcon", f"file:{p / 'debug.log'}", "-device", "isa-debug-exit,iobase=0xf4,iosize=0x04",
-                       "-net", "none", "-no-reboot"]
-            completed = subprocess.run(command, capture_output=True, text=True, timeout=60)
-            log = (p / "debug.log").read_text(errors="replace")
-            passed = completed.returncode == 33 and "JIT SELFTEST PASS" in log and "AIC WIRED IRQ SELFTEST PASS" in log
-            if own_guest:
-                passed = passed and "GUEST HALT" in log
-            if cpu_model == "Conroe":
-                passed = completed.returncode == 37 and "UNSUPPORTED CPU" in log and "JIT SELFTEST PASS" not in log
-            results.append({"cpu_model": cpu_model, "own_code_guest": own_guest, "qemu_exit": completed.returncode,
-                            "passed": passed, "log": log, "stderr": completed.stderr})
-    report = {"schema": 1, "passed": all(x["passed"] for x in results), "cpu_model": "Nehalem",
-              "avx_available": False, "boot_environment": "OVMF UEFI (no Linux guest)",
-              "instrumented_artifact_sha256": hashlib.sha256((ROOT / "build/TESTX64.EFI").read_bytes()).hexdigest(),
-              "production_artifact_sha256": hashlib.sha256((ROOT / "build/BOOTX64.EFI").read_bytes()).hexdigest(),
-              "macos_boot_verified": False, "physical_mac_verified": False, "cases": results}
-    (ROOT / "build/ovmf-report.json").write_text(json.dumps(report, indent=2) + "\n")
+    cases = [
+        {"name": "built-in-golden-halt", "kind": "normal", "cpu": "Nehalem", "guest": None, "exit": 33},
+        {"name": "external-own-code-halt", "kind": "normal", "cpu": "Nehalem", "guest": "normal", "exit": 33},
+        {
+            "name": "unsupported-aarch64-instruction", "kind": "guest-failure", "cpu": "Nehalem",
+            "guest": "bad-instruction", "exit": 35,
+            "stop_marker": "VF: GUEST_STOP reason=BAD_INSTRUCTION",
+            "preos_marker": "VF: PREOS_FAIL code=JIT",
+        },
+        {
+            "name": "bounded-loop-budget-exhaustion", "kind": "guest-failure", "cpu": "Nehalem",
+            "guest": "budget-exhaustion", "exit": 35,
+            "stop_marker": "VF: GUEST_STOP reason=BUDGET_EXHAUSTED",
+            "preos_marker": "VF: PREOS_FAIL code=BUDGET",
+        },
+        {"name": "pre-sse4-host-rejection", "kind": "host-rejection", "cpu": "Conroe", "guest": None, "exit": 37},
+    ]
+    results = [run_case(case) for case in cases]
+    report = {
+        "schema": 2,
+        "passed": all(result["passed"] for result in results),
+        "cpu_model": "Nehalem",
+        "avx_available": False,
+        "boot_environment": "OVMF UEFI (no Linux guest, no product QEMU runtime dependency)",
+        "instrumented_artifact_sha256": hashlib.sha256((ROOT / "build" / "TESTX64.EFI").read_bytes()).hexdigest(),
+        "production_artifact_sha256": hashlib.sha256((ROOT / "build" / "BOOTX64.EFI").read_bytes()).hexdigest(),
+        "layer_status": {
+            "firmware_efi": "passed" if all(result["passed"] for result in results) else "failed",
+            "rust_preos": "passed" if all(result["passed"] for result in results[:4]) else "failed",
+            "aarch64_jit": "passed" if all(result["passed"] for result in results[:4]) else "failed",
+            "native_machine": "partial: Phase-2 VfMachine RAM/registry/reset core; no M1 device graph",
+            "apple_boot_chain": "not attempted",
+            "macos": "not attempted",
+        },
+        "macos_boot_verified": False,
+        "physical_m1_compatibility": False,
+        "physical_mac_verified": False,
+        "cases": results,
+    }
+    (ROOT / "build" / "ovmf-report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
     raise SystemExit(0 if report["passed"] else 1)
 

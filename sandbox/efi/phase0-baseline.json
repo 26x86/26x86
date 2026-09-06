@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "scope": "Measured Phase 0 C-only baseline before Rust micro-preOS integration.",
+  "host": "x86_64 Linux build host",
+  "artifact": {
+    "name": "BOOTX64.EFI",
+    "bytes": 14336,
+    "sha256": "dd6729e38f4d25870085caabaed547d9a419371d7f77714ed6550dab4ff4bce8"
+  },
+  "c_jit_unit": {
+    "passed": true,
+    "assertions": 29,
+    "native_jit_executed": true,
+    "wx_enforced": true
+  },
+  "ovmf": {
+    "passed": true,
+    "normal_selftest": true,
+    "own_code_halt": true,
+    "pre_sse4_rejection": true
+  },
+  "macos_boot_verified": false,
+  "physical_m1_compatibility": false
+}

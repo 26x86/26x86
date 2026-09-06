@@ -15,6 +15,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y clang lld qemu-system-x86 ovmf
+      - name: Install Rust COFF static-library target
+        run: rustup target add x86_64-pc-windows-msvc
       - name: Compile production EFI and execute generated code
         run: python3 sandbox/efi/build.py
       - name: Compile VSK root policies and run sanitizer unit tests

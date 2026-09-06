@@ -8,14 +8,18 @@ internal `venfire` namespace remains available under `research/venfire`.
 
 The adopted VF-SPEC-001 v0.1 now defines the [VSK implementation](VSK.md):
 a VMX-root kernel with isolated Execution, Block, GPU and Shader cells. The
-direct EFI JIT described below is an existing diagnostic implementation, not
-the final VSK isolation boundary. New product admission is `AppleIntelOnly`
-with mandatory VMX/EPT, VT-d and interrupt remapping.
+EFI-integrated Rust/JIT path described below is a bounded diagnostic
+implementation, not the final VSK isolation boundary. New product admission is
+`AppleIntelOnly` with mandatory VMX/EPT, VT-d and interrupt remapping.
 
-The Sandbox is an x86_64 UEFI engine launched by 26x86-OpenCorePkg. It translates
-AArch64 guest code into x86_64 machine code. A Linux installation and a QEMU
-process are not runtime dependencies. QEMU/TCG research remains a reference and
-comparison harness; it is not substituted for this EFI implementation.
+The Sandbox is one x86_64 UEFI package launched by 26x86-OpenCorePkg. Its
+existing C EFI entry owns protocols, page allocation, W^X and cleanup; a
+statically linked Rust `no_std` micro-preOS validates the bounded context and
+orchestrates the existing AArch64-to-x86_64 JIT through a C wrapper. There is no
+second Rust EFI image, kernel, stage-2 loader, or host operating-system runtime.
+A Linux installation and a QEMU process are not runtime dependencies.
+QEMU/TCG research remains a reference and comparison harness; it is not
+substituted for this EFI implementation.
 
 The virtual Apple SoC uses **AIC**, not GIC. Guest startup is an **iBoot** path.
 Windows on ARM is outside the target platform. `config.plist` is the source for
@@ -89,8 +93,10 @@ python3 sandbox/vsk/tools/verify_efi_inputs.py \
 that validation does not open three windows. This is an EFI/VSK input diagnostic
 only: it does not load `iBoot`, start a macOS guest, or turn a target-27 label
 into Golden Gate boot evidence. Headless `--display none` remains the default
-for repeatable CI checks; `--display gtk|sdl` is available for an explicit
-single-case run. On WSL or a non-default QEMU installation, pass `--qemu`,
+for repeatable CI checks; VMApple `auto` selects Cocoa on native Apple Silicon
+and a QEMU-advertised headless backend (normally `none`) on Linux/WSL.
+`--display gtk|sdl|cocoa|none` remains available for an explicit run. On WSL or
+a non-default QEMU installation, pass `--qemu`,
 `--ovmf-code` and `--ovmf-vars` explicitly (or set `QEMU_SYSTEM_X86_64`,
 `OVMF_CODE` and `OVMF_VARS`). The resulting report records the resolved QEMU
 version and SHA-256 hashes of both OVMF inputs so a visible run can be compared
@@ -136,6 +142,15 @@ The prior Linux research directory includes useful original-image hashing,
 normal personalization and device experiments. It retains its historical CPU
 and release restrictions; neither those experiments nor a synthetic UEFI test
 constitute successful macOS 26/27 boot on a physical Mac.
+
+The normal macOS entry is now a separate runner path. Selecting
+`--boot-selection macos` skips iBSS/iBEC personalization and DFU, starts the
+provisioned AUX/root pair through AVPBooter, and records separate Darwin/XNU and
+userspace UART markers. On an Apple-Silicon macOS host the runner selects QEMU
+HVF and the normal VMApple graphics path; elsewhere it remains the explicit
+TCG research-headless path. No marker is promoted to `macos_boot_verified` until
+both XNU and userspace evidence are present, and a Golden Gate installation is
+still a separate receipt/UI claim.
 
 ## Licensing and scope
 

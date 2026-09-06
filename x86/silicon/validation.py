@@ -7,6 +7,8 @@ Never touches real hardware, USB, or a hypervisor — see x86/silicon/__init__.p
 This module defines its own ``StepResult`` — a distinct, unrelated class from
 ``x86.extreme.validation.StepResult`` (same shape, different track: this package is
 Apple-Silicon-sandbox simulation, not the unrelated x86-hardware/Tahoe-Vega64 track).
+The explicit real VMApple path lives in :mod:`x86.silicon.real` and is not
+started by these gates.
 """
 
 from __future__ import annotations
@@ -26,6 +28,7 @@ UNITTEST_MODULES: tuple[str, ...] = (
     "x86.silicon.test_dfu_handshake",
     "x86.silicon.test_mock_host",
     "x86.silicon.test_session",
+    "x86.silicon.test_real",
 )
 
 
@@ -144,8 +147,8 @@ def run_all(*, run_unittests: bool = True, verbosity: int = 1) -> dict[str, Any]
         "gates_ok": all(g.ok for g in gates),
         "unit": unit,
         "note": (
-            "Pure simulation. No QEMU/hypervisor is ever spawned by this package, "
-            "regardless of what is installed on this host."
+            "These gates are pure simulation. The explicit `x86.silicon direct` "
+            "command is the separate VMApple runtime path."
         ),
     }
     payload["ok"] = payload["gates_ok"] and (unit.get("ok", True) if not unit.get("skipped") else True)
