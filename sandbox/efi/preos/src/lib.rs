@@ -5,6 +5,9 @@
 
 #![no_std]
 
+#[cfg(test)]
+extern crate std;
+
 use core::ffi::c_void;
 use core::mem::{align_of, size_of};
 use core::ptr;
@@ -269,6 +272,19 @@ fn result_storage_valid(result: &VfPreosResult) -> bool {
         && zero_words(&result.reserved)
 }
 
+fn failure_trace_is_safe(context: &VfPreosContext) -> bool {
+    // Do not call a callback selected from a context that failed the ABI
+    // header/reserved-field check.  The EFI owner normally supplies a trusted
+    // C callback, but malformed input must not turn error reporting into an
+    // indirect call through unvalidated bytes.  Once the stable header and
+    // reserved area are valid, the remaining context checks can report their
+    // explicit failure through the caller-owned trace endpoint.
+    context.abi_version == ABI_VERSION
+        && context.struct_size as usize == size_of::<VfPreosContext>()
+        && zero_words(&context.reserved)
+        && context.trace.is_some()
+}
+
 fn empty_jit_result() -> VfJitResult {
     VfJitResult {
         abi_version: ABI_VERSION,
@@ -387,7 +403,7 @@ pub unsafe extern "C" fn vf_preos_run(
     let validation = validate_context(context);
     if validation != OK {
         assign_error(result, validation, TERMINATION_NONE);
-        if context.trace.is_some() {
+        if failure_trace_is_safe(context) {
             trace_failure(context, validation);
         }
         return validation;
@@ -501,6 +517,40 @@ mod tests {
         assert_eq!(core::mem::offset_of!(VfPreosContext, guest_ram), 40);
         assert_eq!(core::mem::offset_of!(VfJitRequest, opaque_execution_handle), 56);
         assert_eq!(core::mem::offset_of!(VfPreosResult, result_x1), 48);
+    }
+
+    #[test]
+    fn abi_layout_receipt() {
+        // build.py captures this line with --nocapture and compares every
+        // value against the C receipt from abi_layout.c.  Keeping the receipt
+        // in a unit test preserves the staticlib-only deployment rule: this
+        // is never a staged Rust executable.
+        std::println!(
+            concat!(
+                "VF_ABI_LAYOUT {{\"context_size\":{},\"context_align\":{},",
+                "\"context_budget_offset\":{},\"context_guest_offset\":{},",
+                "\"context_ram_offset\":{},\"context_handle_offset\":{},",
+                "\"context_trace_offset\":{},\"context_expected_x1_offset\":{},",
+                "\"context_reserved_offset\":{},\"request_size\":{},",
+                "\"request_align\":{},\"request_handle_offset\":{},",
+                "\"jit_result_size\":{},\"jit_result_align\":{},",
+                "\"preos_result_size\":{},\"preos_result_align\":{},",
+                "\"preos_result_x1_offset\":{}}}"
+            ),
+            size_of::<VfPreosContext>(), align_of::<VfPreosContext>(),
+            core::mem::offset_of!(VfPreosContext, execution_budget),
+            core::mem::offset_of!(VfPreosContext, guest_bytes),
+            core::mem::offset_of!(VfPreosContext, guest_ram),
+            core::mem::offset_of!(VfPreosContext, opaque_execution_handle),
+            core::mem::offset_of!(VfPreosContext, trace),
+            core::mem::offset_of!(VfPreosContext, expected_x1),
+            core::mem::offset_of!(VfPreosContext, reserved),
+            size_of::<VfJitRequest>(), align_of::<VfJitRequest>(),
+            core::mem::offset_of!(VfJitRequest, opaque_execution_handle),
+            size_of::<VfJitResult>(), align_of::<VfJitResult>(),
+            size_of::<VfPreosResult>(), align_of::<VfPreosResult>(),
+            core::mem::offset_of!(VfPreosResult, result_x1),
+        );
     }
 
     #[test]

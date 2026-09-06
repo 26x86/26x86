@@ -26,6 +26,21 @@ def json_output(command):
     return json.loads(lines[-1])
 
 
+def captured(command):
+    return subprocess.run(command, check=True, capture_output=True, text=True)
+
+
+def rust_layout_receipt(output):
+    prefix = "VF_ABI_LAYOUT "
+    receipts = [line[len(prefix):] for line in output.splitlines() if line.startswith(prefix)]
+    if len(receipts) != 1:
+        raise RuntimeError("Rust ABI layout test did not emit exactly one receipt")
+    try:
+        return json.loads(receipts[0])
+    except json.JSONDecodeError as error:
+        raise RuntimeError("Rust ABI layout receipt is not JSON") from error
+
+
 def cargo_target_present():
     installed = subprocess.check_output(["rustup", "target", "list", "--installed"], text=True)
     if EFI_RUST_TARGET not in installed.splitlines():
@@ -36,7 +51,10 @@ def cargo_target_present():
 
 def build_rust_staticlibs():
     cargo_target_present()
-    run(["cargo", "test", "--manifest-path", str(PREOS / "Cargo.toml")])
+    tests = captured([
+        "cargo", "test", "--manifest-path", str(PREOS / "Cargo.toml"), "--", "--nocapture",
+    ])
+    rust_layout = rust_layout_receipt(tests.stdout + tests.stderr)
     host_target = BUILD / "cargo-host"
     efi_target = BUILD / "cargo-efi"
     run([
@@ -51,7 +69,7 @@ def build_rust_staticlibs():
     efi_staticlib = efi_target / EFI_RUST_TARGET / "release" / "venfire_preos.lib"
     if not host_staticlib.is_file() or not efi_staticlib.is_file():
         raise RuntimeError("Cargo did not emit the expected no_std static libraries")
-    return host_staticlib, efi_staticlib
+    return host_staticlib, efi_staticlib, rust_layout
 
 
 def validate_machine_contract():
@@ -102,7 +120,51 @@ def build_native_tests(host_staticlib):
         str(host_staticlib), "-o", str(BUILD / "test-preos"),
     ])
     ffi = json_output([str(BUILD / "test-preos")])
-    return native, ffi
+    run([
+        "clang", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror",
+        str(ROOT / "abi_layout.c"), "-o", str(BUILD / "test-abi-layout"),
+    ])
+    abi = json_output([str(BUILD / "test-abi-layout")])
+    return native, ffi, abi
+
+
+def build_aic_test():
+    """Exercise the first-party AIC model linked into the EFI image.
+
+    This is a standalone device-model test, not M1 hardware evidence.  The
+    EFI entry runs the same model's bounded self-test, while this process
+    covers reset, masking, level reassertion, affinity, and bounds without
+    requiring an Apple device tree.
+    """
+    run([
+        "clang", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror",
+        str(ROOT.parent / "devices" / "aic_v1.c"),
+        str(ROOT.parent / "devices" / "test_aic.c"),
+        "-o", str(BUILD / "test-aic"),
+    ])
+    result = captured([str(BUILD / "test-aic")])
+    expected = "PASS AIC v1 wired IRQ"
+    if expected not in result.stdout:
+        raise RuntimeError(f"AIC model test did not emit its pass marker: {result.stdout!r}")
+    return {
+        "passed": True,
+        "stdout": result.stdout.strip(),
+        "scope": "standalone AIC v1 model; no M1 device-tree or physical hardware claim",
+    }
+
+
+def compare_abi_layout(c_layout, rust_layout):
+    if c_layout != rust_layout:
+        raise RuntimeError(
+            "C/Rust ABI layout mismatch:\n"
+            + json.dumps({"c": c_layout, "rust": rust_layout}, indent=2)
+        )
+    return {
+        "passed": True,
+        "values": c_layout,
+        "evidence": "C abi_layout.c receipt exactly matched Rust #[repr(C)] unit-test receipt",
+        "deployment_executable_count": 0,
+    }
 
 
 def audit_linked_image(image, map_file):
@@ -124,7 +186,7 @@ def source_hashes():
     paths = [
         ROOT / "jit.c", ROOT / "jit.h", ROOT / "main.c", ROOT / "uefi.h", ROOT / "handoff.h",
         ROOT / "preos_abi.h", ROOT / "preos_bridge.h", ROOT / "preos_bridge.c", ROOT / "test_jit.c",
-        ROOT / "preos_host_test.c", ROOT / "verify_ovmf.py", ROOT / "build.py",
+        ROOT / "preos_host_test.c", ROOT / "abi_layout.c", ROOT / "verify_ovmf.py", ROOT / "build.py",
         ROOT / "verify_m1_machine_contract.py", ROOT / "m1-machine-contract.json",
         PREOS / "Cargo.toml", PREOS / "Cargo.lock", PREOS / "src" / "lib.rs",
         PREOS / "src" / "machine.rs",
@@ -135,8 +197,10 @@ def source_hashes():
 def main():
     BUILD.mkdir(exist_ok=True)
     machine_contract = validate_machine_contract()
-    host_staticlib, efi_staticlib = build_rust_staticlibs()
-    native, ffi = build_native_tests(host_staticlib)
+    host_staticlib, efi_staticlib, rust_layout = build_rust_staticlibs()
+    native, ffi, c_layout = build_native_tests(host_staticlib)
+    aic = build_aic_test()
+    abi_layout = compare_abi_layout(c_layout, rust_layout)
     artifacts = build_efi(efi_staticlib)
     production, production_map = artifacts[0]
     instrumented, instrumented_map = artifacts[1]
@@ -161,7 +225,9 @@ def main():
         ],
         "native_unit": native,
         "rust_unit": {"passed": True, "runner": "cargo test --manifest-path sandbox/efi/preos/Cargo.toml"},
+        "static_abi_unit": abi_layout,
         "c_rust_abi_unit": ffi,
+        "aic_unit": aic,
         "linked_image_audit": audit,
         "instrumented_image_audit": test_audit,
         "measurements": {

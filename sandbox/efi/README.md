@@ -77,6 +77,14 @@ test-console and QEMU-exit instrumentation, but is never the production image.
 The repository build report and OVMF report are the authoritative evidence for
 the artifacts and tests actually run.
 
+`python3 sandbox/efi/build.py` also runs the host-only `abi_layout.c` receipt
+and the Rust `#[repr(C)]` receipt with `--nocapture`, then refuses to link the
+EFI image if any size, alignment, or offset differs.  It separately executes
+the first-party AIC v1 model test that is linked into the EFI self-test.  Those
+executables remain build-time verifiers and are not companion deployment
+images; the AIC result is a device-model unit result, not M1 hardware or
+device-tree evidence.
+
 ## Layer ownership
 
 The ownership boundary is intentionally narrow. It prevents a Rust runtime

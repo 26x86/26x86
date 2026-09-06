@@ -135,9 +135,28 @@ int main(void) {
 
     context = make_context(&execution, golden, sizeof(golden) / sizeof(golden[0]), 100, 0);
     context.reserved[0] = 1;
+    trace_mask = 0;
     zero_result(&result);
     CHECK(vf_preos_run(&context, &result) == VF_PREOS_E_ABI);
     CHECK(result.code == VF_PREOS_E_ABI);
+    CHECK(trace_mask == 0); /* malformed ABI must not indirect-call trace */
+
+    context = make_context(&execution, golden, sizeof(golden) / sizeof(golden[0]), 100, 0);
+    context.guest_bytes = 0;
+    zero_result(&result);
+    CHECK(vf_preos_run(&context, &result) == VF_PREOS_E_GUEST_INPUT);
+    CHECK(result.code == VF_PREOS_E_GUEST_INPUT);
+    context = make_context(&execution, golden, sizeof(golden) / sizeof(golden[0]), 100, 0);
+    context.guest_bytes = (const uint8_t *)(uintptr_t)(UINTPTR_MAX - (uintptr_t)7);
+    context.guest_size = 16;
+    zero_result(&result);
+    CHECK(vf_preos_run(&context, &result) == VF_PREOS_E_GUEST_INPUT);
+    CHECK(result.code == VF_PREOS_E_GUEST_INPUT);
+    context = make_context(&execution, golden, sizeof(golden) / sizeof(golden[0]), 100, 0);
+    context.guest_ram = 0;
+    zero_result(&result);
+    CHECK(vf_preos_run(&context, &result) == VF_PREOS_E_CONTEXT);
+    CHECK(result.code == VF_PREOS_E_CONTEXT);
 
     /* Architectural system state is not silently interpreted by the Phase-1
      * user-mode subset.  The stable feature request is rejected before the
