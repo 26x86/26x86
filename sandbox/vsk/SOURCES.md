@@ -7,6 +7,9 @@ VF-SPEC-001 v0.1, not from measurements of completed hardware support.
   https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html
   VMX allowed-control bit interpretation, ISA and XSTATE definitions. Policy
   helpers consuming captured values are not live MSR probes or VMX enablement.
+  Exact VMX control reference: revision 092 volume 3D, appendix A.3, printed
+  page A-3 (PDF page 207):
+  https://cdrdv2-public.intel.com/922490/332831-092-sdm-vol-3d.pdf
 - ACPICA's Intel-maintained `actbl1.h`, DMAR structure definitions:
   https://github.com/acpica/acpica/blob/master/source/include/actbl1.h
   Used to verify DMAR/DRHD/RMRR/device-scope binary offsets; no source copied.

@@ -49,7 +49,7 @@
     "include/vf_abi.h": "5064f990dfe6da50f06da7fd1e4a9ff642fcf9d69141e39babea680bcdaf0de8",
     "include/vf_boot.h": "805aa256b06299410084ca4c03cb0a5072373d3d784434783f24c4b52f43c5a5",
     "include/vf_dmar.h": "61c69715bf98ec679bd04724f80a1b6c072a7229f809fa36cd09314b45fbc348",
-    "include/vf_policy.h": "5cb31c463726fed67b3b155a7c8bc31a112434ccd2b38b2f6c0c647ab1183cce",
+    "include/vf_policy.h": "61717d0025e174eca2c4d1ad3e87371dee8e83f0cfe66f2d3874802bcf6cc07f",
     "src/vf_boot.c": "2f2b3f042c4f75c022274aaa6a085c52e69f5ebba3c69d6df76b49cd5cb773a5",
     "src/vf_dmar.c": "f58861aafc34938c8165e7350876858f688acc44b51266a9b61b960443c18f39",
     "src/vf_policy.c": "3dd7aab6b20d0127cabc7eec1f4c6ddb1146a4427e591db81da1f6b7c126e8db",

@@ -122,7 +122,7 @@ struct vf_codegen_choice {
 };
 vf_status vf_select_common_codegen(const struct vf_cpu_capability *cpus,
     uint32_t count, struct vf_codegen_choice *out);
-/* SDM volume 3C appendix A: low MSR bits require 1, high bits permit 1.
+/* SDM revision 092 volume 3D appendix A.3: low MSR bits require 1, high bits permit 1.
  * Use TRUE control MSRs when IA32_VMX_BASIC[55] supports them. The caller
  * selects the correct control class and checks dependencies between classes. */
 vf_status vf_vmx_combine_controls(const uint64_t *capability_msrs,
