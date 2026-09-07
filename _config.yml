@@ -1,0 +1,12 @@
+title: 26x86 Developer Wiki
+description: OpenCore integration, Nextcore contracts, and evidence-first development documentation
+url: https://26x86.github.io
+baseurl: /26x86
+theme: minima
+markdown: kramdown
+exclude:
+  - _isolated
+  - site
+  - node_modules
+  - vendor
+  - mkdocs.yml
