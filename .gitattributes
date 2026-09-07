@@ -17,3 +17,6 @@ vendor/mellow/** linguist-vendored
 integration/patches/*.patch -text -whitespace
 research/venfire/** -text -whitespace
 sandbox/vsk/crypto/** -text -whitespace
+
+# Pre-commit guard template must stay LF (CRLF breaks hook execution)
+Tools/git/hooks/pre-commit text eol=lf

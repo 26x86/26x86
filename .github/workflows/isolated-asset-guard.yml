@@ -1,0 +1,39 @@
+name: Isolated-Asset Guard
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  guard:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify no _isolated path is tracked in HEAD
+        run: |
+          set -eu
+          if git ls-files | grep -E '^_isolated(/|$)'; then
+            echo "::error::_isolated/ asset is tracked in HEAD — this must be impossible"
+            exit 1
+          fi
+          echo "OK: no _isolated paths tracked."
+      - name: Verify the pre-commit guard actually rejects forced staging
+        run: |
+          set -eu
+          bash tools/git/install-hooks.sh
+          mkdir -p _isolated
+          echo "probe" > _isolated/ci-probe.txt
+          git add -f _isolated/ci-probe.txt
+          git config user.name "ci-guard"
+          git config user.email "ci@localhost"
+          if git commit -m "guard-must-reject" >/tmp/guard.log 2>&1; then
+            echo "::error::commit SUCCEEDED with a forced _isolated path — guard is broken"
+            cat /tmp/guard.log
+            exit 1
+          fi
+          grep -q "COMMIT REJECTED" /tmp/guard.log
+          echo "OK: guard rejected the forced _isolated commit."
+          git restore --staged _isolated/ci-probe.txt
+          rm -rf _isolated

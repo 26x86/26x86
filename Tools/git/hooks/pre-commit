@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Pre-commit guard: refuse any commit that stages a path under _isolated/.
+#
+# Why this is required even when .gitignore lists /_isolated/ :
+#   - .gitignore prevents `git add` from picking up new files during normal
+#     use, but it does NOT stop `git add -f _isolated/...` or path restores.
+#   - Once forced into the index, .gitignore alone is insufficient.
+#
+# Matching rule (deliberately dumb and portable):
+#   Hooks always run from the repository top level, and `git diff
+#   --cached --name-only` prints paths relative to that top level with
+#   forward slashes on every platform. We match those relative strings
+#   only. No absolute paths, no filesystem resolution, no per-host
+#   formatting assumptions (Windows drive paths vs MSYS paths differ and
+#   MUST NOT be compared).
+#
+# Override: there is none. If a file under _isolated/ must enter a commit,
+# the path itself is wrong; move the asset out of _isolated/ first.
+
+set -eu
+
+violation_found=0
+violations=""
+
+while IFS= read -r staged_path; do
+    [ -z "$staged_path" ] && continue
+    normalized="$staged_path"
+    case "$normalized" in
+        ./*) normalized="${normalized#./}" ;;
+    esac
+    case "$normalized" in
+        _isolated|_isolated/*)
+            violation_found=1
+            violations="  - $staged_path
+$violations"
+            ;;
+    esac
+done < <(git diff --cached --name-only --diff-filter=ACMRT)
+
+if [ "$violation_found" -eq 1 ]; then
+    printf '%s\n' \
+        '=================================================================' \
+        '  COMMIT REJECTED: _isolated/ asset staged into the public tree' \
+        '=================================================================' \
+        '' \
+        'The following staged paths resolve under _isolated/, which holds' \
+        'reverse-engineering material that must never enter ANY branch,' \
+        'tag, or CI artifact of a public repository:' \
+        '' \
+        "$violations" \
+        'Next steps:' \
+        '  * Staged by accident:  git restore --staged <path>' \
+        '  * Needed in this commit: move the asset out of _isolated/ to' \
+        '    a location whose public visibility matches its actual' \
+        '    visibility (see docs/PUBLIC_VS_PRIVATE_BOUNDARY.md).' \
+        '=================================================================' >&2
+    exit 1
+fi
+
+exit 0

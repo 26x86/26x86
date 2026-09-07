@@ -288,3 +288,25 @@ resources/branding/*.iconset/
 
 # Agent session state (local only)
 .claude/
+
+# ==========================================
+# Nextcore isolated research assets (CRITICAL)
+# ==========================================
+# Reverse-engineering results and Apple-asset-derived files MUST NOT enter the
+# public tree in any branch, tag, or CI artifact. They live in the local
+# _isolated/ directory and are pinned by a pre-commit guard below.
+#
+# A pre-commit hook in .git/hooks/pre-commit (or tools/git/hooks/pre-commit)
+# refuses any commit that stages a path under _isolated/. The .gitignore entry
+# below makes git status/ls-files ignore them, the hook makes it impossible.
+# Either layer alone is insufficient; both must be present.
+#
+# Public documentation: docs/PUBLIC_VS_PRIVATE_BOUNDARY.md
+# Public documentation: docs/NEXTCORE_CLEAN_ROOM.md
+/_isolated/
+/_isolated/**
+
+# Nextcore target tree lives next to this one; tracked separately.
+# Listed here only so that tooling that scans the whole workspace does not
+# mistake a parallel Nextcore checkout for part of this repo.
+/nextcore/
