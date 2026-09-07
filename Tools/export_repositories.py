@@ -64,6 +64,27 @@ def git_head() -> str:
     return result.stdout.strip()
 
 
+def _git_config(key: str, fallback: str) -> str:
+    result = subprocess.run(["git", "-C", str(ROOT), "config", key],
+                            capture_output=True, text=True)
+    value = result.stdout.strip()
+    return value if result.returncode == 0 and value else fallback
+
+
+def init_module_repository(destination: Path, *, tag: str) -> None:
+    """Give the exported tree its own initial commit and module tag."""
+    name = _git_config("user.name", "26x86 release tooling")
+    email = _git_config("user.email", "release@localhost")
+    def git(*args: str) -> None:
+        subprocess.run(["git", "-C", str(destination), *args],
+                       check=True, capture_output=True, text=True)
+    git("init", "-b", "main")
+    git("add", "-A")
+    git("-c", f"user.name={name}", "-c", f"user.email={email}",
+        "commit", "-m", f"Initial module export ({tag})")
+    git("tag", tag)
+
+
 def file_inventory(root: Path) -> list[dict[str, object]]:
     entries = []
     for path in sorted(path for path in root.rglob("*") if path.is_file()):
@@ -212,6 +233,7 @@ def export(output: Path) -> dict[str, object]:
         description="26x86 ARM64 VMApple/TCG conformance and evidence tooling",
         depends_on=["26x86/VenFire-QEMU"], source="research/venfire",
         tag="26x86-VenFire-v0.1.0")
+    init_module_repository(venfire, tag="26x86-VenFire-v0.1.0")
 
     copy_path(QEMU_PATCHES, qemu / "patches")
     copy_named(VENFIRE / "tools", qemu / "tools", sorted(QEMU_TOOLS))
@@ -230,6 +252,7 @@ def export(output: Path) -> dict[str, object]:
         description="Reproducible QEMU VMApple TCG/headless patch series and source audit",
         depends_on=["qemu/qemu@ff1d2d19d7e24893e2012d879f8e73077e17b9bd"],
         source="research/venfire/patches", tag="26x86-VenFire-QEMU-v0.1.0")
+    init_module_repository(qemu, tag="26x86-VenFire-QEMU-v0.1.0")
     return {"output": str(output), "repositories": [str(venfire), str(qemu)]}
 
 
