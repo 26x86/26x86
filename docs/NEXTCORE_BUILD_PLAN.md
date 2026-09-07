@@ -690,6 +690,25 @@ Virtualization.framework로 ARM macOS guest를 실행할 적격 host가 없다.
 XNU marker, userspace marker를 순서대로 판정한다. 그 전에는 현재 TCG panic을
 macOS boot 또는 장치 구현 성공으로 승격하지 않는다.
 
+### BP18. Nextcore 모듈 저장소 배포
+
+현재 상태: Nextcore workspace에는 `core`, `efi`, `gpu`, `hal`, `ise`, `apls`,
+`tool`의 일곱 Rust crate가 있고, 루트 저장소 배포만 완료됐다. 기존 VenFire
+배포처럼 모듈 소비자는 각 계층의 소스, 의존 관계, source commit 및 tag를 독립
+저장소에서 확인할 수 있어야 한다.
+
+결정: 공개 tracked source만 fresh export directory로 복사하고 각 저장소에 독립
+Git 초기 commit, `26x86-Nextcore-<Module>-v0.1.0` tag, `repository.json`,
+sha256 file inventory 및 CI를 생성한다. 외부 모듈 의존은 상대 path 대신 해당
+GitHub 저장소와 초기 tag로 고정한다. 배포 순서는 leaf `Core`/`GPU`/`HAL`/`ISE`,
+그 다음 `APLS`/`EFI`, 마지막 `Tool`이다. `_isolated/`, artifacts, target 및
+비공개 입력은 export 대상이 아니다.
+
+검증 게이트: export 전 source path가 tracked crate tree인지 확인하고, 각 export의
+metadata와 inventory를 검토한다. public repository 생성 뒤 branch/tag push를
+확인하고, clone한 독립 tree에서 module별 Cargo test 또는 EFI target check가
+통과해야 배포 성공으로 기록한다.
+
 ## OPEN_QUESTION
 
 - BP9 연속 실행 결정: Design D2-A는 표준 EFI application 중간 경로를 허용했고,
