@@ -494,6 +494,25 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
         provision_macosvm,
         run,
     )
+    from x86.vmapple_tcg import TCGVMappleConfig, run_tcg_macosvm
+
+    if args.vmapple_action in ("verify-handoff", "handoff-verify"):
+        from sandbox.efi.verify_iboot_xnu_handoff import verify_file
+        try:
+            result = verify_file(
+                Path(args.report),
+                expected_target_major=args.target,
+                require_recovery_chain=args.require_recovery_chain,
+            )
+        except (ValueError, OSError) as exc:
+            _emit_json({"ok": False, "valid": False, "error": str(exc)})
+            return 2
+        _emit_json({"ok": bool(result.get("valid")) and (
+            not args.require_boot or bool(result.get("claims", {}).get("macos_boot_verified"))
+        ), **result})
+        return 0 if (result.get("valid") and (
+            not args.require_boot or result.get("claims", {}).get("macos_boot_verified") is True
+        )) else 2
 
     if args.vmapple_action == "status":
         _emit_json(configured_from_environment())
@@ -564,6 +583,40 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
         })
         return 0 if result.get("macos_boot_verified") else 2
 
+    if args.vmapple_action in ("run-tcg", "tcg", "emulate"):
+        try:
+            result = run_tcg_macosvm(
+                TCGVMappleConfig(
+                    target_major=args.target,
+                    qemu=args.qemu,
+                    qemu_img=args.qemu_img,
+                    firmware=args.firmware,
+                    vm_json=args.vm_json,
+                    output=args.output,
+                    aux_seed=args.aux_seed,
+                    root_seed=args.root_seed,
+                    memory_mib=args.memory_mib,
+                    smp=args.smp,
+                    display=args.display,
+                    duration=args.duration,
+                    observation_timeout=args.observation_timeout,
+                    research_only=args.research_only,
+                    research_graphics=args.research_graphics,
+                    firmware_kind=args.firmware_kind,
+                )
+            )
+        except (ValueError, OSError, TimeoutError, RuntimeError) as exc:
+            _emit_json({
+                "ok": False,
+                "error": str(exc),
+                "engine": "qemu-vmapple-tcg",
+                "native_runtime_started": False,
+                "macos_boot_verified": False,
+            })
+            return 2
+        _emit_json({"ok": bool(result.get("macos_boot_verified")), **result})
+        return 0 if result.get("macos_boot_verified") else 2
+
     config = VMappleConfig(
         target_major=args.target,
         qemu=args.qemu,
@@ -575,7 +628,11 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
         output=args.output,
         vm_json=args.vm_json,
         qemu_img=args.qemu_img,
+        aux_seed=args.aux_seed,
+        root_seed=args.root_seed,
         display=args.display,
+        research_graphics=args.research_graphics,
+        research_stage2=args.research_stage2,
         uuid=args.uuid,
         aux_offset=args.aux_offset,
         memory_mib=args.memory_mib,
@@ -689,6 +746,17 @@ def build_parser() -> argparse.ArgumentParser:
         "status", help="Show configured VMApple paths without launching a guest"
     )
     vmapple_status.set_defaults(handler=cmd_vmapple)
+    vmapple_handoff = vmapple_actions.add_parser(
+        "verify-handoff", aliases=["handoff-verify"],
+        help="Verify a saved iBoot→XNU report; --require-boot demands real macOS evidence",
+    )
+    vmapple_handoff.add_argument("--report", required=True,
+                                 help="saved launch/report JSON; it is read-only")
+    vmapple_handoff.add_argument("--target", type=int, choices=[26, 27])
+    vmapple_handoff.add_argument("--require-recovery-chain", action="store_true")
+    vmapple_handoff.add_argument("--require-boot", action="store_true",
+                                 help="return failure unless XNU and userspace evidence prove macOS boot")
+    vmapple_handoff.set_defaults(handler=cmd_vmapple)
     vmapple_capabilities = vmapple_actions.add_parser(
         "capabilities",
         help="Show the qemu-t8030-derived Apple Silicon device profile without launching a guest",
@@ -756,6 +824,54 @@ def build_parser() -> argparse.ArgumentParser:
     )
     vmapple_native.add_argument("--json", action="store_true")
     vmapple_native.set_defaults(handler=cmd_vmapple)
+    vmapple_tcg = vmapple_actions.add_parser(
+        "run-tcg", aliases=["tcg", "emulate"],
+        help="Run an unchanged VMApple bundle through portable AArch64 TCG (no macOS host required)",
+    )
+    vmapple_tcg.add_argument("--target", type=int, choices=[26, 27], default=27)
+    vmapple_tcg.add_argument("--qemu", default=os.environ.get("X86_VMAPLE_QEMU"))
+    vmapple_tcg.add_argument("--qemu-img", default=os.environ.get("X86_VMAPLE_QEMU_IMG"))
+    vmapple_tcg.add_argument(
+        "--firmware", default=os.environ.get("X86_VMAPLE_AVPBOOTER", ""),
+        required=not bool(os.environ.get("X86_VMAPLE_AVPBOOTER")),
+        help="caller-supplied AVPBooter or raw iBoot Stage2 firmware binary",
+    )
+    vmapple_tcg.add_argument(
+        "--firmware-kind", choices=["avpbooter", "iboot-stage2"], default="avpbooter",
+        help="interpret --firmware as AVPBooter (default) or decoded raw iBoot Stage2",
+    )
+    vmapple_tcg.add_argument(
+        "--vm-json", default=os.environ.get("X86_VMAPLE_JSON", ""),
+        required=not bool(os.environ.get("X86_VMAPLE_JSON")),
+        help="macosvm.json; its ECID, hardware model, AUX, and root are used atomically",
+    )
+    vmapple_tcg.add_argument(
+        "--aux-seed", default=os.environ.get("X86_VMAPLE_AUX_SEED", ""),
+        help="read-only raw guest view or qcow2 overlay from an earlier recovery session",
+    )
+    vmapple_tcg.add_argument(
+        "--root-seed", default=os.environ.get("X86_VMAPLE_ROOT_SEED", ""),
+        help="read-only raw guest view or qcow2 overlay from an earlier recovery session",
+    )
+    vmapple_tcg.add_argument("--output", default=os.environ.get("X86_VMAPLE_OUTPUT"))
+    vmapple_tcg.add_argument("--memory-mib", type=int, default=4096)
+    vmapple_tcg.add_argument("--smp", type=int, default=2)
+    vmapple_tcg.add_argument(
+        "--display", choices=["none", "auto", "dbus"], default="none",
+        help="headless by default; TCG PV graphics is not assumed",
+    )
+    vmapple_tcg.add_argument(
+        "--research-graphics", action="store_true",
+        help="explicitly enable the QEMU/Reims research graphics path",
+    )
+    vmapple_tcg.add_argument("--duration", type=float)
+    vmapple_tcg.add_argument("--observation-timeout", type=float, default=600.0)
+    vmapple_tcg.add_argument(
+        "--research-only", action="store_true", required=True,
+        help="Required acknowledgement that this is an emulation research run",
+    )
+    vmapple_tcg.add_argument("--json", action="store_true")
+    vmapple_tcg.set_defaults(handler=cmd_vmapple)
     vmapple_inspect_storage = vmapple_actions.add_parser(
         "inspect-storage",
         help="Read-only AUX/root readiness inspection; never starts QEMU or writes inputs",
@@ -793,10 +909,26 @@ def build_parser() -> argparse.ArgumentParser:
     vmapple_run.add_argument("--ibec", default=os.environ.get("X86_VMAPLE_IBEC"))
     vmapple_run.add_argument("--aux", default=os.environ.get("X86_VMAPLE_AUX", ""))
     vmapple_run.add_argument("--root", default=os.environ.get("X86_VMAPLE_ROOT", ""))
+    vmapple_run.add_argument(
+        "--aux-seed", default=os.environ.get("X86_VMAPLE_AUX_SEED", ""),
+        help="read-only raw guest view or qcow2 overlay from an earlier recovery session",
+    )
+    vmapple_run.add_argument(
+        "--root-seed", default=os.environ.get("X86_VMAPLE_ROOT_SEED", ""),
+        help="read-only raw guest view or qcow2 overlay from an earlier recovery session",
+    )
     vmapple_run.add_argument("--output", default=os.environ.get("X86_VMAPLE_OUTPUT"))
     vmapple_run.add_argument(
         "--display", choices=["auto", "gtk", "sdl", "cocoa", "none", "dbus"], default="auto",
         help="Display backend; auto selects Cocoa on native Apple Silicon and headless on research hosts",
+    )
+    vmapple_run.add_argument(
+        "--research-graphics", action="store_true",
+        help="explicitly enable the QEMU/Reims research graphics path on TCG",
+    )
+    vmapple_run.add_argument(
+        "--research-stage2", action="store_true",
+        help="explicitly expose the EL2/iBoot Stage2 research contract on TCG",
     )
     vmapple_run.add_argument("--uuid", type=lambda value: int(value, 0), default=0)
     vmapple_run.add_argument("--aux-offset", type=lambda value: int(value, 0), default=0)

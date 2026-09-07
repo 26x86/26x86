@@ -14,6 +14,10 @@ use core::ptr;
 
 mod machine;
 use machine::VfMachine;
+mod arch;
+mod mmu;
+mod m1;
+mod vmapple;
 
 const ABI_VERSION: u32 = 1;
 const MACHINE_PROFILE_M1_DIAGNOSTIC: u32 = 0x4d31_4430;
@@ -35,10 +39,10 @@ const E_RESULT: i32 = 10;
 const E_UNSUPPORTED: i32 = 11;
 
 /* Context flags are intentionally split into an expectation bit and explicit
- * future CPU/system requests.  The current AArch64 translator supports only
- * its bounded base subset.  A caller asking for exception-level state, an
- * MMU/TLB, atomics, SMP, timers, or PAuth is rejected before the JIT is
- * entered; it is never silently treated as ordinary user-mode code. */
+ * architectural requests. The base diagnostic guest keeps the C JIT fast
+ * path; a caller requesting CPU/system state is routed to the bounded Rust
+ * reference core instead of silently treating privileged code as ordinary
+ * user-mode bytes. */
 const FLAG_EXPECT_GOLDEN_RESULT: u32 = 0x0000_0001;
 const FLAG_REQUEST_EXCEPTION_MODEL: u32 = 0x0000_0100;
 const FLAG_REQUEST_PRIVILEGED_STATE: u32 = 0x0000_0200;
@@ -49,7 +53,7 @@ const FLAG_REQUEST_ATOMICS: u32 = 0x0000_2000;
 const FLAG_REQUEST_SMP: u32 = 0x0000_4000;
 const FLAG_REQUEST_TIMER: u32 = 0x0000_8000;
 const FLAG_REQUEST_PAUTH: u32 = 0x0001_0000;
-const REQUESTED_UNSUPPORTED_FEATURES: u32 = FLAG_REQUEST_EXCEPTION_MODEL
+const REQUESTED_ARCHITECTURE_FEATURES: u32 = FLAG_REQUEST_EXCEPTION_MODEL
     | FLAG_REQUEST_PRIVILEGED_STATE
     | FLAG_REQUEST_SYSTEM_REGISTERS
     | FLAG_REQUEST_MMU
@@ -58,7 +62,7 @@ const REQUESTED_UNSUPPORTED_FEATURES: u32 = FLAG_REQUEST_EXCEPTION_MODEL
     | FLAG_REQUEST_SMP
     | FLAG_REQUEST_TIMER
     | FLAG_REQUEST_PAUTH;
-const KNOWN_FLAGS: u32 = FLAG_EXPECT_GOLDEN_RESULT | REQUESTED_UNSUPPORTED_FEATURES;
+const KNOWN_FLAGS: u32 = FLAG_EXPECT_GOLDEN_RESULT | REQUESTED_ARCHITECTURE_FEATURES;
 
 const TERMINATION_NONE: u32 = 0;
 const TERMINATION_HALT: u32 = 1;
@@ -71,6 +75,16 @@ const TERMINATION_CODE_BUFFER_FULL: u32 = 7;
 const TERMINATION_WRAPPER_REJECTED: u32 = 8;
 const TERMINATION_INTERNAL: u32 = 9;
 const TERMINATION_UNSUPPORTED: u32 = 10;
+const TERMINATION_UNDEFINED_INSTRUCTION: u32 = 11;
+const TERMINATION_PRIVILEGE_FAULT: u32 = 12;
+const TERMINATION_TRANSLATION_FAULT: u32 = 13;
+const TERMINATION_PERMISSION_FAULT: u32 = 14;
+const TERMINATION_ALIGNMENT_FAULT: u32 = 15;
+const TERMINATION_SYSTEM_REGISTER_TRAP: u32 = 16;
+const TERMINATION_TIMER_INTERRUPT: u32 = 17;
+const TERMINATION_EXTERNAL_INTERRUPT: u32 = 18;
+const TERMINATION_INSTRUCTION_ABORT: u32 = 19;
+const TERMINATION_DATA_ABORT: u32 = 20;
 
 type TraceFn = unsafe extern "C" fn(*const u8, *mut c_void);
 
@@ -185,7 +199,13 @@ fn zero_words(words: &[u64; 3]) -> bool {
     words[0] == 0 && words[1] == 0 && words[2] == 0
 }
 
-fn valid_span(pointer: *const u8, bytes: u64, minimum: u64, maximum: u64, alignment: usize) -> bool {
+fn valid_span(
+    pointer: *const u8,
+    bytes: u64,
+    minimum: u64,
+    maximum: u64,
+    alignment: usize,
+) -> bool {
     if pointer.is_null()
         || bytes < minimum
         || bytes > maximum
@@ -229,14 +249,16 @@ fn validate_context(context: &VfPreosContext) -> i32 {
     if context.flags & !KNOWN_FLAGS != 0 {
         return E_ABI;
     }
-    if context.flags & REQUESTED_UNSUPPORTED_FEATURES != 0 {
-        return E_UNSUPPORTED;
-    }
     if context.execution_budget == 0 || context.execution_budget > MAX_EXECUTION_BUDGET {
         return E_CONTEXT;
     }
-    if !valid_span(context.guest_bytes, context.guest_size, 4, MAX_GUEST_BYTES, 4)
-        || (context.guest_size & 3) != 0
+    if !valid_span(
+        context.guest_bytes,
+        context.guest_size,
+        4,
+        MAX_GUEST_BYTES,
+        4,
+    ) || (context.guest_size & 3) != 0
     {
         return E_GUEST_INPUT;
     }
@@ -246,8 +268,7 @@ fn validate_context(context: &VfPreosContext) -> i32 {
         FIXED_GUEST_RAM_BYTES,
         FIXED_GUEST_RAM_BYTES,
         8,
-    )
-        || context.opaque_execution_handle.is_null()
+    ) || context.opaque_execution_handle.is_null()
         || ((context.opaque_execution_handle as usize) & 7) != 0
         || context.trace.is_none()
         || !expected_result_fields_valid(context)
@@ -294,8 +315,7 @@ unsafe fn abi_prefix_valid<T>(pointer: *const T, expected_size: usize) -> bool {
         return false;
     }
     let words = pointer.cast::<u32>();
-    ptr::read(words) == ABI_VERSION
-        && ptr::read(words.add(1)) as usize == expected_size
+    ptr::read(words) == ABI_VERSION && ptr::read(words.add(1)) as usize == expected_size
 }
 
 fn empty_jit_result() -> VfJitResult {
@@ -319,11 +339,11 @@ fn jit_status_valid(status: i32) -> bool {
     // VF_NEXT is an internal continuation value.  It must never cross the
     // wrapper boundary as a terminal result; vf_run() is expected to consume
     // it and either continue within the budget or return a terminal status.
-    matches!(status, 1..=7)
+    matches!(status, 1..=17)
 }
 
 fn termination_valid(reason: u32) -> bool {
-    (TERMINATION_HALT..=TERMINATION_UNSUPPORTED).contains(&reason)
+    (TERMINATION_HALT..=TERMINATION_DATA_ABORT).contains(&reason)
 }
 
 fn jit_result_valid(result: &VfJitResult) -> bool {
@@ -344,6 +364,16 @@ fn jit_result_pair_valid(result: &VfJitResult) -> bool {
         | (5, TERMINATION_BUDGET_EXHAUSTED)
         | (6, TERMINATION_CODE_BUFFER_FULL)
         | (7, TERMINATION_PROTECTION_FAILURE) => true,
+        (8, TERMINATION_UNDEFINED_INSTRUCTION)
+        | (9, TERMINATION_PRIVILEGE_FAULT)
+        | (10, TERMINATION_TRANSLATION_FAULT)
+        | (11, TERMINATION_PERMISSION_FAULT)
+        | (12, TERMINATION_ALIGNMENT_FAULT)
+        | (13, TERMINATION_SYSTEM_REGISTER_TRAP)
+        | (14, TERMINATION_TIMER_INTERRUPT)
+        | (15, TERMINATION_EXTERNAL_INTERRUPT)
+        | (16, TERMINATION_INSTRUCTION_ABORT)
+        | (17, TERMINATION_DATA_ABORT) => true,
         _ => false,
     }
 }
@@ -395,6 +425,22 @@ unsafe fn trace_guest_stop(context: &VfPreosContext, reason: u32) {
         TERMINATION_PROTECTION_FAILURE => b"VF: GUEST_STOP reason=PROTECTION\r\n\0".as_ptr(),
         TERMINATION_CODE_BUFFER_FULL => b"VF: GUEST_STOP reason=CODE_BUFFER_FULL\r\n\0".as_ptr(),
         TERMINATION_WRAPPER_REJECTED => b"VF: GUEST_STOP reason=WRAPPER_REJECTED\r\n\0".as_ptr(),
+        TERMINATION_UNDEFINED_INSTRUCTION => {
+            b"VF: GUEST_STOP reason=UNDEFINED_INSTRUCTION\r\n\0".as_ptr()
+        }
+        TERMINATION_PRIVILEGE_FAULT => b"VF: GUEST_STOP reason=PRIVILEGE_FAULT\r\n\0".as_ptr(),
+        TERMINATION_TRANSLATION_FAULT => b"VF: GUEST_STOP reason=TRANSLATION_FAULT\r\n\0".as_ptr(),
+        TERMINATION_PERMISSION_FAULT => b"VF: GUEST_STOP reason=PERMISSION_FAULT\r\n\0".as_ptr(),
+        TERMINATION_ALIGNMENT_FAULT => b"VF: GUEST_STOP reason=ALIGNMENT_FAULT\r\n\0".as_ptr(),
+        TERMINATION_SYSTEM_REGISTER_TRAP => {
+            b"VF: GUEST_STOP reason=SYSTEM_REGISTER_TRAP\r\n\0".as_ptr()
+        }
+        TERMINATION_TIMER_INTERRUPT => b"VF: GUEST_STOP reason=TIMER_INTERRUPT\r\n\0".as_ptr(),
+        TERMINATION_EXTERNAL_INTERRUPT => {
+            b"VF: GUEST_STOP reason=EXTERNAL_INTERRUPT\r\n\0".as_ptr()
+        }
+        TERMINATION_INSTRUCTION_ABORT => b"VF: GUEST_STOP reason=INSTRUCTION_ABORT\r\n\0".as_ptr(),
+        TERMINATION_DATA_ABORT => b"VF: GUEST_STOP reason=DATA_ABORT\r\n\0".as_ptr(),
         _ => b"VF: GUEST_STOP reason=INTERNAL\r\n\0".as_ptr(),
     };
     trace(context, message);
@@ -409,13 +455,107 @@ fn code_for_termination(reason: u32) -> i32 {
         | TERMINATION_DATA_FAULT
         | TERMINATION_CODE_BUFFER_FULL
         | TERMINATION_WRAPPER_REJECTED => E_JIT,
-        TERMINATION_UNSUPPORTED => E_UNSUPPORTED,
+        TERMINATION_INSTRUCTION_ABORT | TERMINATION_DATA_ABORT => E_JIT,
+        TERMINATION_UNSUPPORTED
+        | TERMINATION_UNDEFINED_INSTRUCTION
+        | TERMINATION_PRIVILEGE_FAULT
+        | TERMINATION_TRANSLATION_FAULT
+        | TERMINATION_PERMISSION_FAULT
+        | TERMINATION_ALIGNMENT_FAULT
+        | TERMINATION_SYSTEM_REGISTER_TRAP
+        | TERMINATION_TIMER_INTERRUPT
+        | TERMINATION_EXTERNAL_INTERRUPT => E_UNSUPPORTED,
         _ => E_INTERNAL,
     }
 }
 
+fn termination_for_arch_exception(kind: arch::ExceptionKind) -> u32 {
+    match kind {
+        arch::ExceptionKind::UndefinedInstruction => TERMINATION_UNDEFINED_INSTRUCTION,
+        arch::ExceptionKind::PrivilegedInstruction => TERMINATION_PRIVILEGE_FAULT,
+        arch::ExceptionKind::InstructionAbort => TERMINATION_INSTRUCTION_ABORT,
+        arch::ExceptionKind::DataAbort => TERMINATION_DATA_ABORT,
+        arch::ExceptionKind::TranslationFault => TERMINATION_TRANSLATION_FAULT,
+        arch::ExceptionKind::PermissionFault => TERMINATION_PERMISSION_FAULT,
+        arch::ExceptionKind::AlignmentFault => TERMINATION_ALIGNMENT_FAULT,
+        arch::ExceptionKind::SystemRegisterTrap => TERMINATION_SYSTEM_REGISTER_TRAP,
+        arch::ExceptionKind::TimerInterrupt => TERMINATION_TIMER_INTERRUPT,
+        arch::ExceptionKind::ExternalInterrupt => TERMINATION_EXTERNAL_INTERRUPT,
+        arch::ExceptionKind::GuestHalt => TERMINATION_HALT,
+        arch::ExceptionKind::SupervisorCall => TERMINATION_UNSUPPORTED,
+    }
+}
+
+unsafe fn run_architecture_guest(
+    context: &VfPreosContext,
+    machine: &mut VfMachine,
+    result: &mut VfPreosResult,
+) -> i32 {
+    let guest = core::slice::from_raw_parts(context.guest_bytes, context.guest_size as usize);
+    let ram = core::slice::from_raw_parts_mut(context.guest_ram, context.guest_ram_size as usize);
+    trace(context, b"VF: ARCH_EXEC_ENTER\r\n\0".as_ptr());
+    let run = {
+        let (arch, m1) = (&mut machine.arch, &mut machine.m1);
+        let mut bus = crate::m1::M1GuestBus::new(m1, ram);
+        arch.run_bounded_with_bus(guest, &mut bus, context.execution_budget, |_| {})
+    };
+    result.retired_instruction_count = run.retired;
+    result.guest_pc = run.pc;
+    result.result_x0 = machine.arch.x[0];
+    result.result_x1 = machine.arch.x[1];
+    result.result_x3 = machine.arch.x[3];
+    result.fault_instruction = run
+        .exception
+        .map_or(0, |exception| exception.instruction);
+    match run.status {
+        arch::ArchRunStatus::Halt => {
+            result.termination_reason = TERMINATION_HALT;
+            machine.termination_reason.value = TERMINATION_HALT;
+            machine.execution_budget.consumed = run.retired;
+            trace(context, b"VF: ARCH_EXEC_HALT\r\n\0".as_ptr());
+            if !golden_result_matches(context, result) {
+                assign_error(result, E_RESULT, TERMINATION_HALT);
+                trace_failure(context, E_RESULT);
+                return E_RESULT;
+            }
+            result.code = OK;
+            trace(context, b"VF: RUST_RETURN_OK\r\n\0".as_ptr());
+            OK
+        }
+        arch::ArchRunStatus::Budget => {
+            assign_error(result, E_BUDGET, TERMINATION_BUDGET_EXHAUSTED);
+            trace(context, b"VF: ARCH_EXEC_BUDGET\r\n\0".as_ptr());
+            trace_failure(context, E_BUDGET);
+            E_BUDGET
+        }
+        arch::ArchRunStatus::Input => {
+            assign_error(result, E_GUEST_INPUT, TERMINATION_NONE);
+            trace_failure(context, E_GUEST_INPUT);
+            E_GUEST_INPUT
+        }
+        arch::ArchRunStatus::Wait => {
+            assign_error(result, E_UNSUPPORTED, TERMINATION_UNSUPPORTED);
+            trace(context, b"VF: ARCH_EXEC_WAIT\r\n\0".as_ptr());
+            trace_failure(context, E_UNSUPPORTED);
+            E_UNSUPPORTED
+        }
+        arch::ArchRunStatus::Exception => {
+            let termination = run.exception.map_or(TERMINATION_INTERNAL, |exception| {
+                termination_for_arch_exception(exception.kind)
+            });
+            let code = code_for_termination(termination);
+            result.termination_reason = termination;
+            machine.termination_reason.value = termination;
+            trace(context, b"VF: ARCH_EXEC_EXCEPTION\r\n\0".as_ptr());
+            trace_guest_stop(context, termination);
+            trace_failure(context, code);
+            code
+        }
+    }
+}
+
 unsafe fn golden_result_matches(context: &VfPreosContext, result: &VfPreosResult) -> bool {
-    if context.flags == 0 {
+    if context.flags & FLAG_EXPECT_GOLDEN_RESULT == 0 {
         return true;
     }
     let offset = context.expected_ram_offset as usize;
@@ -472,7 +612,33 @@ pub unsafe extern "C" fn vf_preos_run(
         trace_failure(context, E_MACHINE_INIT);
         return E_MACHINE_INIT;
     }
+    if !machine.architecture_ready() {
+        assign_error(result, E_MACHINE_INIT, TERMINATION_INTERNAL);
+        trace_failure(context, E_MACHINE_INIT);
+        return E_MACHINE_INIT;
+    }
+    trace(context, b"VF: AARCH64_STATE_READY\r\n\0".as_ptr());
+    // The descriptor is initialized on the same synchronous call as the
+    // diagnostic machine. It provides the portable VMApple guest-visible
+    // graph used by the TCG/reference path; it is not an M1 AIC/DART model.
+    if !machine.vmapple_graph_ready() {
+        assign_error(result, E_MACHINE_INIT, TERMINATION_INTERNAL);
+        trace_failure(context, E_MACHINE_INIT);
+        return E_MACHINE_INIT;
+    }
+    trace(context, b"VF: VMAPPLE_GRAPH_READY\r\n\0".as_ptr());
+    trace(context, b"VF: M1_GRAPH_READY\r\n\0".as_ptr());
+    if !machine.m1.activate_runtime() {
+        assign_error(result, E_MACHINE_INIT, TERMINATION_INTERNAL);
+        trace_failure(context, E_MACHINE_INIT);
+        return E_MACHINE_INIT;
+    }
+    trace(context, b"VF: M1_RUNTIME_ACTIVE\r\n\0".as_ptr());
     trace(context, b"VF: MACHINE_READY\r\n\0".as_ptr());
+
+    if context.flags & REQUESTED_ARCHITECTURE_FEATURES != 0 {
+        return run_architecture_guest(context, &mut machine, result);
+    }
 
     let request = VfJitRequest {
         abi_version: ABI_VERSION,
@@ -490,7 +656,8 @@ pub unsafe extern "C" fn vf_preos_run(
     let mut jit_result = empty_jit_result();
     trace(context, b"VF: JIT_ENTER\r\n\0".as_ptr());
     let wrapper_code = vf_preos_jit_execute(&request, &mut jit_result);
-    if wrapper_code == OK && (!jit_result_valid(&jit_result) || !jit_result_pair_valid(&jit_result)) {
+    if wrapper_code == OK && (!jit_result_valid(&jit_result) || !jit_result_pair_valid(&jit_result))
+    {
         assign_error(result, E_INTERNAL, TERMINATION_INTERNAL);
         trace(context, b"VF: GUEST_STOP reason=INTERNAL\r\n\0".as_ptr());
         trace_failure(context, E_INTERNAL);
@@ -503,6 +670,9 @@ pub unsafe extern "C" fn vf_preos_run(
             jit_result.guest_pc,
             jit_result.termination_reason,
             context.guest_size,
+            jit_result.result_x0,
+            jit_result.result_x1,
+            jit_result.result_x3,
         )
     {
         assign_error(result, E_INTERNAL, TERMINATION_INTERNAL);
@@ -585,7 +755,10 @@ mod tests {
         assert_eq!(align_of::<VfJitRequest>(), 8);
         assert_eq!(align_of::<VfJitResult>(), 8);
         assert_eq!(core::mem::offset_of!(VfPreosContext, guest_ram), 40);
-        assert_eq!(core::mem::offset_of!(VfJitRequest, opaque_execution_handle), 56);
+        assert_eq!(
+            core::mem::offset_of!(VfJitRequest, opaque_execution_handle),
+            56
+        );
         assert_eq!(core::mem::offset_of!(VfPreosResult, result_x1), 48);
     }
 
@@ -607,7 +780,8 @@ mod tests {
                 "\"preos_result_size\":{},\"preos_result_align\":{},",
                 "\"preos_result_x1_offset\":{}}}"
             ),
-            size_of::<VfPreosContext>(), align_of::<VfPreosContext>(),
+            size_of::<VfPreosContext>(),
+            align_of::<VfPreosContext>(),
             core::mem::offset_of!(VfPreosContext, execution_budget),
             core::mem::offset_of!(VfPreosContext, guest_bytes),
             core::mem::offset_of!(VfPreosContext, guest_ram),
@@ -615,10 +789,13 @@ mod tests {
             core::mem::offset_of!(VfPreosContext, trace),
             core::mem::offset_of!(VfPreosContext, expected_x1),
             core::mem::offset_of!(VfPreosContext, reserved),
-            size_of::<VfJitRequest>(), align_of::<VfJitRequest>(),
+            size_of::<VfJitRequest>(),
+            align_of::<VfJitRequest>(),
             core::mem::offset_of!(VfJitRequest, opaque_execution_handle),
-            size_of::<VfJitResult>(), align_of::<VfJitResult>(),
-            size_of::<VfPreosResult>(), align_of::<VfPreosResult>(),
+            size_of::<VfJitResult>(),
+            align_of::<VfJitResult>(),
+            size_of::<VfPreosResult>(),
+            align_of::<VfPreosResult>(),
             core::mem::offset_of!(VfPreosResult, result_x1),
         );
     }
@@ -670,7 +847,10 @@ mod tests {
     #[test]
     fn termination_mapping_preserves_failure_class() {
         assert_eq!(code_for_termination(TERMINATION_BUDGET_EXHAUSTED), E_BUDGET);
-        assert_eq!(code_for_termination(TERMINATION_PROTECTION_FAILURE), E_PROTECTION);
+        assert_eq!(
+            code_for_termination(TERMINATION_PROTECTION_FAILURE),
+            E_PROTECTION
+        );
         assert_eq!(code_for_termination(TERMINATION_BAD_INSTRUCTION), E_JIT);
         assert_eq!(code_for_termination(TERMINATION_INTERNAL), E_INTERNAL);
     }

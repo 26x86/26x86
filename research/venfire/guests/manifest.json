@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "producer": "self-authored Venfire conformance guest",
+  "producer": "self-authored 26x86 conformance guest",
   "assembler": "GNU assembler (GNU Binutils for Ubuntu) 2.42",
   "sources": {
     "conformance.S": "484379768788a88892ed0ee9bb61a87abb3ee00186f76a9f0cc6f7ddc23acda7",

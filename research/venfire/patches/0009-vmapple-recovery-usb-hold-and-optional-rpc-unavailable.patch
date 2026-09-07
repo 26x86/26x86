@@ -1,0 +1,200 @@
+From: 26x86 VenFire backend <venfire@26x86.local>
+Subject: [PATCH 0009] vmapple: unavailable optional-RPC diagnostic window
+
+Port the novel delta from the venfire-rpc-20260906 worktree on top of
+0001-0008: an explicitly-unavailable optional-RPC window at 0x004fc000
+(guest-ram linked, preserves guest bytes, synthesizes no success/result/
+signature state) plus trace events. Deliberately excludes the worktree's
+stale reversions of the 0005 firmware window, 0006 EL2/PAuth reset path,
+and graphics research options. Diagnostics only; no XNU/userspace/macOS
+promotion.
+
+---
+--- a/hw/vmapple/cfg.c
++++ b/hw/vmapple/cfg.c
+@@ -10,16 +10,21 @@
+  */
+ 
+ #include "qemu/osdep.h"
++#include "qemu/bswap.h"
+ #include "hw/vmapple/vmapple.h"
+ #include "hw/core/sysbus.h"
+ #include "qemu/log.h"
+ #include "qemu/module.h"
+ #include "qapi/error.h"
+ #include "net/net.h"
++#include "system/address-spaces.h"
++#include "trace.h"
+ 
+ OBJECT_DECLARE_SIMPLE_TYPE(VMAppleCfgState, VMAPPLE_CFG)
+ 
+ #define VMAPPLE_CFG_SIZE 0x00010000
++#define VMAPPLE_OPTIONAL_RPC_SIZE 0x4000
++#define VMAPPLE_OPTIONAL_RPC_DOORBELL 0x3ff8
+ 
+ typedef struct VMAppleCfg {
+     uint32_t version;         /* 0x000 */
+@@ -60,11 +65,87 @@
+     VMAppleCfg cfg;
+ 
+     MemoryRegion mem;
++    MemoryRegion optional_rpc;
++    bool optional_rpc_unavailable;
++    MemoryRegion *guest_ram;
+     char *serial;
+     char *model;
+     char *soc_name;
+ };
+ 
++/*
++ * Experimental unavailable optional RPC, NOT an implementation of the service.
++ * Original 26A5425a iBEC submits a 24-byte version-1 request at 0x4ffff8.
++ * For opcode 2 it explicitly falls back to the legacy configuration region
++ * when completion byte 3 remains zero. Preserve every guest byte: no success
++ * marker, result, configuration, or signature-related state is synthesized.
++ */
++static MemTxResult vmapple_optional_rpc_write(void *opaque, hwaddr offset,
++                                             uint64_t address, unsigned size,
++                                             MemTxAttrs attrs)
++{
++    VMAppleCfgState *s = VMAPPLE_CFG(opaque);
++    uint8_t header[24];
++    MemoryRegionSection section;
++    bool readable;
++
++    if (offset != VMAPPLE_OPTIONAL_RPC_DOORBELL || size != 8 ||
++        address > UINT64_MAX - sizeof(header)) {
++        trace_vmapple_optional_rpc_reject(offset, address, size, "access");
++        return MEMTX_ERROR;
++    }
++
++    /* Never follow a pointer into MMIO, ROM, a hole, or a partial RAM range. */
++    section = memory_region_find(get_system_memory(), address, sizeof(header));
++    if (!section.mr) {
++        trace_vmapple_optional_rpc_reject(offset, address, size, "unmapped");
++        return MEMTX_ERROR;
++    }
++    readable = section.mr == s->guest_ram &&
++               memory_region_is_ram(section.mr) && !section.readonly &&
++               !memory_region_is_ram_device(section.mr) &&
++               section.offset_within_address_space == address &&
++               int128_eq(section.size, int128_make64(sizeof(header)));
++    if (readable) {
++        memcpy(header, (uint8_t *)memory_region_get_ram_ptr(section.mr) +
++                       section.offset_within_region, sizeof(header));
++    }
++    memory_region_unref(section.mr);
++    if (!readable) {
++        trace_vmapple_optional_rpc_reject(offset, address, size, "not-ram");
++        return MEMTX_ERROR;
++    }
++
++    trace_vmapple_optional_rpc_request(address, ldl_le_p(header),
++                                      ldl_le_p(header + 4),
++                                      ldq_le_p(header + 8),
++                                      ldq_le_p(header + 16));
++    if (ldl_le_p(header) != 0x00010001 || ldl_le_p(header + 4) != 2) {
++        trace_vmapple_optional_rpc_reject(offset, address, size, "unknown-request");
++        return MEMTX_ERROR;
++    }
++
++    /* The bus store completes; the unsupported guest request does not. */
++    return MEMTX_OK;
++}
++
++static MemTxResult vmapple_optional_rpc_read(void *opaque, hwaddr offset,
++                                            uint64_t *value, unsigned size,
++                                            MemTxAttrs attrs)
++{
++    *value = UINT64_MAX;
++    trace_vmapple_optional_rpc_reject(offset, 0, size, "read");
++    return MEMTX_ERROR;
++}
++
++static const MemoryRegionOps vmapple_optional_rpc_ops = {
++    .read_with_attrs = vmapple_optional_rpc_read,
++    .write_with_attrs = vmapple_optional_rpc_write,
++    .endianness = DEVICE_LITTLE_ENDIAN,
++    .valid = { .min_access_size = 8, .max_access_size = 8 },
++    .impl = { .min_access_size = 8, .max_access_size = 8 },
++};
++
+ static void vmapple_cfg_reset(Object *obj, ResetType type)
+ {
+     VMAppleCfgState *s = VMAPPLE_CFG(obj);
+@@ -108,6 +189,12 @@
+     VMAppleCfgState *s = VMAPPLE_CFG(dev);
+     uint32_t i;
+ 
++    if (s->optional_rpc_unavailable && !s->guest_ram) {
++        error_setg(errp, "Optional RPC requires the machine guest RAM link");
++        return;
++    }
++    memory_region_set_enabled(&s->optional_rpc, s->optional_rpc_unavailable);
++
+     if (!s->serial) {
+         s->serial = g_strdup("1234");
+     }
+@@ -150,9 +237,18 @@
+     memory_region_init_ram(&s->mem, obj, "VMApple Config", VMAPPLE_CFG_SIZE,
+                            &error_fatal);
+     sysbus_init_mmio(SYS_BUS_DEVICE(obj), &s->mem);
++    memory_region_init_io(&s->optional_rpc, obj, &vmapple_optional_rpc_ops, s,
++                         "vmapple-optional-rpc-unavailable",
++                         VMAPPLE_OPTIONAL_RPC_SIZE);
++    memory_region_set_enabled(&s->optional_rpc, false);
++    sysbus_init_mmio(SYS_BUS_DEVICE(obj), &s->optional_rpc);
+ }
+ 
+ static const Property vmapple_cfg_properties[] = {
++    DEFINE_PROP_BOOL("optional-rpc-unavailable", VMAppleCfgState,
++                     optional_rpc_unavailable, false),
++    DEFINE_PROP_LINK("guest-ram", VMAppleCfgState, guest_ram,
++                     TYPE_MEMORY_REGION, MemoryRegion *),
+     DEFINE_PROP_UINT32("nr-cpus", VMAppleCfgState, cfg.nr_cpus, 1),
+     DEFINE_PROP_UINT64("ecid", VMAppleCfgState, cfg.ecid, 0),
+     DEFINE_PROP_UINT64("ram-size", VMAppleCfgState, cfg.ram_size, 0),
+--- a/hw/vmapple/trace-events
++++ b/hw/vmapple/trace-events
+@@ -1,6 +1,10 @@
+ # See docs/devel/tracing.rst for syntax documentation.
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ 
++# cfg.c: experimental unavailable optional RPC; request words remain unchanged
++vmapple_optional_rpc_request(uint64_t address, uint32_t header, uint32_t opcode, uint64_t argument0, uint64_t argument1) "addr=0x%"PRIx64" header=0x%x opcode=0x%x arg0=0x%"PRIx64" arg1=0x%"PRIx64" completion=unchanged"
++vmapple_optional_rpc_reject(uint64_t offset, uint64_t address, unsigned size, const char *reason) "offset=0x%"PRIx64" addr=0x%"PRIx64" size=%u reason=%s"
++
+ # aes.c
+ aes_read(uint64_t offset, uint64_t res) "offset=0x%"PRIx64" res=0x%"PRIx64
+ aes_cmd_key_select_builtin(uint32_t ctx, uint32_t key_id, const char *direction, const char *cipher) "[%d] Selecting builtin key %d to %scrypt with %s"
+--- a/hw/vmapple/vmapple.c
++++ b/hw/vmapple/vmapple.c
+@@ -84,6 +81,7 @@
+ enum {
+     VMAPPLE_FIRMWARE,
+     VMAPPLE_CONFIG,
++    VMAPPLE_OPTIONAL_RPC,
+     VMAPPLE_MEM,
+     VMAPPLE_GIC_DIST,
+     VMAPPLE_GIC_REDIST,
+@@ -111,5 +111,6 @@
+     [VMAPPLE_FIRMWARE] =           { 0x00100000, 0x00200000 },
+     [VMAPPLE_CONFIG] =             { 0x00400000, 0x00010000 },
++    [VMAPPLE_OPTIONAL_RPC] =       { 0x004fc000, 0x00004000 },
+ 
+     [VMAPPLE_GIC_DIST] =           { 0x10000000, 0x00010000 },
+     [VMAPPLE_GIC_REDIST] =         { 0x10010000, 0x00400000 },
+@@ -198,10 +191,13 @@
+     vms->cfg = qdev_new(TYPE_VMAPPLE_CFG);
+     cfg = SYS_BUS_DEVICE(vms->cfg);
+     sysbus_mmio_map(cfg, 0, vms->memmap[VMAPPLE_CONFIG].base);
++    sysbus_mmio_map(cfg, 1, vms->memmap[VMAPPLE_OPTIONAL_RPC].base);
+ 
+     qemu_guest_getrandom_nofail(&rnd, sizeof(rnd));
+ 
+     qdev_prop_set_uint32(vms->cfg, "nr-cpus", machine->smp.cpus);
++    object_property_set_link(OBJECT(vms->cfg), "guest-ram",
++                             OBJECT(machine->ram), &error_fatal);
+     qdev_prop_set_uint64(vms->cfg, "ecid", vms->uuid);
+     qdev_prop_set_uint64(vms->cfg, "ram-size", machine->ram_size);
+     qdev_prop_set_uint32(vms->cfg, "rnd", rnd);

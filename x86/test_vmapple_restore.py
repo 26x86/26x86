@@ -123,6 +123,7 @@ class VMappleRestoreTests(unittest.TestCase):
             ticket.write_bytes(_der(0x30, _der(0x16, b"IM4M") + b"ticket"))
 
             with patch("x86.vmapple_restore.RecoveryTransport", FakeTransport):
+                held = []
                 report = run_restore_sequence(
                     socket_path="unused",
                     build_manifest=manifest_path,
@@ -130,11 +131,14 @@ class VMappleRestoreTests(unittest.TestCase):
                     ticket=ticket,
                     output=root / "restore",
                     total_timeout=5,
+                    transport_holders=held,
                 )
             self.assertTrue(report["sequence_sent"])
             self.assertTrue(report["bootx_acknowledged"])
             self.assertEqual(report["preboot_notification"]["guest_stall_hex"], "0200")
             self.assertFalse(report["preboot_notification"]["acknowledged"])
+            self.assertEqual(len(held), 1)
+            held[0].__exit__(None, None, None)
 
 
 if __name__ == "__main__":

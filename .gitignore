@@ -47,6 +47,8 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
+artifacts/ipsw/
+artifacts/extracted/
 nosetests.xml
 coverage.xml
 *.cover
@@ -283,3 +285,6 @@ ci_tooling/privileged_helper_tool/com.dortania.opencore-legacy-patcher.privilege
 
 # Logo asset build intermediate
 resources/branding/*.iconset/
+
+# Agent session state (local only)
+.claude/

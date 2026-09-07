@@ -1,0 +1,13 @@
+include README.md
+include DEVELOPMENT_POLICY.md
+include pyproject.toml
+include venfire_build_backend.py
+recursive-include venfire *.py *.cer
+recursive-include guests *.elf *.bin *.json *.S *.ld *.md
+recursive-include tools *.py
+recursive-include usb *.py init
+recursive-include docs *.md
+recursive-include patches *.patch *.md *.json COPYING series
+prune build
+prune dist
+prune __pycache__

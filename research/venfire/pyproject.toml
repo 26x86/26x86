@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=63"]
+build-backend = "venfire_build_backend"
+backend-path = ["."]
+
+[project]
+name = "26x86-venfire"
+version = "0.2.0"
+description = "Evidence-driven ARM64 VMApple/TCG research and conformance tools"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "DEVELOPMENT_POLICY.md"}
+authors = [{name = "26x86 contributors"}]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: POSIX :: Linux",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["venfire*"]
+
+[tool.setuptools.package-data]
+venfire = ["certs/*.cer"]
+
+[tool.setuptools.data-files]
+"share/venfire/guests" = [
+  "guests/virt.elf",
+  "guests/vmapple.elf",
+  "guests/vmapple.bin",
+  "guests/manifest.json",
+]

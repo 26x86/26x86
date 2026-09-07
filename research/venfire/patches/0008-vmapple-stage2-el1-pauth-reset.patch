@@ -1,0 +1,83 @@
+diff --git a/hw/vmapple/vmapple.c b/hw/vmapple/vmapple.c
+index 2fa4813..a442aba 100644
+--- a/hw/vmapple/vmapple.c
++++ b/hw/vmapple/vmapple.c
+@@ -71,6 +71,7 @@ struct VMAppleMachineState {
+     uint64_t uuid;
+     bool research_headless;
+     bool research_graphics;
++    bool research_stage2;
+     MemoryRegion m1_ram_high_alias;
+ };
+ 
+@@ -446,6 +447,32 @@ static void vmapple_reset(void *opaque)
+     hwaddr base = vms->memmap[VMAPPLE_FIRMWARE].base;
+ 
+     cpu_set_pc(first_cpu, base);
++
++    /*
++     * AVPBooter enters through the non-secure EL1 recovery contract.  The
++     * explicit Stage2 research machine still exposes EL2 for the later
++     * iBoot/Stage2 path, but must not start the firmware at EL2: AVPBooter
++     * does not establish its recovery control plane from that state.
++     */
++    if (vms->research_stage2) {
++        arm_emulate_firmware_reset(CPU(first_cpu), 1);
++        /*
++         * iBSS starts at non-secure EL1 and reads CNTPCT_EL0 before the
++         * Stage2 handoff.  When EL2 is exposed for that later handoff,
++         * CNTHCTL_EL2.EL1PCTEN defaults clear and would trap this early
++         * architectural counter access back to an uninitialised EL2 vector.
++         */
++        ARM_CPU(first_cpu)->env.cp15.cnthctl_el2 |= BIT(0);
++        /*
++         * The EL1 recovery code seeds APIAKEY_EL1 before it enters the
++         * Stage2 path.  With PAuth implemented, HCR_EL2.API/APK must permit
++         * those EL1 key accesses; otherwise QEMU correctly raises a system
++         * register trap to the uninitialised EL2 vector.
++         */
++        ARM_CPU(first_cpu)->env.cp15.hcr_el2 |= HCR_API | HCR_APK;
++        arm_rebuild_hflags(&ARM_CPU(first_cpu)->env);
++        cpu_set_pc(first_cpu, base);
++    }
+ }
+ 
+ static void mach_vmapple_init(MachineState *machine)
+@@ -508,7 +535,7 @@ static void mach_vmapple_init(MachineState *machine)
+             object_property_set_bool(cpu, "has_el3", false, &error_fatal);
+         }
+         if (object_property_find(cpu, "has_el2")) {
+-            object_property_set_bool(cpu, "has_el2", vms->research_headless,
++            object_property_set_bool(cpu, "has_el2", vms->research_stage2,
+                                      &error_fatal);
+         }
+         if (object_property_find(cpu, "vmapple-research")) {
+@@ -646,6 +673,16 @@ static void vmapple_set_research_graphics(Object *obj, bool value, Error **errp)
+     VMAPPLE_MACHINE(obj)->research_graphics = value;
+ }
+ 
++static bool vmapple_get_research_stage2(Object *obj, Error **errp)
++{
++    return VMAPPLE_MACHINE(obj)->research_stage2;
++}
++
++static void vmapple_set_research_stage2(Object *obj, bool value, Error **errp)
++{
++    VMAPPLE_MACHINE(obj)->research_stage2 = value;
++}
++
+ static void vmapple_machine_class_init(ObjectClass *oc, const void *data)
+ {
+     MachineClass *mc = MACHINE_CLASS(oc);
+@@ -670,6 +707,11 @@ static void vmapple_machine_class_init(ObjectClass *oc, const void *data)
+                                    vmapple_set_research_graphics);
+     object_class_property_set_description(oc, "research-graphics",
+                                          "Experimental Reims MMIO/Vulkan host device");
++    object_class_property_add_bool(oc, "research-stage2",
++                                   vmapple_get_research_stage2,
++                                   vmapple_set_research_stage2);
++    object_class_property_set_description(oc, "research-stage2",
++                                         "Expose the opt-in j274 iBoot Stage2 EL2 contract");
+     object_class_property_add_bool(oc, "research-headless",
+                                    vmapple_get_research_headless,
+                                    vmapple_set_research_headless);

@@ -22,6 +22,21 @@ ROLE_TAGS = {
     "RestoreRamDisk": (b"rdsk", b"rdsk"),
 }
 STANDARD_RESTORE_BOOT_ARGS = "rd=md0 nand-enable-reformat=1 -progress -restore"
+BOOT_ARGS_ENV_VAR = "VENFIRE_RESTORE_BOOT_ARGS"
+
+
+def resolve_boot_args():
+    """Effective boot-args for setenv; env override keeps the standard default."""
+    args = os.environ.get(BOOT_ARGS_ENV_VAR, STANDARD_RESTORE_BOOT_ARGS)
+    if not isinstance(args, str):
+        raise ValueError("Restore boot-args must be 1..254 printable ASCII")
+    try:
+        raw = args.encode("ascii")
+    except UnicodeEncodeError:
+        raise ValueError("Restore boot-args must be 1..254 printable ASCII")
+    if not 0 < len(raw) < 255 or any(v < 32 or v > 126 for v in raw):
+        raise ValueError("Restore boot-args must be 1..254 printable ASCII")
+    return args
 
 
 def _element(data, offset, limit):
@@ -295,7 +310,9 @@ def run_stage(socket_path, images, *, total_timeout=600, timeout=10):
                 report["preboot_notification"] = {"acknowledged": False,
                     "guest_stall_hex": exc.response_hex,
                     "handling": "notification result unused by upstream recovery.c"}
-            command("setenv boot-args " + STANDARD_RESTORE_BOOT_ARGS)
+            boot_args = resolve_boot_args()
+            report["boot_args"] = boot_args
+            command("setenv boot-args " + boot_args)
             command("bootx", request=1)
             report["sequence_sent"] = True
     except BaseException as exc:

@@ -1,0 +1,359 @@
+{
+  "schema_version": 1,
+  "target_machine_profile": "VMApple-TCG-GoldenGate",
+  "scope": "QEMU VMApple TCG host layer and bounded VenFire descriptor; not physical M1 compatibility",
+  "components": [
+    {
+      "name": "aarch64-cpu-and-exception-engine",
+      "target_machine_profile": "VMApple-TCG-GoldenGate",
+      "guest_visible_purpose": "AArch64 instruction, exception, MMU, timer and PAuth execution under TCG",
+      "source": {
+        "project": "QEMU target/arm",
+        "upstream_repository": "https://github.com/qemu/qemu.git",
+        "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+        "upstream_file_path": "target/arm",
+        "source_license": "GPL-2.0-or-later",
+        "provenance_status": "confirmed"
+      },
+      "port": {
+        "mode": "behavior-reference-only",
+        "venfire_destination": "QEMU aarch64-softmmu TCG build; no EFI copy",
+        "rationale": "The portable host engine uses QEMU's tested CPU target; EFI VenFire remains QEMU-independent."
+      },
+      "guest_contract": {
+        "reset_behavior": "QEMU VMApple reset path; reset PC and RAM base are machine-owned",
+        "mmio_pio_map": "none in CPU target",
+        "register_layout": "AArch64 architectural state defined by QEMU target/arm",
+        "read_behavior": "architectural loads and system reads follow target/arm; unsupported accesses fail in QEMU",
+        "write_side_effects": "architectural stores/system writes follow target/arm; unsupported accesses fail in QEMU",
+        "irq_behavior": "exceptions and virtual IRQs enter the QEMU ARM CPU model",
+        "dma_behavior": "not owned by CPU target",
+        "timer_behavior": "counter/timer execution is provided by the selected VMApple machine",
+        "firmware_visible_identity": "AArch64 VMApple guest CPU; not physical Apple M1",
+        "device_tree_acpi_exposure": "VMApple machine-owned",
+        "boot_time_dependency": "CPU target must be initialized before firmware entry"
+      },
+      "evidence": {
+        "references": [
+          "QEMU source ff1d2d19d7e24893e2012d879f8e73077e17b9bd target/arm",
+          "QEMU VMApple machine source hw/vmapple/vmapple.c"
+        ],
+        "source_trace": "pinned checkout and research/venfire/patches/series",
+        "guest_driver_trace": "not collected; caller-supplied Golden Gate firmware required",
+        "register_differential_test": "not applicable to CPU target",
+        "venfire_test_evidence": "Tools/build_vmapple_tcg.py receipt and QEMU capability probe",
+        "evidence_status": "confirmed"
+      },
+      "state": "runtime-tested",
+      "known_gaps": "No XNU or Golden Gate userspace boot evidence is included."
+    },
+    {
+      "name": "vmapple-memory-reset-and-config",
+      "target_machine_profile": "VMApple-TCG-GoldenGate",
+      "guest_visible_purpose": "VMApple firmware/config windows, RAM base, ECID, model and reset ordering",
+      "source": {
+        "project": "QEMU VMApple machine and config device",
+        "upstream_repository": "https://github.com/qemu/qemu.git",
+        "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+        "upstream_file_path": "hw/vmapple/vmapple.c; hw/vmapple/cfg.c",
+        "source_license": "GPL-2.0-or-later",
+        "provenance_status": "confirmed"
+      },
+      "port": {
+        "mode": "clean-room-reimplementation",
+        "venfire_destination": "sandbox/efi/preos/src/vmapple.rs; QEMU build patch",
+        "rationale": "The fixed Rust descriptor records guest-visible addresses without importing QOM or GLib."
+      },
+      "guest_contract": {
+        "reset_behavior": "fixed graph reset clears counter and device state while preserving topology",
+        "mmio_pio_map": "QEMU reference: firmware 0x00100000/0x00100000; config 0x00400000/0x00010000; GIC distributor 0x10000000/0x00010000; redistributors 0x10010000/0x00400000; UART 0x20010000/0x00010000; RTC 0x20050000/0x00001000; GPIO 0x20060000/0x00001000; pvpanic 0x20070000/0x2; BDIF 0x30000000/0x00200000; APV 0x30200000/0x20000; AES 0x30220000/0x8000; PCIe ECAM 0x40000000/0x10000000; PCIe MMIO 0x50000000/0x1fff0000; RAM 0x70000000+. Rust descriptor records every fixed window; only firmware/config/GIC/UART/RTC/GPIO/pvpanic/BDIF/APV state has implemented behavior, while AES/PCIe reads return zero and writes fail closed.",
+        "register_layout": "config version 0x000, CPUs 0x004, ECID 0x018, RAM 0x020, model 0x3c0, SoC 0x404",
+        "read_behavior": "aligned 1/2/4/8-byte reads only; unknown register reads return zero",
+        "write_side_effects": "config writes are rejected; reset restores fixed state",
+        "irq_behavior": "none in config descriptor",
+        "dma_behavior": "none",
+        "timer_behavior": "counter state is reset with machine",
+        "firmware_visible_identity": "Apple M1 (Virtual) / VM0001 metadata only",
+        "device_tree_acpi_exposure": "not generated by EFI descriptor",
+        "boot_time_dependency": "config must exist before firmware reads ECID/model; graph reset/validity is checked in the same Rust preOS call"
+      },
+      "evidence": {
+        "references": [
+          "QEMU hw/vmapple/vmapple.c and hw/vmapple/cfg.c at pinned commit",
+          "sandbox/efi/preos/src/vmapple.rs unit tests"
+        ],
+        "source_trace": "research/venfire/patches/series, 0001-vmapple-explicit-tcg-research.patch",
+        "guest_driver_trace": "not collected",
+        "register_differential_test": "Rust graph read/write/reset tests",
+        "venfire_test_evidence": "cargo test --manifest-path sandbox/efi/preos/Cargo.toml",
+        "evidence_status": "confirmed"
+      },
+      "state": "runtime-tested",
+      "known_gaps": "Descriptor reset/validity is wired into the EFI preOS call but the diagnostic JIT has no MMIO dispatch; AES DMA, PCIe enumeration, firmware backing, and PV graphics remain unsupported and their windows fail closed. This is not a physical M1 map."
+    },
+    {
+      "name": "virtual-interrupt-controller",
+      "target_machine_profile": "VMApple-TCG-GoldenGate",
+      "guest_visible_purpose": "Virtual interrupt delivery through the VMApple GICv3 graph",
+      "source": {
+        "project": "QEMU ARM GICv3 and VMApple machine",
+        "upstream_repository": "https://github.com/qemu/qemu.git",
+        "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+        "upstream_file_path": "hw/intc/arm_gicv3*; hw/vmapple/vmapple.c",
+        "source_license": "GPL-2.0-or-later",
+        "provenance_status": "confirmed"
+      },
+      "port": {
+        "mode": "behavior-reference-only",
+        "venfire_destination": "QEMU VMApple GICv3; native AIC remains separate",
+        "rationale": "GICv3 is required to start this QEMU VMApple build but is forbidden as a physical M1 fallback."
+      },
+      "guest_contract": {
+        "reset_behavior": "QEMU GIC reset during VMApple realize",
+        "mmio_pio_map": "GIC distributor 0x10000000/0x00010000; redistributors 0x10010000/0x00400000",
+        "register_layout": "ARM GICv3 register layout from QEMU/ARM implementation",
+        "read_behavior": "QEMU GICv3 access rules and width checks",
+        "write_side_effects": "mask/pending/acknowledge behavior is QEMU-owned",
+        "irq_behavior": "GICv3 routes virtual IRQs to AArch64 CPUs",
+        "dma_behavior": "none",
+        "timer_behavior": "architectural timer IRQs use the virtual interrupt router",
+        "firmware_visible_identity": "GICv3 VMApple baseline, not AIC",
+        "device_tree_acpi_exposure": "VMApple machine-owned",
+        "boot_time_dependency": "GIC must realize before firmware/CPU interrupt use"
+      },
+      "evidence": {
+        "references": [
+          "QEMU hw/intc/arm_gicv3* at pinned commit",
+          "QEMU hw/vmapple/vmapple.c VMApple GIC realization"
+        ],
+        "source_trace": "QEMU build receipt and -machine vmapple capability probe",
+        "guest_driver_trace": "not collected",
+        "register_differential_test": "not a native AIC differential test",
+        "venfire_test_evidence": "portable QEMU process initialization with synthetic bundle",
+        "evidence_status": "confirmed"
+      },
+      "state": "runtime-tested",
+      "known_gaps": "This does not implement or prove the native Sandbox AIC contract."
+    },
+    {
+      "name": "timer-counter-uart",
+      "target_machine_profile": "VMApple-TCG-GoldenGate",
+      "guest_visible_purpose": "VMApple RTC/counter and PL011 serial diagnostics",
+      "source": {
+        "project": "QEMU VMApple PL011/PL031 machine",
+        "upstream_repository": "https://github.com/qemu/qemu.git",
+        "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+        "upstream_file_path": "hw/vmapple/vmapple.c; hw/char/pl011.c",
+        "source_license": "GPL-2.0-or-later",
+        "provenance_status": "confirmed"
+      },
+      "port": {
+        "mode": "behavior-reference-only",
+        "venfire_destination": "QEMU VMApple TCG serial/recovery path",
+        "rationale": "Serial is retained as evidence transport; no Apple UART identity is inferred."
+      },
+      "guest_contract": {
+        "reset_behavior": "QEMU PL011/PL031 reset during machine realize",
+        "mmio_pio_map": "UART 0x20010000/0x00010000; RTC 0x20050000/0x00001000",
+        "register_layout": "PL011/PL031 layouts plus 24 MHz VMApple counter contract",
+        "read_behavior": "UART status and RTC reads follow QEMU device models",
+        "write_side_effects": "UART writes reach the serial log; RTC writes are not accepted",
+        "irq_behavior": "QEMU routes UART/RTC IRQs through GICv3",
+        "dma_behavior": "none",
+        "timer_behavior": "counter frequency is 24 MHz in the VMApple profile",
+        "firmware_visible_identity": "serial diagnostic channel only",
+        "device_tree_acpi_exposure": "VMApple machine-owned",
+        "boot_time_dependency": "serial must be available before firmware evidence collection"
+      },
+      "evidence": {
+        "references": [
+          "QEMU hw/vmapple/vmapple.c at pinned commit",
+          "QEMU PL011/PL031 device implementations"
+        ],
+        "source_trace": "QEMU capability probe and serial log from synthetic launch",
+        "guest_driver_trace": "Golden Gate UART output not supplied",
+        "register_differential_test": "Rust descriptor UART/RTC width tests",
+        "venfire_test_evidence": "x86/vmapple_tcg.py evidence observer",
+        "evidence_status": "confirmed"
+      },
+      "state": "runtime-tested",
+      "known_gaps": "A serial marker is not proof of XNU/userspace execution."
+    },
+    {
+      "name": "bdif-storage-and-cow",
+      "target_machine_profile": "VMApple-TCG-GoldenGate",
+      "guest_visible_purpose": "Read-only AUX/root inputs with writable session overlays",
+      "source": {
+        "project": "QEMU VMApple BDIF and VMApple guide",
+        "upstream_repository": "https://github.com/qemu/qemu.git",
+        "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+        "upstream_file_path": "hw/vmapple/bdif.c",
+        "source_license": "GPL-2.0-or-later",
+        "provenance_status": "confirmed"
+      },
+      "port": {
+        "mode": "behavior-reference-only",
+        "venfire_destination": "x86/vmapple_tcg.py StorageSession and QEMU BDIF",
+        "rationale": "The host runner owns immutable input hashing and COW creation; QEMU remains a build-time/runtime host tool."
+      },
+      "guest_contract": {
+        "reset_behavior": "new overlays per launch; source files are never opened writable",
+        "mmio_pio_map": "BDIF 0x30000000/0x00200000",
+        "register_layout": "QEMU BDIF command layout at pinned source",
+        "read_behavior": "BDIF reads use original AUX metadata offset 0x4000 and root view",
+        "write_side_effects": "writes target qcow2 overlays only; source mutation is forbidden",
+        "irq_behavior": "QEMU BDIF behavior; no native EFI IRQ claim",
+        "dma_behavior": "QEMU block backend only; no native DART policy",
+        "timer_behavior": "none",
+        "firmware_visible_identity": "storage topology from caller VM bundle",
+        "device_tree_acpi_exposure": "VMApple machine-owned",
+        "boot_time_dependency": "AUX/root devices must be realized before AVPBooter reads storage"
+      },
+      "evidence": {
+        "references": [
+          "QEMU hw/vmapple/bdif.c at pinned commit",
+          "QEMU VMApple guide https://www.qemu.org/docs/master/system/arm/vmapple.html"
+        ],
+        "source_trace": "StorageSession session.json and input SHA-256 manifest",
+        "guest_driver_trace": "Golden Gate storage trace not supplied",
+        "register_differential_test": "COW overlay size/backing-path validation",
+        "venfire_test_evidence": "synthetic TCG launch returned input_integrity=true",
+        "evidence_status": "confirmed"
+      },
+      "state": "runtime-tested",
+      "known_gaps": "Provisioning and APFS install-target validity remain caller inputs."
+    },
+    {
+      "name": "dart-dma-policy",
+      "target_machine_profile": "VMApple-TCG-GoldenGate",
+      "guest_visible_purpose": "DART/SART DMA isolation and fault policy",
+      "source": {
+        "project": "Apple DART/SART public behavior",
+        "upstream_repository": "not supplied",
+        "upstream_commit": "not recorded",
+        "upstream_file_path": "unavailable",
+        "source_license": "unavailable",
+        "provenance_status": "unavailable"
+      },
+      "port": {
+        "mode": "behavior-reference-only",
+        "venfire_destination": "not started",
+        "rationale": "A synthetic DART register block would be an unsafe success stub without target evidence."
+      },
+      "guest_contract": {
+        "reset_behavior": "unavailable",
+        "mmio_pio_map": "unavailable",
+        "register_layout": "unavailable",
+        "read_behavior": "must fail closed until source/trace is pinned",
+        "write_side_effects": "must fail closed until source/trace is pinned",
+        "irq_behavior": "unavailable",
+        "dma_behavior": "unavailable",
+        "timer_behavior": "none known",
+        "firmware_visible_identity": "none",
+        "device_tree_acpi_exposure": "unavailable",
+        "boot_time_dependency": "unavailable"
+      },
+      "evidence": {
+        "references": [
+          "QEMU VMApple source has no guest-visible DART device",
+          "sandbox/efi/M1_SOURCE_PORT_MANIFEST.md explicit M1 evidence rule"
+        ],
+        "source_trace": "not collected",
+        "guest_driver_trace": "not collected",
+        "register_differential_test": "not written",
+        "venfire_test_evidence": "explicit blocked state in contract verifier",
+        "evidence_status": "unavailable"
+      },
+      "state": "blocked",
+      "known_gaps": "No target-matched DART/SART source, register trace, or guest driver contract is supplied."
+    },
+    {
+      "name": "display-and-recovery-channel",
+      "target_machine_profile": "VMApple-TCG-GoldenGate",
+      "guest_visible_purpose": "Headless serial/recovery execution without synthetic GUI success",
+      "source": {
+        "project": "QEMU VMApple machine",
+        "upstream_repository": "https://github.com/qemu/qemu.git",
+        "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+        "upstream_file_path": "hw/vmapple/vmapple.c",
+        "source_license": "GPL-2.0-or-later",
+        "provenance_status": "confirmed"
+      },
+      "port": {
+        "mode": "behavior-reference-only",
+        "venfire_destination": "x86/vmapple_tcg.py headless runner",
+        "rationale": "TCG builds intentionally omit Apple PV graphics and keep serial evidence explicit."
+      },
+      "guest_contract": {
+        "reset_behavior": "QEMU process and serial files are new per launch",
+        "mmio_pio_map": "PV graphics omitted; serial/recovery channel only",
+        "register_layout": "no VenFire display register claim",
+        "read_behavior": "headless output is observed as bytes, not a display success signal",
+        "write_side_effects": "guest writes are contained by QEMU/COW session",
+        "irq_behavior": "no PV graphics IRQ in TCG profile",
+        "dma_behavior": "none claimed",
+        "timer_behavior": "none",
+        "firmware_visible_identity": "VMApple metadata-only virtual identity",
+        "device_tree_acpi_exposure": "QEMU machine-owned",
+        "boot_time_dependency": "serial log must survive until observer closes the evidence gate"
+      },
+      "evidence": {
+        "references": [
+          "QEMU VMApple source at pinned commit",
+          "QEMU -display help output for the built TCG binary"
+        ],
+        "source_trace": "QEMU build receipt records graphics=headless serial/recovery only",
+        "guest_driver_trace": "not collected",
+        "register_differential_test": "not applicable to headless observer",
+        "venfire_test_evidence": "synthetic launch report with macos_boot_verified=false",
+        "evidence_status": "confirmed"
+      },
+      "state": "runtime-tested",
+      "known_gaps": "Apple PV graphics, Metal, installer UI, and display acceptance are not implemented."
+    },
+    {
+      "name": "iboot-xnu-userspace-evidence",
+      "target_machine_profile": "VMApple-TCG-GoldenGate",
+      "guest_visible_purpose": "Original Golden Gate AVPBooter -> XNU -> userspace boot evidence",
+      "source": {
+        "project": "caller-supplied signed VMApple firmware and storage",
+        "upstream_repository": "not supplied",
+        "upstream_commit": "not recorded",
+        "upstream_file_path": "external inputs",
+        "source_license": "caller-controlled",
+        "provenance_status": "unavailable"
+      },
+      "port": {
+        "mode": "behavior-reference-only",
+        "venfire_destination": "x86/vmapple_tcg.py UART evidence gate",
+        "rationale": "The runner observes evidence but never fabricates a boot marker or modifies signed inputs."
+      },
+      "guest_contract": {
+        "reset_behavior": "caller firmware controls boot reset",
+        "mmio_pio_map": "caller VMApple bundle plus QEMU VMApple map",
+        "register_layout": "caller firmware contract, not inferred",
+        "read_behavior": "evidence observer reads only the QEMU serial log",
+        "write_side_effects": "no source-image writes; only overlays are writable",
+        "irq_behavior": "QEMU VMApple GICv3 baseline",
+        "dma_behavior": "DART/SART unavailable",
+        "timer_behavior": "QEMU VMApple counter baseline",
+        "firmware_visible_identity": "metadata-only Apple M1 (Virtual) / VM0001",
+        "device_tree_acpi_exposure": "caller firmware/QEMU-owned",
+        "boot_time_dependency": "requires original Golden Gate firmware and provisioned VM bundle"
+      },
+      "evidence": {
+        "references": [
+          "QEMU VMApple guide and source at pinned commit",
+          "Apple Virtualization.framework VM bundle supplied by caller"
+        ],
+        "source_trace": "not collected until caller provides original inputs",
+        "guest_driver_trace": "not collected",
+        "register_differential_test": "not written",
+        "venfire_test_evidence": "observer reports false without Darwin/userspace markers",
+        "evidence_status": "unavailable"
+      },
+      "state": "blocked",
+      "known_gaps": "No original Golden Gate AVPBooter, provisioned bundle, XNU marker, or userspace marker is present."
+    }
+  ]
+}

@@ -47,7 +47,7 @@ class InputTests(unittest.TestCase):
         original = builder.regular_bytes
         def read(path):
             value = original(path)
-            return value + b'extra.patch\n' if path == PROJECT / 'patches/series' else value
+            return value + b'extra.patch\n' if path == builder.OPTIONAL / 'core-series' else value
         with patch.object(builder, 'regular_bytes', side_effect=read):
             with self.assertRaisesRegex(ValueError, 'Core series differs'):
                 builder.load_inputs()

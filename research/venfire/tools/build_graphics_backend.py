@@ -69,8 +69,11 @@ def load_inputs():
             if hashlib.sha256(data).hexdigest() != digest:
                 raise ValueError(f'Reviewed input changed: {category}/{name}')
             snapshots[category + '/' + name] = data
-    series = regular_bytes(PROJECT / 'patches/series').decode().splitlines()
-    if series != list(lock['core_patches']):
+    # The optional Reims candidate is a frozen graphics acceptance line.  It
+    # intentionally keeps the core-0001..0004 lock separate from the newer
+    # j274/iBoot research series used by the portable raw-Stage2 runner.
+    core_series = regular_bytes(OPTIONAL / 'core-series').decode().splitlines()
+    if core_series != list(lock['core_patches']):
         raise ValueError('Core series differs from the explicitly pinned graphics candidate')
     if regular_bytes(OPTIONAL / 'series').decode().splitlines() != list(lock['optional_patches']):
         raise ValueError('Optional graphics series differs from lockfile')

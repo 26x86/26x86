@@ -15,8 +15,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import plistlib
+import re
 import time
 from typing import Any
 
@@ -41,6 +43,21 @@ REQUIRED_ROLES = (
     "RestoreTrustCache", "RestoreRamDisk", "RestoreDeviceTree", "RestoreKernelCache",
 )
 STANDARD_BOOT_ARGS = "rd=md0 nand-enable-reformat=1 -progress -restore"
+BOOT_ARGS_ENV_VAR = "VENFIRE_RESTORE_BOOT_ARGS"
+
+
+def resolve_boot_args():
+    """Effective boot-args for setenv; env override keeps the standard default."""
+    args = os.environ.get(BOOT_ARGS_ENV_VAR, STANDARD_BOOT_ARGS)
+    if not isinstance(args, str):
+        raise ValueError("Restore boot-args must be 1..254 printable ASCII")
+    try:
+        raw = args.encode("ascii")
+    except UnicodeEncodeError:
+        raise ValueError("Restore boot-args must be 1..254 printable ASCII")
+    if not 0 < len(raw) < 255 or any(v < 32 or v > 126 for v in raw):
+        raise ValueError("Restore boot-args must be 1..254 printable ASCII")
+    return args
 MAX_MANIFEST_BYTES = 32 * 1024 * 1024
 
 
@@ -225,7 +242,9 @@ def _compact_upload(result: dict[str, Any]) -> dict[str, Any]:
 
 def run_restore_sequence(*, socket_path: str, build_manifest: str | Path,
                          role_sources: dict[str, str | Path], ticket: str | Path,
-                         output: str | Path, total_timeout: float = 900.0) -> dict[str, Any]:
+                         output: str | Path, total_timeout: float = 900.0,
+                         transport_holders: list[object] | None = None,
+                         extra_commands: tuple[str, ...] | list[str] | None = None) -> dict[str, Any]:
     """Prepare and send the standard macOS restore sequence after Stage2."""
     if not 0 < total_timeout <= 3600:
         raise ValueError("Restore timeout must be between 0 and 3600 seconds")
@@ -279,7 +298,10 @@ def run_restore_sequence(*, socket_path: str, build_manifest: str | Path,
             report["roles"][role] = {"normalized": normalized, "wrapped": wrapped_proof}
 
         deadline = time.monotonic() + total_timeout
-        with RecoveryTransport(socket_path, timeout=min(10.0, _remaining(deadline))) as transport:
+        transport = RecoveryTransport(socket_path, timeout=min(10.0, _remaining(deadline)))
+        transport.__enter__()
+        keep_transport = False
+        try:
             configuration = transport.configure_recovery(deadline=deadline)
             report["configuration"] = configuration
 
@@ -323,10 +345,25 @@ def run_restore_sequence(*, socket_path: str, build_manifest: str | Path,
                     "guest_stall_hex": "0200",
                     "handling": "notification result unused by restore protocol",
                 }
-            command("setenv boot-args " + STANDARD_BOOT_ARGS)
+            for extra in extra_commands or ():
+                if not isinstance(extra, str) or not re.fullmatch(r"[A-Za-z][A-Za-z0-9 _=.+-]*", extra):
+                    raise ValueError("Restore extra command must match [A-Za-z][A-Za-z0-9 _=.+-]*")
+                try:
+                    transport.send_command(extra, request=0, deadline=deadline)
+                    report["commands"].append({"command": extra, "request": 0, "acknowledged": True})
+                except RecoveryProtocolError as exc:
+                    report["commands"].append({"command": extra, "request": 0, "acknowledged": False,
+                                               "error": str(exc)[:256]})
+            command("setenv boot-args " + resolve_boot_args())
             command("bootx", request=1)
             report["sequence_sent"] = True
             report["bootx_acknowledged"] = True
+            if transport_holders is not None:
+                transport_holders.append(transport)
+                keep_transport = True
+        finally:
+            if not keep_transport:
+                transport.__exit__(None, None, None)
     except BaseException as exc:
         failure = exc
         report["error"] = f"{type(exc).__name__}: {exc}"[:2048]

@@ -1,0 +1,55 @@
+{
+  "schema": "26x86.iboot-xnu-handoff/1",
+  "machine_type": "iBoot(AArch64)",
+  "guest_os": "macOS",
+  "target_majors": [26, 27],
+  "claim_policy": {
+    "runtime_started": "requires the native or TCG guest process to have started in the same evidence report; markers copied into a static fixture are not a boot result",
+    "signature_acceptance_verified": "requires an explicit guest acceptance acknowledgement; TSS status, ticket receipt, and payload preservation are preparation evidence only",
+    "xnu_executed": "requires a Darwin/XNU UART marker with a matching kernel major",
+    "macos_userspace_reached": "requires XNU evidence plus launchd, loginwindow, or WindowServer marker",
+    "macos_boot_verified": "requires every selected stage, input_integrity=true, XNU/userspace evidence, and matching target major"
+  },
+  "recovery_stages": [
+    {
+      "id": "ibss-dfu",
+      "required_evidence": ["recovery_inputs_required=true", "dfu_upload.transfer_complete=true", "transition.state=ibec-ready"]
+    },
+    {
+      "id": "ibec-stage2",
+      "required_evidence": ["ibec_executed=true", "stage2_execution_observed=true", "stage2.observed=true"]
+    },
+    {
+      "id": "restore-roles-bootx",
+      "required_evidence": ["restore_chain.sequence_sent=true", "restore_chain.bootx_acknowledged=true", "restore_chain.input_integrity=true"]
+    },
+    {
+      "id": "xnu-entry",
+      "required_evidence": ["xnu_executed=true", "direct_boot.observation.observed_markers.xnu[]", "guest_target_match=true"]
+    },
+    {
+      "id": "macos-userspace",
+      "required_evidence": ["direct_boot.observation.macos_userspace_reached=true", "direct_boot.observation.observed_markers.userspace[]"]
+    }
+  ],
+  "direct_stages": [
+    {
+      "id": "avpbooter-direct-entry",
+      "required_evidence": ["direct_boot.requested=true", "direct_boot.selection=macos", "direct_boot.dfu_entered=false"]
+    },
+    {
+      "id": "xnu-entry",
+      "required_evidence": ["xnu_executed=true", "direct_boot.observation.observed_markers.xnu[]", "guest_target_match=true"]
+    },
+    {
+      "id": "macos-userspace",
+      "required_evidence": ["direct_boot.observation.macos_userspace_reached=true", "direct_boot.observation.observed_markers.userspace[]"]
+    }
+  ],
+  "safety": {
+    "allows_synthetic_success": false,
+    "allows_input_mutation": false,
+    "allows_transport_as_signature_acceptance": false,
+    "allows_iBoot_panic_as_xnu": false
+  }
+}

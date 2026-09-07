@@ -1,0 +1,18 @@
+#!/bin/busybox sh
+
+# The live image is intentionally an explicit Linux userspace layer:
+# x86_64 host -> QEMU TCG -> AArch64 guest. Optional modules never turn a
+# missing Apple device into a success signal.
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
+export PATH
+
+mount -t proc proc /proc 2>/dev/null || true
+mount -t sysfs sysfs /sys 2>/dev/null || true
+mount -t devtmpfs devtmpfs /dev 2>/dev/null || true
+mkdir -p /run /tmp
+
+for module in applesmc hid_apple usb_storage uas virtio_pci virtio_blk virtio_net; do
+    /sbin/modprobe "$module" 2>/dev/null || echo "VENFIRE_USB|MODULE|UNAVAILABLE|$module"
+done
+
+exec /usr/bin/python3 -m usb.live_menu

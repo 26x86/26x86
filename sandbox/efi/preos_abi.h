@@ -47,8 +47,9 @@ enum vf_preos_code {
 /* VF_PREOS_CONTEXT.flags.  Bit zero requests the Phase-1 golden-result
  * assertion.  The feature request bits are intentionally present in the
  * stable ABI so callers cannot accidentally assume that a user-mode JIT run
- * implements architectural system state; the current machine rejects them
- * with VF_PREOS_E_UNSUPPORTED before entering the translator. */
+ * implements architectural system state.  A nonzero feature request is kept
+ * out of the C JIT fast path and is handled only by the bounded Rust reference
+ * boundary; unsupported portions return VF_PREOS_E_UNSUPPORTED. */
 #define VF_PREOS_REQUEST_EXCEPTION_MODEL UINT32_C(0x00000100)
 #define VF_PREOS_REQUEST_PRIVILEGED_STATE UINT32_C(0x00000200)
 #define VF_PREOS_REQUEST_SYSTEM_REGISTERS UINT32_C(0x00000400)
@@ -71,6 +72,16 @@ enum vf_termination_reason {
     VF_TERMINATION_WRAPPER_REJECTED = 8,
     VF_TERMINATION_INTERNAL = 9,
     VF_TERMINATION_UNSUPPORTED = 10,
+    VF_TERMINATION_UNDEFINED_INSTRUCTION = 11,
+    VF_TERMINATION_PRIVILEGE_FAULT = 12,
+    VF_TERMINATION_TRANSLATION_FAULT = 13,
+    VF_TERMINATION_PERMISSION_FAULT = 14,
+    VF_TERMINATION_ALIGNMENT_FAULT = 15,
+    VF_TERMINATION_SYSTEM_REGISTER_TRAP = 16,
+    VF_TERMINATION_TIMER_INTERRUPT = 17,
+    VF_TERMINATION_EXTERNAL_INTERRUPT = 18,
+    VF_TERMINATION_INSTRUCTION_ABORT = 19,
+    VF_TERMINATION_DATA_ABORT = 20,
 };
 
 /* C owns both the trace endpoint and its opaque value.  The callback receives

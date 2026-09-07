@@ -1,0 +1,251 @@
+diff --git a/hw/vmapple/vmapple.c b/hw/vmapple/vmapple.c
+index 8d14fc0..2fa4813 100644
+--- a/hw/vmapple/vmapple.c
++++ b/hw/vmapple/vmapple.c
+@@ -70,6 +70,8 @@ struct VMAppleMachineState {
+     MemoryRegion ecam_alias;
+     uint64_t uuid;
+     bool research_headless;
++    bool research_graphics;
++    MemoryRegion m1_ram_high_alias;
+ };
+ 
+ #define TYPE_VMAPPLE_MACHINE   MACHINE_TYPE_NAME("vmapple")
+@@ -100,6 +102,12 @@ enum {
+ };
+ 
+ static const MemMapEntry memmap[] = {
++    /*
++     * The macOS 27 j274 iBoot IM4P is BVX2/LZFSE-compressed on disk and
++     * expands to roughly 1.4 MiB.  Keep the research firmware window large
++     * enough for the unwrapped Stage2 image while retaining the fixed base
++     * address used by the VMApple reset path.
++     */
+     [VMAPPLE_FIRMWARE] =           { 0x00100000, 0x00200000 },
+     [VMAPPLE_CONFIG] =             { 0x00400000, 0x00010000 },
+ 
+@@ -211,7 +219,7 @@ static void create_gfx(VMAppleMachineState *vms, MemoryRegion *mem)
+     int irq_iosfc = vms->irqmap[VMAPPLE_APV_IOSFC];
+     SysBusDevice *gfx;
+ 
+-    gfx = SYS_BUS_DEVICE(qdev_new("apple-gfx-mmio"));
++    gfx = SYS_BUS_DEVICE(qdev_new(vms->research_graphics ? "reims-vgpu-mmio" : "apple-gfx-mmio"));
+     sysbus_mmio_map(gfx, 0, vms->memmap[VMAPPLE_APV_GFX].base);
+     sysbus_mmio_map(gfx, 1, vms->memmap[VMAPPLE_APV_IOSFC].base);
+     sysbus_connect_irq(gfx, 0, qdev_get_gpio_in(vms->gic, irq_gfx));
+@@ -464,7 +472,11 @@ static void mach_vmapple_init(MachineState *machine)
+         error_report("vmapple requires apple-gfx-mmio in this mode");
+         exit(1);
+     }
+-    if (vms->research_headless) {
++    if (vms->research_graphics && !vms->research_headless) {
++        error_report("research-graphics requires research-headless=on");
++        exit(1);
++    }
++    if (vms->research_headless && !vms->research_graphics) {
+         warn_report("vmapple research mode: no Apple PV graphics; "
+                     "macOS boot is unverified");
+     }
+@@ -499,6 +511,10 @@ static void mach_vmapple_init(MachineState *machine)
+             object_property_set_bool(cpu, "has_el2", vms->research_headless,
+                                      &error_fatal);
+         }
++        if (object_property_find(cpu, "vmapple-research")) {
++            object_property_set_bool(cpu, "vmapple-research",
++                                     vms->research_headless, &error_fatal);
++        }
+         object_property_set_int(cpu, "psci-conduit", QEMU_PSCI_CONDUIT_HVC,
+                                 &error_fatal);
+ 
+@@ -516,11 +532,26 @@ static void mach_vmapple_init(MachineState *machine)
+     memory_region_add_subregion(sysmem, vms->memmap[VMAPPLE_MEM].base,
+                                 machine->ram);
+ 
++    /*
++     * The j274 Stage2 image relocates itself to 0x1fc000000 before it
++     * initializes the next boot stage.  The historical VMApple map places
++     * the configurable RAM window at 0x70000000, so provide a second alias
++     * only for the explicit TCG research machine.  It preserves one backing
++     * RAM object and does not change the guest-visible contents.
++     */
++    if (vms->research_headless) {
++        memory_region_init_alias(&vms->m1_ram_high_alias, OBJECT(vms),
++                                 "vmapple.m1-ram-high-alias", machine->ram,
++                                 0, machine->ram_size);
++        memory_region_add_subregion(sysmem, 0x1fc000000ULL,
++                                    &vms->m1_ram_high_alias);
++    }
++
+     create_gic(vms, sysmem);
+     create_bdif(vms, sysmem);
+     create_pvpanic(vms, sysmem);
+     create_aes(vms, sysmem);
+-    if (!vms->research_headless) {
++    if (!vms->research_headless || vms->research_graphics) {
+         create_gfx(vms, sysmem);
+     }
+     create_uart(vms, VMAPPLE_UART, sysmem, serial_hd(0));
+@@ -605,6 +636,16 @@ static void vmapple_set_research_headless(Object *obj, bool value, Error **errp)
+     VMAPPLE_MACHINE(obj)->research_headless = value;
+ }
+ 
++static bool vmapple_get_research_graphics(Object *obj, Error **errp)
++{
++    return VMAPPLE_MACHINE(obj)->research_graphics;
++}
++
++static void vmapple_set_research_graphics(Object *obj, bool value, Error **errp)
++{
++    VMAPPLE_MACHINE(obj)->research_graphics = value;
++}
++
+ static void vmapple_machine_class_init(ObjectClass *oc, const void *data)
+ {
+     MachineClass *mc = MACHINE_CLASS(oc);
+@@ -624,6 +665,11 @@ static void vmapple_machine_class_init(ObjectClass *oc, const void *data)
+ 
+     compat_props_add(mc->compat_props, vmapple_compat_defaults,
+                      G_N_ELEMENTS(vmapple_compat_defaults));
++    object_class_property_add_bool(oc, "research-graphics",
++                                   vmapple_get_research_graphics,
++                                   vmapple_set_research_graphics);
++    object_class_property_set_description(oc, "research-graphics",
++                                         "Experimental Reims MMIO/Vulkan host device");
+     object_class_property_add_bool(oc, "research-headless",
+                                    vmapple_get_research_headless,
+                                    vmapple_set_research_headless);
+diff --git a/target/arm/cpu.c b/target/arm/cpu.c
+index 77aa78f..6157a0c 100644
+--- a/target/arm/cpu.c
++++ b/target/arm/cpu.c
+@@ -1314,6 +1314,10 @@ static const Property arm_cpu_reset_hivecs_property =
+ static const Property arm_cpu_has_el2_property =
+             DEFINE_PROP_BOOL("has_el2", ARMCPU, has_el2, true);
+ 
++static const Property arm_cpu_vmapple_research_property =
++            DEFINE_PROP_BOOL("vmapple-research", ARMCPU,
++                             vmapple_research, false);
++
+ static const Property arm_cpu_has_el3_property =
+             DEFINE_PROP_BOOL("has_el3", ARMCPU, has_el3, true);
+ 
+@@ -1597,6 +1601,8 @@ static void arm_cpu_post_init(Object *obj)
+ 
+     if (arm_feature(&cpu->env, ARM_FEATURE_EL2)) {
+         qdev_property_add_static(DEVICE(obj), &arm_cpu_has_el2_property);
++        qdev_property_add_static(DEVICE(obj),
++                                 &arm_cpu_vmapple_research_property);
+     }
+ #endif
+ 
+diff --git a/target/arm/cpu.h b/target/arm/cpu.h
+index e3f931d..5e9edca 100644
+--- a/target/arm/cpu.h
++++ b/target/arm/cpu.h
+@@ -507,6 +507,7 @@ typedef struct CPUArchState {
+         uint32_t c15_diagnostic; /* diagnostic register */
+         uint32_t c15_power_diagnostic;
+         uint32_t c15_power_control; /* power control */
++        uint64_t vmapple_l2_cramconfig;
+         uint64_t dbgbvr[16]; /* breakpoint value registers */
+         uint64_t dbgbcr[16]; /* breakpoint control registers */
+         uint64_t dbgwvr[16]; /* watchpoint value registers */
+@@ -1000,6 +1001,12 @@ struct ArchCPU {
+ 
+     /* CPU has virtualization extension */
+     bool has_el2;
++    /*
++     * VMApple research mode exposes a small, explicitly opt-in set of
++     * Apple implementation-defined system registers.  Keep this on the
++     * CPU rather than making the register visible to every AArch64 guest.
++     */
++    bool vmapple_research;
+     /* CPU has security extension */
+     bool has_el3;
+     /* CPU has PMU (Performance Monitor Unit) */
+diff --git a/target/arm/helper.c b/target/arm/helper.c
+index c3f607e..c6d7122 100644
+--- a/target/arm/helper.c
++++ b/target/arm/helper.c
+@@ -3739,6 +3739,69 @@ static const ARMCPRegInfo v8_cp_reginfo[] = {
+       .fieldoffset = offsetoflow32(CPUARMState, cp15.mdcr_el3) },
+ };
+ 
++/* These are present only when EL1 supports AArch32 */
++/*
++ * Apple M1 iBoot uses S3_3_C15_C7_0 during the early L2/DRAM bring-up
++ * sequence.  This encoding is implementation-defined in AArch64; it is not
++ * an architectural register and must not be exposed by the generic CPU.
++ *
++ * The VMApple research machine does not claim to reproduce the physical
++ * register.  It models only the observed contract needed by the j274 iBoot
++ * path: writes are retained and a write with bit 1 set makes the bounded
++ * initialization-complete bit visible.  The CPU property is set by
++ * hw/vmapple only for research-headless TCG, so ordinary ARM guests still
++ * take the architectural undefined-system-register path.
++ */
++#define VMAPPLE_L2_CRAMCONFIG_INIT  BIT_ULL(1)
++#define VMAPPLE_L2_CRAMCONFIG_DONE  BIT_ULL(63)
++#define VMAPPLE_L2_CRAMCONFIG_RESET ((UINT64_C(0x3c) << 16) | \
++                                     (UINT64_C(0x10) << 8))
++
++static uint64_t vmapple_l2_cramconfig_read(CPUARMState *env,
++                                           const ARMCPRegInfo *ri)
++{
++    return env->cp15.vmapple_l2_cramconfig;
++}
++
++static void vmapple_l2_cramconfig_write(CPUARMState *env,
++                                        const ARMCPRegInfo *ri,
++                                        uint64_t value)
++{
++    /* The research model completes the observed one-write initialization. */
++    value |= VMAPPLE_L2_CRAMCONFIG_DONE;
++    env->cp15.vmapple_l2_cramconfig = value;
++}
++
++static void vmapple_l2_cramconfig_reset(CPUARMState *env,
++                                        const ARMCPRegInfo *ri)
++{
++    /* Observed j274 geometry: exponent 16 and limit 0x3c. */
++    env->cp15.vmapple_l2_cramconfig = VMAPPLE_L2_CRAMCONFIG_RESET;
++}
++
++static const ARMCPRegInfo vmapple_impdef_reginfo[] = {
++    {
++        .name = "VMAPPLE_L2_CRAMCONFIG",
++        .state = ARM_CP_STATE_AA64,
++        .opc0 = 3, .opc1 = 3, .crn = 15, .crm = 7, .opc2 = 0,
++        .access = PL1_RW,
++        .type = ARM_CP_IO,
++        .readfn = vmapple_l2_cramconfig_read,
++        .writefn = vmapple_l2_cramconfig_write,
++        .resetfn = vmapple_l2_cramconfig_reset,
++    },
++    {
++        /* Apple access-controlled alias of the physical counter. */
++        .name = "VMAPPLE_ACNTPCTSS_EL0",
++        .state = ARM_CP_STATE_AA64,
++        .opc0 = 3, .opc1 = 4, .crn = 15, .crm = 10, .opc2 = 5,
++        .access = PL2_R,
++        .type = ARM_CP_NO_RAW | ARM_CP_IO,
++        .accessfn = gt_pct_access,
++        .readfn = gt_cnt_read,
++    },
++};
++
+ /* These are present only when EL1 supports AArch32 */
+ static const ARMCPRegInfo v8_aa32_el1_reginfo[] = {
+     { .name = "FPEXC32_EL2", .state = ARM_CP_STATE_AA64,
+@@ -6989,6 +7052,9 @@ void register_cp_regs_for_features(ARMCPU *cpu)
+         }
+         define_arm_cp_regs(cpu, v8_idregs);
+         define_arm_cp_regs(cpu, v8_cp_reginfo);
++        if (cpu->vmapple_research) {
++            define_arm_cp_regs(cpu, vmapple_impdef_reginfo);
++        }
+         if (cpu_isar_feature(aa64_aa32_el1, cpu)) {
+             define_arm_cp_regs(cpu, v8_aa32_el1_reginfo);
+         }
+#VENFIRE_TEMP /tmp/venfire-qemu-patch7-final-_bork2l7
+

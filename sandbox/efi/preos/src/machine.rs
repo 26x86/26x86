@@ -9,8 +9,8 @@
 #![allow(dead_code)]
 
 use super::{
-    VfPreosContext, FIXED_GUEST_RAM_BYTES, MACHINE_PROFILE_M1_DIAGNOSTIC,
-    MAX_EXECUTION_BUDGET, TERMINATION_HALT, TERMINATION_INTERNAL, TERMINATION_NONE,
+    VfPreosContext, FIXED_GUEST_RAM_BYTES, MACHINE_PROFILE_M1_DIAGNOSTIC, MAX_EXECUTION_BUDGET,
+    TERMINATION_HALT, TERMINATION_INTERNAL, TERMINATION_NONE,
 };
 
 pub(crate) const MAX_RAM_REGIONS: usize = 4;
@@ -24,8 +24,27 @@ const MMIO_WIDTHS_ALL: u32 = MMIO_WIDTH_1 | MMIO_WIDTH_2 | MMIO_WIDTH_4 | MMIO_W
 
 #[derive(Clone, Copy)]
 pub(crate) struct VfCpuContext {
+    pub(crate) x: [u64; 31],
+    pub(crate) sp: u64,
     pub(crate) retired_instruction_count: u64,
     pub(crate) guest_pc: u64,
+    pub(crate) pstate: u64,
+    pub(crate) current_el: u8,
+    pub(crate) exception_pending: u32,
+    pub(crate) sctlr: u64,
+    pub(crate) ttbr0: u64,
+    pub(crate) ttbr1: u64,
+    pub(crate) tcr: u64,
+    pub(crate) mair: u64,
+    pub(crate) vbar: u64,
+    pub(crate) esr: u64,
+    pub(crate) far: u64,
+    pub(crate) elr: u64,
+    pub(crate) cntfrq: u64,
+    pub(crate) cntpct: u64,
+    pub(crate) cntp_ctl: u64,
+    pub(crate) cntp_cval: u64,
+    pub(crate) smp_affinity: u32,
 }
 
 #[derive(Clone, Copy)]
@@ -45,8 +64,9 @@ impl VfRamRegion {
 
     fn contains(self, address: u64, bytes: u64) -> bool {
         match (self.end(), address.checked_add(bytes)) {
-            (Some(end), Some(access_end)) =>
-                self.bytes != 0 && address >= self.base && access_end <= end,
+            (Some(end), Some(access_end)) => {
+                self.bytes != 0 && address >= self.base && access_end <= end
+            }
             _ => false,
         }
     }
@@ -76,8 +96,9 @@ impl VfMmioRegion {
 
     fn contains(self, address: u64, bytes: u64) -> bool {
         match (self.end(), address.checked_add(bytes)) {
-            (Some(end), Some(access_end)) =>
-                self.bytes != 0 && address >= self.base && access_end <= end,
+            (Some(end), Some(access_end)) => {
+                self.bytes != 0 && address >= self.base && access_end <= end
+            }
             _ => false,
         }
     }
@@ -143,7 +164,11 @@ impl VfMmioRegistry {
     /// not manufacture register values or IRQ behaviour for an unproven
     /// device.  A caller that has no device contract leaves the registry
     /// empty; a synthetic diagnostic device can use `MMIO_KIND_DIAGNOSTIC`.
-    pub(crate) fn register(&mut self, region: VfMmioRegion, gpa: &VfGuestPhysicalAddressSpace) -> bool {
+    pub(crate) fn register(
+        &mut self,
+        region: VfMmioRegion,
+        gpa: &VfGuestPhysicalAddressSpace,
+    ) -> bool {
         if region.kind == 0
             || region.bytes == 0
             || region.base & 0xfff != 0
@@ -158,7 +183,9 @@ impl VfMmioRegistry {
         }
         if self.regions[..self.region_count as usize]
             .iter()
-            .any(|existing| ranges_overlap(existing.base, existing.bytes, region.base, region.bytes))
+            .any(|existing| {
+                ranges_overlap(existing.base, existing.bytes, region.base, region.bytes)
+            })
         {
             return false;
         }
@@ -204,8 +231,21 @@ pub(crate) struct VfMachineProfile {
 
 pub(crate) struct VfMachine {
     pub(crate) cpu: VfCpuContext,
+    /// Canonical guest architectural state. `cpu` remains the C-JIT result
+    /// mirror; this object owns EL/system/MMU/timer/SMP state for the Rust
+    /// reference path and is never an EFI context.
+    pub(crate) arch: crate::arch::GuestCpuState,
+    pub(crate) mmu: crate::mmu::VfMmu,
     pub(crate) guest_physical_address_space: VfGuestPhysicalAddressSpace,
     pub(crate) mmio: VfMmioRegistry,
+    // VMApple is a bounded guest-visible graph descriptor.  It is kept
+    // separate from the Phase-1 diagnostic address space and is never
+    // substituted for the native M1 AIC/DART contract.
+    pub(crate) vmapple: Option<crate::vmapple::VfVmappleMachine>,
+    // Native M1-only graph.  This is distinct from the portable VMApple
+    // descriptor and owns the DART/DMA, recovery, display, timer/AIC, and
+    // firmware-handoff contract primitives.
+    pub(crate) m1: crate::m1::M1MachineGraph,
     pub(crate) execution_budget: VfExecutionBudget,
     pub(crate) termination_reason: VfTerminationReason,
     pub(crate) profile: VfMachineProfile,
@@ -216,11 +256,37 @@ impl VfMachine {
     pub(crate) fn seed(context: &VfPreosContext) -> Self {
         let mut machine = Self {
             cpu: VfCpuContext {
+                x: [0; 31],
+                sp: 0,
                 retired_instruction_count: 0,
                 guest_pc: 0,
+                pstate: 0,
+                current_el: 1,
+                exception_pending: 0,
+                sctlr: 0,
+                ttbr0: 0,
+                ttbr1: 0,
+                // TCR_EL1 reset value used by the reference 4 KiB TTBR0
+                // configuration.  The C-JIT mirror is kept in step with the
+                // canonical GuestCpuState bank.
+                tcr: 16,
+                mair: 0,
+                vbar: 0,
+                esr: 0,
+                far: 0,
+                elr: 0,
+                cntfrq: 24_000_000,
+                cntpct: 0,
+                cntp_ctl: 0,
+                cntp_cval: 0,
+                smp_affinity: 0,
             },
+            arch: crate::arch::GuestCpuState::reset(0),
+            mmu: crate::mmu::VfMmu::disabled(),
             guest_physical_address_space: VfGuestPhysicalAddressSpace::empty(),
             mmio: VfMmioRegistry::empty(),
+            vmapple: crate::vmapple::VfVmappleMachine::new(1, context.guest_ram_size, 0),
+            m1: crate::m1::M1MachineGraph::new(context.guest_ram_size),
             execution_budget: VfExecutionBudget {
                 limit: context.execution_budget,
                 consumed: 0,
@@ -245,12 +311,37 @@ impl VfMachine {
     /// reset hook was actually called; it is not a firmware reset operation.
     pub(crate) fn reset(&mut self) {
         self.cpu = VfCpuContext {
+            x: [0; 31],
+            sp: 0,
             retired_instruction_count: 0,
             guest_pc: 0,
+            pstate: 0,
+            current_el: 1,
+            exception_pending: 0,
+            sctlr: 0,
+            ttbr0: 0,
+            ttbr1: 0,
+            tcr: 16,
+            mair: 0,
+            vbar: 0,
+            esr: 0,
+            far: 0,
+            elr: 0,
+            cntfrq: 24_000_000,
+            cntpct: 0,
+            cntp_ctl: 0,
+            cntp_cval: 0,
+            smp_affinity: 0,
         };
+        self.arch = crate::arch::GuestCpuState::reset(0);
+        self.mmu.invalidate();
         self.execution_budget.limit = self.execution_budget.limit.min(MAX_EXECUTION_BUDGET);
         self.execution_budget.consumed = 0;
         self.termination_reason.value = TERMINATION_NONE;
+        if let Some(vmapple) = self.vmapple.as_mut() {
+            vmapple.reset();
+        }
+        self.m1.reset();
         self.reset_generation = self.reset_generation.saturating_add(1);
     }
 
@@ -277,6 +368,36 @@ impl VfMachine {
             && self.execution_budget.limit != 0
             && self.execution_budget.consumed == 0
             && self.execution_budget.limit <= MAX_EXECUTION_BUDGET
+            && self.arch.state_valid()
+            && self.arch.current_el == crate::arch::ExceptionLevel::El1
+            && self.arch.affinity == 0
+            && self.arch.sys.cntfrq_el0 == 24_000_000
+            && self
+                .vmapple
+                .as_ref()
+                .map_or(false, crate::vmapple::VfVmappleMachine::valid)
+            && self.m1.valid()
+    }
+
+    pub(crate) fn vmapple_graph_ready(&self) -> bool {
+        self.vmapple
+            .as_ref()
+            .map_or(false, crate::vmapple::VfVmappleMachine::valid)
+    }
+
+    pub(crate) fn m1_graph_ready(&self) -> bool {
+        self.m1.valid()
+    }
+
+    pub(crate) fn architecture_ready(&self) -> bool {
+        self.arch.state_valid()
+            && self.arch.current_el == crate::arch::ExceptionLevel::El1
+            && self.arch.affinity == 0
+            && self.arch.smp.cpu_count == 1
+            && self.arch.smp.online_mask & 1 != 0
+            && self.arch.sys.cntfrq_el0 == 24_000_000
+            && !self.arch.mmu.enabled
+            && self.arch.pending_exception.is_none()
     }
 
     pub(crate) fn valid_topology(&self) -> bool {
@@ -290,7 +411,9 @@ impl VfMachine {
                 || region.access_widths == 0
                 || region.access_widths & !MMIO_WIDTHS_ALL != 0
                 || region.end().is_none()
-                || self.guest_physical_address_space.overlaps(region.base, region.bytes)
+                || self
+                    .guest_physical_address_space
+                    .overlaps(region.base, region.bytes)
             {
                 return false;
             }
@@ -308,6 +431,9 @@ impl VfMachine {
         guest_pc: u64,
         termination_reason: u32,
         guest_size: u64,
+        result_x0: u64,
+        result_x1: u64,
+        result_x3: u64,
     ) -> bool {
         if retired > self.execution_budget.limit
             || (termination_reason == TERMINATION_HALT
@@ -318,6 +444,14 @@ impl VfMachine {
         }
         self.cpu.retired_instruction_count = retired;
         self.cpu.guest_pc = guest_pc;
+        self.cpu.x[0] = result_x0;
+        self.cpu.x[1] = result_x1;
+        self.cpu.x[3] = result_x3;
+        self.arch.retired = retired;
+        self.arch.pc = guest_pc;
+        self.arch.x[0] = result_x0;
+        self.arch.x[1] = result_x1;
+        self.arch.x[3] = result_x3;
         self.execution_budget.consumed = retired;
         self.termination_reason.value = termination_reason;
         true
@@ -378,6 +512,14 @@ mod tests {
         machine.reset();
         assert!(machine.valid_seed());
         assert!(machine.valid_topology());
+        assert!(machine.vmapple_graph_ready());
+        assert!(machine.m1_graph_ready());
+        assert_eq!(machine.m1.identity.soc_id, crate::m1::M1_SOC_T8103);
+        assert_eq!(machine.m1.identity.cpu_count, crate::m1::M1_CPU_COUNT);
+        assert_eq!(
+            machine.vmapple.as_ref().map(|graph| graph.cpu_count),
+            Some(1)
+        );
         assert!(machine.ram_contains(0, 8));
         assert!(!machine.ram_contains(FIXED_GUEST_RAM_BYTES, 1));
     }
@@ -435,11 +577,23 @@ mod tests {
         machine.cpu.guest_pc = 12;
         machine.termination_reason.value = 3;
         let generation = machine.reset_generation;
+        let vmapple_generation = machine
+            .vmapple
+            .as_ref()
+            .map(|graph| graph.reset_generation)
+            .unwrap();
+        let m1_generation = machine.m1.reset_generation;
         machine.reset();
         assert_eq!(machine.cpu.retired_instruction_count, 0);
         assert_eq!(machine.cpu.guest_pc, 0);
         assert_eq!(machine.termination_reason.value, TERMINATION_NONE);
         assert_eq!(machine.mmio.region_count, 1);
+        assert!(machine
+            .vmapple
+            .as_ref()
+            .map(|graph| graph.reset_generation > vmapple_generation)
+            .unwrap_or(false));
+        assert!(machine.m1.reset_generation > m1_generation);
         assert!(machine.reset_generation > generation);
     }
 
@@ -447,17 +601,17 @@ mod tests {
     fn execution_result_is_bounded_and_aligned() {
         let mut machine = VfMachine::seed(&context());
         machine.reset();
-        assert!(machine.accept_execution_result(35, 32, TERMINATION_HALT, 32));
+        assert!(machine.accept_execution_result(35, 32, TERMINATION_HALT, 32, 0, 55, 55));
         assert_eq!(machine.cpu.retired_instruction_count, 35);
         assert_eq!(machine.execution_budget.consumed, 35);
         assert_eq!(machine.cpu.guest_pc, 32);
         assert_eq!(machine.termination_reason.value, TERMINATION_HALT);
 
-        assert!(!machine.accept_execution_result(101, 32, TERMINATION_HALT, 32));
+        assert!(!machine.accept_execution_result(101, 32, TERMINATION_HALT, 32, 0, 0, 0));
         assert_eq!(machine.termination_reason.value, TERMINATION_INTERNAL);
         machine.reset();
-        assert!(!machine.accept_execution_result(1, 2, TERMINATION_HALT, 32));
+        assert!(!machine.accept_execution_result(1, 2, TERMINATION_HALT, 32, 0, 0, 0));
         machine.reset();
-        assert!(!machine.accept_execution_result(1, 36, TERMINATION_HALT, 32));
+        assert!(!machine.accept_execution_result(1, 36, TERMINATION_HALT, 32, 0, 0, 0));
     }
 }

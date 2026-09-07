@@ -1,0 +1,156 @@
+{
+  "schema": "venfire-vmapple-tcg-machine-contract/1",
+  "target_machine_profile": "VMApple-TCG-GoldenGate",
+  "guest_os": "macOS-only ARM64",
+  "host_policy": "software AArch64 emulation; Virtualization.framework and Apple hardware are not required",
+  "qemu_source": {
+    "repository": "https://github.com/qemu/qemu.git",
+    "commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+    "patch_series": "research/venfire/patches/series",
+    "patches": [
+      {
+        "path": "research/venfire/patches/0001-vmapple-explicit-tcg-research.patch",
+        "sha256": "da55f660a551e66e6e5ae9affd8410f72b17cf0b633d09db2816700b7d131897"
+      },
+      {
+        "path": "research/venfire/patches/0002-vmapple-block-barrier.patch",
+        "sha256": "58e8a2a42656647f7e3f8393e1b032fc260b99760ce37576c00b7af0938473cc"
+      },
+      {
+        "path": "research/venfire/patches/0003-vmapple-recovery-usb.patch",
+        "sha256": "29faaa21e284e82fb3e7848574730627c9c7d55f60a5a2e8bdb3310bad4acd0c"
+      },
+      {
+        "path": "research/venfire/patches/0004-vmapple-bdif-cow-write.patch",
+        "sha256": "1d4639c0e845ad0d5a8d9f542c6ed104897f5a69eba95998373770e691a3e541"
+      },
+      {
+        "path": "research/venfire/patches/0005-vmapple-iboot-firmware-window.patch",
+        "sha256": "7334b10eafd1e95750fa4d2feb2982217c7aa08e5a680b40485ea00bf1ec7e15"
+      },
+      {
+        "path": "research/venfire/patches/0006-vmapple-tcg-enable-el2.patch",
+        "sha256": "a95f86295af68bc56aa4132479f63b24b1b5bc1753da7cf221b8907dbb67f252"
+      },
+      {
+        "path": "research/venfire/patches/0007-vmapple-j274-impdef-and-highram.patch",
+        "sha256": "1026e06129ae54e26935c58834f2ef70ddd4c47db1ae4ef4ca47562ad20bee98"
+      },
+      {
+        "path": "research/venfire/patches/0008-vmapple-stage2-el1-pauth-reset.patch",
+        "sha256": "c4cbe374387ed3f7d563429bb365741617e20c15b465e9b87abbfe84a896c998"
+      },
+      {
+        "path": "research/venfire/patches/0009-vmapple-recovery-usb-hold-and-optional-rpc-unavailable.patch",
+        "sha256": "03c77e3899349d1e6e63ee0e8442038ee220c2c1f64b124f8c81372478c762ed"
+      }
+    ],
+    "machine": "vmapple",
+    "accelerator": "tcg"
+  },
+  "guest_input_policy": {
+    "firmware": "caller-supplied read-only AVPBooter/VMApple firmware",
+    "storage": "caller-supplied AUX/root images with qcow2 copy-on-write overlays",
+    "image_modification": false,
+    "signature_modification": false
+  },
+  "components": [
+    {
+      "name": "aarch64-cpu-and-exception-engine",
+      "guest_visible_purpose": "AArch64 instruction, exception, MMU, timer and PAuth execution under TCG",
+      "source": {
+        "project": "QEMU target/arm",
+        "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+        "path": "target/arm"
+      },
+      "destination": "QEMU TCG aarch64-softmmu",
+      "state": "runtime-tested",
+      "evidence": "QEMU TCG build receipt and qemu-system-aarch64 capability probe"
+    },
+    {
+      "name": "vmapple-memory-reset-and-config",
+      "guest_visible_purpose": "VMApple firmware region, config region, RAM base and reset PC",
+      "source": {
+        "project": "QEMU VMApple",
+        "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+        "path": "hw/vmapple/vmapple.c"
+      },
+      "destination": "sandbox/efi/preos/src/vmapple.rs and QEMU hw/vmapple",
+      "state": "runtime-tested",
+      "evidence": "Rust graph unit tests plus QEMU VMApple machine probe"
+    },
+    {
+      "name": "virtual-interrupt-controller",
+      "guest_visible_purpose": "VMApple guest interrupt delivery",
+      "source": {
+        "project": "QEMU ARM GICv3 VMApple implementation",
+        "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+        "path": "hw/intc/arm_gicv3*"
+      },
+      "destination": "QEMU VMApple GICv3; native descriptor AIC state is kept separate",
+      "state": "runtime-tested",
+      "evidence": "VMApple TCG configuration and device graph realization"
+    },
+    {
+      "name": "timer-counter-uart",
+      "guest_visible_purpose": "24 MHz counter, PL011-compatible serial diagnostics and RTC path",
+      "source": {
+        "project": "QEMU VMApple",
+        "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+        "path": "hw/vmapple/vmapple.c"
+      },
+      "destination": "QEMU PL011/PL031 and sandbox/efi/preos/src/vmapple.rs",
+      "state": "runtime-tested",
+      "evidence": "Rust register semantics tests and serial evidence observer"
+    },
+    {
+      "name": "bdif-storage-and-cow",
+      "guest_visible_purpose": "VMApple AUX/root block reads without mutating source images",
+      "source": {
+        "project": "QEMU VMApple BDIF",
+        "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+        "path": "hw/vmapple/bdif.c"
+      },
+      "destination": "x86/vmapple_tcg.py and QEMU vmapple-bdif/vmapple-virtio-blk-pci",
+      "state": "runtime-tested",
+      "evidence": "read-only input hashes and qcow2 overlay receipt"
+    },
+    {
+      "name": "dart-dma-policy",
+      "guest_visible_purpose": "bounded DART enable state and future DMA fault boundary",
+      "source": {
+        "project": "26x86 virtual DART contract",
+        "upstream_commit": "local",
+        "path": "sandbox/efi/preos/src/vmapple.rs"
+      },
+      "destination": "fixed-size descriptor state",
+      "state": "blocked",
+      "evidence": "No guest-visible DART/SART mapping is present in the pinned QEMU VMApple graph; implementation is fail-closed until target evidence is supplied",
+      "known_gap": "Native M1 DART/SART behavior is not available from the supplied sources"
+    },
+    {
+      "name": "display-and-recovery-channel",
+      "guest_visible_purpose": "headless serial/recovery execution; no synthetic GUI success",
+      "source": {
+        "project": "QEMU VMApple serial/recovery path",
+        "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+        "path": "hw/vmapple/vmapple.c"
+      },
+      "destination": "TCG headless runner",
+      "state": "runtime-tested",
+      "evidence": "qemu process/serial observer; display remains explicitly headless"
+    },
+    {
+      "name": "iboot-xnu-userspace-evidence",
+      "guest_visible_purpose": "Golden Gate iBoot -> XNU -> launchd/userspace boot",
+      "source": {
+        "project": "caller-supplied signed VMApple firmware and storage",
+        "upstream_commit": "not supplied",
+        "path": "external inputs"
+      },
+      "destination": "x86/vmapple_tcg.py UART evidence gate",
+      "state": "awaiting-caller-input",
+      "evidence": "cannot be asserted without an original Golden Gate VM bundle and firmware"
+    }
+  ]
+}

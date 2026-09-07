@@ -2,3 +2,8 @@
 0002-vmapple-block-barrier.patch
 0003-vmapple-recovery-usb.patch
 0004-vmapple-bdif-cow-write.patch
+0005-vmapple-iboot-firmware-window.patch
+0006-vmapple-tcg-enable-el2.patch
+0007-vmapple-j274-impdef-and-highram.patch
+0008-vmapple-stage2-el1-pauth-reset.patch
+0009-vmapple-recovery-usb-hold-and-optional-rpc-unavailable.patch

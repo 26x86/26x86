@@ -1,0 +1,420 @@
+{
+  "schema": "26x86.xnu-entry-boundary/1",
+  "date": "2026-09-07",
+  "qemu_binary_sha256": "4c8c3485aa1aef9b479d59b139e60423d40fca9140baeca03c7cfbe6435439bd",
+  "qemu_patch_series": "research/venfire/patches/series (0001-0009)",
+  "panic_signature": {
+    "marker": "iBoot Panic: : 4962211b03d706d:203",
+    "board": "vma2ap:0",
+    "chip": "fe00:00",
+    "build": "mBoot-20457.1.29",
+    "stack_pcs": [
+      "0x70080a90",
+      "0x70080ad8",
+      "0x700d9168",
+      "0x700d91d0",
+      "0x700d88dc"
+    ],
+    "double_panic": true
+  },
+  "runs": [
+    {
+      "output": "/tmp/venfire-dfu-freshbin-0907",
+      "aux": "fragment-fixture",
+      "optional_rpc": true,
+      "serial_bytes": 2644,
+      "aux_reads": 120,
+      "root_reads": 2,
+      "restore": true,
+      "xnu": false
+    },
+    {
+      "output": "/tmp/venfire-dfu-norpc-0907",
+      "aux": "fragment-fixture",
+      "optional_rpc": false,
+      "serial_bytes": 1562,
+      "aux_reads": 81,
+      "root_reads": 2,
+      "restore": false,
+      "xnu": false
+    },
+    {
+      "output": "/tmp/venfire-dfu-zeroaux-0907",
+      "aux": "zero-64m",
+      "optional_rpc": false,
+      "serial_bytes": 1467,
+      "aux_reads": 79,
+      "root_reads": 2,
+      "restore": false,
+      "xnu": false
+    },
+    {
+      "output": "/tmp/venfire-dfu-nostage2-0907",
+      "aux": "fragment-fixture",
+      "optional_rpc": false,
+      "research_stage2": false,
+      "serial_bytes": 1562,
+      "aux_reads": 81,
+      "root_reads": 2,
+      "restore": false,
+      "xnu": false,
+      "note": "same panic hash; EL2/PAuth exposure not the cause"
+    },
+    {
+      "output": "/tmp/venfire-dfu-ecid-0907",
+      "aux": "aux-from-stage2.raw via vm_json bundle, ECID 10211377754",
+      "optional_rpc": false,
+      "research_stage2": true,
+      "research_graphics": false,
+      "serial_bytes": 1541,
+      "aux_reads": 81,
+      "root_reads": 2,
+      "restore": false,
+      "restore_chain_completed": false,
+      "restore_error": "Stage2 UART marker was not observed",
+      "xnu": false,
+      "note": "Stage1 USB serial shows real ECID 0000000260A5425A but Stage2 panic hash+PCs identical -> ECID eliminated. Panic occurred BEFORE restore roles (pre-prompt), same fault site as post-bootx runs."
+    },
+    {
+      "output": "/tmp/venfire-dfu-gfx-0907",
+      "result": "launch-blocked",
+      "detail": "QEMU ff1d2d19+0001-0009 has no reims-vgpu-mmio device; research-graphics path not in this build (probes only under research/venfire/patches/graphics/). Display-none suspect NOT testable with current binary.",
+      "xnu": false
+    },
+    {
+      "output": "/tmp/venfire-dfu-int-0907",
+      "config": "ECID-run repeat + guest_errors,unimp,int",
+      "serial_bytes": 1541,
+      "aux_reads": 81,
+      "root_reads": 2,
+      "restore": false,
+      "xnu": false,
+      "qemu_stderr": "only PV-graphics warning + SIGTERM; zero int/guest_error/unimp lines despite -d guest_errors,unimp,int active",
+      "conclusion": "Stage2 panic is an explicit panic() check failure, NOT a CPU data-abort from missing-device MMIO. SEP/display MMIO-fault hypothesis rejected at this layer."
+    },
+    {
+      "output": "/tmp/venfire-dfu-freshbin-0907 (prior agent)",
+      "uuid": 0,
+      "aux": "aux-physical-payload-guest-1a00000.raw (staged, guest-0x1a00000 nonzero)",
+      "serial_bytes": 2644,
+      "aux_reads": 120,
+      "root_reads": 2,
+      "restore": true,
+      "post_bootx_panic": true,
+      "storage_narrative": "UMPV dance -> staged-0x1a00000 read (survives) -> zero reads at 0xa00000/0xb04000 (survive pre-provisioning) -> 512KB provision write at 0xa00000 -> re-verify -> full rescan -> terminal read guest-0xb04000 (zeros) -> panic, no further storage IO",
+      "xnu": false
+    },
+    {
+      "output": "/tmp/venfire-dfu-auxsweep-0907",
+      "aux": "aux-physical-img4-llb-sha256 (signed LLB.vma2+logo+j274-iBootData at guest-visible offsets)",
+      "optional_rpc": true,
+      "research_stage2": true,
+      "restore_chain_requested": true,
+      "serial_bytes": 1562,
+      "stage2_prompt": false,
+      "restore": false,
+      "xnu": false,
+      "note": "SAME 5-PC panic after 3 Stage2 KPIs; harness gated restore on STAGE2_PROMPT and correctly skipped it. Provisioned AUX did not unlock the prompt. vblk (addr-normalized) identical to freshbin for first 86 reads: pre-prompt guest ignores LLB/iBootData regions."
+    },
+    {
+      "output": "/tmp/venfire-dfu-repro-0907",
+      "aux": "fragment-fixture (exact freshbin replica)",
+      "optional_rpc": true,
+      "research_stage2": true,
+      "restore_chain_requested": true,
+      "status": "COMPLETE: early-panic mode, serial byte-identical to norpc+auxsweep",
+      "note": "Discriminator: does the freshbin late/prompt path reproduce, or is prompt-reaching rare/flaky (ticket-nonce/USB-timing)?",
+      "serial_bytes": 1562,
+      "stage2_prompt": false,
+      "restore": false,
+      "xnu": false
+    },
+    {
+      "output": "/tmp/venfire-dfu-uuid0-0907",
+      "uuid": 0,
+      "aux": "plain aux-from-stage2.raw (zeros at 0x1a00000)",
+      "no_vm_json": true,
+      "aux_offset": 16384,
+      "serial_bytes": 1517,
+      "restore": false,
+      "restore_error": "Stage2 UART marker was not observed",
+      "termination": "stage2-panic",
+      "xnu": false,
+      "verdict": "pre-prompt panic identical hash+PCs. DECISIVE CELL."
+    },
+    {
+      "output": "/tmp/venfire-dfu-b04000-0907 (launched)",
+      "uuid": 0,
+      "aux": "aux-physical-payload-guest-1a00000-plus-b04000.raw (sha 4b2caecb...)",
+      "hypothesis": "Stage2 expects chained info block at guest-0xB04000; copied Apple-original 4KB block from guest-0x1A00000",
+      "status": "pending (launched 14:18, ~7-8min expected)"
+    },
+    {
+      "output": "/tmp/venfire-dfu-rpcfixed-0907",
+      "aux": "fragment-fixture staged payload (true freshbin replica INCLUDING --optional-rpc-unavailable)",
+      "optional_rpc_unavailable": true,
+      "research_stage2": true,
+      "restore_chain_requested": true,
+      "status": "COMPLETE: serial BYTE-IDENTICAL to freshbin; 5 roles delivered, bootx transfer-acked, same post-bootx panic PCs.",
+      "note": "Deterministic-switch confirmation: prompt+restore+bootx expected. If confirmed, post-bootx becomes the iterable front toward XNU.",
+      "puzzle": "freshbin round-1 read zeros at 0xb04000 pre-prompt and SURVIVED; b04000-nonzero run died pre-prompt. Either pre-prompt requires zero at 0xb04000 (H1) or timing flake (H2).",
+      "serial_bytes": 2644,
+      "stage2_prompt": true,
+      "restore": true,
+      "bootx": true,
+      "xnu": false
+    },
+    {
+      "output": "/tmp/venfire-dfu-b04000flag-0907",
+      "aux": "staged payload + Apple-original 4KB block at guest 0xB04000 (971 nonzero bytes, sole base diff vs rpcfixed)",
+      "optional_rpc_unavailable": true,
+      "research_stage2": true,
+      "restore_chain_requested": true,
+      "status": "PRE-PROMPT PANIC (stage2-panic, 1412B). Exact-freshbin-input repeat FAILED to reach prompt.",
+      "note": "Single-variable vs rpcfixed: does answering the terminal zero-read change post-bootx behavior?"
+    },
+    {
+      "output": "/tmp/venfire-dfu-ibootobj-0907 (launched)",
+      "uuid": 0,
+      "aux": "aux-physical-payload-guest-1a00000-plus-iboot-b04000.raw (sha 3e76432e)",
+      "hypothesis": "guest-0xB04000 expects Apple-signed iBoot vma2 IM4P (412198B, mBoot-20457.1.29, staged from artifacts, verified on merits)",
+      "status": "pending"
+    },
+    {
+      "output": "/tmp/venfire-dfu-b04000flag-0907",
+      "aux": "staged + 4KB block at guest 0xB04000 (sole 971B base diff)",
+      "optional_rpc_unavailable": true,
+      "bootx": true,
+      "xnu": false,
+      "serial_bytes": 2644,
+      "status": "COMPLETE: serial BYTE-IDENTICAL to rpcfixed; guest read 0xB04000 (r=0) and panicked identically. Chained-info-block hypothesis dead."
+    },
+    {
+      "output": "/tmp/venfire-dfu-noformat-0907",
+      "aux": "staged payload (same as rpcfixed)",
+      "optional_rpc_unavailable": true,
+      "boot_args": "rd=md0 -progress -restore (no nand-enable-reformat=1)",
+      "status": "PRE-PROMPT PANIC (1562B). iBoot-at-b04000 UNTESTED (flake).",
+      "note": "Does Stage2 post-bootx path depend on boot-args? Byte-compare serial vs rpcfixed.",
+      "correction": "VACUOUS: sent STANDARD boot-args (live path is x86/vmapple_restore.py, not patched research restore.py). Report commands[] proves standard string. Hypothesis UNTESTED, not eliminated."
+    },
+    {
+      "output": "/tmp/venfire-dfu-ibootrpc-0907 (launched)",
+      "uuid": 0,
+      "aux": "plus-iboot-b04000 (sha 3e76432e)",
+      "optional_rpc_unavailable": true,
+      "hypothesis": "flag=on reaches bootx; iBoot IM4P at guest-0xB04000 satisfies post-bootx check",
+      "status": "pending"
+    },
+    {
+      "output": "/tmp/venfire-dfu-noformat2-0907",
+      "aux": "staged payload",
+      "optional_rpc_unavailable": true,
+      "boot_args": "rd=md0 -progress -restore via VENFIRE_RESTORE_BOOT_ARGS (live path x86/vmapple_restore.py patched)",
+      "status": "COMPLETE: variant boot-args DELIVERED (commands[] proves rd=md0 -progress -restore), serial BYTE-IDENTICAL to rpcfixed. Stage2 post-bootx ignores boot-args. Lever dead for Stage2.",
+      "note": "REAL boot-args variant test. Verify via restore/result.json commands[] setenv string.",
+      "serial_bytes": 2644,
+      "stage2_prompt": true,
+      "restore": true,
+      "bootx": true,
+      "xnu": false
+    },
+    {
+      "output": "/tmp/venfire-dfu-postint-0907",
+      "aux": "staged payload (rpcfixed replica)",
+      "optional_rpc_unavailable": true,
+      "qemu_d_int": "guest_errors,unimp,int (temporary tree edit, revert after launch)",
+      "status": "COMPLETE. Terminal CPU sequence: 2x HVC(EL1->EL2, handled as PSCI) + SVC 0x22/0x23 loop + Data Abort FAR 0x30240040 (UNMAPPED hole: AES_2 ends 0x30234000, next PCIE_ECAM 0x40000000) + Guest crash. smp=2, cntfrq=24MHz (counter mismatch already addressed).",
+      "note": "Post-bootx CPU-exception test: any abort/trap between bootx-complete and iBoot panic?",
+      "serial_bytes": 2644,
+      "stage2_prompt": true,
+      "restore": true,
+      "bootx": true,
+      "xnu": false
+    },
+    {
+      "output": "/tmp/venfire-dfu-kernelcmd-0907 (launched)",
+      "uuid": 0,
+      "aux": "staged base (1a00000 payload, b04000 zeros)",
+      "optional_rpc_unavailable": true,
+      "extra_commands": [
+        "kernel"
+      ],
+      "hypothesis": "missing `kernel` registration after KernelCache upload is why bootx takes disk path; acked kernel cmd may route bootx to DRAM ramdisk (rd=md0)",
+      "status": "pending"
+    },
+    {
+      "output": "/tmp/venfire-dfu-psci-0907",
+      "aux": "staged payload (rpcfixed replica)",
+      "optional_rpc_unavailable": true,
+      "extra_trace": "arm_psci_call via VENFIRE_EXTRA_TRACE",
+      "status": "RUNNING pid 10527",
+      "note": "Identify the 2 post-bootx HVC PSCI function IDs (CPU_ON? SYSTEM_RESET?)."
+    },
+    {
+      "output": "/tmp/venfire-dfu-crashregs-0907 (launched)",
+      "uuid": 0,
+      "aux": "staged base",
+      "optional_rpc_unavailable": true,
+      "qemu": "869ddc48 debug",
+      "goal": "capture AArch64 registers at panic (x0/panic-arg, PC, ESR) via pvpanic crashloaded path",
+      "status": "pending"
+    }
+  ],
+  "eliminated": [
+    "optional-RPC window presence (identical panic PCs with/without)",
+    "AUX fragment content vs zero-filled (identical panic hash)",
+    "research-stage2 EL2/PAuth exposure (identical panic hash without)",
+    "virtual ECID 0 vs real 10211377754 (identical panic hash+PCs with live TSS)",
+    "nothing new; graphics contrast blocked at build layer (unknown type reims-vgpu-mmio)",
+    "CPU-abort-from-device-gap (int-trace silent with explicit -d int active)"
+  ],
+  "standing_blocker": "Pre-prompt death SOLVED (flag-gated doorbell abort; deterministic path restored). Current front: post-bootx Stage2 boot-target assembly panics before the RAM-kernel jump (Apple-proprietary). XNU/userspace unverified; boot-args-variant experiments queued next.",
+  "policy": "No XNU/userspace/macOS claim. Personalized DFU + restore roles + bootx verified; panic is guest-side evidence, not host failure.",
+  "kpi_analysis": {
+    "fragment_aux_kpis": 53,
+    "zero_aux_kpis": 27,
+    "common_stage1_prefix": 9,
+    "reconvergence": [
+      "ae71af5ee32b84:130",
+      "1aad73bb1002bf0:801",
+      "d25f5bc36c172c3:372"
+    ],
+    "common_tail": [
+      "4962211b03d706d:203",
+      "fe00:00"
+    ],
+    "reading": "AUX content causes one extra probe branch then reconverges; both runs die at the same panic after restore. AUX bytes are not the panic driver."
+  },
+  "transport_finding": "122 vblk_read vs 3 MMIO-only vblk_write: Stage2 never wrote restored data to disk; root probed twice. bootx likely means 'boot local system', which does not exist on unprovisioned AUX.",
+  "aux_provisioning_writes_confirmed": {
+    "output": "/tmp/venfire-dfu-ecid-0907/storage/aux.qcow2",
+    "method": "qemu-img convert overlay to raw, read-only",
+    "writes": [
+      {
+        "guest_off": "0xa00000",
+        "desc": "NVRAM + boot-breadcrumbs BOOT/COMMIT incl 69626563=ibec"
+      },
+      {
+        "guest_off": "0xa60000",
+        "desc": "boot-breadcrumbs duplicate"
+      },
+      {
+        "guest_off": "0x1000000",
+        "desc": "UMPV header"
+      }
+    ],
+    "correction": "prior 'never wrote restored data to disk' reading was wrong; 3 vblk_write ops confirmed in transport.log (lines 1077972, 1142869, 1142996)",
+    "post_write": "after 512KB write at 0xa00000, Stage2 reads aux 0x1000000, root 0x0, aux 0x1a00000 (all zeros in backing+overlay) then Guest crash"
+  },
+  "qemu_device_gaps_confirmed": {
+    "source": "hw/vmapple/vmapple.c @ ff1d2d19",
+    "interrupt": "GICv3 baseline, no Apple AIC",
+    "crypto": "Apple AES device present",
+    "sep": "no SEP model found in hw/vmapple",
+    "graphics": "gfx IRQ wired but no Apple PV graphics; -display none effective"
+  },
+  "next_experiment": "smp1 (script ready /tmp/run_smp1.py): single vCPU removes inter-CPU race; run when host idle.",
+  "session_pm": {
+    "cow_readback": "VERIFIED: guest Stage2 AUX writes persist in qcow2 overlay and re-read coherently (UMPv at guest 0x1000000, nvram/common store 0x80000 at guest 0xa00000); base image is zero at both offsets, so bytes are guest-written. Host BDIF/overlay path eliminated as blocker.",
+    "kernel_selection": "VERIFIED correct VM path: vma2macosap KernelCache.payload.raw contains Darwin 27.0.0 xnu-13432.1.9~3/RELEASE_ARM64_VMAPPLE (same VM-targeted class as the Monterey experiment-021 kernel that reached XNU EL1). j274ap bundle holds RELEASE_ARM64_T8103 physical-SoC kernel, not used here. RestoreKernelCache role (23128927 B) is the compressed vma2 VMApple kernel.",
+    "post_bootx_chain": "VERIFIED causal: bootx is USB vendor-OUT only (send_command transfer ACK, not guest semantic accept, per recovery.py docstring). After bootx, Stage2 stays alive: writes UMP+NVRAM to AUX, re-reads them, probes root GPT once, scans AUX headers, reads guest 0xb04000 (zeros) as its LAST storage access, then MMIO doorbell-polls and prints its own panic banner+stack. So Stage2 attempted boot-target assembly and failed; control never reached XNU (no Darwin marker).",
+    "aux_caveat": "The fragment-vs-zero AUX A/B is weaker than recorded: BOTH bases are zero at the late-probed offsets (guest 0xb04000, NVRAM region), so identical early hashes do not prove AUX content is irrelevant post-bootx. Provisioned-AUX test queued.",
+    "queued_run": {
+      "output": "/tmp/venfire-dfu-auxsweep-0907",
+      "aux": "aux-physical-img4-llb-sha256.raw (signed LLB.vma2 IM4P at phys 147456, logo IMG4 at phys 500477, j274 iBootData at phys 0x1000000; only iBootData available is j274 class, recorded limitation)",
+      "varies": "--aux only; all else replicates freshbin (research-stage2, live-personalize, restore-chain, DFU recovery)"
+    },
+    "xnu_userspace_markers": "Unchanged contract: XNU requires Darwin Kernel Version (expect 27.0.0 xnu-13432 line) before launchd/loginwindow/WindowServer markers, offset-ordered, target-major 27.",
+    "tcg_clean": "VERIFIED: freshbin qemu.stderr.log carries no guest_errors/unimp/data-abort lines (only research-mode no-PV-graphics warning + SIGTERM teardown), although -d guest_errors,unimp,int is in the default QEMU args (x86/vmapple.py). TCG executed the full Stage2 path without unimplemented-access complaints; corroborates genuine guest-logic panic over CPU-emulation fault.",
+    "interrupt_model": "Corroborated: hw/vmapple/vmapple.c instantiates GICv3 (gicv3_class_name), zero AIC references and zero SEP references across hw/vmapple/*.c at base ff1d2d19. Apple AIC/SEP-dependent guest paths remain unmodeled; recorded as XNU-phase risk, not the current Stage2-panic driver (panic is guest-printed with live storage probing).",
+    "auxsweep_status": "COMPLETE: early-panic mode (1562 B serial), verdict restore-roles-bootx blocked, EXIT=0 fail-closed. See runs[] entry.",
+    "repro_status": "COMPLETE: early-panic, byte-identical to norpc/auxsweep. Prompt-reaching did not reproduce (1/7). No further guest runs queued from this lane; pre-prompt Stage2 death is the primary blocker, post-bootx (freshbin-only) secondary."
+  },
+  "ecid_correction": {
+    "prior_claim": "ECID eliminated (same panic hash+PCs)",
+    "correction": "Fault SITE identical but REACH differs: uuid=0 reaches prompt+restore+bootx (freshbin, 437s), real ECID panics pre-prompt (ecid/int, ~100s). Same QEMU binary, same TSS helper. ECID-bound validation path is implicated; ECID is NOT eliminated.",
+    "confound": "freshbin also used staged AUX fixture (payload at guest 0x1a00000); ECID/int runs used plain aux-from-stage2.raw (zeros there). Two variables differ (uuid + aux fixture); need 2x2 to separate."
+  },
+  "fixture_anatomy": {
+    "aux-physical-payload-guest-1a00000.raw": "file0x0 zeros (16KB VZ prefix); file0x4000 HUFA; guest0x1a00000 staged structured payload 971/4096 nonzero (vs zeros in plain aux). Provenance: sibling sidecars show Apple-original HUFA/LLB/im4p bytes staged at physical offsets, authentic_vz_auxiliary_storage:false (honest fixture, no forged signatures). Payload fixture file itself lacks a .json sidecar (undocumented).",
+    "plain aux-from-stage2.raw": "zeros at guest 0xa00000/0xa60000/0x1000000/0x1a00000 pre-run; Stage2 writes NVRAM/breadcrumbs/UMPV itself then panics reading zeros at 0x1a00000."
+  },
+  "prompt_gate": {
+    "mechanism": "harness _wait_serial_marker(STAGE2_PROMPT) (x86/vmapple.py); restore uploads only after guest prints Entering iBootStage2 recovery mode prompt; panic-before-prompt yields early serials with no restore dir",
+    "reading": "Prompt-reaching is 100pct guest-decided. 1/6 runs reached it (freshbin). Pre-prompt storage inputs verified identical across runs; branch driver unknown (live-ticket variance vs USB/TCG timing)."
+  },
+  "determinism": {
+    "early_serial": "Byte-identical (1562 B) across repro/auxsweep/norpc despite different AUX, live-ticket nonces, RPC-window flag: pre-prompt death is deterministic, not input-driven at guest-visible level.",
+    "prompt_rate": "1/7 runs reached the Stage2 prompt (freshbin only); exact replica failed. Driver unknown: live-ticket byte variance vs USB/TCG-timing race (both unobservable, Apple-proprietary/hypervisor-timing).",
+    "svc_storm": "RESOLVED as logging artifact, not guest divergence: 434K SVC round-trips in repro/int vs 0 in earlier runs come from another lane s uncommitted -d guest_errors,unimp,int working-tree edit (committed tree has guest_errors,unimp). The SVC traffic itself is normal AVPBooter EL0/EL1 firmware execution (PCs 0x10xxxx). No unimp/data-abort/guest_errors in any run."
+  },
+  "matrix_2x2": {
+    "uuid0+staged": "prompt+restore+bootx then post-bootx panic (freshbin)",
+    "uuid0+plain": "pre-prompt panic (uuid0-0907)",
+    "realECID+plain": "pre-prompt panic (ecid/int-0907)",
+    "realECID+staged": "untested",
+    "conclusion": "AUX fixture (staged guest-0x1a00000 payload) is the decisive variable for pre-prompt reach; ECID/uuid is IRRELEVANT (uuid0+plain panics identically). Prior ECID-elimination retraction was wrong; ECID irrelevance now rigorously established.",
+    "flag_confound_correction": "10/10 fleet rule (incl rpcfixed byte-identical replica): --optional-rpc-unavailable predicts prompt 2/2 ON vs 0/8 OFF, REGARDLESS of AUX (staged/zero/plain/img4-llb) and ECID. Matrix cells above never varied the flag (freshbin had it ON unknowingly); AUX-decisive claim is confounded. Decisive pending: same-AUX flag ON/OFF pair on plain aux."
+  },
+  "fixture_map_staged": {
+    "file": "aux-physical-payload-guest-1a00000.raw (guest=file-0x4000)",
+    "guest_0": "HUFA",
+    "guest_0x20000": "IMG4/IM4P dense ~360KB (LLB-family)",
+    "guest_0x9FC004": "nvram bytes",
+    "guest_0xA5C010": "boot-breadcrumbs",
+    "guest_0x1A00000": "boot-info block with mBoot-20457.1.29 (load-bearing for prompt)",
+    "guest_0xB04000": "ZEROS - post-bootx terminal read, confirmed gap",
+    "note": "NVRAM/breadcrumbs/UMPV bytes in fixture match Stage2's own prior-run overlay writes (nz 23/145/6 identical) -> fixture likely snapshots earlier guest provisioning + Apple-original HUFA/LLB/im4p."
+  },
+  "frontier_post_bootx": {
+    "rounds": "round1 pre-prompt provisioning (survives all zero reads incl 0xa00000/0xb04000) -> prompt+5 roles+bootx(ack, rd=md0) -> round2 re-provision+verify+rescan -> terminal read guest-0xB04000 (zeros) -> explicit panic, no further storage IO",
+    "qemu_stderr_int_run": "silent with -d guest_errors,unimp,int -> explicit panic(), not device-MMIO abort",
+    "hypotheses": [
+      "bootx boots DISK not DRAM ramdisk; disk lacks object at 0xB04000",
+      "DRAM ramdisk/kernel rejected (acceptance unverified) -> fallback disk boot -> zeros -> panic"
+    ]
+  },
+  "rpc_switch": {
+    "rule": "--optional-rpc-unavailable predicts prompt-reaching 9/9: ON (freshbin only) -> 2644 B prompt+restore+bootx; OFF (8 others) -> 1467-1562 B pre-prompt panic. Verified from launch.json command vectors, not flags tables.",
+    "correction": "Boundary eliminated[] entry for optional-RPC is WRONG (same error class as the ECID correction): panic PCs identical but REACH differs. My auxsweep+repro attribution to AUX-flakiness/timing is also superseded: both lacked the flag.",
+    "confirmation": "CONFIRMED twice over (freshbin 10:31 + rpcfixed 14:3x): flag ON -> prompt+restore+bootx deterministically (byte-identical serials). 9/9 fleet rule. Pre-prompt blocker CLOSED as Data-Abort-on-unmapped-doorbell (FAR 0x4ffff8).",
+    "tally": "ON 2/2 prompt (freshbin, rpcfixed byte-identical); OFF 0/9 early (incl repeat-0907 just now)."
+  },
+  "abort_forensics": {
+    "transport": "repro + int runs each show exactly 1 Data Abort amid ~440K SVCs: ESR EC 0x24 ISS 0x92000050 (EL0 write, FAR valid), FAR 0x4ffff8, ELR 0x700b0200, vector EL1 PC 0x700d8400 (panic-stack neighborhood 0x700d88dc/0x700d9168).",
+    "match": "FAR 0x4ffff8 == 0009 doorbell (0x004fc000+0x3ff8); patch comment: original 26A5425a iBEC submits 24-byte v1 request there, opcode 2 falls back to legacy config when completion byte 3 stays zero.",
+    "mechanism": "Flag OFF -> optional_rpc MR mapped-but-disabled -> doorbell write aborts -> Stage2 abort handler -> empty-message panic. Flag ON -> doorbell completes (MEMTX_OK), completion stays 0 -> legacy fallback -> prompt.",
+    "code_comment_flag": "vmapple.py comment claims the switch is absent from the normal path because iBSS faults when the region is advertised unavailable; observed guest behavior is the opposite (normal path aborts, flag-on proceeds). Comment rationale is stale."
+  },
+  "front": "POST-BOOTXqe: variant boot-args eliminated. Next: flag-ON run WITH -d int to test whether any CPU exception (abort/trap) occurs between bootx-complete and the iBoot panic (jump-attempted-and-faulted vs pure-logic-panic).",
+  "flakiness_proven": {
+    "identical_inputs": "rpcfixed vs repeat: same QEMU binary, same staged aux file, uuid0, same flags/roles; personalized sizes identical (iBSS 353017, iBEC 417838)",
+    "divergent_paths": "rpcfixed 125 ops prompt+restore+bootx; repeat 86 ops pre-prompt panic (exact prefix, divergence right after op86 = post-1a00000-read, pre-a00000-verify)",
+    "conclusion": "Deciding input is NOT storage (identical) nor personalization size (identical). Candidates: smp-2 CPU race (host-scheduling dependent), ticket content (timestamps), USB timing. Fixture-decisiveness OVERTURNED; b04000-copy verdict = INCONCLUSIVE (confounded).",
+    "rate": "prompt-reach 2/9 runs (freshbin, rpcfixed); pre-prompt panic 7/9"
+  },
+  "sibling_findings": "b04000flag run used MY plus-b04000 file, reached bootx then SAME post-bootx panic with byte-identical 125-op trace -> mBoot-copy does not satisfy post-bootx check (genuinely rejected content OR check is elsewhere).",
+  "code": {
+    "change": "research/venfire/venfire/restore.py: VENFIRE_RESTORE_BOOT_ARGS env override + resolve_boot_args() (printable-ASCII validated), effective args recorded in report[boot_args]; default unchanged.",
+    "tests": "venfire unittest restore_chain/restore_stage/artifacts/media/personalization: 70 pass, 1 pre-existing skip.",
+    "live_path": "x86/vmapple_restore.py: same VENFIRE_RESTORE_BOOT_ARGS override on the LIVE run_restore_sequence path; x86.test_vmapple_restore (4) + x86.test_vmapple (55) green.",
+    "extra_trace_knob": "x86/vmapple.py: VENFIRE_EXTRA_TRACE env appends -trace enable=<pat> (own -trace option, default off); x86 tests 59 green."
+  },
+  "stage1_determinism": "Stage1 serial byte-identical (sha dca05ae60c39) across reachers AND panickers (uuid0+staged family). Divergence strictly inside Stage2 post-go with identical storage/DRAM-upload-sizes/Stage1-history. Tickets/DFU/ECID/AUX eliminated as pre-prompt deciders. Remaining: CPU/interrupt nondeterminism (smp2+host schedule, GICv3-vs-AIC IRQ timing).",
+  "rate_update": "prompt-reach 3/11; pre-prompt panic 8/11 same signature",
+  "flag_decisive": {
+    "finding": "optional-rpc-unavailable=ON -> prompt+restore+bootx 4/4 (freshbin, rpcfixed, b04000flag, noformat); OFF -> pre-prompt panic 9/9 (all mine + norpc/nostage2/zeroaux/ecid). Prior 'optional-RPC eliminated' claim OVERTURNED (it compared panic PCs, missing the reach difference).",
+    "mechanism_inferred": "Stage2 probes optional-RPC region pre-prompt; advertised region -> unexpected response -> explicit panic at shared assertion. Flag=on (0009 patch) is the vehicle.",
+    "flakiness_retracted": "No nondeterminism; reach is deterministic by flag. smp-race hypothesis dropped (smp1 test unnecessary).",
+    "correction2": "b04000-copy 'rejection' was confounded (run lacked the flag); retesting WITH flag + iBoot IM4P at b04000."
+  },
+  "code_diff": "x86/vmapple_restore.py: run_restore_sequence += opt-in extra_commands (best-effort send after KernelCache, stall tolerated+recorded, regex-validated); x86/vmapple.py: VMappleConfig.restore_extra_commands=() + validation + passthrough. Default path byte-identical (unittest 4+66 green). No commit.",
+  "post_bootx_cpu": "HVC x2 then abort: ESR 0x16 HVC imm0 handled-as-PSCI; abort ESR EC 0x24 ISS 0x10 (EL0 READ, DFSC 0b010000 address-size fault level 0) FAR 0x30240040 ELR 0x70087788 -> EL1 0x700d8400. FAR unmapped in vmapple memmap (AES_2 ends 0x30234000, next PCIE_ECAM 0x40000000). PSCI function IDs unknown (x0 not in -d int); arming arm_psci_call trace next.",
+  "qemu_debug_binary": {
+    "path": "/tmp/26x86-vmapple-tcg-build-0907b/qemu/build/qemu-system-aarch64",
+    "sha256_new": "869ddc4811126b37",
+    "sha256_verified_series": "4c8c3485aa1aef9b479d59b139e60423d40fca9140baeca03c7cfbe6435439bd",
+    "change": "system/runstate.c crashloaded handler += cpu_dump_state to stderr (logging only). Reversible by revert+rebuild. NOTE: binary path shared with sibling agents; behavior identical except extra crash log lines."
+  }
+}

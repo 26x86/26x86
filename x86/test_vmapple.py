@@ -99,6 +99,52 @@ class VMappleOfflineTest(unittest.TestCase):
             self.assertIn("NXSB", report["markers"])
             self.assertIsNone(report["installer_ui_possible"])
 
+    def test_storage_seed_view_is_selected_as_read_only_guest_backing(self) -> None:
+        from x86.vmapple import Executable, StorageSession
+
+        def qcow_header(size: int) -> bytes:
+            header = bytearray(104)
+            header[:4] = b"QFI\xfb"
+            struct.pack_into(">I", header, 4, 3)
+            struct.pack_into(">Q", header, 24, size)
+            struct.pack_into(">I", header, 20, 16)
+            return bytes(header)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            aux = root / "aux.raw"
+            disk = root / "root.raw"
+            aux_seed = root / "aux-seed.raw"
+            root_seed = root / "root-seed.raw"
+            aux_overlay = root / "aux.qcow2"
+            root_overlay = root / "root.qcow2"
+            aux.write_bytes(b"A" * 1024)
+            disk.write_bytes(b"R" * 2048)
+            aux_seed.write_bytes(b"S" * 1024)
+            root_seed.write_bytes(b"T" * 2048)
+            aux_overlay.write_bytes(qcow_header(1024))
+            root_overlay.write_bytes(qcow_header(2048))
+            session = StorageSession(
+                root, aux, disk, aux_overlay, root_overlay, 0,
+                aux_seed=aux_seed, root_seed=root_seed,
+            )
+            arguments = session.arguments(Executable("qemu-system-aarch64"), allow_bdif_writes=False)
+            blockdev = [arguments[index + 1] for index, value in enumerate(arguments) if value == "-blockdev"]
+            self.assertEqual(len(blockdev), 2)
+            self.assertTrue(all(str(seed) in item for seed, item in ((aux_seed, blockdev[0]), (root_seed, blockdev[1]))))
+            self.assertTrue(all('"offset":0' in item for item in blockdev))
+
+    def test_cli_parser_exposes_storage_seed_views(self) -> None:
+        from x86.cli import build_parser
+
+        parsed = build_parser().parse_args([
+            "vmapple", "run", "--research-only",
+            "--aux-seed", "/tmp/aux-seed.raw",
+            "--root-seed", "/tmp/root-seed.raw",
+        ])
+        self.assertEqual(parsed.aux_seed, "/tmp/aux-seed.raw")
+        self.assertEqual(parsed.root_seed, "/tmp/root-seed.raw")
+
     def test_macosvm_json_resolves_ecid_and_storage_atomically(self) -> None:
         from x86.vmapple import VMappleConfig, load_macosvm_configuration
 
@@ -652,6 +698,89 @@ class VMappleOfflineTest(unittest.TestCase):
                                    "/tmp/vmapple.sock", root)
         self.assertIn("vmapple-cfg.optional-rpc-unavailable=on", command)
         self.assertTrue(any("enable=vmapple_optional_rpc_*,file=" in item for item in command))
+
+    def test_qemu_command_explicitly_enables_research_graphics(self) -> None:
+        from x86.vmapple import Executable, VMappleConfig, _command_for
+
+        class EmptyStorage:
+            def arguments(self, executable, **kwargs):
+                return []
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            firmware = root / "AVPBooter.bin"
+            firmware.write_bytes(b"firmware")
+            config = VMappleConfig(
+                target_major=27, qemu="qemu", firmware=str(firmware), ibss="",
+                aux="aux", root="root", output=str(root), research_only=True,
+                research_graphics=True,
+            )
+            command = _command_for(
+                config, Executable("qemu-system-aarch64"), EmptyStorage(),
+                "/tmp/vmapple.sock", root,
+            )
+        self.assertIn("vmapple,research-headless=on,research-graphics=on,uuid=0", command)
+
+    def test_qemu_command_can_explicitly_enable_stage2_contract(self) -> None:
+        from x86.vmapple import Executable, VMappleConfig, _command_for
+
+        class EmptyStorage:
+            def arguments(self, executable, **kwargs):
+                return []
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            firmware = root / "AVPBooter.bin"
+            firmware.write_bytes(b"firmware")
+            config = VMappleConfig(
+                target_major=27, qemu="qemu", firmware=str(firmware), ibss="",
+                aux="aux", root="root", output=str(root), research_only=True,
+                research_stage2=True,
+            )
+            command = _command_for(
+                config, Executable("qemu-system-aarch64"), EmptyStorage(),
+                "/tmp/vmapple.sock", root,
+            )
+        self.assertTrue(any("research-headless=on,research-stage2=on,uuid=0" in item for item in command))
+
+    def test_stage2_serial_start_is_execution_evidence_before_panic(self) -> None:
+        from x86.vmapple import IBOOT_PANIC_MARKER, STAGE2_PROMPT, _wait_serial_marker
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "serial.log"
+            path.write_bytes(
+                b"======== Start of iBootStage2 serial output. ========\n"
+                + IBOOT_PANIC_MARKER
+                + b" test\n"
+            )
+            result = _wait_serial_marker(path, STAGE2_PROMPT, 1)
+        self.assertFalse(result["observed"])
+        self.assertTrue(result["panic_observed"])
+        self.assertTrue(result["stage2_serial_started"])
+        self.assertEqual(result["stage2_serial_start_byte_offset"], 0)
+
+    def test_live_recovery_command_keeps_initial_el1_contract(self) -> None:
+        from x86.vmapple import Executable, VMappleConfig, _command_for
+
+        class EmptyStorage:
+            def arguments(self, executable, **kwargs):
+                return []
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            firmware = root / "AVPBooter.bin"
+            firmware.write_bytes(b"firmware")
+            config = VMappleConfig(
+                target_major=27, qemu="qemu", firmware=str(firmware), ibss="",
+                aux="aux", root="root", output=str(root), research_only=True,
+                live_personalize=True,
+            )
+            command = _command_for(
+                config, Executable("qemu-system-aarch64"), EmptyStorage(),
+                "/tmp/vmapple.sock", root,
+            )
+        self.assertIn("vmapple,research-headless=on,uuid=0", command)
+        self.assertFalse(any("research-stage2=on" in item for item in command))
 
     def test_direct_macos_command_can_select_native_hvf_on_arm_mac(self) -> None:
         from x86.vmapple import Executable, VMappleConfig, _command_for

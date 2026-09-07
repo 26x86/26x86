@@ -1,0 +1,32 @@
+name: VenFire layered boot-runtime contract
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  harness-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Test UART and harness evidence gates
+        run: python3 -m unittest tests.test_boot_runtime x86.test_boot_evidence x86.test_iboot_handoff x86.test_vmapple_tcg -v
+      - name: Execute contract-only layered harness
+        run: |
+          python3 Tools/verify_boot_runtime.py \
+            --output "$RUNNER_TEMP/26x86-boot-runtime" \
+            --skip-efi --skip-ovmf
+      - name: Upload layered evidence contract
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 26x86-boot-runtime-contract
+          path: ${{ runner.temp }}/26x86-boot-runtime

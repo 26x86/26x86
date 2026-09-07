@@ -20,6 +20,9 @@ NORMAL_TRACE = [
     "VF: RUST_ENTER",
     "VF: RUST_POLICY_OK",
     "VF: MACHINE_RESET",
+    "VF: AARCH64_STATE_READY",
+    "VF: VMAPPLE_GRAPH_READY",
+    "VF: M1_GRAPH_READY",
     "VF: MACHINE_READY",
     "VF: JIT_ENTER",
     "VF: GUEST_HALT",
@@ -47,8 +50,18 @@ def allocation_measurement(log):
 def fixture_words(kind):
     if kind == "normal":
         return [0xd2800140, 0xd1000400, 0xb5ffffe0, 0xd4400000]
-    if kind == "bad-instruction":
+    if kind == "undefined-instruction":
         return [0xffffffff]
+    if kind == "privileged-instruction":
+        return [0xd69f03e0]
+    if kind == "system-register-trap":
+        return [0xd53be000]
+    if kind == "instruction-abort":
+        return [0x14000001]
+    if kind == "alignment-fault":
+        return [0xd2800021, 0xf9000020]
+    if kind == "data-abort":
+        return [0xd2a00201, 0xf9000020]
     if kind == "budget-exhaustion":
         return [0x14000000]
     return None
@@ -90,7 +103,8 @@ def run_case(case):
     elif case["kind"] == "guest-failure":
         failure_trace = [
             "VF: EFI_ENTRY", "VF: EFI_MEMORY_READY", "VF: PREOS_CONTEXT_READY", "VF: RUST_ENTER",
-            "VF: RUST_POLICY_OK", "VF: MACHINE_READY", "VF: JIT_ENTER", case["stop_marker"],
+            "VF: RUST_POLICY_OK", "VF: MACHINE_RESET", "VF: AARCH64_STATE_READY",
+            "VF: VMAPPLE_GRAPH_READY", "VF: M1_GRAPH_READY", "VF: MACHINE_READY", "VF: JIT_ENTER", case["stop_marker"],
             case["preos_marker"], "VF: EFI_RETURN_ERROR",
         ]
         passed = passed and ordered(log, failure_trace)
@@ -117,9 +131,39 @@ def main():
         {"name": "built-in-golden-halt", "kind": "normal", "cpu": "Nehalem", "guest": None, "exit": 33},
         {"name": "external-own-code-halt", "kind": "normal", "cpu": "Nehalem", "guest": "normal", "exit": 33},
         {
-            "name": "unsupported-aarch64-instruction", "kind": "guest-failure", "cpu": "Nehalem",
-            "guest": "bad-instruction", "exit": 35,
-            "stop_marker": "VF: GUEST_STOP reason=BAD_INSTRUCTION",
+            "name": "undefined-aarch64-instruction", "kind": "guest-failure", "cpu": "Nehalem",
+            "guest": "undefined-instruction", "exit": 35,
+            "stop_marker": "VF: GUEST_STOP reason=UNDEFINED_INSTRUCTION",
+            "preos_marker": "VF: PREOS_FAIL code=UNSUPPORTED",
+        },
+        {
+            "name": "el0-privileged-instruction", "kind": "guest-failure", "cpu": "Nehalem",
+            "guest": "privileged-instruction", "exit": 35,
+            "stop_marker": "VF: GUEST_STOP reason=PRIVILEGE_FAULT",
+            "preos_marker": "VF: PREOS_FAIL code=UNSUPPORTED",
+        },
+        {
+            "name": "el0-system-register-trap", "kind": "guest-failure", "cpu": "Nehalem",
+            "guest": "system-register-trap", "exit": 35,
+            "stop_marker": "VF: GUEST_STOP reason=SYSTEM_REGISTER_TRAP",
+            "preos_marker": "VF: PREOS_FAIL code=UNSUPPORTED",
+        },
+        {
+            "name": "guest-instruction-abort", "kind": "guest-failure", "cpu": "Nehalem",
+            "guest": "instruction-abort", "exit": 35,
+            "stop_marker": "VF: GUEST_STOP reason=INSTRUCTION_ABORT",
+            "preos_marker": "VF: PREOS_FAIL code=JIT",
+        },
+        {
+            "name": "guest-alignment-fault", "kind": "guest-failure", "cpu": "Nehalem",
+            "guest": "alignment-fault", "exit": 35,
+            "stop_marker": "VF: GUEST_STOP reason=ALIGNMENT_FAULT",
+            "preos_marker": "VF: PREOS_FAIL code=UNSUPPORTED",
+        },
+        {
+            "name": "guest-data-abort", "kind": "guest-failure", "cpu": "Nehalem",
+            "guest": "data-abort", "exit": 35,
+            "stop_marker": "VF: GUEST_STOP reason=DATA_ABORT",
             "preos_marker": "VF: PREOS_FAIL code=JIT",
         },
         {
@@ -141,9 +185,9 @@ def main():
         "production_artifact_sha256": hashlib.sha256((ROOT / "build" / "BOOTX64.EFI").read_bytes()).hexdigest(),
         "layer_status": {
             "firmware_efi": "passed" if all(result["passed"] for result in results) else "failed",
-            "rust_preos": "passed" if all(result["passed"] for result in results[:4]) else "failed",
-            "aarch64_jit": "passed" if all(result["passed"] for result in results[:4]) else "failed",
-            "native_machine": "partial: Phase-2 VfMachine RAM/registry/reset core; no M1 device graph",
+            "rust_preos": "passed" if all(result["passed"] for result in results[:-1]) else "failed",
+            "aarch64_jit": "passed" if all(result["passed"] for result in results[:-1]) else "failed",
+            "native_machine": "partial: synchronized M1-only T8103 contract graph plus Phase-2 VfMachine/VMApple descriptor; Apple physical MMIO/register evidence is not claimed",
             "apple_boot_chain": "not attempted",
             "macos": "not attempted",
         },

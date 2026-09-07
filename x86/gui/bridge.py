@@ -437,6 +437,7 @@ class WizardBridge:
         # paths and bounded scalar values, never arbitrary QEMU arguments.
         string_fields = (
             "qemu", "qemu_img", "firmware", "macosvm", "vm_json", "ibss", "ibec", "aux", "root", "output",
+            "aux_seed", "root_seed",
             "build_manifest", "tss_helper", "original_ibss", "original_ibec", "restore_role_dir",
         )
         values: dict[str, Any] = {}
@@ -545,6 +546,8 @@ class WizardBridge:
         add("--ibec", "ibec")
         add("--aux", "aux")
         add("--root", "root")
+        add("--aux-seed", "aux_seed")
+        add("--root-seed", "root_seed")
         add("--output", "output")
         add("--build-manifest", "build_manifest")
         add("--tss-helper", "tss_helper")

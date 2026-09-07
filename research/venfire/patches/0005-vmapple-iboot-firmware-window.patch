@@ -1,0 +1,7 @@
+diff --git a/hw/vmapple/vmapple.c b/hw/vmapple/vmapple.c
+--- a/hw/vmapple/vmapple.c
++++ b/hw/vmapple/vmapple.c
+@@ -103,2 +103,2 @@ static const MemMapEntry memmap[] = {
+-    [VMAPPLE_FIRMWARE] =           { 0x00100000, 0x00100000 },
++    [VMAPPLE_FIRMWARE] =           { 0x00100000, 0x00200000 },
+     [VMAPPLE_CONFIG] =             { 0x00400000, 0x00010000 },

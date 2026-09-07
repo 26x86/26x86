@@ -1,0 +1,5 @@
+* text=auto
+*.S text eol=lf
+usb/init text eol=lf
+*.bin binary
+*.elf binary

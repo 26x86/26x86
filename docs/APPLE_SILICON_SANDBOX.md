@@ -158,6 +158,102 @@ rejected for target 26/27 because QEMU's documented VMApple guest support does
 not cover those modern macOS versions; QEMU remains available for the separate
 recovery/protocol research path.
 
+### Portable VMApple TCG path (non-Apple host)
+
+The native worker above is not the only host execution layer. When the host is
+Linux, Windows/WSL, or another non-Apple system, the repository now provides an
+explicit software-emulation path. It builds a pinned QEMU source revision with
+the reviewed `research/venfire/patches/series`; the series exposes an explicit
+TCG/headless mode, barrier/recovery plumbing, a default-off BDIF write gate,
+and the opt-in j274 Stage2 contract (EL2, observed implementation-defined
+registers, and high-RAM relocation alias). It does not alter a guest image,
+its signatures, or its VM bundle.
+
+Build the exact binary in a new directory (the source checkout must be clean):
+
+```sh
+python3 Tools/build_vmapple_tcg.py \
+  --output /tmp/26x86-vmapple-tcg \
+  --source /path/to/qemu-at-ff1d2d19d7e2 \
+  --jobs 4
+```
+
+The build receipt pins the QEMU commit, every patch digest, configure/build
+commands, binary digest, `vmapple` machine, and `tcg` accelerator. A normal upstream
+QEMU binary is not silently accepted: the runner probes this exact binary for
+the VMApple machine, TCG, and BDIF storage device before opening the guest.
+
+Run an unchanged Virtualization.framework bundle through headless TCG with an
+explicit research acknowledgement:
+
+```sh
+python3 -m x86 vmapple run-tcg \
+  --target 27 \
+  --qemu /tmp/26x86-vmapple-tcg/qemu/build/qemu-system-aarch64 \
+  --qemu-img /usr/bin/qemu-img \
+  --firmware /path/to/AVPBooter.vmapple2.bin \
+  --vm-json /path/to/macosvm.json \
+  --output /tmp/26x86-goldengate-tcg \
+  --observation-timeout 900 \
+  --research-only --json
+```
+
+This path uses qcow2 copy-on-write overlays for AUX/root and re-hashes the
+original firmware, JSON, and storage files after the process exits.  It is
+headless by design; `--display auto` resolves to `none`/`dbus` only when the
+selected QEMU advertises that backend.  The fixed Rust VMApple graph and the
+QEMU GICv3/BDIF graph are contracts for this TCG layer, not a claim that the
+native Sandbox AIC, ANS, DART/SART, PV graphics, or Metal stack is emulated.
+
+For the macOS 27 j274 IPSW, the decoded raw iBoot Stage2 can be selected
+explicitly. This is a firmware-execution probe, not an AVPBooter replacement:
+the runner enables a bounded QEMU `exec` trace and records Stage2 entry and the
+observed high-RAM relocation separately from UART iBoot/XNU/userspace evidence.
+
+```sh
+python3 -m x86 vmapple run-tcg \
+  --target 27 \
+  --qemu /tmp/26x86-vmapple-tcg/qemu/build/qemu-system-aarch64 \
+  --qemu-img /usr/bin/qemu-img \
+  --firmware /path/to/iboot-stage2-decoded.bin \
+  --firmware-kind iboot-stage2 \
+  --vm-json /path/to/macos27-j274-macosvm.json \
+  --research-graphics --duration 60 --research-only --json
+```
+
+The report fields `firmware_execution_evidence.stage2_execution_observed` and
+`high_ram_relocation_observed` mean that QEMU executed the supplied raw Stage2
+input. `graphics_host_evidence.host_frame_presented` means only that the
+optional Reims host swapchain presented a synthetic frame; it is not evidence
+of WindowServer, AGX, Metal, or a guest framebuffer. `macos_boot_verified`
+still requires target-matching Darwin/XNU and userspace UART markers.
+
+The pinned QEMU map is explicit: firmware `0x00100000/0x00200000`, config
+`0x00400000/0x00010000`, GIC distributor `0x10000000/0x00010000`, GIC
+redistributors `0x10010000/0x00400000`, UART `0x20010000/0x00010000`, PL031
+RTC `0x20050000/0x00001000`, PL061 GPIO `0x20060000/0x00001000`, pvpanic
+`0x20070000/0x2`, BDIF `0x30000000/0x00200000`, APV graphics/IOSFC
+`0x30200000/0x10000` and `0x30210000/0x10000`, AES windows
+`0x30220000/0x4000` and `0x30230000/0x4000`, PCIe ECAM
+`0x40000000/0x10000000`, PCIe MMIO `0x50000000/0x1fff0000`, and RAM from
+`0x70000000`, with a research-only RAM alias at `0x1fc000000` for the j274
+Stage2 relocation path. Its realized IRQ routes are UART 1, RTC 2, GPIO 5, IOSFC
+`0x10`, graphics `0x11`, AES `0x12`, and PCIe `0x20`; the virtual timer is
+PPI 27. The current Rust descriptor records only its bounded subset and the
+same-call reset/validity gate; it does not silently claim the AES, PCIe, or PV
+graphics windows are implemented. Unsupported firmware backing, AES DMA,
+PCIe enumeration, and PV graphics accesses fail closed. The map is QEMU
+VMApple behavior, not
+evidence of the physical M1 AIC/DART or an iBoot-compatible native machine.
+
+The command returns success only when the UART observer sees a target-matching
+Darwin/XNU banner and a userspace marker.  A TCG process start, a machine help
+line, an iBoot banner, or a recovery prompt is not `macos_boot_verified`.
+Without caller-supplied original Golden Gate firmware and a provisioned bundle,
+the evidence gate must remain false.  This preserves the distinction between
+the portable TCG/emulation layer and the native Apple Virtualization.framework
+layer below.
+
 `macosvm.json` is treated as an atomic, read-only bundle: the ECID comes from
 the binary-plist `machineId`, the hardware-model digest comes from
 `hardwareModel`, and exactly one `aux` plus one `disk` storage entry is
