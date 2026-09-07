@@ -6,7 +6,7 @@
   <p>OpenCore integration, clean-room boot research, and evidence-first compatibility tooling.</p>
   <p>
     <a href="https://github.com/26x86/26x86/actions">Actions</a> ·
-    <a href="docs/wiki/Home.md">Docs</a> ·
+    <a href="docs/wiki/README.md">Docs</a> ·
     <a href="docs/MELLOW_INTEGRATION.md">Mellow</a> ·
     <a href="SECURITY.md">Security</a>
   </p>
@@ -20,6 +20,7 @@
 
 | I want to… | Go to |
 | --- | --- |
+| Understand the public architecture | [Documentation hub](docs/wiki/README.md) |
 | Prepare an Intel Mac for Tahoe | [Setup and compatibility guide](docs/wiki/Home.md) |
 | Run the guided tool | `26x86.command` or `python3 -m x86 wizard` |
 | Build on Windows | [Windows EXE workflow](#windows-exe) |
@@ -42,7 +43,6 @@ and runtime components so their evidence can be reviewed independently.
 | **Runtime** | [Nextcore-APLS](https://github.com/26x86/Nextcore-APLS) · [Nextcore-GPU](https://github.com/26x86/Nextcore-GPU) | VMApple recovery orchestration and GPU policy |
 | **Hardware translation** | [Nextcore-HAL](https://github.com/26x86/Nextcore-HAL) · [Nextcore-ISE](https://github.com/26x86/Nextcore-ISE) | Platform-table translation and instruction policy |
 | **CLI** | [Nextcore-Tool](https://github.com/26x86/Nextcore-Tool) | Reproducible command-line orchestration |
-| **TCG research** | [VenFire](https://github.com/26x86/VenFire) · [VenFire-QEMU](https://github.com/26x86/VenFire-QEMU) | Isolated VMApple/TCG conformance and backend contracts |
 | **Compatibility packages** | [OpenCorePkg](https://github.com/26x86/OpenCorePkg) · [MetallibSupportPkg](https://github.com/26x86/MetallibSupportPkg) · [PatcherSupportPkg](https://github.com/26x86/PatcherSupportPkg) | Upstream integration and patcher support |
 
 Every exported Nextcore module has an independent `main` branch, fixed initial
@@ -104,6 +104,6 @@ unverified. See [Apple Silicon Sandbox](docs/APPLE_SILICON_SANDBOX.md),
 - An observation advances only the layer it measures; it cannot stand in for a
   later firmware, kernel, userspace, graphics, or physical-hardware result.
 
-Read [CONTRIBUTING guidance](docs/wiki/Home.md), [NOTICE.md](NOTICE.md),
+Read [CONTRIBUTING guidance](docs/wiki/Developer.md), [NOTICE.md](NOTICE.md),
 [CREDITS.md](CREDITS.md), and the [upstream inventory](docs/wiki/Upstream-Repositories.md)
 before integrating changes.

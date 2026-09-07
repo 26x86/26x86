@@ -1,0 +1,61 @@
+site_name: 26x86 Developer Wiki
+site_description: OpenCore integration, Nextcore contracts, and evidence-first development documentation
+site_url: https://26x86.github.io/26x86/
+repo_url: https://github.com/26x86/26x86
+repo_name: 26x86/26x86
+docs_dir: docs
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+nav:
+  - Home: wiki/README.md
+  - Introduction:
+      - Getting started: wiki/Getting-Started.md
+      - Supported models: wiki/Supported-Models.md
+      - OpenCore: wiki/OpenCore.md
+  - How to install:
+      - Installation notes: wiki/Installation-Notes.md
+      - Configuration: wiki/Configuration.md
+      - Migration: wiki/Migration.md
+  - macOS support:
+      - macOS support: wiki/macOS-Support.md
+      - Pre-AVX Mac Pro: wiki/Pre-AVX-Mac-Pro.md
+      - Surface Pro 6: SURFACE_PRO6.md
+  - Application:
+      - Application: wiki/Application.md
+      - Mellow integration: MELLOW_INTEGRATION.md
+  - Troubleshooting:
+      - Troubleshooting: wiki/Troubleshooting.md
+      - Known issues: wiki/Known-Issues.md
+      - GPU limitations: wiki/GPU-Limitations.md
+      - Warnings: wiki/Warnings.md
+  - Developer documentation:
+      - Architecture: wiki/Architecture.md
+      - Build and development: wiki/Build-and-Development.md
+      - Nextcore design: NEXTCORE_DESIGN.md
+      - Nextcore build plan: NEXTCORE_BUILD_PLAN.md
+      - Public/private boundary: wiki/Privacy-and-Disclosure.md
+      - Repository layout: REPOSITORY_LAYOUT.md
