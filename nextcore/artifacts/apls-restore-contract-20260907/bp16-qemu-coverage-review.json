@@ -1,0 +1,363 @@
+{
+  "schema": "nextcore.bp16-qemu-coverage-review/1",
+  "date": "2026-09-07",
+  "layer": "QEMU host device registration and CPU physical-address decode",
+  "current_state": "same-event decode failure; private translated node exists; no declared/reset-view range overlaps the node",
+  "desired_state": "identify a public device and register contract before selecting a mapping implementation",
+  "decision": "HOLD: device identity and access semantics not established by registration coverage",
+  "qemu": {
+    "worktree": "/tmp/26x86-vmapple-tcg-build-0907b/qemu",
+    "base_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+    "worktree_modified": true,
+    "base_machine_sha256": "2e7f872746da5183e745dcb7b2bb2137b76716f4abeae0a0b78921402a05384a",
+    "current_machine_sha256": "6fcd457542de1b2e65bf68e75380d686df489bd5a57b13e10e8f863f49fe2fef",
+    "base_declared_region_count": 16,
+    "current_declared_region_count": 17,
+    "base_map_covers_access": false,
+    "current_map_overlaps_any_target_range": false
+  },
+  "evidence": {
+    "same_event_read_size_bytes": 4,
+    "same_event_result": "MEMTX_DECODE_ERROR",
+    "translated_target_node_count": 1,
+    "translated_target_range_count": 1,
+    "target_translation_resolved": true,
+    "same_event_access_fits_target_node": true,
+    "flatview_capture_phase": "reset",
+    "flatview_captured_at_fault_event": false,
+    "cpu_system_flatview_region_count": 16,
+    "all_address_space_region_count": 25,
+    "cpu_system_flatview_overlaps_target_node": false,
+    "cpu_system_flatview_covers_access": false,
+    "flatview_sha256": "f8cb033fd786f4a5cbe66f5aa8f5d8e9179d0bd3c5c0adf9787eb11796079665",
+    "decode_error_alone_proves_unmapped": false,
+    "dynamic_fault_time_flatview_observed": false
+  },
+  "registration_gap_matrix": [
+    {
+      "kind": "firmware RAM",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:354-385"
+      ],
+      "creation_gate": "unconditional",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": true,
+      "recorded_region_kind": "ram",
+      "reset_system_view_region_present": true,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    },
+    {
+      "kind": "configuration RAM",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:192-220",
+        "hw/vmapple/cfg.c:235-244"
+      ],
+      "creation_gate": "unconditional",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": true,
+      "recorded_region_kind": "ram",
+      "reset_system_view_region_present": true,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    },
+    {
+      "kind": "optional RPC MMIO",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:203",
+        "hw/vmapple/cfg.c:187-196",
+        "hw/vmapple/cfg.c:240-244"
+      ],
+      "creation_gate": "explicit unavailable-adapter flag enabled in recorded invocation",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": true,
+      "recorded_region_kind": "i/o",
+      "reset_system_view_region_present": true,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    },
+    {
+      "kind": "interrupt controller",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:253-301"
+      ],
+      "creation_gate": "unconditional",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": true,
+      "recorded_region_kind": "i/o",
+      "reset_system_view_region_present": true,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    },
+    {
+      "kind": "UART",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:304-317"
+      ],
+      "creation_gate": "unconditional",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": true,
+      "recorded_region_kind": "i/o",
+      "reset_system_view_region_present": true,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    },
+    {
+      "kind": "RTC",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:319-325",
+        "hw/vmapple/vmapple.c:590",
+        "hw/rtc/pl031.c:190-207",
+        "hw/rtc/pl031.c:321-335"
+      ],
+      "creation_gate": "unconditional",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": true,
+      "recorded_region_kind": "i/o",
+      "reset_system_view_region_present": true,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    },
+    {
+      "kind": "GPIO",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:334-352"
+      ],
+      "creation_gate": "unconditional",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": true,
+      "recorded_region_kind": "i/o",
+      "reset_system_view_region_present": true,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    },
+    {
+      "kind": "panic notification",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:181-190"
+      ],
+      "creation_gate": "unconditional",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": true,
+      "recorded_region_kind": "i/o",
+      "reset_system_view_region_present": true,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    },
+    {
+      "kind": "storage backdoor",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:148-179",
+        "hw/vmapple/bdif.c:492-500"
+      ],
+      "creation_gate": "unconditional",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": true,
+      "recorded_region_kind": "i/o",
+      "reset_system_view_region_present": true,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    },
+    {
+      "kind": "AES banks",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:236-246",
+        "hw/vmapple/aes.c:553-556"
+      ],
+      "creation_gate": "unconditional",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": true,
+      "recorded_region_kind": "i/o",
+      "reset_system_view_region_present": true,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    },
+    {
+      "kind": "PCI apertures",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:387-447"
+      ],
+      "creation_gate": "unconditional",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": true,
+      "recorded_region_kind": "container",
+      "reset_system_view_region_present": true,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    },
+    {
+      "kind": "PV graphics and surface MMIO",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:222-234",
+        "hw/vmapple/vmapple.c:586-588"
+      ],
+      "creation_gate": "headless without research-graphics: creation skipped",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": false,
+      "recorded_region_kind": "not instantiated",
+      "reset_system_view_region_present": false,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    },
+    {
+      "kind": "main RAM and research alias",
+      "registration_sources": [
+        "hw/vmapple/vmapple.c:564-580"
+      ],
+      "creation_gate": "main RAM plus explicit research-headless alias",
+      "source_creation_path_present": true,
+      "instantiated_in_recorded_run": true,
+      "recorded_region_kind": "ram",
+      "reset_system_view_region_present": true,
+      "declared_ranges_overlap_private_node": false,
+      "reset_ranges_overlap_private_node": false,
+      "reset_ranges_cover_same_event_access": false,
+      "corresponds_to_private_node_device": null
+    }
+  ],
+  "registration_findings": {
+    "explicit_qdev_creation_and_mapping": true,
+    "guest_restore_dt_automatically_instantiates_qemu_models": false,
+    "qemu_dtb_autoload_skipped": true,
+    "rtc_pl031_already_instantiated": true,
+    "pci_other_address_spaces_counted_as_cpu_map": false,
+    "graphics_enable_is_supported_repair_for_target": false,
+    "ram_alias_is_supported_repair_for_target": false,
+    "private_target_device_identity_verified": false
+  },
+  "required_public_contract_fields": [
+    "versioned source provenance and target SoC/model applicability",
+    "binding between compatible/role and a concrete independently documented device",
+    "bus address/size cell encoding and parent translation into the CPU physical map",
+    "complete MMIO range and bank/alias/mirroring rules",
+    "observed register offset and accepted width/alignment/endianness",
+    "reset value, reset ordering and clock/power availability",
+    "read return meaning and side effects; write restrictions and unknown-register behavior",
+    "access privilege/security attributes and fault response",
+    "interrupt/timer/DMA interactions if the identified register participates in them",
+    "QEMU MemoryRegionOps access validity and realization/mapping lifecycle",
+    "minimal independent register tests and same-event follow-up acceptance"
+  ],
+  "implementation_authorized_by_this_review": false,
+  "source_changed": false,
+  "vm_runs": 0,
+  "tss_requests": 0,
+  "network_requests": 0,
+  "private_addresses_node_strings_or_register_values_in_output": false,
+  "local_public_sources": [
+    {
+      "path": "hw/vmapple/vmapple.c",
+      "sha256": "6fcd457542de1b2e65bf68e75380d686df489bd5a57b13e10e8f863f49fe2fef",
+      "official_pinned_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/vmapple.c",
+      "worktree_may_differ_from_pinned_url": true
+    },
+    {
+      "path": "hw/vmapple/Kconfig",
+      "sha256": "bf2deff2b6a67d9f9a942b475a30b4faa927f4f341c81fe7741cf92ce623a6e4",
+      "official_pinned_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/Kconfig",
+      "worktree_may_differ_from_pinned_url": true
+    },
+    {
+      "path": "hw/vmapple/meson.build",
+      "sha256": "41325cfb53ee92e9eef48b65e76bbf43693446c2b53077a695f4673cf2d28518",
+      "official_pinned_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/meson.build",
+      "worktree_may_differ_from_pinned_url": false
+    },
+    {
+      "path": "hw/vmapple/cfg.c",
+      "sha256": "5d019ec7203d4573887bd1bf7977b5c6d54d96e4945f23578ebf18811e7c65f4",
+      "official_pinned_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/cfg.c",
+      "worktree_may_differ_from_pinned_url": true
+    },
+    {
+      "path": "hw/vmapple/aes.c",
+      "sha256": "f2684d11f97114037cd061933e57dcd5a17ff04eb18d70309cf24352252316b2",
+      "official_pinned_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/aes.c",
+      "worktree_may_differ_from_pinned_url": true
+    },
+    {
+      "path": "hw/vmapple/bdif.c",
+      "sha256": "e6e7356bb055f99c62d7042b52e88384ea20680d1d0970f6f0b4e3c20f367b88",
+      "official_pinned_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/bdif.c",
+      "worktree_may_differ_from_pinned_url": true
+    },
+    {
+      "path": "hw/vmapple/virtio-blk.c",
+      "sha256": "2ee96594b8add1c37b49bfbf58b45be327a583492cbd59193c62317ed371e0ae",
+      "official_pinned_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/virtio-blk.c",
+      "worktree_may_differ_from_pinned_url": true
+    },
+    {
+      "path": "hw/rtc/pl031.c",
+      "sha256": "057a621bf4e35ebe86a2da9b09f2ea8f14c53ae1e34a9662bb4e913658dab9c2",
+      "official_pinned_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/rtc/pl031.c",
+      "worktree_may_differ_from_pinned_url": false
+    },
+    {
+      "path": "system/memory.c",
+      "sha256": "7932ef81121c762398c8bcaaac4dd062e585a3b8b83e82d399d0d0503d0a05cc",
+      "official_pinned_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/system/memory.c",
+      "worktree_may_differ_from_pinned_url": false
+    },
+    {
+      "path": "system/physmem.c",
+      "sha256": "a8d6c0d4525b5dd758406e4a2d0cf888f818c0cfeb24da4dc793ce53f5f919de",
+      "official_pinned_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/system/physmem.c",
+      "worktree_may_differ_from_pinned_url": false
+    },
+    {
+      "path": "include/exec/memattrs.h",
+      "sha256": "cf65c7334c8e9367e35ccac1a73bda5227d5aa58c1290689cc7b1f2d284fe1cf",
+      "official_pinned_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/include/exec/memattrs.h",
+      "worktree_may_differ_from_pinned_url": false
+    }
+  ],
+  "private_evidence_fingerprints": [
+    {
+      "artifact_name": "bp14-device-tree-survey-private.json",
+      "sha256": "f29828b30fe4d48bc6da71837b0cc95b237c66d1ed829cbc8971b73c410205cf"
+    },
+    {
+      "artifact_name": "bp14b-transaction.json",
+      "sha256": "5a7f6de585e2b3c06745aff3e8f139a599d245c45d52cc475843da7c33d37edd"
+    },
+    {
+      "artifact_name": "normal-recovery-translation-b-memory-tree.txt",
+      "sha256": "f8cb033fd786f4a5cbe66f5aa8f5d8e9179d0bd3c5c0adf9787eb11796079665"
+    },
+    {
+      "artifact_name": "bp14b-run.py",
+      "sha256": "da0f9e91af6627b0242ff9c8734c0a277c121064f734b910df0fbd0143381b3a"
+    },
+    {
+      "artifact_name": "bp14b-qemu-argv.json",
+      "sha256": "499d6aacc282203b5ced6454c0ce6bac527485a15d099806f713241540c1581e"
+    }
+  ],
+  "all_reviewed_files_unchanged_during_final_calculation": true,
+  "network_source_verification_this_review": false
+}

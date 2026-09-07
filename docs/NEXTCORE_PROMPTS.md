@@ -7,7 +7,9 @@ Design 슬롯, *구현*은 Build Plan 슬롯의 영역이다.
 
 ## 현재 상태
 
-- 없음 — Nextcore 프롬프트는 아직 시작되지 않았다.
+- P1~P9 박제 완료 — (F) 정정: 종전 "없음 — 아직 시작되지 않았다"는 본문
+  (P1~P7)과 어긋난 기재였고, P8·P9는 F 통합 검증으로 신설된 박제다.
+- 본 문서 OPEN_QUESTION 2/2 종결(RESOLVED 2; P9에 검토 HOLD 1건 부속).
 
 ## 원하는 상태
 
@@ -42,7 +44,7 @@ Design 슬롯, *구현*은 Build Plan 슬롯의 영역이다.
 - 진입 조건: Step 2의 EFI 산출물이 디스크에 존재.
 - 종료 조건: 사용자가 USB 드라이브를 선택하고 "시작"을 눌러 작업이 끝났거나, wizard를 종료.
 
-> 모든 step에서 "고급" 토글은 *기본으로 숨김*. 노출 여부는 Boundary 슬롯 결정에 따르며, 현재 OPEN_QUESTION으로 남아 있다.
+> 모든 step에서 "고급" 토글은 *기본으로 숨김*. 노출 여부는 Boundary 슬롯 결정에 따르며, (F) 종결: v1에서는 재노출하지 않는다 — 판단 근거와 조건부 문구는 P9 참조.
 
 > 근거: 사용자 요구(심플하게)와 3-step 골격을 1:1로 일치시키기 위함. 진입/종료 조건을 박제해 Build Plan 단계 게이트(BP3)와 1:1로 대응시킨다.
 
@@ -115,10 +117,18 @@ USB 드라이브를 선택하는 순간 표시되는 *경고 문구*:
 - EN: "Calling Apple's official tool (createinstallmedia). A macOS installer image will be downloaded — an internet connection is required, and the process may take tens of minutes depending on USB capacity."
 
 > 근거: 사용자가 *데이터 손실*을 인지한 상태로만 "시작"이 가능하도록 한다. createinstallmedia 호출 자체는 Boundary B1에서 공개 도구로 분류되어 있으므로 wizard에 이름을 노출해도 무방하다.
+>
+> **(F) 호스트 OS 분기 문구 (Build Plan BP3.9/BP6(b) 정합 — 분기 카피 누락 보강):**
+> - macOS 호스트: 위 "시작" 뒤 안내를 그대로 사용한다(공개 도구 직접 호출). 카피 변경 없음.
+> - Windows(비-macOS) 호스트: "시작" 버튼을 누른 뒤 안내를 아래로 대체한다.
+>   - KO: "이 OS에서는 createinstallmedia를 직접 실행할 수 없어 Nextcore는 EFI 산출물만 USB에 복사합니다. 복사가 끝나면 macOS로 부팅해서 화면 안내에 따라 설치 USB 만들기를 마무리하세요."
+>   - EN: "createinstallmedia can't run directly on this OS, so Nextcore copies the EFI payload to the USB. When the copy finishes, boot macOS and follow the on-screen instructions to complete the installer USB."
+>   - 완료 표시: KO "EFI 복사 완료 — macOS에서 계속하세요." / EN "EFI copy complete — continue on macOS."
+> - 정합 확인 결과: BP3.9의 Windows 분기(EFI 복사 + macOS 측 실행 안내 1줄)와 위 카피가 1:1 대응한다. macOS 분기는 BP3.9의 `make-usb: done` 게이트 문구와 충돌 없이 병존한다.
 
 ### P5. 제거된 요소
 
-다음 요소는 wizard 메인 흐름에서 *제거*된다. 고급 토글 노출 여부는 Boundary 슬롯의 결정에 따른다 (현재 OPEN_QUESTION).
+다음 요소는 wizard 메인 흐름에서 *제거*된다. (F) 종결: 고급 토글의 v1 재노출 없음 — P9 참조.
 
 | 제거 항목 | 왜 제거했는지 |
 | --- | --- |
@@ -159,6 +169,12 @@ USB 드라이브를 선택하는 순간 표시되는 *경고 문구*:
 - KO: "선택한 macOS 버전의 설치 이미지를 찾을 수 없습니다. 인터넷 연결을 확인하고 다시 시도하세요. 자세한 내용은 로그 파일을 확인하세요: <log path>"
 - EN: "The installer image for the selected macOS was not found. Check your internet connection and try again. See the log file for details: <log path>"
 
+**(F) 추가 — Design `동적 macOS 목록의 빈 상태·오류 문구를 확정하라` 답변:**
+
+- KO: "설치 매체에서 읽은 버전 목록이 없습니다. 매체를 연결하거나 인터넷에 연결한 뒤 다시 시도하세요. 로그 파일: <log path>"
+- EN: "No macOS version list could be read from the installer media. Attach the media or connect to the internet, then try again. Log file: <log path>"
+- 원칙 박제: 버전 선택기는 *빈 목록을 노출하지 않는다* — 목록이 비면 Step 1에 머무르고 위 안내를 표시한다(Design D6의 예외 처리 = Prompts 책임 원칙에 부응).
+
 **Step 2 (EFI 생성)**
 
 - KO: "EFI 디렉터리를 만들 수 없습니다. 쓰기 권한이 있는 폴더를 선택하고 다시 시도하세요. 로그 파일: <log path>"
@@ -175,12 +191,47 @@ USB 드라이브를 선택하는 순간 표시되는 *경고 문구*:
 
 > 근거: 해결 방법은 *사용자가 직접 검색*할 수 있도록 로그 파일 경로만 노출한다. 단계별 표시는 Build Plan BP3의 검증 게이트와 짝을 이뤄, 어느 단계에서 막혔는지를 wizard가 그대로 알려준다.
 
+### P8. macOS 버전 선택기 노출 정책 (F 통합 박제)
+
+- wizard v1은 P2 목록의 **4종 고정**(Ventura / Sonoma / Sequoia / Tahoe)만
+  노출하고, 동적 확장 목록은 노출하지 않는다.
+- Design 원칙은 **동적 목록**(D6)이다 — D6과 P8은 **상하 관계**다:
+  원칙(전달 방식) = D6 동적 / v1 노출 집합 = P8 고정 4종. 충돌이 아니다.
+  동일 결론이 Design D6 (F)에 병기되어 있으며, 한쪽만 바꾸는 개정은 금지한다(F).
+- 고정 4종이 소진·부족해지면 설치 매체·공개 릴리스 식별자가 주는 값을
+  선택기에 추가할 수 있다(동적 확장 여지). 확장 구현 시점은
+  `HOLD: wizard v1 출시 이후 BP 단계표 밖의 별도 단계로 수립`.
+- 빈 목록·오프라인 예외 시 카피는 P7 (F) 추가분에 박제.
+
+> 근거: F 통합 검증이 결정한 절충. Design D6("동적 원칙")과 종전 P2 결정
+> ("4종 고정 노출")의 충돌을 원칙/노출 층위 분리로 해소해 양쪽에 같은
+> 결론으로 박제했다.
+
+### P9. 고급 토글 정책 (F 박제)
+
+- Boundary의 두 질의(`고급 토글을 wizard에 다시 노출할지`, `고급 토글
+  재노출 시 격리 참조 금지 문구 반영`)에 대한 답변 — **v1 방침: 재노출
+  없음**. P5의 제거 항목 7개는 v1에서도 제거 상태로 유지한다.
+- Boundary B5(c)는 재노출 자체를 경계 위반으로 보지 않으나, v1은 그 권한을
+  행사하지 않는다. 근거: 사용자 요구 "심플하게"(P1 근거)가 계속 우선한다.
+- 향후 재노출 검토: `HOLD: 사용자 요구가 발생할 때만 재개 — 격리 참조
+  금지 항목은 B5(c)로 고정` — 명시적 보류.
+- 향후 노출 시 전제 조건(사전 박제): 토글 UI를 구현하게 되면 아래 안내
+  한 줄을 그대로 포함해야 하며, 격리 자산 참조·내부 포맷 의존 옵션·
+  키/blob 입력은 어느 경우에도 노출하지 않는다.
+  - KO: "고급 옵션에는 격리 자산 참조, 내부 포맷 의존 옵션, 키/블롭 입력이 포함될 수 없습니다."
+  - EN: "Advanced options must not expose isolated-asset references, internal-format-dependent options, or key/blob inputs."
+
 ## OPEN_QUESTION
 
 Prompts 슬롯이 직접 해소한 항목 (다음 슬롯이 합의를 확인하고 OPEN_QUESTION에서 제거):
 
 - ~~`OPEN_QUESTION: Design:macOS 버전을 하드코딩할지 동적으로 가져올지`~~
   → **박제 결정**: wizard 카피에는 4개 버전(Ventura / Sonoma / Sequoia / Tahoe)을 *하드코딩*으로 노출한다. 동적 버전(베타, 구버전) 표시는 *다음 단계*의 Build Plan 결정으로 남긴다 — Build Plan이 *어떻게* 가져올지 정한다.
+  → (F) 흡수: 본 결정은 P8로 흡수·일반화됨 — 원칙은 Design D6(동적), v1
+    노출은 본 결정(고정 4종)의 상하 관계로 통합 박제. 확장 구현 시점은
+    P8의 HOLD를 따르고, Build Plan이 아니라 Design·Prompts 공동 박제로
+    정정한다.
 
 - ~~`OPEN_QUESTION: Design:Prompts:사용자에게 macOS 선택지를 *어떤* 수준으로 노출할지`~~
   → **박제 결정**: 메인 카피에는 *4개 버전 이름과 검증 상태 한 줄*만 노출한다. SMBIOS, ACPI, kext 선택지는 wizard에 노출하지 않는다.
@@ -190,5 +241,24 @@ Prompts 슬롯이 직접 해소한 항목 (다음 슬롯이 합의를 확인하�
 
 남은 OPEN_QUESTION (다른 슬롯이 답해야 함 — Prompts 슬롯은 건드리지 않는다):
 
+(F) 통합 검증 회수: 아래 2건 전부 종결했다.
+
 - `OPEN_QUESTION: Build Plan:createinstallmedia 호출 경로 (호스트 OS별)`
+  → RESOLVED-BY-F: Build Plan BP6(b)/BP3.9가 macOS 직접 호출·Windows
+  복사+안내로 박제 완료 — 본 문서 P4 (F) 분기 카피와 3자 정합 닫힘.
 - `OPEN_QUESTION: Boundary:고급 토글을 wizard에 다시 노출할지`
+  → RESOLVED-BY-F: Boundary B5(c)(경계 관점 답변) + 본 문서 P9 (F)가
+  v1 재노출 없음으로 최종 박제 — 향후 재노출 검토만 P9 내 HOLD로 부속.
+
+## 통합 검증 (F)
+
+| 질문 (본 문서) | 결론 | 박제 위치 |
+| --- | --- | --- |
+| createinstallmedia 호출 경로 (OS별) | RESOLVED — BP6(b)/BP3.9 앵커 + 분기 카피 | P4 (F) |
+| 고급 토글 재노출 여부 | RESOLVED — v1 재노출 없음 | P9 (F) (향후 검토 HOLD 부속) |
+
+- 신규 박제: P8(버전 선택기 노출 정책 — Design D6 (F)와 동일 결론 병기),
+  P9(고급 토글), P4 (F) 호스트 OS 분기 카피, P7 (F) 빈 목록 오류 카피
+  (Design 위임 회수).
+- 정정: 현 상태의 "아직 시작되지 않았다" 기재, P1/P5의 "현재
+  OPEN_QUESTION" 표기 2곳을 종결 상태로 수정.

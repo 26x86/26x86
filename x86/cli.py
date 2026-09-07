@@ -603,6 +603,7 @@ def cmd_vmapple(args: argparse.Namespace) -> int:
                     research_only=args.research_only,
                     research_graphics=args.research_graphics,
                     firmware_kind=args.firmware_kind,
+                    optional_rpc_unavailable=args.optional_rpc_unavailable,
                 )
             )
         except (ValueError, OSError, TimeoutError, RuntimeError) as exc:
@@ -863,6 +864,10 @@ def build_parser() -> argparse.ArgumentParser:
     vmapple_tcg.add_argument(
         "--research-graphics", action="store_true",
         help="explicitly enable the QEMU/Reims research graphics path",
+    )
+    vmapple_tcg.add_argument(
+        "--optional-rpc-unavailable", action="store_true",
+        help="map the unavailable optional-RPC window for raw iBoot Stage2 fallback",
     )
     vmapple_tcg.add_argument("--duration", type=float)
     vmapple_tcg.add_argument("--observation-timeout", type=float, default=600.0)

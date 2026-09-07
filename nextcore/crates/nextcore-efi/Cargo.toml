@@ -1,0 +1,32 @@
+[package]
+name = "nextcore-efi"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+uefi = { version = "0.40", features = ["alloc", "panic_handler"] }
+nextcore-core = { path = "../nextcore-core", default-features = false }
+
+[features]
+test-child = []
+kernel-probe = []
+
+[[bin]]
+name = "NXKERNEL"
+path = "src/kernel.rs"
+test = false
+bench = false
+
+[[bin]]
+name = "BOOTX64"
+path = "src/main.rs"
+test = false
+bench = false
+
+[[bin]]
+name = "NXTEST"
+path = "src/test_child.rs"
+test = false
+bench = false
+required-features = ["test-child"]

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PlatformInfo</key>
+    <dict>
+        <key>Generic</key>
+        <dict>
+            <key>SystemProductName</key>
+            <string>MacPro5,1</string>
+            <key>SystemName</key>
+            <string>MacPro</string>
+            <key>MLB</key>
+            <string>C02PC0AAHTD7</string>
+            <key>SystemSerialNumber</key>
+            <string>CPC0AABEDT7</string>
+        </dict>
+    </dict>
+    <key>Misc</key>
+    <dict>
+        <key>Debug</key>
+        <dict>
+            <key>Target</key>
+            <integer>3</integer>
+        </dict>
+    </dict>
+</dict>
+</plist>

@@ -1,0 +1,21 @@
+{
+  "inputs": [
+    {
+      "input_role": "BP14_actual_RestoreDeviceTree",
+      "model_matches_active_selection": true,
+      "matching_node_count": 1
+    },
+    {
+      "input_role": "held_comparison_device_tree_vma2macosap",
+      "model_matches_active_selection": true,
+      "matching_node_count": 1
+    },
+    {
+      "input_role": "held_comparison_device_tree_j274ap",
+      "model_matches_active_selection": false,
+      "matching_node_count": 0
+    }
+  ],
+  "supported_public_contract_found": false,
+  "device_identity_verified": false
+}

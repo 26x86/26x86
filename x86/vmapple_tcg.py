@@ -58,6 +58,7 @@ _PSCI_TRACE_RE = re.compile(
 _FIRMWARE_BASE = 0x00100000
 _HIGH_RAM_ALIAS_BASE = 0x1FC000000
 _MAX_PSCI_TRACE_BYTES = 1024 * 1024
+_MAX_EXEC_TRACE_BYTES = 4 * 1024 * 1024
 _PSCI_SYSTEM_RESET_IDS = frozenset((0x84000009, 0xC4000009))
 
 _VMAPPLE_DEVICE_MAP: tuple[tuple[str, int, int], ...] = (
@@ -93,10 +94,51 @@ _QEMU_GUEST_CRASH_RE = re.compile(
 )
 
 
+def _read_trace_windows(path: Path, maximum: int) -> tuple[int, list[tuple[int, bytes]]]:
+    """Read at most maximum bytes, keeping independent original head/tail ranges."""
+    if maximum < 2:
+        raise ValueError("trace sample limit must be at least two bytes")
+    with path.open("rb") as source:
+        source.seek(0, 2)
+        total = source.tell()
+        source.seek(0)
+        if total <= maximum:
+            return total, [(0, source.read(maximum))]
+        head_bytes = maximum // 2
+        head = source.read(head_bytes)
+        tail_offset = total - (maximum - head_bytes)
+        source.seek(tail_offset)
+        return total, [(0, head), (tail_offset, source.read(maximum - head_bytes))]
+
+
+def _trace_sample_metadata(total: int, windows: list[tuple[int, bytes]]) -> dict[str, object]:
+    observed = sum(len(data) for _, data in windows)
+    return {
+        "trace_present": True,
+        "trace_bytes": total,
+        "trace_bytes_observed": observed,
+        "trace_truncated": total > observed,
+        "trace_sample_ranges": [{"offset": offset, "bytes": len(data)} for offset, data in windows],
+        "count_scope": "complete sampled lines; head/tail only when trace_truncated is true",
+    }
+
+
+def _trace_lines(windows: list[tuple[int, bytes]], total: int):
+    """Do not join a cut head line to a tail line or parse a cut tail prefix."""
+    for offset, data in windows:
+        for index, line in enumerate(data.splitlines(keepends=True)):
+            end = offset + len(line)
+            complete_start = offset == 0 or index > 0
+            complete_end = line.endswith(b"\n") or end == total
+            if complete_start and complete_end:
+                yield offset, line
+            offset = end
+
+
 def _psci_trace_evidence(path: Path) -> dict[str, object]:
     """Parse the bounded text trace emitted by QEMU's arm_psci_call event.
 
-    This is a diagnostic sidecar only.  A PSCI call is not a boot-stage or
+    This is a diagnostic from the shared QEMU log. A PSCI call is not a boot-stage or
     userspace marker, and SYSTEM_RESET is reported as a guest request rather
     than as evidence that QEMU or macOS completed a reset.
     """
@@ -112,25 +154,19 @@ def _psci_trace_evidence(path: Path) -> dict[str, object]:
         "evidence_policy": "PSCI trace diagnostic only; no XNU/userspace/macOS promotion",
     }
     try:
-        total_bytes = path.stat().st_size
-        with path.open("rb") as trace_file:
-            data = trace_file.read(_MAX_PSCI_TRACE_BYTES)
+        total_bytes, windows = _read_trace_windows(path, _MAX_PSCI_TRACE_BYTES)
     except OSError as error:
         result["read_error"] = f"{type(error).__name__}: {error}"
         return result
-    result.update({
-        "trace_present": True,
-        "trace_bytes": total_bytes,
-        "trace_bytes_observed": len(data),
-        "trace_truncated": total_bytes > len(data),
-    })
+    result.update(_trace_sample_metadata(total_bytes, windows))
     calls: list[dict[str, object]] = []
-    for line in data.decode("utf-8", errors="replace").splitlines():
-        match = _PSCI_TRACE_RE.search(line)
+    for offset, line in _trace_lines(windows, total_bytes):
+        match = _PSCI_TRACE_RE.search(line.decode("utf-8", errors="replace"))
         if match is None:
             continue
         function_id = int(match.group(1), 16)
         calls.append({
+            "byte_offset": offset,
             "function_id": f"0x{function_id:x}",
             "x0": f"0x{function_id:016x}",
             "x1": f"0x{int(match.group(2), 16):016x}",
@@ -239,17 +275,24 @@ def _qemu_stderr_evidence(path: Path) -> dict[str, object]:
     return result
 
 
-def _bound_trace_file(path: Path, maximum: int = _MAX_PSCI_TRACE_BYTES) -> None:
-    """Keep the sidecar bounded after QEMU has exited."""
+def _bound_trace_file(path: Path, maximum: int = _MAX_PSCI_TRACE_BYTES) -> dict[str, object]:
+    """Retain bounded diagnostic samples without destroying the original trace."""
+    result: dict[str, object] = {"source_path": str(path), "source_preserved": True, "samples": []}
     try:
-        if path.stat().st_size <= maximum:
-            return
-        with path.open("r+b") as trace_file:
-            trace_file.truncate(maximum)
-    except OSError:
-        # The parser/report still expose the error-free prefix; inability to
-        # trim a diagnostic file must not alter guest boot evidence.
-        return
+        total, windows = _read_trace_windows(path, maximum)
+        result.update(_trace_sample_metadata(total, windows))
+        samples = []
+        for index, (offset, data) in enumerate(windows):
+            sample = path
+            if total > maximum:
+                suffix = ".sample-head" if index == 0 else ".sample-tail"
+                sample = path.with_name(path.name + suffix)
+                sample.write_bytes(data)
+            samples.append({"path": str(sample), "offset": offset, "bytes": len(data)})
+        result["samples"] = samples
+    except OSError as error:
+        result["sample_error"] = f"{type(error).__name__}: {error}"
+    return result
 
 
 def _graphics_host_evidence(path: Path) -> dict[str, object]:
@@ -296,6 +339,8 @@ def _qemu_execution_evidence(path: Path, *, firmware_kind: str) -> dict[str, obj
         "trace_path": str(path),
         "trace_present": False,
         "trace_bytes": 0,
+        "trace_bytes_observed": 0,
+        "trace_truncated": False,
         "translation_block_count": 0,
         "distinct_guest_pcs": 0,
         "first_guest_pc": None,
@@ -313,24 +358,26 @@ def _qemu_execution_evidence(path: Path, *, firmware_kind: str) -> dict[str, obj
         )
         return result
     try:
-        data = path.read_bytes()
+        total_bytes, windows = _read_trace_windows(path, _MAX_EXEC_TRACE_BYTES)
     except OSError as error:
         result["read_error"] = f"{type(error).__name__}: {error}"
         return result
-    result["trace_present"] = True
-    result["trace_bytes"] = len(data)
-    bounded = data if len(data) <= 4 * 1024 * 1024 else data[:2 * 1024 * 1024] + data[-2 * 1024 * 1024:]
+    result.update(_trace_sample_metadata(total_bytes, windows))
     pcs: list[int] = []
-    for line in bounded.splitlines():
+    pc_offsets: list[int] = []
+    for offset, line in _trace_lines(windows, total_bytes):
         match = _QEMU_TRACE_PC_RE.match(line)
         if match is not None:
             pcs.append(int(match.group(1), 16))
+            pc_offsets.append(offset)
     distinct = list(dict.fromkeys(pcs))
     result.update({
         "translation_block_count": len(pcs),
         "distinct_guest_pcs": len(distinct),
         "first_guest_pc": f"0x{pcs[0]:x}" if pcs else None,
         "last_guest_pc": f"0x{pcs[-1]:x}" if pcs else None,
+        "first_guest_pc_byte_offset": pc_offsets[0] if pc_offsets else None,
+        "last_guest_pc_byte_offset": pc_offsets[-1] if pc_offsets else None,
         "stage2_execution_observed": any(
             _FIRMWARE_BASE <= pc < _FIRMWARE_BASE + MAX_FIRMWARE_BYTES for pc in pcs
         ),
@@ -342,7 +389,7 @@ def _qemu_execution_evidence(path: Path, *, firmware_kind: str) -> dict[str, obj
         ),
     })
     if result["iboot_panic_range_entry"]:
-        last_in_range = next(pc for pc in reversed(distinct) if _IBOOT_PANIC_LOW <= pc <= _IBOOT_PANIC_HIGH)
+        last_in_range = next(pc for pc in reversed(pcs) if _IBOOT_PANIC_LOW <= pc <= _IBOOT_PANIC_HIGH)
         result["iboot_panic_classification"] = _classify_iboot_panic_range(last_in_range)
     return result
 
@@ -420,6 +467,7 @@ def _tcg_command(
     allow_bdif_writes: bool,
     research_graphics: bool = False,
     firmware_kind: str = "avpbooter",
+    optional_rpc_unavailable: bool = False,
     debug_trace: Path | None = None,
     psci_trace: Path | None = None,
 ) -> list[str]:
@@ -440,6 +488,10 @@ def _tcg_command(
         "-global", f"vmapple-cfg.soc_name={VIRTUAL_SOC_NAME}",
         "-global", f"vmapple-cfg.model={VIRTUAL_MODEL}",
     ]
+    if optional_rpc_unavailable:
+        arguments.extend([
+            "-global", "vmapple-cfg.optional-rpc-unavailable=on",
+        ])
     storage_arguments = storage.arguments(
         executable, allow_bdif_writes=allow_bdif_writes
     )
@@ -453,18 +505,21 @@ def _tcg_command(
         "-nic", "none",
         "-no-reboot",
     ])
+    # The pinned QEMU uses the log trace backend. trace/control.c's
+    # trace_init_file() makes -trace file= override the global -D sink:
+    # https://gitlab.com/qemu-project/qemu/-/blob/master/trace/control.c
+    # Use one -D destination and enable PSCI without a second file option.
+    if debug_trace is not None and psci_trace is not None and debug_trace != psci_trace:
+        raise ValueError("QEMU log backend requires one shared debug/PSCI trace path")
+    log_trace = debug_trace if debug_trace is not None else psci_trace
     if debug_trace is None:
         arguments.extend(["-d", "guest_errors,unimp"])
     else:
-        arguments.extend([
-            "-d", "guest_errors,unimp,exec",
-            "-D", _guest_path(debug_trace, executable),
-        ])
+        arguments.extend(["-d", "guest_errors,unimp,exec"])
+    if log_trace is not None:
+        arguments.extend(["-D", _guest_path(log_trace, executable)])
     if psci_trace is not None:
-        arguments.extend([
-            "-trace",
-            f"enable=arm_psci_call,file={_guest_path(psci_trace, executable)}",
-        ])
+        arguments.extend(["-trace", "enable=arm_psci_call"])
     return executable.command(*arguments)
 
 
@@ -488,6 +543,7 @@ class TCGVMappleConfig:
     research_only: bool = False
     research_graphics: bool = False
     firmware_kind: str = "avpbooter"
+    optional_rpc_unavailable: bool = False
 
     def validate(self) -> tuple[Any, Any, Path, Any]:
         if self.target_major not in (26, 27):
@@ -496,6 +552,8 @@ class TCGVMappleConfig:
             raise ValueError("TCG VMApple launch requires the explicit --research-only flag")
         if self.firmware_kind not in ("avpbooter", "iboot-stage2"):
             raise ValueError("TCG VMApple firmware kind must be avpbooter or iboot-stage2")
+        if type(self.optional_rpc_unavailable) is not bool:
+            raise ValueError("TCG VMApple optional_rpc_unavailable must be a boolean")
         if self.display not in ("none", "auto", "dbus"):
             raise ValueError("TCG VMApple display must be none, auto, or dbus")
         if type(self.memory_mib) is not int or not 512 <= self.memory_mib <= 1024 * 1024:
@@ -609,7 +667,14 @@ def run_tcg_macosvm(config: TCGVMappleConfig) -> dict[str, object]:
         "error": None,
     }
     process: subprocess.Popen[bytes] | None = None
-    psci_trace: Path | None = None
+    log_trace = output / "qemu.debug.log"
+    report["qemu_logging"] = {
+        "backend": "log",
+        "shared_log_path": str(log_trace),
+        "execution_trace_enabled": config.firmware_kind == "iboot-stage2",
+        "psci_event": "arm_psci_call",
+        "sink_option": "-D; -trace enables events without file=",
+    }
     started = time.monotonic()
     run_timeout = float(config.duration if config.duration is not None else config.observation_timeout)
     if config.firmware_kind == "iboot-stage2" and config.duration is None:
@@ -637,8 +702,7 @@ def run_tcg_macosvm(config: TCGVMappleConfig) -> dict[str, object]:
         display = _effective_display_backend(
             config.display, direct_macos=False, available=("none", "dbus")
         )
-        debug_trace = output / "qemu.debug.log" if config.firmware_kind == "iboot-stage2" else None
-        psci_trace = output / "arm_psci_call.trace"
+        debug_trace = log_trace if config.firmware_kind == "iboot-stage2" else None
         command = _tcg_command(
             executable=qemu,
             bundle=bundle,
@@ -651,8 +715,9 @@ def run_tcg_macosvm(config: TCGVMappleConfig) -> dict[str, object]:
             allow_bdif_writes=allow_writes,
             research_graphics=config.research_graphics,
             firmware_kind=config.firmware_kind,
+            optional_rpc_unavailable=config.optional_rpc_unavailable,
             debug_trace=debug_trace,
-            psci_trace=psci_trace,
+            psci_trace=log_trace,
         )
         report["storage"] = {
             "aux_offset": bundle.aux_offset,
@@ -749,9 +814,7 @@ def run_tcg_macosvm(config: TCGVMappleConfig) -> dict[str, object]:
         report["duration_seconds"] = round(time.monotonic() - started, 3)
         report["input_integrity"] = _inputs_intact(source_inputs)
         report["graphics_host_evidence"] = _graphics_host_evidence(output / "qemu.stderr.log")
-        report["psci_trace_evidence"] = _psci_trace_evidence(
-            psci_trace if psci_trace is not None else output / "arm_psci_call.trace"
-        )
+        report["psci_trace_evidence"] = _psci_trace_evidence(log_trace)
         psci_evidence = report["psci_trace_evidence"]
         if isinstance(psci_evidence, dict):
             report["guest_reset_requested"] = (
@@ -760,12 +823,10 @@ def run_tcg_macosvm(config: TCGVMappleConfig) -> dict[str, object]:
         report["qemu_stderr_evidence"] = _qemu_stderr_evidence(
             output / "qemu.stderr.log"
         )
-        _bound_trace_file(
-            psci_trace if psci_trace is not None else output / "arm_psci_call.trace"
-        )
         report["firmware_execution_evidence"] = _qemu_execution_evidence(
-            output / "qemu.debug.log", firmware_kind=config.firmware_kind
+            log_trace, firmware_kind=config.firmware_kind
         )
+        report["qemu_trace_retention"] = _bound_trace_file(log_trace)
         execution_evidence = report["firmware_execution_evidence"]
         if isinstance(execution_evidence, dict):
             report["iboot_stage2_execution_observed"] = (

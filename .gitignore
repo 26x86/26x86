@@ -306,7 +306,8 @@ resources/branding/*.iconset/
 /_isolated/
 /_isolated/**
 
-# Nextcore target tree lives next to this one; tracked separately.
-# Listed here only so that tooling that scans the whole workspace does not
-# mistake a parallel Nextcore checkout for part of this repo.
-/nextcore/
+# Nextcore is public clean-room source in this repository. Build products and
+# runtime receipts remain local unless an explicitly reviewed evidence artifact
+# is force-added for publication.
+/nextcore/target/
+/nextcore/artifacts/
