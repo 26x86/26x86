@@ -673,6 +673,23 @@ Virtio 및 GPU용 MMIO forwarding도 이번 node의 register/reset/side-effect �
 `bp16-public-contract-survey`, `bp16-qemu-coverage-review`,
 `bp16-host-interface-survey` 문서/JSON에 나누어 보존했다.
 
+### BP17. 실제 실행 호스트 적격성 판별
+
+현재 상태: x86 UEFI probe는 authored guest에서만 통과했고, ARM TCG recovery는
+`bootx` ACK 뒤 firmware MMIO decode failure에서 멈춘다. 둘 다 macOS boot 증거가
+아니다. BP16의 공개 contract HOLD를 임의 모델로 우회할 수 없으므로, native Apple
+Silicon/macOS 실행 경로가 있는지도 별도 판정한다.
+
+결정: 2026-09-07에 현재 Windows host와 등록 원격 두 대를 로그인 없이 변경하지
+않는 명령으로 확인했다. 현재 host는 Samsung x64 PC / Windows 11 x64이고,
+`zuzunza` 및 `koreaidc2`는 모두 `x86_64` Linux였다. 따라서 이 세 환경에는
+Virtualization.framework로 ARM macOS guest를 실행할 적격 host가 없다.
+
+검증 게이트: native Apple Silicon macOS host가 제공되면, Windows TCG 결과와
+분리된 새 receipt에서 host architecture, supported macOS runtime, VM boot marker,
+XNU marker, userspace marker를 순서대로 판정한다. 그 전에는 현재 TCG panic을
+macOS boot 또는 장치 구현 성공으로 승격하지 않는다.
+
 ## OPEN_QUESTION
 
 - BP9 연속 실행 결정: Design D2-A는 표준 EFI application 중간 경로를 허용했고,

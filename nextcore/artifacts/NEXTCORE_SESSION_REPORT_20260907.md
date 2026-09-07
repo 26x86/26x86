@@ -319,8 +319,11 @@ PL031 alias를 추가하지 않는다. 세 병렬 조사 결과는 다음 파일
   지켰다: `docs/NEXTCORE_DESIGN.md`, `docs/NEXTCORE_PROMPTS.md`,
   `docs/PUBLIC_VS_PRIVATE_BOUNDARY.md`, `docs/ISOLATED_INVENTORY.md`.
 
-루트 Git은 기존 정책에 따라 `/nextcore/`를 ignore한다. 현재 세션은 ignore 정책을
-바꾸지 않았고 `_isolated/`를 stage하지 않았으며 commit/push를 수행하지 않았다.
+루트 Git은 `nextcore/target/`와 `nextcore/artifacts/`를 기본 제외하고, 선택한
+clean-room source와 검토된 공개 evidence만 명시적으로 추적한다. 2026-09-07
+배포 commit `f4c3c5e`는 branch `codex/mellow-mode-integration`에서 GitHub
+`26x86/26x86`에 push됐다. `_isolated/`, Apple 입력, unreviewed runtime receipt는
+stage하거나 배포하지 않았다.
 
 ## 14. 검증 로그와 artifact index
 
@@ -355,3 +358,12 @@ PL031 alias를 추가하지 않는다. 세 병렬 조사 결과는 다음 파일
 5종 전송과 `bootx` ACK 뒤 firmware panic이며, 가장 구체적인 원인은 DeviceTree가
 선언하지만 current CPU system map이 제공하지 않는 4-byte MMIO access다. 장치의
 공개 contract는 아직 확인되지 않았다.
+
+## 16. BP17 실행 호스트 적격성
+
+2026-09-07에 현재 Windows host 및 등록 원격 `zuzunza`, `koreaidc2`를
+read-only로 판정했다. 현재 host는 x64 Windows PC이고 두 원격은 x86_64 Linux다.
+따라서 이 세 host에는 ARM macOS guest를 Virtualization.framework로 실행할 native
+Apple Silicon/macOS 환경이 없다. 이 결과는 BP16의 공개 MMIO contract HOLD와
+독립적인 실행 한계다. native host가 제공될 때까지 현재 세션의 macOS boot 상태는
+`false`로 유지한다.
