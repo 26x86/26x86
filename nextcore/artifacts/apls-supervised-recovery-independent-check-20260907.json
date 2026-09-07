@@ -1,0 +1,37 @@
+{
+  "schema": "nextcore.bp15-independent-check/1",
+  "adapter_exit_code": 2,
+  "runner_exit_code": 0,
+  "runner_completed": true,
+  "elapsed_seconds": 48.3650599,
+  "guest_runtime_started": true,
+  "runtime_pid_observed": true,
+  "process_inventory_complete": true,
+  "cleanup_complete": true,
+  "remaining_recorded_pids": 0,
+  "matching_qemu_or_tss_or_supervisor_processes_after_run": 0,
+  "deadline_exceeded": false,
+  "cancel_requested": false,
+  "declared_input_count": 15,
+  "all_input_fingerprints_complete": true,
+  "all_inputs_unchanged": true,
+  "recovery": {
+    "dfu_upload_completed": true,
+    "ibec_endpoint_advertised": true,
+    "stage2_banner_observed": true,
+    "stage2_prompt_observed": true,
+    "restore_role_step_count": 5,
+    "restore_sequence_sent": true,
+    "bootx_acknowledged": true,
+    "firmware_panic_observed": true
+  },
+  "xnu_executed": false,
+  "target_kernel_major_observed": false,
+  "macos_userspace_reached": false,
+  "macos_boot_verified": false,
+  "sha256": {
+    "adapter_json": "0137de65b2f5d451cbf0a1b947b0a09578eae7bce73e35fa99899c1f501f3e67",
+    "request_json": "e4e8eb1469a479b5e4378d04f38fbf7e7faaa2d201d5c0dc22ab0923b0e025f8",
+    "invocation_json": "7fca1c4f869c129a44ca5710dd50426969748aee1401a882c5670c321efce628"
+  }
+}

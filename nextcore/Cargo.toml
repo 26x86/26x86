@@ -1,0 +1,11 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/nextcore-core",
+    "crates/nextcore-efi",
+    "crates/nextcore-tool",
+    "crates/nextcore-ise",
+    "crates/nextcore-gpu",
+    "crates/nextcore-hal",
+    "crates/nextcore-apls",
+]

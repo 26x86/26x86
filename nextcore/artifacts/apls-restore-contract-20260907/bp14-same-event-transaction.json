@@ -1,0 +1,33 @@
+{
+  "schema": "nextcore.bp14-same-event-transaction/1",
+  "event_count": 1,
+  "matching_private_bp13_fault_va": true,
+  "debugger_detached": true,
+  "guest_or_device_values_modified": false,
+  "all_requested_arguments_available": true,
+  "virtual_equals_physical": true,
+  "access_type": "MMU_DATA_LOAD",
+  "size_bytes": 4,
+  "mmu_idx": 0,
+  "memtx_result": "2",
+  "memtx_result_integer": 2,
+  "cpu_index": 0,
+  "physical_address_in_declared_memmap": false,
+  "memmap_matches": [],
+  "runtime_memory_tree_matching_regions": [],
+  "precise_addresses_or_registers_copied": false,
+  "runtime_memory_tree_parsed_range_count": 25,
+  "memtx_result_name": "MEMTX_DECODE_ERROR",
+  "mmu_idx_public_mapping": "A-profile core index 0: ARMMMUIdx_E10_0 (EL0, EL1&0 stage-1+2 TLB regime)",
+  "individual_translation_stage_enable_bits_observed": false,
+  "physical_decode_gap_observed_for_same_access": true,
+  "device_identity": "unknown",
+  "public_sources": [
+    "target/arm/tcg/tlb_helper.c:316",
+    "include/exec/memattrs.h:89",
+    "target/arm/mmuidx.h:32",
+    "target/arm/mmuidx.h:65",
+    "target/arm/mmuidx.h:142",
+    "target/arm/internals.h:1019"
+  ]
+}

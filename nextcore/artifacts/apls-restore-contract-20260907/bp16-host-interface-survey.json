@@ -1,0 +1,55 @@
+{
+  "schema": "nextcore.bp16-host-interface-survey/1",
+  "date": "2026-09-07",
+  "layer": "host virtualization API and QEMU device model",
+  "target": {"architecture": "ARM64", "macos_version": "27.0", "build": "26A5425a", "media_role": "recovery"},
+  "decision": "HOLD",
+  "public_host_device_mechanism_exists": true,
+  "matching_device_identity_established": false,
+  "matching_register_semantics_established": false,
+  "current_adapter_exposes_matching_device_state": false,
+  "scope": "Bounded public host-interface survey; no private node identity inference and no new runtime experiment",
+  "qemu_base": {
+    "commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+    "version_file": "11.1.50",
+    "version_url": "https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/VERSION",
+    "local_runtime_is_modified_research_worktree": true,
+    "documented_guest_major": 12,
+    "documented_guest_support_does_not_cover_target": true
+  },
+  "interfaces": [
+    {"name":"VZMacPlatformConfiguration / VZMacHardwareModel","version":"macOS 12.0+ / live reference retrieved 2026-09-07","mechanism":"opaque compatible platform identity and auxiliary storage","matching_contract":false,"reason":"No documented target register-provider surface","sources":["https://developer.apple.com/documentation/virtualization/vzmacplatformconfiguration","https://developer.apple.com/documentation/virtualization/vzmachardwaremodel"]},
+    {"name":"VZVirtualMachineConfiguration","version":"macOS 11.0+; individual properties have their own availability","mechanism":"typed supported device configurations","matching_contract":false,"reason":"No matching target-device property found","sources":["https://developer.apple.com/documentation/virtualization/vzvirtualmachineconfiguration","https://developer.apple.com/documentation/virtualization/vzvirtualmachineconfiguration/storagedevices?language=objc"]},
+    {"name":"VZCustomVirtioDevice","version":"macOS 27.0 beta / WWDC26 session 224","mechanism":"custom PCI/Virtio device, queues and host delegate; documented for Linux guests","matching_contract":false,"reason":"No identity or transport match to current recovery firmware access","sources":["https://developer.apple.com/documentation/virtualization/vzcustomvirtiodevice","https://developer.apple.com/videos/play/wwdc2026/224/?time=957"]},
+    {"name":"PGDevice","version":"macOS 11.0+","mechanism":"host implementation of specifically advertised GPU MMIO","matching_contract":false,"reason":"Four-byte access match alone cannot identify an unknown device as graphics","sources":["https://developer.apple.com/documentation/paravirtualizedgraphics/pgdevice","https://developer.apple.com/documentation/paravirtualizedgraphics/pg_pci_bar_mmio"]},
+    {"name":"QEMU ARM apple-gfx-mmio adapter","version":"ff1d2d19d7e24893e2012d879f8e73077e17b9bd","mechanism":"known graphics MMIO forwarded to native framework","matching_contract":false,"reason":"ARM extension declarations are absent from distributed framework headers per source; target correspondence not established","sources":["https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/display/apple-gfx-mmio.m#L23"]},
+    {"name":"Hypervisor framework / hv_vm_map","version":"live Apple reference retrieved 2026-09-07","mechanism":"host memory and vCPU exits for an independently owned VMM","matching_contract":false,"reason":"Generic VMM mechanism, no target device semantics or existing VZVirtualMachine hook","sources":["https://developer.apple.com/documentation/Hypervisor?changes=__3_6_8_3&language=objc","https://developer.apple.com/documentation/hypervisor/hv_vm_map%28_%3A_%3A_%3A_%3A%29?language=objc"]},
+    {"name":"QEMU MemoryRegionOps","version":"ff1d2d19d7e24893e2012d879f8e73077e17b9bd","mechanism":"host MMIO callbacks with width, alignment and transaction constraints","matching_contract":false,"reason":"Dispatch API supplies no target reset/read/side-effect values","sources":["https://github.com/qemu/qemu/blob/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/docs/devel/memory.rst#L30"]},
+    {"name":"vhost-user","version":"live QEMU master docs retrieved 2026-09-07; wire header version 1","mechanism":"external userspace Virtio queue backend","matching_contract":false,"reason":"No matching guest frontend or target register protocol","sources":["https://www.qemu.org/docs/master/interop/vhost-user.html#introduction"]},
+    {"name":"VZ machine state restoration","version":"macOS 14 sample workflow; live API reference","mechanism":"framework-produced whole-VM saved state compatible with configuration","matching_contract":false,"reason":"No documented per-device state interchange into QEMU","sources":["https://developer.apple.com/documentation/virtualization/vzvirtualmachine/restoremachinestatefrom%28url%3Acompletionhandler%3A%29?language=objc"]}
+  ],
+  "apple_documentation_metadata": [
+    {"title":"VZCustomVirtioDevice","macos_introduced":"27.0","beta":true,"bytes":41780,"sha256":"e80aa06a9f89f70b8f5d9e2bbb1453c63e80c1c5629c2cde88cf3b8803dacef3","url":"https://developer.apple.com/tutorials/data/documentation/virtualization/vzcustomvirtiodevice.json"},
+    {"title":"VZMacPlatformConfiguration","macos_introduced":"12.0","beta":false,"bytes":34255,"sha256":"d12059820562233e31bca1d5fb6c1232704af730c9450b9a2ea591e6ec0bab71","url":"https://developer.apple.com/tutorials/data/documentation/virtualization/vzmacplatformconfiguration.json"},
+    {"title":"PGDevice","macos_introduced":"11.0","beta":false,"bytes":29050,"sha256":"63715a7df9d0e87d5ad0294a82167aedaf32c9a2f1ec35388f2ab550458befca","url":"https://developer.apple.com/tutorials/data/documentation/paravirtualizedgraphics/pgdevice.json"},
+    {"title":"VZVirtualMachineConfiguration","macos_introduced":"11.0","beta":false,"bytes":61392,"sha256":"4bc0a52b3baa93af335da6480284cdabce2c1e32d1228c23c3fa6c57ec898d5c","url":"https://developer.apple.com/tutorials/data/documentation/virtualization/vzvirtualmachineconfiguration.json"}
+  ],
+  "project_source_snapshots": [
+    {"path":"nextcore/crates/nextcore-apls/src/runner.rs","bytes":59834,"sha256":"7149a7d1c05292fb8d0914d894aaf3e8b81536962d806fea1524b0d9b08348d7"},
+    {"path":"x86/recovery_supervisor.py","bytes":36586,"sha256":"2528fc5270094681ae2e4cf22286b40fbda11c0514f63ffca3f3d6dca74777ba"},
+    {"path":"x86/vmapple.py","bytes":157918,"sha256":"584256d8ef11c5d3007edf141cc034c2033eeda75e0b5619e2e156dad2b62bdd"}
+  ],
+  "existing_runtime_evidence": {
+    "source":"BP14 same-event transaction and BP16 Build Plan",
+    "access":"four-byte read",
+    "transaction_result":"MEMTX_DECODE_ERROR",
+    "runtime_target_mapped":false,
+    "old_translation_unknown_flag_superseded":true,
+    "new_run_performed":false
+  },
+  "implementation_resume_requires": ["matching selected platform/device identity","covered access range and width","reset/read values and side effects","ordering and error behavior","host API lifecycle and serialization if a host service is required"],
+  "vm_execution_performed":false,
+  "private_assets_read_for_this_survey":false,
+  "private_addresses_or_node_strings_published":false,
+  "project_source_code_modified":false
+}

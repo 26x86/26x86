@@ -79,7 +79,36 @@ class VMappleTCGTests(unittest.TestCase):
         self.assertIn("vmapple-cfg.soc_name=Apple M1 (Virtual)", command)
         self.assertIn("vmapple-cfg.model=VM0001", command)
 
-    def test_command_separates_bounded_psci_trace_from_debug_trace(self) -> None:
+    def test_stage2_command_maps_unavailable_optional_rpc_window(self) -> None:
+        from x86.vmapple import Executable
+        from x86.vmapple_tcg import _tcg_command
+
+        class Storage:
+            def arguments(self, executable, *, allow_bdif_writes):
+                return []
+
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            firmware = output / "iboot-stage2.bin"
+            firmware.write_bytes(b"stage2 fixture")
+            command = _tcg_command(
+                executable=Executable("qemu-system-aarch64"),
+                bundle=SimpleNamespace(uuid=1),
+                storage=Storage(),
+                firmware=firmware,
+                output=output,
+                memory_mib=4096,
+                smp=2,
+                display="none",
+                allow_bdif_writes=False,
+                firmware_kind="iboot-stage2",
+                optional_rpc_unavailable=True,
+            )
+
+        self.assertIn("research-stage2=on", command[command.index("-M") + 1])
+        self.assertIn("vmapple-cfg.optional-rpc-unavailable=on", command)
+
+    def test_command_uses_one_log_sink_for_execution_and_psci(self) -> None:
         from x86.vmapple import Executable
         from x86.vmapple_tcg import _tcg_command
 
@@ -92,7 +121,7 @@ class VMappleTCGTests(unittest.TestCase):
             firmware = output / "AVPBooter.bin"
             firmware.write_bytes(b"firmware")
             debug_trace = output / "qemu.debug.log"
-            psci_trace = output / "arm_psci_call.trace"
+            psci_trace = debug_trace
             command = _tcg_command(
                 executable=Executable("qemu-system-aarch64"),
                 bundle=SimpleNamespace(uuid=1),
@@ -106,14 +135,28 @@ class VMappleTCGTests(unittest.TestCase):
                 debug_trace=debug_trace,
                 psci_trace=psci_trace,
             )
+            psci_only = _tcg_command(
+                executable=Executable("qemu-system-aarch64"),
+                bundle=SimpleNamespace(uuid=1), storage=Storage(), firmware=firmware,
+                output=output, memory_mib=4096, smp=2, display="none",
+                allow_bdif_writes=False, psci_trace=psci_trace,
+            )
+            with self.assertRaisesRegex(ValueError, "one shared debug/PSCI trace path"):
+                _tcg_command(
+                    executable=Executable("qemu-system-aarch64"),
+                    bundle=SimpleNamespace(uuid=1), storage=Storage(), firmware=firmware,
+                    output=output, memory_mib=4096, smp=2, display="none",
+                    allow_bdif_writes=False, debug_trace=debug_trace,
+                    psci_trace=output / "misleading-separate.trace",
+                )
 
-        self.assertIn("-D", command)
-        self.assertIn(str(debug_trace), command)
+        self.assertEqual(command.count("-D"), 1)
+        self.assertEqual(command[command.index("-D") + 1], str(debug_trace))
         trace_index = command.index("-trace")
-        self.assertEqual(
-            command[trace_index + 1],
-            f"enable=arm_psci_call,file={psci_trace}",
-        )
+        self.assertEqual(command[trace_index + 1], "enable=arm_psci_call")
+        self.assertIn("guest_errors,unimp,exec", command)
+        self.assertEqual(psci_only[psci_only.index("-D") + 1], str(psci_trace))
+        self.assertEqual(psci_only[psci_only.index("-d") + 1], "guest_errors,unimp")
 
     def test_psci_trace_parser_classifies_system_reset_without_boot_promotion(self) -> None:
         from x86.vmapple_tcg import _psci_trace_evidence
@@ -138,7 +181,7 @@ class VMappleTCGTests(unittest.TestCase):
         self.assertTrue(evidence["calls"][1]["reset_requested"])
         self.assertIn("no XNU/userspace/macOS promotion", evidence["evidence_policy"])
 
-    def test_psci_trace_parser_is_bounded(self) -> None:
+    def test_trace_samples_are_bounded_without_truncating_original(self) -> None:
         from x86.vmapple_tcg import (
             _MAX_PSCI_TRACE_BYTES,
             _bound_trace_file,
@@ -149,13 +192,66 @@ class VMappleTCGTests(unittest.TestCase):
             path = Path(directory) / "arm_psci_call.trace"
             path.write_bytes(b"x" * (_MAX_PSCI_TRACE_BYTES + 17))
             evidence = _psci_trace_evidence(path)
-            _bound_trace_file(path)
-            bounded_size = path.stat().st_size
+            retention = _bound_trace_file(path)
+            original_size = path.stat().st_size
+            sample_size = sum(Path(item["path"]).stat().st_size for item in retention["samples"])
 
         self.assertEqual(evidence["trace_bytes"], _MAX_PSCI_TRACE_BYTES + 17)
         self.assertEqual(evidence["trace_bytes_observed"], _MAX_PSCI_TRACE_BYTES)
         self.assertTrue(evidence["trace_truncated"])
-        self.assertEqual(bounded_size, _MAX_PSCI_TRACE_BYTES)
+        self.assertEqual(original_size, _MAX_PSCI_TRACE_BYTES + 17)
+        self.assertEqual(sample_size, _MAX_PSCI_TRACE_BYTES)
+        self.assertEqual(retention["trace_bytes"], original_size)
+        self.assertEqual(retention["samples"][-1]["offset"], original_size - _MAX_PSCI_TRACE_BYTES // 2)
+        self.assertTrue(retention["source_preserved"])
+
+    def test_large_shared_log_keeps_first_last_pc_and_psci_reset_at_tail(self) -> None:
+        from x86.vmapple_tcg import (
+            _MAX_EXEC_TRACE_BYTES, _MAX_PSCI_TRACE_BYTES,
+            _qemu_execution_evidence, _psci_trace_evidence,
+        )
+
+        first = b"Trace 0: 0x1 [100000000000/0000000000100000/000004a1/ff020000] \n"
+        last = b"Trace 1: 0x2 [100800204408/00000001fc000000/00000671/ff020000] \n"
+        reset = (
+            b"arm_psci_call: PSCI Call x0=0x84000009 x1=0x0 x2=0x0 x3=0x0 cpuid=0x0\n"
+        )
+        trace = first + b"padding\n" * (_MAX_EXEC_TRACE_BYTES // 8 + 50) + last + reset
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "qemu.debug.log"
+            path.write_bytes(trace)
+            # A parser that reads the complete file before slicing regresses
+            # memory bounds even if its eventual sample size looks correct.
+            with patch.object(Path, "read_bytes", side_effect=AssertionError("unbounded trace read")):
+                execution = _qemu_execution_evidence(path, firmware_kind="iboot-stage2")
+                psci = _psci_trace_evidence(path)
+
+        self.assertEqual(execution["trace_path"], psci["trace_path"])
+        for evidence, maximum in ((execution, _MAX_EXEC_TRACE_BYTES), (psci, _MAX_PSCI_TRACE_BYTES)):
+            self.assertEqual(evidence["trace_bytes"], len(trace))
+            self.assertEqual(evidence["trace_bytes_observed"], maximum)
+            self.assertTrue(evidence["trace_truncated"])
+            self.assertEqual(evidence["trace_sample_ranges"][-1]["offset"], len(trace) - maximum // 2)
+            self.assertIn("sampled lines", evidence["count_scope"])
+        self.assertTrue(execution["stage2_execution_observed"])
+        self.assertTrue(execution["high_ram_relocation_observed"])
+        self.assertEqual(execution["first_guest_pc"], "0x100000")
+        self.assertEqual(execution["last_guest_pc"], "0x1fc000000")
+        self.assertEqual(execution["first_guest_pc_byte_offset"], 0)
+        self.assertEqual(execution["last_guest_pc_byte_offset"], trace.index(last))
+        self.assertEqual(execution["translation_block_count"], 2)
+        self.assertEqual(psci["call_count"], 1)
+        self.assertTrue(psci["guest_reset_requested"])
+        self.assertEqual(psci["calls"][0]["byte_offset"], trace.index(reset))
+        self.assertIn("no XNU/userspace/macOS promotion", psci["evidence_policy"])
+
+    def test_trace_samples_discard_cut_lines_without_joining_ranges(self) -> None:
+        from x86.vmapple_tcg import _trace_lines
+
+        head = b"first\nTrace 0: 0x1 [0/0000000000100000/"
+        tail = b"000004a1/ff020000]\nlast\n"
+        lines = list(_trace_lines([(0, head), (1000, tail)], 1000 + len(tail)))
+        self.assertEqual(lines, [(0, b"first\n"), (1000 + tail.index(b"last"), b"last\n")])
 
     def test_qemu_stderr_parser_classifies_guest_crash_loaded_only(self) -> None:
         from x86.vmapple_tcg import _qemu_stderr_evidence
@@ -312,6 +408,15 @@ class VMappleTCGTests(unittest.TestCase):
                 "direct_boot_blocker": "fixture",
                 "boot_chain_evidence": None,
             }
+
+            def exited_qemu(*args, **kwargs):
+                # The log backend puts both event and exec records at -D.
+                (root / "run" / "qemu.debug.log").write_bytes(
+                    b"Trace 0: 0x1 [100000000000/0000000000100000/000004a1/ff020000] \n"
+                    b"arm_psci_call: PSCI Call x0=0x84000009 x1=0x0 x2=0x0 x3=0x0 cpuid=0x0\n"
+                )
+                return ExitedProcess()
+
             with patch.object(
                 TCGVMappleConfig,
                 "validate",
@@ -323,7 +428,7 @@ class VMappleTCGTests(unittest.TestCase):
                         "x86.vmapple_tcg.subprocess.run",
                         return_value=SimpleNamespace(returncode=0, stdout="", stderr=""),
                     ), \
-                    patch("x86.vmapple_tcg.subprocess.Popen", return_value=ExitedProcess()), \
+                    patch("x86.vmapple_tcg.subprocess.Popen", side_effect=exited_qemu), \
                     patch("x86.vmapple_tcg._observe_direct_macos_boot", return_value=observation), \
                     patch("x86.vmapple_tcg._apply_iboot_xnu_handoff_gate"):
                 report = run_tcg_macosvm(TCGVMappleConfig(
@@ -338,6 +443,7 @@ class VMappleTCGTests(unittest.TestCase):
                     duration=0.1,
                     observation_timeout=0.1,
                     research_only=True,
+                    firmware_kind="iboot-stage2",
                 ))
 
             expected_aux_seed_path = str(aux_seed.resolve())
@@ -356,7 +462,13 @@ class VMappleTCGTests(unittest.TestCase):
             "root": expected_root_seed_path,
         })
         self.assertIn("psci_trace_evidence", report)
-        self.assertFalse(report["guest_reset_requested"])
+        self.assertTrue(report["guest_reset_requested"])
+        self.assertTrue(report["iboot_stage2_execution_observed"])
+        shared_path = report["qemu_logging"]["shared_log_path"]
+        self.assertEqual(report["qemu_logging"]["backend"], "log")
+        self.assertEqual(report["psci_trace_evidence"]["trace_path"], shared_path)
+        self.assertEqual(report["firmware_execution_evidence"]["trace_path"], shared_path)
+        self.assertEqual(report["qemu_trace_retention"]["source_path"], shared_path)
         self.assertFalse(report["qemu_stderr_evidence"]["guest_crash_loaded_observed"])
         self.assertFalse(report["xnu_executed"])
         self.assertFalse(report["macos_boot_verified"])
@@ -436,6 +548,8 @@ class VMappleTCGTests(unittest.TestCase):
         trace = (
             b"Trace 0: 0x1 [100000000000/0000000000100000/000004a1/ff020000] \n"
             b"Trace 1: 0x2 [100800204408/0000000070070000/00000671/ff020000] \n"
+            b"Trace 1: 0x3 [100800204408/0000000070080000/00000671/ff020000] \n"
+            b"Trace 1: 0x2 [100800204408/0000000070070000/00000671/ff020000] \n"
         )
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "qemu.debug.log"
@@ -444,6 +558,7 @@ class VMappleTCGTests(unittest.TestCase):
         self.assertTrue(evidence["iboot_panic_range_entry"])
         self.assertIsNotNone(evidence["iboot_panic_classification"])
         self.assertIn("diagnostic", evidence["iboot_panic_classification"])  # type: ignore[index]
+        self.assertEqual(evidence["iboot_panic_classification"]["panic_pc"], "0x70070000")
 
     def test_avpbooter_trace_is_not_raw_stage2_evidence(self) -> None:
         from x86.vmapple_tcg import _qemu_execution_evidence

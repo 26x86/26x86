@@ -1,0 +1,10 @@
+[package]
+name = "nextcore-ise"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+log = "0.4"
+thiserror = { version = "2", default-features = false }
+bitflags = "2"

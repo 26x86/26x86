@@ -1,0 +1,163 @@
+{
+  "schema": "nextcore.bp14-independent-postrun-check/1",
+  "read_only": true,
+  "new_guest_runs": 0,
+  "source_hash_checks": [
+    {
+      "input": "vm_json",
+      "sha256": "1f0da91c9a0e50702f68efea0ce4878e1ee2db46a21d27233466846d36a938f0",
+      "matches_reviewed_original": true
+    },
+    {
+      "input": "aux",
+      "sha256": "4e0d176473d7f7f8638e6f5290e1be702ef234647788e123f2ba1dbdc22f506f",
+      "matches_reviewed_original": true
+    },
+    {
+      "input": "root",
+      "sha256": "05dd1297e5150dc191e93489dde8b4144fb35a6eae0704283bcdf8f157df94cf",
+      "matches_reviewed_original": true
+    },
+    {
+      "input": "firmware",
+      "sha256": "727b7de542e228d4db690289830da5049dbd61f65ec721629db17bba0c98831a",
+      "matches_reviewed_original": true
+    },
+    {
+      "input": "iBSS",
+      "sha256": "149111b580f1e7572348551a31af0001543d4eacdb9b662f620b2710734dbc8c",
+      "matches_reviewed_original": true
+    },
+    {
+      "input": "iBEC",
+      "sha256": "b872a987ebd1bf46b2a6add8c869d187268bcf1034ae52152759cd8d57726d6d",
+      "matches_reviewed_original": true
+    },
+    {
+      "input": "RestoreKernelCache",
+      "sha256": "23ffe7b6f4aeec1ccf207353f8bdc605dd8fa7d75d4b677aac030d445051bc8b",
+      "matches_reviewed_original": true
+    },
+    {
+      "input": "RestoreDeviceTree",
+      "sha256": "b9fc78c1397af696e30336aed34e3755bb8343038d01dd8049cc07fb28762fb3",
+      "matches_reviewed_original": true
+    },
+    {
+      "input": "RestoreTrustCache",
+      "sha256": "9dc198735d21e890ea7852f8f6149c7fbadccf8def5964181c19704c628a08cd",
+      "matches_reviewed_original": true
+    },
+    {
+      "input": "RestoreLogo",
+      "sha256": "30114dd0e92233295151238cd84dede01e86ec54503b9ad636dbc0a333a73e12",
+      "matches_reviewed_original": true
+    },
+    {
+      "input": "RestoreRamDisk",
+      "sha256": "d0832ad91fb51a1a3dd45b7ada4d9f80c2621f21ed1e95486932827a1a0c68f9",
+      "matches_reviewed_original": true
+    },
+    {
+      "input": "build_manifest",
+      "sha256": "4137196616826e4e8eca265eedea52bc59c925113dd96bf2a59460075080a364",
+      "matches_reviewed_original": true
+    },
+    {
+      "input": "tss_helper",
+      "sha256": "2d6d98cf05f7c7b2eb8c9ca82d91fdc9c922a61a20a2de85d15a3715ba088104",
+      "matches_reviewed_original": true
+    }
+  ],
+  "source_count": 13,
+  "all_originals_unchanged": true,
+  "recorded_pid_readback": [
+    {
+      "attempt": 1,
+      "role": "worker",
+      "recorded_pid": 11,
+      "pid_currently_exists": false,
+      "matches_recorded_experiment": false
+    },
+    {
+      "attempt": 1,
+      "role": "wrapper",
+      "recorded_pid": 31,
+      "pid_currently_exists": false,
+      "matches_recorded_experiment": false
+    },
+    {
+      "attempt": 1,
+      "role": "qemu",
+      "recorded_pid": 42,
+      "pid_currently_exists": true,
+      "matches_recorded_experiment": false
+    },
+    {
+      "attempt": 1,
+      "role": "gdb",
+      "recorded_pid": 32,
+      "pid_currently_exists": false,
+      "matches_recorded_experiment": false
+    },
+    {
+      "attempt": 2,
+      "role": "worker",
+      "recorded_pid": 18,
+      "pid_currently_exists": false,
+      "matches_recorded_experiment": false
+    },
+    {
+      "attempt": 2,
+      "role": "wrapper",
+      "recorded_pid": 38,
+      "pid_currently_exists": false,
+      "matches_recorded_experiment": false
+    },
+    {
+      "attempt": 2,
+      "role": "qemu",
+      "recorded_pid": 49,
+      "pid_currently_exists": false,
+      "matches_recorded_experiment": false
+    },
+    {
+      "attempt": 2,
+      "role": "gdb",
+      "recorded_pid": 39,
+      "pid_currently_exists": false,
+      "matches_recorded_experiment": false
+    }
+  ],
+  "matching_owned_processes_remaining": [],
+  "executed_helper_hashes_still_match_preflight": {
+    "bp14-static-preflight.json": {
+      "bp14-run.py": true,
+      "bp14-qemu-wrapper.py": true,
+      "bp14-observe.gdb": true,
+      "bp14_lifecycle.py": true
+    },
+    "bp14b-static-preflight.json": {
+      "bp14b-run.py": true,
+      "bp14b-qemu-wrapper.py": true,
+      "bp14b-observe.gdb": true,
+      "bp14b_lifecycle.py": true
+    }
+  },
+  "private_addresses_or_registers_copied": false,
+  "executed_helper_snapshot_hashes_verified_after_followup": {
+    "1": {
+      "bp14-run.py": true,
+      "bp14-qemu-wrapper.py": true,
+      "bp14-observe.gdb": true,
+      "bp14_lifecycle.py": true
+    },
+    "2": {
+      "bp14b-run.py": true,
+      "bp14b-qemu-wrapper.py": true,
+      "bp14b-observe.gdb": true,
+      "bp14b_lifecycle.py": true
+    }
+  },
+  "postrun_signal_change_receipt": "bp14-postrun-signal-check.json"
+}

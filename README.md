@@ -1,115 +1,109 @@
 # 26x86
 
 <div align="center">
-<img src="resources/branding/26x86-logo-256.png" alt="26x86 로고" width="256" />
-<h1>26x86</h1>
-<h3>x86 Mac을 위한 macOS 26 (Tahoe) 패처</h3>
+  <img src="resources/branding/26x86-logo-256.png" alt="26x86" width="144" />
+  <h3>macOS 26 on x86-based Macintosh hardware</h3>
+  <p>OpenCore integration, clean-room boot research, and evidence-first compatibility tooling.</p>
+  <p>
+    <a href="https://github.com/26x86/26x86/actions">Actions</a> ·
+    <a href="docs/wiki/Home.md">Docs</a> ·
+    <a href="docs/MELLOW_INTEGRATION.md">Mellow</a> ·
+    <a href="SECURITY.md">Security</a>
+  </p>
 </div>
 
-> **실험적 알파** — [면책 조항](DISCLAIMER.md) 확인 · **전체 백업** 후 테스트용 Mac에서 시험하세요.
+> **Experimental alpha.** Work from a full backup on a test machine. A passed
+> static check, emulator probe, or firmware transfer is never presented as a
+> physical-Mac or macOS boot result.
 
-## 문서
+## Start here
 
-| 문서 | 설명 |
-|------|------|
-| **[위키 홈](docs/wiki/Home.md)** | 주의사항, 설치, 설정, 이전 패처에서 전환 |
-| [Releases](https://github.com/NiSeullent/26x86/releases) | 안정 빌드 |
-| [SOURCE.md](SOURCE.md) | 소스 실행·빌드 |
-| [iBoot Personality 범위](docs/IBOOT_PERSONALITY.md) | macOS 전용 게스트·DFU/IPSW 정책 |
-| [부트 피커·복구](docs/BOOT_PICKER_RECOVERY.md) | 2초 Alt/Option 입력과 macOS Recovery 경로 |
+| I want to… | Go to |
+| --- | --- |
+| Prepare an Intel Mac for Tahoe | [Setup and compatibility guide](docs/wiki/Home.md) |
+| Run the guided tool | `26x86.command` or `python3 -m x86 wizard` |
+| Build on Windows | [Windows EXE workflow](#windows-exe) |
+| Inspect supported operating modes | [Mellow integration](docs/MELLOW_INTEGRATION.md) |
+| Follow the boot-engineering work | [Nextcore validation](nextcore/VALIDATION.md) |
+| Review boundaries and notices | [Disclaimer](DISCLAIMER.md) · [Security](SECURITY.md) · [Source policy](SOURCE.md) |
 
-영문: [docs/README.en.md](docs/README.en.md)
+## The platform
 
-## 실행
+26x86 is organized as small, inspectable modules. The core repository carries
+the user-facing patcher, OpenCore integration, EFI preparation, diagnostics,
+and cross-layer contracts. The companion repositories isolate reusable boot
+and runtime components so their evidence can be reviewed independently.
 
-**Mellow 통합 및 실행 모드:** [Mellow 안내](docs/MELLOW_INTEGRATION.md).
-`x86`에서는 EFI 또는 루트 패치로 네이티브 드라이버를 준비하고,
-`apple-silicon-sandbox`에서는 호스트 kext·루트 패치를 차단합니다.
-현재 포함된 Mellow는 진단 kext이며 Tahoe Metal 가속 완료를 의미하지 않습니다.
+| Area | Repository | What it owns |
+| --- | --- | --- |
+| **Patcher** | [26x86](https://github.com/26x86/26x86) | Guided workflow, OpenCore integration, EFI and root-patch preparation |
+| **Boot core** | [Nextcore-Core](https://github.com/26x86/Nextcore-Core) | Configuration, public format codecs, and handoff contracts |
+| **UEFI** | [Nextcore-EFI](https://github.com/26x86/Nextcore-EFI) | EFI application and controlled handoff probes |
+| **Runtime** | [Nextcore-APLS](https://github.com/26x86/Nextcore-APLS) · [Nextcore-GPU](https://github.com/26x86/Nextcore-GPU) | VMApple recovery orchestration and GPU policy |
+| **Hardware translation** | [Nextcore-HAL](https://github.com/26x86/Nextcore-HAL) · [Nextcore-ISE](https://github.com/26x86/Nextcore-ISE) | Platform-table translation and instruction policy |
+| **CLI** | [Nextcore-Tool](https://github.com/26x86/Nextcore-Tool) | Reproducible command-line orchestration |
+| **TCG research** | [VenFire](https://github.com/26x86/VenFire) · [VenFire-QEMU](https://github.com/26x86/VenFire-QEMU) | Isolated VMApple/TCG conformance and backend contracts |
+| **Compatibility packages** | [OpenCorePkg](https://github.com/26x86/OpenCorePkg) · [MetallibSupportPkg](https://github.com/26x86/MetallibSupportPkg) · [PatcherSupportPkg](https://github.com/26x86/PatcherSupportPkg) | Upstream integration and patcher support |
 
-Surface Pro 6 i5-8250U / Tahoe 준비·검사와 macOS 루트 패치 경로:
-[Surface Pro 6 안내](docs/SURFACE_PRO6.md). Windows/Linux GUI는 EFI 준비와 검사를
-지원하며 APFS 루트 패치는 설치된 macOS에서 실행합니다.
+Every exported Nextcore module has an independent `main` branch, fixed initial
+tag, file-hash inventory, and CI gate. The module boundary does not widen any
+boot claim: it makes each layer easier to inspect and test.
 
-`26x86.command` 또는 `python3 -m x86 wizard`
+## Evidence status
 
-기본 GUI: **Tauri** (WKWebView / WebView2, Chromium Qt 아님). 폴백: Cocoa pywebview.
-셸 소스: [`gui-tauri/`](gui-tauri/).
+| Layer | Current evidence | Status |
+| --- | --- | --- |
+| x86 UEFI | Authored OVMF handoff probes validate allocation, memory-copy, flat DeviceTree, and 32-bit transition contracts | Contract verified; not XNU boot |
+| ARM recovery | DFU, iBEC endpoint, Stage2 prompt, restore-role transfer, and `bootx` acknowledgement are recorded | Firmware panic after `bootx`; macOS not verified |
+| Native Apple Silicon | The current Windows and registered remote hosts are x86_64 | A native macOS/Apple Silicon host is still required |
+| Userspace and Metal | No target-matching XNU/userspace boot evidence yet | Not verified |
 
-## Windows EXE CI 빌드
+Read the complete acceptance boundary in [Nextcore validation](nextcore/VALIDATION.md)
+and the [session evidence report](nextcore/artifacts/NEXTCORE_SESSION_REPORT_20260907.md).
 
-- 워크플로우: `.github/workflows/windows-exe.yml`
-- 실행 조건: `main` 브랜치 `push`, `main` 대상 `pull_request`, 수동 `workflow_dispatch`
-- 빌드 명령: `.\scripts\build-windows-exe.ps1 -Clean` (내부적으로 `python -m PyInstaller 26x86-Windows.spec`)
-- 산출물: Actions Artifact `26x86-windows-exe` (내용: `dist/**`, 실행 파일 `dist/26x86/26x86.exe`)
+## Working modes
 
-### 아티팩트 다운로드
+**x86 Mac mode** prepares the EFI and root-patch path for native hardware.
+**Apple Silicon Sandbox mode** is a contained diagnostic and research path; it
+does not load host kexts or apply root patches. The Tauri GUI is the default
+desktop surface (WKWebView/WebView2); Cocoa pywebview remains a fallback.
 
-1. GitHub 저장소의 [Actions](https://github.com/NiSeullent/26x86/actions) 탭 진입
-2. `Build Windows EXE` 워크플로우 실행 선택
-3. 페이지 하단 `Artifacts`에서 `26x86-windows-exe` 다운로드
+Surface Pro 6 i5-8250U / Tahoe preparation is documented separately in the
+[Surface Pro 6 guide](docs/SURFACE_PRO6.md). It uses the same evidence gate:
+file checks are useful, but boot, display acceleration, audio, sleep, touch,
+and recovery each need runtime acceptance.
 
-### 실패 시 빠른 점검
+<details>
+<summary><strong>Windows EXE</strong></summary>
 
-- `No module named webview`: 빌드 로그의 의존성 설치 단계에서 `pywebview` 설치 성공 여부 확인
-- EXE 실행 시 빈 화면: 대상 PC에 Microsoft Edge WebView2 Runtime 설치 확인
-- `dist/26x86/26x86.exe not found`: PyInstaller 단계 실패 로그(숨김 import/경로 오류) 확인
+The [Build Windows EXE](https://github.com/26x86/26x86/actions/workflows/windows-exe.yml)
+workflow builds `dist/26x86/26x86.exe` from
+`scripts/build-windows-exe.ps1 -Clean`. Download the `26x86-windows-exe`
+artifact from the corresponding Actions run. If the app has a blank window,
+install Microsoft Edge WebView2 Runtime before diagnosing the bundle.
 
-## 법적
+</details>
 
-[DISCLAIMER.md](DISCLAIMER.md) · [LICENSE.txt](LICENSE.txt) · [NOTICE.md](NOTICE.md) · [원본 저장소](docs/wiki/Upstream-Repositories.md) · [CREDITS.md](CREDITS.md)
+<details>
+<summary><strong>Sandbox and recovery boundary</strong></summary>
 
-## Apple Silicon Sandbox integration
+The sandbox accepts caller-supplied original inputs, uses copy-on-write
+overlays, and leaves IPSW, installer files, ESP, and source components
+unchanged. It records the recovery chain but does not force a boot transition.
+The current trace reached the iBEC prompt, the five restore roles, and `bootx`;
+the subsequent firmware panic means XNU, graphics, and installer UI remain
+unverified. See [Apple Silicon Sandbox](docs/APPLE_SILICON_SANDBOX.md),
+[VSK](docs/VSK.md), and [Golden Gate GUI validation](docs/QEMU_GOLDEN_GATE_GUI.md).
 
-EFI-native AArch64 translation, AIC and iBoot integration for macOS 26/27 is in development. See [architecture and actual validation status](docs/APPLE_SILICON_SANDBOX.md) and the adopted [VSK isolation design and implementation](docs/VSK.md). VSK product admission is fixed to approved Intel Macs and requires VMX/EPT, VT-d and interrupt remapping. The existing EFI self-test is not a VSK kernel or macOS boot environment.
+</details>
 
-The reproducible QEMU GUI commands and their result boundaries are documented
-in [QEMU Golden Gate GUI validation](docs/QEMU_GOLDEN_GATE_GUI.md). A visible
-QEMU window is diagnostic evidence only; it does not certify iBoot, XNU or
-physical-Mac boot.
+## Project rules
 
-The Sandbox screen in the 26x86 GUI exposes a visible `GTK VM 창 열기` action
-and the complete live-personalization path. It accepts the official
-`BuildManifest.plist`, a local TSS request helper and unchanged original iBSS/iBEC
-components. Fresh IMG4 outputs are written to a new directory for the current
-USB nonce; the IPSW, installer files, existing ESP and source components are
-never modified. A legacy pre-personalized input mode remains available only for
-diagnostic runs. On Windows, a Linux VMApple QEMU path is re-executed in WSLg
-with a shell-free `wsl.exe` command; the CLI equivalent is
-`python3 -m x86 vmapple run --live-personalize --research-only`.
+- Public repositories contain clean-room source and public specifications only.
+- `_isolated/` research material is excluded by Git and pre-commit guards.
+- An observation advances only the layer it measures; it cannot stand in for a
+  later firmware, kernel, userspace, graphics, or physical-hardware result.
 
-The VMApple config device is explicitly set to the guest metadata
-`Apple M1 (Virtual)` / `VM0001`. This makes the intended iBoot personality
-observable in the report; it is metadata only and is not Apple hardware
-attestation. Both paths preserve immutable firmware and use COW overlays, and
-stop at the real post-reset USB descriptor boundary instead of forcing iBEC
-admission.
-
-The iBoot(AArch64) personality is deliberately macOS-only: macOS is supported,
-while iOS, iPadOS and other mobile Apple OS requests are rejected before DFU.
-Its DFU/IPSW recovery scope uses `_default.ipsw` for Local Recovery. Inspect the
-enforced matrix without starting a VM with
-`python3 -m x86 personality validate --guest-os macOS`.
-
-The GUI now arms a two-second boot picker. Press Alt/Option during that window,
-choose `macOS Recovery · _default.ipsw`, and then open the visible Recovery VM.
-The picker and its input source are recorded in `launch.json`; a Golden Gate
-installation is reported only after iBEC, XNU and macOS UI evidence exists. The
-latest live TSS Alt→Recovery GTK run is summarized in
-[integration/vmapple-gui-bootpicker-report.json](integration/vmapple-gui-bootpicker-report.json);
-it records successful iBSS personalization, DFU reset, re-enumeration as
-`05ac:1281` with bulk endpoint 4, LocalPolicy/iBEC uploads and `go`. The
-original iBEC reaches the Stage2 command prompt. The restore chain then sends
-the five official restore roles, records the expected pre-boot notification
-STALL, and receives a `bootx` acknowledgement before iBoot emits a panic. XNU,
-graphics and the Golden Gate installer UI remain unverified. No transition is
-forced and installation verification remains false.
-
-Before launching the recovery worker, the GUI and CLI can perform a bounded,
-read-only AUX/root inspection:
-`python3 -m x86 vmapple inspect-storage --aux <AUX> --root <ROOT>`. A
-zero-filled base is reported as `unprovisioned-zero` (or
-`partially-unprovisioned`) and is blocked by the GUI because it cannot reach an
-installer. Non-zero bytes or an APFS marker remain `unverified` until a
-hardware-model-matched auxiliary-storage provisioning receipt exists; the
-inspection never edits the IPSW, installer, ESP or source images.
+Read [CONTRIBUTING guidance](docs/wiki/Home.md), [NOTICE.md](NOTICE.md),
+[CREDITS.md](CREDITS.md), and the [upstream inventory](docs/wiki/Upstream-Repositories.md)
+before integrating changes.

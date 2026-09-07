@@ -1,0 +1,121 @@
+{
+  "schema": "nextcore.public-device-contract-survey/1",
+  "status": "HOLD",
+  "layer": "host device model / guest MMIO contract",
+  "selected_input_hash_matches_prior": true,
+  "selected_input_model_matches_active_selection": true,
+  "private_matching_node_count": 1,
+  "selected_compatible_matches_pl031": false,
+  "selected_compatible_matches_linux_smc": false,
+  "selected_role_property_present": false,
+  "pl031_named_register_covers_access": false,
+  "pl031_id_register_covers_access": false,
+  "pl031_bad_offset_fallback_would_be_used": true,
+  "supported_public_contract_found": false,
+  "device_identity_verified": false,
+  "matching_access_return_semantics_verified": false,
+  "matching_access_width_semantics_verified": false,
+  "matching_read_side_effects_verified": false,
+  "matching_reset_state_verified": false,
+  "qemu_current_model_covers_selected_range": false,
+  "linux_bsd_candidate_transport_matches": false,
+  "sources": [
+    {
+      "id": "qemu-machine",
+      "version": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+      "repository": "qemu/qemu",
+      "path": "hw/vmapple/vmapple.c",
+      "url": "https://raw.githubusercontent.com/qemu/qemu/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/vmapple/vmapple.c",
+      "fetch_complete": true,
+      "sha256": "2e7f872746da5183e745dcb7b2bb2137b76716f4abeae0a0b78921402a05384a",
+      "bytes": 20480,
+      "exact_selected_identity_token_matches": 0
+    },
+    {
+      "id": "qemu-pl031",
+      "version": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+      "repository": "qemu/qemu",
+      "path": "hw/rtc/pl031.c",
+      "url": "https://raw.githubusercontent.com/qemu/qemu/ff1d2d19d7e24893e2012d879f8e73077e17b9bd/hw/rtc/pl031.c",
+      "fetch_complete": true,
+      "sha256": "057a621bf4e35ebe86a2da9b09f2ea8f14c53ae1e34a9662bb4e913658dab9c2",
+      "bytes": 9139,
+      "exact_selected_identity_token_matches": 0
+    },
+    {
+      "id": "linux-smc-binding",
+      "version": "v6.19-rc7",
+      "repository": "torvalds/linux",
+      "path": "Documentation/devicetree/bindings/rtc/apple,smc-rtc.yaml",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/v6.19-rc7/Documentation/devicetree/bindings/rtc/apple,smc-rtc.yaml",
+      "fetch_complete": true,
+      "sha256": "97f06a684b2f9e4e0e8eb2e6ca198f5adaf82901eca3bad17f28282928282b74",
+      "bytes": 811,
+      "exact_selected_identity_token_matches": 0
+    },
+    {
+      "id": "linux-smc-driver",
+      "version": "v6.19-rc7",
+      "repository": "torvalds/linux",
+      "path": "drivers/rtc/rtc-macsmc.c",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/v6.19-rc7/drivers/rtc/rtc-macsmc.c",
+      "fetch_complete": true,
+      "sha256": "ce03efc8a74e51a629a52d5b348b8fdcb6d39891b441a3e53cd5be62d6358432",
+      "bytes": 3518,
+      "exact_selected_identity_token_matches": 0
+    },
+    {
+      "id": "linux-pl031-binding",
+      "version": "v6.19-rc7",
+      "repository": "torvalds/linux",
+      "path": "Documentation/devicetree/bindings/rtc/arm,pl031.yaml",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/v6.19-rc7/Documentation/devicetree/bindings/rtc/arm,pl031.yaml",
+      "fetch_complete": false,
+      "error": "HTTPError"
+    },
+    {
+      "id": "openbsd-smc",
+      "version": "8da35e4bf6afbf16c87dcd7a1fb460782b5682b6",
+      "repository": "openbsd/src",
+      "path": "sys/arch/arm64/dev/aplsmc.c",
+      "url": "https://raw.githubusercontent.com/openbsd/src/8da35e4bf6afbf16c87dcd7a1fb460782b5682b6/sys/arch/arm64/dev/aplsmc.c",
+      "fetch_complete": true,
+      "sha256": "3233486156e9c72e9097d7cea0e3aef591562b8ae10efa84590376b82525d21c",
+      "bytes": 23409,
+      "exact_selected_identity_token_matches": 0
+    },
+    {
+      "id": "apple-xnu-identify",
+      "version": "f6217f891ac0bb64f3d375211650a4c1ff8ca1ea",
+      "repository": "apple-oss-distributions/xnu",
+      "path": "pexpert/arm/pe_identify_machine.c",
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/pexpert/arm/pe_identify_machine.c",
+      "fetch_complete": true,
+      "sha256": "f7a7bbd1d9102b538abf548715f7bd5f86c1ac90ef6473fb4f09c2659cd8a74d",
+      "bytes": 8639,
+      "exact_selected_identity_token_matches": 0
+    },
+    {
+      "id": "apple-xnu-init",
+      "version": "f6217f891ac0bb64f3d375211650a4c1ff8ca1ea",
+      "repository": "apple-oss-distributions/xnu",
+      "path": "pexpert/arm/pe_init.c",
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/pexpert/arm/pe_init.c",
+      "fetch_complete": true,
+      "sha256": "f6d71d8dc87b05e0c2120857f7e365b1b6c74ca0502d3988cf6cebfb5162a7d7",
+      "bytes": 27523,
+      "exact_selected_identity_token_matches": 0
+    }
+  ],
+  "m1n1_path_inventory": {
+    "repository": "AsahiLinux/m1n1",
+    "tree": "940439b9a407fbfc499bea933269219f3f62d4c7",
+    "truncated": false,
+    "rtc_or_vmapple_named_paths": 0,
+    "scope": "path inventory only, not whole-source absence proof"
+  },
+  "scope_limit": "Bounded primary-source survey; absence of a match is not proof that no public implementation exists anywhere.",
+  "guest_runs": 0,
+  "product_source_modifications": 0,
+  "private_raw_details_copied_to_public": false
+}
