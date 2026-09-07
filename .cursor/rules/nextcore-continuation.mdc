@@ -1,0 +1,26 @@
+---
+description: Preserve Nextcore boot evidence, clean-room boundaries, and lightweight continuation discipline.
+alwaysApply: true
+---
+
+# Nextcore continuation
+
+- Start Nextcore work by reading `AGENTS.md`, `docs/NEXTCORE_CURRENT_CONTEXT.md`,
+  and `nextcore/VALIDATION.md`; then identify the layer: x86 UEFI, ARM firmware,
+  graphics, or module release.
+- Keep `macos_boot_verified=false` until target-matching XNU and userspace
+  evidence exists. A probe, emulator, transfer, or panic is evidence only for
+  the layer it measured.
+- Never stage `_isolated/`, Apple firmware, guest disks, extracted blobs, or
+  private reverse-engineering output. Do not invent MMIO behavior to pass the
+  current ARM panic.
+- Write or update the relevant decision/evidence document before code. For a
+  cross-slot need, add an `OPEN_QUESTION` instead of editing another slot.
+- Use small, reversible steps: one hypothesis, one meaningful check, one
+  recorded result. Preserve a working display/output path during graphics work.
+- The graphics driver is deferred while large-model capacity is rate-limited.
+  Small models may maintain public contracts, tests, and documentation, but do
+  not attempt a broad driver implementation or claim Metal acceptance.
+- For module release, use `Tools/export_nextcore_repositories.py`, verify
+  independent clone builds, and report dependency-boundary failures. Never
+  force-push; external publication needs current user authorization.
