@@ -1,0 +1,9 @@
+{
+  "Core": "1c1630fa8dc4d38198c94ae407fe4d6f2fcefdd9",
+  "EFI": "b66d05bdfa82f5e11993beef1c860ed4965b4287",
+  "Tool": "b10e7b94d0271ed7d27ecb9c8e2ccde2ca98a8f5",
+  "ISE": "37a94d8af2a1014b90385d8c9f3ab8a950aaf6a0",
+  "GPU": "84b881e8129774acee3e4faf944e833c407711fd",
+  "HAL": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+  "APLS": "ddd6743083e67c2fbfd57bb1c2724e932b2633c4"
+}

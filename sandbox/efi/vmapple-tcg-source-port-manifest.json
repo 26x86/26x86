@@ -61,7 +61,7 @@
       },
       "port": {
         "mode": "clean-room-reimplementation",
-        "venfire_destination": "sandbox/efi/preos/src/vmapple.rs; QEMU build patch",
+        "venfire_destination": "nextcore/crates/nextcore-ise/runtime/preos/src/vmapple.rs; QEMU build patch",
         "rationale": "The fixed Rust descriptor records guest-visible addresses without importing QOM or GLib."
       },
       "guest_contract": {
@@ -80,12 +80,12 @@
       "evidence": {
         "references": [
           "QEMU hw/vmapple/vmapple.c and hw/vmapple/cfg.c at pinned commit",
-          "sandbox/efi/preos/src/vmapple.rs unit tests"
+          "nextcore/crates/nextcore-ise/runtime/preos/src/vmapple.rs unit tests"
         ],
         "source_trace": "research/venfire/patches/series, 0001-vmapple-explicit-tcg-research.patch",
         "guest_driver_trace": "not collected",
         "register_differential_test": "Rust graph read/write/reset tests",
-        "venfire_test_evidence": "cargo test --manifest-path sandbox/efi/preos/Cargo.toml",
+        "venfire_test_evidence": "cargo test --manifest-path nextcore/crates/nextcore-ise/runtime/preos/Cargo.toml",
         "evidence_status": "confirmed"
       },
       "state": "runtime-tested",

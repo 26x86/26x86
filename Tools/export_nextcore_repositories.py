@@ -42,10 +42,15 @@ def tag(name: str) -> str:
 
 def tracked_files(crate: str) -> list[Path]:
     prefix = f"nextcore/crates/{crate}/"
-    files = run("git", "-C", str(ROOT), "ls-files", "--", prefix).splitlines()
-    if not files:
+    module_root = CRATES / crate
+    if (module_root / ".git").exists():
+        files = run("git", "-C", str(module_root), "ls-files", "-z").split("\0")
+        result = [module_root / entry for entry in files if entry]
+    else:
+        files = run("git", "-C", str(ROOT), "ls-files", "-z", "--", prefix).split("\0")
+        result = [ROOT / entry for entry in files if entry]
+    if not result:
         raise RuntimeError(f"crate has no tracked files: {crate}")
-    result = [ROOT / entry for entry in files]
     for path in result:
         if not path.is_file() or "_isolated" in path.parts:
             raise RuntimeError(f"invalid public export input: {path}")

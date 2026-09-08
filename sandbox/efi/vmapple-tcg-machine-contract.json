@@ -75,7 +75,7 @@
         "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
         "path": "hw/vmapple/vmapple.c"
       },
-      "destination": "sandbox/efi/preos/src/vmapple.rs and QEMU hw/vmapple",
+      "destination": "nextcore/crates/nextcore-ise/runtime/preos/src/vmapple.rs and QEMU hw/vmapple",
       "state": "runtime-tested",
       "evidence": "Rust graph unit tests plus QEMU VMApple machine probe"
     },
@@ -99,7 +99,7 @@
         "upstream_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
         "path": "hw/vmapple/vmapple.c"
       },
-      "destination": "QEMU PL011/PL031 and sandbox/efi/preos/src/vmapple.rs",
+      "destination": "QEMU PL011/PL031 and nextcore/crates/nextcore-ise/runtime/preos/src/vmapple.rs",
       "state": "runtime-tested",
       "evidence": "Rust register semantics tests and serial evidence observer"
     },
@@ -121,7 +121,7 @@
       "source": {
         "project": "26x86 virtual DART contract",
         "upstream_commit": "local",
-        "path": "sandbox/efi/preos/src/vmapple.rs"
+        "path": "nextcore/crates/nextcore-ise/runtime/preos/src/vmapple.rs"
       },
       "destination": "fixed-size descriptor state",
       "state": "blocked",

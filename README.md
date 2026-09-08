@@ -2,7 +2,7 @@
 
 <div align="center">
   <img src="resources/branding/nextcore-logo-256.png" alt="NextCore" width="144" />
-  <h3>Intel / Apple Silicon boot engineering</h3>
+  <h3>macOS compatibility on x86 EFI</h3>
   <p>UEFI boot, HAL translation, and Metal acceleration development for macOS 26 Tahoe and macOS 27 Golden Gate.</p>
   <p>
     <a href="https://github.com/26x86/26x86/actions">Actions</a> ·
@@ -23,7 +23,7 @@
 | Browse the documentation site | [NextCore docs](https://26x86.github.io/26x86/) |
 | Understand the public architecture | [Documentation hub](docs/wiki/README.md) |
 | Boot macOS on Intel hardware | [Setup and compatibility guide](docs/wiki/Home.md) |
-| Boot macOS on Apple Silicon | [Apple Silicon guide](docs/APPLE_SILICON_SANDBOX.md) |
+| Develop ARM64e macOS on an x86 computer | [Module and EFI JIT guide](docs/wiki/Nextcore-Modules.md) |
 | Run the guided tool | `26x86.command` or `python3 -m x86 wizard` |
 | Build on Windows | [Windows EXE workflow](#windows-exe) |
 | Inspect supported operating modes | [Mellow integration](docs/MELLOW_INTEGRATION.md) |
@@ -32,13 +32,17 @@
 
 ## The platform
 
-NextCore is an experimental macOS bootloader and compatibility toolkit under
-development for Intel and Apple Silicon. Its required targets are Tahoe native
-HAL and Golden Gate AMD64↔Apple Silicon HAL with actual guest Metal acceleration.
-These are development goals; the measured results below define current support.
-The repository contains the guided tool, EFI implementation, external compatibility
-integrations and diagnostics. Reusable Rust crates live under `nextcore/crates/`
-and can be exported as independently tested modules.
+NextCore is an experimental macOS bootloader and compatibility layer for x86
+computers. macOS 27 uses the ARM64e operating-system build, with an M1 baseline,
+translated by a macOS-focused ARM64e-to-x86_64 JIT and hardware adaptation layer
+running directly in x86 EFI. WSL2 is the development environment; QEMU/OVMF is a
+firmware test fixture. Neither is required by the target EFI runtime.
+
+The integration repository owns the guided tools, build orchestration and evidence.
+Seven independently versioned repositories are checked out as real Git submodules
+under `nextcore/crates/`. The ISE module owns the freestanding C/Rust JIT runtime;
+the EFI module links it through a pinned build dependency. See the
+[module guide](docs/wiki/Nextcore-Modules.md) for recursive clone and build commands.
 
 Changes to `main` arrive **only through pull requests**. `main` is protected:
 required reviews, required status checks (`docs-build`, `isolated-asset-guard`,
@@ -50,13 +54,13 @@ merge. See the [branching and release policy](docs/wiki/Branching-and-Release.md
 | **Patcher** | [26x86](https://github.com/26x86/26x86) | Guided workflow, OpenCore integration, EFI and root-patch preparation |
 | **Boot core** | [Nextcore-Core](https://github.com/26x86/Nextcore-Core) | Configuration, public format codecs, and handoff contracts |
 | **UEFI** | [Nextcore-EFI](https://github.com/26x86/Nextcore-EFI) | EFI application and controlled handoff probes |
-| **Runtime** | [Nextcore-APLS](https://github.com/26x86/Nextcore-APLS) · [Nextcore-GPU](https://github.com/26x86/Nextcore-GPU) | VMApple recovery orchestration and GPU policy |
-| **Hardware translation** | [Nextcore-HAL](https://github.com/26x86/Nextcore-HAL) · [Nextcore-ISE](https://github.com/26x86/Nextcore-ISE) | Platform-table translation and instruction policy |
+| **Runtime** | [Nextcore-APLS](https://github.com/26x86/Nextcore-APLS) · [Nextcore-GPU](https://github.com/26x86/Nextcore-GPU) | Recovery diagnostics and GPU command execution |
+| **Hardware translation** | [Nextcore-HAL](https://github.com/26x86/Nextcore-HAL) · [Nextcore-ISE](https://github.com/26x86/Nextcore-ISE) | Platform-table translation and the freestanding ARM64e JIT runtime |
 | **CLI** | [Nextcore-Tool](https://github.com/26x86/Nextcore-Tool) | Reproducible command-line orchestration |
 | **Compatibility packages** | [OpenCorePkg](https://github.com/26x86/OpenCorePkg) · [MetallibSupportPkg](https://github.com/26x86/MetallibSupportPkg) · [PatcherSupportPkg](https://github.com/26x86/PatcherSupportPkg) | Upstream integration and patcher support |
 
-Every exported NextCore module has an independent `main` branch, fixed initial
-tag, file-hash inventory, and CI gate. The module boundary does not widen any
+Each NextCore module has its own Git history, pinned integration commit,
+file-hash inventory, and CI gate. The module boundary does not widen any
 boot claim: it makes each layer easier to inspect and test.
 
 ## Evidence status
@@ -66,6 +70,7 @@ boot claim: it makes each layer easier to inspect and test.
 | EFI picker | Actual OVMF GOP selection, matching child execution, Esc cancellation, automatic boot and text fallback | Verified at the firmware UI layer |
 | Tahoe native EFI | NextCore ConsoleControl → original booter → original XNU and launchd, correlated with a unique CPU memory sample | Early userspace reached; full HAL and OS acceptance unfinished |
 | Tahoe external reference | Signed recovery reaches WindowServer and the recovery GUI after a standard virtual SMC is supplied | Recovery GUI verified; installed OS and Metal unfinished |
+| ARM64e JIT in x86 EFI | Native translated blocks, software PAC/AUT, 16 GOP pixels read back, and 9 positive/negative firmware cases | Authored fixtures verified; macOS boot unfinished |
 | Golden Gate ARM recovery | DFU, iBEC endpoint, Stage2 prompt, five restore roles and `bootx` acknowledgement | A same-event unmapped MMIO read stops firmware before XNU |
 | Metal | Real Intel host GPU compute/readback; x86_64 and ARM64 guest Metal probes built | Guest Metal execution remains mandatory and unverified |
 

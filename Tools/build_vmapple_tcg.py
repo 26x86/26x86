@@ -20,6 +20,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 from typing import Sequence
 
 
@@ -89,7 +90,22 @@ def _clone(source: str | None, checkout: Path) -> None:
             raise ValueError("source checkout is dirty; use a clean checkout")
         _run(["git", "clone", "--no-local", "--no-hardlinks", str(source_path), str(checkout)])
     else:
-        _run(["git", "clone", "--filter=blob:none", QEMU_REPOSITORY, str(checkout)])
+        # The build consumes one exact revision; full QEMU history needlessly
+        # dominates provisioning on a fresh development host.
+        checkout.mkdir()
+        _run(["git", "init", str(checkout)])
+        _run(["git", "remote", "add", "origin", QEMU_REPOSITORY], cwd=checkout)
+        fetch = ["git", "-c", "http.version=HTTP/1.1", "fetch", "--depth=1",
+                 "--no-tags", "origin", QEMU_COMMIT]
+        for attempt in range(3):
+            try:
+                _run(fetch, cwd=checkout)
+                break
+            except subprocess.CalledProcessError:
+                # Interrupted transfers leave no trusted revision. Retry the
+                # same immutable commit and keep checkout gated on success.
+                if attempt == 2:
+                    raise
     _run(["git", "checkout", "--detach", QEMU_COMMIT], cwd=checkout)
 
 
@@ -115,7 +131,8 @@ def _configure(source: Path) -> list[str]:
     ]
 
 
-def build(*, output: str | None, source: str | None, jobs: int) -> dict[str, object]:
+def build(*, output: str | None, source: str | None, jobs: int,
+          validate_cpu: bool = False) -> dict[str, object]:
     if type(jobs) is not int or not 1 <= jobs <= 256:
         raise ValueError("jobs must be between 1 and 256")
     patches = _patch_series()
@@ -145,6 +162,22 @@ def build(*, output: str | None, source: str | None, jobs: int) -> dict[str, obj
     bdif_help = _capture([str(binary), "-device", "vmapple-bdif,help"])
     if "allow-block-writes" not in bdif_help:
         raise RuntimeError("built QEMU does not expose the BDIF write gate")
+    cpu_probe: dict[str, object] = {"requested": validate_cpu, "verified": False}
+    if validate_cpu:
+        probe_directory = destination / "arm64e-cpu-probe"
+        probe_command = [
+            sys.executable, str(PROJECT / "nextcore" / "tools" / "probe_vmapple_arm64e.py"),
+            "--qemu", str(binary), "--output", str(probe_directory), "--negative-control",
+        ]
+        _run(probe_command)
+        probe_report = json.loads((probe_directory / "report.json").read_text(encoding="utf-8"))
+        if probe_report.get("passed") is not True:
+            raise RuntimeError("VMApple architectural CPU execution probe did not pass")
+        cpu_probe.update({
+            "verified": True, "command": probe_command,
+            "report": str(probe_directory / "report.json"),
+            "scope": "authored EL1/PAuth/timer operations; no ARM64e ABI or macOS verdict",
+        })
     receipt: dict[str, object] = {
         "schema": "26x86.vmapple-tcg-build/1",
         "host_layer": "non-Apple host software emulation",
@@ -173,6 +206,7 @@ def build(*, output: str | None, source: str | None, jobs: int) -> dict[str, obj
             "graphics": "headless serial/recovery only",
         },
         "guest_inputs_modified": False,
+        "architectural_cpu_execution": cpu_probe,
     }
     (destination / "build-receipt.json").write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
@@ -185,9 +219,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--output", help="new build directory")
     parser.add_argument("--source", help="clean checkout already at the pinned commit")
     parser.add_argument("--jobs", type=int, default=max(1, os.cpu_count() or 1))
+    parser.add_argument("--validate-cpu", action="store_true",
+                        help="execute authored EL1/PAuth checks and negative control (requires clang/llvm)")
     args = parser.parse_args(argv)
     try:
-        print(json.dumps(build(output=args.output, source=args.source, jobs=args.jobs), indent=2))
+        print(json.dumps(build(output=args.output, source=args.source, jobs=args.jobs,
+                               validate_cpu=args.validate_cpu), indent=2))
     except (OSError, RuntimeError, ValueError, subprocess.CalledProcessError) as error:
         print(json.dumps({"ok": False, "error": f"{type(error).__name__}: {error}"}, indent=2))
         return 2

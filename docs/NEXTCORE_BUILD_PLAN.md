@@ -1185,6 +1185,50 @@ Core parser/tests는 root, EFI adapter/main 연결·합성 firmware 회귀는 x8
 명시 위임한다. 원본 실행은 installer 담당이 종료/불변을 확인한 snapshot의 새 COW만
 사용한다. 원본 booter 경로는 격리 설정 입력이며 공개 구현에 hard-code하지 않는다.
 
+
+### BP25 - WSL2 ARM64e boot and real submodule integration (2026-09-08)
+
+Current state: seven crates are copied into the superproject despite independent
+module histories. ARM metadata/staging and boot_args are separate; there is no
+AArch64 EFI handoff. Guest Metal command execution remains unverified.
+
+DECIDED (current user): work in WSL2, obtain original macOS 27 inputs for an M1
+baseline, prioritize ARM boot, develop graphics concurrently, and convert all seven
+crates into fully integrated Git submodules. Root owns module integration, build/CI,
+and original-input acquisition. ARM EFI agent owns ARM core placement/config, EFI
+entry and authored firmware execution tests. ARM recovery agent owns actual PAC
+CPU execution checks and reproducible QEMU provisioning. GPU agent owns compute
+command dispatch and actual backend/readback validation. Their detailed contracts
+are recorded under nextcore/artifacts before implementation. Existing sources,
+module histories, firmware authentication and ARM64e PAC semantics are preserved.
+
+The module conversion reuses existing repository histories and preserves active
+source edits. Cargo workspace patches select checked-out local modules, while each
+standalone module pins remote dependencies. CI recursively initializes all gitlinks
+and verifies resolution. No original firmware or private output enters a module.
+A recursive fresh clone must resolve the exact module commits before conversion
+can be called complete. Root coordinates the index and local commits after tests.
+
+Actual kernel/GUI/Metal acceptance remains tied to guest execution evidence;
+authored handoff/PAC payload results are reported as their own layers.
+
+### BP25-A - Corrected target: x86 EFI macOS-specific JIT compatibility layer
+
+The current user clarified that the physical computer is always x86. macOS 27's
+ARM build is the input because there is no x86 build for this target. WSL2 is
+only the development/build environment. Product execution must begin in x86
+EFI and use a macOS-optimized ARM64e-to-x86_64 JIT plus HAL compatibility layer.
+A host-OS QEMU process, a physical M1, or an ARM-native EFI application cannot
+serve as the target implementation. QEMU and BOOTAA64 may remain reference
+validation tools, with their evidence named accordingly.
+
+Root retains submodule integration and provisioning. CPU agent is delegated
+preOS ARM64e/PAC architectural semantics and native JIT bridge; boot agent is
+delegated ARM image/argument placement into the x86 EFI compatibility runtime;
+GPU agent owns no_std display scanout and backend dispatch. Runtime sources
+will be owned by the ISE submodule, with explicit EFI and workspace dependencies.
+Metal still requires actual hardware command translation and guest completion.
+
 ## OPEN_QUESTION
 
 - BP9 연속 실행 결정: Design D2-A는 표준 EFI application 중간 경로를 허용했고,
@@ -1243,3 +1287,28 @@ Core parser/tests는 root, EFI adapter/main 연결·합성 firmware 회귀는 x8
   카피): 세 문서 정합 닫힘. macOS 버전 목록 원칙(D6/P8)과 단계 9의
   고정 목록 검증은 상하 관계로 정리 — 구현은 BP3.9 그대로, 확장 시점은
   D6 (F)의 HOLD를 따른다.
+
+
+## BP25-B — macOS 27 startup ABI and bounded original-input trace
+
+Current: independently authored ARM64e fixtures execute in x86 EFI. The original
+M1-baseline kernel collection stages unchanged, but its startup contract must be
+established separately. Public XNU `osfmk/arm64/sptm/start_sptm.s` documents a cold
+startup selector in x0, traditional boot arguments in x1, and SPTM arguments in
+x2. A legacy x0=boot-arguments handoff cannot be assumed for this entry shape.
+
+Decision: the EFI agent owns explicit diagnostic initial-register selection and
+bounded original-input tracing. The CPU agent owns generic ARM immediate
+arithmetic/condition flags and conditional control flow needed at the observed
+first instruction boundary, with independently authored tests. This delegation
+reopens those source scopes while module metadata/integration remains root-owned.
+Unknown SPTM argument structures and services must not be fabricated or reported
+as implemented. Any partial trace must state missing startup prerequisites and
+must not be treated as correct macOS cold boot. Raw original instructions and
+addresses stay in `_isolated/`; public receipts contain only outcomes and limits.
+
+Reference: https://github.com/apple-oss-distributions/xnu/blob/main/osfmk/arm64/sptm/start_sptm.s
+
+Wanted: establish and test the selected startup ABI, virtual-address translation,
+MMU and SPTM interface before advancing to sustained XNU initialization. Synthetic
+success and partial original instruction execution remain distinct milestones.

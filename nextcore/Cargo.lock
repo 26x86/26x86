@@ -300,6 +300,7 @@ name = "nextcore-efi"
 version = "0.1.0"
 dependencies = [
  "nextcore-core",
+ "nextcore-ise",
  "uefi",
  "uefi-raw",
 ]

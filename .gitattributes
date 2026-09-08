@@ -20,3 +20,6 @@ sandbox/vsk/crypto/** -text -whitespace
 
 # Pre-commit guard template must stay LF (CRLF breaks hook execution)
 Tools/git/hooks/pre-commit text eol=lf
+
+# Firmware UART evidence preserves original CRLF bytes.
+nextcore/artifacts/arm-efi-20260908/**/serial.log -text -whitespace

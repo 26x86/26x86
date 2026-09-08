@@ -18,7 +18,7 @@
       "guest_visible_purpose": "AArch64 exception levels, system registers, translation, atomics, SMP, timer, and PAuth state",
       "state": "blocked",
       "source": {"project": "Arm Architecture Reference Manual", "upstream_commit": "not recorded", "provenance_status": "unavailable"},
-      "venfire_destination": "sandbox/efi/preos/src/machine.rs (descriptor gate only)",
+      "venfire_destination": "nextcore/crates/nextcore-ise/runtime/preos/src/machine.rs (descriptor gate only)",
       "known_gap": "The shipped translator is a bounded user-mode subset; the requested feature bits are rejected before JIT entry."
     },
     {
@@ -36,7 +36,7 @@
       "guest_visible_purpose": "M1 interrupt routing, masking, acknowledgement, affinity, and reset state",
       "state": "blocked",
       "source": {"project": "Apple AIC public driver/source references", "upstream_commit": "not recorded", "provenance_status": "reference-only"},
-      "venfire_destination": "sandbox/devices/aic_v1.c (standalone reference model; not wired into an M1 graph)",
+      "venfire_destination": "nextcore/crates/nextcore-ise/devices/aic_v1.c (standalone reference model; not wired into an M1 graph)",
       "known_gap": "The AIC v1 self-test is not proof of M1 register identity or guest device-tree wiring. GIC is forbidden as a fallback."
     },
     {

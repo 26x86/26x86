@@ -9,3 +9,24 @@ members = [
     "crates/nextcore-hal",
     "crates/nextcore-apls",
 ]
+
+[patch."https://github.com/26x86/Nextcore-Core.git"]
+nextcore-core = { path = "crates/nextcore-core" }
+
+[patch."https://github.com/26x86/Nextcore-EFI.git"]
+nextcore-efi = { path = "crates/nextcore-efi" }
+
+[patch."https://github.com/26x86/Nextcore-Tool.git"]
+nextcore-tool = { path = "crates/nextcore-tool" }
+
+[patch."https://github.com/26x86/Nextcore-ISE.git"]
+nextcore-ise = { path = "crates/nextcore-ise" }
+
+[patch."https://github.com/26x86/Nextcore-GPU.git"]
+nextcore-gpu = { path = "crates/nextcore-gpu" }
+
+[patch."https://github.com/26x86/Nextcore-HAL.git"]
+nextcore-hal = { path = "crates/nextcore-hal" }
+
+[patch."https://github.com/26x86/Nextcore-APLS.git"]
+nextcore-apls = { path = "crates/nextcore-apls" }

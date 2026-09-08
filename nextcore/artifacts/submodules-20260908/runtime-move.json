@@ -1,0 +1,139 @@
+[
+  {
+    "old": "sandbox/efi/preos_bridge.h",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos_bridge.h"
+  },
+  {
+    "old": "sandbox/efi/main.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/main.c"
+  },
+  {
+    "old": "sandbox/efi/preos_abi.h",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos_abi.h"
+  },
+  {
+    "old": "sandbox/efi/gop_scanout.h",
+    "new": "nextcore/crates/nextcore-ise/runtime/gop_scanout.h"
+  },
+  {
+    "old": "sandbox/efi/test_gop_scanout.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/test_gop_scanout.c"
+  },
+  {
+    "old": "sandbox/efi/abi_layout.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/abi_layout.c"
+  },
+  {
+    "old": "sandbox/efi/test_jit.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/test_jit.c"
+  },
+  {
+    "old": "sandbox/efi/uefi.h",
+    "new": "nextcore/crates/nextcore-ise/runtime/uefi.h"
+  },
+  {
+    "old": "sandbox/efi/boot_jit.h",
+    "new": "nextcore/crates/nextcore-ise/runtime/boot_jit.h"
+  },
+  {
+    "old": "sandbox/efi/arch.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/arch.c"
+  },
+  {
+    "old": "sandbox/efi/preos_host_test.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos_host_test.c"
+  },
+  {
+    "old": "sandbox/efi/test_boot_jit.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/test_boot_jit.c"
+  },
+  {
+    "old": "sandbox/efi/preos_bridge.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos_bridge.c"
+  },
+  {
+    "old": "sandbox/efi/handoff.h",
+    "new": "nextcore/crates/nextcore-ise/runtime/handoff.h"
+  },
+  {
+    "old": "sandbox/efi/test_pauth_jit.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/test_pauth_jit.c"
+  },
+  {
+    "old": "sandbox/efi/jit.h",
+    "new": "nextcore/crates/nextcore-ise/runtime/jit.h"
+  },
+  {
+    "old": "sandbox/efi/test_wx.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/test_wx.c"
+  },
+  {
+    "old": "sandbox/efi/boot_jit.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/boot_jit.c"
+  },
+  {
+    "old": "sandbox/efi/jit_protection.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/jit_protection.c"
+  },
+  {
+    "old": "sandbox/efi/gop_scanout.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/gop_scanout.c"
+  },
+  {
+    "old": "sandbox/efi/jit.c",
+    "new": "nextcore/crates/nextcore-ise/runtime/jit.c"
+  },
+  {
+    "old": "sandbox/efi/preos/src/arch.rs",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos/src/arch.rs"
+  },
+  {
+    "old": "sandbox/efi/preos/src/machine.rs",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos/src/machine.rs"
+  },
+  {
+    "old": "sandbox/efi/preos/src/mmu.rs",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos/src/mmu.rs"
+  },
+  {
+    "old": "sandbox/efi/preos/src/m1.rs",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos/src/m1.rs"
+  },
+  {
+    "old": "sandbox/efi/preos/src/pauth.rs",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos/src/pauth.rs"
+  },
+  {
+    "old": "sandbox/efi/preos/src/vmapple.rs",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos/src/vmapple.rs"
+  },
+  {
+    "old": "sandbox/efi/preos/src/lib.rs",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos/src/lib.rs"
+  },
+  {
+    "old": "sandbox/efi/preos/Cargo.toml",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos/Cargo.toml"
+  },
+  {
+    "old": "sandbox/efi/preos/Cargo.lock",
+    "new": "nextcore/crates/nextcore-ise/runtime/preos/Cargo.lock"
+  },
+  {
+    "old": "sandbox/devices/aic_v1.c",
+    "new": "nextcore/crates/nextcore-ise/devices/aic_v1.c"
+  },
+  {
+    "old": "sandbox/devices/aic_v1.h",
+    "new": "nextcore/crates/nextcore-ise/devices/aic_v1.h"
+  },
+  {
+    "old": "sandbox/devices/test_aic.c",
+    "new": "nextcore/crates/nextcore-ise/devices/test_aic.c"
+  },
+  {
+    "old": "nextcore/tools/probe_efi_native_pauth.py",
+    "new": "nextcore/crates/nextcore-ise/tools/probe_efi_native_pauth.py",
+    "parent": "thin runpy integration wrapper retained"
+  }
+]
