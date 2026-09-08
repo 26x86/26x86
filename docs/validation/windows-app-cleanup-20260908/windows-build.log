@@ -1,0 +1,108 @@
+437 INFO: PyInstaller: 6.22.2, contrib hooks: 2026.7
+437 INFO: Python: 3.12.14
+542 INFO: Platform: Windows-11-10.0.26200-SP0
+542 INFO: Python environment: C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-env
+562 INFO: Module search paths (PYTHONPATH):
+['C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-source',
+ 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-source',
+ 'C:\\Users\\sharh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python312.zip',
+ 'C:\\Users\\sharh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\DLLs',
+ 'C:\\Users\\sharh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib',
+ 'C:\\Users\\sharh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python',
+ 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env',
+ 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages',
+ 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-source']
+1628 INFO: Appending 'datas' from .spec
+1658 INFO: checking Analysis
+1936 INFO: Building because C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\x86\patch\root.py changed
+1936 INFO: Looking for Python shared library...
+1936 INFO: Using Python shared library: C:\Users\sharh\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python312.dll
+1936 INFO: Running Analysis Analysis-00.toc
+1936 INFO: Target bytecode optimization level: 0
+1936 INFO: Initializing module dependency graph...
+1936 INFO: Initializing module graph hook caches...
+1984 INFO: Analyzing modules for base_library.zip ...
+4374 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+5813 INFO: Processing standard module hook 'hook-math.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+7494 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+8438 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+9010 INFO: Caching module dependency graph...
+9065 INFO: Analyzing C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\x86\gui\entry.py
+9406 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+9487 INFO: Processing pre-safe-import-module hook 'hook-packaging.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+9491 INFO: SetuptoolsInfo: initializing cached setuptools info...
+11781 INFO: Processing pre-safe-import-module hook 'hook-typing_extensions.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+12249 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+12355 INFO: Processing standard module hook 'hook-xml.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+12624 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+13703 INFO: Processing standard module hook 'hook-urllib3.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+13834 INFO: Processing pre-safe-import-module hook 'hook-backports.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+13836 INFO: Setuptools: 'backports' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.backports'!
+13846 INFO: Processing standard module hook 'hook-setuptools.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+13885 INFO: Processing pre-safe-import-module hook 'hook-distutils.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+13954 INFO: Processing standard module hook 'hook-sysconfig.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+13954 INFO: Processing pre-safe-import-module hook 'hook-jaraco.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+13954 INFO: Setuptools: 'jaraco' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco'!
+13986 INFO: Processing pre-safe-import-module hook 'hook-more_itertools.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+13986 INFO: Setuptools: 'more_itertools' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.more_itertools'!
+14156 INFO: Processing standard module hook 'hook-_osx_support.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+14436 INFO: Processing standard module hook 'hook-setuptools._vendor.jaraco.text.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+14452 INFO: Processing pre-safe-import-module hook 'hook-importlib_resources.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+15401 INFO: Processing pre-safe-import-module hook 'hook-tomli.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+15403 INFO: Setuptools: 'tomli' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.tomli'!
+16007 INFO: Processing pre-safe-import-module hook 'hook-wheel.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+16008 INFO: Setuptools: 'wheel' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.wheel'!
+16562 INFO: Processing standard module hook 'hook-certifi.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+16703 INFO: Processing standard module hook 'hook-charset_normalizer.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+17765 INFO: Processing standard module hook 'hook-webbrowser.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+18096 INFO: Processing standard module hook 'hook-difflib.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+19324 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks'
+19340 INFO: Processing standard module hook 'hook-zoneinfo.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+20093 INFO: Processing standard module hook 'hook-webview.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\webview\\__pyinstaller'
+20943 INFO: Processing pre-safe-import-module hook 'hook-gi.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+21108 INFO: Processing standard module hook 'hook-clr.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\pythonnet\\_pyinstaller'
+21696 INFO: Processing standard module hook 'hook-clr_loader.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+21877 INFO: Processing standard module hook 'hook-pycparser.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+22687 INFO: Processing module hooks (post-graph stage)...
+22689 WARNING: Hidden import "pycparser.lextab" not found!
+22689 WARNING: Hidden import "pycparser.yacctab" not found!
+22694 WARNING: Hidden import "tzdata" not found!
+22752 INFO: Performing binary vs. data reclassification (140 entries)
+23063 INFO: Looking for ctypes DLLs
+23091 WARNING: Ignoring /usr/lib/libc.dylib imported from C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\opencore_legacy_patcher\volume\properties.py - only basenames are supported with ctypes imports!
+23126 INFO: Analyzing run-time hooks ...
+23132 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+23138 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+23140 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+23140 INFO: Including run-time hook 'pyi_rth_setuptools.py' from 'C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-env\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+23156 INFO: Creating base_library.zip...
+23199 INFO: Looking for dynamic libraries
+25266 INFO: Extra DLL search directories (AddDllDirectory): []
+25266 INFO: Extra DLL search directories (PATH): []
+26711 INFO: Warnings written to C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\build\26x86-Windows\warn-26x86-Windows.txt
+26812 INFO: Graph cross-reference written to C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\build\26x86-Windows\xref-26x86-Windows.html
+26858 INFO: checking PYZ
+27121 INFO: Building because C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\x86\patch\root.py changed
+27121 INFO: Building PYZ (ZlibArchive) C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\build\26x86-Windows\PYZ-00.pyz
+27894 INFO: Building PYZ (ZlibArchive) C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\build\26x86-Windows\PYZ-00.pyz completed successfully.
+27916 INFO: checking PKG
+27918 INFO: Building because C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\build\26x86-Windows\PYZ-00.pyz changed
+27919 INFO: Building PKG (CArchive) 26x86.pkg
+27968 INFO: Building PKG (CArchive) 26x86.pkg completed successfully.
+27968 INFO: Bootloader C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-env\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+27968 INFO: checking EXE
+27968 INFO: Rebuilding EXE-00.toc because pkg is more recent
+27968 INFO: Building EXE from EXE-00.toc
+27986 INFO: Copying bootloader EXE to C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\build\26x86-Windows\26x86.exe
+27998 INFO: Copying icon to EXE
+28008 INFO: Copying 0 resources to EXE
+28008 INFO: Embedding manifest in EXE
+28017 INFO: Appending PKG archive to EXE
+28028 INFO: Fixing EXE headers
+28108 INFO: Building EXE from EXE-00.toc completed successfully.
+28124 INFO: checking COLLECT
+28124 INFO: Removing dir C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\dist\26x86
+28373 INFO: Building COLLECT COLLECT-00.toc
+29516 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+29516 INFO: Build complete! The results are available in: C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\dist
+Windows EXE build complete: C:\Users\sharh\AppData\Local\26x86-devtools\windows-app-source\dist\26x86\26x86.exe

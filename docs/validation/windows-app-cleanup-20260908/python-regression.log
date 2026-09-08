@@ -1,0 +1,49 @@
+ERROR:root:We have a problem to execute patches and rebuild the Kernel Cache.
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 537, in _patch_root_vol
+  File "/home/sharh/src/26x86/tests/test_mellow_integration.py", line 264, in <lambda>
+    _execute_patchset=lambda p: (_ for _ in ()).throw(IOError("copy failed")))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sharh/src/26x86/tests/test_mellow_integration.py", line 264, in <genexpr>
+    _execute_patchset=lambda p: (_ for _ in ()).throw(IOError("copy failed")))
+OSError: copy failed
+ERROR:root:- Failed to write patchset: Failed to generate root patch metadata
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 521, in _write_patchset
+RuntimeError: Failed to generate root patch metadata
+ERROR:root:We have a problem to execute patches and rebuild the Kernel Cache.
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 549, in _patch_root_vol
+RuntimeError: Kernel collection or APFS snapshot rebuild failed
+ERROR:root:Merging KDK with root volume failed
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 254, in _merge_kdk_with_root
+  File "/home/sharh/src/26x86/tests/test_mellow_integration.py", line 229, in <lambda>
+    merger = lambda *a: SimpleNamespace(merge=lambda *a: (_ for _ in ()).throw(IOError("KDK copy failed")))
+                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sharh/src/26x86/tests/test_mellow_integration.py", line 229, in <genexpr>
+    merger = lambda *a: SimpleNamespace(merge=lambda *a: (_ for _ in ()).throw(IOError("KDK copy failed")))
+OSError: KDK copy failed
+ERROR:root:Merging KDK with root volume failed
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 258, in _merge_kdk_with_root
+RuntimeError: Mellow requires the exact-build KDK to be successfully merged
+ERROR:root:We have a problem to execute patches and rebuild the Kernel Cache.
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 540, in _patch_root_vol
+  File "/home/sharh/src/26x86/tests/test_mellow_integration.py", line 282, in <lambda>
+    _mellow_transaction=SimpleNamespace(installed=lambda: (_ for _ in ()).throw(ValueError("hash"))),
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sharh/src/26x86/tests/test_mellow_integration.py", line 282, in <genexpr>
+    _mellow_transaction=SimpleNamespace(installed=lambda: (_ for _ in ()).throw(ValueError("hash"))),
+ValueError: hash
+----------------------------------------------------------------------
+Ran 168 tests in 28.844s
+
+OK (skipped=3)
