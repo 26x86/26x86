@@ -1,0 +1,28 @@
+{
+  "schema": "nextcore.bp31-integration/1",
+  "passed": true,
+  "baseline_source_commit": "8bcf5c528695243c10df9a3d148d21a90b46cb90",
+  "strict_runner_commit": "f38a2c30d167c915439cfc1be8959df360308994",
+  "strict_runner_sha256": "d4454372860a75cdb21039165638ead27c0bfd4ca062da033bb47e405dfa7078",
+  "workspace_tests": 476,
+  "python_tests": 149,
+  "gui_tests": 25,
+  "architectural_reference_tests": 93,
+  "actual_x86_firmware_cases": 78,
+  "additional_cli_rejections": 6,
+  "separate_strict_standalone_firmware_cases": 14,
+  "exact_arm_fault_comparisons": 158,
+  "conditional_arm_oracle_cases": 3668,
+  "native_conditional_cases": 34264,
+  "native_conditional_assertions": 137070,
+  "vulkan_tests": 119,
+  "binaries_sha256": {
+    "NXARMJIT-default.efi": "ac718681e6e4ad52498d55a14de1acbc27ed65bbf575e9488cdbc81a4eaff4c3",
+    "NXARMJIT-provider.efi": "4b013dbbe0cabe48c8d4806e1d8b709efdcfcc11b647a3cadf70952aea728bc2",
+    "NXARMJIT-tiered.efi": "3f379b8966a611e565dcfa99ca822af166fa22befe34d594f847c2ffce7b4c7a",
+    "NXARMJIT-probe.efi": "af198b0131430e096b39e33901833bede63a8f4b1930281c1b899edb4709af57"
+  },
+  "native_mmu_verified": false,
+  "macos_boot_verified": false,
+  "guest_metal_verified": false
+}

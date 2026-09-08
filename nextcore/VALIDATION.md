@@ -5,6 +5,11 @@
 
 ## BP31 — 조건부 비교 명령어
 
+[새 재귀 통합 결과](artifacts/integration-bp31-20260909/README.md): baseline8bcf5c52에서
+workspace476/Python149/GUI25/참조93, 실제 x86 EFI78개 및 별도 CLI6개 통과.
+f38a2c30의 provider 필수 판정은 별도13개 성공/실제 우회 거부1개로 추가 검증했다.
+이후 최종 CI에서는 새 통합 바이너리에 필수 provider 판정을 적용한다.
+
 ISE0aabf085의 CCMP/CCMN reg/imm5 및32/64-bit 구현과 EFI7495633 연결을 각각
 모듈 PR #5로 병합했다. 독립 ISE 클론의 native34264경우/137070assertions,
 참조93개, Arm3668개와 native/provider/PAC/MMU 회귀 검사가 통과했다.

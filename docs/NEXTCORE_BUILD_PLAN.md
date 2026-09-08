@@ -1708,3 +1708,12 @@ The strengthened runner separately passes13 positive executions and rejects one
 actual direct-runtime execution only for missing provider evidence, with correct
 arithmetic preserved. This additional runner proof uses canonical standalone
 EFI7495633, distinct from the fresh parent8bcf5c52 baseline suite.
+
+
+BP31 closure: fresh recursive8bcf5c52 passes476workspace/149Python/25GUI/93reference,
+78actualEFI+6CLI,3668conditionalArm+158faultoracle and native/ABI/package regressions.
+The strengthenedf38a2c30runner independently passes13provider executions and one
+actual bypass rejection using canonical standaloneEFI7495633. Final-head CI uses
+that stronger predicate on newly built integrated firmware. Raw evidence preserves
+these separate identities in integration-bp31-20260909; final publication gets its
+own canonical recursive checkout and artifact-byte validation.

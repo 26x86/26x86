@@ -6,6 +6,12 @@
 
 ## BP31 최신 개발 상태
 
+상위 PR #13의 새 재귀 baseline8bcf5c52는 workspace476/Python149/GUI25/참조93,
+실제 x86 EFI78개 및 별도 CLI 거부6개를 통과했다. f38a2c30의 강화한 runner는
+별도 canonical standalone EFI에서13개 provider 사례와 실제 우회 거부1개를 검증했다.
+증거는 `nextcore/artifacts/integration-bp31-20260909`에 있다. 최종 증거 커밋은 별도
+GitHub 재귀 클론과 최종 CI를 검증하고 병합한다.
+
 BP30 상위 PR #12/main3912da33은 최종 CI28개와 최종 GitHub 재귀 클론/해시 검사를
 통과해 병합했다. 완료된 상위/모듈 브랜치는 정리했고7개 서브모듈 구조를 유지한다.
 BP31 ISE0aabf085와 EFI7495633은 각각 PR #5로 main 병합됐다. CCMP/CCMN을32/64-bit

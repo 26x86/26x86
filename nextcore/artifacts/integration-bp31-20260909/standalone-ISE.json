@@ -1,0 +1,162 @@
+{
+  "module": "ISE",
+  "commit": "0aabf085fa5d9bec38c83076f766274d3006358d",
+  "passed": true,
+  "fresh_standalone_clone": true,
+  "commands": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/work/bp31-ise-ccmp",
+        "/home/sharh/work/module-validation-bp31-final-20260909/ISE"
+      ],
+      "exit_code": 0,
+      "seconds": -0.42
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 5.73
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "runtime/preos/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "seconds": 3.08
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_efi_native_pauth.py",
+        "--output",
+        "/home/sharh/work/module-validation-bp31-final-20260909/ise-native.json"
+      ],
+      "exit_code": 0,
+      "seconds": 19.43
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_pair_memory.py",
+        "--output",
+        "/home/sharh/work/module-validation-bp31-final-20260909/ise-pair.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.62
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_scalar_memory.py",
+        "--output",
+        "/home/sharh/work/module-validation-bp31-final-20260909/ise-scalar.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.47
+    },
+    {
+      "command": [
+        "python3",
+        "tools/mmu_fault_levels/probe_fault_levels.py",
+        "--output",
+        "/home/sharh/work/module-validation-bp31-final-20260909/mmu-at"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7
+    },
+    {
+      "command": [
+        "python3",
+        "tools/mmu_fault_levels/probe_abort_levels.py",
+        "--output",
+        "/home/sharh/work/module-validation-bp31-final-20260909/mmu-abort"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6
+    },
+    {
+      "command": [
+        "python3",
+        "tools/mmu_fault_levels/compare_walker.py",
+        "--runtime-checkout",
+        "/home/sharh/work/module-validation-bp31-final-20260909/ISE",
+        "--at-report",
+        "/home/sharh/work/module-validation-bp31-final-20260909/mmu-at/report.json",
+        "--abort-report",
+        "/home/sharh/work/module-validation-bp31-final-20260909/mmu-abort/report.json",
+        "--output",
+        "/home/sharh/work/module-validation-bp31-final-20260909/mmu-comparison"
+      ],
+      "exit_code": 0,
+      "seconds": 0.75
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_efi_memory_provider.py",
+        "--work-dir",
+        "/home/sharh/work/module-validation-bp31-final-20260909/native-memory",
+        "--output",
+        "/home/sharh/work/module-validation-bp31-final-20260909/native-memory.json"
+      ],
+      "exit_code": 0,
+      "seconds": 3.46
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_pc_alignment.py",
+        "--work-dir",
+        "/home/sharh/work/module-validation-bp31-final-20260909/pc-alignment",
+        "--output",
+        "/home/sharh/work/module-validation-bp31-final-20260909/pc-alignment.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.41
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "runtime/memory-service/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "seconds": 0.69
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--manifest-path",
+        "runtime/memory-service/Cargo.toml",
+        "--target",
+        "x86_64-unknown-uefi"
+      ],
+      "exit_code": 0,
+      "seconds": 0.12
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_conditional_compare.py",
+        "--work-dir",
+        "/home/sharh/work/module-validation-bp31-final-20260909/conditional-compare",
+        "--output",
+        "/home/sharh/work/module-validation-bp31-final-20260909/conditional-compare.json"
+      ],
+      "exit_code": 0,
+      "seconds": 4.12
+    }
+  ]
+}

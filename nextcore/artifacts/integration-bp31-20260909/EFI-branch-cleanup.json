@@ -1,0 +1,7 @@
+{
+  "module": "EFI",
+  "head": "74956333503abe5724b13d22b1337d18a380bbf7",
+  "main": "3d0f0d5382cf9c248fad6b0b12f6ed2c9c94c280",
+  "deleted_owned_branch": "codex/conditional-compare-runtime",
+  "clean_detached_worktree": "/home/sharh/work/bp31-efi-ccmp"
+}
