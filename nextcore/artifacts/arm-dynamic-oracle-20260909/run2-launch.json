@@ -1,0 +1,9 @@
+{
+  "argv": [
+    "python3",
+    "/home/sharh/work/bp34-enable-oracle/probe_enable.py",
+    "--output",
+    "/home/sharh/work/bp34-enable-oracle/run2-strict"
+  ],
+  "returncode": 0
+}

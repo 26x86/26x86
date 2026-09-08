@@ -1,0 +1,27 @@
+
+/home/sharh/work/bp34-enable-oracle/run2-strict/payload.S.o:	file format elf64-littleaarch64
+
+Disassembly of section .text.payload:
+
+0000000000000000 <transition_words>:
+       0: d5181000     	msr	SCTLR_EL1, x0
+       4: d5033fdf     	isb
+
+0000000000000008 <transition_end>:
+       8: d538100a     	mrs	x10, SCTLR_EL1
+       c: 1000000b     	adr	x11, 0xc <transition_end+0x4>
+      10: f940002c     	ldr	x12, [x1]
+      14: f9000422     	str	x2, [x1, #0x8]
+      18: d5033f9f     	dsb	sy
+      1c: d508871f     	tlbi	vmalle1
+      20: d5033f9f     	dsb	sy
+      24: d5033fdf     	isb
+      28: f940042d     	ldr	x13, [x1, #0x8]
+      2c: d280068e     	mov	x14, #0x34              // =52
+      30: d4000682     	hvc	#0x34
+      34: 14000000     	b	0x34 <transition_end+0x2c>
+
+0000000000000038 <target_end>:
+      38: d28175ae     	mov	x14, #0xbad             // =2989
+      3c: d4000682     	hvc	#0x34
+      40: 14000000     	b	0x40 <target_end+0x8>

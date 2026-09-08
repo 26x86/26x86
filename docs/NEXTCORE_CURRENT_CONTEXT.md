@@ -4,6 +4,24 @@
 과장하지 않고 이어갈 수 있게 하는 정본 요약이다. 상세 설계는
 `docs/NEXTCORE_BUILD_PLAN.md`, 검증 결과는 `nextcore/VALIDATION.md`를 따른다.
 
+## BP34 최신 개발 상태
+
+BP33은 상위 PR15/main9ef0e262로 최종 CI29개와 정식 재귀 클론 검사 후 병합했고
+완료 브랜치를 정리했다. 이번 통합은 별도 병합된 ISE0d722886(PR7/mainbcf1ca9)과
+EFIed9ba255(PR8/maincfc8af9)를 연결한다. Core147/Tool4bb 및7개 서브모듈 구조는 유지한다.
+ISE는 one-way MMU enable, 분리된 architectural/effective 상태, 실제 canonical TLBI를
+구현한다. 새 NXDYN의 authored6개는 x86 EFI에서 MMU를 켠 뒤 다른 물리 페이지로
+fetch/load/store하며 정확한 fault도 확인한다. 실제58 fetch/data 및40 control 이벤트,
+전체 RAM과 불변 테이블,30개 reader 변조 거부를 별도로 검증했다.
+독립 Arm6개와 native C/Rust 비교도 통과했다. 성공2개의 원래 HVC는 변경하지 않고
+unsupported boundary로 분리한다. 하드웨어 TLB refill이나 HVC dispatch를 주장하지 않는다.
+정식 서브모듈 standalone 빌드는 통과했고 새 상위 재귀 검증과 최종 CI를 진행한다.
+
+별도 BP35의16384-budget 원본 진단은5311명령에서 UBFM/LSL 지원 경계에 도달했다.
+좌표/바이트는 비공개이며 BP36 UBFM과 Undefined ESR의 IL 수정은 독립 검증 중이다.
+이 통합의 동결된 BP34 소스와 역사적 결과는 변경하지 않는다. 정상 macOS27
+handoff/데스크톱, 실제 SPTM 서비스, EFI GPU와 guest Metal은 여전히 미완료다.
+
 ## BP33 최신 개발 상태
 
 BP32는 상위 PR14/main1b86a2e로 최종 CI29개와 정식 재귀 클론 검사 후 병합했다.

@@ -1,0 +1,6 @@
+{
+  "source": "src/dynamic_probe.rs",
+  "change": "synthetic MSR SCTLR enable replaced by ADD X0,X0,#0; ISB and positive expectation unchanged",
+  "original_sha256": "f3a18707e53f0b112dfc195327a6b0ef8bf0ae51408679e40799b0c1c6bb2394",
+  "mutated_sha256": "aecb26a80665f6abdc4f4fd2c10f8eb2a0794d9618cd0a76b82e3c2e4b2c7b0f"
+}

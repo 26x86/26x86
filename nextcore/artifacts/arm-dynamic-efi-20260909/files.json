@@ -1,0 +1,165 @@
+{
+  "schema": "nextcore.artifact-files/1",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2176,
+      "sha256": "353e051a5c246b55656d744d531976cff093c2988076528b750f8e16ebe55fe3"
+    },
+    {
+      "path": "bp34-runtime-source-freeze.json",
+      "bytes": 6609,
+      "sha256": "72f5e7e58ad42c1428cbced6c261d37783061c13b45639a465faada7d51dc7d3"
+    },
+    {
+      "path": "check_dynamic_capture.py",
+      "bytes": 4681,
+      "sha256": "9e05a5aa7147989e41ad909eb0600fb8f5f8eacf5a6f7674d6fc59fd49ad75be"
+    },
+    {
+      "path": "check_dynamic_omission.py",
+      "bytes": 7073,
+      "sha256": "0850af5e8a9de312c5cd5b7cbfd01fd41059b34a8525a370c96c702da6091e17"
+    },
+    {
+      "path": "historical/build-command.json",
+      "bytes": 442,
+      "sha256": "87d4b17b7c0571d4de6caf02795f0227049b85aaf7c5e33040cff7b495bd15d5"
+    },
+    {
+      "path": "historical/build.log",
+      "bytes": 3324,
+      "sha256": "139de65307658abe4d57ffd5938b376fd592dbd9fdf987434bfe69d66adebff8"
+    },
+    {
+      "path": "historical/isa/enable.bin",
+      "bytes": 64,
+      "sha256": "0033be41ba30498c3284cac04f3166014a83879aad8b54a3568642cda5fa6a2f"
+    },
+    {
+      "path": "historical/isa/receipt.json",
+      "bytes": 527,
+      "sha256": "3aafa586d424d3ee44f59892d0eaf29fe431609ff1275a8d6007cd5486a19136"
+    },
+    {
+      "path": "historical/legacy-link-NXARMJIT.log",
+      "bytes": 2285,
+      "sha256": "f31e6672cb732bb989d96e610be002b1f386c4011aaf3e881bf620aa0a12c87b"
+    },
+    {
+      "path": "historical/legacy-link-NXMMU.log",
+      "bytes": 1714,
+      "sha256": "1bbda9c248033d40d5e66bf784869ece06f31b49428b9693f5254f1b17b91c3a"
+    },
+    {
+      "path": "historical/legacy-link-results.json",
+      "bytes": 1044,
+      "sha256": "e0d424f519146db8e4d1b0650156eb971e7d601f8767ca729dfb9c13c6572924"
+    },
+    {
+      "path": "historical/negative-omit-enable/build-command.json",
+      "bytes": 306,
+      "sha256": "480bfd863bfb0bbd57cc4f83837b594f5300259ff0c0c73ab27e3485a257e83f"
+    },
+    {
+      "path": "historical/negative-omit-enable/build.log",
+      "bytes": 2878,
+      "sha256": "10d4d25afcf926e41af33aa6c90315681e16a7b1dbc7834ef8e9df47611b482b"
+    },
+    {
+      "path": "historical/negative-omit-enable/mutation.json",
+      "bytes": 322,
+      "sha256": "895aded869d4aed4225a834d7c0bc77c238a4a2d2de197aa94f15f85c378744e"
+    },
+    {
+      "path": "historical/omission-validation-final.json",
+      "bytes": 296,
+      "sha256": "6e5e5aaf3084a7001b9b06e05c54abd00f3ed01324fc2423c68d036cc278152f"
+    },
+    {
+      "path": "historical/ovmf-negative-serial-bound/command.json",
+      "bytes": 645,
+      "sha256": "74352488b13213e26a70cd92d82c55e106a7e54defc4e03fc3b15a9f4db346df"
+    },
+    {
+      "path": "historical/ovmf-negative-serial-bound/report.json",
+      "bytes": 7698,
+      "sha256": "8f089bbff069ab43bcbfcfd6c11845b60a3a08a9cfa568782044b0c72054459d"
+    },
+    {
+      "path": "historical/ovmf-negative-serial-bound/runner.py",
+      "bytes": 18301,
+      "sha256": "80663e056c172e2f60c770c5dd76637038fb8080f8b4230ff66e986a76977931"
+    },
+    {
+      "path": "historical/ovmf-negative-serial-bound/serial.log",
+      "bytes": 2544,
+      "sha256": "35b9c4a8ced814999fad9a5231e20d7e6216648bc5464c5a12f18dc07389b649"
+    },
+    {
+      "path": "historical/ovmf-negative-serial-bound/validation.json",
+      "bytes": 72,
+      "sha256": "a38dd9c94eb34a05cd908873d5109ff8819caa2cc2a4be9889d43bc99b04c2cc"
+    },
+    {
+      "path": "historical/ovmf-serial-bound/command.json",
+      "bytes": 618,
+      "sha256": "d586365075f61ad629eb3a0d8008cb4bd091e9b43149e45355fa2a47c4b188ed"
+    },
+    {
+      "path": "historical/ovmf-serial-bound/report.json",
+      "bytes": 83191,
+      "sha256": "b8353e57cd09396ac4d8eca7aa031bfc1abb22c6dbbd5ebcdcefc6e50b0ab2fd"
+    },
+    {
+      "path": "historical/ovmf-serial-bound/runner.py",
+      "bytes": 18301,
+      "sha256": "80663e056c172e2f60c770c5dd76637038fb8080f8b4230ff66e986a76977931"
+    },
+    {
+      "path": "historical/ovmf-serial-bound/serial.log",
+      "bytes": 26402,
+      "sha256": "b893b12820aad741bf8b84a3488088954d2651c5271585271d94b59b90b20e91"
+    },
+    {
+      "path": "historical/ovmf-serial-bound/validation.json",
+      "bytes": 167,
+      "sha256": "b05ecab84dbeda3677e76a2ac5329262cc445147d87de072ea5f3db2f692d1b9"
+    },
+    {
+      "path": "historical/reader-mutations-final-serial.json",
+      "bytes": 3816,
+      "sha256": "4f9fb7558155baa4caa02e8273d8bf481479b3e1fe264063cf9a1e17fe633796"
+    },
+    {
+      "path": "historical/source-checks.json",
+      "bytes": 973,
+      "sha256": "1f821f65110c8ad7eb7952ebbf62329deeb6f1cfdb6c3b1753574cf7aa9d5ce9"
+    },
+    {
+      "path": "historical/source-freeze.json",
+      "bytes": 5584,
+      "sha256": "a004d7da0ace63c1bb0bdf5d3318f61f91e845b77156de99218e4b4e2a81bb7a"
+    },
+    {
+      "path": "historical/workspace/Cargo.lock",
+      "bytes": 12040,
+      "sha256": "d22aa1402bec20649bbeefe79101207e95f3eb300c8f61190318aabf68b1b97d"
+    },
+    {
+      "path": "historical/workspace/Cargo.toml",
+      "bytes": 343,
+      "sha256": "6d383c87b882438c2cbd674e69b50e5bf5d6c1ee8afd9416b6b9bbf26a6e2acb"
+    },
+    {
+      "path": "independent-reader-review.json",
+      "bytes": 6791,
+      "sha256": "3ddf093d6b14dc1abc1777ac750c39030d843c8b8a23d56b3713edb088238f92"
+    },
+    {
+      "path": "verify_dynamic_ovmf.py",
+      "bytes": 18301,
+      "sha256": "80663e056c172e2f60c770c5dd76637038fb8080f8b4230ff66e986a76977931"
+    }
+  ]
+}

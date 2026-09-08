@@ -1,0 +1,13 @@
+test_duplicate_record_rejected (__main__.StrictReaderTests.test_duplicate_record_rejected) ... ok
+test_extra_negative_control_failure_rejected (__main__.StrictReaderTests.test_extra_negative_control_failure_rejected) ... ok
+test_malformed_number_rejected (__main__.StrictReaderTests.test_malformed_number_rejected) ... ok
+test_missing_case_rejected (__main__.StrictReaderTests.test_missing_case_rejected) ... ok
+test_normal_six_actual_cases (__main__.StrictReaderTests.test_normal_six_actual_cases) ... ok
+test_real_omission_negatives_detected (__main__.StrictReaderTests.test_real_omission_negatives_detected) ... ok
+test_unrelated_negative_case_failure_rejected (__main__.StrictReaderTests.test_unrelated_negative_case_failure_rejected) ... ok
+test_wrong_fault_level_does_not_pass (__main__.StrictReaderTests.test_wrong_fault_level_does_not_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.062s
+
+OK

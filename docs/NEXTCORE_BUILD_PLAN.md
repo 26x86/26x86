@@ -1832,3 +1832,19 @@ e0351bd47-command suite, including194actualEFI and6CLI-only cases. Core SHA2
 debug failure and the earlier separate QEMU shutdown timeout remain failed
 historical records. Final artifact bytes, canonical network clone and exact-head
 CI are required before parent merge; subsequent BP34/35 module work is separate.
+
+
+## BP34 — integrate one-way translated execution from x86 EFI
+
+Root integrates merged ISE0d722886 and EFIed9ba255, retaining Core147 and Tool4bb.
+The new opt-in NXDYN consumer owns separate RAM/table/JIT allocations and checks
+architectural versus effective MMU control across PREPARE/COMMIT and guarded ISB.
+Six actual firmware cases cover 4K/16K translated read/write and precise immediate
+fetch/data faults. Existing memory ABIs and immutable-table restrictions remain.
+The independently captured Arm six-case oracle and its native C/Rust comparison
+are published separately from EFI evidence. Original HVC termination is retained
+as an unsupported native boundary, without an architectural HVC dispatch claim.
+Root adds native/EFI/reader gates and verifies fresh recursive and canonical
+network checkouts before authorized PR/main merge and completed-branch cleanup.
+BP35 deeper original diagnostics and BP36 UBFM/Undefined-IL corrections retain
+separate source identities and are not included in these BP34 runtime pins.

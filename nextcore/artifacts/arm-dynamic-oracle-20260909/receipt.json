@@ -1,0 +1,41 @@
+{
+  "schema": "nextcore.bp34-enable-oracle-public.v1",
+  "passed": true,
+  "source_frozen": true,
+  "source_sha256": {
+    "start.S": "bc5fc647b8c5f5764c31c0cf89af4b92d7e24c57993adad23a4c1ae2b4d051fd",
+    "payload.S": "b57ac5a24b02864e985bb23f95ce8de02948f8a9c7349516d5101705580524c1",
+    "oracle.c": "979a9b77c0b054e487f6508725610102ac7d5dad247fa81a0c3e9eeb2107658b",
+    "oracle.ld": "8fbb00fba670db4f9ec141c3edaa8912beea1487f6d38ad5dd0e9b11b90cd1b0",
+    "contract.md": "27be22a8e6f5fa55fbd8e8750911a721b793bfe05957b5e1eb831d349332c79e",
+    "probe_enable.py": "14d8b30d608e3a0e6ba55bfd756b1ab2c7a6b0f2983e48fa5249448ff7c63262",
+    "test_reader.py": "0d5d94a2f9e1b7d18dffd2316337bc2de27dfa8ed32adddfc888c1bae44087e5"
+  },
+  "strict_actual_arm_normal_cases": 6,
+  "independent_semantic_negative_variants": 2,
+  "intentionally_rejected_cases_per_negative": 2,
+  "unchanged_fault_cases_per_negative": 4,
+  "host_reader_tests_passed": 8,
+  "strict_report_sha256": "808420a4b3deca268b947187ab83cf741bc8025dc2c09b66a64a5ad9bd83e059",
+  "reader_log_sha256": "4ff066e77dfebff6f758791b10e46cbf66feab2862966526679182cb3d0fef9b",
+  "initial_success_run_report_sha256": "b5438036ed32be97c328b5da3be6fe9c4d35a5944838350ce94251a31191fbc4",
+  "strict_repeat_same_elf_hashes": true,
+  "strict_repeat_same_raw_logs": true,
+  "executable_sha256": {
+    "normal": "895621f0748be425002d4aa4f31f6ff48b72410401ff72d46052632ee948735d",
+    "omit-enable": "682f38a592f44500ab17b9e87c92f80942cfa0819608b5704e01a0e3fb7d5d26",
+    "omit-code-mapping": "c5b577baed59191a732d6cb230620f2556740e4346d28f3418efb1a86ef183b6"
+  },
+  "capture_provenance": "Authored freestanding AArch64 instructions, actual EL2/EL1 system registers, explicitly zeroed table pages with every nonzero descriptor captured, authored nonzero RAM values and actual readback. No runtime implementation imports.",
+  "qemu_version": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+  "limitations": {
+    "pre_isb_effect_visibility_compared": false,
+    "physical_arm_verified": false,
+    "hardware_tlbi_refill_observed": false,
+    "native_x86_jit_executed": false,
+    "efi_executed": false,
+    "original_os_boot_verified": false,
+    "guest_metal_verified": false
+  },
+  "earlier_failed_fixture": "External dev1 preserves an authored T0SZ16/L1 mismatch for16K and its timeout; fixed to17 before all accepted cases, with no production runtime claim."
+}

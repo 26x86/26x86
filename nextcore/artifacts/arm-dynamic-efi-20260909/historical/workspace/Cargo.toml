@@ -1,0 +1,8 @@
+[workspace]
+resolver="2"
+members=["core","efi"]
+[patch."https://github.com/26x86/Nextcore-Core.git"]
+nextcore-core={path="core"}
+[patch."https://github.com/26x86/Nextcore-ISE.git"]
+nextcore-ise={path="/home/sharh/work/bp34-ise-dynamic-control"}
+nextcore-memory-service={path="/home/sharh/work/bp34-ise-dynamic-control/runtime/memory-service"}

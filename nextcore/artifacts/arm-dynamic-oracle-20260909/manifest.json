@@ -1,0 +1,89 @@
+{
+  "schema": "nextcore.bp34-enable-oracle-public-manifest.v1",
+  "files": {
+    "README.md": {
+      "sha256": "8c830b8993e80f89b1d32acdbdf4c19796a7f0c2952c74672f0e1357d9f435c4",
+      "bytes": 4911
+    },
+    "captured/commands.json": {
+      "sha256": "9c5570723797eda6d88b13c44d5dcaa73fb78190a5fe3d337aca2c4e3de680fb",
+      "bytes": 6915
+    },
+    "captured/normal.elf": {
+      "sha256": "895621f0748be425002d4aa4f31f6ff48b72410401ff72d46052632ee948735d",
+      "bytes": 80368
+    },
+    "captured/normal.log": {
+      "sha256": "326f15fd8f98e28ea9a6c2487a4fbfcd31b838122f8e8331a65d79de98ec614b",
+      "bytes": 68978
+    },
+    "captured/omit-code-mapping.elf": {
+      "sha256": "c5b577baed59191a732d6cb230620f2556740e4346d28f3418efb1a86ef183b6",
+      "bytes": 80584
+    },
+    "captured/omit-code-mapping.log": {
+      "sha256": "febd55980fbca1e4d8493c2cefb7379b8c28521516af6b7c410762f156ae77eb",
+      "bytes": 68882
+    },
+    "captured/omit-enable.elf": {
+      "sha256": "682f38a592f44500ab17b9e87c92f80942cfa0819608b5704e01a0e3fb7d5d26",
+      "bytes": 80392
+    },
+    "captured/omit-enable.log": {
+      "sha256": "205bb454b534c1cb751a2554dffe06e4ea40401be5e2e51dc5242f7335f2385e",
+      "bytes": 68978
+    },
+    "captured/payload-disassembly.txt": {
+      "sha256": "2039bac7b5f2b5ec47fdaaa60475a7a0f9b931b63038f418c44a44b8a4c52998",
+      "bytes": 951
+    },
+    "captured/report.json": {
+      "sha256": "808420a4b3deca268b947187ab83cf741bc8025dc2c09b66a64a5ad9bd83e059",
+      "bytes": 169458
+    },
+    "contract.md": {
+      "sha256": "27be22a8e6f5fa55fbd8e8750911a721b793bfe05957b5e1eb831d349332c79e",
+      "bytes": 2902
+    },
+    "oracle.c": {
+      "sha256": "979a9b77c0b054e487f6508725610102ac7d5dad247fa81a0c3e9eeb2107658b",
+      "bytes": 5713
+    },
+    "oracle.ld": {
+      "sha256": "8fbb00fba670db4f9ec141c3edaa8912beea1487f6d38ad5dd0e9b11b90cd1b0",
+      "bytes": 189
+    },
+    "payload.S": {
+      "sha256": "b57ac5a24b02864e985bb23f95ce8de02948f8a9c7349516d5101705580524c1",
+      "bytes": 492
+    },
+    "probe_enable.py": {
+      "sha256": "14d8b30d608e3a0e6ba55bfd756b1ab2c7a6b0f2983e48fa5249448ff7c63262",
+      "bytes": 12038
+    },
+    "reader-tests-command.json": {
+      "sha256": "1b239dd711f819936c3d0d1ca1c7b8ad9c0824d7f2c2a32b19efc27a22544851",
+      "bytes": 186
+    },
+    "reader-tests.log": {
+      "sha256": "4ff066e77dfebff6f758791b10e46cbf66feab2862966526679182cb3d0fef9b",
+      "bytes": 954
+    },
+    "receipt.json": {
+      "sha256": "63fdf5932fdd24ec190aecb7d3703b03dc376263448ef5bf67cd7576a7e9726f",
+      "bytes": 2417
+    },
+    "run2-launch.json": {
+      "sha256": "61dddfeb6a730261c84a763f33cc75a2cdf3ad4896005ed1d8362597aa99cdc5",
+      "bytes": 183
+    },
+    "start.S": {
+      "sha256": "bc5fc647b8c5f5764c31c0cf89af4b92d7e24c57993adad23a4c1ae2b4d051fd",
+      "bytes": 1740
+    },
+    "test_reader.py": {
+      "sha256": "0d5d94a2f9e1b7d18dffd2316337bc2de27dfa8ed32adddfc888c1bae44087e5",
+      "bytes": 3032
+    }
+  }
+}

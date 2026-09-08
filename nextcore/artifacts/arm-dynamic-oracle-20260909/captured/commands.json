@@ -1,0 +1,252 @@
+[
+  {
+    "argv": [
+      "clang",
+      "--target=aarch64-none-elf",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-mgeneral-regs-only",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "/home/sharh/work/bp34-enable-oracle/start.S",
+      "-o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/start.S.o"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "clang",
+      "--target=aarch64-none-elf",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-mgeneral-regs-only",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "/home/sharh/work/bp34-enable-oracle/payload.S",
+      "-o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/payload.S.o"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "llvm-objdump",
+      "-d",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/payload.S.o"
+    ],
+    "returncode": 0,
+    "stdout": "\n/home/sharh/work/bp34-enable-oracle/run2-strict/payload.S.o:\tfile format elf64-littleaarch64\n\nDisassembly of section .text.payload:\n\n0000000000000000 <transition_words>:\n       0: d5181000     \tmsr\tSCTLR_EL1, x0\n       4: d5033fdf     \tisb\n\n0000000000000008 <transition_end>:\n       8: d538100a     \tmrs\tx10, SCTLR_EL1\n       c: 1000000b     \tadr\tx11, 0xc <transition_end+0x4>\n      10: f940002c     \tldr\tx12, [x1]\n      14: f9000422     \tstr\tx2, [x1, #0x8]\n      18: d5033f9f     \tdsb\tsy\n      1c: d508871f     \ttlbi\tvmalle1\n      20: d5033f9f     \tdsb\tsy\n      24: d5033fdf     \tisb\n      28: f940042d     \tldr\tx13, [x1, #0x8]\n      2c: d280068e     \tmov\tx14, #0x34              // =52\n      30: d4000682     \thvc\t#0x34\n      34: 14000000     \tb\t0x34 <transition_end+0x2c>\n\n0000000000000038 <target_end>:\n      38: d28175ae     \tmov\tx14, #0xbad             // =2989\n      3c: d4000682     \thvc\t#0x34\n      40: 14000000     \tb\t0x40 <target_end+0x8>\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "clang",
+      "--target=aarch64-none-elf",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-mgeneral-regs-only",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "/home/sharh/work/bp34-enable-oracle/oracle.c",
+      "-o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/normal.o"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "ld.lld",
+      "-T",
+      "/home/sharh/work/bp34-enable-oracle/oracle.ld",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/start.S.o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/payload.S.o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/normal.o",
+      "-o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/normal.elf"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "qemu-system-aarch64",
+      "-machine",
+      "virt,virtualization=on",
+      "-cpu",
+      "max",
+      "-m",
+      "128",
+      "-nographic",
+      "-monitor",
+      "none",
+      "-serial",
+      "none",
+      "-net",
+      "none",
+      "-semihosting-config",
+      "enable=on,target=native",
+      "-kernel",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/normal.elf"
+    ],
+    "returncode": 0,
+    "log": "normal.log",
+    "log_sha256": "326f15fd8f98e28ea9a6c2487a4fbfcd31b838122f8e8331a65d79de98ec614b"
+  },
+  {
+    "argv": [
+      "clang",
+      "--target=aarch64-none-elf",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-mgeneral-regs-only",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-DOMIT_ENABLE",
+      "-c",
+      "/home/sharh/work/bp34-enable-oracle/oracle.c",
+      "-o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/omit-enable.o"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "ld.lld",
+      "-T",
+      "/home/sharh/work/bp34-enable-oracle/oracle.ld",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/start.S.o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/payload.S.o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/omit-enable.o",
+      "-o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/omit-enable.elf"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "qemu-system-aarch64",
+      "-machine",
+      "virt,virtualization=on",
+      "-cpu",
+      "max",
+      "-m",
+      "128",
+      "-nographic",
+      "-monitor",
+      "none",
+      "-serial",
+      "none",
+      "-net",
+      "none",
+      "-semihosting-config",
+      "enable=on,target=native",
+      "-kernel",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/omit-enable.elf"
+    ],
+    "returncode": 0,
+    "log": "omit-enable.log",
+    "log_sha256": "205bb454b534c1cb751a2554dffe06e4ea40401be5e2e51dc5242f7335f2385e"
+  },
+  {
+    "argv": [
+      "clang",
+      "--target=aarch64-none-elf",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-mgeneral-regs-only",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-DOMIT_CODE_MAPPING",
+      "-c",
+      "/home/sharh/work/bp34-enable-oracle/oracle.c",
+      "-o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/omit-code-mapping.o"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "ld.lld",
+      "-T",
+      "/home/sharh/work/bp34-enable-oracle/oracle.ld",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/start.S.o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/payload.S.o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/omit-code-mapping.o",
+      "-o",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/omit-code-mapping.elf"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "qemu-system-aarch64",
+      "-machine",
+      "virt,virtualization=on",
+      "-cpu",
+      "max",
+      "-m",
+      "128",
+      "-nographic",
+      "-monitor",
+      "none",
+      "-serial",
+      "none",
+      "-net",
+      "none",
+      "-semihosting-config",
+      "enable=on,target=native",
+      "-kernel",
+      "/home/sharh/work/bp34-enable-oracle/run2-strict/omit-code-mapping.elf"
+    ],
+    "returncode": 0,
+    "log": "omit-code-mapping.log",
+    "log_sha256": "febd55980fbca1e4d8493c2cefb7379b8c28521516af6b7c410762f156ae77eb"
+  },
+  {
+    "argv": [
+      "qemu-system-aarch64",
+      "--version"
+    ],
+    "returncode": 0,
+    "stdout": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)\nCopyright (c) 2003-2023 Fabrice Bellard and the QEMU Project developers\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "clang",
+      "--version"
+    ],
+    "returncode": 0,
+    "stdout": "Ubuntu clang version 18.1.3 (1ubuntu1)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin\n",
+    "stderr": ""
+  }
+]

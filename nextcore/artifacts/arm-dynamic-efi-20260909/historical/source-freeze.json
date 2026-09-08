@@ -1,0 +1,96 @@
+{
+  "schema": "nextcore.bp34-dynamic-efi-source-freeze.v1",
+  "passed": true,
+  "source": "/home/sharh/work/bp34-efi-dynamic",
+  "base": "93286527c9624d4ca8d46d2c4221fa58a4aa0854",
+  "core_commit": "f77c98f0b457ab488f37e5be10a608a364d996c7",
+  "ise_commit": "0d722886753268ec366f068823c37ea10132fb43",
+  "runtime_manifest": {
+    "path": "/home/sharh/work/bp34-runtime-source-freeze.json",
+    "sha256": "72f5e7e58ad42c1428cbced6c261d37783061c13b45639a465faada7d51dc7d3",
+    "files_verified": 69
+  },
+  "source_sha256": {
+    "Cargo.toml": "b9dfc1d8a0f6e76935de6c8e8b5c771cf97bc3e818bf884abd4063c50c3f2108",
+    "build.rs": "2e63268f3e94ae728ff9451944b96d3c30c6b5bc6c5578f77d6a381089c3bd14",
+    "src/dynamic_probe.rs": "f3a18707e53f0b112dfc195327a6b0ef8bf0ae51408679e40799b0c1c6bb2394",
+    "docs/ARM_DYNAMIC_EFI_PROBE.md": "cc74128d7864f506f1bd783c5bb49b1c36136f743c9eebe368dbd4e68212c2ef",
+    "docs/fixtures/dynamic_enable.S": "ac9574aaf43bfb7b764f5ba48e58cfaac91a17ac5e493acb5aaf2c1481f854ee",
+    "tools/verify_dynamic_ovmf.py": "80663e056c172e2f60c770c5dd76637038fb8080f8b4230ff66e986a76977931",
+    "tools/check_dynamic_capture.py": "9e05a5aa7147989e41ad909eb0600fb8f5f8eacf5a6f7674d6fc59fd49ad75be",
+    "tools/check_dynamic_omission.py": "0850af5e8a9de312c5cd5b7cbfd01fd41059b34a8525a370c96c702da6091e17"
+  },
+  "binaries": {
+    "positive": {
+      "path": "/home/sharh/work/bp34-dynamic-efi-proof/target/x86_64-unknown-uefi/release/NXDYN.efi",
+      "sha256": "cf7805a83a59da7d037e1fcc9ada4d97ab80ae6d12e32be2df386bc591e6ef47",
+      "bytes": 138752
+    },
+    "omission_negative": {
+      "path": "/home/sharh/work/bp34-dynamic-efi-proof/negative-omit-enable/target/x86_64-unknown-uefi/release/NXDYN.efi",
+      "sha256": "aa8d0ff8426efa6c545f00d8b9432e1a84a826623dd3b569135dd5637291619a",
+      "bytes": 138752
+    }
+  },
+  "receipts_sha256": {
+    "build-command.json": "87d4b17b7c0571d4de6caf02795f0227049b85aaf7c5e33040cff7b495bd15d5",
+    "build.log": "139de65307658abe4d57ffd5938b376fd592dbd9fdf987434bfe69d66adebff8",
+    "workspace/Cargo.toml": "6d383c87b882438c2cbd674e69b50e5bf5d6c1ee8afd9416b6b9bbf26a6e2acb",
+    "workspace/Cargo.lock": "d22aa1402bec20649bbeefe79101207e95f3eb300c8f61190318aabf68b1b97d",
+    "negative-omit-enable/build-command.json": "480bfd863bfb0bbd57cc4f83837b594f5300259ff0c0c73ab27e3485a257e83f",
+    "negative-omit-enable/build.log": "10d4d25afcf926e41af33aa6c90315681e16a7b1dbc7834ef8e9df47611b482b",
+    "negative-omit-enable/mutation.json": "895aded869d4aed4225a834d7c0bc77c238a4a2d2de197aa94f15f85c378744e",
+    "isa/receipt.json": "3aafa586d424d3ee44f59892d0eaf29fe431609ff1275a8d6007cd5486a19136",
+    "isa/enable.bin": "0033be41ba30498c3284cac04f3166014a83879aad8b54a3568642cda5fa6a2f",
+    "source-checks.json": "1f821f65110c8ad7eb7952ebbf62329deeb6f1cfdb6c3b1753574cf7aa9d5ce9",
+    "legacy-link-results.json": "e0d424f519146db8e4d1b0650156eb971e7d601f8767ca729dfb9c13c6572924",
+    "legacy-link-NXARMJIT.log": "f31e6672cb732bb989d96e610be002b1f386c4011aaf3e881bf620aa0a12c87b",
+    "legacy-link-NXMMU.log": "1bbda9c248033d40d5e66bf784869ece06f31b49428b9693f5254f1b17b91c3a",
+    "reader-mutations-final-serial.json": "4f9fb7558155baa4caa02e8273d8bf481479b3e1fe264063cf9a1e17fe633796",
+    "omission-validation-final.json": "6e5e5aaf3084a7001b9b06e05c54abd00f3ed01324fc2423c68d036cc278152f",
+    "ovmf-serial-bound/report.json": "b8353e57cd09396ac4d8eca7aa031bfc1abb22c6dbbd5ebcdcefc6e50b0ab2fd",
+    "ovmf-serial-bound/validation.json": "b05ecab84dbeda3677e76a2ac5329262cc445147d87de072ea5f3db2f692d1b9",
+    "ovmf-serial-bound/serial.log": "b893b12820aad741bf8b84a3488088954d2651c5271585271d94b59b90b20e91",
+    "ovmf-serial-bound/runner.py": "80663e056c172e2f60c770c5dd76637038fb8080f8b4230ff66e986a76977931",
+    "ovmf-serial-bound/command.json": "d586365075f61ad629eb3a0d8008cb4bd091e9b43149e45355fa2a47c4b188ed",
+    "ovmf-negative-serial-bound/report.json": "8f089bbff069ab43bcbfcfd6c11845b60a3a08a9cfa568782044b0c72054459d",
+    "ovmf-negative-serial-bound/validation.json": "a38dd9c94eb34a05cd908873d5109ff8819caa2cc2a4be9889d43bc99b04c2cc",
+    "ovmf-negative-serial-bound/serial.log": "35b9c4a8ced814999fad9a5231e20d7e6216648bc5464c5a12f18dc07389b649",
+    "ovmf-negative-serial-bound/runner.py": "80663e056c172e2f60c770c5dd76637038fb8080f8b4230ff66e986a76977931",
+    "ovmf-negative-serial-bound/command.json": "74352488b13213e26a70cd92d82c55e106a7e54defc4e03fc3b15a9f4db346df"
+  },
+  "independent_review": {
+    "path": "/home/sharh/work/bp34-dynamic-reader-review/receipt.json",
+    "sha256": "3ddf093d6b14dc1abc1777ac750c39030d843c8b8a23d56b3713edb088238f92",
+    "passed": true
+  },
+  "results": {
+    "actual_ovmf_cases": 6,
+    "data_fetch_events": 58,
+    "control_events": 40,
+    "reader_mutation_controls": 30,
+    "assembler_words": 16,
+    "compiled_omission": {
+      "status": 8,
+      "retired": 3,
+      "blocks": 4,
+      "fetch": 4,
+      "data": 0,
+      "control": 2,
+      "ram_unchanged": true
+    },
+    "legacy_release_link": [
+      "NXARMJIT",
+      "NXMMU"
+    ]
+  },
+  "limits": [
+    "Historical release proof uses frozen Coref77; root owns later canonical Core UEFI software-SHA2 pin and debug/release build.",
+    "Immutable table profile; one-way M0 to M1, one CPU, no general M1 writes or exception handler execution.",
+    "HVC decoy unsupported status is not architectural HVC dispatch.",
+    "No original Apple input or normal macOS boot claim."
+  ],
+  "normal_boot_verified": false,
+  "original_inputs_used": false,
+  "metadata_pins_indices_commits_changed_by_agent": false
+}

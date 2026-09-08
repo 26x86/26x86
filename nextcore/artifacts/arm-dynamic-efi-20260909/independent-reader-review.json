@@ -1,0 +1,175 @@
+{
+  "schema": "nextcore.bp34-dynamic-reader-independent-review.v1",
+  "passed": true,
+  "reviewed_source_sha256_before": {
+    "/home/sharh/work/bp34-efi-dynamic/tools/verify_dynamic_ovmf.py": "80663e056c172e2f60c770c5dd76637038fb8080f8b4230ff66e986a76977931",
+    "/home/sharh/work/bp34-efi-dynamic/tools/check_dynamic_capture.py": "9e05a5aa7147989e41ad909eb0600fb8f5f8eacf5a6f7674d6fc59fd49ad75be",
+    "/home/sharh/work/bp34-efi-dynamic/tools/check_dynamic_omission.py": "0850af5e8a9de312c5cd5b7cbfd01fd41059b34a8525a370c96c702da6091e17"
+  },
+  "reviewed_source_sha256_after": {
+    "/home/sharh/work/bp34-efi-dynamic/tools/verify_dynamic_ovmf.py": "80663e056c172e2f60c770c5dd76637038fb8080f8b4230ff66e986a76977931",
+    "/home/sharh/work/bp34-efi-dynamic/tools/check_dynamic_capture.py": "9e05a5aa7147989e41ad909eb0600fb8f5f8eacf5a6f7674d6fc59fd49ad75be",
+    "/home/sharh/work/bp34-efi-dynamic/tools/check_dynamic_omission.py": "0850af5e8a9de312c5cd5b7cbfd01fd41059b34a8525a370c96c702da6091e17"
+  },
+  "prior_checkpoint_sha256": "27228842c036a1f049ddb779910ed6bfbf85d52dd039cd6590773b53211fe494",
+  "finding": {
+    "id": "DYNAMIC-RAW-1",
+    "status": "fixed_by_owner",
+    "problem": "Checker accepted absent raw serial and a forged64-zero digest",
+    "correction": "All actual/public checker paths bind the actual raw file digest and sanitized markers; missing and mismatched raw rejected"
+  },
+  "independent_cli_commands": [
+    {
+      "name": "normal_current",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp34-efi-dynamic/tools/check_dynamic_capture.py",
+        "--report",
+        "/home/sharh/work/bp34-dynamic-efi-proof/ovmf-serial-bound/report.json",
+        "--output",
+        "/home/sharh/work/bp34-dynamic-reader-review/normal_current.json"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\": true, \"negative_cases\": 30}\n",
+      "stderr": ""
+    },
+    {
+      "name": "actual_omission",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp34-efi-dynamic/tools/check_dynamic_omission.py",
+        "--report",
+        "/home/sharh/work/bp34-dynamic-efi-proof/ovmf-negative-serial-bound/report.json",
+        "--output",
+        "/home/sharh/work/bp34-dynamic-reader-review/actual_omission.json"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\": true, \"expected_failure\": \"actual M0 physical HVC unsupported boundary\", \"status\": 8, \"retired\": 3, \"blocks\": 4, \"fetch\": 4, \"data\": 0, \"control\": 2, \"ram_sha256\": \"99db9ab1d91ec82167ca61aa9590c79e4bddc5dca529b21812a4b3ebe32fa883\", \"normal_boot_verified\": false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "omission_forged_raw_digest",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp34-efi-dynamic/tools/check_dynamic_omission.py",
+        "--report",
+        "/home/sharh/work/bp34-dynamic-reader-review/omission-bad-serial.json",
+        "--serial",
+        "/home/sharh/work/bp34-dynamic-efi-proof/ovmf-negative-serial-bound/serial.log",
+        "--output",
+        "/home/sharh/work/bp34-dynamic-reader-review/omission-bad-serial.result.json"
+      ],
+      "returncode": 1,
+      "stdout": "{\"passed\": false, \"error\": \"raw serial digest mismatch\"}\n",
+      "stderr": ""
+    }
+  ],
+  "original_false_acceptance_now_rejected": [
+    {
+      "name": "positive",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp34-efi-dynamic/tools/check_dynamic_capture.py",
+        "--report",
+        "/home/sharh/work/bp34-dynamic-efi-proof/ovmf-final/report.json",
+        "--output",
+        "/home/sharh/work/bp34-dynamic-reader-review/positive.corrected.json"
+      ],
+      "returncode": 0,
+      "expected": 0,
+      "passed": true,
+      "stdout": "{\"passed\": true, \"negative_cases\": 30}\n",
+      "stderr": ""
+    },
+    {
+      "name": "no_raw",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp34-efi-dynamic/tools/check_dynamic_capture.py",
+        "--report",
+        "/home/sharh/work/bp34-dynamic-reader-review/wrong-serial-digest.json",
+        "--output",
+        "/home/sharh/work/bp34-dynamic-reader-review/no_raw.corrected.json"
+      ],
+      "returncode": 1,
+      "expected": 1,
+      "passed": true,
+      "stdout": "",
+      "stderr": "invalid capture: missing raw serial file\n"
+    },
+    {
+      "name": "wrong_digest",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp34-efi-dynamic/tools/check_dynamic_capture.py",
+        "--report",
+        "/home/sharh/work/bp34-dynamic-reader-review/wrong-serial-digest.json",
+        "--output",
+        "/home/sharh/work/bp34-dynamic-reader-review/wrong_digest.corrected.json",
+        "--serial",
+        "/home/sharh/work/bp34-dynamic-efi-proof/ovmf-final/serial.log"
+      ],
+      "returncode": 1,
+      "expected": 1,
+      "passed": true,
+      "stdout": "",
+      "stderr": "invalid capture: raw serial digest mismatch\n"
+    }
+  ],
+  "current_normal_capture": {
+    "report_sha256": "b8353e57cd09396ac4d8eca7aa031bfc1abb22c6dbbd5ebcdcefc6e50b0ab2fd",
+    "serial_sha256": "b893b12820aad741bf8b84a3488088954d2651c5271585271d94b59b90b20e91",
+    "cases": 6,
+    "data_events": 58,
+    "control_events": 40,
+    "checker_mutation_controls": 30
+  },
+  "actual_omission": {
+    "report_sha256": "8f089bbff069ab43bcbfcfd6c11845b60a3a08a9cfa568782044b0c72054459d",
+    "serial_sha256": "35b9c4a8ced814999fad9a5231e20d7e6216648bc5464c5a12f18dc07389b649",
+    "exact_boundary": "status8, M0 physical decoy HVC unsupported, retired3/fetch4/blocks4, data0, control2, A/E unchanged, revision1/epoch1",
+    "generic_failure_controls": [
+      {
+        "name": "wrong_failure",
+        "rejected": true,
+        "result": {
+          "passed": false,
+          "error": "raw capture mismatch"
+        }
+      },
+      {
+        "name": "missing_execution",
+        "rejected": true,
+        "result": {
+          "passed": false,
+          "error": "raw capture mismatch"
+        }
+      },
+      {
+        "name": "success_instead",
+        "rejected": true,
+        "result": {
+          "passed": false,
+          "error": "not the failed authored execution"
+        }
+      }
+    ]
+  },
+  "additional_concrete_defects": [],
+  "reviewer_source_mutation": false,
+  "reviewer_repeated_ovmf": false,
+  "historical_captures_modified": false,
+  "original_inputs_accessed": false,
+  "limits": [
+    "Table hashes compare preserved table bytes, not a separate reconstruction of all table descriptors",
+    "Software table-read/invalidation counters are not physical hardware TLB observations",
+    "Unsupported decoy HVC is a native diagnostic boundary, not architectural HVC dispatch",
+    "No complete OS boot or guest Metal claim"
+  ]
+}

@@ -1,0 +1,12 @@
+[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01HBdsDxe: loading Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+BdsDxe: starting Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+NXDYN: ENTRY host=x86_64 authored=true profile=nextcore-stage1-enable-nc-v1
+NXDYN: ENTRY host=x86_64 authored=true profile=nextcore-stage1-enable-nc-v1
+NXDYN: DATA name=roundtrip granule=4096 index=0 pc=0x40000ff4 address=0x40000ff4 operation=1 width=4 count=1 sctlr=0x30d00802 epoch=1 reply=0 value0=0x91000442 value1=0x0 esr=0x0 fsc=0 far=0x0
+NXDYN: DATA name=roundtrip granule=4096 index=1 pc=0x40000ff8 address=0x40000ff8 operation=1 width=4 count=1 sctlr=0x30d00802 epoch=1 reply=0 value0=0x91000000 value1=0x0 esr=0x0 fsc=0 far=0x0
+NXDYN: DATA name=roundtrip granule=4096 index=2 pc=0x40000ffc address=0x40000ffc operation=1 width=4 count=1 sctlr=0x30d00802 epoch=1 reply=0 value0=0xd5033fdf value1=0x0 esr=0x0 fsc=0 far=0x0
+NXDYN: DATA name=roundtrip granule=4096 index=3 pc=0x40001000 address=0x40001000 operation=1 width=4 count=1 sctlr=0x30d00802 epoch=1 reply=0 value0=0xd4000002 value1=0x0 esr=0x0 fsc=0 far=0x0
+NXDYN: CONTROL name=roundtrip granule=4096 index=0 phase=1 operation=2 selector=0 pc=0x40000ffc operand=0x0 request_revision=1 request_epoch=1 reply=0 tag=1 token=1 revision=1 epoch=1 invalidations=0 arch=0x30d00802 effective=0x30d00802
+NXDYN: CONTROL name=roundtrip granule=4096 index=1 phase=2 operation=2 selector=0 pc=0x40000ffc operand=0x1 request_revision=1 request_epoch=1 reply=0 tag=2 token=0 revision=1 epoch=1 invalidations=0 arch=0x30d00802 effective=0x30d00802
+NXDYN: CASE name=roundtrip granule=4096 status=8 provider=0 retired=3 blocks=4 fetch=4 data=0 completed=0 control=2 table_reads=0 tlbi_reads=0 esr=0x0 far=0x0 elr=0x40001000 spsr=0x3c5 pstate=0x3c5 pc=0x40001000 x0=0x30d00803 x1=0x40002ff8 x2=0x9 x3=0x63 sp=0x40000400 version=3 bytes=512 tag=2 revision=1 epoch=1 invalidations=0 arch=0x30d00802 effective=0x30d00802 tcr=0x580100010 ttbr0=0x10000000 ttbr1=0x10000000 mair=0x44 transition=false protocol=false ram=false tables=true ram_host=0xe3d8000 table_host=0xe3cc000 jit_host=0xe388000 ram_sha=99db9ab1d91ec82167ca61aa9590c79e4bddc5dca529b21812a4b3ebe32fa883 table_before_sha=2bbb1b0bf471449ab3857501a163942478fdfd586fb6f5c446df6a27ee13ff3e table_after_sha=2bbb1b0bf471449ab3857501a163942478fdfd586fb6f5c446df6a27ee13ff3e pass=false
+NXDYN: FAIL case=0 status=COMPROMISED_DATA
