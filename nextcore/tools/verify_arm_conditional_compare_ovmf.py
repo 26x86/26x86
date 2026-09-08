@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Authored conditional-compare readback in actual x86 OVMF EFI."""
-import argparse,hashlib,json,os,struct,subprocess,sys
+import argparse,hashlib,importlib.util,json,os,struct,subprocess,sys
 from pathlib import Path
 
 TOOLS=Path(__file__).resolve().parent
@@ -25,7 +25,7 @@ def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def const(reg,value):return [f"movz {reg},#{value&65535}"]+[f"movk {reg},#{value>>shift&65535},lsl #{shift}" for shift in [16,32,48]]
 def prop(name,value):return name.encode().ljust(32,b"\0")+struct.pack("<I",len(value))+value.ljust((len(value)+3)&~3,b"\0")
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument("--efi",type=Path,required=True);parser.add_argument("--ise",type=Path,required=True);parser.add_argument("--output",type=Path,required=True);parser.add_argument("--negative-control",action="store_true")
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument("--efi",type=Path,required=True);parser.add_argument("--ise",type=Path,required=True);parser.add_argument("--output",type=Path,required=True);parser.add_argument("--negative-control",action="store_true");parser.add_argument("--require-memory-provider",action="store_true")
     args=parser.parse_args();out=args.output.resolve();out.mkdir(parents=True,exist_ok=False);efi=args.efi.resolve(strict=True)
     ise=args.ise.resolve(strict=True)
     tracked=subprocess.check_output(["git","-C",str(ise),"ls-files","-z","runtime"]).decode().split("\0")
@@ -33,6 +33,7 @@ def main():
     if not frozen:raise RuntimeError("No tracked ISE runtime sources were supplied")
     source_commit=subprocess.check_output(["git","-C",str(ise),"rev-parse","HEAD"],text=True).strip()
     inputs=[efi,Path(__file__).resolve(),TOOLS/"trace_arm_jit_ovmf.py",TOOLS/"verify_arm_jit_ovmf.py",TOOLS/"build_arm64_handoff_probe.py"]
+    if args.require_memory_provider:inputs.append(TOOLS.parent/"artifacts/arm-memory-provider-20260909/verify_provider_results.py")
     before={str(p):digest(p) for p in inputs};assert all(digest(ise/n)==h for n,h in frozen.items())
     dt=out/"diagnostic.dt";dt.write_bytes(struct.pack("<II",1,1)+prop("name",b"\0")+struct.pack("<II",3,0)+prop("name",b"chosen\0")+prop("dram-base",struct.pack("<Q",0x40000000))+prop("dram-size",struct.pack("<Q",67108864)))
     results=[];commands=[]
@@ -55,9 +56,20 @@ def main():
             "x0":regs.get("x0")==a,"x1":regs.get("x1")==b,"sp":regs.get("x2")==platform.get("sp"),"marker":regs.get("x3")==0xcc31,
             "pstate":platform.get("pstate")==0x3c5|(expected<<28),"no_fault":e.get("fault_instruction")==0 and exc.get("esr")==0 and exc.get("vector")==0,
             "inputs_preserved":report["original_inputs_preserved"] and report["esp_copies_preserved"]}
-        result={"name":name,"passed":all(checks.values()),"checks":checks,"status":e.get("status"),"retired":e.get("retired"),"native_blocks":e.get("compiled_blocks"),"pstate":platform.get("pstate"),"receipt":str(directory/"report.json")}
+        provider_observed=None
+        if args.require_memory_provider:
+            helper=TOOLS.parent/"artifacts/arm-memory-provider-20260909/verify_provider_results.py"
+            spec=importlib.util.spec_from_file_location("conditional_provider_observer",helper)
+            if spec is None or spec.loader is None:raise RuntimeError("Provider observation helper is unavailable")
+            observer=importlib.util.module_from_spec(spec);spec.loader.exec_module(observer)
+            provider_observed,marker=observer.observation(directory)
+            expected_provider={"abi":1,"provider_status":0,"guest_far":0,"fetch_requests":15 if name=="native-chain" else 12,"data_requests":0,"completed_data_operations":0,"last_address":e.get("pc",0)-4}
+            checks["provider_marker"]=marker
+            checks.update({"provider_"+key:provider_observed.get(key)==value for key,value in expected_provider.items()})
+            checks["one_native_entry_per_fetch"]=e.get("compiled_blocks")==expected_provider["fetch_requests"]
+        result={"name":name,"passed":all(checks.values()),"checks":checks,"status":e.get("status"),"retired":e.get("retired"),"native_blocks":e.get("compiled_blocks"),"pstate":platform.get("pstate"),"receipt":str(directory/"report.json"),"provider_observed":provider_observed}
         results.append(result);print(json.dumps(result),flush=True)
     after={str(p):digest(p) for p in inputs};preserved=before==after and all(digest(ise/n)==h for n,h in frozen.items())
-    result={"schema":"nextcore.efi-conditional-compare/1","passed":preserved and all(r["passed"]for r in results),"source_preserved":preserved,"negative_control":args.negative_control,"cases":results,"commands":commands,"inputs_sha256":before,"ise_source_sha256":frozen,"ise_commit":source_commit,"macos_boot_verified":False,"metal_verified":False}
+    result={"schema":"nextcore.efi-conditional-compare/1","passed":preserved and all(r["passed"]for r in results),"source_preserved":preserved,"negative_control":args.negative_control,"memory_provider_required":args.require_memory_provider,"cases":results,"commands":commands,"inputs_sha256":before,"ise_source_sha256":frozen,"ise_commit":source_commit,"macos_boot_verified":False,"metal_verified":False}
     (out/"report.json").write_text(json.dumps(result,indent=2)+"\n");return 0 if result["passed"]else 1
 if __name__=="__main__":raise SystemExit(main())

@@ -1699,3 +1699,12 @@ actual Arm fault-priority comparisons; EFI agent owns an opt-in authored NXMMU
 probe and its allocation/callback lifetime. The runtime-DT transformer prototype
 is frozen outside production pending a real allocation/reservation view. Neither
 that prototype nor the M=1 work changes this BP31 integration input.
+
+
+BP31 runner review: optional --require-memory-provider checks every authored
+conditional case for ABI1, exact Rust fetch count, one native entry per fetch,
+zero data operations/ESR/FAR and final fetch address. CI explicitly enables it.
+The strengthened runner separately passes13 positive executions and rejects one
+actual direct-runtime execution only for missing provider evidence, with correct
+arithmetic preserved. This additional runner proof uses canonical standalone
+EFI7495633, distinct from the fresh parent8bcf5c52 baseline suite.
