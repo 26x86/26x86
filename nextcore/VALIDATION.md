@@ -3,8 +3,11 @@
 Final pins are Core147f4c4, EFI7e7a08b and Tool4bb09da. Core's UEFI-only software
 SHA-256 selection corrects the actual debug LLVM failure exposed by the unchanged
 NXAPFS all-features build. Core PR5 is merged; its fresh standalone tests and real
-debug/release firmware code generation pass. Corrected canonical EFI and parent
-validation keep their own source/binary identities.
+debug/release firmware code generation pass. Corrected canonical EFI passes debug NXAPFS and conditional13/stage1108/DT8.
+Fresh recursivee0351bd passes47commands,502workspace/149Python/25GUI,194actualEFI
+and6separateCLI,98reference/39service/119Vulkan plus native/oracle/package checks.
+Core no-default232+3doctests and28DT reader controls pass. Clippy warnings remain.
+Full receipts: [integration-bp33-20260909](artifacts/integration-bp33-20260909/README.md).
 
 The original authored8-case DT capture and separate compiled wrong-mapping
 failure are unchanged. Reader review corrected report-envelope and host-u64

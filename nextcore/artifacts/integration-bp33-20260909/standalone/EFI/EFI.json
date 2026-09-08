@@ -1,0 +1,240 @@
+{
+  "module": "EFI",
+  "commit": "7e7a08b2f8ac555503a95c023427c6b2fb27477c",
+  "passed": true,
+  "fresh_standalone_clone": true,
+  "empty_cargo_cache": true,
+  "canonical_git_dependencies": true,
+  "root_workspace_patches": false,
+  "commands": [
+    {
+      "name": "clone",
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/work/bp33-efi-ledger-dt",
+        "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/EFI"
+      ],
+      "exit_code": 0,
+      "seconds": 6.74
+    },
+    {
+      "name": "build-default",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 26.55
+    },
+    {
+      "name": "build-direct",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-probe,arm-jit-trace",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 9.88
+    },
+    {
+      "name": "build-combined",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-memory-provider,arm-jit-tiered-trace",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 3.92
+    },
+    {
+      "name": "all-features",
+      "command": [
+        "cargo",
+        "check",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 8.9
+    },
+    {
+      "name": "debug-nxapfs",
+      "command": [
+        "cargo",
+        "build",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features",
+        "--bin",
+        "NXAPFS"
+      ],
+      "exit_code": 0,
+      "seconds": 9.07
+    },
+    {
+      "name": "conditional-firmware",
+      "command": [
+        "python3",
+        "/home/sharh/work/bp32-integration/nextcore/tools/verify_arm_conditional_compare_ovmf.py",
+        "--efi",
+        "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/NXARMJIT-combined.efi",
+        "--ise",
+        "/home/sharh/work/bp32-ise-native-mmu",
+        "--output",
+        "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/conditional-firmware",
+        "--require-memory-provider"
+      ],
+      "exit_code": 0,
+      "seconds": 65.22
+    },
+    {
+      "name": "stage1-reader",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_stage1_reader.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.14
+    },
+    {
+      "name": "stage1-build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-stage1-probe",
+        "--bin",
+        "NXMMU"
+      ],
+      "exit_code": 0,
+      "seconds": 3.91
+    },
+    {
+      "name": "stage1-firmware",
+      "command": [
+        "python3",
+        "tools/verify_stage1_ovmf.py",
+        "--efi-probe",
+        "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/NXMMU.efi",
+        "--output",
+        "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/stage1-firmware"
+      ],
+      "exit_code": 0,
+      "seconds": 6.01
+    },
+    {
+      "name": "dt-build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-dt-probe",
+        "--bin",
+        "NXDT"
+      ],
+      "exit_code": 0,
+      "seconds": 1.89
+    },
+    {
+      "name": "dt-firmware",
+      "command": [
+        "python3",
+        "tools/verify_dt_ledger_ovmf.py",
+        "--efi-probe",
+        "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/NXDT.efi",
+        "--output",
+        "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/dt-firmware"
+      ],
+      "exit_code": 0,
+      "seconds": 5.17
+    },
+    {
+      "name": "dt-capture-check",
+      "command": [
+        "python3",
+        "tools/check_dt_ledger_capture.py",
+        "--report",
+        "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/dt-firmware/report.json",
+        "--output",
+        "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/dt-reader.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.1
+    }
+  ],
+  "binaries": {
+    "default": {
+      "path": "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/NXARMJIT-default.efi",
+      "sha256": "90ee77cacad1fb8c4e1cc3d964b0cbc6964d49068c657732a0ad5f80faeceb2e"
+    },
+    "direct": {
+      "path": "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/NXARMJIT-direct.efi",
+      "sha256": "767a6731c8962480f30cddc00b6e989132344d3edfa22db18e2303713fc3cc35"
+    },
+    "combined": {
+      "path": "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/NXARMJIT-combined.efi",
+      "sha256": "aea809e1c8fbfbebf23db954576720af2de72af76f91ddcd940968c0456e9db9"
+    },
+    "stage1": {
+      "path": "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/NXMMU.efi",
+      "sha256": "b528677d7698acaa9ae154c7dcf8058afac11652453d2a3b0c902d19d397b32a"
+    },
+    "dt": {
+      "path": "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/NXDT.efi",
+      "sha256": "6048684573edc8484f258809b7bc3e33a216a90c35264571efd035b3846b1770"
+    }
+  },
+  "nextcore_packages": [
+    {
+      "name": "nextcore-core",
+      "source": "git+https://github.com/26x86/Nextcore-Core.git?rev=147f4c4e4969074c9dd12c63bf17c6e8c674dabb#147f4c4e4969074c9dd12c63bf17c6e8c674dabb"
+    },
+    {
+      "name": "nextcore-efi",
+      "source": null
+    },
+    {
+      "name": "nextcore-ise",
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=720d7c61140e39da0f457192bd88138a52017e22#720d7c61140e39da0f457192bd88138a52017e22"
+    },
+    {
+      "name": "nextcore-memory-service",
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=720d7c61140e39da0f457192bd88138a52017e22#720d7c61140e39da0f457192bd88138a52017e22"
+    }
+  ]
+}

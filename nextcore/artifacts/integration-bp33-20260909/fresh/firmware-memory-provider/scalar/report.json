@@ -1,0 +1,590 @@
+{
+  "schema": "nextcore.efi-scalar-memory.v1",
+  "cases": [
+    {
+      "name": "byte-signed",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_blocks_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "halt": true,
+        "complete_retirement": true,
+        "no_fault_word": true,
+        "no_exception": true,
+        "x0_value": true,
+        "x1_value": true,
+        "x2_value": true,
+        "same_initial_stack": true
+      },
+      "execution": {
+        "status": 1,
+        "retired": 18,
+        "pc": 1107313736,
+        "compiled_blocks": 18,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 129,
+          "x1": 18446744073709551489,
+          "x2": 4294967169,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "fixture_sha256": "9742985ad080f62feaee799d1324b632ef4b8cf3605cb53c68cb75ce45f9ea6e",
+      "raw_sha256": "453ad6e79b50bd3a709ce93ef6634bca7c62d4d4c41d671dcef359c1b674796a",
+      "receipt": "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/byte-signed/report.json"
+    },
+    {
+      "name": "half-signed",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_blocks_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "halt": true,
+        "complete_retirement": true,
+        "no_fault_word": true,
+        "no_exception": true,
+        "x0_value": true,
+        "x1_value": true,
+        "x2_value": true,
+        "same_initial_stack": true
+      },
+      "execution": {
+        "status": 1,
+        "retired": 18,
+        "pc": 1107313736,
+        "compiled_blocks": 18,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 32769,
+          "x1": 18446744073709518849,
+          "x2": 4294934529,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "fixture_sha256": "9326393b60d62449c0c67e865e55daa94d29aacc56fd9fe04edae1ee92c786d1",
+      "raw_sha256": "97f96cad735e3b96803290d7107f68960e30581b47353c3506cd2bdf4529d51f",
+      "receipt": "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/half-signed/report.json"
+    },
+    {
+      "name": "word-signed",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_blocks_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "halt": true,
+        "complete_retirement": true,
+        "no_fault_word": true,
+        "no_exception": true,
+        "x0_value": true,
+        "x1_value": true,
+        "stack_restored": true,
+        "same_initial_stack": true
+      },
+      "execution": {
+        "status": 1,
+        "retired": 15,
+        "pc": 1107313724,
+        "compiled_blocks": 15,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 2147483653,
+          "x1": 18446744071562067973,
+          "x2": 1107443712,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "fixture_sha256": "95332804583b58e2ac4ec533ced19830e22c6a9ec081b17728caca20d644ec3e",
+      "raw_sha256": "15fade2f5fb9d7f266485ab36e2d1f984ef030d32df0725cb0919d360b337ebe",
+      "receipt": "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/word-signed/report.json"
+    },
+    {
+      "name": "quad-zr",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_blocks_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "halt": true,
+        "complete_retirement": true,
+        "no_fault_word": true,
+        "no_exception": true,
+        "x0_value": true,
+        "x2_zero": true,
+        "stack_restored": true,
+        "same_initial_stack": true
+      },
+      "execution": {
+        "status": 1,
+        "retired": 18,
+        "pc": 1107313736,
+        "compiled_blocks": 18,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 1311768467015204869,
+          "x1": 1107443712,
+          "x2": 0,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "fixture_sha256": "db0c9c2c0fd0781f747c08f97fce2f4b086532b6abacfa5803c0dbe97edaf928",
+      "raw_sha256": "a976842801d477cdc1c470349cfd2a423a5a4cb5dfd94fb834e757c5c1d58a66",
+      "receipt": "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/quad-zr/report.json"
+    },
+    {
+      "name": "a0-device-load",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_blocks_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "no_fault_retirement": true,
+        "precise_fault_pc": true,
+        "precise_fault_word": true,
+        "x0_preserved": true,
+        "x1_preserved": true,
+        "alignment_status": true,
+        "alignment_esr": true,
+        "base_preserved": true,
+        "stack_unchanged": true
+      },
+      "execution": {
+        "status": 12,
+        "retired": 9,
+        "pc": 1107313700,
+        "compiled_blocks": 10,
+        "fault_instruction": 3107979328,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443713,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313700,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 2516582433
+        }
+      },
+      "fixture_sha256": "d5341a3b67017df535f0b23ca2c07b3aeea6bf85cabf02369447330306a152af",
+      "raw_sha256": "9c3e1e6f041bb16ecbec32f6fd4fe3df937592eac1fb532295ecc976faf1c08c",
+      "receipt": "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/a0-device-load/report.json"
+    },
+    {
+      "name": "a0-device-store",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_blocks_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "no_fault_retirement": true,
+        "precise_fault_pc": true,
+        "precise_fault_word": true,
+        "x0_preserved": true,
+        "x1_preserved": true,
+        "alignment_status": true,
+        "alignment_esr": true,
+        "base_preserved": true,
+        "stack_unchanged": true
+      },
+      "execution": {
+        "status": 12,
+        "retired": 9,
+        "pc": 1107313700,
+        "compiled_blocks": 10,
+        "fault_instruction": 2030043200,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443713,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313700,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 2516582497
+        }
+      },
+      "fixture_sha256": "2adcd21625e248553dceda2bffd3f3662de937a419b82dd88d40fa832e29277b",
+      "raw_sha256": "43dfc5d4e51e8015be9cd6c523e3184d062431da1050b669f25c2307aa840208",
+      "receipt": "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/a0-device-store/report.json"
+    },
+    {
+      "name": "sp-load",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_blocks_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "no_fault_retirement": true,
+        "precise_fault_pc": true,
+        "precise_fault_word": true,
+        "x0_preserved": true,
+        "x1_preserved": true,
+        "sp_alignment_status": true,
+        "sp_alignment_esr": true,
+        "base_preserved": true,
+        "sp_preserved_at_fault": true
+      },
+      "execution": {
+        "status": 19,
+        "retired": 10,
+        "pc": 1107313704,
+        "compiled_blocks": 11,
+        "fault_instruction": 960496608,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443712,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443720
+        },
+        "exception": {
+          "elr": 1107313704,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 2583691264
+        }
+      },
+      "fixture_sha256": "b0d14694a0bf0db714ad493c832f6210856b093e3e80f2164974d2ef700f3c6a",
+      "raw_sha256": "4c44528e6000e97ff79542de001cf3c6d6bceefcb1e5b1679aaa264d2a0875fb",
+      "receipt": "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/sp-load/report.json"
+    },
+    {
+      "name": "sp-store",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_blocks_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "no_fault_retirement": true,
+        "precise_fault_pc": true,
+        "precise_fault_word": true,
+        "x0_preserved": true,
+        "x1_preserved": true,
+        "sp_alignment_status": true,
+        "sp_alignment_esr": true,
+        "base_preserved": true,
+        "sp_preserved_at_fault": true
+      },
+      "execution": {
+        "status": 19,
+        "retired": 10,
+        "pc": 1107313704,
+        "compiled_blocks": 11,
+        "fault_instruction": 4177527776,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443712,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443720
+        },
+        "exception": {
+          "elr": 1107313704,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 2583691264
+        }
+      },
+      "fixture_sha256": "a0c06fc7281cb4becdac7d8845c7e586ede4bb875c7cf2c11964097233edb46a",
+      "raw_sha256": "8a6fd7d896a24f563dd52dccf3b1b597e849c188da434b5e7e0115dcc28b0f9d",
+      "receipt": "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/sp-store/report.json"
+    },
+    {
+      "name": "simd-rejected",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_blocks_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "no_fault_retirement": true,
+        "precise_fault_pc": true,
+        "precise_fault_word": true,
+        "x0_preserved": true,
+        "x1_preserved": true,
+        "undefined_status": true,
+        "undefined_esr": true,
+        "base_preserved": true,
+        "stack_unchanged": true
+      },
+      "execution": {
+        "status": 8,
+        "retired": 7,
+        "pc": 1107313692,
+        "compiled_blocks": 8,
+        "fault_instruction": 4244635712,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443712,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313692,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "fixture_sha256": "230f9c5b00fb5afa5fdb12c4d6303d613e09e19697ebb92fffaddb48ab5f8d40",
+      "raw_sha256": "0caad27123be2e9461264d78db6549092ea1dcca177a47511c2dcbe639e09ee9",
+      "receipt": "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/simd-rejected/report.json"
+    },
+    {
+      "name": "reserved-rejected",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_blocks_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "no_fault_retirement": true,
+        "precise_fault_pc": true,
+        "precise_fault_word": true,
+        "x0_preserved": true,
+        "x1_preserved": true,
+        "undefined_status": true,
+        "undefined_esr": true,
+        "base_preserved": true,
+        "stack_unchanged": true
+      },
+      "execution": {
+        "status": 8,
+        "retired": 7,
+        "pc": 1107313692,
+        "compiled_blocks": 8,
+        "fault_instruction": 4190109760,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443712,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313692,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "fixture_sha256": "a3f7d50ceab30ba5d407e1244989265499d7b4295a5b8bbbe9b089fa5a8938fb",
+      "raw_sha256": "ee4ff5aaa2791634a9929c3698035f072215c6c4955e365042c9218c62dbf268",
+      "receipt": "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/reserved-rejected/report.json"
+    },
+    {
+      "name": "prefetch-rejected",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_blocks_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "no_fault_retirement": true,
+        "precise_fault_pc": true,
+        "precise_fault_word": true,
+        "x0_preserved": true,
+        "x1_preserved": true,
+        "undefined_status": true,
+        "undefined_esr": true,
+        "base_preserved": true,
+        "stack_unchanged": true
+      },
+      "execution": {
+        "status": 8,
+        "retired": 7,
+        "pc": 1107313692,
+        "compiled_blocks": 8,
+        "fault_instruction": 4185915456,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443712,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313692,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "fixture_sha256": "e942bba6a22aa9e3526aa17b20381bdb0fb377664912e90d8f5a9dc6e48df6d6",
+      "raw_sha256": "845c80f21f2b7d9eae60d2ef5d0587c1d7842aceabfc23d81aa432dab9fcfce9",
+      "receipt": "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/prefetch-rejected/report.json"
+    }
+  ],
+  "forms": [
+    "STRB",
+    "LDRB",
+    "LDRSB_X",
+    "LDRSB_W",
+    "STRH",
+    "LDRH",
+    "LDRSH_X",
+    "LDRSH_W",
+    "STR_W",
+    "LDR_W",
+    "LDRSW_X",
+    "STR_X",
+    "LDR_X"
+  ],
+  "negative_control": false,
+  "passed": true,
+  "input_sha256_before": {
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-provider.efi": "fbfa153e8d88f8046118e34e843b4ca1bb443176b7020f0971ed7bc06a515b79",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/arm64_scalar_probe.S": "f3ef5bf3ed964380a32f21f9fcdb35e3e7ebfc6190aa408b7302d86d5b461de0",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/verify_scalar_ovmf.py": "f39ac6dde8776a33bf9494e25e041822883b3158fab996fbde6fc08554154202",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/trace_arm_jit_ovmf.py": "2831b9208673839fa445c6f6e6a888fad5d7a31d97fe3f7314d546244c73915e",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "29a14a20596e1f68bbb48c77f20ae8565c26f4802567ac83596ada05c4f352a2",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/build_arm64_handoff_probe.py": "57ac29fc0558f79152978e6f7660d8ddcb8b0d98a69cc571b13349dc032cf3ee"
+  },
+  "input_sha256_after": {
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-provider.efi": "fbfa153e8d88f8046118e34e843b4ca1bb443176b7020f0971ed7bc06a515b79",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/arm64_scalar_probe.S": "f3ef5bf3ed964380a32f21f9fcdb35e3e7ebfc6190aa408b7302d86d5b461de0",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/verify_scalar_ovmf.py": "f39ac6dde8776a33bf9494e25e041822883b3158fab996fbde6fc08554154202",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/trace_arm_jit_ovmf.py": "2831b9208673839fa445c6f6e6a888fad5d7a31d97fe3f7314d546244c73915e",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "29a14a20596e1f68bbb48c77f20ae8565c26f4802567ac83596ada05c4f352a2",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/build_arm64_handoff_probe.py": "57ac29fc0558f79152978e6f7660d8ddcb8b0d98a69cc571b13349dc032cf3ee"
+  },
+  "far_observed": false,
+  "guest_ram_after_fault_observed": false,
+  "physical_host_efi_verified": false,
+  "sptm_provided": false,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

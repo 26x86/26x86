@@ -9,7 +9,7 @@
 BP32는 상위 PR14/main1b86a2e로 최종 CI29개와 정식 재귀 클론 검사 후 병합했다.
 BP33 최종 연결은 Core147f4c4, EFI7e7a08b, Tool4bb09da다. Core PR4/main0e2bcca와
 Tool PR4/main14977ec는 병합됐고, Core PR5/main1c5f8a1이 실제 EFI 디버그 SHA-256
-LLVM 오류를 수정했다. 정식 EFI/Tool 수정 pin과 상위 통합 검증을 진행한다.
+LLVM 오류를 수정했다. EFI PR7/main53329bf와 Tool PR5/main6ead716도 최종 CI 후 병합하고 완료 브랜치를 정리했다.
 7개 서브모듈/8개 소유 패키지 구조를 유지한다.
 
 Core는 실제 소유/배타 차용 RAM과64개 목적별 예약을 연결하고, owner/generation에
@@ -32,6 +32,12 @@ QEMU 종료 대기 시간 초과로 실패했으며 해당 실패 기록도 보�
 독립 Arm capture6개 비교는 통과했지만 이번 BP33은 기존 ISE720을 유지한다.
 실제 dynamic EFI caller와 명시적16384 원본 진단은 별도 작업이다. 정상 macOS27
 handoff/데스크톱, SPTM 서비스, EFI GPU와 guest Metal은 아직 미완료다.
+
+BP33 최종 재귀e0351bd는47개 검증 명령을 통과했다: workspace502(문서검사 포함),
+Python149/GUI25, 실제EFI194 및 별도CLI6, 참조98/service39/Vulkan119와 패키지검사.
+Core no-default232개와 compile-fail3개, 실제 debug NXAPFS link, DT 변조28개도 통과했다.
+Clippy의 기존 경고는 기록 그대로 유지한다. 전체 기록은
+nextcore/artifacts/integration-bp33-20260909이며 최종 공개 커밋은 정식 재귀 클론/CI로 확인한다.
 
 ## BP32 최신 개발 상태
 

@@ -1,0 +1,946 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling thiserror v2.0.20
+   Compiling serde_core v1.0.229
+   Compiling memchr v2.8.3
+   Compiling log v0.4.34
+   Compiling serde v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.151
+   Compiling itoa v1.0.18
+   Compiling time-core v0.1.9
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.2
+   Compiling powerfmt v0.2.0
+   Compiling num-conv v0.2.2
+   Compiling deranged v0.5.8
+   Compiling version_check v0.9.5
+   Compiling base64 v0.23.1
+   Compiling typenum v1.20.1
+   Compiling cpufeatures v0.2.17
+   Compiling cfg-if v1.0.4
+   Compiling plain v0.2.3
+   Compiling utf8parse v0.2.2
+   Compiling colorchoice v1.0.5
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling anstyle-query v1.1.5
+   Compiling anstyle v1.0.14
+   Compiling anyhow v1.0.104
+   Compiling heck v0.5.0
+   Compiling strsim v0.11.1
+   Compiling clap_lex v1.1.0
+   Compiling bitflags v2.13.1
+   Compiling anstyle-parse v1.0.0
+   Compiling anstream v1.0.0
+   Compiling generic-array v0.14.7
+   Compiling clap_builder v4.6.6
+   Compiling quick-xml v0.42.0
+   Compiling roxmltree v0.21.1
+   Compiling indexmap v2.14.2
+   Compiling syn v3.0.5
+   Compiling time v0.3.55
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling thiserror-impl v2.0.20
+   Compiling serde_derive v1.0.229
+   Compiling scroll_derive v0.13.2
+   Compiling clap_derive v4.6.4
+   Compiling scroll v0.13.0
+   Compiling goblin v0.10.7
+   Compiling nextcore-ise v0.1.0 (/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise)
+warning: unused import: `OperandSize`
+   --> crates/nextcore-ise/src/emulator.rs:367:46
+    |
+367 |     use crate::decoder::{InstructionDecoder, OperandSize};
+    |                                              ^^^^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `rex_b`
+   --> crates/nextcore-ise/src/decoder.rs:126:13
+    |
+126 |         let rex_b = (rex & 0x01) != 0;
+    |             ^^^^^ help: if this is intentional, prefix it with an underscore: `_rex_b`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `rex_r`
+   --> crates/nextcore-ise/src/decoder.rs:127:13
+    |
+127 |         let rex_r = (rex & 0x04) != 0;
+    |             ^^^^^ help: if this is intentional, prefix it with an underscore: `_rex_r`
+
+warning: value assigned to `v` is never read
+   --> crates/nextcore-ise/src/decoder.rs:245:29
+    |
+245 |                 let mut v = 0u64;
+    |                             ^^^^ this value is reassigned later and never used
+...
+248 |                     v = data[ip] as u64 & 0x3F;
+    |                     -------------------------- `v` is overwritten here before the previous value is read
+    |
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+   --> crates/nextcore-ise/src/decoder.rs:461:17
+    |
+461 |             let mut bs = (sib & 7) as u32;
+    |                 ----^^
+    |                 |
+    |                 help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling clap v4.6.6
+warning: `nextcore-ise` (lib) generated 4 warnings (run `cargo fix --lib -p nextcore-ise` to apply 3 suggestions)
+warning: `nextcore-ise` (lib test) generated 5 warnings (4 duplicates) (run `cargo fix --lib -p nextcore-ise --tests` to apply 1 suggestion)
+   Compiling plist v1.10.1
+   Compiling nextcore-gpu v0.1.0 (/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-gpu)
+   Compiling nextcore-core v0.1.0 (/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-core)
+   Compiling nextcore-hal v0.1.0 (/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-hal)
+   Compiling nextcore-apls v0.1.0 (/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-apls)
+   Compiling nextcore-tool v0.1.0 (/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-tool)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.34s
+     Running unittests src/lib.rs (nextcore/target/debug/deps/nextcore_apls-f8e44bec8eb8a784)
+
+running 57 tests
+test guest::tests::iso_boot_disk_rejected ... ok
+test guest::tests::launch_plan_decode_rejects_truncation ... ok
+test guest::tests::launch_plan_roundtrip ... ok
+test guest::tests::spec_validation ... ok
+test guest::tests::unsupported_backend_fails_closed ... ok
+test guest::tests::xstate_domain_floor ... ok
+test mode::tests::detect_is_environment_consistent ... ok
+test mode::tests::probe_reports_arch_and_mode ... ok
+test runner::tests::booleans_and_successful_process_do_not_prove_boot ... ok
+test runner::tests::evidence_verdict_requires_order_exit_and_backend_specific_runtime ... ok
+test runner::tests::command_keeps_paths_as_single_arguments_and_requires_acknowledgement ... ok
+test runner::tests::invalid_request_creates_no_receipts ... ok
+test runner::tests::preflight_failure_and_missing_report_remain_failures ... ok
+test runner::tests::recovery_bootx_and_zero_worker_exit_preserve_progress_but_not_boot ... ok
+test runner::tests::recovery_invocation_uses_only_supervisor_flags_and_preserves_path_arguments ... ok
+test runner::tests::recovery_correlates_relative_request_with_canonical_linux_output ... ok
+test runner::tests::recovery_counts_completed_distinct_roles_and_preserves_post_bootx_panic ... ok
+test runner::tests::wrong_target_and_input_mutation_deny_even_populated_evidence ... ok
+test sgpu::tests::caps_roundtrip ... ok
+test sgpu::tests::command_roundtrip_all_variants ... ok
+test sgpu::tests::copy_buffer_executes_on_software_backend ... ok
+test runner::tests::recovery_request_rejects_bad_paths_and_inconsistent_budgets_before_io ... ok
+test runner::tests::recovery_rejects_mismatched_envelope_and_raw_launch_identity ... ok
+test runner::tests::recovery_requires_a_unique_observed_qemu_identity_in_the_worker_session ... ok
+test sgpu::tests::dispatch_create_and_copy_via_wire_roundtrip ... ok
+test sgpu::tests::dispatch_query_caps_through_vf_frame ... ok
+test runner::tests::recovery_transport_loss_and_missing_cleanup_never_confirm_linux_exit ... ok
+test sgpu::tests::dispatch_validates_direct_frames_before_resource_mutation ... ok
+test sgpu::tests::inline_frame_checks_overflow_limits_and_typed_payload_consistency ... ok
+test sgpu::tests::inline_frame_rejects_every_truncation_and_extra_transfer_bytes ... ok
+test sgpu::tests::inline_frame_roundtrip_preserves_header_and_payload_with_padding ... ok
+test sgpu::tests::oversized_resource_requests_fail_without_entering_allocator ... ok
+test sgpu::tests::present_without_backend_is_rejected ... ok
+test runner::tests::recovery_strict_future_evidence_requires_causality_integrity_and_clean_completion ... ok
+test sgpu::tests::request_opcodes_require_exact_payload_lengths ... ok
+test sgpu::tests::shared_codec_errors_propagate_into_legacy_result_alias ... ok
+test sgpu::tests::shared_codec_rejects_guest_count_attack_and_trailing_record_data ... ok
+test sgpu::tests::resource_count_budget_recovers_after_destroy ... ok
+test sgpu::tests::unknown_opcode_rejected ... ok
+test sgpu::tests::unknown_resource_rejected ... ok
+test sgpu::tests::unsupported_dispatch_has_no_success_frame_or_partial_copy ... ok
+test vf_abi::tests::decode_rejects_wrong_size ... ok
+test vf_abi::tests::encode_uses_little_endian ... ok
+test vf_abi::tests::layout_matches_vf_abi_header_offsets ... ok
+test vf_abi::tests::payload_bounds_checked ... ok
+test vf_abi::tests::roundtrip ... ok
+test vf_abi::tests::validate_shape_rejects_bad_family ... ok
+test vf_abi::tests::validate_shape_rejects_bad_magic ... ok
+test vf_policy::tests::grant_range_check ... ok
+test vf_policy::tests::bounded_key_set ... ok
+test vf_policy::tests::golden_gate_template_parses_and_denies ... ok
+test vf_policy::tests::required_features_gate ... ok
+test vf_policy::tests::unknown_key_is_rejected ... ok
+test vf_policy::tests::unregistered_guest_profile_rejected ... ok
+test vf_policy::tests::unsupported_platform_policy_rejected ... ok
+test vf_policy::tests::weakens_security_is_rejected ... ok
+test sgpu::tests::resource_byte_budget_recovers_after_destroy ... ok
+
+test result: ok. 57 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests/sgpu_grant.rs (nextcore/target/debug/deps/sgpu_grant-330d155d0de2e8ed)
+
+running 7 tests
+test existing_vsk_c_policy_differential ... ignored, requires C compiler and explicit NEXTCORE_VSK_POLICY_ROOT
+test backend_failure_retains_only_completed_prefix_through_grant_adapter ... ok
+test grant_to_existing_executor_copy_and_atomic_preflight ... ok
+test inline_grant_conversion_normalizes_only_data_and_rechecks_revocation ... ok
+test snapshot_ranges_route_and_supported_opcode_are_checked_before_execution ... ok
+test policy_generation_rights_validity_duplicates_and_range ... ok
+test strict_header_profile_and_copy_in ... ok
+
+test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (nextcore/target/debug/deps/nextcore_core-a7ac97f700ec5408)
+
+running 3 tests
+test guest_memory::tests::dt_commit_generation_exhaustion_is_atomic ... ok
+test guest_memory::tests::generation_exhaustion_preserves_state_and_does_not_run_closure ... ok
+test guest_memory::tests::identity_exhaustion_never_reuses_or_wraps ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/acpi_parse.rs (nextcore/target/debug/deps/acpi_parse-9b5aafd99ab91e03)
+
+running 4 tests
+test test_find_table ... ok
+test test_rsdp_detection ... ok
+test test_table_signatures ... ok
+test test_xsdt_parse ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/apfs_boot_config.rs (nextcore/target/debug/deps/apfs_boot_config-57d5877aad296dcb)
+
+running 9 tests
+test absence_preserves_own_volume_in_both_parsers ... ok
+test disabled_labels_do_not_leak_into_a_later_or_earlier_selected_target ... ok
+test selector_does_not_relax_existing_path_validation ... ok
+test picker_keeps_per_entry_selectors_and_single_target_ambiguity ... ok
+test labels_preserve_case_unicode_and_xml_decoding_exactly ... ok
+test wrong_types_and_duplicate_selectors_are_not_ignored ... ok
+test utf16_limit_counts_supplementary_characters_as_two_units ... ok
+test unicode_edge_whitespace_and_decoded_forbidden_characters_are_rejected ... ok
+test invalid_label_is_rejected_even_on_disabled_or_later_entries ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/apfs_jumpstart.rs (nextcore/target/debug/deps/apfs_jumpstart-f1682a3dc0a2f9e9)
+
+running 23 tests
+test aggregate_extent_capacity_overflow_is_rejected ... ok
+test changed_prefix_is_rejected ... ok
+test bad_checksums_stop_before_dependent_reads ... ok
+test driver_payload_is_opaque_and_not_mistaken_for_checksummed_or_valid_pe ... ok
+test excess_allocated_capacity_is_not_read_or_returned ... ok
+test extra_extents_are_validated_even_when_they_are_not_read ... ok
+test caller_limits_are_enforced ... ok
+test absent_negative_and_outside_jumpstart_addresses_do_not_seek ... ok
+test insufficient_capacity_does_not_return_partial_bytes ... ok
+test container_geometry_is_checked_without_wrapping ... ok
+test jumpstart_reserved_and_optional_feature_bits_are_preserved_as_opaque ... ok
+test extent_count_and_complete_table_must_fit_the_checksum_block ... ok
+test block_size_prefix_is_bounded_before_allocation_or_full_read ... ok
+test device_errors_and_short_reads_are_preserved_at_each_boundary ... ok
+test partition_bounds_stop_reads_before_callback ... ok
+test all_fusion_indicators_fail_before_jumpstart_read ... ok
+test physical_jumpstart_must_match_its_address_and_storage_type ... ok
+test incompatible_features_fail_closed ... ok
+test unsupported_jumpstart_version_and_zero_file_length_are_rejected ... ok
+test signed_and_overflowing_extent_ranges_fail_before_data_reads ... ok
+test bad_magic_and_object_headers_are_rejected_after_valid_checksum ... ok
+test fletcher_matches_independent_c_vectors_and_checksum_field_is_excluded ... ok
+test ordered_extents_return_exact_file_size_for_small_and_large_blocks ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/arm64_boot_config.rs (nextcore/target/debug/deps/arm64_boot_config-69d107e9db4c4622)
+
+running 3 tests
+test arm_config_retains_bounds_and_path_rejection ... ok
+test arm_profiles_are_explicit_and_intel_gate_remains_separate ... ok
+test original_trace_requires_explicit_bounded_coordinates_and_dt ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/arm64_handoff.rs (nextcore/target/debug/deps/arm64_handoff-50b90343cc14b6d8)
+
+running 3 tests
+test invalid_linear_mapping_alignment_and_ram_coverage_are_rejected ... ok
+test physical_layout_stage_and_wire_coordinates_agree ... ok
+test modified_code_arguments_tree_padding_and_stack_are_detected ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/arm64_kernel_collection.rs (nextcore/target/debug/deps/arm64_kernel_collection-31b7b045205f8fe5)
+
+running 12 tests
+test default_intel_inspection_and_staging_still_reject_arm ... ok
+test format8_start_requires_full_opaque_word ... ok
+test last_complete_instruction_extent_is_accepted ... ok
+test explicit_plain_arm64_profiles_are_not_inferred_from_arm64e ... ok
+test malformed_outer_and_member_ranges_stay_bounded ... ok
+test pc_requires_alignment_and_all_four_file_backed_bytes ... ok
+test raw_cpu_and_thread_provenance_survive_inspection ... ok
+test member_shared_views_do_not_require_outer_page_alignment ... ok
+test thread_flavor_count_and_single_state_subset_are_checked ... ok
+test wrong_cpu_and_mixed_member_subtypes_are_rejected ... ok
+test staging_rounds_16k_and_preserves_every_source_view ... ok
+test staging_detects_corrupt_header_payload_tail_and_hole ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/arm64_platform_config.rs (nextcore/target/debug/deps/arm64_platform_config-c84b4225406a8789)
+
+running 9 tests
+test extended_configuration_retains_handoff_memory_and_platform_validation ... ok
+test unknown_types_duplicates_and_unrecognized_options_are_not_silently_ignored ... ok
+test absent_profile_retains_old_bound_and_does_not_create_a_provider ... ok
+test software_profile_has_explicit_defaults_and_its_own_diagnostic_bound ... ok
+test vector_table_must_be_aligned_and_fully_inside_guest_ram ... ok
+test unsupported_extended_budgets_never_become_arbitrary_long_runs ... ok
+test extended_ceiling_does_not_provision_a_profile_or_expand_its_absent_bound ... ok
+test only_defined_override_fields_pstate_modes_and_boolean_levels_are_accepted ... ok
+test explicit_tiers_require_a_valid_ceiling_and_do_not_change_the_default_entry ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/boot_config.rs (nextcore/target/debug/deps/boot_config-57a7e419c8cb1452)
+
+running 12 tests
+test disabled_fields_are_still_checked_and_error_tokens_cannot_inject_markers ... ok
+test duplicate_keys_and_mixed_text_are_rejected_in_the_entire_document ... ok
+test missing_or_disabled_selection_returns_none_and_arguments_default_empty ... ok
+test path_rejects_non_ucs2_characters_but_arguments_keep_utf16 ... ok
+test external_plist_doctype_works_without_resolving_or_accepting_entities ... ok
+test multiple_active_entries_are_ambiguous_and_entry_count_is_bounded ... ok
+test selects_one_target_and_decodes_xml_text_without_changing_arguments ... ok
+test root_version_structure_and_known_types_are_required ... ok
+test binary_non_utf8_and_all_truncated_document_prefixes_are_rejected ... ok
+test path_validation_rejects_escape_aliases_non_efi_and_control_characters ... ok
+test utf16_limits_count_surrogate_pairs_and_allow_exact_boundary ... ok
+test input_depth_and_node_limits_are_enforced_before_unbounded_work ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/boot_menu.rs (nextcore/target/debug/deps/boot_menu-b577e1fb43948af8)
+
+running 7 tests
+test absent_name_has_stable_fallback_and_empty_list_stays_empty ... ok
+test invalid_picker_type_and_later_unsafe_path_are_rejected ... ok
+test explicit_picker_preserves_order_names_targets_and_single_parser_semantics ... ok
+test no_opt_in_keeps_single_target_and_rejects_ambiguity ... ok
+test display_names_are_bounded_and_checked_even_for_disabled_entries ... ok
+test automatic_boot_ignores_display_names_like_the_original_parser ... ok
+test total_entry_cap_applies_before_disabled_filter ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/config_parse.rs (nextcore/target/debug/deps/config_parse-ce9ed680c39d2b39)
+
+running 5 tests
+test test_config_from_xml_bytes ... ok
+test test_config_boot_args ... ok
+test test_config_mlb ... ok
+test test_config_system_name ... ok
+test test_config_validate ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/config_roundtrip.rs (nextcore/target/debug/deps/config_roundtrip-4e82c366abd32c58)
+
+running 2 tests
+test test_config_binary_roundtrip ... ok
+test test_config_xml_roundtrip ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/device_props.rs (nextcore/target/debug/deps/device_props-535ee329cb5be7e2)
+
+running 4 tests
+test test_apply_empty_config ... ok
+test test_apply_from_config ... ok
+test test_encode_decode_roundtrip ... ok
+test test_property_data_types ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/firmware_dt.rs (nextcore/target/debug/deps/firmware_dt-6598ffa839d2ba8f)
+
+running 7 tests
+test opaque_or_malformed_template_bodies_remain_unresolved ... ok
+test names_and_recursion_depth_have_independent_limits ... ok
+test every_truncation_and_trailing_byte_is_rejected ... ok
+test templates_and_literal_values_preserve_the_original_wire_bytes ... ok
+test unmodified_runtime_data_must_still_pass_the_existing_strict_validator ... ok
+test untrusted_counts_and_flagged_lengths_are_bounded_before_payload_access ... ok
+test aggregate_node_and_property_budgets_cover_wide_trees ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/flat_dt.rs (nextcore/target/debug/deps/flat_dt-022a55a1701c31c2)
+
+running 12 tests
+test duplicate_properties_and_children_are_rejected_in_models_and_wire ... ok
+test error_display_does_not_include_untrusted_names ... ok
+test depth_limit_applies_to_both_encoder_and_untrusted_wire ... ok
+test every_truncated_prefix_and_trailing_bytes_are_rejected ... ok
+test longest_names_and_binary_values_remain_supported ... ok
+test malicious_lengths_counts_and_missing_name_do_not_drive_unbounded_work ... ok
+test minimal_root_matches_independently_authored_wire_fixture ... ok
+test properties_precede_child_subtrees_and_payloads_are_padded_to_four_bytes ... ok
+test unterminated_noncanonical_or_invalid_names_and_padding_are_rejected ... ok
+test per_node_and_total_limits_precede_serialization ... ok
+test aggregate_node_budget_also_applies_to_individually_valid_subtrees ... ok
+test aggregate_property_budget_also_applies_to_individually_valid_subtrees ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/guest_memory.rs (nextcore/target/debug/deps/guest_memory-6df14e261da261aa)
+
+running 10 tests
+test dt_commit_uses_observed_snapshot_and_preserves_entire_reserved_tail ... ok
+test exact_alignment_adjacency_capacity_and_error_atomicity ... ok
+test dt_binding_checks_snapshot_target_purpose_capacity_and_alignment ... ok
+test foreign_released_and_reused_tokens_are_rejected ... ok
+test malformed_or_missing_provider_data_never_reaches_ledger_commit ... ok
+test owned_and_exclusively_borrowed_backing_have_explicit_guest_extent ... ok
+test scoped_service_can_read_dt_and_return_owned_state_but_errors_do_not_rollback ... ok
+test stale_or_foreign_dt_commit_never_changes_ram ... ok
+test fixed_slots_and_first_fit_do_not_lose_reusable_holes ... ok
+test deterministic_reservations_match_independent_byte_occupancy_oracle ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests/handoff_roundtrip.rs (nextcore/target/debug/deps/handoff_roundtrip-d4aeb4e89f03e3c4)
+
+running 4 tests
+test test_bad_magic ... ok
+test test_deterministic ... ok
+test test_roundtrip ... ok
+test test_truncated ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/kc_classic_rebase.rs (nextcore/target/debug/deps/kc_classic_rebase-b4ee7569add8ee03)
+
+running 18 tests
+test classic_chain_overlap_rejected_before_profile_application ... ok
+test duplicate_classic_write_rejected ... ok
+test empty_classic_table_is_not_success ... ok
+test external_dynamic_table_is_rejected_even_with_local_flags ... ok
+test header_and_load_commands_are_preserved_by_rejection ... ok
+test no_executable_is_rejected ... ok
+test non_outer_classic_table_is_rejected ... ok
+test applies_both_widths_and_preserves_every_other_byte ... ok
+test symbol_nonzero_is_outside_profile ... ok
+test target_in_kext_is_not_kernel_proper ... ok
+test two_executables_are_rejected ... ok
+test width4_overflow_rejected_without_wrapping ... ok
+test readback_detects_target_chain_header_hole_and_tail_damage ... ok
+test width8_overflow_rejected_without_wrapping ... ok
+test unsupported_type_pc_external_width_are_rejected ... ok
+test word_crossing_kernel_file_end_is_rejected ... ok
+test width4_exact_max_is_supported ... ok
+test zero_slide_preserves_image_and_still_reads_back ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/kc_fixup_audit.rs (nextcore/target/debug/deps/kc_fixup_audit-be3a20f0a799fb4a)
+
+running 21 tests
+test absent_primary_base_and_unsupported_format_are_explicit ... ok
+test bad_next_stops_at_page_boundary ... ok
+test classic_write_must_fit_its_entire_file_backed_word ... ok
+test later_word_cannot_enter_segment_zero_fill ... ok
+test classic_chain_and_classic_classic_overlaps_have_distinct_witnesses ... ok
+test first_and_only_chain_word_can_straddle_its_page ... ok
+test duplicate_multistart_visits_and_consumer_limit_are_reported ... ok
+test missing_classic_base_does_not_guess_header_address ... ok
+test next_start_cannot_leave_the_page_even_in_a_larger_segment ... ok
+test page_start_budget_is_independent_from_record_budget ... ok
+test page_straddle_does_not_permit_crossing_a_segment_file_end ... ok
+test resource_limits_reject_partial_audits ... ok
+test pointer_into_hole_or_outside_collection_is_not_covered ... ok
+test signed_classic_and_unaligned_byte_stride_are_audited_without_writes ... ok
+test terminal_word_may_straddle_its_page_inside_one_file_backed_segment ... ok
+test section_relative_record_cannot_write_outside_its_section ... ok
+test truncated_or_forged_metadata_never_returns_an_audit ... ok
+test unknown_cache_and_authentication_remain_issues ... ok
+test unsupported_external_table_is_reported_even_if_record_flag_is_clear ... ok
+test unsigned_classic_flags_and_widths_are_not_silently_supported ... ok
+test zero_size_segment_affects_declared_primary_base_without_fake_adjustment ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/kc_staging.rs (nextcore/target/debug/deps/kc_staging-7539674fb8771e4d)
+
+running 12 tests
+test exact_span_cap_is_accepted_without_allocating_arena_and_next_byte_rejected ... ok
+test actual_copy_zero_holes_and_shared_views_match_independent_layout ... ok
+test page_rounding_overflow_is_rejected_before_arena_allocation ... ok
+test header_minimum_entry_and_original_segment_indices_stay_distinct ... ok
+test sparse_virtual_span_is_bounded_independently_of_file_size ... ok
+test overlapping_outer_memory_and_file_ranges_remain_metadata_errors ... ok
+test supplied_buffer_size_rejection_leaves_every_byte_unchanged ... ok
+test zero_sized_extreme_segment_does_not_expand_the_arena ... ok
+test zero_file_backed_outer_segment_is_initialized_without_copying_source ... ok
+test wrong_member_mapping_and_truncated_source_cannot_be_staged ... ok
+test verified_immutable_staging_copies_into_an_owned_guest_reservation ... ok
+test readback_detects_payload_zero_tail_hole_page_tail_and_member_corruption ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/kernel_collection.rs (nextcore/target/debug/deps/kernel_collection-64264852ab693257)
+
+running 17 tests
+test collection_and_member_entries_remain_distinct_and_never_ready ... ok
+test collection_entry_requires_file_backed_execute_mapping ... ok
+test fixup_starts_cannot_reference_unbacked_bytes_or_other_tables ... ok
+test imports_and_compressed_symbols_remain_explicit_requirements ... ok
+test fixup_headers_segments_and_pages_are_strictly_bounded ... ok
+test main_entry_is_member_provenance_and_not_a_collection_entry ... ok
+test member_identifiers_and_references_are_checked ... ok
+test multiple_page_starts_need_a_bounded_terminator ... ok
+test relocation_and_linkedit_ranges_are_bounded ... ok
+test page_starts_allow_a_file_backed_straddling_word_but_not_a_start_on_next_page ... ok
+test segment_before_header_uses_only_metadata_modulo_displacement ... ok
+test section_layout_relocations_and_aggregate_budget_are_checked ... ok
+test truncation_and_command_size_mutations_fail ... ok
+test segment_overflow_overlap_protection_and_member_tail_fail ... ok
+test unknown_pointer_format_is_a_preparation_blocker ... ok
+test unsupported_headers_and_recursive_filesets_fail ... ok
+test zero_segments_and_member_shared_linkedit_are_valid_views ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/kernel_target.rs (nextcore/target/debug/deps/kernel_target-6b29453c6046c6de)
+
+running 2 tests
+test explicit_profile_and_independent_kernel_path_are_required ... ok
+test kernel_c_string_and_whole_document_validation_precede_loading ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/kext_scan.rs (nextcore/target/debug/deps/kext_scan-86e9934fc27c6c13)
+
+running 3 tests
+test test_parse_info_plist ... ok
+test test_scan_kexts ... ok
+test test_skip_invalid ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/mach_o_load.rs (nextcore/target/debug/deps/mach_o_load-473d21ebda093fee)
+
+running 3 tests
+test test_bad_magic ... ok
+test test_calculate_entry ... ok
+test test_parse_header ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/macho_image.rs (nextcore/target/debug/deps/macho_image-09e7fe31178b4d4c)
+
+running 10 tests
+test command_segment_section_and_image_span_limits_are_enforced ... ok
+test duplicate_missing_and_outside_executable_entries_are_rejected ... ok
+test metadata_ranges_and_header_mapping_are_bounded ... ok
+test main_file_offset_is_mapped_through_its_executable_segment_and_zero_fill_is_exact ... ok
+test pagezero_is_an_unmapped_guard_and_non_page_aligned_segments_have_page_rounded_span ... ok
+test sections_follow_segment_copy_mapping_and_zero_fill_tail ... ok
+test segment_virtual_and_file_overlap_overflow_and_invalid_ranges_are_rejected ... ok
+test unixthread_rip_is_absolute_and_not_a_file_offset ... ok
+test unsupported_format_cpu_filetypes_and_execution_mechanisms_are_explicit ... ok
+test file_command_and_thread_truncations_fail_without_panics ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/picker_view.rs (nextcore/target/debug/deps/picker_view-29701177e0aef735)
+
+running 4 tests
+test navigation_wraps_and_boots_only_current_selection ... ok
+test allocation_limits_invalid_selection_and_starting_state_are_explicit ... ok
+test unsupported_glyphs_and_long_text_stay_inside_canvas ... ok
+test renders_resolutions_and_scrolls_all_entries_without_changing_identity ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests/runtime_dt.rs (nextcore/target/debug/deps/runtime_dt-c87fbdfa12317666)
+
+running 9 tests
+test all_missing_providers_are_returned_without_writes ... ok
+test arithmetic_output_limit_and_reservation_failures_are_atomic ... ok
+test literal_tree_is_unchanged_and_zero_length_is_only_an_explicit_value ... ok
+test nested_explicit_values_preserve_literals_and_ignore_expression_bodies ... ok
+test noncanonical_names_and_duplicate_children_are_rejected_before_commit ... ok
+test source_truncation_counts_structural_templates_and_bad_padding_never_commit ... ok
+test successful_commit_changes_only_output_span_and_reads_declared_ram_values ... ok
+test source_identity_unknown_targets_duplicate_and_missing_labels_fail_atomically ... ok
+test current_runtime_property_ceiling_is_preserved_explicitly ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/xnu_arm64_boot_args.rs (nextcore/target/debug/deps/xnu_arm64_boot_args-2362c03bdd9aac11)
+
+running 15 tests
+test actual_dt_bytes_are_validated_not_just_their_length ... ok
+test argument_alignment_overflow_and_extent_are_checked ... ok
+test all_handoff_pairs_must_be_disjoint ... ok
+test command_line_limit_preserves_nul_and_rejects_lossy_inputs ... ok
+test disjoint_handoff_before_kernel_is_still_rejected ... ok
+test dram_properties_must_exist_at_the_public_chosen_path ... ok
+test dram_values_must_match_contain_and_not_wrap ... ok
+test flags_outside_public_subset_are_rejected ... ok
+test kernel_range_is_checked_before_handoff_layout ... ok
+test managed_ram_overflow_zero_and_alignment_are_rejected ... ok
+test managed_window_may_be_a_subset_of_actual_dram ... ok
+test occupied_top_must_be_inside_managed_ram_and_page_aligned ... ok
+test touching_ranges_and_exact_occupied_end_are_valid ... ok
+test public_layout_and_pa_kva_roles_are_distinct ... ok
+test virtual_window_overflow_and_alignment_are_rejected ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/xnu_boot_args.rs (nextcore/target/debug/deps/xnu_boot_args-9d4e35fefa400e3e)
+
+running 14 tests
+test efi_pointer_is_not_forced_into_kernel_arena_but_must_fit_its_wire_field ... ok
+test errors_are_fixed_log_tokens ... ok
+test fileset_checks_full_header_extent_against_map_and_tree ... ok
+test fileset_extension_matches_independently_compiled_public_c_layout ... ok
+test fileset_keeps_common_validation_and_never_truncates_slide ... ok
+test fileset_rejects_virtual_null_unaligned_overflow_and_unowned_header_ranges ... ok
+test kernel_cursor_must_not_overflow_when_rounded_to_page ... ok
+test maximum_command_leaves_one_nul_before_memory_map ... ok
+test physical_ram_can_exceed_four_gib_but_cannot_overflow_early_physmap_addition ... ok
+test pinned_public_offsets_are_little_endian_and_reserved_bytes_stay_zero ... ok
+test prevents_early_allocator_reusing_map_or_tree_and_rejects_overlap ... ok
+test refuses_null_unaligned_high_and_wrapping_references ... ok
+test rejects_command_truncation_nul_and_non_ascii ... ok
+test requires_actual_efi_descriptor_shape_without_silently_repacking ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (nextcore/target/debug/deps/nextcore_gpu-e9bf09a48e5a3a3b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_compute.rs (nextcore/target/debug/deps/gpu_compute-780371d7527333e9)
+
+running 11 tests
+test invalid_dispatch_never_signals_fence ... ok
+test storage_range_arithmetic_cannot_overflow ... ok
+test test_default_dispatch_does_not_fake_execution_or_fence ... ok
+test test_create_pipeline ... ok
+test test_delete_pipeline ... ok
+test test_dispatch_invalid_dims ... ok
+test test_dispatch_missing_buffer ... ok
+test test_dispatch_missing_pipeline ... ok
+test test_storage_buffer_oob_read ... ok
+test test_storage_buffer_oob_write ... ok
+test test_storage_buffer_ops ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_executor.rs (nextcore/target/debug/deps/gpu_executor-96ceafb1ccfba156)
+
+running 11 tests
+test test_begin_end_render_pass_clears ... ok
+test test_binding_commands ... ok
+test test_copy_texture_commands ... ok
+test test_create_index_buffer ... ok
+test test_create_uniform_buffer ... ok
+test test_create_vertex_buffer ... ok
+test test_draw_commands_record_execution ... ok
+test test_draw_instanced ... ok
+test test_reset_stats ... ok
+test test_write_uniform_limited_to_buffer_size ... ok
+test test_write_vertex_buffer ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_executor_compute.rs (nextcore/target/debug/deps/gpu_executor_compute-da799fc717b16bd1)
+
+running 5 tests
+test compute_rejects_active_render_pass_across_command_lists ... ok
+test failed_dispatch_stops_later_commands_and_retains_prior_work ... ok
+test rasterizer_entry_point_does_not_silently_accept_compute ... ok
+test recorded_compute_forwards_typed_manager_errors_and_preserves_buffers ... ok
+test recorded_compute_requires_a_backend_and_never_counts_a_noop ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_framebuffer.rs (nextcore/target/debug/deps/gpu_framebuffer-b4bc5309f753ca31)
+
+running 11 tests
+test test_dirty_tracking ... ok
+test test_double_buffer_swap ... ok
+test test_framebuffer_blit ... ok
+test test_framebuffer_blit_out_of_bounds ... ok
+test test_framebuffer_clear_bgra ... ok
+test test_framebuffer_clear_rgba ... ok
+test test_framebuffer_fill_rect ... ok
+test test_framebuffer_new_dimensions ... ok
+test test_framebuffer_out_of_bounds ... ok
+test test_framebuffer_set_get_pixel_roundtrip ... ok
+test test_from_raw_framebuffer ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_pipeline.rs (nextcore/target/debug/deps/gpu_pipeline-149cee6ad08cbd54)
+
+running 10 tests
+test test_attribute_offsets ... ok
+test test_blend_factors_variants ... ok
+test test_default_blend_state ... ok
+test test_default_depth_state ... ok
+test test_default_rasterizer_state ... ok
+test test_default_stencil_state ... ok
+test test_input_rate_equality ... ok
+test test_pipeline_construction ... ok
+test test_shader_module_stages ... ok
+test test_vertex_format_sizes ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_raster.rs (nextcore/target/debug/deps/gpu_raster-c27e5ed71673d4d1)
+
+running 12 tests
+test test_alpha_blend ... ok
+test test_blend_functions ... ok
+test test_color_clamp ... ok
+test test_color_conversions ... ok
+test test_color_lerp ... ok
+test test_perspective_divide ... ok
+test test_rasterize_fullscreen_triangle ... ok
+test test_rasterize_line ... ok
+test test_rasterize_triangle_list ... ok
+test test_rasterize_triangle_list_bad_length ... ok
+test test_vec_operations ... ok
+test test_vertex_with_attributes ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_render_path.rs (nextcore/target/debug/deps/gpu_render_path-f3631e83c24bcd64)
+
+running 6 tests
+test render_indexed_draw_rasterizes_triangle ... ok
+test render_path_clears_and_rasterizes_triangle ... ok
+test render_path_records_draw_call_count ... ok
+test render_without_rasterizer_only_clears ... ok
+test render_path_double_buffer_presents ... ok
+test software_vertex_roundtrip_via_decode ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_sync.rs (nextcore/target/debug/deps/gpu_sync-fc28f5d4a9cfa6b8)
+
+running 11 tests
+test test_counts ... ok
+test test_event_fire_wait ... ok
+test test_event_reset ... ok
+test test_fence_create_and_signal ... ok
+test test_fence_wait ... ok
+test test_reset_all_resets_all_types ... ok
+test test_semaphore_id_derives ... ok
+test test_semaphore_is_cloneable_state ... ok
+test test_semaphore_signal_wait ... ok
+test test_fence_timeout ... ok
+test test_semaphore_timeout ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/gpu_texture.rs (nextcore/target/debug/deps/gpu_texture-57c1ecf7d233c3b6)
+
+running 11 tests
+test test_compare_func_variants ... ok
+test test_sample_2d_nearest ... ok
+test test_sample_clamp_to_border ... ok
+test test_sampler_create_get_delete ... ok
+test test_texture_create_and_destroy ... ok
+test test_texture_format_size ... ok
+test test_texture_invalid_dimensions ... ok
+test test_texture_not_found ... ok
+test test_texture_upload_download ... ok
+test test_texture_upload_size_mismatch ... ok
+test test_usage_bit_dedup ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_virtual.rs (nextcore/target/debug/deps/gpu_virtual-7ca2d856aacef732)
+
+running 11 tests
+test buffer_range_overflow_is_rejected_without_mutation ... ok
+test test_command_copy ... ok
+test test_allocate_buffer ... ok
+test test_device_family ... ok
+test test_gtx680_canonical ... ok
+test test_hd4000_canonical ... ok
+test test_rx580_canonical ... ok
+test test_rx580_vram ... ok
+test test_spec_json_roundtrip ... ok
+test test_unknown_fallback ... ok
+test test_vega64_canonical ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sgpu_submission.rs (nextcore/target/debug/deps/sgpu_submission-793f1b2c78b344fe)
+
+running 10 tests
+test all_truncations_and_trailing_bytes_are_rejected ... ok
+test backend_failure_reports_committed_prefix_and_stops_later_work ... ok
+test copy_and_io_ranges_do_not_wrap_or_truncate ... ok
+test independently_authored_little_endian_fixture_keeps_full_width_handles ... ok
+test kernel_shape_and_invocation_limits_are_checked_before_any_work ... ok
+test host_registrations_are_bounded_and_reject_zero_handles ... ok
+test mapping_isolation_and_registered_kernel_lifetime_are_enforced ... ok
+test snapshot_windows_check_u64_overflow_and_32_bit_boundary ... ok
+test unsupported_command_preflight_preserves_earlier_copy ... ok
+test count_and_byte_attacks_fail_before_reservation ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (nextcore/target/debug/deps/nextcore_hal-dae01c4e8b8dd431)
+
+running 10 tests
+test acpi_raw::tests::read_u16_helper_covers_pci_paths ... ok
+test acpi_raw::tests::rejects_truncated_inputs ... ok
+test acpi_raw::tests::rsdp_v2_roundtrip ... ok
+test acpi_raw::tests::sdt_header_accepts_real_shape ... ok
+test acpi_raw::tests::sdt_header_rejects_bad_checksum_only_as_flag ... ok
+test acpi_raw::tests::xsdt_entries_decode ... ok
+test acpi_translator::tests::test_patch_dsdt ... ok
+test pci_raw::tests::decodes_q35_host_bridge_shape ... ok
+test pci_raw::tests::rejects_empty_slot_and_truncation ... ok
+test smbios_translator::tests::test_translate_to_mac ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hal_translate.rs (nextcore/target/debug/deps/hal_translate-27233ed88d535a74)
+
+running 9 tests
+test test_acpi_patch ... ok
+test test_acpi_patch_bad_len ... ok
+test test_pci_rx580 ... ok
+test test_build_device_tree ... ok
+test test_device_tree_translate ... ok
+test test_pci_unknown ... ok
+test test_serial_deterministic ... ok
+test test_smbios_serial_unknown ... ok
+test test_smbios_translate ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/raw_firmware.rs (nextcore/target/debug/deps/raw_firmware-83bc7d017786c463)
+
+running 8 tests
+test every_typed_sdt_parser_rejects_bad_checksum ... ok
+test facp_optional_x_dsdt_uses_declared_length ... ok
+test fixed_fields_cannot_come_from_after_declared_table ... ok
+test madt_known_records_require_complete_layouts ... ok
+test madt_preserves_unknown_records_without_decoding_them ... ok
+test madt_rejects_dangling_header_and_overlong_body ... ok
+test pci_layout_mask_accepts_multifunction_type0_and_rejects_other_layouts ... ok
+test root_entry_width_and_mcfg_allocation_width_are_enforced ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (nextcore/target/debug/deps/nextcore_ise-934010da998426e3)
+
+running 26 tests
+test cpu_features::tests::test_detect_runs ... ok
+test cpu_features::tests::test_missing_features ... ok
+test decoder::tests::test_decode_add_imm8 ... ok
+test decoder::tests::test_decode_add_reg_mem ... ok
+test decoder::tests::test_decode_mov ... ok
+test decoder::tests::test_decode_movdqa ... ok
+test decoder::tests::test_decode_nop ... ok
+test decoder::tests::test_decode_popcnt ... ok
+test decoder::tests::test_decode_shl ... ok
+test decoder::tests::test_decode_unsupported ... ok
+test decoder::tests::test_decode_vex ... ok
+test decoder::tests::test_decode_xor ... ok
+test emulator::tests::test_add_imm ... ok
+test emulator::tests::test_add_reg ... ok
+test emulator::tests::test_and_imm ... ok
+test emulator::tests::test_cmp_flags ... ok
+test emulator::tests::test_mov ... ok
+test emulator::tests::test_popcnt_gpr ... ok
+test emulator::tests::test_shl_imm ... ok
+test emulator::tests::test_sub_mem_unsupported ... ok
+test emulator::tests::test_vaddps_simple ... ok
+test emulator::tests::test_vzeroupper ... ok
+test emulator::tests::test_xor_reg ... ok
+test trap::tests::test_handle_gp_fault ... ok
+test trap::tests::test_handle_non_vex_passthrough ... ok
+test trap::tests::test_handle_vex_invalid_opcode ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (nextcore/target/debug/deps/nextcore_tool-e017c8c6681e94cd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (nextcore/target/debug/deps/nextcore_tool-feecf98abfcc3065)
+
+running 9 tests
+test apls::tests::successful_worker_exit_is_not_a_successful_boot_exit ... ok
+test apls::tests::local_tcg_options_reach_shared_runner_without_path_splitting ... ok
+test apls::tests::explicit_recovery_options_map_to_supervisor_and_default_rpc_off ... ok
+test apls::tests::native_selection_is_explicit_and_cannot_use_tcg_or_wsl_options ... ok
+test apls::tests::wsl_requires_distribution_and_preserves_linux_paths ... ok
+test apls::tests::recovery_wsl_keeps_linux_paths_and_host_receipts_separate ... ok
+test apls::tests::recovery_validation_keeps_post_and_total_budgets_distinct ... ok
+test apls::tests::incomplete_or_invalid_requests_are_rejected_without_launching ... ok
+test apls::tests::recovery_requires_all_inputs_and_rejects_raw_backend_options ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/bundle_cli.rs (nextcore/target/debug/deps/bundle_cli-327031a5628c4ec5)
+
+running 9 tests
+test compiled_efi_is_copied_without_changes ... ignored, requires NEXTCORE_TEST_EFI pointing to an independently compiled x86_64 UEFI image
+test every_truncated_prefix_is_rejected_without_panicking ... ok
+test config_destination_preflight_prevents_partial_efi_write ... ok
+test hard_link_destination_cannot_truncate_input ... ok
+test explicit_efi_is_required_and_existing_read_only_commands_work ... ok
+test invalid_or_missing_inputs_do_not_create_output ... ok
+test malformed_pe_inputs_fail_before_output_creation ... ok
+test existing_outputs_and_self_copy_preserve_originals ... ok
+test build_and_install_copy_validated_inputs_exactly ... ok
+
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.71s
+
+   Doc-tests nextcore_apls
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+   Doc-tests nextcore_core
+
+running 3 tests
+test crates/nextcore-core/src/guest_memory.rs - guest_memory::GuestMemory<'a>::from_borrowed (line 215) - compile fail ... ok
+test crates/nextcore-core/src/guest_memory.rs - guest_memory::GuestMemory<'a>::with_guest_memory (line 475) - compile fail ... ok
+test crates/nextcore-core/src/guest_memory.rs - guest_memory::GuestMemory<'a>::with_guest_memory (line 482) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.79s
+
+   Doc-tests nextcore_gpu
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests nextcore_hal
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests nextcore_ise
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests nextcore_tool
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

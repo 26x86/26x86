@@ -1,0 +1,16 @@
+   Compiling nextcore-gpu v0.1.0 (/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-gpu)
+   Compiling nextcore-apls v0.1.0 (/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-apls)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.21s
+     Running tests/sgpu_grant.rs (nextcore/target/debug/deps/sgpu_grant-8e9ecad2d1726413)
+
+running 7 tests
+test backend_failure_retains_only_completed_prefix_through_grant_adapter ... ok
+test grant_to_existing_executor_copy_and_atomic_preflight ... ok
+test inline_grant_conversion_normalizes_only_data_and_rechecks_revocation ... ok
+test snapshot_ranges_route_and_supported_opcode_are_checked_before_execution ... ok
+test strict_header_profile_and_copy_in ... ok
+test policy_generation_rights_validity_duplicates_and_range ... ok
+test existing_vsk_c_policy_differential ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.37s
+

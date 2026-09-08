@@ -1,0 +1,174 @@
+{
+  "passed": true,
+  "actual_cases_checked": 8,
+  "capture_validation": {
+    "passed": true,
+    "actual_cases_checked": 8,
+    "serial_sha256": "c52db964e53965c140bd95bb0614389dad421eb1921827c0933d7c372fd129d9",
+    "input_hashes_preserved": true,
+    "input_hashes_are_recorded_provenance": true
+  },
+  "tampered_case_rejections": [
+    {
+      "name": "pass_true_wrong_retirement",
+      "rejected": true,
+      "error": "retired: actual 17 != expected 16"
+    },
+    {
+      "name": "pass_true_wrong_far",
+      "rejected": true,
+      "error": "far: actual 1 != expected 0"
+    },
+    {
+      "name": "pass_true_wrong_ram_digest",
+      "rejected": true,
+      "error": "complete RAM/guard digest mismatch"
+    },
+    {
+      "name": "pass_true_table_mutation",
+      "rejected": true,
+      "error": "table mutation or invalid digest"
+    },
+    {
+      "name": "wrong_property_offset",
+      "rejected": true,
+      "error": "property offset mismatch"
+    },
+    {
+      "name": "missing_field",
+      "rejected": true,
+      "error": "missing/extra keys"
+    },
+    {
+      "name": "extra_field",
+      "rejected": true,
+      "error": "missing/extra keys"
+    },
+    {
+      "name": "host_address_above_u64",
+      "rejected": true,
+      "error": "host span outside u64"
+    },
+    {
+      "name": "host_span_wraps_u64",
+      "rejected": true,
+      "error": "host span outside u64"
+    },
+    {
+      "name": "duplicate_field",
+      "rejected": true,
+      "errors": [
+        "duplicate key"
+      ]
+    },
+    {
+      "name": "failed_envelope",
+      "rejected": true,
+      "error": "unsuccessful or wrong report schema"
+    },
+    {
+      "name": "passed_not_boolean",
+      "rejected": true,
+      "error": "unsuccessful or wrong report schema"
+    },
+    {
+      "name": "wrong_schema",
+      "rejected": true,
+      "error": "unsuccessful or wrong report schema"
+    },
+    {
+      "name": "missing_envelope",
+      "rejected": true,
+      "error": "missing/extra report fields"
+    },
+    {
+      "name": "duplicate_matrix",
+      "rejected": true,
+      "error": "missing, duplicate or reordered matrix case"
+    },
+    {
+      "name": "missing_matrix",
+      "rejected": true,
+      "error": "incomplete or unexpected marker sequence"
+    },
+    {
+      "name": "raw_marker_mismatch",
+      "rejected": true,
+      "error": "recorded markers differ from raw serial"
+    },
+    {
+      "name": "raw_fail_marker",
+      "rejected": true,
+      "error": "incomplete or unexpected marker sequence"
+    },
+    {
+      "name": "unknown_raw_marker",
+      "rejected": true,
+      "error": "incomplete or unexpected marker sequence"
+    },
+    {
+      "name": "raw_duplicate_field",
+      "rejected": true,
+      "error": "malformed marker fields"
+    },
+    {
+      "name": "missing_raw_serial",
+      "rejected": true,
+      "error": "missing raw serial capture"
+    },
+    {
+      "name": "missing_input_role",
+      "rejected": true,
+      "error": "wrong input provenance roles"
+    },
+    {
+      "name": "invalid_input_digest",
+      "rejected": true,
+      "error": "invalid input digest"
+    },
+    {
+      "name": "changed_input_digest",
+      "rejected": true,
+      "error": "input changed during capture"
+    },
+    {
+      "name": "scope_flag_changed",
+      "rejected": true,
+      "error": "invalid scope flags"
+    },
+    {
+      "name": "forged_host_validation",
+      "rejected": true,
+      "error": "recorded host validations differ from recomputation"
+    },
+    {
+      "name": "serial_digest_mismatch",
+      "rejected": true,
+      "error": "raw serial digest mismatch"
+    },
+    {
+      "name": "duplicate_count_mismatch",
+      "rejected": true,
+      "error": "transport duplicate count mismatch"
+    }
+  ],
+  "input_paths": {
+    "report": "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/dt-firmware/report.json",
+    "serial": "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/dt-firmware/serial.log",
+    "checker": "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/EFI/tools/check_dt_ledger_capture.py",
+    "reader": "/home/sharh/work/module-validation-bp33-efi-sha2-20260909/EFI/tools/verify_dt_ledger_ovmf.py"
+  },
+  "input_sha256_before": {
+    "report": "93a571e3ec4307b3a125ee3529748eb732211a8d518e22b43b268a9b65118d0f",
+    "serial": "c52db964e53965c140bd95bb0614389dad421eb1921827c0933d7c372fd129d9",
+    "checker": "582da32c36b9ea01341bd0fbf0995f8158ac2faf6a92485d4cc0b33727ebc43c",
+    "reader": "7c281fba318c99de35fd44f0e670a1be07ffa0998347d36b85f5bd1acfb1dd5f"
+  },
+  "input_sha256_after": {
+    "report": "93a571e3ec4307b3a125ee3529748eb732211a8d518e22b43b268a9b65118d0f",
+    "serial": "c52db964e53965c140bd95bb0614389dad421eb1921827c0933d7c372fd129d9",
+    "checker": "582da32c36b9ea01341bd0fbf0995f8158ac2faf6a92485d4cc0b33727ebc43c",
+    "reader": "7c281fba318c99de35fd44f0e670a1be07ffa0998347d36b85f5bd1acfb1dd5f"
+  },
+  "historical_input_hashes_are_recorded_provenance": true
+}

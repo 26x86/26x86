@@ -1817,3 +1817,18 @@ x86 accelerated backend; cargo check and release-only builds had not exercised
 that compiler path. Root owns the corrective Core target-UEFI force-soft
 dependency, actual debug/release codegen CI, dependent EFI/Tool pins and fresh
 firmware validation. Existing successful/failed source identities stay separate.
+
+
+BP35's single original16384 diagnostic reached5311 retired instructions and
+stopped at a real UBFM/LSL-immediate unsupported boundary; original coordinates
+and bytes remain isolated. BP36 is delegated to CPU (complete UBFM32/64 native
+and reference semantics), GPU (independent authored Arm oracle), and EFI
+(authored existing-bin consumer proof), all in new worktrees/external fixtures.
+No BFM/SBFM support or additional original run is implied.
+
+
+BP33 closure: merged Core147/EFI7e7/Tool4bb pins pass the corrected fresh recursive
+e0351bd47-command suite, including194actualEFI and6CLI-only cases. Core SHA2
+debug failure and the earlier separate QEMU shutdown timeout remain failed
+historical records. Final artifact bytes, canonical network clone and exact-head
+CI are required before parent merge; subsequent BP34/35 module work is separate.

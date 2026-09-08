@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "commit": "4bb09da1243eba98ee8fb0ed01b58b3f36484209",
+  "fresh_standalone_clone": true,
+  "canonical_core": "git+https://github.com/26x86/Nextcore-Core.git?rev=147f4c4e4969074c9dd12c63bf17c6e8c674dabb#147f4c4e4969074c9dd12c63bf17c6e8c674dabb",
+  "root_workspace_patches": false,
+  "commands": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/work/bp33-tool-uefi-sha2",
+        "/home/sharh/work/module-validation-bp33-tool-sha2-20260909/Tool"
+      ],
+      "exit_code": 0,
+      "seconds": 3.05
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 35.19
+    }
+  ],
+  "inventory_files": 13
+}

@@ -1,0 +1,179 @@
+{
+  "schema": "nextcore.integrated-efi-memory-proof.v1",
+  "passed": true,
+  "commands": [
+    {
+      "name": "scalar",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/verify_scalar_ovmf.py",
+        "--efi",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-provider.efi",
+        "--tools",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools",
+        "--output",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "name": "pair",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/verify_pair_ovmf.py",
+        "--efi",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-provider.efi",
+        "--tools",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools",
+        "--output",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/pair"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "name": "observations",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/verify_provider_results.py",
+        "--scalar",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar",
+        "--pair",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/pair",
+        "--output",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/observations.json"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "name": "edges",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/run_provider_edges.py",
+        "--efi",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-provider.efi",
+        "--tools",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools",
+        "--output",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/edges"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "name": "direct-bypass",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/trace_arm_jit_ovmf.py",
+        "--efi",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-probe.efi",
+        "--kernel",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/byte-signed.kc",
+        "--device-tree",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/scalar/diagnostic.dt",
+        "--output",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/bypass",
+        "--physical-base",
+        "0x40000000",
+        "--virtual-base",
+        "0xfffffe0000000000",
+        "--memory-size",
+        "67108864",
+        "--kernel-physical",
+        "0x42000000",
+        "--instruction-budget",
+        "64",
+        "--platform-profile",
+        "nextcore-irq-compat-v1",
+        "--allow-incomplete-sptm-prefix",
+        "--host-memory-mib",
+        "256",
+        "--timeout",
+        "30"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0
+    },
+    {
+      "name": "bypass-rejected",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/verify_provider_results.py",
+        "--byte-case",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/bypass",
+        "--output",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/bypass-negative.json"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1
+    },
+    {
+      "name": "tiers",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-tiered-trace-20260909/verify_tiered_budget_ovmf.py",
+        "--tools",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools",
+        "--efi",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-tiered.efi",
+        "--default-efi",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-provider.efi",
+        "--output",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/firmware-memory-provider/tiers"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0
+    }
+  ],
+  "input_sha256_before": {
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-provider.efi": "fbfa153e8d88f8046118e34e843b4ca1bb443176b7020f0971ed7bc06a515b79",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-probe.efi": "58947c77ea076ad1e832a4f1fd311d5467841828885a17ccf70d5ce830b46d3b",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-tiered.efi": "e57578f3314bc38d022e5394ad49c50bb89c07f9dc1400ade9489482837268df",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/verify_arm_memory_provider_ovmf.py": "5ebeed92b91105dec85dcba546164ff72fd07ec7c85a46e3043d9c8e18aa2b54",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/trace_arm_jit_ovmf.py": "2831b9208673839fa445c6f6e6a888fad5d7a31d97fe3f7314d546244c73915e",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "29a14a20596e1f68bbb48c77f20ae8565c26f4802567ac83596ada05c4f352a2",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/build_arm64_handoff_probe.py": "57ac29fc0558f79152978e6f7660d8ddcb8b0d98a69cc571b13349dc032cf3ee",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/verify_provider_results.py": "6ae08df90146b84884eeaee57998df6f720764cc2837383fe6c6fef4e13702b6",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/verify_pair_ovmf.py": "46535f72bd2c7976530efe34a0b72c9458412ba732e428b291749874c2589e78",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/build_variants.py": "295517282c1e7b7c4114896db11d56999e5463d7c5b716de72c730e60d35a12b",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/verify_scalar_ovmf.py": "f39ac6dde8776a33bf9494e25e041822883b3158fab996fbde6fc08554154202",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/run_provider_edges.py": "956fa3236398e3ec93a15bcd6087a9246d18336396c12f1851b12d61c4285d80",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/reproduce.py": "3b13668157ad777e77a187ae588819fa32da2168c2c0bb10d52c010a38bac361",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/arm64_provider_edges.S": "50567811f5cf8f316beabc113606a34101a5cd3e166d7037047ed89c3cc2a672",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/arm64_scalar_probe.S": "f3ef5bf3ed964380a32f21f9fcdb35e3e7ebfc6190aa408b7302d86d5b461de0",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/arm64_pair_probe.S": "22fbe0fa54811b5f89f510e013d00f45a12932363b28e16ad3be2a14f09a6706",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-tiered-trace-20260909/verify_tiered_budget_ovmf.py": "a731834e84af22841612ceaf7ca0197228d93d6b3c8647e955b421ad4773ca17",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-tiered-trace-20260909/tiered_budget_probe.S": "b7a8fe2ccb96b5102c902b53d34e4445f24f90d2df5cadb1211108a74ea51ec3"
+  },
+  "input_sha256_after": {
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-provider.efi": "fbfa153e8d88f8046118e34e843b4ca1bb443176b7020f0971ed7bc06a515b79",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-probe.efi": "58947c77ea076ad1e832a4f1fd311d5467841828885a17ccf70d5ce830b46d3b",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/NXARMJIT-tiered.efi": "e57578f3314bc38d022e5394ad49c50bb89c07f9dc1400ade9489482837268df",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/verify_arm_memory_provider_ovmf.py": "5ebeed92b91105dec85dcba546164ff72fd07ec7c85a46e3043d9c8e18aa2b54",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/trace_arm_jit_ovmf.py": "2831b9208673839fa445c6f6e6a888fad5d7a31d97fe3f7314d546244c73915e",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "29a14a20596e1f68bbb48c77f20ae8565c26f4802567ac83596ada05c4f352a2",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/tools/build_arm64_handoff_probe.py": "57ac29fc0558f79152978e6f7660d8ddcb8b0d98a69cc571b13349dc032cf3ee",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/verify_provider_results.py": "6ae08df90146b84884eeaee57998df6f720764cc2837383fe6c6fef4e13702b6",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/verify_pair_ovmf.py": "46535f72bd2c7976530efe34a0b72c9458412ba732e428b291749874c2589e78",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/build_variants.py": "295517282c1e7b7c4114896db11d56999e5463d7c5b716de72c730e60d35a12b",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/verify_scalar_ovmf.py": "f39ac6dde8776a33bf9494e25e041822883b3158fab996fbde6fc08554154202",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/run_provider_edges.py": "956fa3236398e3ec93a15bcd6087a9246d18336396c12f1851b12d61c4285d80",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/reproduce.py": "3b13668157ad777e77a187ae588819fa32da2168c2c0bb10d52c010a38bac361",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/arm64_provider_edges.S": "50567811f5cf8f316beabc113606a34101a5cd3e166d7037047ed89c3cc2a672",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/arm64_scalar_probe.S": "f3ef5bf3ed964380a32f21f9fcdb35e3e7ebfc6190aa408b7302d86d5b461de0",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-memory-provider-20260909/arm64_pair_probe.S": "22fbe0fa54811b5f89f510e013d00f45a12932363b28e16ad3be2a14f09a6706",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-tiered-trace-20260909/verify_tiered_budget_ovmf.py": "a731834e84af22841612ceaf7ca0197228d93d6b3c8647e955b421ad4773ca17",
+    "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/artifacts/arm-tiered-trace-20260909/tiered_budget_probe.S": "b7a8fe2ccb96b5102c902b53d34e4445f24f90d2df5cadb1211108a74ea51ec3"
+  },
+  "provider_cases": 23,
+  "tiered_cases": 8,
+  "actual_x86_firmware_cases": 26,
+  "cli_rejections": 6,
+  "direct_bypass_negative_detected": true,
+  "transport_failure_variant_executed": false,
+  "native_mmu_verified": false,
+  "macos_boot_verified": false,
+  "guest_metal_verified": false
+}

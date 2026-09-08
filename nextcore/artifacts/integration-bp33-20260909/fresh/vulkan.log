@@ -1,0 +1,203 @@
+   Compiling ash v0.38.0+1.3.281
+   Compiling libloading v0.8.9
+   Compiling serde_json v1.0.151
+   Compiling nextcore-gpu v0.1.0 (/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-gpu)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.56s
+     Running unittests src/lib.rs (nextcore/target/debug/deps/nextcore_gpu-627aac2550cba7b1)
+
+running 11 tests
+test vulkan_compute::tests::duplicate_uuid_and_wrong_ids_never_choose_a_candidate ... ok
+test vulkan_compute::tests::authored_fixture_profile ... ok
+test vulkan_compute::tests::host_memory_selection_respects_buffer_bits_coherency_and_shared_heaps ... ok
+test vulkan_compute::tests::memory_type_index_31_and_malformed_counts_are_checked ... ok
+test vulkan_compute::tests::optional_memory_features_are_not_silently_used ... ok
+test vulkan_compute::tests::software_vulkan_pipeline_reuse_and_replacement ... ignored, requires Mesa llvmpipe Vulkan ICD and /usr/bin/spirv-val
+test vulkan_compute::tests::rejects_bad_header_truncation_entry_and_optional_capabilities ... ok
+test vulkan_compute::tests::unsupported_diagnostics_report_all_failed_baseline_requirements ... ok
+test vulkan_compute::tests::rejects_nonzero_descriptor_set_and_conflicting_workgroup_builtin ... ok
+test vulkan_compute::tests::uuid_selects_same_model_without_first_device_or_vendor_policy ... ok
+test vulkan_compute::tests::virtual_device_remains_unsupported_and_low_capacity_is_explicit ... ok
+
+test result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_compute.rs (nextcore/target/debug/deps/gpu_compute-16cc8b36aaaa5840)
+
+running 11 tests
+test invalid_dispatch_never_signals_fence ... ok
+test storage_range_arithmetic_cannot_overflow ... ok
+test test_create_pipeline ... ok
+test test_default_dispatch_does_not_fake_execution_or_fence ... ok
+test test_delete_pipeline ... ok
+test test_dispatch_invalid_dims ... ok
+test test_dispatch_missing_buffer ... ok
+test test_dispatch_missing_pipeline ... ok
+test test_storage_buffer_oob_read ... ok
+test test_storage_buffer_oob_write ... ok
+test test_storage_buffer_ops ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_executor.rs (nextcore/target/debug/deps/gpu_executor-cb78925db51f4aaf)
+
+running 11 tests
+test test_begin_end_render_pass_clears ... ok
+test test_binding_commands ... ok
+test test_copy_texture_commands ... ok
+test test_create_index_buffer ... ok
+test test_create_uniform_buffer ... ok
+test test_create_vertex_buffer ... ok
+test test_draw_commands_record_execution ... ok
+test test_draw_instanced ... ok
+test test_reset_stats ... ok
+test test_write_uniform_limited_to_buffer_size ... ok
+test test_write_vertex_buffer ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_executor_compute.rs (nextcore/target/debug/deps/gpu_executor_compute-4467e8b98d15c51e)
+
+running 5 tests
+test compute_rejects_active_render_pass_across_command_lists ... ok
+test failed_dispatch_stops_later_commands_and_retains_prior_work ... ok
+test rasterizer_entry_point_does_not_silently_accept_compute ... ok
+test recorded_compute_forwards_typed_manager_errors_and_preserves_buffers ... ok
+test recorded_compute_requires_a_backend_and_never_counts_a_noop ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_framebuffer.rs (nextcore/target/debug/deps/gpu_framebuffer-795b8de09d988997)
+
+running 11 tests
+test test_dirty_tracking ... ok
+test test_double_buffer_swap ... ok
+test test_framebuffer_blit ... ok
+test test_framebuffer_blit_out_of_bounds ... ok
+test test_framebuffer_clear_bgra ... ok
+test test_framebuffer_clear_rgba ... ok
+test test_framebuffer_fill_rect ... ok
+test test_framebuffer_new_dimensions ... ok
+test test_framebuffer_set_get_pixel_roundtrip ... ok
+test test_framebuffer_out_of_bounds ... ok
+test test_from_raw_framebuffer ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_pipeline.rs (nextcore/target/debug/deps/gpu_pipeline-00e8de47475bfbec)
+
+running 10 tests
+test test_attribute_offsets ... ok
+test test_blend_factors_variants ... ok
+test test_default_blend_state ... ok
+test test_default_depth_state ... ok
+test test_default_rasterizer_state ... ok
+test test_default_stencil_state ... ok
+test test_input_rate_equality ... ok
+test test_pipeline_construction ... ok
+test test_shader_module_stages ... ok
+test test_vertex_format_sizes ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_raster.rs (nextcore/target/debug/deps/gpu_raster-3731274dee55b1cf)
+
+running 12 tests
+test test_alpha_blend ... ok
+test test_blend_functions ... ok
+test test_color_clamp ... ok
+test test_color_conversions ... ok
+test test_color_lerp ... ok
+test test_perspective_divide ... ok
+test test_rasterize_fullscreen_triangle ... ok
+test test_rasterize_line ... ok
+test test_rasterize_triangle_list ... ok
+test test_rasterize_triangle_list_bad_length ... ok
+test test_vec_operations ... ok
+test test_vertex_with_attributes ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_render_path.rs (nextcore/target/debug/deps/gpu_render_path-287626fa3c405233)
+
+running 6 tests
+test render_indexed_draw_rasterizes_triangle ... ok
+test render_path_clears_and_rasterizes_triangle ... ok
+test render_path_records_draw_call_count ... ok
+test render_path_double_buffer_presents ... ok
+test render_without_rasterizer_only_clears ... ok
+test software_vertex_roundtrip_via_decode ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_sync.rs (nextcore/target/debug/deps/gpu_sync-1eeaf767552c40cb)
+
+running 11 tests
+test test_counts ... ok
+test test_event_fire_wait ... ok
+test test_event_reset ... ok
+test test_fence_create_and_signal ... ok
+test test_fence_wait ... ok
+test test_reset_all_resets_all_types ... ok
+test test_semaphore_id_derives ... ok
+test test_semaphore_is_cloneable_state ... ok
+test test_semaphore_signal_wait ... ok
+test test_fence_timeout ... ok
+test test_semaphore_timeout ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/gpu_texture.rs (nextcore/target/debug/deps/gpu_texture-bc0fc5dcf0631a42)
+
+running 11 tests
+test test_compare_func_variants ... ok
+test test_sample_2d_nearest ... ok
+test test_sample_clamp_to_border ... ok
+test test_sampler_create_get_delete ... ok
+test test_texture_create_and_destroy ... ok
+test test_texture_format_size ... ok
+test test_texture_invalid_dimensions ... ok
+test test_texture_not_found ... ok
+test test_texture_upload_download ... ok
+test test_texture_upload_size_mismatch ... ok
+test test_usage_bit_dedup ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpu_virtual.rs (nextcore/target/debug/deps/gpu_virtual-f5bbf4ea2ee66715)
+
+running 11 tests
+test buffer_range_overflow_is_rejected_without_mutation ... ok
+test test_allocate_buffer ... ok
+test test_command_copy ... ok
+test test_device_family ... ok
+test test_gtx680_canonical ... ok
+test test_hd4000_canonical ... ok
+test test_rx580_canonical ... ok
+test test_rx580_vram ... ok
+test test_spec_json_roundtrip ... ok
+test test_unknown_fallback ... ok
+test test_vega64_canonical ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sgpu_submission.rs (nextcore/target/debug/deps/sgpu_submission-1c52d431551a2a47)
+
+running 10 tests
+test all_truncations_and_trailing_bytes_are_rejected ... ok
+test backend_failure_reports_committed_prefix_and_stops_later_work ... ok
+test copy_and_io_ranges_do_not_wrap_or_truncate ... ok
+test independently_authored_little_endian_fixture_keeps_full_width_handles ... ok
+test kernel_shape_and_invocation_limits_are_checked_before_any_work ... ok
+test host_registrations_are_bounded_and_reject_zero_handles ... ok
+test mapping_isolation_and_registered_kernel_lifetime_are_enforced ... ok
+test snapshot_windows_check_u64_overflow_and_32_bit_boundary ... ok
+test unsupported_command_preflight_preserves_earlier_copy ... ok
+test count_and_byte_attacks_fail_before_reservation ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/vulkan_compute.rs (nextcore/target/debug/examples/vulkan_compute-e7252324368db5f3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
