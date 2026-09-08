@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-09-08T14:53:18.938442+00:00",
+  "scope": "BP27-C Windows application cleanup",
+  "development_environment": "WSL2 Ubuntu 24.04; native Windows packaging and Chrome browser validation",
+  "build": {
+    "command": "scripts/build-windows-exe.ps1",
+    "python": "3.12.14",
+    "pyinstaller": "6.22.2",
+    "pywebview": "6.2.1",
+    "artifact": "dist/26x86/26x86.exe",
+    "artifact_sha256": "c4a5affa968369c3ea69aa677286517cf0afde87f5540f0ad1121b89a73dfef9",
+    "exit_code": 0,
+    "source_snapshot_checks": [
+      {
+        "path": "x86/cli.py",
+        "sha256": "4cedc3d3b14f514067c211ea464068e81d568daf38608fa1b9b89a341affc93d",
+        "build_snapshot_sha256": "4cedc3d3b14f514067c211ea464068e81d568daf38608fa1b9b89a341affc93d",
+        "match": true
+      },
+      {
+        "path": "x86/gui/bootstrap.py",
+        "sha256": "74401bde7e87d12eb07570b38fa07ca3ff58baca8709e7215f5314e8c532477c",
+        "build_snapshot_sha256": "74401bde7e87d12eb07570b38fa07ca3ff58baca8709e7215f5314e8c532477c",
+        "match": true
+      },
+      {
+        "path": "x86/gui/bridge.py",
+        "sha256": "f3df9bf56ae2ae260e4bed474999826b62c41f3f6117401c87c68fe10850a89e",
+        "build_snapshot_sha256": "f3df9bf56ae2ae260e4bed474999826b62c41f3f6117401c87c68fe10850a89e",
+        "match": true
+      },
+      {
+        "path": "x86/gui/entry.py",
+        "sha256": "2378a886e4ac78f0992140a3891192dafc8d87a27b4de95c92837aeaa3df1f8a",
+        "build_snapshot_sha256": "2378a886e4ac78f0992140a3891192dafc8d87a27b4de95c92837aeaa3df1f8a",
+        "match": true
+      },
+      {
+        "path": "x86/gui/http_bridge.py",
+        "sha256": "d3d8d39239553745924b2d2ebd7a6a0e1e14e37ae83434b83e4329988456fa94",
+        "build_snapshot_sha256": "d3d8d39239553745924b2d2ebd7a6a0e1e14e37ae83434b83e4329988456fa94",
+        "match": true
+      },
+      {
+        "path": "x86/gui/qt_chromium.py",
+        "sha256": "647960b324afeec812e8aa07ae2237df78bc8ed82e1baaaf961723bedfb8e6f2",
+        "build_snapshot_sha256": "647960b324afeec812e8aa07ae2237df78bc8ed82e1baaaf961723bedfb8e6f2",
+        "match": true
+      },
+      {
+        "path": "x86/gui/webview_app.py",
+        "sha256": "790e80193993c90d743ccdeea4e68a3ec9b69551c0377ac94126700959daa710",
+        "build_snapshot_sha256": "790e80193993c90d743ccdeea4e68a3ec9b69551c0377ac94126700959daa710",
+        "match": true
+      },
+      {
+        "path": "x86/gui/web/app.js",
+        "sha256": "ef6cd4b9918af65de68ce3efcc379cf131d8a05f0aef4bd1384eabec33bd7940",
+        "build_snapshot_sha256": "ef6cd4b9918af65de68ce3efcc379cf131d8a05f0aef4bd1384eabec33bd7940",
+        "match": true
+      },
+      {
+        "path": "x86/gui/web/styles.css",
+        "sha256": "5851619ad61c16162cf24967469fc2f9d4da55c6612010ff1314ae85ab4ace72",
+        "build_snapshot_sha256": "5851619ad61c16162cf24967469fc2f9d4da55c6612010ff1314ae85ab4ace72",
+        "match": true
+      },
+      {
+        "path": "x86/patch/root.py",
+        "sha256": "3b6629be1164ad94b0a809d5082c0e52aeea7c03774935724b2e1a3f9f232bfa",
+        "build_snapshot_sha256": "3b6629be1164ad94b0a809d5082c0e52aeea7c03774935724b2e1a3f9f232bfa",
+        "match": true
+      },
+      {
+        "path": "26x86-Windows.spec",
+        "sha256": "a7a6bb3e5cfa5aa5ac8e2b3274a74884a547581d51a6c121762c4b6a5b5ce312",
+        "build_snapshot_sha256": "a7a6bb3e5cfa5aa5ac8e2b3274a74884a547581d51a6c121762c4b6a5b5ce312",
+        "match": true
+      },
+      {
+        "path": "scripts/build-windows-exe.ps1",
+        "sha256": "c0dc62f18b655c713dfe50fc7f34ad3a886a1ca24b669e02c3e5bb23e3f77d48",
+        "build_snapshot_sha256": "c0dc62f18b655c713dfe50fc7f34ad3a886a1ca24b669e02c3e5bb23e3f77d48",
+        "match": true
+      },
+      {
+        "path": "tests/extreme/gui_web.test.cjs",
+        "sha256": "c41c9e5220527db273f3d23a974a290efc7a072a0d0d7ac00e901a77c9e40d04",
+        "build_snapshot_sha256": "c41c9e5220527db273f3d23a974a290efc7a072a0d0d7ac00e901a77c9e40d04",
+        "match": true
+      },
+      {
+        "path": "tests/test_gui_boundaries.py",
+        "sha256": "11b49ebdf3dbd890fc65bcc87bc040166baf0ae82766090c9be8bc8f80598a5e",
+        "build_snapshot_sha256": "11b49ebdf3dbd890fc65bcc87bc040166baf0ae82766090c9be8bc8f80598a5e",
+        "match": true
+      }
+    ]
+  },
+  "validation": {
+    "python_regression": {
+      "passed": 165,
+      "skipped": 3,
+      "total": 168,
+      "command": "python -m unittest tests.test_gui_boundaries tests.test_execution tests.test_mellow_integration tests.test_mellow_transaction x86.patch.test_abstraction x86.test_sandbox x86.test_boot_picker x86.test_vmapple -q",
+      "note": "Before the final two boundary assertions; the final boundary suite below reran the changed code."
+    },
+    "python_final_boundaries": {
+      "passed": 19,
+      "command": "python -m unittest tests.test_gui_boundaries x86.patch.test_abstraction -q"
+    },
+    "javascript_transport": {
+      "passed": 4,
+      "node": "24.15.0",
+      "command": "node --test tests/gui_transport.test.cjs"
+    },
+    "javascript_syntax": {
+      "passed": true,
+      "command": "node --check x86/gui/web/app.js"
+    },
+    "chrome_browser_ui": {
+      "passed": true,
+      "command": "node tests/extreme/gui_web.test.cjs",
+      "coverage": [
+        "ARM EFI preparation",
+        "removed app testers absent",
+        "native build dispatch",
+        "no false completion",
+        "help errors",
+        "saved ARM mode",
+        "390px layout"
+      ]
+    },
+    "windows_exe_startup": {
+      "passed": true,
+      "exit_code": 0,
+      "check_count": 6,
+      "command": "26x86.exe --smoke-report windows-app-final-smoke.json",
+      "note": "Backend startup smoke; browser DOM was exercised separately, not in a rendered EXE WebView window."
+    },
+    "git_diff_check": true,
+    "retired_profile_tracked_search": {
+      "matched": false,
+      "scope": "Tracked public text, including historical artifacts"
+    },
+    "workflow_read_only_cli": {
+      "passed": true,
+      "command": "python -m x86 --help"
+    }
+  },
+  "verified_guest_macos_boot": false,
+  "verified_guest_metal": false,
+  "verified_physical_efi_gpu_backend": false,
+  "evidence": [
+    {
+      "path": "browser-ui.log",
+      "sha256": "b023b7c3a68eba495bcdca4b469d5beed5b950a8d1952595352fa6a4a0ac8e7e",
+      "bytes": 119
+    },
+    {
+      "path": "javascript-transport.log",
+      "sha256": "3fd6b88e9fbc2a84e2d2b1d38ee895b0b42713be3d2b958996ddbd1993208be2",
+      "bytes": 472
+    },
+    {
+      "path": "python-boundaries.log",
+      "sha256": "d2ed8bf3a6b2e12f41cb7dfe2e0ba019d96f2cff44a0ffda0d959a93dc254e33",
+      "bytes": 98
+    },
+    {
+      "path": "python-regression.log",
+      "sha256": "4bb41da03f1707f23eea4c55b9bfd21a3cc789edd74c2e56fbcc852bf77f8935",
+      "bytes": 2886
+    },
+    {
+      "path": "windows-build.log",
+      "sha256": "6ee4f77b94bf0eb9c42d15fdcfa209b0a092893b5c74e4dd73e2c830de8f59cc",
+      "bytes": 12542
+    },
+    {
+      "path": "windows-exe-smoke.json",
+      "sha256": "16658a9d837fce7e3e21948a3abd875fc9463bf90ca617747af368ab0617c312",
+      "bytes": 2709
+    }
+  ],
+  "publication_cleanup": {
+    "filtered_historical_records": 3,
+    "originals_preserved_outside_repository": true,
+    "original_and_published_sha256_in_sidecars": true,
+    "original_test_execution_counts_unchanged": true
+  }
+}

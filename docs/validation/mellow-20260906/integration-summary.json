@@ -13,7 +13,11 @@
         "Ran 118 tests in 4.566s",
         "",
         "OK (skipped=1)"
-      ]
+      ],
+      "sha256_scope": "original_execution_log_before_publication_filter",
+      "original_sha256": "9337b8f27904f3e8c33d373244db28c8795a9f8d3d551b7cfdade2b6b92af96d",
+      "published_sha256": "ae2f920d9fb6bd37111d7b622b3e739338a9d8ce546a96b248a808245842a570",
+      "publication_note": "Retired machine-profile entries omitted; original execution count and outcome are unchanged. See publication-redactions.json."
     },
     {
       "command": "python -m unittest x86.gui.test_mellow_gui x86.gui.test_bridge_smoke -v",
@@ -46,7 +50,6 @@
     "x86/paths.py": "557fc9ee8c1ecb6eb1bc8c71da431c75d55c7df0e274eb5acc49837cecfe39a8",
     "x86/platform.py": "2038ba4c1b2b8c9a261cc084e0ac512a8d0c404c62e5dbd30ca803b568a2a9c3",
     "x86/settings.py": "68dd251333d6fde2b83aa81a137f01d4dc3315c0039d42831b7070a1f7721c08",
-    "x86/surface.py": "bf5458e242c48611fa3b7effaace00a23a22593d981251f49596e3b02ffbf577",
     "x86/__init__.py": "97e040118210fface304822223bff73066a246c2ad476f8f61caf98f79e7f7c4",
     "x86/__main__.py": "b5d94f251bf1a66e3e34529f02620d37edffa42eafe120b2038082027e691e8f",
     "x86/extreme/apply_order.py": "547bfa624215819b5a7a27d6f9881f0b93f115052b0edeea427572587e5bcfb8",
@@ -317,7 +320,7 @@
     "tests/test_mellow_integration.py": "dd7acfe640695dc9ae0cdccfd57d2188b72f9c3080b07150191a58b5774ee692",
     "tests/test_mellow_payload.py": "58643d8330131e6aabbd178e0ed4f1679d02a5a22c5ea41f73b5d5b0af5846e3",
     "tests/test_mellow_transaction.py": "eab96bbed6b052a5817b0d78ba4444a3e1a0f6b349b10583f63d98a14787aa15",
-    "tests/test_surface.py": "b67f14040329085412e79283154a2c3c5b67e209352f08405fabb7c007a58d57",
     "tests/extreme/run_extreme_validation.py": "a41049a7c7b8322084fece30f07266e73719adb6b7d87fdfe68d89302d560cd4"
-  }
+  },
+  "historical_record_note": "Two retired machine-profile source hash entries removed at user request in BP27. Historical execution counts and outcomes are unchanged; affected public command logs are explicitly filtered and carry original/published hashes."
 }

@@ -5,10 +5,11 @@ from __future__ import annotations
 import os
 from pathlib import Path
 from x86.platform import is_macos, MACOS_ONLY_MESSAGE
-from x86.surface import PROFILE_ID, configure_surface_constants
 
 
 def _context(profile=None, payload_dir=None, **mellow_options):
+    if profile is not None:
+        raise ValueError("Unknown root patch profile")
     from x86.mellow.integration import configuration, configure_constants
     if "mellow_payload" in mellow_options:
         mellow_options["payload_dir"] = mellow_options.pop("mellow_payload")
@@ -30,8 +31,6 @@ def _context(profile=None, payload_dir=None, **mellow_options):
     c.gui_mode = False
     if payload_dir:
         c.payload_path = Path(payload_dir).expanduser().resolve()
-    if profile == PROFILE_ID:
-        configure_surface_constants(c)
     return c
 
 
@@ -40,7 +39,7 @@ def preflight(profile=None, payload_dir=None, *, constants=None,
     """No root writes, payload mounts, or privileges requested by this entry."""
     if not is_macos():
         return {"ok": False, "status": "unsupported_platform", "can_patch": False, "error": MACOS_ONLY_MESSAGE}
-    if profile not in (None, PROFILE_ID):
+    if profile is not None:
         return {"ok": False, "status": "invalid_profile", "can_patch": False, "error": "Unknown root patch profile"}
     try:
         c = constants or _context(profile, payload_dir, **mellow_options)
@@ -58,17 +57,11 @@ def preflight(profile=None, payload_dir=None, *, constants=None,
         # inspection.
         from x86.mellow.integration import validate_live
         validate_live(c)
-        if profile == PROFILE_ID:
-            configure_surface_constants(c)
-            if c.detected_os != 25:
-                raise ValueError("The Surface Tahoe root profile requires installed Darwin 25 / macOS 26.")
         from opencore_legacy_patcher.sys_patch.patchsets import HardwarePatchsetDetection
 
         detected = HardwarePatchsetDetection(c)
         patches = list(detected.patches)
         blockers = []
-        if profile == PROFILE_ID and any(name not in ("Modern Audio", "Mellow") for name in patches):
-            blockers.append("Unexpected patch set for UHD 620. This profile permits only Modern Audio: " + ", ".join(patches))
         if not detected.can_patch:
             blockers.append("Live SIP / AMFI / FileVault / update / security validation rejected patching.")
         kdk_report = None
@@ -90,7 +83,7 @@ def preflight(profile=None, payload_dir=None, *, constants=None,
                 warnings.append("The existing engine selected a nearby KDK build, not an exact match. Review the KDK report before applying.")
         payload = Path(c.payload_local_binaries_root_path_dmg)
         if any(name != "Mellow" for name in patches) and not payload.is_file():
-            blockers.append(f"Missing published support payload: {payload}. See docs/SURFACE_PRO6.md.")
+            blockers.append(f"Missing published support payload: {payload}.")
         return {"ok": not blockers, "status": "blocked" if blockers else ("ready" if patches else "not_required"),
                 "can_patch": not blockers and bool(patches), "patches": patches, "blockers": blockers,
                 "validations": dict(detected.device_properties), "os_build": c.detected_os_build,

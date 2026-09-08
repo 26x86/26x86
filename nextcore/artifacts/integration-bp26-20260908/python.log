@@ -1,3 +1,4 @@
+# Filtered publication: retired machine-profile entries omitted at user request in BP27-C; original execution count and outcome retained. See publication-redactions.json.
 test_contract_only_run_is_successful_but_macos_stays_blocked (test_boot_runtime.BootRuntimeHarnessTests.test_contract_only_run_is_successful_but_macos_stays_blocked) ... ok
 test_external_input_contract_is_explicit_when_assets_are_missing (test_boot_runtime.BootRuntimeHarnessTests.test_external_input_contract_is_explicit_when_assets_are_missing) ... ok
 test_require_macos_does_not_get_promoted_by_missing_input (test_boot_runtime.BootRuntimeHarnessTests.test_require_macos_does_not_get_promoted_by_missing_input) ... ok
@@ -454,15 +455,6 @@ test_restore_ramdisk_is_opt_in_and_payload_is_recorded_separately (test_prepare_
     "install_target_members_extracted": false
   }
 }ok
-test_websites_cannot_launch_local_patch_or_read_efi (test_surface.BridgeBoundaryTests.test_websites_cannot_launch_local_patch_or_read_efi) ... ok
-test_enabled_path_cannot_escape_efi (test_surface.SurfaceTests.test_enabled_path_cannot_escape_efi) ... ok
-test_missing_optional_qt_parents_are_not_startup_errors (test_surface.SurfaceTests.test_missing_optional_qt_parents_are_not_startup_errors) ... ok
-test_non_mac_root_patch_never_loads_engine (test_surface.SurfaceTests.test_non_mac_root_patch_never_loads_engine) ... ok
-test_preflight_reports_nearby_kdk_and_blocks_unrelated_patches (test_surface.SurfaceTests.test_preflight_reports_nearby_kdk_and_blocks_unrelated_patches) ... ok
-test_preparation_does_not_import_mac_frameworks_or_wx (test_surface.SurfaceTests.test_preparation_does_not_import_mac_frameworks_or_wx) ... ok
-test_profile_requires_cpu_and_gpu_not_spoofed_smbios (test_surface.SurfaceTests.test_profile_requires_cpu_and_gpu_not_spoofed_smbios) ... ok
-test_rollback_success_cannot_be_reported_as_patch_success (test_surface.SurfaceTests.test_rollback_success_cannot_be_reported_as_patch_success) ... ok
-test_validation_preserves_efi_and_detects_missing_binary (test_surface.SurfaceTests.test_validation_preserves_efi_and_detects_missing_binary) ... ok
 test_legacy_prefix_exact (test_sync_repositories.SyncContract.test_legacy_prefix_exact) ... ok
 test_owner_is_organization (test_sync_repositories.SyncContract.test_owner_is_organization) ... ok
 test_plan_lists_both_modules (test_sync_repositories.SyncContract.test_plan_lists_both_modules) ... ok

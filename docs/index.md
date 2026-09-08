@@ -69,11 +69,9 @@ Material and deployed only from `main` through a pull request.
 ## Working modes
 
 - **x86 Mac mode** — prepares the EFI and root-patch path for native Intel Macs.
-- **Apple Silicon Sandbox mode** — contained diagnostic and research path; never
-  loads host kexts or applies root patches.
-- **Surface Pro 6 / Tahoe orientation** — same evidence gate: *file checks are
-  useful, but boot, display acceleration, audio, sleep, touch, and recovery each
-  need runtime acceptance.*
+- **ARM macOS EFI mode** — preparation information for ARM64e macOS 27 on
+  x86_64 EFI. Development VM launchers and synthetic demos are outside the app.
+
 
 See [Setup guides](SETUP.md) and [Supported hardware](wiki/Supported-Models.md).
 

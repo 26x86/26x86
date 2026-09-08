@@ -23,10 +23,6 @@ datas = [
 ]
 
 sys.path.insert(0, str(SPEC_DIR))
-if (SPEC_DIR / "sandbox/efi/build/BOOTX64.EFI").exists():
-    from x86.sandbox import _artifact
-    engine, _ = _artifact(SPEC_DIR)
-    datas.extend((str(file), "sandbox/efi/build") for file in (engine, engine.parent / "build-report.json"))
 
 a = Analysis(
     [str(ENTRY)],

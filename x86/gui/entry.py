@@ -28,13 +28,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--smoke-report", type=Path, help="Write a backend smoke report without opening a window")
     parser.add_argument("--gui-smoke-report", type=Path, help="Open the native window, verify its DOM and close it")
-    parser.add_argument("--profile", choices=["surface-pro6-i5-tahoe"], help="Lock the GUI to this target, independent of the preparation host")
-    parser.add_argument("--efi", type=Path, help="Pre-fill the Surface EFI validation directory; no automatic disk writes")
     args = parser.parse_args()
-    if args.profile:
-        os.environ["X86_TARGET_PROFILE"] = args.profile
-    if args.efi:
-        os.environ["X86_SURFACE_EFI"] = str(args.efi)
     from x86.gui.webview_app import _ensure_stdio_for_frozen_gui, smoke_test_bridge, launch_webview_wizard, _launch_pywebview_wizard
     _ensure_stdio_for_frozen_gui()
     if args.smoke_report:

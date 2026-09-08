@@ -90,8 +90,6 @@ class WizardBridge:
         self._boot_picker_selection: Optional[str] = None
         self._boot_picker_trigger: Optional[str] = None
 
-    def _hardware_profile(self):
-        return os.environ.get("X86_TARGET_PROFILE") or self._settings.read("hardware_profile")
 
     def get_sandbox_status(self) -> dict[str, Any]:
         from x86.sandbox import status
@@ -684,26 +682,9 @@ class WizardBridge:
             "host_is_mac": is_macos(),
             "macos_only_message": None if is_macos() else MACOS_ONLY_MESSAGE,
             "status_ready": strings.STATUS_READY,
-            "hardware_profile": self._hardware_profile(),
-            "profile_locked": bool(os.environ.get("X86_TARGET_PROFILE")),
-            "surface_efi_path": os.environ.get("X86_SURFACE_EFI", ""),
             **selection,
         }
 
-    def set_hardware_profile(self, profile: Optional[str] = None) -> dict[str, Any]:
-        from x86.surface import PROFILE_ID, profile_info
-        if profile not in (None, PROFILE_ID):
-            return {"ok": False, "error": "Unknown hardware profile"}
-        if os.environ.get("X86_TARGET_PROFILE") and profile != os.environ["X86_TARGET_PROFILE"]:
-            return {"ok": False, "error": "이 실행 파일은 Surface 대상 모드로 시작되었습니다."}
-        data = self._settings.load()
-        data["hardware_profile"] = profile
-        self._settings.save(data)
-        return {"ok": True, "profile": profile_info() if profile else None}
-
-    def validate_surface_efi(self, path: str) -> dict[str, Any]:
-        from x86.surface import validate_efi
-        return validate_efi(path)
 
     def get_steps(self) -> list[dict[str, str]]:
         return WEB_STEPS
@@ -797,34 +778,18 @@ class WizardBridge:
         self._settings.record_detect(payload["model"], extra=detect_extra)
         return {"ok": True, "detect": payload}
 
-    def get_silicon_sandbox_demo(self) -> dict[str, Any]:
-        """Simulated Apple Silicon boot-chain / DFU trace — never a real boot.
-
-        See x86.silicon for the safety contract (simulated/real_boot_verified/
-        xnu_executed). This never touches a subprocess, USB device, or hypervisor.
-        """
-        try:
-            from x86.silicon.session import run_install_session
-            return {"ok": True, "demo": run_install_session().as_dict()}
-        except Exception as exc:
-            logging.exception("silicon sandbox demo failed")
-            return {"ok": False, "error": errors.user_message(exc)}
 
     def get_patch_status(self) -> dict[str, Any]:
         try:
             context, deployment, payload, efi = self._configuration()
             if context.is_sandbox:
-                demo = self.get_silicon_sandbox_demo()
-                summary = "Apple Silicon Sandbox Mode · native kext 및 루트 패치 사용 불가."
-                if demo.get("ok"):
-                    summary += " ⚠ 시뮬레이션 — 실제 macOS 부팅이 아닙니다 (SIMULATED — NOT A REAL macOS BOOT)."
+                summary = "ARM64e macOS EFI 실행 모드 · 설치용 EFI 준비 중."
                 return {"ok": True, "execution": context.as_dict(),
-                    "patch": {"can_patch": False, "can_unpatch": False, "patches_available": [],
-                              "silicon_demo": demo.get("demo")},
+                    "patch": {"can_patch": False, "can_unpatch": False, "patches_available": []},
                     "summary": summary}
             if deployment == "root-patch":
                 from x86.patch.root import preflight
-                report = preflight(self._hardware_profile(), constants=self._constants())
+                report = preflight(constants=self._constants())
                 return {"ok": True, "execution": context.as_dict(), "patch": report,
                     "summary": "Mellow diagnostic root patch · GPU 가속 미검증\n" + "\n".join(
                         report.get("patches", []) + report.get("blockers", []) + [report.get("error") or ""])}
@@ -836,20 +801,6 @@ class WizardBridge:
                     "summary": "Mellow EFI 준비 가능 · 새 출력 폴더에 생성합니다. 실제 부팅 및 Metal 가속은 미검증입니다."}
         except Exception as exc:
             return {"ok": False, "patch": {"can_patch": False}, "summary": str(exc), "error": str(exc)}
-        from x86.surface import PROFILE_ID
-        if self._hardware_profile() == PROFILE_ID:
-            from x86.patch.root import preflight
-            report = preflight(PROFILE_ID)
-            summary = ["Surface Pro 6 · Tahoe · AppleHDA root patch"]
-            summary.extend(report.get("patches", []))
-            summary.extend(report.get("blockers", []))
-            summary.extend(report.get("warnings", []))
-            if report.get("kdk"):
-                summary.append("KDK: " + str(report["kdk"].get("selected_build")) + " / macOS: " + str(report["kdk"].get("host_build")))
-            if report.get("error"):
-                summary.append(report["error"])
-            summary.append("Surface EFI는 그대로 사용합니다. UHD 620에는 레거시 GPU 루트 패치를 적용하지 않습니다.")
-            return {"ok": True, "patch": report, "summary": "\n".join(summary)}
         try:
             patch = _patch_status_payload()
             active = patch.get("patches_available") or []
@@ -1000,13 +951,9 @@ class WizardBridge:
                 "error": "Mellow 복원 저널은 관리자 권한의 전체 작업 프로세스가 필요합니다. "
                 "저장한 설정으로 터미널에서 실행하세요: " + shlex.join(command)}
 
-        from x86.surface import PROFILE_ID
-        surface = self._hardware_profile() == PROFILE_ID
-        if surface and action in ("build", "install", "model_change", "advanced"):
-            return {"ok": False, "error": "Surface 전용 EFI를 사용하세요. Mac용 EFI 빌더로 덮어쓰지 않습니다."}
         if action == "patch":
             from x86.patch.root import preflight
-            report = preflight(PROFILE_ID if surface else None)
+            report = preflight()
             if not report.get("can_patch"):
                 # The bridge's platform guard above is authoritative.  This
                 # narrow compatibility path only covers an embedded/test
@@ -1037,8 +984,6 @@ class WizardBridge:
         env.setdefault("X86_LEGACY_GUI", "1")
         env.update(X86_EXECUTION_MODE=context.mode.value, X86_MELLOW_DEPLOYMENT=deployment,
                    X86_MELLOW_PAYLOAD=str(payload), X86_MELLOW_EFI=str(efi or ""))
-        if surface:
-            env["X86_TARGET_PROFILE"] = PROFILE_ID
         if action == "advanced":
             env["X86_ADVANCED"] = "1"
 

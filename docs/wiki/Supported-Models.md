@@ -10,7 +10,6 @@ promise of complete runtime support.
 | --- | --- | --- |
 | Mac Pro | [Pre-AVX Mac Pro](Pre-AVX-Mac-Pro.md) | GPU acceleration, AVX requirements, legacy firmware |
 | Intel Mac notebooks | [Configuration](Configuration.md) | Wi-Fi, sleep, graphics, input devices |
-| Surface Pro 6 | [Surface Pro 6](../SURFACE_PRO6.md) | Touch, audio, sleep, and graphics acceptance |
 
 For a new model, add a dedicated page only after its hardware assumptions,
 configuration scope, and evidence status are documented.

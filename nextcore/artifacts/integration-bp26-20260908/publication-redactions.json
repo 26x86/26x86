@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "file": "python.log",
+      "original_sha256": "edf84e28dfd3d7674f52be0a206b189b0115df2257589f0cdc5d6d8330d709f7",
+      "published_sha256": "43caa16a396588e1d2189cb7c42af2816a4120555c9da69c44cb3167d8c1ea52",
+      "publication_is_filtered": true,
+      "omitted_entries": 9,
+      "original_execution_count": 132,
+      "original_execution_count_unchanged": true,
+      "note": "Retired machine-profile entries omitted at user request in BP27-C. Original bytes are preserved outside the public repository; this file is not the unmodified execution evidence."
+    }
+  ]
+}

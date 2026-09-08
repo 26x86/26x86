@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "file": "integration-0.txt",
+      "original_sha256": "9337b8f27904f3e8c33d373244db28c8795a9f8d3d551b7cfdade2b6b92af96d",
+      "published_sha256": "ae2f920d9fb6bd37111d7b622b3e739338a9d8ce546a96b248a808245842a570",
+      "publication_is_filtered": true,
+      "omitted_entries": 9,
+      "original_execution_count": 118,
+      "original_execution_count_unchanged": true,
+      "note": "Retired machine-profile entries omitted at user request in BP27-C. Original bytes are preserved outside the public repository; this file is not the unmodified execution evidence."
+    }
+  ]
+}

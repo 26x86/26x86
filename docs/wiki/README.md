@@ -28,7 +28,6 @@ macOS release, then use the application and troubleshooting references.
 | --- | --- |
 | Tahoe and newer macOS work | [macOS support](macOS-Support.md) |
 | Pre-AVX Mac Pro constraints | [Pre-AVX Mac Pro](Pre-AVX-Mac-Pro.md) |
-| Surface Pro 6 | [Surface Pro 6](../SURFACE_PRO6.md) |
 
 ## Application
 

@@ -91,14 +91,10 @@ the firmware text menu. This screen is separate from a macOS GUI or Metal result
 ## Working modes
 
 **x86 Mac mode** prepares the EFI and root-patch path for native hardware.
-**Apple Silicon Sandbox mode** is a contained diagnostic and research path; it
-does not load host kexts or apply root patches. The Tauri GUI is the default
+**ARM macOS EFI mode** prepares the x86_64 EFI execution path for ARM64e macOS 27.
+The desktop app shows preparation information; research VM launchers and synthetic
+boot demonstrations remain outside the app. The Tauri GUI is the default
 desktop surface (WKWebView/WebView2); Cocoa pywebview remains a fallback.
-
-Surface Pro 6 i5-8250U / Tahoe preparation is documented separately in the
-[Surface Pro 6 guide](docs/SURFACE_PRO6.md). It uses the same evidence gate:
-file checks are useful, but boot, display acceleration, audio, sleep, touch,
-and recovery each need runtime acceptance.
 
 <details>
 <summary><strong>Windows EXE</strong></summary>

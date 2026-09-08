@@ -31,49 +31,10 @@ class WebviewApi:
     def get_app_info(self) -> dict[str, Any]:
         return self._bridge.get_app_info()
 
-    def get_sandbox_status(self):
-        return self._bridge.get_sandbox_status()
 
     def set_execution_mode(self, mode: str):
         return self._bridge.set_execution_mode(mode)
 
-    def get_sandbox_plan(self, target_major: int):
-        return self._bridge.get_sandbox_plan(target_major)
-
-    def prepare_sandbox(self, target_major: int, output_path: str):
-        return self._bridge.prepare_sandbox(target_major, output_path)
-
-    def get_vmapple_status(self):
-        return self._bridge.get_vmapple_status()
-
-    def inspect_vmapple_storage(self, config: dict[str, Any]):
-        """Read-only AUX/root readiness inspection for every webview backend."""
-        return self._bridge.inspect_vmapple_storage(config)
-
-    def get_boot_picker_status(self):
-        return self._bridge.get_boot_picker_status()
-
-    def start_boot_picker(self, target_major: int = 27, recovery_protocol: str = "DFU/IPSW",
-                          recovery_image_name: str = "_default.ipsw"):
-        return self._bridge.start_boot_picker(target_major, recovery_protocol, recovery_image_name)
-
-    def tick_boot_picker(self):
-        return self._bridge.tick_boot_picker()
-
-    def boot_picker_key(self, key: object, pressed: bool = True):
-        return self._bridge.boot_picker_key(key, pressed)
-
-    def select_boot_entry(self, entry_id: object):
-        return self._bridge.select_boot_entry(entry_id)
-
-    def launch_vmapple(self, config: dict[str, Any]):
-        return self._bridge.launch_vmapple(config)
-
-    def set_hardware_profile(self, profile=None) -> dict[str, Any]:
-        return self._bridge.set_hardware_profile(profile)
-
-    def validate_surface_efi(self, path: str) -> dict[str, Any]:
-        return self._bridge.validate_surface_efi(path)
 
     def get_steps(self) -> list[dict[str, str]]:
         return self._bridge.get_steps()
@@ -90,8 +51,6 @@ class WebviewApi:
     def get_patch_status(self) -> dict[str, Any]:
         return self._bridge.get_patch_status()
 
-    def get_silicon_sandbox_demo(self) -> dict[str, Any]:
-        return self._bridge.get_silicon_sandbox_demo()
 
     def get_status(self) -> dict[str, Any]:
         return self._bridge.get_status()

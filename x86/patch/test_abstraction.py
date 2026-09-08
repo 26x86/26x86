@@ -111,12 +111,11 @@ class AbstractionTests(unittest.TestCase):
         from x86.gui.bridge import WizardBridge
         bridge = WizardBridge.__new__(WizardBridge)
         bridge._settings = SimpleNamespace(read=lambda key, default=None: default)
-        bridge._hardware_profile = lambda: None
         with patch("x86.gui.bridge.is_macos", return_value=True), \
              patch("x86.patch.root.preflight", return_value={"can_patch":False, "status":"abstraction_blocked",
                  "blockers":["unregistered adapter"]}) as gate:
             report = bridge.launch_wx_action("patch")
-        gate.assert_called_once_with(None)
+        gate.assert_called_once_with()
         self.assertFalse(report["ok"])
         self.assertIn("unregistered adapter", report["error"])
 

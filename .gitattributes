@@ -11,7 +11,7 @@
 
 # Mellow manifests describe exact delivered bytes on every host.
 payloads/Mellow/** -text
-docs/validation/mellow-20260906/** -text
+docs/validation/mellow-20260906/** -text -whitespace
 vendor/mellow/** linguist-vendored
 # Exported patches and historical evidence have byte-identity receipts.
 integration/patches/*.patch -text -whitespace
@@ -28,3 +28,5 @@ nextcore/artifacts/integration-bp26-20260908/*.log -text -whitespace
 
 nextcore/artifacts/arm-platform-profile-20260908/**/*.log -text -whitespace
 nextcore/artifacts/integration-bp27-20260908/**/*.log -text -whitespace
+
+docs/validation/windows-app-cleanup-20260908/** -text -whitespace
