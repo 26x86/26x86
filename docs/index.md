@@ -3,14 +3,14 @@ hide:
   - navigation
 ---
 
-# 26x86
+# NextCore
 
 <div class="hero">
-  <h1>Modern Intel &amp; Apple Silicon macOS bootloader</h1>
+  <h1>NextCore — Intel &amp; Apple Silicon boot engineering</h1>
   <p class="hero-sub">
-    Clean-room EFI boot research, OpenCore integration, and evidence-first
-    compatibility tooling for macOS Tahoe — documented the way the ecosystem
-    actually builds it.
+    A clean-room EFI bootloader with a graphical picker. Our targets are native
+    HAL support for macOS 26 Tahoe and experimental AMD64 ↔ Apple Silicon HAL
+    with Metal acceleration for macOS 27 Golden Gate.
   </p>
   <div class="hero-actions">
     <a class="md-button md-button--primary" href="wiki/README.md">Start here</a>
@@ -32,28 +32,37 @@ hide:
 | --- | --- |
 | [Quick start](wiki/README.md) | Install, configure, and run the guided tool |
 | [macOS compatibility](wiki/macOS-Support.md) | Supported machines, Tahoe notes, known limits |
-| [OpenCore integration](wiki/OpenCore.md) | Bootloader wiring, EFI preparation, upstream packages |
+| [External EFI components](wiki/OpenCore.md) | Reference integration, EFI preparation, upstream attribution |
 | [Application](wiki/Application.md) | GUI, Mellow mode, sandbox and validation harnesses |
 | [Troubleshooting](wiki/Troubleshooting.md) | Common failures, GPU limitations, warnings |
-| [Boot engineering](wiki/Architecture.md) | Nextcore clean-room EFI/xnu handoff contracts and evidence |
+| [Boot engineering](wiki/Architecture.md) | NextCore clean-room EFI/XNU handoff contracts and evidence |
 | [Contribution](wiki/Developer.md) | PR workflow, branch and release policy, boundaries |
 
 ## Front page of the boot-engineering effort
 
-```text
-x86 UEFI handoff probes      → contract verified (not XNU boot)
-ARM recovery (VMApple)       → bootx acknowledged, firmware panic after
-Native Apple Silicon         → no registered native host yet
-Userspace + Metal            → no target-matched XNU/userspace evidence yet
-```
+| Layer | Current evidence |
+| --- | --- |
+| Firmware picker | Actual OVMF graphics, keyboard selection, cancellation and text fallback |
+| Tahoe native EFI path | NextCore → original booter → XNU, readable Recovery GUI and Terminal |
+| Golden Gate ARM64E preparation | Independent boot arguments and full host-memory KC staging/readback; guest entry unfinished |
+| ARM firmware path | Restore transport reaches `bootx`; a device-contract failure remains |
+| Host graphics | Actual Intel Vulkan compute, fence and result readback |
+| Guest Metal | Tahoe Recovery probe executes and reports no Metal device; full OS/driver validation continues |
 
-Detailed per-layer status lives in **Nextcore validation** (repository)
+![NextCore picker in an actual OVMF run](assets/images/nextcore-picker.png)
+
+The pictured EFI test entries are authored validation fixtures. The picker
+displays explicitly configured applications on its current volume; automatic
+OS-volume discovery is not implemented yet. Metal acceleration remains a required
+goal and is not claimed from a host-GPU or framebuffer test.
+
+Detailed per-layer status lives in **NextCore validation** (repository)
 [`nextcore/VALIDATION.md`](https://github.com/26x86/26x86/blob/main/nextcore/VALIDATION.md)
-and the [session evidence report][1]. The documentation site itself is built
+and the [current context][1]. The documentation site itself is built
 from [`docs/`](https://github.com/26x86/26x86/tree/main/docs) with MkDocs
 Material and deployed only from `main` through a pull request.
 
-[1]: https://github.com/26x86/26x86/blob/main/nextcore/artifacts/NEXTCORE_SESSION_REPORT_20260907.md
+[1]: https://github.com/26x86/26x86/blob/main/docs/NEXTCORE_CURRENT_CONTEXT.md
 
 ## Working modes
 

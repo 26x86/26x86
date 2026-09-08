@@ -1,6 +1,6 @@
 # Application
 
-The 26x86 application provides a guided workflow around OpenCore preparation,
+The NextCore application provides a guided workflow around EFI preparation,
 diagnostics, and evidence collection.
 
 ## Modes

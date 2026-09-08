@@ -1,6 +1,6 @@
-# 26x86 documentation
+# NextCore documentation
 
-This is the public documentation hub for 26x86. It follows a Dortania-style
+This is the public documentation hub for NextCore. It follows a Dortania-style
 guide structure: start with the installation path, select the target model and
 macOS release, then use the application and troubleshooting references.
 
@@ -8,7 +8,7 @@ macOS release, then use the application and troubleshooting references.
 
 | Topic | Document |
 | --- | --- |
-| New to 26x86 | [Getting started](Getting-Started.md) |
+| New to NextCore | [Getting started](Getting-Started.md) |
 | What is OpenCore in this project? | [OpenCore](OpenCore.md) |
 | Which Macs are covered? | [Supported models](Supported-Models.md) |
 | Frequently asked questions | [Home](Home.md) |
@@ -53,8 +53,8 @@ macOS release, then use the application and troubleshooting references.
 | --- | --- |
 | Public architecture | [Architecture](Architecture.md) |
 | Build and development | [Build and development](Build-and-Development.md) |
-| Nextcore design | [Nextcore design](../NEXTCORE_DESIGN.md) |
-| Build plan and validation | [Nextcore build plan](../NEXTCORE_BUILD_PLAN.md) |
+| NextCore design | [NextCore design](../NEXTCORE_DESIGN.md) |
+| Build plan and validation | [NextCore build plan](../NEXTCORE_BUILD_PLAN.md) |
 | Public/private boundary | [Privacy and disclosure](Privacy-and-Disclosure.md) |
 
 Internal research material and implementation details are intentionally not

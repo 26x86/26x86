@@ -5,7 +5,7 @@
 ## Type of change
 
 - [ ] docs (site, wiki, mkdocs nav)
-- [ ] module (Nextcore submodule pointer bump)
+- [ ] module (NextCore workspace crate or independent module export)
 - [ ] code (patcher, tooling, CI)
 - [ ] CI/deployment
 - [ ] other: _____
@@ -15,8 +15,8 @@
 - [ ] I read the [branching and release policy](docs/wiki/Branching-and-Release.md).
 - [ ] Changes follow the [developer guide](docs/wiki/Developer.md).
 - [ ] No `_isolated/` path is staged (pre-commit guard enforces this).
-- [ ] If I bumped a Nextcore module I staged the **gitlink** only
-      (`git add nextcore/crates/<module>`), never module file contents.
+- [ ] Module changes identify the tracked workspace source commit and, when
+      published separately, the independent release tag and verification.
 - [ ] `docs-build`, `isolated-asset-guard`, and `workspace-tests` are expected to
       pass (or a justification is given in the description).
 

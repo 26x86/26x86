@@ -1,5 +1,5 @@
-site_name: 26x86
-site_description: Modern Intel/Apple Silicon macOS bootloader — OpenCore integration, Nextcore boot engineering, and evidence-first compatibility documentation
+site_name: NextCore
+site_description: NextCore EFI boot engineering for macOS 26 Tahoe and experimental macOS 27 Golden Gate HAL and Metal support
 site_url: https://26x86.github.io/26x86/
 repo_url: https://github.com/26x86/26x86
 repo_name: 26x86/26x86
@@ -106,7 +106,7 @@ extra_css:
   - assets/stylesheets/extra.css
 
 copyright: |
-  <a href="https://github.com/26x86/26x86">26x86</a> — clean-room EFI boot research and compatibility tooling. Not affiliated with or endorsed by Apple.
+  <a href="https://github.com/26x86/26x86">NextCore</a> — clean-room EFI boot research and compatibility tooling. Not affiliated with or endorsed by Apple.
 
 nav:
   - Home: index.md
@@ -124,7 +124,7 @@ nav:
       - MacPro5,1 Vega64 Tahoe profile: profiles/MacPro5-Vega64-Tahoe.md
       - Tahoe yellow screen: wiki/Mac-Pro-Tahoe-Yellow-Screen.md
       - Safari pre-AVX fix: wiki/Safari-PreAVX-Fix.md
-  - OpenCore integration:
+  - External EFI integration:
       - wiki/OpenCore.md
       - Configuration: wiki/Configuration.md
       - EFI optimize this Mac: EFI-OPTIMIZE-THIS-MAC.md
@@ -143,11 +143,11 @@ nav:
       - GPU limitations: wiki/GPU-Limitations.md
       - Warnings: wiki/Warnings.md
       - Disclaimer: wiki/Disclaimer.md
-  - Boot engineering (Nextcore):
+  - Boot engineering (NextCore):
       - Architecture: wiki/Architecture.md
       - Build and development: wiki/Build-and-Development.md
-      - Nextcore design: NEXTCORE_DESIGN.md
-      - Nextcore build plan: NEXTCORE_BUILD_PLAN.md
+      - NextCore design: NEXTCORE_DESIGN.md
+      - NextCore build plan: NEXTCORE_BUILD_PLAN.md
       - Boot runtime verification: BOOT_RUNTIME_VERIFICATION.md
       - Boot picker recovery: BOOT_PICKER_RECOVERY.md
       - Module repositories: wiki/Nextcore-Modules.md

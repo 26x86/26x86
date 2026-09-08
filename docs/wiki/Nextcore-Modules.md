@@ -1,103 +1,63 @@
-# Nextcore module repositories
+# NextCore module repositories
 
-Nextcore is split into **seven module repositories** under the `26x86` GitHub
-organization. This repository references them as **git submodules** so module
-source has a single home and is never staged twice.
+NextCore has seven tracked Cargo workspace crates and seven independent release
+repositories in the `26x86` organization. The workspace is the source of reviewed
+exports. These directories are regular tracked source, not Git submodules.
 
 ## Module map
 
-| Module (submodule path) | Repository | Crate | Responsibility |
-| --- | --- | --- | --- |
-| `nextcore/crates/nextcore-core` | [Nextcore-Core][core] | `nextcore-core` | Configuration, public format codecs, handoff contracts |
-| `nextcore/crates/nextcore-efi` | [Nextcore-EFI][efi] | `nextcore-efi` | EFI application and controlled XNU handoff probes |
-| `nextcore/crates/nextcore-tool` | [Nextcore-Tool][tool] | `nextcore-tool` | Reproducible command-line orchestration |
-| `nextcore/crates/nextcore-ise` | [Nextcore-ISE][ise] | `nextcore-ise` | Instruction-set emulation and CPU feature policy |
-| `nextcore/crates/nextcore-gpu` | [Nextcore-GPU][gpu] | `nextcore-gpu` | GPU compatibility policy and virtual-device contracts |
-| `nextcore/crates/nextcore-hal` | [Nextcore-HAL][hal] | `nextcore-hal` | ACPI, PCI, SMBIOS and DeviceTree translation |
-| `nextcore/crates/nextcore-apls` | [Nextcore-APLS][apls] | `nextcore-apls` | AArch64 VMApple recovery runner and guest ABI |
+| Workspace crate | Repository | Responsibility |
+| --- | --- | --- |
+| `nextcore-core` | [NextCore Core](https://github.com/26x86/Nextcore-Core) | Configuration, picker view, public formats and kernel preparation |
+| `nextcore-efi` | [NextCore EFI](https://github.com/26x86/Nextcore-EFI) | Firmware picker, providers and controlled handoff probes |
+| `nextcore-tool` | [NextCore Tool](https://github.com/26x86/Nextcore-Tool) | Command-line orchestration |
+| `nextcore-ise` | [NextCore ISE](https://github.com/26x86/Nextcore-ISE) | Instruction emulation and CPU feature policy |
+| `nextcore-gpu` | [NextCore GPU](https://github.com/26x86/Nextcore-GPU) | GPU contracts, software rendering and optional Vulkan compute |
+| `nextcore-hal` | [NextCore HAL](https://github.com/26x86/Nextcore-HAL) | ACPI, PCI, SMBIOS and device-tree translation |
+| `nextcore-apls` | [NextCore APLS](https://github.com/26x86/Nextcore-APLS) | ARM VMApple recovery runner and guest ABI |
 
-[core]: https://github.com/26x86/Nextcore-Core
-[efi]: https://github.com/26x86/Nextcore-EFI
-[tool]: https://github.com/26x86/Nextcore-Tool
-[ise]: https://github.com/26x86/Nextcore-ISE
-[gpu]: https://github.com/26x86/Nextcore-GPU
-[hal]: https://github.com/26x86/Nextcore-HAL
-[apls]: https://github.com/26x86/Nextcore-APLS
+Repository URLs preserve their existing spelling. Product branding is NextCore.
 
-## Workflow
-
-The superproject `nextcore/` remains a Cargo **workspace** root
-([`nextcore/Cargo.toml`](https://github.com/26x86/26x86/blob/main/nextcore/Cargo.toml));
-its members are the seven checked-out submodules.
-
-The exported module manifests are **standalone**: cross-crate references are git
-dependencies pinned to the module's initial tag (for example
-`nextcore-core = { git = "…/Nextcore-Core.git", tag = "26x86-Nextcore-Core-v0.1.0" }`).
-For the superproject workspace to build against the **local** submodule
-checkouts instead of re-fetching GitHub, the workspace root carries `[patch]`
-entries that redirect those git sources back to the checked-out paths:
-
-```toml
-[patch."https://github.com/26x86/Nextcore-Core.git"]
-nextcore-core = { path = "crates/nextcore-core" }
-
-[patch."https://github.com/26x86/Nextcore-GPU.git"]
-nextcore-gpu = { path = "crates/nextcore-gpu" }
-
-[patch."https://github.com/26x86/Nextcore-APLS.git"]
-nextcore-apls = { path = "crates/nextcore-apls" }
-```
+## Develop in the workspace
 
 ```bash
-# First clone
-git clone --recurse-submodules https://github.com/26x86/26x86.git
+git clone https://github.com/26x86/26x86.git
 cd 26x86/nextcore
 cargo test --workspace
-
-# Later sync
-git pull
-git submodule update --init --recursive
 ```
 
-## Publishing a module
+The workspace manifests use local path dependencies. Commit changes to the
+relevant files under `nextcore/crates/` and include their validation in a PR.
+No submodule update or gitlink operation is needed for this layout.
 
-Export + publish + convert is scripted in
-[`Tools/publish_nextcore_modules.sh`](https://github.com/26x86/26x86/blob/main/Tools/publish_nextcore_modules.sh),
-which reuses `Tools/export_nextcore_repositories.py`. It builds each module repo
-(own `main`, initial tag, git dependencies), pushes it, and — only with
-`--convert-submodules` — replaces the tracked crate directories with submodules.
+## Independent releases
 
-```bash
-# 1) export and publish the seven module repositories
-bash Tools/publish_nextcore_modules.sh --output /tmp/nx-modules --yes
+An export records its exact source commit in `repository.json` and its public
+file hashes in `repository-files.json`. Cross-crate dependencies are rewritten
+to immutable release tags. Core, GPU, HAL and ISE are leaves; APLS follows GPU,
+EFI follows Core, and Tool follows Core and APLS.
 
-# 2) after inventory review, convert this repository's crate dirs
-bash Tools/publish_nextcore_modules.sh --output /tmp/nx-modules --yes --convert-submodules
-```
+For an existing repository, prepare a fresh clone of its current `main`, copy
+only the selected commit's public crate files, update the release metadata and
+dependency tags, then create a normal descendant commit and a previously unused
+tag. Validate and publish leaves before dependents. Verify the remote identities
+and repeat each gate from a separate fresh clone:
 
-The conversion stages `.gitmodules`, the gitlinks, and the `[patch]` manifest on
-the current branch — never a commit on `main` directly.
+- Ordinary modules: `cargo test --all-targets`.
+- Core: also check `--no-default-features`.
+- GPU's optional backend: also check the `vulkan` feature.
+- EFI: install `x86_64-unknown-uefi` and run
+  `cargo check --target x86_64-unknown-uefi`.
 
-## Changing module code
+The original exporter initializes new repository histories and fixed v0.1.0
+tags. It is for first exports; it must not overwrite existing module history or
+tags during incremental updates. Optional submodule-conversion tooling describes
+a possible future layout and has not been applied to this workspace.
 
-1. Edit inside the submodule (its own repository).
-2. Commit **and push** to the module repository's `main` on its own PR review
-   there — or for this repo's PR, bump the checked-out commit to the reviewed
-   revision.
-3. In this repository, the change is a **gitlink update** only. Stage it with
-   `git add nextcore/crates/<module>` and include it in the PR description.
+## Evidence boundary
 
-!!! warning "Staging hygiene"
-
-    Module directories are submodules. Never add their *contents*
-    (`git add nextcore/crates/<module>/src/...`). If `git status` ever shows
-    module files as regular changes instead of a single gitlink, the submodule's
-    `.git` wiring is missing — re-run `git submodule update --init` first.
-
-## Boundary rules (unchanged)
-
-- `_isolated/` reverse-engineering material is **not** part of any module
-  repository and is excluded by `.gitignore` and the pre-commit guard.
-- Every module exports an independent `main`, but widening the *module boundary*
-  never widens a *boot claim*: an observation still advances only the layer it
-  measures.
+Only public crate source belongs in module exports. `_isolated/`, runtime
+artifacts, target directories, firmware and operating-system images are excluded.
+Passing a module gate proves its tested layer. It does not establish original
+kernel execution, a complete native HAL or guest Metal acceleration. See
+[current validation](https://github.com/26x86/26x86/blob/main/nextcore/VALIDATION.md).
