@@ -1,0 +1,122 @@
+{
+  "schema": "nextcore.pc-alignment-oracle/1",
+  "passed": true,
+  "source_sha256": "4e79a0fbcff31177f91055c06e2b52070728c26c12b5cc91313069ad29ecb9c9",
+  "negative_control_detected": true,
+  "records": [
+    {
+      "case": "correct",
+      "command": [
+        "clang",
+        "--target=aarch64-none-elf",
+        "-DEXPECTED_ESR=2315255808",
+        "-c",
+        "/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/crates/nextcore-ise/tools/pc_alignment_probe.S",
+        "-o",
+        "/home/sharh/work/integration-validation-bp34-20260909/pc-alignment/correct.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "correct",
+      "command": [
+        "ld.lld",
+        "-Ttext=0x40080000",
+        "-e",
+        "_start",
+        "/home/sharh/work/integration-validation-bp34-20260909/pc-alignment/correct.o",
+        "-o",
+        "/home/sharh/work/integration-validation-bp34-20260909/pc-alignment/correct.elf"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "correct",
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt",
+        "-cpu",
+        "max",
+        "-m",
+        "128",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "none",
+        "-net",
+        "none",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "/home/sharh/work/integration-validation-bp34-20260909/pc-alignment/correct.elf"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "PC_ALIGNMENT_ORACLE: PASS ESR=8a000000 FAR=target ELR=target\n"
+    },
+    {
+      "case": "wrong_il",
+      "command": [
+        "clang",
+        "--target=aarch64-none-elf",
+        "-DEXPECTED_ESR=2281701376",
+        "-c",
+        "/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/crates/nextcore-ise/tools/pc_alignment_probe.S",
+        "-o",
+        "/home/sharh/work/integration-validation-bp34-20260909/pc-alignment/wrong_il.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "wrong_il",
+      "command": [
+        "ld.lld",
+        "-Ttext=0x40080000",
+        "-e",
+        "_start",
+        "/home/sharh/work/integration-validation-bp34-20260909/pc-alignment/wrong_il.o",
+        "-o",
+        "/home/sharh/work/integration-validation-bp34-20260909/pc-alignment/wrong_il.elf"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "wrong_il",
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt",
+        "-cpu",
+        "max",
+        "-m",
+        "128",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "none",
+        "-net",
+        "none",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "/home/sharh/work/integration-validation-bp34-20260909/pc-alignment/wrong_il.elf"
+      ],
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "PC_ALIGNMENT_ORACLE: FAIL\n"
+    }
+  ],
+  "apple_assets_used": false,
+  "macos_boot_verified": false
+}

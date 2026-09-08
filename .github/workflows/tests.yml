@@ -188,6 +188,14 @@ jobs:
           cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-dt-probe --bin NXDT
           python3 nextcore/crates/nextcore-efi/tools/verify_dt_ledger_ovmf.py --efi-probe nextcore/target/x86_64-unknown-uefi/release/NXDT.efi --output "$RUNNER_TEMP/nextcore-dt-proof"
           python3 nextcore/crates/nextcore-efi/tools/check_dt_ledger_capture.py --report "$RUNNER_TEMP/nextcore-dt-proof/report.json" --output "$RUNNER_TEMP/nextcore-dt-reader.json"
+      - name: Execute one-way MMU activation and captured native comparison
+        run: |
+          python3 nextcore/crates/nextcore-ise/tools/probe_dynamic_memory.py --work-dir "$RUNNER_TEMP/native-dynamic" --output "$RUNNER_TEMP/native-dynamic.json"
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-dynamic-probe --bin NXDYN
+          python3 nextcore/crates/nextcore-efi/tools/verify_dynamic_ovmf.py --efi-probe nextcore/target/x86_64-unknown-uefi/release/NXDYN.efi --output "$RUNNER_TEMP/nextcore-dynamic-proof"
+          python3 nextcore/crates/nextcore-efi/tools/check_dynamic_capture.py --report "$RUNNER_TEMP/nextcore-dynamic-proof/report.json" --output "$RUNNER_TEMP/nextcore-dynamic-reader.json"
+          python3 -B nextcore/artifacts/arm-dynamic-comparison-20260909/compare.py --oracle nextcore/artifacts/arm-dynamic-oracle-20260909 --runtime nextcore/crates/nextcore-ise/runtime --output "$RUNNER_TEMP/dynamic-arm-comparison" --rustc "$(command -v rustc)"
+          python3 -B nextcore/artifacts/arm-dynamic-comparison-20260909/test_compare.py --oracle nextcore/artifacts/arm-dynamic-oracle-20260909 --evidence "$RUNNER_TEMP/dynamic-arm-comparison"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -199,3 +207,8 @@ jobs:
             ${{ runner.temp }}/nextcore-dt-proof/*.json
             ${{ runner.temp }}/nextcore-dt-proof/*.log
             ${{ runner.temp }}/nextcore-dt-reader.json
+            ${{ runner.temp }}/native-dynamic.json
+            ${{ runner.temp }}/nextcore-dynamic-proof/*.json
+            ${{ runner.temp }}/nextcore-dynamic-proof/*.log
+            ${{ runner.temp }}/nextcore-dynamic-reader.json
+            ${{ runner.temp }}/dynamic-arm-comparison/receipt.json

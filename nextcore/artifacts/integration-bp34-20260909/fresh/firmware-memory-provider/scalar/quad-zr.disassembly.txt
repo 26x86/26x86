@@ -1,0 +1,30 @@
+
+/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/scalar/quad-zr.o:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000000000 <probe_start>:
+       0: d2800a63     	mov	x3, #0x53               // =83
+       4: 910003e9     	mov	x9, sp
+       8: d10083ff     	sub	sp, sp, #0x20
+       c: d28000a4     	mov	x4, #0x5                // =5
+      10: f2b00004     	movk	x4, #0x8000, lsl #16
+      14: f2cacf04     	movk	x4, #0x5678, lsl #32
+      18: f2e24684     	movk	x4, #0x1234, lsl #48
+      1c: f90007e4     	str	x4, [sp, #0x8]
+      20: f94007e0     	ldr	x0, [sp, #0x8]
+      24: f9000bff     	str	xzr, [sp, #0x10]
+      28: f9400be2     	ldr	x2, [sp, #0x10]
+      2c: f94007ff     	ldr	xzr, [sp, #0x8]
+      30: 91000121     	add	x1, x9, #0x0
+      34: 910083ff     	add	sp, sp, #0x20
+      38: 910003ea     	mov	x10, sp
+      3c: eb09015f     	cmp	x10, x9
+      40: 54000041     	b.ne	0x48 <probe_bad>
+
+0000000000000044 <probe_success>:
+      44: d4400000     	hlt	#0
+
+0000000000000048 <probe_bad>:
+      48: d28175a3     	mov	x3, #0xbad              // =2989
+      4c: d4400000     	hlt	#0

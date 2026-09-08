@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "runtime_files_verified": 69,
+  "checks": [
+    {
+      "command": [
+        "git",
+        "-C",
+        "/home/sharh/work/bp34-efi-dynamic",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustfmt",
+        "--edition",
+        "2021",
+        "--check",
+        "/home/sharh/work/bp34-efi-dynamic/src/dynamic_probe.rs"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "py_compile",
+        "/home/sharh/work/bp34-efi-dynamic/tools/verify_dynamic_ovmf.py",
+        "/home/sharh/work/bp34-efi-dynamic/tools/check_dynamic_capture.py",
+        "/home/sharh/work/bp34-efi-dynamic/tools/check_dynamic_omission.py"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

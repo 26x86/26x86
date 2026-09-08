@@ -1,0 +1,22 @@
+   Compiling typenum v1.20.1
+   Compiling cfg-if v1.0.4
+   Compiling cpufeatures v0.2.17
+   Compiling uguid v2.2.1
+   Compiling bitflags v2.13.1
+   Compiling memchr v2.8.3
+   Compiling bit_field v0.10.3
+   Compiling log v0.4.34
+   Compiling nextcore-memory-service v0.1.0 (https://github.com/26x86/Nextcore-ISE.git?rev=0d722886753268ec366f068823c37ea10132fb43#0d722886)
+   Compiling ptr_meta v0.3.2
+   Compiling uefi-raw v0.16.0
+   Compiling ucs2 v0.3.3
+   Compiling roxmltree v0.21.1
+   Compiling generic-array v0.14.7
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling nextcore-core v0.1.0 (https://github.com/26x86/Nextcore-Core.git?rev=147f4c4e4969074c9dd12c63bf17c6e8c674dabb#147f4c4e)
+   Compiling uefi v0.40.0
+   Compiling nextcore-efi v0.1.0 (/home/sharh/work/module-validation-bp34-efi-20260909/EFI)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 9.38s

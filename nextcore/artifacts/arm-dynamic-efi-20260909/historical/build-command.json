@@ -1,0 +1,19 @@
+{
+  "command": [
+    "cargo",
+    "build",
+    "--manifest-path",
+    "/home/sharh/work/bp34-dynamic-efi-proof/workspace/Cargo.toml",
+    "-p",
+    "nextcore-efi",
+    "--bin",
+    "NXDYN",
+    "--features",
+    "arm-jit-dynamic-probe",
+    "--release",
+    "--target",
+    "x86_64-unknown-uefi"
+  ],
+  "target_dir": "/home/sharh/work/bp34-dynamic-efi-proof/target",
+  "runtime_override": "/home/sharh/work/bp34-ise-dynamic-control/runtime"
+}

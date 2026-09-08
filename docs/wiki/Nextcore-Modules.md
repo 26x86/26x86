@@ -164,3 +164,20 @@ This authored connection does not establish the macOS27 target handoff or Metal.
 Core selects sha2 force-soft only for firmware targets after the actual debug
 NXAPFS build exposed an LLVM x86-backend failure. Debug and release code generation
 are explicit CI requirements; check-only compilation is insufficient.
+
+
+## Dynamic MMU execution from x86 EFI
+
+The ISE/EFI BP34 pins add one-way M0-to-M1 execution with immutable tables.
+Build the opt-in authored consumer and execute its six-case firmware gate:
+
+```bash
+cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-dynamic-probe --bin NXDYN
+python3 nextcore/crates/nextcore-efi/tools/verify_dynamic_ovmf.py --efi-probe nextcore/target/x86_64-unknown-uefi/release/NXDYN.efi --output /path/to/new-dynamic-proof
+python3 nextcore/crates/nextcore-efi/tools/check_dynamic_capture.py --report /path/to/new-dynamic-proof/report.json --output /path/to/new-reader.json
+```
+
+This developer fixture runs from x86 EFI, using the generated-x86 ARM JIT and
+canonical Rust memory owner. It is not a Windows application feature. See the
+arm-dynamic-oracle, arm-dynamic-comparison and arm-dynamic-efi artifact bundles
+for independent boundaries and reproduction. Normal macOS boot remains pending.

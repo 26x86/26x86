@@ -1,0 +1,101 @@
+{
+  "schema": "nextcore.x86-efi-arm-trace.v1",
+  "host_architecture": "x86_64",
+  "handoff_abi": "unprovisioned-sptm-prefix",
+  "sptm_args_provided": false,
+  "platform_profile": "nextcore-irq-compat-v1",
+  "profile_reset_origin": "software_defined",
+  "sptm_services_provided": false,
+  "platform_device_tree_provided": false,
+  "config": {
+    "Nextcore": {
+      "Kernel": {
+        "Profile": "x86-efi-arm64-trace",
+        "Path": "\\EFI\\NEXTCORE\\kernel.kc",
+        "Arguments": "-v",
+        "Trace": {
+          "HandoffAbi": "unprovisioned-sptm-prefix",
+          "PhysicalBase": 1073741824,
+          "VirtualBase": 18446741874686296064,
+          "MemorySize": 67108864,
+          "ActualMemorySize": 67108864,
+          "KernelPhysical": 1107296256,
+          "InstructionBudget": 64,
+          "DeviceTreePath": "\\EFI\\NEXTCORE\\diagnostic.dt",
+          "PlatformProfile": "nextcore-irq-compat-v1"
+        }
+      }
+    }
+  },
+  "execution": {
+    "status": 1,
+    "retired": 18,
+    "pc": 1107313736,
+    "compiled_blocks": 18,
+    "fault_instruction": 0,
+    "registers": {
+      "x0": 1311768467015204869,
+      "x1": 1107443712,
+      "x2": 0,
+      "x3": 83
+    },
+    "platform": {
+      "profile": 1,
+      "override": 0,
+      "pending": 0,
+      "pstate": 1610613701,
+      "sp": 1107443712
+    },
+    "exception": {
+      "elr": 0,
+      "spsr": 0,
+      "vector": 0,
+      "esr": 0
+    }
+  },
+  "tiered_diagnostic_requested": false,
+  "tiered_diagnostic_build_observed": false,
+  "markers": [
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: CONFIG_PARSED",
+    "NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152",
+    "NXARMJIT: TRACE_DT_CHECKED templates=0 platform_complete=false",
+    "NXARMJIT: TRACE_STAGING_VERIFIED source_unchanged=true",
+    "NXARMJIT: TRACE_HANDOFF_UNPROVISIONED abi=unprovisioned-sptm-prefix sptm_args=false sptm_services=false platform_device_tree=false",
+    "NXARMJIT: TRACE_PLATFORM_PROFILE name=nextcore-irq-compat-v1 reset_origin=software_defined initial_override=0x0 initial_pstate=0x3c5 irq=0 fiq=0",
+    "NXARMJIT: TRACE_ENTER entry=0x42004400 x0=0 x1=0x4200c000 x2=0 x3=0 budget=64",
+    "NXARMJIT: TRACE_MEMORY_PROVIDER abi=1 mode=m0-only",
+    "NXARMJIT: TRACE_RETURN status=1 retired=18 pc=0x42004448 blocks=18 instruction=0x0",
+    "NXARMJIT: TRACE_REGISTERS x0=0x1234567880000005 x1=0x42024000 x2=0x0 x3=0x53",
+    "NXARMJIT: TRACE_PLATFORM_STATE profile=1 override=0x0 pending=0 pstate=0x600003c5 sp=0x42024000",
+    "NXARMJIT: TRACE_EXCEPTION_STATE elr=0x0 spsr=0x0 vector=0x0 esr=0x0 handler_executed=false",
+    "NXARMJIT: TRACE_MEMORY_RESULT abi=1 provider_status=0 guest_far=0x0 last_address=0x42004444 fetch_requests=18 data_requests=5 completed_data_operations=5",
+    "NXARMJIT: TRACE_ONLY macos_boot_verified=false metal_verified=false",
+    "NXARMJIT: ERROR status=ABORTED"
+  ],
+  "input_sha256_before": {
+    "/home/sharh/work/integration-validation-bp34-20260909/NXARMJIT-provider.efi": "ed54112cb36bc0e0379c3fd7337a39989b467f9fcf84a9a52825f7d0e5849db9",
+    "/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/scalar/quad-zr.kc": "db0c9c2c0fd0781f747c08f97fce2f4b086532b6abacfa5803c0dbe97edaf928",
+    "/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/scalar/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "input_sha256_after": {
+    "/home/sharh/work/integration-validation-bp34-20260909/NXARMJIT-provider.efi": "ed54112cb36bc0e0379c3fd7337a39989b467f9fcf84a9a52825f7d0e5849db9",
+    "/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/scalar/quad-zr.kc": "db0c9c2c0fd0781f747c08f97fce2f4b086532b6abacfa5803c0dbe97edaf928",
+    "/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/scalar/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "original_inputs_preserved": true,
+  "esp_copies_preserved": true,
+  "diagnostic_completed": true,
+  "native_execution_observed": true,
+  "elapsed_seconds": 5.443,
+  "failure": null,
+  "qemu_exit_code": 0,
+  "stopped_by_harness": true,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

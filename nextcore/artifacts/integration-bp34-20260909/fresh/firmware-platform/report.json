@@ -1,0 +1,191 @@
+{
+  "schema": "nextcore.efi-platform-irq.v1",
+  "cases": [
+    {
+      "name": "readback",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "status": true,
+        "retired": true,
+        "profile": true,
+        "override": true,
+        "pending_preserved": true,
+        "marker_register": true,
+        "esr_not_written": true,
+        "no_async_vector": true,
+        "provider_readback": true
+      },
+      "receipt": "/home/sharh/work/integration-validation-bp34-20260909/firmware-platform/readback/report.json",
+      "handler_executed": false
+    },
+    {
+      "name": "absent-provider",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "status": true,
+        "retired": true,
+        "profile": true,
+        "override": true,
+        "pending_preserved": true,
+        "marker_register": true,
+        "esr_not_written": true,
+        "no_async_vector": true,
+        "fault_pc": true,
+        "fault_word_present": true
+      },
+      "receipt": "/home/sharh/work/integration-validation-bp34-20260909/firmware-platform/absent-provider/report.json",
+      "handler_executed": false
+    },
+    {
+      "name": "unsupported-field",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "status": true,
+        "retired": true,
+        "profile": true,
+        "override": true,
+        "pending_preserved": true,
+        "marker_register": true,
+        "esr_not_written": true,
+        "no_async_vector": true,
+        "fault_pc": true,
+        "fault_word_present": true
+      },
+      "receipt": "/home/sharh/work/integration-validation-bp34-20260909/firmware-platform/unsupported-field/report.json",
+      "handler_executed": false
+    },
+    {
+      "name": "masked-levels",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "status": true,
+        "retired": true,
+        "profile": true,
+        "override": true,
+        "pending_preserved": true,
+        "marker_register": true,
+        "esr_not_written": true,
+        "no_async_vector": true,
+        "masked_value_readback": true
+      },
+      "receipt": "/home/sharh/work/integration-validation-bp34-20260909/firmware-platform/masked-levels/report.json",
+      "handler_executed": false
+    },
+    {
+      "name": "override-release-irq-el1t",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "status": true,
+        "retired": true,
+        "profile": true,
+        "override": true,
+        "pending_preserved": true,
+        "marker_register": true,
+        "esr_not_written": true,
+        "vector": true,
+        "saved_pc": true,
+        "saved_pstate": true,
+        "entered_el1h_masked": true,
+        "no_fault_word": true,
+        "masked_value_readback": true
+      },
+      "receipt": "/home/sharh/work/integration-validation-bp34-20260909/firmware-platform/override-release-irq-el1t/report.json",
+      "handler_executed": false
+    },
+    {
+      "name": "override-release-fiq-el1h",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "status": true,
+        "retired": true,
+        "profile": true,
+        "override": true,
+        "pending_preserved": true,
+        "marker_register": true,
+        "esr_not_written": true,
+        "vector": true,
+        "saved_pc": true,
+        "saved_pstate": true,
+        "entered_el1h_masked": true,
+        "no_fault_word": true,
+        "masked_value_readback": true
+      },
+      "receipt": "/home/sharh/work/integration-validation-bp34-20260909/firmware-platform/override-release-fiq-el1h/report.json",
+      "handler_executed": false
+    },
+    {
+      "name": "daif-irq-only",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "status": true,
+        "retired": true,
+        "profile": true,
+        "override": true,
+        "pending_preserved": true,
+        "marker_register": true,
+        "esr_not_written": true,
+        "vector": true,
+        "saved_pc": true,
+        "saved_pstate": true,
+        "entered_el1h_masked": true,
+        "no_fault_word": true
+      },
+      "receipt": "/home/sharh/work/integration-validation-bp34-20260909/firmware-platform/daif-irq-only/report.json",
+      "handler_executed": false
+    },
+    {
+      "name": "daif-fiq-only",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "status": true,
+        "retired": true,
+        "profile": true,
+        "override": true,
+        "pending_preserved": true,
+        "marker_register": true,
+        "esr_not_written": true,
+        "vector": true,
+        "saved_pc": true,
+        "saved_pstate": true,
+        "entered_el1h_masked": true,
+        "no_fault_word": true
+      },
+      "receipt": "/home/sharh/work/integration-validation-bp34-20260909/firmware-platform/daif-fiq-only/report.json",
+      "handler_executed": false
+    }
+  ],
+  "input_sha256_before": {
+    "/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/tools/arm64_platform_irq_probe.S": "77fed580b06a0e1991d1b8ef49b9f25a223385ee7bf6c5082cdb4cfbfccb40cc",
+    "/home/sharh/work/integration-validation-bp34-20260909/NXARMJIT-probe.efi": "b946026983685f93ac0dbb6437663b907d03f7babd7a422efa22e1be3897a393",
+    "/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/tools/verify_arm_platform_irq_ovmf.py": "3e01be47a4c2e74a16ec9ce18f5edbd68a0ffb6d860b5318d530381963e36287",
+    "/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/tools/trace_arm_jit_ovmf.py": "2831b9208673839fa445c6f6e6a888fad5d7a31d97fe3f7314d546244c73915e"
+  },
+  "input_sha256_after": {
+    "/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/tools/arm64_platform_irq_probe.S": "77fed580b06a0e1991d1b8ef49b9f25a223385ee7bf6c5082cdb4cfbfccb40cc",
+    "/home/sharh/work/integration-validation-bp34-20260909/NXARMJIT-probe.efi": "b946026983685f93ac0dbb6437663b907d03f7babd7a422efa22e1be3897a393",
+    "/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/tools/verify_arm_platform_irq_ovmf.py": "3e01be47a4c2e74a16ec9ce18f5edbd68a0ffb6d860b5318d530381963e36287",
+    "/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/tools/trace_arm_jit_ovmf.py": "2831b9208673839fa445c6f6e6a888fad5d7a31d97fe3f7314d546244c73915e"
+  },
+  "passed": true,
+  "profile_reset_origin": "software_defined",
+  "handler_executed": false,
+  "sptm_provided": false,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

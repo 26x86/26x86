@@ -1,0 +1,127 @@
+{
+  "schema": "nextcore.scalar-memory-oracle/1",
+  "passed": true,
+  "source_sha256": "4b7f1380282c3e64cf8a912f0fdc180cfa9c9b3f157b20f54af4b7d481612b16",
+  "elf_sha256": {
+    "scalar": "ff0cb5f95d255219fb6c681d8ff57e0cb94ccd796f92b1dfc05a1d8a9a3290c7",
+    "negative": "91706f9b9737f3447ad0aef7ab5971a9cdbcc26b8f526b85285f364033325a64"
+  },
+  "commands": [
+    {
+      "case": "scalar",
+      "command": [
+        "clang",
+        "--target=aarch64-none-elf",
+        "-c",
+        "/tmp/nextcore-scalar-ijexy9hy/scalar.S",
+        "-o",
+        "/tmp/nextcore-scalar-ijexy9hy/scalar.o"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "scalar",
+      "command": [
+        "ld.lld",
+        "-Ttext=0x40080000",
+        "-e",
+        "_start",
+        "/tmp/nextcore-scalar-ijexy9hy/scalar.o",
+        "-o",
+        "/tmp/nextcore-scalar-ijexy9hy/scalar.elf"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "scalar",
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt",
+        "-cpu",
+        "max",
+        "-m",
+        "128",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "none",
+        "-net",
+        "none",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "/tmp/nextcore-scalar-ijexy9hy/scalar.elf"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "SCALAR_ORACLE: PASS 13forms,imm12,sign,sp,zr,alignment\n"
+    },
+    {
+      "case": "negative",
+      "command": [
+        "clang",
+        "--target=aarch64-none-elf",
+        "-c",
+        "/tmp/nextcore-scalar-ijexy9hy/negative.S",
+        "-o",
+        "/tmp/nextcore-scalar-ijexy9hy/negative.o"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "negative",
+      "command": [
+        "ld.lld",
+        "-Ttext=0x40080000",
+        "-e",
+        "_start",
+        "/tmp/nextcore-scalar-ijexy9hy/negative.o",
+        "-o",
+        "/tmp/nextcore-scalar-ijexy9hy/negative.elf"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "negative",
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt",
+        "-cpu",
+        "max",
+        "-m",
+        "128",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "none",
+        "-net",
+        "none",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "/tmp/nextcore-scalar-ijexy9hy/negative.elf"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "SCALAR_ORACLE: FAIL\n"
+    }
+  ],
+  "negative_control_rejected": true,
+  "sp_alignment_oracle_verified": false,
+  "mmu_off_device_alignment_oracle_verified": false,
+  "alignment_limitations": "QEMU omits SP SA checks and observed MMU-off A=0 Device alignment; explicit A=1 data faults are checked",
+  "apple_assets_used": false,
+  "macos_boot_verified": false
+}

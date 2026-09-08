@@ -1,0 +1,12 @@
+{"report": "/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/edges/missing-load/report.json", "diagnostic_completed": true, "native_execution_observed": true, "failure": null}
+{"name": "missing-load", "passed": true, "failed_checks": []}
+{"report": "/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/edges/missing-store/report.json", "diagnostic_completed": true, "native_execution_observed": true, "failure": null}
+{"name": "missing-store", "passed": true, "failed_checks": []}
+{"report": "/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/edges/pair-second-load/report.json", "diagnostic_completed": true, "native_execution_observed": true, "failure": null}
+{"name": "pair-second-load", "passed": true, "failed_checks": []}
+{"report": "/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/edges/pair-second-store/report.json", "diagnostic_completed": true, "native_execution_observed": true, "failure": null}
+{"name": "pair-second-store", "passed": true, "failed_checks": []}
+{"report": "/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/edges/pc-alignment/report.json", "diagnostic_completed": true, "native_execution_observed": true, "failure": null}
+{"name": "pc-alignment", "passed": true, "failed_checks": []}
+{"report": "/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/edges/missing-fetch/report.json", "diagnostic_completed": true, "native_execution_observed": true, "failure": null}
+{"name": "missing-fetch", "passed": true, "failed_checks": []}

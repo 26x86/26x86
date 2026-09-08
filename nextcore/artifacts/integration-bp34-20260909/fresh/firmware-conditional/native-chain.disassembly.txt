@@ -1,0 +1,25 @@
+
+/home/sharh/work/integration-validation-bp34-20260909/firmware-conditional/native-chain.o:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000000000 <_start>:
+       0: d28003e0     	mov	x0, #0x1f               // =31
+       4: f2a00000     	movk	x0, #0x0, lsl #16
+       8: f2c00000     	movk	x0, #0x0, lsl #32
+       c: f2e00000     	movk	x0, #0x0, lsl #48
+      10: d28003e1     	mov	x1, #0x1f               // =31
+      14: f2a00001     	movk	x1, #0x0, lsl #16
+      18: f2c00001     	movk	x1, #0x0, lsl #32
+      1c: f2e00001     	movk	x1, #0x0, lsl #48
+      20: 910003e2     	mov	x2, sp
+      24: d2998623     	mov	x3, #0xcc31             // =52273
+      28: fa41e000     	ccmp	x0, x1, #0x0, al
+      2c: 3a41100f     	ccmn	w0, w1, #0xf, ne
+      30: fa5ff800     	ccmp	x0, #0x1f, #0x0, nv
+      34: 54000060     	b.eq	0x40 <probe_success>
+      38: d28175a3     	mov	x3, #0xbad              // =2989
+      3c: d4400000     	hlt	#0
+
+0000000000000040 <probe_success>:
+      40: d4400000     	hlt	#0

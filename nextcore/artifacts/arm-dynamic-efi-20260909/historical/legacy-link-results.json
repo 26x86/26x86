@@ -1,0 +1,48 @@
+[
+  {
+    "binary": "NXARMJIT",
+    "command": [
+      "cargo",
+      "build",
+      "--offline",
+      "--locked",
+      "--manifest-path",
+      "/home/sharh/work/bp34-dynamic-efi-proof/workspace/Cargo.toml",
+      "-p",
+      "nextcore-efi",
+      "--bin",
+      "NXARMJIT",
+      "--features",
+      "arm-jit",
+      "--release",
+      "--target",
+      "x86_64-unknown-uefi"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 33.722,
+    "log": "/home/sharh/work/bp34-dynamic-efi-proof/legacy-link-NXARMJIT.log"
+  },
+  {
+    "binary": "NXMMU",
+    "command": [
+      "cargo",
+      "build",
+      "--offline",
+      "--locked",
+      "--manifest-path",
+      "/home/sharh/work/bp34-dynamic-efi-proof/workspace/Cargo.toml",
+      "-p",
+      "nextcore-efi",
+      "--bin",
+      "NXMMU",
+      "--features",
+      "arm-jit-stage1-probe",
+      "--release",
+      "--target",
+      "x86_64-unknown-uefi"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 4.959,
+    "log": "/home/sharh/work/bp34-dynamic-efi-proof/legacy-link-NXMMU.log"
+  }
+]

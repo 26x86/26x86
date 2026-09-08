@@ -1,0 +1,646 @@
+    Checking typenum v1.20.1
+    Checking cfg-if v1.0.4
+    Checking bit_field v0.10.3
+    Checking cpufeatures v0.2.17
+    Checking uguid v2.2.1
+    Checking memchr v2.8.3
+    Checking bitflags v2.13.1
+    Checking log v0.4.34
+    Checking nextcore-memory-service v0.1.0 (/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/crates/nextcore-ise/runtime/memory-service)
+    Checking ptr_meta v0.3.2
+   Compiling nextcore-ise v0.1.0 (/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/crates/nextcore-ise)
+    Checking ucs2 v0.3.3
+    Checking uefi-raw v0.16.0
+warning: unused variable: `rex_b`
+   --> crates/nextcore-ise/src/decoder.rs:126:13
+    |
+126 |         let rex_b = (rex & 0x01) != 0;
+    |             ^^^^^ help: if this is intentional, prefix it with an underscore: `_rex_b`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `rex_r`
+   --> crates/nextcore-ise/src/decoder.rs:127:13
+    |
+127 |         let rex_r = (rex & 0x04) != 0;
+    |             ^^^^^ help: if this is intentional, prefix it with an underscore: `_rex_r`
+
+warning: value assigned to `v` is never read
+   --> crates/nextcore-ise/src/decoder.rs:245:29
+    |
+245 |                 let mut v = 0u64;
+    |                             ^^^^ this value is reassigned later and never used
+...
+248 |                     v = data[ip] as u64 & 0x3F;
+    |                     -------------------------- `v` is overwritten here before the previous value is read
+    |
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+   --> crates/nextcore-ise/src/decoder.rs:461:17
+    |
+461 |             let mut bs = (sib & 7) as u32;
+    |                 ----^^
+    |                 |
+    |                 help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: this `if` has identical blocks
+   --> crates/nextcore-ise/src/decoder.rs:222:55
+    |
+222 |               let operands = if name == OpcodeName::Cmp {
+    |  _______________________________________________________^
+223 | |                 vec![dst, Operand::Immediate(imm)]
+224 | |             } else {
+    | |_____________^
+    |
+note: same as this
+   --> crates/nextcore-ise/src/decoder.rs:224:20
+    |
+224 |               } else {
+    |  ____________________^
+225 | |                 vec![dst, Operand::Immediate(imm)]
+226 | |             };
+    | |_____________^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#if_same_then_else
+    = note: `#[warn(clippy::if_same_then_else)]` on by default
+
+warning: this `if` statement can be collapsed
+   --> crates/nextcore-ise/src/decoder.rs:483:16
+    |
+483 |           } else if mode == 0 {
+    |  ________________^
+484 | |             if rm == 5 && index.is_none() {
+485 | |                 if newpos + 4 > data.len() {
+486 | |                     return Err(DecodeError::InsufficientData(newpos));
+...   |
+492 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+    = note: `#[warn(clippy::collapsible_if)]` on by default
+help: collapse nested if block
+    |
+483 ~         } else if mode == 0
+484 ~             && rm == 5 && index.is_none() {
+485 |                 if newpos + 4 > data.len() {
+...
+490 |                 base = u32::MAX;
+491 ~             }
+    |
+
+warning: casting to the same type is unnecessary (`u32` -> `u32`)
+   --> crates/nextcore-ise/src/decoder.rs:520:20
+    |
+520 |         let vvvv = ((!vvvv) & 0xF) as u32;
+    |                    ^^^^^^^^^^^^^^^^^^^^^^ help: try: `((!vvvv) & 0xF)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#unnecessary_cast
+    = note: `#[warn(clippy::unnecessary_cast)]` on by default
+
+warning: casting to the same type is unnecessary (`u32` -> `u32`)
+   --> crates/nextcore-ise/src/decoder.rs:564:20
+    |
+564 |         let vvvv = ((!vvvv) & 0xF) as u32;
+    |                    ^^^^^^^^^^^^^^^^^^^^^^ help: try: `((!vvvv) & 0xF)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#unnecessary_cast
+
+warning: the loop variable `i` is used to index `out`
+   --> crates/nextcore-ise/src/emulator.rs:307:18
+    |
+307 |         for i in 0..count {
+    |                  ^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#needless_range_loop
+    = note: `#[warn(clippy::needless_range_loop)]` on by default
+help: consider using an iterator and enumerate()
+    |
+307 -         for i in 0..count {
+307 +         for (i, <item>) in out.iter_mut().enumerate().take(count) {
+    |
+
+warning: the loop variable `i` is used to index `out`
+   --> crates/nextcore-ise/src/emulator.rs:313:18
+    |
+313 |         for i in 0..count {
+    |                  ^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#needless_range_loop
+help: consider using an iterator and enumerate()
+    |
+313 -         for i in 0..count {
+313 +         for (i, <item>) in out.iter().enumerate().take(count) {
+    |
+
+warning: this operation has no effect
+  --> crates/nextcore-ise/src/cpu_features.rs:78:34
+   |
+78 |                     brand_string[(i * 4 + 0) as usize] = result.eax;
+   |                                  ^^^^^^^^^^^ help: consider reducing it to: `(i * 4)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#identity_op
+   = note: `#[warn(clippy::identity_op)]` on by default
+
+    Checking roxmltree v0.21.1
+warning: `nextcore-ise` (lib) generated 11 warnings (run `cargo clippy --fix --lib -p nextcore-ise -- ` to apply 7 suggestions)
+   Compiling nextcore-efi v0.1.0 (/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/crates/nextcore-efi)
+    Checking generic-array v0.14.7
+    Checking crypto-common v0.1.7
+    Checking block-buffer v0.10.4
+    Checking digest v0.10.7
+    Checking sha2 v0.10.9
+    Checking nextcore-core v0.1.0 (/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/crates/nextcore-core)
+warning: using `chunks_exact` with a constant chunk size
+   --> crates/nextcore-core/src/apfs_jumpstart.rs:104:29
+    |
+104 |     for word in object[8..].chunks_exact(4) {
+    |                             ^^^^^^^^^^^^^^^ help: consider using `as_chunks` instead: `as_chunks::<4>().0`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#chunks_exact_to_as_chunks
+    = note: `#[warn(clippy::chunks_exact_to_as_chunks)]` on by default
+
+warning: using `chunks_exact` with a constant chunk size
+   --> crates/nextcore-core/src/apfs_jumpstart.rs:208:50
+    |
+208 |     for record in block[JSDR_EXTENTS..table_end].chunks_exact(EXTENT_SIZE) {
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider using `as_chunks` instead: `as_chunks::<EXTENT_SIZE>().0`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#chunks_exact_to_as_chunks
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/boot_config.rs:438:12
+    |
+438 |         || result.memory_size % 16384 != 0
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!result.memory_size.is_multiple_of(16384)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+    = note: `#[warn(clippy::manual_is_multiple_of)]` on by default
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/boot_config.rs:439:12
+    |
+439 |         || result.physical_base % 16384 != 0
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!result.physical_base.is_multiple_of(16384)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/boot_config.rs:440:12
+    |
+440 |         || result.kernel_phys % 16384 != 0
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!result.kernel_phys.is_multiple_of(16384)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/boot_config.rs:441:12
+    |
+441 |         || result.virtual_base % 16384 != 0
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!result.virtual_base.is_multiple_of(16384)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/boot_config.rs:443:12
+    |
+443 |         || result.actual_memory_size % 16384 != 0
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!result.actual_memory_size.is_multiple_of(16384)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual arithmetic check found
+  --> crates/nextcore-core/src/boot_picker.rs:80:20
+   |
+80 |               } else if dy >= h - r {
+   |  ____________________^
+81 | |                 dy - (h - r)
+82 | |             } else {
+83 | |                 0
+84 | |             };
+   | |_____________^ help: replace it with: `{ dy.saturating_sub(h - r) }`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#implicit_saturating_sub
+   = note: `#[warn(clippy::implicit_saturating_sub)]` on by default
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/runtime_dt.rs:199:16
+    |
+199 |             || reservation.address % 4 != 0
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!reservation.address.is_multiple_of(4)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/guest_memory.rs:299:12
+    |
+299 |         if address % alignment != 0 {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!address.is_multiple_of(alignment)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: using `chunks_exact` with a constant chunk size
+   --> crates/nextcore-core/src/kernel_collection.rs:666:24
+    |
+666 |     for s in cmd[72..].chunks_exact(80) {
+    |                        ^^^^^^^^^^^^^^^^ help: consider using `as_chunks` instead: `as_chunks::<80>().0`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#chunks_exact_to_as_chunks
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/macho_image.rs:169:8
+    |
+169 |     if command_size % 8 != 0 || count > command_size / 8 {
+    |        ^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!command_size.is_multiple_of(8)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/macho_image.rs:182:24
+    |
+182 |         if size < 8 || size % 8 != 0 {
+    |                        ^^^^^^^^^^^^^ help: replace with: `!size.is_multiple_of(8)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: using `chunks_exact` with a constant chunk size
+   --> crates/nextcore-core/src/macho_image.rs:328:34
+    |
+328 |     for section in command[72..].chunks_exact(80) {
+    |                                  ^^^^^^^^^^^^^^^^ help: consider using `as_chunks` instead: `as_chunks::<80>().0`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#chunks_exact_to_as_chunks
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/macho_image.rs:412:32
+    |
+412 |             if kind == 0x29 && size % 8 != 0 {
+    |                                ^^^^^^^^^^^^^ help: replace with: `!size.is_multiple_of(8)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+  --> crates/nextcore-core/src/xnu_boot_args.rs:99:12
+   |
+99 |         || stride % 8 != 0
+   |            ^^^^^^^^^^^^^^^ help: replace with: `!stride.is_multiple_of(8)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_boot_args.rs:101:12
+    |
+101 |         || input.memory_map_phys % 8 != 0
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.memory_map_phys.is_multiple_of(8)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_boot_args.rs:102:12
+    |
+102 |         || input.memory_map_size % u64::from(stride) != 0
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.memory_map_size.is_multiple_of(u64::from(stride))`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_boot_args.rs:111:8
+    |
+111 |     if input.device_tree_phys % 4 != 0
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.device_tree_phys.is_multiple_of(4)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_boot_args.rs:113:12
+    |
+113 |         || input.device_tree_size % 4 != 0
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.device_tree_size.is_multiple_of(4)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_boot_args.rs:128:8
+    |
+128 |     if input.kernel_phys % PAGE_SIZE != 0
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.kernel_phys.is_multiple_of(PAGE_SIZE)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_boot_args.rs:155:44
+    |
+155 |     if input.efi_system_table_phys == 0 || input.efi_system_table_phys % 8 != 0 {
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.efi_system_table_phys.is_multiple_of(8)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_boot_args.rs:192:8
+    |
+192 |     if input.collection_header_phys % 8 != 0 || input.collection_header_size < 32 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.collection_header_phys.is_multiple_of(8)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_arm64_boot_args.rs:165:8
+    |
+165 |     if input.physical_base % VMAPPLE_PAGE_SIZE != 0 || input.memory_size % VMAPPLE_PAGE_SIZE != 0 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.physical_base.is_multiple_of(VMAPPLE_PAGE_SIZE)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_arm64_boot_args.rs:165:56
+    |
+165 |     if input.physical_base % VMAPPLE_PAGE_SIZE != 0 || input.memory_size % VMAPPLE_PAGE_SIZE != 0 {
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.memory_size.is_multiple_of(VMAPPLE_PAGE_SIZE)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_arm64_boot_args.rs:173:8
+    |
+173 |     if input.virtual_base % VMAPPLE_PAGE_SIZE != 0 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.virtual_base.is_multiple_of(VMAPPLE_PAGE_SIZE)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_arm64_boot_args.rs:177:46
+    |
+177 |     if top <= ram.start || top >= ram.end || top % VMAPPLE_PAGE_SIZE != 0 {
+    |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!top.is_multiple_of(VMAPPLE_PAGE_SIZE)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_arm64_boot_args.rs:189:8
+    |
+189 |     if input.kernel_phys % VMAPPLE_PAGE_SIZE != 0 || !occupied.contains(kernel) {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.kernel_phys.is_multiple_of(VMAPPLE_PAGE_SIZE)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_arm64_boot_args.rs:197:8
+    |
+197 |     if input.boot_args_phys % 8 != 0 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.boot_args_phys.is_multiple_of(8)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-core/src/xnu_arm64_boot_args.rs:201:8
+    |
+201 |     if input.device_tree_phys % 4 != 0 || dt_length % 4 != 0 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.device_tree_phys.is_multiple_of(4)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+  --> crates/nextcore-core/src/xnu_arm64_handoff.rs:76:12
+   |
+76 |         if input.kernel_phys % VMAPPLE_PAGE_SIZE != 0 || input.kernel_phys < input.physical_base {
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!input.kernel_phys.is_multiple_of(VMAPPLE_PAGE_SIZE)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: `nextcore-core` (lib) generated 31 warnings (run `cargo clippy --fix --lib -p nextcore-core -- ` to apply 31 suggestions)
+    Checking uefi v0.40.0
+warning: duplicated attribute
+ --> /home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/crates/nextcore-ise/runtime/preos/src/platform.rs:3:10
+  |
+3 | #![allow(dead_code)]
+  |          ^^^^^^^^^
+  |
+note: first defined here
+ --> /home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/target/x86_64-unknown-uefi/debug/build/nextcore-efi-b4f98abcf7223287/out/jit_pauth.rs:4:9
+  |
+4 | #[allow(dead_code)]
+  |         ^^^^^^^^^
+help: remove this attribute
+ --> /home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/crates/nextcore-ise/runtime/preos/src/platform.rs:3:10
+  |
+3 | #![allow(dead_code)]
+  |          ^^^^^^^^^
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#duplicated_attributes
+  = note: `#[warn(clippy::duplicated_attributes)]` on by default
+
+warning: operator precedence might not be obvious
+   --> crates/nextcore-efi/src/dynamic_probe.rs:257:17
+    |
+257 |                 RAM_PA + 4 * granule as u64 | 0x403
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider parenthesizing your expression: `(RAM_PA + 4 * granule as u64) | 0x403`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#precedence
+    = note: `#[warn(clippy::precedence)]` on by default
+
+warning: operator precedence might not be obvious
+   --> crates/nextcore-efi/src/dynamic_probe.rs:262:13
+    |
+262 |             RAM_PA + 2 * granule as u64 | 0x403,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider parenthesizing your expression: `(RAM_PA + 2 * granule as u64) | 0x403`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#precedence
+
+warning: associated items `allocate`, `base`, and `bytes` are never used
+  --> crates/nextcore-efi/src/arm_pages.rs:17:12
+   |
+16 | impl ArmPages {
+   | ------------- associated items in this implementation
+17 |     pub fn allocate(bytes: usize, fixed: Option<u64>) -> Result<Self, Status> {
+   |            ^^^^^^^^
+...
+74 |     pub fn base(&self) -> u64 {
+   |            ^^^^
+...
+77 |     pub fn bytes(&self) -> usize {
+   |            ^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: manual implementation of `.is_multiple_of()`
+  --> crates/nextcore-efi/src/arm_pages.rs:29:16
+   |
+29 |             || bytes % 16384 != 0
+   |                ^^^^^^^^^^^^^^^^^^ help: replace with: `!bytes.is_multiple_of(16384)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+   = note: `#[warn(clippy::manual_is_multiple_of)]` on by default
+
+warning: manual implementation of `.is_multiple_of()`
+  --> crates/nextcore-efi/src/arm_pages.rs:89:16
+   |
+89 |             || meta.map_size % meta.desc_size != 0
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!meta.map_size.is_multiple_of(meta.desc_size)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: `nextcore-efi` (bin "BOOTAA64") generated 3 warnings (run `cargo clippy --fix --bin "BOOTAA64" -p nextcore-efi -- ` to apply 2 suggestions)
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-efi/src/loaded_kernel_collection.rs:101:16
+    |
+101 |             if d.phys_start % STAGING_PAGE_SIZE != 0 {
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!d.phys_start.is_multiple_of(STAGING_PAGE_SIZE)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+    = note: `#[warn(clippy::manual_is_multiple_of)]` on by default
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-efi/src/loaded_kernel_collection.rs:153:26
+    |
+153 |         if bytes == 0 || bytes % STAGING_PAGE_SIZE as usize != 0 || bytes > isize::MAX as usize {
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!bytes.is_multiple_of(STAGING_PAGE_SIZE as usize)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-efi/src/loaded_kernel_collection.rs:174:16
+    |
+174 |             || base % STAGING_PAGE_SIZE != 0
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!base.is_multiple_of(STAGING_PAGE_SIZE)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: manual `!RangeInclusive::contains` implementation
+   --> crates/nextcore-efi/src/hal_tables.rs:170:8
+    |
+170 |     if root_len < 36 || root_len > MAX_XSDT_BYTES {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: use: `!(36..=MAX_XSDT_BYTES).contains(&root_len)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_range_contains
+    = note: `#[warn(clippy::manual_range_contains)]` on by default
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-efi/src/hal_tables.rs:189:8
+    |
+189 |     if (root_len - 36) % entry_size != 0 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!(root_len - 36).is_multiple_of(entry_size)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+    = note: `#[warn(clippy::manual_is_multiple_of)]` on by default
+
+warning: manual `!RangeInclusive::contains` implementation
+   --> crates/nextcore-efi/src/hal_tables.rs:233:12
+    |
+233 |         if len < 36 || len > MAX_TABLE_BYTES {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: use: `!(36..=MAX_TABLE_BYTES).contains(&len)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_range_contains
+
+warning: manual `!RangeInclusive::contains` implementation
+   --> crates/nextcore-efi/src/hal_tables.rs:296:8
+    |
+296 |     if len < 36 || len > 64 {
+    |        ^^^^^^^^^^^^^^^^^^^^ help: use: `!(36..=64).contains(&len)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_range_contains
+
+warning: `nextcore-efi` (bin "NXKC") generated 3 warnings (run `cargo clippy --fix --bin "NXKC" -p nextcore-efi -- ` to apply 3 suggestions)
+warning: `nextcore-efi` (bin "NXHAL") generated 4 warnings (run `cargo clippy --fix --bin "NXHAL" -p nextcore-efi -- ` to apply 4 suggestions)
+warning: manual implementation of `.is_multiple_of()`
+  --> crates/nextcore-efi/src/loaded_kernel.rs:59:16
+   |
+59 |             || physical_base % PAGE_SIZE != 0
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!physical_base.is_multiple_of(PAGE_SIZE)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+   = note: `#[warn(clippy::manual_is_multiple_of)]` on by default
+
+warning: manual implementation of `.is_multiple_of()`
+  --> crates/nextcore-efi/src/loaded_kernel.rs:62:16
+   |
+62 |             || plan.image_size % PAGE_SIZE != 0
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!plan.image_size.is_multiple_of(PAGE_SIZE)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: `nextcore-efi` (bin "NXKERNEL") generated 2 warnings (run `cargo clippy --fix --bin "NXKERNEL" -p nextcore-efi -- ` to apply 2 suggestions)
+warning: using `chunks_exact` with a constant chunk size
+   --> crates/nextcore-efi/src/apfs_observation.rs:119:23
+    |
+119 |     for pair in bytes.chunks_exact(2) {
+    |                       ^^^^^^^^^^^^^^^ help: consider using `as_chunks` instead: `as_chunks::<2>().0`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#chunks_exact_to_as_chunks
+    = note: `#[warn(clippy::chunks_exact_to_as_chunks)]` on by default
+
+warning: `nextcore-efi` (bin "NXFSFIX") generated 1 warning (run `cargo clippy --fix --bin "NXFSFIX" -p nextcore-efi -- ` to apply 1 suggestion)
+warning: using `chunks_exact` with a constant chunk size
+  --> crates/nextcore-efi/src/exit_data.rs:69:23
+   |
+69 |     for pair in bytes.chunks_exact(2) {
+   |                       ^^^^^^^^^^^^^^^ help: consider using `as_chunks` instead: `as_chunks::<2>().0`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#chunks_exact_to_as_chunks
+
+warning: useless conversion to the same type: `alloc::vec::Vec<u8>`
+   --> crates/nextcore-efi/src/dt_probe.rs:146:21
+    |
+146 |     let mut bytes = Vec::from([2u32.to_le_bytes(), 0u32.to_le_bytes()].concat());
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider removing `Vec::from()`: `[2u32.to_le_bytes(), 0u32.to_le_bytes()].concat()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#useless_conversion
+    = note: `#[warn(clippy::useless_conversion)]` on by default
+
+warning: manual implementation of `.is_multiple_of()`
+   --> crates/nextcore-efi/src/dt_probe.rs:179:13
+    |
+179 |     require(value_offset % 4 == 0 && value_offset + 12 <= 16380)?;
+    |             ^^^^^^^^^^^^^^^^^^^^^ help: replace with: `value_offset.is_multiple_of(4)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+
+warning: using `chunks_exact` with a constant chunk size
+   --> crates/nextcore-efi/src/dynamic_probe.rs:439:20
+    |
+439 |         && control.chunks_exact(2).all(|pair| {
+    |                    ^^^^^^^^^^^^^^^ help: consider using `as_chunks` instead: `as_chunks::<2>().0.iter()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#chunks_exact_to_as_chunks
+    = note: `#[warn(clippy::chunks_exact_to_as_chunks)]` on by default
+
+warning: `nextcore-efi` (bin "NXAPFS") generated 2 warnings (1 duplicate) (run `cargo clippy --fix --bin "NXAPFS" -p nextcore-efi -- ` to apply 1 suggestion)
+warning: `nextcore-efi` (bin "NXMMU") generated 3 warnings (3 duplicates)
+warning: using `chunks_exact` with a constant chunk size
+   --> crates/nextcore-efi/src/arm_jit.rs:397:16
+    |
+397 |     if !pixels.chunks_exact(4).all(|p| p == [0x33, 0x22, 0x11, 0]) {
+    |                ^^^^^^^^^^^^^^^ help: consider using `as_chunks` instead: `as_chunks::<4>().0.iter()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#chunks_exact_to_as_chunks
+    = note: `#[warn(clippy::chunks_exact_to_as_chunks)]` on by default
+
+warning: using `chunks_exact` with a constant chunk size
+   --> crates/nextcore-efi/src/arm_jit.rs:432:10
+    |
+432 |         .chunks_exact(4)
+    |          ^^^^^^^^^^^^^^^ help: consider using `as_chunks` instead: `as_chunks::<4>().0.iter()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#chunks_exact_to_as_chunks
+
+warning: `nextcore-efi` (bin "NXDYN") generated 6 warnings (3 duplicates) (run `cargo clippy --fix --bin "NXDYN" -p nextcore-efi -- ` to apply 3 suggestions)
+warning: `nextcore-efi` (bin "NXDT") generated 5 warnings (2 duplicates) (run `cargo clippy --fix --bin "NXDT" -p nextcore-efi -- ` to apply 2 suggestions)
+warning: `nextcore-efi` (bin "NXARMJIT") generated 5 warnings (3 duplicates) (run `cargo clippy --fix --bin "NXARMJIT" -p nextcore-efi -- ` to apply 2 suggestions)
+warning: using `chunks_exact` with a constant chunk size
+  --> crates/nextcore-efi/src/exit_data.rs:69:23
+   |
+69 |     for pair in bytes.chunks_exact(2) {
+   |                       ^^^^^^^^^^^^^^^ help: consider using `as_chunks` instead: `as_chunks::<2>().0`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#chunks_exact_to_as_chunks
+   = note: `#[warn(clippy::chunks_exact_to_as_chunks)]` on by default
+
+warning: using `chunks_exact` with a constant chunk size
+   --> crates/nextcore-efi/src/apfs_observation.rs:119:23
+    |
+119 |     for pair in bytes.chunks_exact(2) {
+    |                       ^^^^^^^^^^^^^^^ help: consider using `as_chunks` instead: `as_chunks::<2>().0`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#chunks_exact_to_as_chunks
+
+warning: `nextcore-efi` (bin "BOOTX64") generated 2 warnings (run `cargo clippy --fix --bin "BOOTX64" -p nextcore-efi -- ` to apply 2 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 8.15s

@@ -1,0 +1,4600 @@
+{
+  "schema": "nextcore.artifact-files/1",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2182,
+      "sha256": "09b5afa5ee8edd57d5a0758cdb0b151aef183c5117700e92af1e1ab64a7d9e36"
+    },
+    {
+      "path": "canonical-modules/EFI/EFI.json",
+      "bytes": 7467,
+      "sha256": "315867320833ba97040662cac5ea42a702f40664b583bce0c763883cf59a9fda"
+    },
+    {
+      "path": "canonical-modules/EFI/all-features.log",
+      "bytes": 1979,
+      "sha256": "d194a6fa1f16612b101c77cebc33ebda83d102e508870763128b277839ad40f9"
+    },
+    {
+      "path": "canonical-modules/EFI/build-combined.log",
+      "bytes": 296,
+      "sha256": "61d56e1aa2fe0df369e45e7111d4c5612daabe049a6995ae01c7ed4bc0a08fd2"
+    },
+    {
+      "path": "canonical-modules/EFI/build-default.log",
+      "bytes": 3301,
+      "sha256": "68bc4b3392d5a888d98f37669e224f8e64e6178a0d880ec2439752675e8abe02"
+    },
+    {
+      "path": "canonical-modules/EFI/build-direct.log",
+      "bytes": 154,
+      "sha256": "38188d3999100e090164d1df388443ea36c943d1b8657422e97091db41c81570"
+    },
+    {
+      "path": "canonical-modules/EFI/clone.log",
+      "bytes": 75,
+      "sha256": "631c60d29161cc90bf0edbdd385f17a8e07acb755ac5ccc6e14a3f1503b6441b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback/command.json",
+      "bytes": 717,
+      "sha256": "5a9583ef90c486df88a8bd53acbae84174c397d630d3b206017369b0d375e05d"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback/report.json",
+      "bytes": 4768,
+      "sha256": "384ac5813ae87fe8486cc2e6c2b0adc486bf06f103289bf6dc940eb8991c8d33"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback/serial.log",
+      "bytes": 1640,
+      "sha256": "1227514ba513db6f48208e40495c4d324bcd1945490503e6c4ea36e03d3d628b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback/stderr.log",
+      "bytes": 79,
+      "sha256": "ee2664e1bdef16d6e9d93f5258b97f15e557c3dbaa27cd59c42cd91b15b55525"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback.S",
+      "bytes": 236,
+      "sha256": "9461363fbf77fd7e4a992cd6bc55078db427e112ecf57cab8d69a32213dddeab"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback.bin",
+      "bytes": 48,
+      "sha256": "c27464150aee4456f124465085fd374946b07300d889f73e7d6b5a7839a4f56e"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback.disassembly.txt",
+      "bytes": 795,
+      "sha256": "99513c14debbbf68aa9196f6dd629ea6796e252bafdcbd3584ce562d5531302d"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback.log",
+      "bytes": 196,
+      "sha256": "b1a0e2f89c44d4be233d3bef028e2ac51ca123d796e916f796c5769652298c4f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm/command.json",
+      "bytes": 708,
+      "sha256": "24f3a0c72ee5eb555ce96badf5e96a37f066a0bdee90029357125330d94705bb"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm/report.json",
+      "bytes": 4776,
+      "sha256": "5da8a220430170b9f4a33244f1f86eaa6125f806d69bb059c9a669c5693e8ddf"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm/serial.log",
+      "bytes": 1647,
+      "sha256": "2afd5f660e13719213d823eb32974ddae02d0cfa3f0e10bc7d30019c110d1901"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm/stderr.log",
+      "bytes": 79,
+      "sha256": "399de72ee1ce5e018df1c98a5de04ae2ad73bcc9465ebbea91ef37f066c1ef08"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm.S",
+      "bytes": 241,
+      "sha256": "5c6a03636f069df917940bdfe2cf5c576e218a5d0b1f619b3dc689e39fd6fb17"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm.bin",
+      "bytes": 48,
+      "sha256": "c718be41bdd77023a99b8cd560e9577c4dff40f9e71f28f102778fe2c749b2e1"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm.disassembly.txt",
+      "bytes": 796,
+      "sha256": "49c7b56d8e6ff590c405c6b5a2dee84f314a24ee75fdc13d15383208699b7a77"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm.log",
+      "bytes": 193,
+      "sha256": "b1e8637c04ecd15f09950cc3b624975acf0c619a8320a26fa8aa2f670c7289b5"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg/command.json",
+      "bytes": 708,
+      "sha256": "a66a9ae7f3425423809634792b2d630a8efbc55555ae56c74f4ea37460f5415f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg/report.json",
+      "bytes": 4775,
+      "sha256": "2003a1ac1be27826636b978423146d6a18ed40a0a261ec9911ef625315bd11d2"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg/serial.log",
+      "bytes": 1647,
+      "sha256": "9b4e74c60f7c237b3442cfb96dbf480a3bb0bdb409c113172bacd1868f63e67b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg/stderr.log",
+      "bytes": 79,
+      "sha256": "aaa124228d096226be2ded42a140f71771b13349707ede6edb0134af8975f785"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg.S",
+      "bytes": 241,
+      "sha256": "ce6c4135d9464bfab28421221c2d8956b1b86728722ed02dfa6efad8320906a1"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg.bin",
+      "bytes": 48,
+      "sha256": "02326f427487a3548f29820f9f9e07e7c71eb83ff2237f5d64e656e92184d0fb"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg.disassembly.txt",
+      "bytes": 794,
+      "sha256": "f0070546e99f72de874fbac9851f7901b6a38a3de167987fa8ce7b5e8eac48a7"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg.log",
+      "bytes": 193,
+      "sha256": "c64cc7b25842e99bfe621c6ca62325293ac927c85e137e8c31dde5de208ee647"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm/command.json",
+      "bytes": 708,
+      "sha256": "b706a5960a79a0bf36ced15586856ab0a1583ffd63484e2882a8c6c45a6c907f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm/report.json",
+      "bytes": 4793,
+      "sha256": "465be98d9712417acc371b1c434c526084b9ce98f3d1112603946c0650f5eb67"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm/serial.log",
+      "bytes": 1655,
+      "sha256": "7e2bfe21a91c6914644b41b3d83630f4c53bd88e634abf1f61823512147d8658"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm/stderr.log",
+      "bytes": 79,
+      "sha256": "354f264f42f7130ccc35b6ae84618a3519510ecfcfccaaeeeedd0f682b6cdf16"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm.S",
+      "bytes": 249,
+      "sha256": "4bd629f8c4ccd3b3cba26f491ebe8b1293a0145a588df24bfe96a92163ac0587"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm.bin",
+      "bytes": 48,
+      "sha256": "9f13081417fc68a96a0584b6c1c4e88ff1d5782511939c4bc21b57b8392fffd0"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm.disassembly.txt",
+      "bytes": 802,
+      "sha256": "8c6d0220b22f5874893801c5d32c604126e7e3db1717f1f7c806d593ae072ea2"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm.log",
+      "bytes": 193,
+      "sha256": "53690dfeceffb6d4569a08f19dca0a1dd00451e3bef4072c7fe6ef67cea576b0"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg/command.json",
+      "bytes": 708,
+      "sha256": "a3f8c0598611b57c0b4a4b4c61336133dfff186b5c417ef460d765bf4ad5526e"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg/report.json",
+      "bytes": 4794,
+      "sha256": "7b01ec8d5437bc3e4268c18aceaaea7d336ae205ff1f35bb3559fd28f47c0364"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg/serial.log",
+      "bytes": 1655,
+      "sha256": "70c1c5fbf72a99397445ae983fe548ccb3cb653876714c7d2c295033b06257bb"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg/stderr.log",
+      "bytes": 79,
+      "sha256": "70e8dbc8a9a710ac11da9b4f9b0c82cb7075f829c5468bb2b98c85475602f109"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg.S",
+      "bytes": 249,
+      "sha256": "7fd2fe1f1061a11e408c681541c2b08ab106f33923cc70c88584ad644ddd4574"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg.bin",
+      "bytes": 48,
+      "sha256": "3f50d2dc63cbfd5a6b6719448408f516e75a2b4d7bb526ec81d8cce2aaeebd95"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg.disassembly.txt",
+      "bytes": 800,
+      "sha256": "fde9ee782633f2fc01f2271d3d8be17064691a7fe79c0b6298801471f9e628df"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg.log",
+      "bytes": 193,
+      "sha256": "54d97c98b4aaad1465fc1c6aa50cdbfa3a143ccd21a9e1b51bb001ad8f159c67"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv/command.json",
+      "bytes": 711,
+      "sha256": "b1a49ae23c0be6598f596237f6d478f0bfea919a53c082e694b6f0e4ceac8a21"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv/report.json",
+      "bytes": 4764,
+      "sha256": "e94aa60a5cce49ac97db41eed4936612be8fc973da4a65f3424885298f2cf157"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv/serial.log",
+      "bytes": 1640,
+      "sha256": "7ea16dd10342562a95155a86ee130ae096705b117d4bcf3f1940f6b1cf6c1f18"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv/stderr.log",
+      "bytes": 79,
+      "sha256": "b3404a8c5959a41a26826214f8f679e1caaae38ad37fbe789186524b6c772470"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv.S",
+      "bytes": 237,
+      "sha256": "8e65b01d944f1261340295b0a7f20b1485ea8eab3d30a5fa05ae6c9579164050"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv.bin",
+      "bytes": 48,
+      "sha256": "d7833147cfaf082327ecaa2fb6a9a6d02c3a27a3d86a21a43fe62cc2f30ca862"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv.disassembly.txt",
+      "bytes": 792,
+      "sha256": "4902b9d1d6781eb640d2260db1b16678704b88264b4fa73b305b25ff2ba7b356"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv.log",
+      "bytes": 194,
+      "sha256": "6856c33d7954e42f4797bf2a0f19606f791ca25c83c03f335c3c82ff5400894d"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback/command.json",
+      "bytes": 717,
+      "sha256": "2bc68b719c03cc740644947afa25106ac8bb7906932c27ce6512fe82da04734c"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback/report.json",
+      "bytes": 4780,
+      "sha256": "b19cd4a29d4c274519ff82b2dff030f4ed541a3a2c8958786b75d343a7831c65"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback/serial.log",
+      "bytes": 1645,
+      "sha256": "ccc46ca3082f522e8b6c3d29ee9ebc7ab3d4e96c7cb77e2726ece9cc10e535b2"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback/stderr.log",
+      "bytes": 79,
+      "sha256": "79bb17ea83e13ffe8d58abd4a83194e776c3aa931524fb2fd28f24a6f2627336"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback.S",
+      "bytes": 235,
+      "sha256": "a0d7098bae1a76a965a7c362f7cc8e4d3f8c8ebb5c8b4a12ee5073164f4314a2"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback.bin",
+      "bytes": 48,
+      "sha256": "7cf1bfcd9061f24b3573d53548e0f5325f0435d7cd4773b39ea74929a902745d"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback.disassembly.txt",
+      "bytes": 792,
+      "sha256": "4fb8908c0885ad1e27d5eb161931588f0dc741eb74cd70641f590a6ef6ea5fbe"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback.log",
+      "bytes": 196,
+      "sha256": "42ae0ce7386272e663601e8e556deb97afbd96ca7ede8d0fef643a658bea5972"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm/command.json",
+      "bytes": 708,
+      "sha256": "4e07bb9298e0f1ec1334de3e56b8db2e504eea3de8e4588f9d5b3442356a9df9"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm/report.json",
+      "bytes": 4760,
+      "sha256": "6c52741eb57557279d176e45f5e5107adcf5de2c05d8618775cc3d53cad1f3e6"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm/serial.log",
+      "bytes": 1640,
+      "sha256": "739a44bc1cd3bf1dcab469814980b31757fd8e9134be9743f9531ae07a40d125"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm/stderr.log",
+      "bytes": 79,
+      "sha256": "33547494ca9074893b00811f2d672e683a3ef5f0289465bc205e4d251b3dd4f2"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm.S",
+      "bytes": 234,
+      "sha256": "55cb77aae6e7b24b41e8aec83447e8ec1ea5a29aad0c4bbb7ea75b884ad60478"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm.bin",
+      "bytes": 48,
+      "sha256": "c1d12e899747f64066f0f7c8208ddf31a16ba8b807cac9def4e9417a2482324a"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm.disassembly.txt",
+      "bytes": 790,
+      "sha256": "7da920848e92f7e21b183adeaca7c9f59a2012c4b3db5baa7d6a6de40d9cdbc2"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm.log",
+      "bytes": 193,
+      "sha256": "e3e643c006c30edd9a422bb0761dcb0a5cb5d934bccd7f9a38a56c9ec6d3825f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg/command.json",
+      "bytes": 708,
+      "sha256": "8f38e3a407f3d67dc663fb5daa2828503d96d243600cc5fb320b2fff5c9d9fcb"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg/report.json",
+      "bytes": 4793,
+      "sha256": "e1fc9e6f153772f5f228bcb9dadd574ee09ef34cb09dd55dc25a79f159cea713"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg/serial.log",
+      "bytes": 1655,
+      "sha256": "e127283e624b4c221ecde2c6bb748dbf1e43cacab43b2fa9b2a2091d3c2e71f1"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg/stderr.log",
+      "bytes": 79,
+      "sha256": "b383e32f6a85fdb402bcc170a05f245dfffda2b77e400c20ce8775fc622aa7ad"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg.S",
+      "bytes": 240,
+      "sha256": "47503baa357e403453972e795e493a7e73e39efae90ece7a59cd113a3feb047c"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg.bin",
+      "bytes": 48,
+      "sha256": "5a37d961c63b6186279dba837dc64d15d84cfb48ea2333b8c1765a115a46eb2c"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg.disassembly.txt",
+      "bytes": 793,
+      "sha256": "4cb85dba02b6e0e8d2bf8631e3d8d15b6d952f6964c7895b75a8c19d74014f42"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg.log",
+      "bytes": 193,
+      "sha256": "55fddd9b6f335eccfca286b8cbb2ee457adfe841215b923ae32251edf26ea8f9"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr/command.json",
+      "bytes": 702,
+      "sha256": "9639117791708c035e150328c6fbef90b5a2cfd6bdb82d8f533674420f98f566"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr/report.json",
+      "bytes": 4758,
+      "sha256": "62f8446f6223d743df3c99deacc98e195573abf9ceb2bef65cf3fcd386bf23b2"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr/serial.log",
+      "bytes": 1640,
+      "sha256": "456eded8fcf4174509bfb73adf30967da5b88e628db9669f213e7a266dd88a99"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr/stderr.log",
+      "bytes": 79,
+      "sha256": "10d5277d67d9b24d482048aa1412c432ebe4ecb463762d23ba0b1b2e9e7af78f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr.S",
+      "bytes": 237,
+      "sha256": "6f4916b0ecdc777f4dc90e07f1aa71bfe56fe776bee1df85997e94cd74d6bc57"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr.bin",
+      "bytes": 48,
+      "sha256": "f4ebd3435196e8b93b0eef9186fbb9cbb77f9e00eb4063e8f7a76181ed2a169f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr.disassembly.txt",
+      "bytes": 789,
+      "sha256": "7ad681fc6da63536d3e4515e270caabf1dbfc0c37712d3d4717ba50aea17f08c"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr.log",
+      "bytes": 191,
+      "sha256": "6973b192be33b3088a869ea277732d2124147bf50ab96fc4f4c15392771de7dc"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm/command.json",
+      "bytes": 708,
+      "sha256": "7ca507045ccd77c6633eb431f41bdd240602eaa52077100a79e4ea31e072d845"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm/report.json",
+      "bytes": 4762,
+      "sha256": "67918db9db7c859b91194ea37d80a75bdc297169bbcfc4015c8989fb331b66a9"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm/serial.log",
+      "bytes": 1641,
+      "sha256": "52df03bc8eb1861cac31742136978bea12052b6b5695f0a8937ff6bf42d60982"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm/stderr.log",
+      "bytes": 79,
+      "sha256": "743bf4c46b45d65ca20f154de1696eb960b93cc4eaf70f86dfbdc2f702246cdf"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm.S",
+      "bytes": 235,
+      "sha256": "2e2297e38c68312a6b31dbf25be67c3df99d2a0cc57f7e075b05c11d6072633b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm.bin",
+      "bytes": 48,
+      "sha256": "c7e148e4f5e89e55e5c5a586455ecd0adea46bae4d80007a582f451b3efa361a"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm.disassembly.txt",
+      "bytes": 791,
+      "sha256": "ad51245314cfea8e87a27531f2d1a3aab5ece69f190fbf4512ee0a8257f65cca"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm.log",
+      "bytes": 193,
+      "sha256": "13ae67d13cc5c413e4176653797cd73a2ebf04af970d3b40304e09b6f86e80bf"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg/command.json",
+      "bytes": 708,
+      "sha256": "9e7ea6b6823d03c97be438fcba546a34279b8a5c570a43b7d3e852dce0c4ef1f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg/report.json",
+      "bytes": 4792,
+      "sha256": "9c9c9adecbf16dbf47bc7c2ff64f9537030e5efe8b13d774995216353c76c21b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg/serial.log",
+      "bytes": 1655,
+      "sha256": "030b9d5f0755970be55dda3f2f445d13a8b2b84d1740e25a0646f4f6e6c73982"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg/stderr.log",
+      "bytes": 79,
+      "sha256": "997374874460f09dbf5588881b095e59f30703481fea5dd7412501155173c37a"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg.S",
+      "bytes": 237,
+      "sha256": "6253c25a8585f3d7229bbda76884d43cdc4fe27491db2bb20112120670afb1fa"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg.bin",
+      "bytes": 48,
+      "sha256": "dc57e9de0b0271a5574684a9454720d96e1cc0c6ce45ff83afcac2e47e92a02d"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg.disassembly.txt",
+      "bytes": 790,
+      "sha256": "07c48528d43c29c29598d3f2fd49c3b4ecae786bfb92c9beb5ec6dfac4405215"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg.log",
+      "bytes": 193,
+      "sha256": "9a0fdda211108f0b2cd53db3cbadf88253523e93f7d9be4293056c834f51823a"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain/command.json",
+      "bytes": 714,
+      "sha256": "4e66b687500e4ea84ce5cfa739f1ad3403c8dfe22db0e85e743e4787a4919f1a"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain/report.json",
+      "bytes": 4768,
+      "sha256": "a9dcd0253a5ce12f0dfef074c7d0ff238c7bb2d90557c4b21d53a508dea1a096"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain/serial.log",
+      "bytes": 1642,
+      "sha256": "6f65e2753f3711aedc5258960ffddcd65909f0cbdc76c7d7453737443b3ab19f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain/stderr.log",
+      "bytes": 79,
+      "sha256": "0c4f2fb8adc9bc477b2e53fe61b87855f4a3ee316363096aca2188bc6b962235"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain.S",
+      "bytes": 310,
+      "sha256": "242cd21d4bcd306c3f988da586f27751ec740fe775cc7d43e529691c81a93c72"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain.bin",
+      "bytes": 68,
+      "sha256": "995137e95f9ef5eb58e6712821698b9cb9aabf318c0b9a99f0c703a438d592c7"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain.disassembly.txt",
+      "bytes": 1028,
+      "sha256": "eda97468232d7f8fbe3be72fc1c7f72d850e578e898d911ba6d019a6e713e61e"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain.log",
+      "bytes": 195,
+      "sha256": "4a164b5bb63f8208362c92f1d0aa588f7d8cc1b69de376322b42fad0e68a7249"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/report.json",
+      "bytes": 37192,
+      "sha256": "6fe94107e7f80a1a546ccbc779a38e633626e5259a859836b34c0a29f9070057"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware.log",
+      "bytes": 11700,
+      "sha256": "982565f7ad8d5d8413fc7ed2e36aacbf422f034e19d2af8315d4412c96b2e93c"
+    },
+    {
+      "path": "canonical-modules/EFI/debug-nxapfs.log",
+      "bytes": 965,
+      "sha256": "7b285a07c58373a609aa6a2225a66146627f087360bdd53aab62a8e3a3e8a878"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-build.log",
+      "bytes": 154,
+      "sha256": "3ffd54a6095408defecdfde281f2c5d08ba3a2ba65385b263f0eaf314d497fb2"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-capture-check.log",
+      "bytes": 39,
+      "sha256": "4178628069c22e9850c0dbdd1086766bda512e2ebdceb19d76470392d266b0d5"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-firmware/command.json",
+      "bytes": 639,
+      "sha256": "ade5f73c691d45d1f7cee5b0de7201ad14d1ae172f6141c013dc1d99d27ec306"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-firmware/report.json",
+      "bytes": 33781,
+      "sha256": "bfa0ff2e24b40849109a9939812f6410fd87f9449a4e62cc0007375581f66a6f"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-firmware/serial.log",
+      "bytes": 10874,
+      "sha256": "eaa4f76567c617372c053fe19470f5fc5a5bdfda5f17f761059df23e1b74bfaf"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-firmware/stderr.log",
+      "bytes": 70,
+      "sha256": "b68bcb62b457ad41b408b36ce50fe1576557183802089970e95eabe049fcfcc0"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-firmware/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-firmware.log",
+      "bytes": 119,
+      "sha256": "6112855770ce7547d85f664cb8da49182d678faad19666828fa107006e81bad1"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-reader.json",
+      "bytes": 4956,
+      "sha256": "b9802d41983ce2fcee593f570accc42990c5654ba20cc4466919dc409dbac4f9"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-build.log",
+      "bytes": 154,
+      "sha256": "07b6177027bf298aa633f605f68c42974fa61c3806dba216cc860250ccfb3d22"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware/command.json",
+      "bytes": 654,
+      "sha256": "fe53789c71255bc48353aa6bce051cd46e1d874bc98b7a42728a809bed0d5135"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware/report.json",
+      "bytes": 83191,
+      "sha256": "2072d98d58c236ad2833bba9e0cf1a0acf068b55d1249927d8e013f00e3e281d"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware/serial.log",
+      "bytes": 26402,
+      "sha256": "5acbd6bddd01924ea5b6f2287eec26d009685b443046bb5d6d901e94cdddfc6e"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware/stderr.log",
+      "bytes": 70,
+      "sha256": "f4d3a846265553db341569e4123e1240b5ca40f715616c55218b951188b7ee9e"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware/validation.json",
+      "bytes": 167,
+      "sha256": "e3d4ee4cb2b64d9605e0ca6c7b715fc0237ffbe8b2a1762dc4b8dceb36b947a3"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware.log",
+      "bytes": 294,
+      "sha256": "8ff87d6ef5557aaf40665886c8e2a4a1f2e72c85ea55b85dfe0a1608ebd14ab2"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-reader.json",
+      "bytes": 3840,
+      "sha256": "a9e0501b4a29b359de320b13ddda62cd11cbce605e1a1c0bde54971de4d051fd"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-reader.log",
+      "bytes": 39,
+      "sha256": "f55f2f6a20e0ceecea728e3be18083625e415f9e74167e5757374875a66f198e"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-build.log",
+      "bytes": 154,
+      "sha256": "7b598d2169d05212ce61b7c4f6c1845e0533d2dbbb4c6e97e619e956bfc51915"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-firmware/command.json",
+      "bytes": 651,
+      "sha256": "938d0e67f6047f05dc2f58c599aadb4dada6d6045ac473b02888e42519134c6e"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-firmware/report.json",
+      "bytes": 116674,
+      "sha256": "7d9523200be4ebefd95ba9078191410b0ec6740f3afc90c5461ae0bfb4bf0228"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-firmware/serial.log",
+      "bytes": 18427,
+      "sha256": "b67978c6df9793cab02b02c2b70f13a84e888ae32ba9674a49e80a42912028a7"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-firmware/stderr.log",
+      "bytes": 70,
+      "sha256": "03fc9d18936ec77e41e5c6f2414b7cccbf654250d15347529225ff6bc1e56a66"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-firmware/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-firmware.log",
+      "bytes": 125,
+      "sha256": "85f17ceabcb77e7a2b72ddd3ba80c0847e59883967edadef92644a453ce25c44"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-reader.log",
+      "bytes": 636,
+      "sha256": "35f17990fb2be6b58879a0e0ffdd444b5a4c661d87e9d8bd4039df066a4b58cc"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-0.log",
+      "bytes": 75,
+      "sha256": "bb48d6c5784721b85ff845881a64052e02563405ac7af64ea5d79cee2fdd2f73"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-1.log",
+      "bytes": 3601,
+      "sha256": "4176ff9d26d787befe197f5266828e5fafc4c7c3d6d02edcea89272fb2916617"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-10.log",
+      "bytes": 102,
+      "sha256": "94ec963d428fb71654539f35afe9dac4379afae0c4b2fbfe03c56c4d4be4cf36"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-11.log",
+      "bytes": 4127,
+      "sha256": "c5cc35a901b706c089723ee73c15012a38d42e2ebf13020869ba40d2d91f8706"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-12.log",
+      "bytes": 198,
+      "sha256": "fdaac84c15602040d5a82cc0c524b9a050ac41c74377d249d4b768a6f9a4f0af"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-13.log",
+      "bytes": 124,
+      "sha256": "65fec32edeba544c9e4728d7b3e30cb961e65cc7b467473a6b6579faf9ac89f5"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-14.log",
+      "bytes": 103,
+      "sha256": "5e579df1440bf453c5d3cd9f7596c338b66fc996278087968cb6ba23c94d6340"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-15.log",
+      "bytes": 188,
+      "sha256": "f13f0beb919e874e72488cb63e22a49245f68c5b3339beb34a8cbfcdfb6563c1"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-16.log",
+      "bytes": 104,
+      "sha256": "8464f3f9ab8c4ee762b8a5e20c28108463830df7d9184b05704eb368bae87621"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-2.log",
+      "bytes": 7939,
+      "sha256": "b9fae702b48282aad8c751c717f7b767bc25982875b4607d0e36a813279e9a6d"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-3.log",
+      "bytes": 94,
+      "sha256": "912bb5a5b5ff71221b81d968287f16f0ce1ba2dca04e0c80c45f9715f1a3e1ae"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-4.log",
+      "bytes": 1772,
+      "sha256": "c6bb409ac2e9b89be7e941091b7865da71f65a298c7ce6732cc4830e20d4d207"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-5.log",
+      "bytes": 3065,
+      "sha256": "2e04124a0c28e0198f83d06092006bcc383c42e59b0119198bf7b8fe97aa3740"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-6.log",
+      "bytes": 87,
+      "sha256": "a855301fa6077fc39c14cdd2b75c5411714d03ec39b46f328fdf3dad5c70c52d"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-7.log",
+      "bytes": 51,
+      "sha256": "b1554479ebc08e13091f23f1d60673f2f282a3a07bcf1036b35462751f81efdd"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-8.log",
+      "bytes": 88,
+      "sha256": "aa0f5994b0207b8244a3d7e2b95868a5d28d65b1eeb49a5381197b9ed3593650"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE-9.log",
+      "bytes": 103,
+      "sha256": "0de18df7ac90180c59667e471bb1ce2523766501f25441ba250a4cf56217d9b9"
+    },
+    {
+      "path": "canonical-modules/ISE/ISE.json",
+      "bytes": 4994,
+      "sha256": "079f92857a3373cad7ab115e42ab666b0ca6dda94597d271deb429133dfb3981"
+    },
+    {
+      "path": "canonical-modules/ISE/conditional-compare/correct.S",
+      "bytes": 1366406,
+      "sha256": "4cdd288466ad4aafb30e1223b9b334cff440e545ada840fd0b79f5af13e8c55d"
+    },
+    {
+      "path": "canonical-modules/ISE/conditional-compare/invalid.S",
+      "bytes": 18,
+      "sha256": "5794da62ef32553e292811f197b0949fc3529ce606e1d91a5729ebc5aeb758e5"
+    },
+    {
+      "path": "canonical-modules/ISE/conditional-compare/nv_never.S",
+      "bytes": 1367443,
+      "sha256": "42ca2fabea2fc4e10cd13b2c0d8555632176ee09da73119faaf40d81868da2e7"
+    },
+    {
+      "path": "canonical-modules/ISE/conditional-compare/wrong_flags.S",
+      "bytes": 1366406,
+      "sha256": "382cac403c84f8a3857ca7f916cb728a09d3dc0c46abb84562bf14a73ab49505"
+    },
+    {
+      "path": "canonical-modules/ISE/conditional-compare.json",
+      "bytes": 5779,
+      "sha256": "695416eb788ab44c1708bce935577e6f0849b496119bfbb999ec4447c07b1105"
+    },
+    {
+      "path": "canonical-modules/ISE/dynamic-memory/cpu_bank_before_commit_ack/jit.c",
+      "bytes": 39894,
+      "sha256": "55d97b8348dab3eea5ddc427f04333e89c84ba33b8300bf9fc08168ad0a42871"
+    },
+    {
+      "path": "canonical-modules/ISE/dynamic-memory/guard_ignores_isb_bytes/dynamic.rs",
+      "bytes": 12867,
+      "sha256": "3f9257a55e17531662ea27df668fb5768db2463f0d64e4a703a060933e1725c2"
+    },
+    {
+      "path": "canonical-modules/ISE/dynamic-memory/guard_ignores_isb_bytes/lib.rs",
+      "bytes": 8245,
+      "sha256": "1f80af642940564a601c227d5d8bfce44d9c4fdebf148801d581dc1f15d294a3"
+    },
+    {
+      "path": "canonical-modules/ISE/dynamic-memory/guard_ignores_isb_bytes/stage1.rs",
+      "bytes": 9850,
+      "sha256": "9023ee92dc8b9b6277169a25d64b258ededc3c187c0280452c9b1412ab09c924"
+    },
+    {
+      "path": "canonical-modules/ISE/dynamic-memory/isb_without_effective_commit/jit.c",
+      "bytes": 39896,
+      "sha256": "9f0dfc9026198b7321b1366c96e92542ad5b464b6b45eec84577d7ac77c64666"
+    },
+    {
+      "path": "canonical-modules/ISE/dynamic-memory/memory_dispatch_bypass/jit.c",
+      "bytes": 39792,
+      "sha256": "2425677b0968d7369181a305124f84fdd9e2d08bdd725251a699b8e3c0b6c231"
+    },
+    {
+      "path": "canonical-modules/ISE/dynamic-memory/omit_actual_tlbi_invalidation/dynamic.rs",
+      "bytes": 12838,
+      "sha256": "5272abeaf6a567071b3d4ed85f2a48cbfc4c859546f8c5a2a0e41f65cebac378"
+    },
+    {
+      "path": "canonical-modules/ISE/dynamic-memory/omit_actual_tlbi_invalidation/lib.rs",
+      "bytes": 8245,
+      "sha256": "1f80af642940564a601c227d5d8bfce44d9c4fdebf148801d581dc1f15d294a3"
+    },
+    {
+      "path": "canonical-modules/ISE/dynamic-memory/omit_actual_tlbi_invalidation/stage1.rs",
+      "bytes": 9856,
+      "sha256": "3a7a35261be286e360c691d113ae2f2cd8a52b6be3ea5dcbb4777b2595166909"
+    },
+    {
+      "path": "canonical-modules/ISE/dynamic-memory.json",
+      "bytes": 36146,
+      "sha256": "6887f9911718e577b76123ae29ca3cfe0f78436a2a5eb03f54d6e1b676215033"
+    },
+    {
+      "path": "canonical-modules/ISE/ise-native.json",
+      "bytes": 31662,
+      "sha256": "e219b71ce367292dc0fde0fca65f6855d99a03caeac93683213d75bba0845359"
+    },
+    {
+      "path": "canonical-modules/ISE/ise-pair.json",
+      "bytes": 1772,
+      "sha256": "c6bb409ac2e9b89be7e941091b7865da71f65a298c7ce6732cc4830e20d4d207"
+    },
+    {
+      "path": "canonical-modules/ISE/ise-scalar.json",
+      "bytes": 3065,
+      "sha256": "2e04124a0c28e0198f83d06092006bcc383c42e59b0119198bf7b8fe97aa3740"
+    },
+    {
+      "path": "canonical-modules/ISE/mmu-abort/negative.log",
+      "bytes": 29439,
+      "sha256": "4091ba7314f1a4f63c9a6c3dd44d42c4214d044a5ce76acedc8b7ca20d593504"
+    },
+    {
+      "path": "canonical-modules/ISE/mmu-abort/normal.log",
+      "bytes": 29439,
+      "sha256": "4ecd46eb58174f8a938da7d9702635fc4bc2a5275f30fd19a458866a666b4033"
+    },
+    {
+      "path": "canonical-modules/ISE/mmu-abort/report.json",
+      "bytes": 103466,
+      "sha256": "aa4776679285df46d0ede6cee4c688bd0269cbf27be901e8ecbe03078a8610c7"
+    },
+    {
+      "path": "canonical-modules/ISE/mmu-at/cases.json",
+      "bytes": 26445,
+      "sha256": "c7871c538274caf85fef523ab44b517e3b32e440d52f9805e734a2a89c708f03"
+    },
+    {
+      "path": "canonical-modules/ISE/mmu-at/negative.log",
+      "bytes": 75369,
+      "sha256": "29f542c1a4290c0f4a33010528bd3fe0a0f1d7159533586e6361451bfeea7ac5"
+    },
+    {
+      "path": "canonical-modules/ISE/mmu-at/normal.log",
+      "bytes": 75369,
+      "sha256": "6640e06027272d59ca76ab0610575411176de9cd8a1b66d68a54dd1a81376d1e"
+    },
+    {
+      "path": "canonical-modules/ISE/mmu-at/report.json",
+      "bytes": 243501,
+      "sha256": "0875556b0da4b1a2c3b78121bd5f875730f5eaa6a15c3ee3344c2f1e55f03acf"
+    },
+    {
+      "path": "canonical-modules/ISE/mmu-comparison/inputs.txt",
+      "bytes": 20432,
+      "sha256": "6d641b7183e64eb1322b5a41dbb61c32836b36246ed0ece606eb3aaf34f33a30"
+    },
+    {
+      "path": "canonical-modules/ISE/mmu-comparison/report.json",
+      "bytes": 129317,
+      "sha256": "c009e1f4202cae24a3df87c92a548bfcf0587be3263726c1320e8ff13e1957b3"
+    },
+    {
+      "path": "canonical-modules/ISE/mmu-comparison/stdout.log",
+      "bytes": 9935,
+      "sha256": "4f475cc5e5d366fb835cf3d7c955a78049a9572aac7cd55c78b2ab1c92c52628"
+    },
+    {
+      "path": "canonical-modules/ISE/mmu-comparison/wrapper.rs",
+      "bytes": 1731,
+      "sha256": "4951a4dd376f3bc6e4a8370d330323033545038411b240fe683bfaa0ff5acb87"
+    },
+    {
+      "path": "canonical-modules/ISE/native-memory/jit_provider_bypass.c",
+      "bytes": 39792,
+      "sha256": "2425677b0968d7369181a305124f84fdd9e2d08bdd725251a699b8e3c0b6c231"
+    },
+    {
+      "path": "canonical-modules/ISE/native-memory.json",
+      "bytes": 15290,
+      "sha256": "aed6b117c414682a2ac6ae1200168efff76615d043bd07b022d199a960f8ac9e"
+    },
+    {
+      "path": "canonical-modules/ISE/native-stage1/backing_failure_as_guest_abort/lib.rs",
+      "bytes": 8245,
+      "sha256": "1f80af642940564a601c227d5d8bfce44d9c4fdebf148801d581dc1f15d294a3"
+    },
+    {
+      "path": "canonical-modules/ISE/native-stage1/backing_failure_as_guest_abort/stage1.rs",
+      "bytes": 9893,
+      "sha256": "1d86506a313dedb735bf0a6670bf70880d11e9f7eb1220948a64ce569c227722"
+    },
+    {
+      "path": "canonical-modules/ISE/native-stage1/jit_provider_bypass.c",
+      "bytes": 39792,
+      "sha256": "2425677b0968d7369181a305124f84fdd9e2d08bdd725251a699b8e3c0b6c231"
+    },
+    {
+      "path": "canonical-modules/ISE/native-stage1/omit_second_store_permission/lib.rs",
+      "bytes": 8245,
+      "sha256": "1f80af642940564a601c227d5d8bfce44d9c4fdebf148801d581dc1f15d294a3"
+    },
+    {
+      "path": "canonical-modules/ISE/native-stage1/omit_second_store_permission/stage1.rs",
+      "bytes": 9935,
+      "sha256": "b64cf93c38b4070fab007562e5975d48fa4f88eb05331b5ab828f505585178b7"
+    },
+    {
+      "path": "canonical-modules/ISE/native-stage1/reuse_first_pair_locations/lib.rs",
+      "bytes": 8245,
+      "sha256": "1f80af642940564a601c227d5d8bfce44d9c4fdebf148801d581dc1f15d294a3"
+    },
+    {
+      "path": "canonical-modules/ISE/native-stage1/reuse_first_pair_locations/stage1.rs",
+      "bytes": 9940,
+      "sha256": "21bbc1a1f50a793c7f5679ac29c03d8061d94947ced663a1edd1b399bc0b85a5"
+    },
+    {
+      "path": "canonical-modules/ISE/native-stage1.json",
+      "bytes": 21464,
+      "sha256": "45cb5c0358e4528251c59df3042d8895ed4ed7d8b40dfeb88f051c399dd03a33"
+    },
+    {
+      "path": "canonical-modules/ISE/pc-alignment.json",
+      "bytes": 3122,
+      "sha256": "a828fb04d580f5984bf78b7d2d4f30a0c16ddf1155f550cd6979a4484785f709"
+    },
+    {
+      "path": "fresh/architectural-reference.log",
+      "bytes": 8000,
+      "sha256": "59fbcc58ade8b84e3a2a7435a8bd8a5b9ad9830c78689167ca51dd862bd83f27"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/actual.tsv",
+      "bytes": 2746,
+      "sha256": "21d8ab631b0ee837acea5073c0f4562aa30203061bb535a00cddfde476b8bc48"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/cases.rs",
+      "bytes": 3441,
+      "sha256": "c6216391f9e227e18cce62dccb7237315fbe9d921e297f973ff1cf2fad9c26ae"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/commands.json",
+      "bytes": 8538,
+      "sha256": "67f9c1ea20c39563599addbc4bbf78f2f5f7f97e96e5d4a1c1f1059c0447ed6d"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/compare.py",
+      "bytes": 16435,
+      "sha256": "fe12f993d5a044af4d21c2acdfa87e986820292bbb7d3a7e35f2da2643f5a416"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g16384_data_unmapped.events",
+      "bytes": 585,
+      "sha256": "31aabde02d1b2789b61dd84380418600fe06f84728e3204304665f53f9750a73"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g16384_data_unmapped.ram-after.bin",
+      "bytes": 65536,
+      "sha256": "ae87312ac72a15771514b3d19318efac464f0270f7143fb65813f91e1a3f82c3"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g16384_data_unmapped.ram-before.bin",
+      "bytes": 65536,
+      "sha256": "ae87312ac72a15771514b3d19318efac464f0270f7143fb65813f91e1a3f82c3"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g16384_data_unmapped.tables.bin",
+      "bytes": 524288,
+      "sha256": "81c20d01a27760dd476493b5faf4b1250a1d019c58124842783bbd58054996d8"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g16384_fetch_unmapped.events",
+      "bytes": 402,
+      "sha256": "9dd553d2f359f9c95376badccd29bf323956e750edef308f2361ceb5f1903e1d"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g16384_fetch_unmapped.ram-after.bin",
+      "bytes": 65536,
+      "sha256": "ae87312ac72a15771514b3d19318efac464f0270f7143fb65813f91e1a3f82c3"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g16384_fetch_unmapped.ram-before.bin",
+      "bytes": 65536,
+      "sha256": "ae87312ac72a15771514b3d19318efac464f0270f7143fb65813f91e1a3f82c3"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g16384_fetch_unmapped.tables.bin",
+      "bytes": 524288,
+      "sha256": "39da579a81e56981d1750fb9711a7107684157599655dc2a0b6cece05cbf35b5"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g16384_success.events",
+      "bytes": 1621,
+      "sha256": "f7a0b794c130c60c971883358bb4e8e1fb4fe1bdffb35ec6995c28871339692c"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g16384_success.ram-after.bin",
+      "bytes": 65536,
+      "sha256": "7152f6522ca9ea855dacc6163380180f3622252c1bfb48d96c9057f91a72fefb"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g16384_success.ram-before.bin",
+      "bytes": 65536,
+      "sha256": "ae87312ac72a15771514b3d19318efac464f0270f7143fb65813f91e1a3f82c3"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g16384_success.tables.bin",
+      "bytes": 524288,
+      "sha256": "e5d4c6ce23ae65d5005b275b6fe7211808770ead8fe5d26e741b7568534363f6"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g4096_data_unmapped.events",
+      "bytes": 585,
+      "sha256": "3400c70e3a92fcd74cd795562b1f9f111e1510d0f16ef8d6339abb4d17b95e47"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g4096_data_unmapped.ram-after.bin",
+      "bytes": 65536,
+      "sha256": "566f41c08095cd5af4acf162575882fed28d053894617c625c2ed2d7201aaca2"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g4096_data_unmapped.ram-before.bin",
+      "bytes": 65536,
+      "sha256": "566f41c08095cd5af4acf162575882fed28d053894617c625c2ed2d7201aaca2"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g4096_data_unmapped.tables.bin",
+      "bytes": 524288,
+      "sha256": "d5a0ee08bae065fc86fc93fed9012a909955dbcda0d0d833cf895e79fe5bc986"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g4096_fetch_unmapped.events",
+      "bytes": 402,
+      "sha256": "27e39bb95baf9f224d75dd0e5b22e1fe69f39b61d9c7ca6085496040e647cd9a"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g4096_fetch_unmapped.ram-after.bin",
+      "bytes": 65536,
+      "sha256": "566f41c08095cd5af4acf162575882fed28d053894617c625c2ed2d7201aaca2"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g4096_fetch_unmapped.ram-before.bin",
+      "bytes": 65536,
+      "sha256": "566f41c08095cd5af4acf162575882fed28d053894617c625c2ed2d7201aaca2"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g4096_fetch_unmapped.tables.bin",
+      "bytes": 524288,
+      "sha256": "33d367c9b5307dc7881ee85893436d1b51b86228a7be941d63858463ddc89da3"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g4096_success.events",
+      "bytes": 1621,
+      "sha256": "b850b8e397ef5729855b3677c2462f4b3e4418eec774efc310c4f25cb11fbf42"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g4096_success.ram-after.bin",
+      "bytes": 65536,
+      "sha256": "2026f4bb497e3402a0ae917776fd921fd43d2d959a4ff05f160f13ba687810a1"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g4096_success.ram-before.bin",
+      "bytes": 65536,
+      "sha256": "566f41c08095cd5af4acf162575882fed28d053894617c625c2ed2d7201aaca2"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/g4096_success.tables.bin",
+      "bytes": 524288,
+      "sha256": "c9b4cbe49c4fd55303fdc76e71698e5737b10dd0e4f6fcc2c0fca387ddc10b99"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/inputs.json",
+      "bytes": 47217,
+      "sha256": "4b5ce22dd945103a4dddf31abda3f21319ad8c69f1f8055ff65a610357365e2c"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/native_replay.rs",
+      "bytes": 5021,
+      "sha256": "b420e39603b6e2192242ab7fd464a08cfabed9f983949649ec909121db5c65e9"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/negative-control.json",
+      "bytes": 2908,
+      "sha256": "b96c4b16e4ee8d5005ff89c2e374e6583d81b2983588e0503a607b372ffd5228"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/observer.c",
+      "bytes": 1938,
+      "sha256": "dabb38d19a961249cf3851f9071466abc722676780ca5ed64f24373ff12ff69a"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/receipt.json",
+      "bytes": 34518,
+      "sha256": "875b2ffe4681cee4e04c8b6256a870e8a090a684f0232b856ab10c2c4471b097"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/source-freeze.json",
+      "bytes": 6609,
+      "sha256": "72f5e7e58ad42c1428cbced6c261d37783061c13b45639a465faada7d51dc7d3"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison/test_compare.py",
+      "bytes": 3617,
+      "sha256": "7714bae1ea1f5e97646bb0100593d81b6eefa1ba3f8d8c96634b34c8a63c19d4"
+    },
+    {
+      "path": "fresh/captured-dynamic-comparison.log",
+      "bytes": 87,
+      "sha256": "a923835c6b172882fc53d47ef949b1c42e474ccb0b6e79bf951645338c40482e"
+    },
+    {
+      "path": "fresh/captured-dynamic-reader.log",
+      "bytes": 1457,
+      "sha256": "7b1c23366ce88acc6e94bb9d5ab63bcd956761fa8356afab8626ae4880adfde9"
+    },
+    {
+      "path": "fresh/cli-utf8.log",
+      "bytes": 1289,
+      "sha256": "a66e6d16e999f9e4de52fa52683f4827de2f09bc9c27fa4d521c25d9a85a9e98"
+    },
+    {
+      "path": "fresh/clippy-efi.log",
+      "bytes": 33227,
+      "sha256": "87fca290afabba6f25b2775178e36b2d81303ba1820c28c9bd983ca61ea89e27"
+    },
+    {
+      "path": "fresh/clippy-host.log",
+      "bytes": 38320,
+      "sha256": "e864f2eab2247193a44e573dfbaa68c53aae85c11990ebb2dde83a54165c5e26"
+    },
+    {
+      "path": "fresh/compiled-bundle.log",
+      "bytes": 464,
+      "sha256": "51324cff00729261a43fe49c6bf1d668645d5727d2fd83c4b4a686677f3e5633"
+    },
+    {
+      "path": "fresh/conditional-oracle/correct.S",
+      "bytes": 1366406,
+      "sha256": "4cdd288466ad4aafb30e1223b9b334cff440e545ada840fd0b79f5af13e8c55d"
+    },
+    {
+      "path": "fresh/conditional-oracle/invalid.S",
+      "bytes": 18,
+      "sha256": "5794da62ef32553e292811f197b0949fc3529ce606e1d91a5729ebc5aeb758e5"
+    },
+    {
+      "path": "fresh/conditional-oracle/nv_never.S",
+      "bytes": 1367443,
+      "sha256": "42ca2fabea2fc4e10cd13b2c0d8555632176ee09da73119faaf40d81868da2e7"
+    },
+    {
+      "path": "fresh/conditional-oracle/wrong_flags.S",
+      "bytes": 1366406,
+      "sha256": "382cac403c84f8a3857ca7f916cb728a09d3dc0c46abb84562bf14a73ab49505"
+    },
+    {
+      "path": "fresh/conditional-oracle.json",
+      "bytes": 5779,
+      "sha256": "4a4f56c69b8034b59e3513ded2111f7902fcdec02fccc4194eba8d671c874160"
+    },
+    {
+      "path": "fresh/conditional-oracle.log",
+      "bytes": 124,
+      "sha256": "29debc104823438b117a41bbcdf34cc95a8d017e5b8d88c7cc588b6cc62c6649"
+    },
+    {
+      "path": "fresh/core-doctests.log",
+      "bytes": 998,
+      "sha256": "25f61629870f5e7caaac0e7e18d16f4dd9f7291594bc07b11ffeebaf8785cfd6"
+    },
+    {
+      "path": "fresh/core-no-default.log",
+      "bytes": 21597,
+      "sha256": "d9412e30a3484de113e2764efdd9966fc1d95035cb06e448ac876a6202d345ff"
+    },
+    {
+      "path": "fresh/debug-nxapfs.log",
+      "bytes": 2922,
+      "sha256": "131ad6de847bcc7a70988d9785c1624c4007fa062b643fc7645a41711ba2ab5b"
+    },
+    {
+      "path": "fresh/dt-capture-check.log",
+      "bytes": 39,
+      "sha256": "4178628069c22e9850c0dbdd1086766bda512e2ebdceb19d76470392d266b0d5"
+    },
+    {
+      "path": "fresh/dt-reader.json",
+      "bytes": 5022,
+      "sha256": "6e9b882c8693533f46598f7d825e17a45dde2a1fb8bc9f8a7229c8a1ca31c323"
+    },
+    {
+      "path": "fresh/dynamic-capture-check.log",
+      "bytes": 39,
+      "sha256": "f55f2f6a20e0ceecea728e3be18083625e415f9e74167e5757374875a66f198e"
+    },
+    {
+      "path": "fresh/dynamic-reader.json",
+      "bytes": 3842,
+      "sha256": "5ad8a502fe60f1a018cac483e5a8814b3ee1a74ea77edc99023017475d6f9e87"
+    },
+    {
+      "path": "fresh/efi-default.log",
+      "bytes": 3340,
+      "sha256": "62a48d8bf029ac1496baedb01277e5ffd572e89dbed598f1f84a577ccd53b1f1"
+    },
+    {
+      "path": "fresh/efi-dt.log",
+      "bytes": 1661,
+      "sha256": "0bb13c4c599343b6ae907f3e3046a20a92e7803c18032e5ab07058677e0bc9cd"
+    },
+    {
+      "path": "fresh/efi-dynamic.log",
+      "bytes": 1661,
+      "sha256": "cc7d81d0aa5778c945559afaddf36abe3ed7d2166ddaa7df28e8a554f1a0953b"
+    },
+    {
+      "path": "fresh/efi-probe.log",
+      "bytes": 1661,
+      "sha256": "eec8a762bda405c1e7af028b9015fc1f2b0f8724155870a24325f026eb8e69c2"
+    },
+    {
+      "path": "fresh/efi-provider.log",
+      "bytes": 1819,
+      "sha256": "bbe6be246afbcfa976ce4a7dcd88030d6de16c11574a5928af30af82c7e079c7"
+    },
+    {
+      "path": "fresh/efi-stage1.log",
+      "bytes": 1661,
+      "sha256": "9141056a1c701afc9375b241475add5e22499e10e7d0e4cb46078071198dfa0e"
+    },
+    {
+      "path": "fresh/efi-tiered.log",
+      "bytes": 1661,
+      "sha256": "17efc71ee8a9da318fdb51c1821d4f0051249fd3346b572f862851cabdc22635"
+    },
+    {
+      "path": "fresh/exact-mmu-abort/negative.log",
+      "bytes": 29439,
+      "sha256": "4091ba7314f1a4f63c9a6c3dd44d42c4214d044a5ce76acedc8b7ca20d593504"
+    },
+    {
+      "path": "fresh/exact-mmu-abort/normal.log",
+      "bytes": 29439,
+      "sha256": "4ecd46eb58174f8a938da7d9702635fc4bc2a5275f30fd19a458866a666b4033"
+    },
+    {
+      "path": "fresh/exact-mmu-abort/report.json",
+      "bytes": 103724,
+      "sha256": "8c7de0ecbd704b1ba7c0a44d274db3c4339b1d7b0d075577ccb089b733aa62f3"
+    },
+    {
+      "path": "fresh/exact-mmu-abort.log",
+      "bytes": 51,
+      "sha256": "b1554479ebc08e13091f23f1d60673f2f282a3a07bcf1036b35462751f81efdd"
+    },
+    {
+      "path": "fresh/exact-mmu-at/cases.json",
+      "bytes": 26445,
+      "sha256": "c7871c538274caf85fef523ab44b517e3b32e440d52f9805e734a2a89c708f03"
+    },
+    {
+      "path": "fresh/exact-mmu-at/negative.log",
+      "bytes": 75369,
+      "sha256": "29f542c1a4290c0f4a33010528bd3fe0a0f1d7159533586e6361451bfeea7ac5"
+    },
+    {
+      "path": "fresh/exact-mmu-at/normal.log",
+      "bytes": 75369,
+      "sha256": "6640e06027272d59ca76ab0610575411176de9cd8a1b66d68a54dd1a81376d1e"
+    },
+    {
+      "path": "fresh/exact-mmu-at/report.json",
+      "bytes": 243759,
+      "sha256": "c68f1ab0791c0513550bb3681a74f27662c295fa74db81db8ca167e3c680c393"
+    },
+    {
+      "path": "fresh/exact-mmu-at.log",
+      "bytes": 87,
+      "sha256": "a855301fa6077fc39c14cdd2b75c5411714d03ec39b46f328fdf3dad5c70c52d"
+    },
+    {
+      "path": "fresh/exact-mmu-comparison/inputs.txt",
+      "bytes": 20432,
+      "sha256": "6d641b7183e64eb1322b5a41dbb61c32836b36246ed0ece606eb3aaf34f33a30"
+    },
+    {
+      "path": "fresh/exact-mmu-comparison/report.json",
+      "bytes": 129377,
+      "sha256": "ad97a27b64ad265341971ef6c40c93bee2ee2e8b882325dbecc57e4721f59742"
+    },
+    {
+      "path": "fresh/exact-mmu-comparison/stdout.log",
+      "bytes": 9935,
+      "sha256": "4f475cc5e5d366fb835cf3d7c955a78049a9572aac7cd55c78b2ab1c92c52628"
+    },
+    {
+      "path": "fresh/exact-mmu-comparison/wrapper.rs",
+      "bytes": 1795,
+      "sha256": "b6cfd6090d130beee8d81c4080902b5a96751b77f345666663a381b0e56c1371"
+    },
+    {
+      "path": "fresh/exact-mmu-comparison.log",
+      "bytes": 88,
+      "sha256": "aa0f5994b0207b8244a3d7e2b95868a5d28d65b1eeb49a5381197b9ed3593650"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-fallback/command.json",
+      "bytes": 720,
+      "sha256": "429b2b8fa022891fa780b919ef0780f98ab33e0d78d5602a0ab1c8bddc148d25"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-fallback/report.json",
+      "bytes": 4770,
+      "sha256": "7f7096d8c320a965f13c1e357911a92680603412b2220bf32e514a5c2cf1be42"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-fallback/serial.log",
+      "bytes": 1640,
+      "sha256": "1227514ba513db6f48208e40495c4d324bcd1945490503e6c4ea36e03d3d628b"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-fallback/stderr.log",
+      "bytes": 79,
+      "sha256": "fc869cfe597bda351f34a784429641f6db95806b3948519d2f1fe6f19990f766"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-fallback/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-fallback.S",
+      "bytes": 236,
+      "sha256": "9461363fbf77fd7e4a992cd6bc55078db427e112ecf57cab8d69a32213dddeab"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-fallback.bin",
+      "bytes": 48,
+      "sha256": "c27464150aee4456f124465085fd374946b07300d889f73e7d6b5a7839a4f56e"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-fallback.disassembly.txt",
+      "bytes": 796,
+      "sha256": "7eec966b7cecad219f69e41571ccb71db4d6536c5065c0205a9a21ca9f9db30b"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-fallback.log",
+      "bytes": 197,
+      "sha256": "3f01fd4c73a2fd805820a6646a1b3a602560f628df5bc982fdfd0febd740c414"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-imm/command.json",
+      "bytes": 711,
+      "sha256": "7a8d3d17f69722ec752c6540d246b791eba93cb40d64bab7f5c2af5944971b97"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-imm/report.json",
+      "bytes": 4778,
+      "sha256": "dd24244060f08764d6691b0700b59161cf81cd699c26f43f26bc0c34f805e207"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-imm/serial.log",
+      "bytes": 1647,
+      "sha256": "2afd5f660e13719213d823eb32974ddae02d0cfa3f0e10bc7d30019c110d1901"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-imm/stderr.log",
+      "bytes": 79,
+      "sha256": "a1944305b9cd0b6e27c875ce06db16092614289ed0b70da2514175fba7688752"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-imm/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-imm.S",
+      "bytes": 241,
+      "sha256": "5c6a03636f069df917940bdfe2cf5c576e218a5d0b1f619b3dc689e39fd6fb17"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-imm.bin",
+      "bytes": 48,
+      "sha256": "c718be41bdd77023a99b8cd560e9577c4dff40f9e71f28f102778fe2c749b2e1"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-imm.disassembly.txt",
+      "bytes": 797,
+      "sha256": "8c8f8cc47c00af564a3928fb8009ae2bf14ca84aa4ebae8ae78047617da1f58c"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-imm.log",
+      "bytes": 194,
+      "sha256": "42a30cd8396bbcaa4ebb433014e443de02b175b9823e7aba89646aa87be629b3"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-reg/command.json",
+      "bytes": 711,
+      "sha256": "fed854fca005185529ca24308c0e2cb8eb61b50a40efc333a7cd1e15e7b6ed96"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-reg/report.json",
+      "bytes": 4778,
+      "sha256": "26c291970297e7c4004ac97f453001fbfa0928565688aeb72be2c3239d7f1688"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-reg/serial.log",
+      "bytes": 1647,
+      "sha256": "9b4e74c60f7c237b3442cfb96dbf480a3bb0bdb409c113172bacd1868f63e67b"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-reg/stderr.log",
+      "bytes": 79,
+      "sha256": "e243bc0f0f1f152a65db20bff433b009f79510a357c101663d5c1f264dcb0766"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-reg/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-reg.S",
+      "bytes": 241,
+      "sha256": "ce6c4135d9464bfab28421221c2d8956b1b86728722ed02dfa6efad8320906a1"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-reg.bin",
+      "bytes": 48,
+      "sha256": "02326f427487a3548f29820f9f9e07e7c71eb83ff2237f5d64e656e92184d0fb"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-reg.disassembly.txt",
+      "bytes": 795,
+      "sha256": "db05d684b50ddf40e3dbf417f03c502f8c909098617bb08bbaa6c3444535586d"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-w-reg.log",
+      "bytes": 194,
+      "sha256": "c435cf810d55735269d345c9711445c879cb49cc53847d86c4fe74e42710e028"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-imm/command.json",
+      "bytes": 711,
+      "sha256": "33b0d89e60f60e3bedddfb368a4ab9f41531c55c6e042180aa393082f7cdcc69"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-imm/report.json",
+      "bytes": 4795,
+      "sha256": "b53331d9593debb04cc439c526108319b66b7e5e23b62e60bd8d8fb37dc09b21"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-imm/serial.log",
+      "bytes": 1655,
+      "sha256": "7e2bfe21a91c6914644b41b3d83630f4c53bd88e634abf1f61823512147d8658"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-imm/stderr.log",
+      "bytes": 79,
+      "sha256": "01935c361cdf56bc1755772c6a807d5e81f6d6ab9ca212598953854ae8461f2c"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-imm/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-imm.S",
+      "bytes": 249,
+      "sha256": "4bd629f8c4ccd3b3cba26f491ebe8b1293a0145a588df24bfe96a92163ac0587"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-imm.bin",
+      "bytes": 48,
+      "sha256": "9f13081417fc68a96a0584b6c1c4e88ff1d5782511939c4bc21b57b8392fffd0"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-imm.disassembly.txt",
+      "bytes": 803,
+      "sha256": "06d461112d164884c9d80f777682253f96bd2945ca66e2d02ef8e95f8c69b3dc"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-imm.log",
+      "bytes": 194,
+      "sha256": "d7b1781a2f3f3ad81fe02993bc88e85ebdf84931d062c73748975ab176d63a9b"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-reg/command.json",
+      "bytes": 711,
+      "sha256": "c92d380d2705b2afcf0f412f575cb16385a737aff079b3f9bc6ad0074d5fbf8a"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-reg/report.json",
+      "bytes": 4795,
+      "sha256": "66370e6d4be919c140882e9db842416e5780e9456f6604f6ad65b8270790a0cc"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-reg/serial.log",
+      "bytes": 1655,
+      "sha256": "70c1c5fbf72a99397445ae983fe548ccb3cb653876714c7d2c295033b06257bb"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-reg/stderr.log",
+      "bytes": 79,
+      "sha256": "318da9f2e7ed65313e7c7ab744d46c257260dda27219b11addcdae43b2356340"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-reg/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-reg.S",
+      "bytes": 249,
+      "sha256": "7fd2fe1f1061a11e408c681541c2b08ab106f33923cc70c88584ad644ddd4574"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-reg.bin",
+      "bytes": 48,
+      "sha256": "3f50d2dc63cbfd5a6b6719448408f516e75a2b4d7bb526ec81d8cce2aaeebd95"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-reg.disassembly.txt",
+      "bytes": 801,
+      "sha256": "d759377c6aec9e51ac629892893144ecccb1b936b2f6f0992eb66f8ba288bf8a"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-x-reg.log",
+      "bytes": 194,
+      "sha256": "5dd60119bdd72f62b92b3153647e02e7c797ae0a9b33354921a59dedeba0c3ac"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-xzr-nv/command.json",
+      "bytes": 714,
+      "sha256": "c1d31870adeb33cc6989f95c28300236025901b0097e2de7913b81aac0a6857f"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-xzr-nv/report.json",
+      "bytes": 4766,
+      "sha256": "1519cf2cc923c1ef11ad8c100d5cc2f6386794a3064b19756e72fd7dbc833b1f"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-xzr-nv/serial.log",
+      "bytes": 1640,
+      "sha256": "7ea16dd10342562a95155a86ee130ae096705b117d4bcf3f1940f6b1cf6c1f18"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-xzr-nv/stderr.log",
+      "bytes": 79,
+      "sha256": "de307e05d13f70323030a41cc7fa403e68daae4427187924ac6b4cd181901236"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-xzr-nv/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-xzr-nv.S",
+      "bytes": 237,
+      "sha256": "8e65b01d944f1261340295b0a7f20b1485ea8eab3d30a5fa05ae6c9579164050"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-xzr-nv.bin",
+      "bytes": 48,
+      "sha256": "d7833147cfaf082327ecaa2fb6a9a6d02c3a27a3d86a21a43fe62cc2f30ca862"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-xzr-nv.disassembly.txt",
+      "bytes": 793,
+      "sha256": "a200db2cda925ab1ac7a96b93f74c8d99e6b27684239a7bbbf10c202ed2643f7"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmn-xzr-nv.log",
+      "bytes": 195,
+      "sha256": "25179a53882c47abc7ddc3a6e23c80c98842b6e1c64e955c2b2b8e611df6500e"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-fallback/command.json",
+      "bytes": 720,
+      "sha256": "ee2af1c6b0e3a13706f49392a95936fbaf8a111dc9978b3f111599a2c3a567f7"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-fallback/report.json",
+      "bytes": 4781,
+      "sha256": "b1cca74932ccce7d4f9fac8cf56e8b57867c6789e8d8989f56bf273dc18fa1cf"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-fallback/serial.log",
+      "bytes": 1645,
+      "sha256": "ccc46ca3082f522e8b6c3d29ee9ebc7ab3d4e96c7cb77e2726ece9cc10e535b2"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-fallback/stderr.log",
+      "bytes": 79,
+      "sha256": "b24022ce742c7619774698f4a340fa495a18d6e1d7ed3aa93d5fa6bfd7198efe"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-fallback/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-fallback.S",
+      "bytes": 235,
+      "sha256": "a0d7098bae1a76a965a7c362f7cc8e4d3f8c8ebb5c8b4a12ee5073164f4314a2"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-fallback.bin",
+      "bytes": 48,
+      "sha256": "7cf1bfcd9061f24b3573d53548e0f5325f0435d7cd4773b39ea74929a902745d"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-fallback.disassembly.txt",
+      "bytes": 793,
+      "sha256": "ec3f1ca5593234cd8f6b9c902b196e545fd355c473987ae420c9489c0fc9774d"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-fallback.log",
+      "bytes": 197,
+      "sha256": "8081aa7a715ade67e2477d3ee706f351c107075a1da5ae7ab703524f8128bf0b"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-imm/command.json",
+      "bytes": 711,
+      "sha256": "3634045f60f2739a1aaf7d4fa6cb002c38119d8158aa9f5552235324d640e1fa"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-imm/report.json",
+      "bytes": 4762,
+      "sha256": "d916a7bb59330c3f752cda2486793270c17fda3a49ba1536e372fa057b42bb14"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-imm/serial.log",
+      "bytes": 1640,
+      "sha256": "739a44bc1cd3bf1dcab469814980b31757fd8e9134be9743f9531ae07a40d125"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-imm/stderr.log",
+      "bytes": 79,
+      "sha256": "06e53a68420f2c3ab7b3da016868eccb47a178c00ad24b677a42c4066cc72a85"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-imm/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-imm.S",
+      "bytes": 234,
+      "sha256": "55cb77aae6e7b24b41e8aec83447e8ec1ea5a29aad0c4bbb7ea75b884ad60478"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-imm.bin",
+      "bytes": 48,
+      "sha256": "c1d12e899747f64066f0f7c8208ddf31a16ba8b807cac9def4e9417a2482324a"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-imm.disassembly.txt",
+      "bytes": 791,
+      "sha256": "ea16704f2ecd199dbf16ae9c1b8d4d7782c52e893c3f4dd0e35ac291c07e8f4b"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-imm.log",
+      "bytes": 194,
+      "sha256": "8af3a8fb3d9db9ce0d2a484f50a2e0779afb3a49ef7bc6a6d2c036e6e8aeef5d"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-reg/command.json",
+      "bytes": 711,
+      "sha256": "df8ee9158023bd678b7b6a73f360988d14c73eccf3fd168735af2fa908d863a7"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-reg/report.json",
+      "bytes": 4795,
+      "sha256": "3dad2f5cc8bc3f2f905a38ff38e5f185f8c72c3570ea17bc5bd192005fc83e25"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-reg/serial.log",
+      "bytes": 1655,
+      "sha256": "e127283e624b4c221ecde2c6bb748dbf1e43cacab43b2fa9b2a2091d3c2e71f1"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-reg/stderr.log",
+      "bytes": 79,
+      "sha256": "8c78baa0fc4260f5bbdce3d743788362f51c864559ab9b1ffe00780c4a8dd2cb"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-reg/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-reg.S",
+      "bytes": 240,
+      "sha256": "47503baa357e403453972e795e493a7e73e39efae90ece7a59cd113a3feb047c"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-reg.bin",
+      "bytes": 48,
+      "sha256": "5a37d961c63b6186279dba837dc64d15d84cfb48ea2333b8c1765a115a46eb2c"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-reg.disassembly.txt",
+      "bytes": 794,
+      "sha256": "938219a80733253c975c61fc5d6a4c684ab92d4e5139d9661c8c9cf93a930c34"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-w-reg.log",
+      "bytes": 194,
+      "sha256": "a88399817304032d50b66771d598d8efcadaba60287782583d6999cd307b5662"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-wzr/command.json",
+      "bytes": 705,
+      "sha256": "25b1fad345d466d320020f528116b97ed6a6075432b3f47a54923e9b8bdfc5c6"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-wzr/report.json",
+      "bytes": 4759,
+      "sha256": "bb1938745e45abc5d4fc460325f8388d9e18a9d221c7785beeb05956b7ced1fd"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-wzr/serial.log",
+      "bytes": 1640,
+      "sha256": "456eded8fcf4174509bfb73adf30967da5b88e628db9669f213e7a266dd88a99"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-wzr/stderr.log",
+      "bytes": 79,
+      "sha256": "5dbb9350cfa6af7880b4590aeb6937a6070d33018eabe56bb371c2399139e2ca"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-wzr/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-wzr.S",
+      "bytes": 237,
+      "sha256": "6f4916b0ecdc777f4dc90e07f1aa71bfe56fe776bee1df85997e94cd74d6bc57"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-wzr.bin",
+      "bytes": 48,
+      "sha256": "f4ebd3435196e8b93b0eef9186fbb9cbb77f9e00eb4063e8f7a76181ed2a169f"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-wzr.disassembly.txt",
+      "bytes": 790,
+      "sha256": "d296e3c40ba9451f2965534ad1459d8530ba50955f36f9b42c7e9383cc702a23"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-wzr.log",
+      "bytes": 192,
+      "sha256": "1617f5c114c5a481f2a1fb0fd984813c23792cca18895e0d68d31c47645cc563"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-imm/command.json",
+      "bytes": 711,
+      "sha256": "28bbe500d3ca320f72d8de248aeb9e1defa9b7c3bb2fc879cc7614c1e5b38c63"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-imm/report.json",
+      "bytes": 4764,
+      "sha256": "c31270564bf9417b9157352516df311f8bae484bfc0cd0bec9ec8ec0faf92096"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-imm/serial.log",
+      "bytes": 1641,
+      "sha256": "52df03bc8eb1861cac31742136978bea12052b6b5695f0a8937ff6bf42d60982"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-imm/stderr.log",
+      "bytes": 79,
+      "sha256": "79f9fd1f82213d322bf37596ec8599bbef859167bdc06f9901d875cadc70eea8"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-imm/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-imm.S",
+      "bytes": 235,
+      "sha256": "2e2297e38c68312a6b31dbf25be67c3df99d2a0cc57f7e075b05c11d6072633b"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-imm.bin",
+      "bytes": 48,
+      "sha256": "c7e148e4f5e89e55e5c5a586455ecd0adea46bae4d80007a582f451b3efa361a"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-imm.disassembly.txt",
+      "bytes": 792,
+      "sha256": "8d0ba4b82ca47faf67286459eff9e157e99f98e3f3c4f82b421bc6d1f35415e1"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-imm.log",
+      "bytes": 194,
+      "sha256": "d35b931f30ff06be6b44a1b26c29729e1f71d4a74de73660492c09e931e42393"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-reg/command.json",
+      "bytes": 711,
+      "sha256": "aba3dbcf571d63ad9ebb210277aa358ea5096dfda10fe947dcf5f9e850bfa3c6"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-reg/report.json",
+      "bytes": 4794,
+      "sha256": "0c2a326a785b46b79d187c4e09e380089593c80cc3e932de4d7c8de5653a0a59"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-reg/serial.log",
+      "bytes": 1655,
+      "sha256": "030b9d5f0755970be55dda3f2f445d13a8b2b84d1740e25a0646f4f6e6c73982"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-reg/stderr.log",
+      "bytes": 79,
+      "sha256": "df6a95480561449a1cf62d0aca65f070eba5a417c5d6f137ca163d05ede4a0f6"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-reg/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-reg.S",
+      "bytes": 237,
+      "sha256": "6253c25a8585f3d7229bbda76884d43cdc4fe27491db2bb20112120670afb1fa"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-reg.bin",
+      "bytes": 48,
+      "sha256": "dc57e9de0b0271a5574684a9454720d96e1cc0c6ce45ff83afcac2e47e92a02d"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-reg.disassembly.txt",
+      "bytes": 791,
+      "sha256": "cc00d35b3783dd967c068880d3bc599a1c6d5e5d246e01eb4e29e9e7d03d81c6"
+    },
+    {
+      "path": "fresh/firmware-conditional/ccmp-x-reg.log",
+      "bytes": 194,
+      "sha256": "fc74dff44606320735fdf0f21bcecd1d40459e9d12910b388ef713dcb10758cd"
+    },
+    {
+      "path": "fresh/firmware-conditional/native-chain/command.json",
+      "bytes": 717,
+      "sha256": "2452ccf80225a884d9d5ba3b33e1a31d5534dbc765e292c2edd7b6b2b1bb1cd9"
+    },
+    {
+      "path": "fresh/firmware-conditional/native-chain/report.json",
+      "bytes": 4770,
+      "sha256": "a933aec7e32685d5def62ce4915bd5064f80b3d92dd55768fb4b39b1f9cd1b84"
+    },
+    {
+      "path": "fresh/firmware-conditional/native-chain/serial.log",
+      "bytes": 1642,
+      "sha256": "6f65e2753f3711aedc5258960ffddcd65909f0cbdc76c7d7453737443b3ab19f"
+    },
+    {
+      "path": "fresh/firmware-conditional/native-chain/stderr.log",
+      "bytes": 79,
+      "sha256": "e15e2ba7e86505b1b9c28367583322c2c37b560af8b8f29d411d2ed43cacdd22"
+    },
+    {
+      "path": "fresh/firmware-conditional/native-chain/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-conditional/native-chain.S",
+      "bytes": 310,
+      "sha256": "242cd21d4bcd306c3f988da586f27751ec740fe775cc7d43e529691c81a93c72"
+    },
+    {
+      "path": "fresh/firmware-conditional/native-chain.bin",
+      "bytes": 68,
+      "sha256": "995137e95f9ef5eb58e6712821698b9cb9aabf318c0b9a99f0c703a438d592c7"
+    },
+    {
+      "path": "fresh/firmware-conditional/native-chain.disassembly.txt",
+      "bytes": 1029,
+      "sha256": "686419aaaaa7000dcaac2d8fba99c308693dfecb93b01f04022be9a22feb7622"
+    },
+    {
+      "path": "fresh/firmware-conditional/native-chain.log",
+      "bytes": 196,
+      "sha256": "346ba80f0bb68e2d2a68ec9e9e82672bea20e309587d2a0378b3311079d340e1"
+    },
+    {
+      "path": "fresh/firmware-conditional/report.json",
+      "bytes": 37698,
+      "sha256": "d005d62201e7685f970123c933fe221899b7201c1a829e6f6fbb4ad4d34d3613"
+    },
+    {
+      "path": "fresh/firmware-conditional.log",
+      "bytes": 11713,
+      "sha256": "b74bf8f29561117b7b90ca2219c071f59f2a6a23640d1056dfb7fde05eb06040"
+    },
+    {
+      "path": "fresh/firmware-dt/command.json",
+      "bytes": 642,
+      "sha256": "f5657b08de8d7c28616804d5f82acfa0ddf83c441b9fb6ce80b5da9d224a816f"
+    },
+    {
+      "path": "fresh/firmware-dt/report.json",
+      "bytes": 33814,
+      "sha256": "c5eecd07782cbbd53b21013e61923338c65c5407d19591b126e6e23ffa862796"
+    },
+    {
+      "path": "fresh/firmware-dt/serial.log",
+      "bytes": 10874,
+      "sha256": "c52db964e53965c140bd95bb0614389dad421eb1921827c0933d7c372fd129d9"
+    },
+    {
+      "path": "fresh/firmware-dt/stderr.log",
+      "bytes": 70,
+      "sha256": "94b7c97ddc830c759efc6cdce342df091c31a714354aec629cbda7b623803925"
+    },
+    {
+      "path": "fresh/firmware-dt/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-dt.log",
+      "bytes": 120,
+      "sha256": "ae471026179bd29321c25f3355a336a037d7fd67d89cb53259a3b93f614e1812"
+    },
+    {
+      "path": "fresh/firmware-dynamic/command.json",
+      "bytes": 657,
+      "sha256": "b16602f943f5246fac8d2dcf3ca54b014337f61fef8b14d38caf8036eea5d468"
+    },
+    {
+      "path": "fresh/firmware-dynamic/report.json",
+      "bytes": 83225,
+      "sha256": "4dd3c6c46838babcdf88f6ff540a921ddd746c457e3f9231074bd663b368d921"
+    },
+    {
+      "path": "fresh/firmware-dynamic/serial.log",
+      "bytes": 26402,
+      "sha256": "b893b12820aad741bf8b84a3488088954d2651c5271585271d94b59b90b20e91"
+    },
+    {
+      "path": "fresh/firmware-dynamic/stderr.log",
+      "bytes": 70,
+      "sha256": "57594eb1911ac7803b5223cfc956e4b40196358452b044108ac3cc8fc4e2ccf7"
+    },
+    {
+      "path": "fresh/firmware-dynamic/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-dynamic/validation.json",
+      "bytes": 167,
+      "sha256": "b05ecab84dbeda3677e76a2ac5329262cc445147d87de072ea5f3db2f692d1b9"
+    },
+    {
+      "path": "fresh/firmware-dynamic.log",
+      "bytes": 295,
+      "sha256": "7a90b07da3f977a584fa2cd935a4cbfa5ecc93cba252864bc831c335218e6d93"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/bypass/command.json",
+      "bytes": 711,
+      "sha256": "ff8083cb11125f49c7c70de2ae5310336a910beb8500ec714ee391635e12e7ac"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/bypass/report.json",
+      "bytes": 4494,
+      "sha256": "5738df16843a87d322e8be2a3d7a9fba35f3a76dcb4df104b43d9983fbc8f18a"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/bypass/serial.log",
+      "bytes": 1398,
+      "sha256": "9334ab7c83d2db0bd792e2fe330855614a137571beda1eed1a936a7048d7344e"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/bypass/stderr.log",
+      "bytes": 79,
+      "sha256": "4144dc684ae083cba79716acdee0a15948ea35cdcb2c76390049ab9ca9ee6416"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/bypass/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/bypass-negative.json",
+      "bytes": 2042,
+      "sha256": "ff36a069933653aaa6967502c506902da6269154a89fcf7d1028905b076b4773"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/bypass-rejected.log",
+      "bytes": 144,
+      "sha256": "6588b711b63a0fbed32e86d5d36b10a8ecbf87ef548f47a8ca8d2184c96c3d8b"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/direct-bypass.log",
+      "bytes": 194,
+      "sha256": "8a8a60dd16cb64686094692eb97b04a13f0f37ff05de8ebe4a5977a3eba675f7"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-fetch/command.json",
+      "bytes": 750,
+      "sha256": "7c36b90b15163531fa80d2ef2b1b5e85f92c369d73ae3b75bcc61716be7ce9b3"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-fetch/report.json",
+      "bytes": 4673,
+      "sha256": "5a493eb6cc1e46afe0c4d524ee07fa24d0ac6d84a44a170e8fe21c0bdb6124f8"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-fetch/serial.log",
+      "bytes": 1584,
+      "sha256": "6bc4ef2230799c1953ce85a9419c5cacf98de9d53b540e54ff764ce995ae2abd"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-fetch/stderr.log",
+      "bytes": 79,
+      "sha256": "cb19078e37bed29de65fc8e48c57e6444de934325623646e4c97eb7a51b4ef4b"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-fetch/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-fetch.bin",
+      "bytes": 20,
+      "sha256": "e5f402e99ffaeee6b84255b05e85412d4f4541495c7f03ad0a473731e97a2a67"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-fetch.disassembly.txt",
+      "bytes": 508,
+      "sha256": "938db3c444dbb1be21e1384a65b7ecbdcf23ad749e3f84c93c66ad96cf063efb"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-load/command.json",
+      "bytes": 747,
+      "sha256": "763fb2ec4e01927712a647c6ccd9637c6865d235627dc7055fd4d0c02a62777d"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-load/report.json",
+      "bytes": 4671,
+      "sha256": "8d6e714738d5ee4bd6f1becd070306a2488c5fc9aa73da93239b2050b955eccb"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-load/serial.log",
+      "bytes": 1584,
+      "sha256": "5fad501f7804d8116cb1ef30358776effb25839709e5043ee11a84f95fccf732"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-load/stderr.log",
+      "bytes": 79,
+      "sha256": "d44ce2dbc962851ed360f9ebd29c9b2bb7fd8cf76e1cb67b1f34a3d065f188d2"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-load/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-load.bin",
+      "bytes": 24,
+      "sha256": "c670c3993969a8d6906920dd1a95ffb6e7869b68ca4b969a4b7524967d9dc0cd"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-load.disassembly.txt",
+      "bytes": 545,
+      "sha256": "ac02b9d4b41bf9823c7ef379c675f3e8d8990cb751b1ab66466e81d995bab3ac"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-store/command.json",
+      "bytes": 750,
+      "sha256": "3dba4be0f1df48f5618508e95ea9fe2aded9eb049bcea1a467a2202e219cedcf"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-store/report.json",
+      "bytes": 4673,
+      "sha256": "b330e29e4c883b5a70ed932f52ca76bc6a597fcf7186bec762c46f8484a740d8"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-store/serial.log",
+      "bytes": 1584,
+      "sha256": "5fad501f7804d8116cb1ef30358776effb25839709e5043ee11a84f95fccf732"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-store/stderr.log",
+      "bytes": 79,
+      "sha256": "ddc251ef88062475e02412af10376067113ab360f87ce15247568b47f4d83680"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-store/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-store.bin",
+      "bytes": 24,
+      "sha256": "fdf7f97d03aa41c03b7168545599a6b4e6fe43dba26c68e7670183640110d8ef"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/missing-store.disassembly.txt",
+      "bytes": 546,
+      "sha256": "fe4123fa636a9b728def21b8cf6289045c6f948c8cf78d0c56e74ced19047df3"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-load/command.json",
+      "bytes": 759,
+      "sha256": "3fa85c988d846dc754dd1b48e271aeb2efa2a6ce832f405ea8946182e2165753"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-load/report.json",
+      "bytes": 4679,
+      "sha256": "9aa481b74d807191ebc56bcad8a8acdc2254527e3e3916e7336bebb20625fb36"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-load/serial.log",
+      "bytes": 1584,
+      "sha256": "4e1b83900197ca8c1877318562ce934be451d4f75970b8a4bd4735450b7b7f8e"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-load/stderr.log",
+      "bytes": 79,
+      "sha256": "3d2230bf1312be7c4a9794843bc265f38b2858a481ab77ccf96d0dee99bce2a3"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-load/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-load.bin",
+      "bytes": 28,
+      "sha256": "2d14172f660e195e20d5e29b8881097bd3178a8118bd90869d7e79beb554544e"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-load.disassembly.txt",
+      "bytes": 601,
+      "sha256": "a5daf9225c79ee2c5aabb0497ccc81e4930c6da29376b4cc060d37c5046d44c3"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-store/command.json",
+      "bytes": 762,
+      "sha256": "8c4aa82a16465277dc7e08da4d6bd8021ac5accfb01d3be5177db261a5b39751"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-store/report.json",
+      "bytes": 4681,
+      "sha256": "b89d3a7fbaeb36199ab78650ca5a413d89b7b6570a9b124cd2bd69673c10e1df"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-store/serial.log",
+      "bytes": 1584,
+      "sha256": "4e1b83900197ca8c1877318562ce934be451d4f75970b8a4bd4735450b7b7f8e"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-store/stderr.log",
+      "bytes": 79,
+      "sha256": "2553e9c3a846cbf4d042c4a0dc774ba3e2a782f8a4784d59e820c63d3f3dccb1"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-store/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-store.bin",
+      "bytes": 28,
+      "sha256": "13f087655482b2cfe93fc39a4135070ef78e0ed7115b5cbe13d94fb36653764e"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pair-second-store.disassembly.txt",
+      "bytes": 602,
+      "sha256": "0cf1da1b829226c9eda0a5a541125a24ccdea255762c3f1d58bb7e15f8ea9770"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pc-alignment/command.json",
+      "bytes": 747,
+      "sha256": "939257c488d31d84fb421abc5479eb7dd23e345d30b9d3061534340a382826e2"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pc-alignment/report.json",
+      "bytes": 4716,
+      "sha256": "fc88229248c58706d01dc89093de18ffc137eb497edd3587848c113ac693897d"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pc-alignment/serial.log",
+      "bytes": 1608,
+      "sha256": "c2fa197e6552e4192ce99f59baeaa2630f1780024b56c2205857edf584d95f91"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pc-alignment/stderr.log",
+      "bytes": 79,
+      "sha256": "3f0da729ca26dc18111803c26865f823fcd05144e49e443b0aaf74de4005a476"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pc-alignment/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pc-alignment.bin",
+      "bytes": 24,
+      "sha256": "e5b48eb4281a2762fc0f6f2e8b5ae8ea43d2dcf55b9909d796663b98e368ccf6"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/pc-alignment.disassembly.txt",
+      "bytes": 548,
+      "sha256": "74618955076506a67c03c761426e63544ede921057293dd81e508a64e380601c"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges/report.json",
+      "bytes": 25605,
+      "sha256": "2944487f8d438a9d13753d6b05683807279fe03b22015a514e0b50df0857f09f"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/edges.log",
+      "bytes": 1630,
+      "sha256": "54b8f1a893efe77fa478bb2ab73c4367ca29530162786c7952543cb8a2ad752d"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/observations.json",
+      "bytes": 31903,
+      "sha256": "55dde5cb892e990bd094a25689c0d3be4d5895ddf85bb87205305fceba768fc0"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/observations.log",
+      "bytes": 141,
+      "sha256": "c22f074df0392dde54e347e713bedd599bb3028d8e169574cd1fabbf06e225e0"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/a0-device-load-fault/command.json",
+      "bytes": 768,
+      "sha256": "4efe035efd08ee7788079354ea1d1897490d842b52f5e3a0813c413d7dbf32e6"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/a0-device-load-fault/report.json",
+      "bytes": 4808,
+      "sha256": "046ba49ae4c0c7ea14a949e231113d602fb3a2f1122e6207a4c543fa8c5ce7c1"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/a0-device-load-fault/serial.log",
+      "bytes": 1645,
+      "sha256": "90123b2bcc029355e625721d63302b8839b28c580b07bcb1ec3f3044a984db0f"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/a0-device-load-fault/stderr.log",
+      "bytes": 79,
+      "sha256": "8fb6eff6996a175750dc90706ec9c05bbf33b8e58a81a410fdcaa5fe536c6c41"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/a0-device-load-fault/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/a0-device-load-fault.bin",
+      "bytes": 44,
+      "sha256": "1e8a4717bbdd7fe11d062dd1127bf1782dd175e676d29d9ec6463135963dd593"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/a0-device-store-fault/command.json",
+      "bytes": 771,
+      "sha256": "a4aad0e02cc63193e66537b0871b649b1b88cc400bfc62300ca4e4167d7fae99"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/a0-device-store-fault/report.json",
+      "bytes": 4811,
+      "sha256": "2ece1889ab022b5177fce7e1c814a7d21554e72c680cf5575cb012f0ede3a332"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/a0-device-store-fault/serial.log",
+      "bytes": 1645,
+      "sha256": "95d34c7f735b73828bd3e568c7d1f985d5bf512491c1fa4ef5ced3661cbf1f26"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/a0-device-store-fault/stderr.log",
+      "bytes": 79,
+      "sha256": "f05571d25613c43257e81aa67151a09f6dca659fa29639380cc8fb704db00de6"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/a0-device-store-fault/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/a0-device-store-fault.bin",
+      "bytes": 44,
+      "sha256": "3364de49e7baa35bc169530c46e8dc8dae1176a148163bd9884f92a6e5393007"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/invalid-writeback-pair/command.json",
+      "bytes": 774,
+      "sha256": "00492bd50adeeb17203c4f21e14e8f994391a131f7012db564f92a33db7872de"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/invalid-writeback-pair/report.json",
+      "bytes": 4740,
+      "sha256": "a3973fc3026b6f595133079cf3f1318cd992b446b154c8db17c7e9f9c3283807"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/invalid-writeback-pair/serial.log",
+      "bytes": 1608,
+      "sha256": "552ffbe168c191f8a2e37e19b850cd2e8d9da16c303aa3cb8c11efad48bfd7d8"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/invalid-writeback-pair/stderr.log",
+      "bytes": 79,
+      "sha256": "da06d6f4a11f0aece8bf4ad092a67d8dfa4513c8c2fd93e628f556546399e76f"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/invalid-writeback-pair/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/invalid-writeback-pair.bin",
+      "bytes": 24,
+      "sha256": "ef9403a2b04e4f6139bed69a16012dae6d0f472bb8ab8f6a555c201c9bf45a78"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/pair-readback/command.json",
+      "bytes": 747,
+      "sha256": "8175c89203f7256ad61a7463c38e4191f19b35ff7f31e5011921976141302e2a"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/pair-readback/report.json",
+      "bytes": 4748,
+      "sha256": "b894ea273c78da7fd34e1e77e112eabbc829f73154c2ae2bdb7cfa502955a3d5"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/pair-readback/serial.log",
+      "bytes": 1622,
+      "sha256": "0e3c6f0aea30727ded1135d0d9097fe1217d2c2e8ff9d4f64c0596b79c31fb08"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/pair-readback/stderr.log",
+      "bytes": 79,
+      "sha256": "e6c86f0fa397f8726080c456402193faccb8cfce30934bb2ba2999c41b8becdf"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/pair-readback/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/pair-readback.bin",
+      "bytes": 200,
+      "sha256": "f4135f6ab54b52323eec3bbbcc4ec0e2f206d55d335256664ef98ee54216cdf7"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/report.json",
+      "bytes": 6580,
+      "sha256": "69c9a13ae2fa92ea264e453150c51606c9187aee023fee6a55086092136aba7c"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/sp-load-fault/command.json",
+      "bytes": 747,
+      "sha256": "a72d06e4cee376363b57f4550d5be035f0b1086ac8a58548b9e5b00179c595fa"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/sp-load-fault/report.json",
+      "bytes": 4738,
+      "sha256": "5ce19acc37b925cf349e563b694a8715ac04e2bce288aabd3afd35e8ca8dddc7"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/sp-load-fault/serial.log",
+      "bytes": 1619,
+      "sha256": "2e1b47320aacc6810b4c18f419c7994eb66a09f9511ca8cceba2a05bda8b8cd3"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/sp-load-fault/stderr.log",
+      "bytes": 79,
+      "sha256": "f980fbd7b3cbd346e2ec9a63275857ffbe1357bb55c06b31aae8f195e2e142e5"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/sp-load-fault/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/sp-load-fault.bin",
+      "bytes": 36,
+      "sha256": "f0c5b8b1bd26b0b3a6526802ed5d0d90dab252d301f6704c48a97f6f435bb55b"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/sp-store-fault/command.json",
+      "bytes": 750,
+      "sha256": "dbe84023bdebfe6cc3bba812c9b8c3fba1a92f0ba38b3a68415f4924e5c2d754"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/sp-store-fault/report.json",
+      "bytes": 4740,
+      "sha256": "943e73aecf4999db9b937945dda798dc4c45ca312ff68f5b274e27ad42fd166d"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/sp-store-fault/serial.log",
+      "bytes": 1619,
+      "sha256": "5230bf7201585eb3b6cf328b6721a916aa0d3b59d45898213e82207944e68955"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/sp-store-fault/stderr.log",
+      "bytes": 79,
+      "sha256": "5e3a0370950d601c2792dd90bc1afdf7727c4577be1bd2ca9f860c18d2aca7cc"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/sp-store-fault/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair/sp-store-fault.bin",
+      "bytes": 36,
+      "sha256": "2358985bad75dcabd67f1473fc734614c4f3261abbe457c634672596b7d493c2"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/pair.log",
+      "bytes": 4868,
+      "sha256": "b839b765abe600b88e8a38526d3d4212518ad351d4a18bbc5239c3e2663a37b0"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/report.json",
+      "bytes": 12176,
+      "sha256": "b38baa5118ac649da393048552f5eef853f64fcc0911471b5eb92828727e9d4e"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-load/command.json",
+      "bytes": 756,
+      "sha256": "b68519fdc7af5f0eb6055cc4e6861468d194ac8703a46b631139cac3c7f891dc"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-load/report.json",
+      "bytes": 4805,
+      "sha256": "35086d38419af90126f3e95e75b9bcce21c6b0886868f7bd8de9452a52401d8e"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-load/serial.log",
+      "bytes": 1645,
+      "sha256": "46368fa5ff38a527cbcf5a04321f52a877b2b558418f41809e74efb09d10eb47"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-load/stderr.log",
+      "bytes": 79,
+      "sha256": "598ec5aea86f6df217a9ce4a575a00758fa09f2e685953c1baf2c55b973bdeae"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-load/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-load.bin",
+      "bytes": 44,
+      "sha256": "9c3e1e6f041bb16ecbec32f6fd4fe3df937592eac1fb532295ecc976faf1c08c"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-load.disassembly.txt",
+      "bytes": 739,
+      "sha256": "ae169a3c9841efadb949c3dbe89334aa1df4ce864b8d8ccd780d61e48b7dd4ab"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-store/command.json",
+      "bytes": 759,
+      "sha256": "b8f67d8c9f4005bb8695d1279cdf80025c46180b751f06bc40707517e7d17664"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-store/report.json",
+      "bytes": 4807,
+      "sha256": "ec5c3dac422aa28c2f8ae98490bdf75eada9531b9d81ffd04f6aecb05906ee41"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-store/serial.log",
+      "bytes": 1645,
+      "sha256": "df3f955be12b791097a7fe4e7d3ace7ff1db01f974d49dda4354fcb3a36bc718"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-store/stderr.log",
+      "bytes": 79,
+      "sha256": "5e7bf8528b51f6afedbecd608cad75c747e5220d36f8321809d739b656598978"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-store/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-store.bin",
+      "bytes": 44,
+      "sha256": "43dfc5d4e51e8015be9cd6c523e3184d062431da1050b669f25c2307aa840208"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/a0-device-store.disassembly.txt",
+      "bytes": 741,
+      "sha256": "6bc044c6a105e04e62bf7acf4c9e971562bcce4e99425153502c9f047091df87"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/byte-signed/command.json",
+      "bytes": 747,
+      "sha256": "cc16ff64e28b31febd2e689e91866a85a437ac0270f6685026bc5526587aa907"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/byte-signed/report.json",
+      "bytes": 4721,
+      "sha256": "3f51559e71ede8fee2a43cbd2ab1ae90c04bba1a00b3c072788c1c220e28ea36"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/byte-signed/serial.log",
+      "bytes": 1606,
+      "sha256": "fbcfa89c6c0f777d7f77e499ca79f405104d4de5d0775d851a392d54197ab6a0"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/byte-signed/stderr.log",
+      "bytes": 79,
+      "sha256": "096d14313ca65d4d2872b20995c1febeeb04c0bdcf6759bf69016955309e0e5b"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/byte-signed/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/byte-signed.bin",
+      "bytes": 80,
+      "sha256": "453ad6e79b50bd3a709ce93ef6634bca7c62d4d4c41d671dcef359c1b674796a"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/byte-signed.disassembly.txt",
+      "bytes": 1168,
+      "sha256": "c6f0575217a1bdab1c1f5996daa18b41ce8b0880a9407252a5aff880eb519c61"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/commands.json",
+      "bytes": 17697,
+      "sha256": "5fff10e30a203fea88bf55275b581a845bba6902bf1a7c14dfb06b0fc37e0310"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/half-signed/command.json",
+      "bytes": 747,
+      "sha256": "7022e94aad1c5a0d3d332dfccd4902a5fb2275d4f85500b98461ac78d2d5e644"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/half-signed/report.json",
+      "bytes": 4725,
+      "sha256": "386554ed366b31ce4302a989bf2fea66aaa66255fb06026ef285c9a1325ca28d"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/half-signed/serial.log",
+      "bytes": 1608,
+      "sha256": "7d1b4d38345608893450554f4a76fa82e5f64b19d141771558afac51026e21b2"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/half-signed/stderr.log",
+      "bytes": 79,
+      "sha256": "d24b3ec213a3e9f5a572b2dc38b98075348dbc0d60cbeb5cfe40101117551749"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/half-signed/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/half-signed.bin",
+      "bytes": 80,
+      "sha256": "97f96cad735e3b96803290d7107f68960e30581b47353c3506cd2bdf4529d51f"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/half-signed.disassembly.txt",
+      "bytes": 1156,
+      "sha256": "cecdeb55c7b93513598c9445c03e59f4224826ebceb9020df5e45cff5af7d210"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/prefetch-rejected/command.json",
+      "bytes": 765,
+      "sha256": "0bf94955ffedfc843289b1bd2306b23ff02deff11e7061b1d6848b40fa119464"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/prefetch-rejected/report.json",
+      "bytes": 4783,
+      "sha256": "f94e5f0cb1927c15fce74aff3f6418b73151d1eda6f9a9c4883fbe1eb3f1ce74"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/prefetch-rejected/serial.log",
+      "bytes": 1628,
+      "sha256": "59d11eb87d03ca4831f9ee9fcc2ee57bc3523809341f2d5c776fc034305d3e52"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/prefetch-rejected/stderr.log",
+      "bytes": 79,
+      "sha256": "d8fd8b14b54fcc7670f64e9a38c1edba9da35fed11e0d29369074d24240dae77"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/prefetch-rejected/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/prefetch-rejected.bin",
+      "bytes": 36,
+      "sha256": "845c80f21f2b7d9eae60d2ef5d0587c1d7842aceabfc23d81aa432dab9fcfce9"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/prefetch-rejected.disassembly.txt",
+      "bytes": 666,
+      "sha256": "ac172f17a46b0967d7d22ccec3277a785667829c735cc407ac90169dbb945f5e"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/quad-zr/command.json",
+      "bytes": 735,
+      "sha256": "678b71cb4e5ecfacffca9cc4fe2bf219f2c7e2b1179f161481a92831290abc89"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/quad-zr/report.json",
+      "bytes": 4709,
+      "sha256": "3367b9ddae5095bdca8438c625c3de575b180afc32304199c50de88002f9b286"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/quad-zr/serial.log",
+      "bytes": 1605,
+      "sha256": "25110b0de4f749d1f2f259855201e204bdb4244816d5e6e82a0ceb5cd598c7bc"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/quad-zr/stderr.log",
+      "bytes": 79,
+      "sha256": "53d2ca80ff2e79f713b99a488042691e58a64a1bb3444fd2528502a24a4352a6"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/quad-zr/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/quad-zr.bin",
+      "bytes": 80,
+      "sha256": "a976842801d477cdc1c470349cfd2a423a5a4cb5dfd94fb834e757c5c1d58a66"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/quad-zr.disassembly.txt",
+      "bytes": 1147,
+      "sha256": "d48656e3e759b14b2dc6bbc324f8a6ac186f001608b21767b0c24052662da678"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/report.json",
+      "bytes": 19088,
+      "sha256": "586fa9d164443dd8264bc38025f35b823d1024af9c6ca3ca0b11832156098781"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/reserved-rejected/command.json",
+      "bytes": 765,
+      "sha256": "9487bc01473e49b5cf944e1851c2bfc9b6e94f30af8c6b32d82e94f73627ec95"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/reserved-rejected/report.json",
+      "bytes": 4783,
+      "sha256": "2df883f3abc8359bdc0d0893b4cc57ec68ed6840d72f95dbf90ba503cf34eb23"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/reserved-rejected/serial.log",
+      "bytes": 1628,
+      "sha256": "3b87373cb65a3cdbcad78d8945d85fa99e8ee378e49c0a3a97d6466106c22f14"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/reserved-rejected/stderr.log",
+      "bytes": 79,
+      "sha256": "5ab9567c59aefe5900991310dc09dddbc4859d6f43e4ab3a77341a78df1f9aa2"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/reserved-rejected/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/reserved-rejected.bin",
+      "bytes": 36,
+      "sha256": "ee4ff5aaa2791634a9929c3698035f072215c6c4955e365042c9218c62dbf268"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/reserved-rejected.disassembly.txt",
+      "bytes": 655,
+      "sha256": "f27e54b71acb4b8ef1da061f63094800aa1358f1addc343475d23040615fd5a3"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/simd-rejected/command.json",
+      "bytes": 753,
+      "sha256": "bc58b25a076b4a62e54edfd4b24edc69dd142b62125ea5be1d0616dc21adf3f1"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/simd-rejected/report.json",
+      "bytes": 4774,
+      "sha256": "f599983c408205156342a8e9030df45e550037222455032498b23d7bb363846c"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/simd-rejected/serial.log",
+      "bytes": 1628,
+      "sha256": "fbfe0b1b528dbb135d4dffc126eca90c631c0f485ee8bb8e4d06a84842b01b01"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/simd-rejected/stderr.log",
+      "bytes": 79,
+      "sha256": "e1eb18bc09963170628f9e2e34a1c7e455a04be3bfe471ae4e05eda77ac31ad9"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/simd-rejected/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/simd-rejected.bin",
+      "bytes": 36,
+      "sha256": "0caad27123be2e9461264d78db6549092ea1dcca177a47511c2dcbe639e09ee9"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/simd-rejected.disassembly.txt",
+      "bytes": 654,
+      "sha256": "a8df53354b577476cc7f567ff0f8663564372e55f8edf9ba409088e4146c0a66"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-load/command.json",
+      "bytes": 735,
+      "sha256": "b827deb3f1e1a2377b9cd0079a4c5d481bfb3ad090cb7c91ab89e8aa244bfa06"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-load/report.json",
+      "bytes": 4792,
+      "sha256": "e37aa2204d831049901f56bfedee10313dcc965d941755c64fe8ea47eb46a2f7"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-load/serial.log",
+      "bytes": 1646,
+      "sha256": "46f1f6cff050c706e9474857f295672419ca16ae51c04d528b2108fd7a390cf0"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-load/stderr.log",
+      "bytes": 79,
+      "sha256": "439b7867a3211279baf23607a1cb846a3e857db7d6ce8545c35e892d03b4f14a"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-load/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-load.bin",
+      "bytes": 48,
+      "sha256": "4c44528e6000e97ff79542de001cf3c6d6bceefcb1e5b1679aaa264d2a0875fb"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-load.disassembly.txt",
+      "bytes": 790,
+      "sha256": "c94bfddb6d7ae63a41c19337c0f6ad70ec4362094f6abebb0ca1f7179c92230d"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-store/command.json",
+      "bytes": 738,
+      "sha256": "0929fb68259eacc96d2ed0af7f0e925cc4ea5fe7beeb6443399b38cc50d4ba83"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-store/report.json",
+      "bytes": 4794,
+      "sha256": "a039b73687e230ceadfc1e1e040c16e570057aff69ffe642f17f65f6164cbfd5"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-store/serial.log",
+      "bytes": 1646,
+      "sha256": "3a813aac83bf47ecd7d989ef1398536dd9f80251f2ec1dac9cbe2b93f30d970e"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-store/stderr.log",
+      "bytes": 79,
+      "sha256": "cf0d1ead6f6dae2dc0d4ff857f5209556b129fc16f33a6a33fa8634854aaa57f"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-store/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-store.bin",
+      "bytes": 48,
+      "sha256": "8a6fd7d896a24f563dd52dccf3b1b597e849c188da434b5e7e0115dcc28b0f9d"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/sp-store.disassembly.txt",
+      "bytes": 790,
+      "sha256": "d1575dc88ee1ca01058a8232720d202316c1b8a1369bad186994508cc320d8dd"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/word-signed/command.json",
+      "bytes": 747,
+      "sha256": "0c7a9e432a2c5ecefb0b88bf5744502a5f78b88800029bf54b48cba420d37432"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/word-signed/report.json",
+      "bytes": 4734,
+      "sha256": "fadc3247817234785f3f51118ac0ac9e3a3d30776fe902bc3c44e08678b3e25a"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/word-signed/serial.log",
+      "bytes": 1612,
+      "sha256": "205c7c177ba65850d16bb108539a6feb03db4115999b0db006f2549b48b6c863"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/word-signed/stderr.log",
+      "bytes": 79,
+      "sha256": "65d7d84be8f601fbfbbf58e1f931cdfca29da370c541de1b56a7796121d840df"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/word-signed/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/word-signed.bin",
+      "bytes": 68,
+      "sha256": "15fade2f5fb9d7f266485ab36e2d1f984ef030d32df0725cb0919d360b337ebe"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar/word-signed.disassembly.txt",
+      "bytes": 1036,
+      "sha256": "4b45f9492ae1d7783a401c5939eb937d3ac111e01bf2a6b918b48b66aa71926f"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/scalar.log",
+      "bytes": 14256,
+      "sha256": "37c00d288aca9f99c4c6be2910a35861c89053e527ae750f61773081dfb3aa9c"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/absent256.log",
+      "bytes": 1132,
+      "sha256": "18f29bc8ac6544cbb79304da70cadb2719c6c9d35dff86cca252a1159d6e8e34"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/absent9.log",
+      "bytes": 1132,
+      "sha256": "18f29bc8ac6544cbb79304da70cadb2719c6c9d35dff86cca252a1159d6e8e34"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/default-firmware256/command.json",
+      "bytes": 768,
+      "sha256": "32c7c688dd9549eb9d0375adb7a45275f6b7ea916d0559e6e09525ffa4ca0e08"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/default-firmware256/report.json",
+      "bytes": 3158,
+      "sha256": "8c9dc0f488a87efdabd081262ee71eb2dafa4a93e7053a2c4dd5e5209f0a50f9"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/default-firmware256/serial.log",
+      "bytes": 584,
+      "sha256": "b8879dd4caf275e1cf848ba587ecebf5bc104e9cf4eeec45c3de96947a42ae12"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/default-firmware256/stderr.log",
+      "bytes": 79,
+      "sha256": "467d94468d5501a16ff4aaa5bb890b525eed4bc3cdcdd48fa5c9d05663dc390b"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/default-firmware256/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/default-firmware256.log",
+      "bytes": 215,
+      "sha256": "7582e1add164b31a71d2e3136fbc6887ad6599339aabe68d75bdc8d055cd2432"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/default256.log",
+      "bytes": 1133,
+      "sha256": "efd91e88e86fcfe9bc583b409415608f410483e49180954c7a43d14f30facbe9"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/excess4097.log",
+      "bytes": 1135,
+      "sha256": "2e3738d53830b57eaaf469ebfb8a9713a878627ed9c88ce6eb61305ce38717f0"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/loop.bin",
+      "bytes": 12,
+      "sha256": "2564f3ad9a6e683a4cce89720980c3aa2290b6bfb5c91d1bd9e4a8aa84a27185"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/report.json",
+      "bytes": 1910,
+      "sha256": "3a4fb9393806c006b76afc06463e5fba2aaea69c64024598fb7c9c91404f532b"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/tiered256/command.json",
+      "bytes": 738,
+      "sha256": "1193d4bcef883309457d43ffc543986065d08a779acdf23d76a349b6b91b08b0"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/tiered256/report.json",
+      "bytes": 4712,
+      "sha256": "5e40c6ace7377fc1fdcc859438e293d155a0ecaee86314b258382a9ada01f851"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/tiered256/serial.log",
+      "bytes": 1638,
+      "sha256": "df9cec0b547fd43c870c81ae29830d9c03e15dce172a6ddae4d8370cf349adee"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/tiered256/stderr.log",
+      "bytes": 79,
+      "sha256": "fd023cf7438c8bcdcb0198b9c1208fd70813c7f761950568274e4dab22ce0e95"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/tiered256/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/tiered256.log",
+      "bytes": 203,
+      "sha256": "11242b4482fa83819785361408ede4dcb3bf71e0ae91c76cff25c113d3f941c7"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/unsupported512.log",
+      "bytes": 1142,
+      "sha256": "28b6473a248a6926b7c04931dbfc795c19efbb77a3e23772d664d45492a78267"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers/unsupported65.log",
+      "bytes": 1142,
+      "sha256": "28b6473a248a6926b7c04931dbfc795c19efbb77a3e23772d664d45492a78267"
+    },
+    {
+      "path": "fresh/firmware-memory-provider/tiers.log",
+      "bytes": 1476,
+      "sha256": "75eee9ae69d0f27f66292514c36f11af043f7a9dd45e2de8073ece1f3b8d587b"
+    },
+    {
+      "path": "fresh/firmware-memory-provider.log",
+      "bytes": 81,
+      "sha256": "b620cc1895be15e028d45c31a277e6680a30452c3558a5a75ae44a30636fc3eb"
+    },
+    {
+      "path": "fresh/firmware-nine/arm64e-pac-positive/command.json",
+      "bytes": 717,
+      "sha256": "ac3e9c5c4b07484a10396285e136457044b54757302777e87d6ee1aa98998f9d"
+    },
+    {
+      "path": "fresh/firmware-nine/arm64e-pac-positive/serial.log",
+      "bytes": 962,
+      "sha256": "3a3e3b7185d071008a193fe98ebfe5da459d8d5face3932eed75d0d0f89cc0ea"
+    },
+    {
+      "path": "fresh/firmware-nine/arm64e-pac-positive/stderr.log",
+      "bytes": 70,
+      "sha256": "7f4a47c11ad55a26d2d2431c3b9b4ee44f45c76e2990c9a81d3b47bf6c5ad847"
+    },
+    {
+      "path": "fresh/firmware-nine/arm64e-pac-positive/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-nine/arm64e-probe-rejected/command.json",
+      "bytes": 723,
+      "sha256": "5490af9a377adc57c572624abd242f8d369b7ba6b2e242b7457f82466e451261"
+    },
+    {
+      "path": "fresh/firmware-nine/arm64e-probe-rejected/serial.log",
+      "bytes": 533,
+      "sha256": "e0e86efd416bfec02fa02926b7ed8c44621961d21dd918d22a3c743d3be2ee80"
+    },
+    {
+      "path": "fresh/firmware-nine/arm64e-probe-rejected/stderr.log",
+      "bytes": 70,
+      "sha256": "7f4a47c11ad55a26d2d2431c3b9b4ee44f45c76e2990c9a81d3b47bf6c5ad847"
+    },
+    {
+      "path": "fresh/firmware-nine/arm64e-probe-rejected/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-nine/arm64e-production-staging/command.json",
+      "bytes": 735,
+      "sha256": "936f4ded6d2dde357314e6654a33442a14af031394c8cefbbf7d98ece0d89635"
+    },
+    {
+      "path": "fresh/firmware-nine/arm64e-production-staging/serial.log",
+      "bytes": 666,
+      "sha256": "d2ad4c542e09ebf3ba59a3ef0d13430fce24743eb1ac7de8d0a18069110855df"
+    },
+    {
+      "path": "fresh/firmware-nine/arm64e-production-staging/stderr.log",
+      "bytes": 70,
+      "sha256": "7f4a47c11ad55a26d2d2431c3b9b4ee44f45c76e2990c9a81d3b47bf6c5ad847"
+    },
+    {
+      "path": "fresh/firmware-nine/arm64e-production-staging/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-nine/fixture/fixture.json",
+      "bytes": 1166,
+      "sha256": "690a4a4cac5cb195fe8cc263db5d0a193de55bdf5888acab7f252caa91a5ce79"
+    },
+    {
+      "path": "fresh/firmware-nine/fixture/probe.bin",
+      "bytes": 132,
+      "sha256": "cb79bedba15bb1e0d5a8fb97dae65a038fad9776e91487aa968ab3ff70dc4356"
+    },
+    {
+      "path": "fresh/firmware-nine/fixture-pac/fixture.json",
+      "bytes": 1205,
+      "sha256": "6982bef7c77243e656f336a4762f9d49df30c5bd88046e4f017071db54c6dfd3"
+    },
+    {
+      "path": "fresh/firmware-nine/fixture-pac/probe.bin",
+      "bytes": 216,
+      "sha256": "c56fa6c00c5053e05ba414db051364ba4b74962eb23785d1e1b817b102f8f222"
+    },
+    {
+      "path": "fresh/firmware-nine/guest-data-corruption/command.json",
+      "bytes": 723,
+      "sha256": "e71f329afd39728dcea39f004eed011602c7301b6da9b50b19a4edb85407143c"
+    },
+    {
+      "path": "fresh/firmware-nine/guest-data-corruption/serial.log",
+      "bytes": 770,
+      "sha256": "df444b8cd139d83ff2b3de634174892962a461c0cb5382f1bcf607a8bf0183e9"
+    },
+    {
+      "path": "fresh/firmware-nine/guest-data-corruption/stderr.log",
+      "bytes": 70,
+      "sha256": "7f4a47c11ad55a26d2d2431c3b9b4ee44f45c76e2990c9a81d3b47bf6c5ad847"
+    },
+    {
+      "path": "fresh/firmware-nine/guest-data-corruption/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-nine/intel-profile-rejected/command.json",
+      "bytes": 726,
+      "sha256": "bb83f251c737452f8009f01a36bf2bb975449a56ad2792dd1f4dff4d247c5a9e"
+    },
+    {
+      "path": "fresh/firmware-nine/intel-profile-rejected/serial.log",
+      "bytes": 498,
+      "sha256": "849fd1fbe9d2a3fb2b8cefb21091c07604f4c5ab7bbfa3cd524dd29fc54c71b0"
+    },
+    {
+      "path": "fresh/firmware-nine/intel-profile-rejected/stderr.log",
+      "bytes": 70,
+      "sha256": "7f4a47c11ad55a26d2d2431c3b9b4ee44f45c76e2990c9a81d3b47bf6c5ad847"
+    },
+    {
+      "path": "fresh/firmware-nine/intel-profile-rejected/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-nine/jit-positive/command.json",
+      "bytes": 696,
+      "sha256": "320db88fc8d6870294ce7f3145185f10d719fe5e74eecaa0ebeb3868b4efd3f1"
+    },
+    {
+      "path": "fresh/firmware-nine/jit-positive/serial.log",
+      "bytes": 928,
+      "sha256": "864bb5058fb7d2592501482332ab209a3e81f3a53c1934c18d2589146024431d"
+    },
+    {
+      "path": "fresh/firmware-nine/jit-positive/stderr.log",
+      "bytes": 70,
+      "sha256": "7f4a47c11ad55a26d2d2431c3b9b4ee44f45c76e2990c9a81d3b47bf6c5ad847"
+    },
+    {
+      "path": "fresh/firmware-nine/jit-positive/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-nine/production-gate/command.json",
+      "bytes": 705,
+      "sha256": "2e853049b72ddf6b7a0525ddeadc4d3a783792d331c3243e61f5d43f824269ae"
+    },
+    {
+      "path": "fresh/firmware-nine/production-gate/serial.log",
+      "bytes": 666,
+      "sha256": "9499a380f285fc7db1fed3f5689768ffd6f5b1d09fef698c2e80c77f68f4afcc"
+    },
+    {
+      "path": "fresh/firmware-nine/production-gate/stderr.log",
+      "bytes": 70,
+      "sha256": "7f4a47c11ad55a26d2d2431c3b9b4ee44f45c76e2990c9a81d3b47bf6c5ad847"
+    },
+    {
+      "path": "fresh/firmware-nine/production-gate/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-nine/report.json",
+      "bytes": 14452,
+      "sha256": "28bb20a83cdd450c7c2691f5572eca1636ef871be2effa8272af6ecb323f6d54"
+    },
+    {
+      "path": "fresh/firmware-nine/truncated-image/command.json",
+      "bytes": 705,
+      "sha256": "861f26c6eb488cbe6760a45c8412405e11ff4a837bb985361a75e66b8fc77b9e"
+    },
+    {
+      "path": "fresh/firmware-nine/truncated-image/serial.log",
+      "bytes": 516,
+      "sha256": "67221d028c5a69967b086bc4a5e13c2315c6d26af5f66c7411ae8432a7686a0b"
+    },
+    {
+      "path": "fresh/firmware-nine/truncated-image/stderr.log",
+      "bytes": 70,
+      "sha256": "7f4a47c11ad55a26d2d2431c3b9b4ee44f45c76e2990c9a81d3b47bf6c5ad847"
+    },
+    {
+      "path": "fresh/firmware-nine/truncated-image/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-nine/unmarked-image/command.json",
+      "bytes": 702,
+      "sha256": "2d7bc8ab9810c225b10dc05ee3f22d830a0375a6a40008506a23a13218bd92ad"
+    },
+    {
+      "path": "fresh/firmware-nine/unmarked-image/serial.log",
+      "bytes": 533,
+      "sha256": "549794382943cb19747605e033ff0110271c81336ee4c0edebdb541dbda5d39e"
+    },
+    {
+      "path": "fresh/firmware-nine/unmarked-image/stderr.log",
+      "bytes": 70,
+      "sha256": "7f4a47c11ad55a26d2d2431c3b9b4ee44f45c76e2990c9a81d3b47bf6c5ad847"
+    },
+    {
+      "path": "fresh/firmware-nine/unmarked-image/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-nine.log",
+      "bytes": 10395,
+      "sha256": "13924744c9fa2fb1011d5871597db447c98e54e01d24fbda291cd720c9144e4a"
+    },
+    {
+      "path": "fresh/firmware-pair/a0-device-load-fault/command.json",
+      "bytes": 720,
+      "sha256": "3e3f426d2dba606ff59340b83172a2e84a4ec49c1cdaf5636e9fecbfac4828f6"
+    },
+    {
+      "path": "fresh/firmware-pair/a0-device-load-fault/report.json",
+      "bytes": 4510,
+      "sha256": "f72d615ad99c284b686fd5e1c60ed2ace7b17d1bc96b045f01f349a1c6bb317b"
+    },
+    {
+      "path": "fresh/firmware-pair/a0-device-load-fault/serial.log",
+      "bytes": 1430,
+      "sha256": "66b1e6930f0a77f28d0bc8c7a13ff73397932843cbe47ea98f32dca5617cf243"
+    },
+    {
+      "path": "fresh/firmware-pair/a0-device-load-fault/stderr.log",
+      "bytes": 79,
+      "sha256": "bb3f1a59876473f8ed926abdc55ec03bfd1dec89b62e1dd68862aef1421e2f94"
+    },
+    {
+      "path": "fresh/firmware-pair/a0-device-load-fault/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-pair/a0-device-load-fault.bin",
+      "bytes": 44,
+      "sha256": "1e8a4717bbdd7fe11d062dd1127bf1782dd175e676d29d9ec6463135963dd593"
+    },
+    {
+      "path": "fresh/firmware-pair/a0-device-store-fault/command.json",
+      "bytes": 723,
+      "sha256": "2556bda68087bb6292adcb7e26102d9eafb9cc8f61695f1cef107ea94ba0d6f8"
+    },
+    {
+      "path": "fresh/firmware-pair/a0-device-store-fault/report.json",
+      "bytes": 4513,
+      "sha256": "c8e315b15b329360342c61ca30c42f6e4c0ec4de0e9a69028b0f74cd672649d2"
+    },
+    {
+      "path": "fresh/firmware-pair/a0-device-store-fault/serial.log",
+      "bytes": 1430,
+      "sha256": "db0641656ee54ab695800039dd0bfb7eed73ae66ee1a5484e52500fd99fb5baf"
+    },
+    {
+      "path": "fresh/firmware-pair/a0-device-store-fault/stderr.log",
+      "bytes": 79,
+      "sha256": "0571de0878ba9c976bee33f177c92d78a0117d645e8f8eb708de2656f362f693"
+    },
+    {
+      "path": "fresh/firmware-pair/a0-device-store-fault/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-pair/a0-device-store-fault.bin",
+      "bytes": 44,
+      "sha256": "3364de49e7baa35bc169530c46e8dc8dae1176a148163bd9884f92a6e5393007"
+    },
+    {
+      "path": "fresh/firmware-pair/invalid-writeback-pair/command.json",
+      "bytes": 726,
+      "sha256": "dd3d4fc800a14203114edf5f33c5dfb58f8d8925f52608bccb97d83033c6a0aa"
+    },
+    {
+      "path": "fresh/firmware-pair/invalid-writeback-pair/report.json",
+      "bytes": 4452,
+      "sha256": "5a5892286c12ae11d9dae73008506a05d8e3c585b73780d9f6f4034b2da2af76"
+    },
+    {
+      "path": "fresh/firmware-pair/invalid-writeback-pair/serial.log",
+      "bytes": 1402,
+      "sha256": "88c00edc22083280f84529723dbf0e5b1e771c74576623a0d28caa223cc4f3b0"
+    },
+    {
+      "path": "fresh/firmware-pair/invalid-writeback-pair/stderr.log",
+      "bytes": 79,
+      "sha256": "dbf5438b04f75bbaecdef93c0e7f7c8d781e13e9a76328570d49b2a920f739ab"
+    },
+    {
+      "path": "fresh/firmware-pair/invalid-writeback-pair/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-pair/invalid-writeback-pair.bin",
+      "bytes": 24,
+      "sha256": "ef9403a2b04e4f6139bed69a16012dae6d0f472bb8ab8f6a555c201c9bf45a78"
+    },
+    {
+      "path": "fresh/firmware-pair/pair-readback/command.json",
+      "bytes": 699,
+      "sha256": "7fe4892e534fe5aba61d88f62182be5a96d41cc8a44e1713f8e9a7f170ae8046"
+    },
+    {
+      "path": "fresh/firmware-pair/pair-readback/report.json",
+      "bytes": 4457,
+      "sha256": "6529d677fc9c1e57c298046e9268b395fd0b6cfdc8efe1da9e8428921e08a6a8"
+    },
+    {
+      "path": "fresh/firmware-pair/pair-readback/serial.log",
+      "bytes": 1413,
+      "sha256": "09fe10520932daf12949dadaf4b36e6921f1cafc2842882fb28ac1bfff1e413a"
+    },
+    {
+      "path": "fresh/firmware-pair/pair-readback/stderr.log",
+      "bytes": 79,
+      "sha256": "fa07b7002157e9ed5876ef9c564d06c25f0e6c82fcde65a38734d1ee01016131"
+    },
+    {
+      "path": "fresh/firmware-pair/pair-readback/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-pair/pair-readback.bin",
+      "bytes": 200,
+      "sha256": "f4135f6ab54b52323eec3bbbcc4ec0e2f206d55d335256664ef98ee54216cdf7"
+    },
+    {
+      "path": "fresh/firmware-pair/report.json",
+      "bytes": 6460,
+      "sha256": "f00111acfebce524a85ada8f827a36494d3422890af8645cbb57fcc653b167f4"
+    },
+    {
+      "path": "fresh/firmware-pair/sp-load-fault/command.json",
+      "bytes": 699,
+      "sha256": "f39b91056e4e6323708517fc7fc2182b82a8cdb5e02e92cb0f8a92073250fe15"
+    },
+    {
+      "path": "fresh/firmware-pair/sp-load-fault/report.json",
+      "bytes": 4442,
+      "sha256": "1a5f521f9241e3e62654d5cef9ecdbb57f21e4a56a8489805a774443b1a0c045"
+    },
+    {
+      "path": "fresh/firmware-pair/sp-load-fault/serial.log",
+      "bytes": 1406,
+      "sha256": "4370e601d3f53202086c972a0da3d1d6cf406b5ab490dca1c87c7333655f0a50"
+    },
+    {
+      "path": "fresh/firmware-pair/sp-load-fault/stderr.log",
+      "bytes": 79,
+      "sha256": "b1ffb7e86b9ef7cbec29bce285aa72c32d8e88b98d11afc5aae6a7f5360d5aae"
+    },
+    {
+      "path": "fresh/firmware-pair/sp-load-fault/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-pair/sp-load-fault.bin",
+      "bytes": 36,
+      "sha256": "f0c5b8b1bd26b0b3a6526802ed5d0d90dab252d301f6704c48a97f6f435bb55b"
+    },
+    {
+      "path": "fresh/firmware-pair/sp-store-fault/command.json",
+      "bytes": 702,
+      "sha256": "a0e341c6203c8e7c7a8d8e986a8faa4c4614a15a4e504bed261dbcc4cf75eb8c"
+    },
+    {
+      "path": "fresh/firmware-pair/sp-store-fault/report.json",
+      "bytes": 4445,
+      "sha256": "d58820cee25a367e86a7b902a9924f6647c03e88c36c1e3db7151687ae586dd9"
+    },
+    {
+      "path": "fresh/firmware-pair/sp-store-fault/serial.log",
+      "bytes": 1406,
+      "sha256": "a94203526d4bd04b3e39bf979cbb1ace1e9074014074cba9c81c3e1854178756"
+    },
+    {
+      "path": "fresh/firmware-pair/sp-store-fault/stderr.log",
+      "bytes": 79,
+      "sha256": "2bffe19c041328cb73b510c7d0a5c180320a0b92679b6ef8e934f6640f4da971"
+    },
+    {
+      "path": "fresh/firmware-pair/sp-store-fault/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-pair/sp-store-fault.bin",
+      "bytes": 36,
+      "sha256": "2358985bad75dcabd67f1473fc734614c4f3261abbe457c634672596b7d493c2"
+    },
+    {
+      "path": "fresh/firmware-pair.log",
+      "bytes": 4658,
+      "sha256": "72ea5865c3eb9527096fc916183b563f91f409cce2993c69f3869889ecc4039a"
+    },
+    {
+      "path": "fresh/firmware-platform/absent-provider/command.json",
+      "bytes": 717,
+      "sha256": "9e429037091c2b50c241ee99e593c3b23aa17be5c2acf8fd6919660ee52eed4a"
+    },
+    {
+      "path": "fresh/firmware-platform/absent-provider/report.json",
+      "bytes": 4276,
+      "sha256": "1ec85952cc7c59ef3ad0cb9173e2e7caab27b0b80e82b1d7a77ba737559ab028"
+    },
+    {
+      "path": "fresh/firmware-platform/absent-provider/serial.log",
+      "bytes": 1323,
+      "sha256": "acc6af6b80a79e94c68a00708254ad4eed867fe4cc49888c5805a44a76dea76f"
+    },
+    {
+      "path": "fresh/firmware-platform/absent-provider/stderr.log",
+      "bytes": 79,
+      "sha256": "8709746abca333d6bacbec2efe8770e2ffbcbf7dc42734b11cf05b2e70506b74"
+    },
+    {
+      "path": "fresh/firmware-platform/absent-provider/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-platform/daif-fiq-only/command.json",
+      "bytes": 711,
+      "sha256": "725424652cc0c00a8141470cb0c45b296e0aeaa559020bdd250ab46b35569810"
+    },
+    {
+      "path": "fresh/firmware-platform/daif-fiq-only/report.json",
+      "bytes": 4603,
+      "sha256": "3b2da5aec1f5d6f9b7ecb8ad7146b7e4d03b1e34d97e0873f3ce9d97c4abda34"
+    },
+    {
+      "path": "fresh/firmware-platform/daif-fiq-only/serial.log",
+      "bytes": 1392,
+      "sha256": "af264d4c081db324996e21a6467912a0f3016558c1e6b4de489cb6b7b5090d06"
+    },
+    {
+      "path": "fresh/firmware-platform/daif-fiq-only/stderr.log",
+      "bytes": 79,
+      "sha256": "ebe69a1fcb2daf30e8a88d6c41a9adf01b844dc284ab35992caf319e6a37483b"
+    },
+    {
+      "path": "fresh/firmware-platform/daif-fiq-only/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-platform/daif-irq-only/command.json",
+      "bytes": 711,
+      "sha256": "a0d3a415eae1c5dad23dac0df02093932b17bf5f4cfc5c98ba1a7287367c8dd2"
+    },
+    {
+      "path": "fresh/firmware-platform/daif-irq-only/report.json",
+      "bytes": 4603,
+      "sha256": "2bbaeb0579f2ce4de2fe8a9e7b55a30ae219c826855d765c49c17dc9cbdd2150"
+    },
+    {
+      "path": "fresh/firmware-platform/daif-irq-only/serial.log",
+      "bytes": 1392,
+      "sha256": "e40c60bb90cf822be8da48c853edde05a5550b5914cb2807366a5f8651db57cc"
+    },
+    {
+      "path": "fresh/firmware-platform/daif-irq-only/stderr.log",
+      "bytes": 79,
+      "sha256": "d93fbfbf488d26b9ea74b59b02ae9d262453ac78da2feb68a7d0196ad3a1e432"
+    },
+    {
+      "path": "fresh/firmware-platform/daif-irq-only/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-platform/fiq.bin",
+      "bytes": 12,
+      "sha256": "9fdafaf9355f173ba940a17a05a19982bc6c959786aaca5af9f7c0e060f4b815"
+    },
+    {
+      "path": "fresh/firmware-platform/invalid.bin",
+      "bytes": 16,
+      "sha256": "857ba59f304d9919492a7b56117617a027e503f9e270a94ce98e7deba3b3fec7"
+    },
+    {
+      "path": "fresh/firmware-platform/irq.bin",
+      "bytes": 12,
+      "sha256": "f94ac2cf4aec61629800020640d4070581d7707c637081b46a632c73042b24b8"
+    },
+    {
+      "path": "fresh/firmware-platform/masked-levels/command.json",
+      "bytes": 711,
+      "sha256": "0618ca2f03c631232f80aa33b5910dbd73db8784c452a01150dd24d5d48bf5ab"
+    },
+    {
+      "path": "fresh/firmware-platform/masked-levels/report.json",
+      "bytes": 4609,
+      "sha256": "2603c205d0436b6894cc03925d10f1dc7561e880b485bc863f273dc840637f5e"
+    },
+    {
+      "path": "fresh/firmware-platform/masked-levels/serial.log",
+      "bytes": 1390,
+      "sha256": "2fba2274087ac9c1a1f000108c41ee4396bdc06cd1640975fdde758c0f3f9534"
+    },
+    {
+      "path": "fresh/firmware-platform/masked-levels/stderr.log",
+      "bytes": 79,
+      "sha256": "5dfc4161de1891d43e6ce521d6232654097f5d338b8586364b3bd67bd103e56f"
+    },
+    {
+      "path": "fresh/firmware-platform/masked-levels/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-platform/override-release-fiq-el1h/command.json",
+      "bytes": 747,
+      "sha256": "953b48c4101b7d02862945c10eff9c748bc3eb0d5bae82e8ab93bebcbc1f8758"
+    },
+    {
+      "path": "fresh/firmware-platform/override-release-fiq-el1h/report.json",
+      "bytes": 4633,
+      "sha256": "e650d981f25852c9644c9e5f12bbfbeb5ac89183b3373e3f58e2bff189e09d88"
+    },
+    {
+      "path": "fresh/firmware-platform/override-release-fiq-el1h/serial.log",
+      "bytes": 1402,
+      "sha256": "99773de130cf148cd3c6e6a5c47a6453d13d4b81feb54b32f50d5b8a7be2e507"
+    },
+    {
+      "path": "fresh/firmware-platform/override-release-fiq-el1h/stderr.log",
+      "bytes": 79,
+      "sha256": "5d9396a9f71f45e245b38752f99d5890b5818d986ed406846d7d55acb8cb7a5c"
+    },
+    {
+      "path": "fresh/firmware-platform/override-release-fiq-el1h/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-platform/override-release-irq-el1t/command.json",
+      "bytes": 747,
+      "sha256": "581159cb87597e119193d0eab15985534e2e0e2b195fec3f53ba36eefcbbebd8"
+    },
+    {
+      "path": "fresh/firmware-platform/override-release-irq-el1t/report.json",
+      "bytes": 4633,
+      "sha256": "6b04a0765c76c23b646efb2501950f09c160d11e8d1856e5d1cbcc0fe050d3e3"
+    },
+    {
+      "path": "fresh/firmware-platform/override-release-irq-el1t/serial.log",
+      "bytes": 1402,
+      "sha256": "898a9d6a80ce855e8067d939e27dabfda52a953fc0f0e4deea24ecf6ab955818"
+    },
+    {
+      "path": "fresh/firmware-platform/override-release-irq-el1t/stderr.log",
+      "bytes": 79,
+      "sha256": "4b5e2294d65ecc1cf3e3c3991b7ad4564cb3383f14340f396f25dd17c84b5dd1"
+    },
+    {
+      "path": "fresh/firmware-platform/override-release-irq-el1t/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-platform/pending.bin",
+      "bytes": 16,
+      "sha256": "d172c60b90154f64adc3d51a1a2031a812b99f08f78274eedf51336dc58f2ab0"
+    },
+    {
+      "path": "fresh/firmware-platform/readback/command.json",
+      "bytes": 696,
+      "sha256": "2db70a9de199fb4da1f17c7744f2df5cdf5fbb1b0ad8ef193ceaa008622e04f1"
+    },
+    {
+      "path": "fresh/firmware-platform/readback/report.json",
+      "bytes": 4595,
+      "sha256": "aa3c887a1ee2bee6039bb24e8b8d9915d80067c31508a34dbc580088a3602c11"
+    },
+    {
+      "path": "fresh/firmware-platform/readback/serial.log",
+      "bytes": 1383,
+      "sha256": "46c635219a8834cce4d2af6ddd901cd09ff826b5de60dae8d197afe2e7943555"
+    },
+    {
+      "path": "fresh/firmware-platform/readback/stderr.log",
+      "bytes": 79,
+      "sha256": "567b26c389172d8511cb00cd2c0ddfe82dc0029f5b7a62d8df6b57e12c222047"
+    },
+    {
+      "path": "fresh/firmware-platform/readback/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-platform/readback.bin",
+      "bytes": 24,
+      "sha256": "30b5730f24de6ec3b901de38c4ed9de07c9786e4d4d1e6dccbfb6df7b3f945b1"
+    },
+    {
+      "path": "fresh/firmware-platform/report.json",
+      "bytes": 6823,
+      "sha256": "12e9203a9a2dc156db48adbe38b7cc9376b089623293a9218acd791f6ba5ee20"
+    },
+    {
+      "path": "fresh/firmware-platform/unmask.bin",
+      "bytes": 20,
+      "sha256": "3bd5a5f08f2c20d0382b4d4d946969d852c82eea84a55e4e4d5242dc285122a2"
+    },
+    {
+      "path": "fresh/firmware-platform/unsupported-field/command.json",
+      "bytes": 723,
+      "sha256": "04da7e6e8c303bfc5beaa590b1bf82353cec56e9c9859d64941fe52e6e7c4b81"
+    },
+    {
+      "path": "fresh/firmware-platform/unsupported-field/report.json",
+      "bytes": 4651,
+      "sha256": "4bfd6dbf4c1b19bb108157a26dfc6093736d4c127e9dab074f594ecca743d10c"
+    },
+    {
+      "path": "fresh/firmware-platform/unsupported-field/serial.log",
+      "bytes": 1409,
+      "sha256": "d3041d36c2133326771baf1bace3b19f6218674db20135d53e618583f023582f"
+    },
+    {
+      "path": "fresh/firmware-platform/unsupported-field/stderr.log",
+      "bytes": 79,
+      "sha256": "8ad9e1ea3c740e4fd9a2f50ec092e3c1958e7b9b6ee4be3c87a4ee9d427178fa"
+    },
+    {
+      "path": "fresh/firmware-platform/unsupported-field/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-platform.log",
+      "bytes": 5629,
+      "sha256": "c30e0bc650deb8c899835a7cfc96f7ee9a2084f5cea2b9317a5af6e5a732fd86"
+    },
+    {
+      "path": "fresh/firmware-prefix/budget/command.json",
+      "bytes": 684,
+      "sha256": "50a34adcfcf8ba11239cdaef3af614edc3bedd39e32b5ea19b75d4173b08a7f0"
+    },
+    {
+      "path": "fresh/firmware-prefix/budget/report.json",
+      "bytes": 4208,
+      "sha256": "0569c68d85871e2eec80032ab7651107f08cc74f49b078083c48b5cf218c6df7"
+    },
+    {
+      "path": "fresh/firmware-prefix/budget/serial.log",
+      "bytes": 1299,
+      "sha256": "a47ef82306e30bfc17139f62f6015746d6282b2583eeb2ba5890e7f5e4e4f324"
+    },
+    {
+      "path": "fresh/firmware-prefix/budget/stderr.log",
+      "bytes": 79,
+      "sha256": "5331060d736fcc24fc7ad7a48eaf087e9eada969c1eb8983bc29aff2908028c8"
+    },
+    {
+      "path": "fresh/firmware-prefix/budget/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-prefix/feature-gate/command.json",
+      "bytes": 702,
+      "sha256": "ca05a75bbb50ec94f7a206ebc262d156ea9f9f5cd545135e098a16c6e2ca6139"
+    },
+    {
+      "path": "fresh/firmware-prefix/feature-gate/report.json",
+      "bytes": 3104,
+      "sha256": "b9e625ce0a214a68d6615fb71ba37df47bcb4b55fba995ef00a0ef0a008e54dc"
+    },
+    {
+      "path": "fresh/firmware-prefix/feature-gate/serial.log",
+      "bytes": 666,
+      "sha256": "9499a380f285fc7db1fed3f5689768ffd6f5b1d09fef698c2e80c77f68f4afcc"
+    },
+    {
+      "path": "fresh/firmware-prefix/feature-gate/stderr.log",
+      "bytes": 79,
+      "sha256": "8ca9f8f7d09e1f0daa6a78197f57d28800cefbd4ccf53ed62f7a0be20652ac7f"
+    },
+    {
+      "path": "fresh/firmware-prefix/feature-gate/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-prefix/positive/command.json",
+      "bytes": 690,
+      "sha256": "16cf8d9ddbb6245bc50b01dd45386cc51fe2b9151cb5c2687b69e96160fa1761"
+    },
+    {
+      "path": "fresh/firmware-prefix/positive/report.json",
+      "bytes": 4243,
+      "sha256": "ed6a4b4f9483b0306d6111c6da16b251320966ccd61eac3064761f73360448f2"
+    },
+    {
+      "path": "fresh/firmware-prefix/positive/serial.log",
+      "bytes": 1314,
+      "sha256": "8b2c165e8cf8b560a14f933adc0f848f9ffc76ec917704606f2189acec7fc8db"
+    },
+    {
+      "path": "fresh/firmware-prefix/positive/stderr.log",
+      "bytes": 79,
+      "sha256": "9b17fe54db0807a78ca76df67d4604276bd830d42aa83d428233118f3f3bbd0c"
+    },
+    {
+      "path": "fresh/firmware-prefix/positive/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-prefix/probe.bin",
+      "bytes": 28,
+      "sha256": "1102c9664f28dd2732eca51a38c03d57d795d93be4e32cd4442405cde7df07fc"
+    },
+    {
+      "path": "fresh/firmware-prefix/report.json",
+      "bytes": 2435,
+      "sha256": "7a3ab0d43e797e89d1e46643e32534491e3939abff15d6a34a20168d258d3dc3"
+    },
+    {
+      "path": "fresh/firmware-prefix/thread-registers/command.json",
+      "bytes": 714,
+      "sha256": "46afbd8d2774f5b91a31e58a475603104632d94e8d1d2da9f0aa3b64207c006e"
+    },
+    {
+      "path": "fresh/firmware-prefix/thread-registers/report.json",
+      "bytes": 4256,
+      "sha256": "a9e22a1b271879735d70b7ff18a923e48cc2f99680b8302f59bf804ad9973d2c"
+    },
+    {
+      "path": "fresh/firmware-prefix/thread-registers/serial.log",
+      "bytes": 1319,
+      "sha256": "2d8b3c448045f67746012afcaf784f3ba1a1d753500de115d39cdb7c6ed9fc16"
+    },
+    {
+      "path": "fresh/firmware-prefix/thread-registers/stderr.log",
+      "bytes": 79,
+      "sha256": "e4119d0ee04ab366cff78666c774aac3dfadf9d9d4dc9be350f570dfd64240d3"
+    },
+    {
+      "path": "fresh/firmware-prefix/thread-registers/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-prefix/thread.bin",
+      "bytes": 28,
+      "sha256": "a0c5af93641f6c141daaf07be848be1a1c45c99f4745043a5a59d33fbbdb3fbd"
+    },
+    {
+      "path": "fresh/firmware-prefix/unresolved-template/command.json",
+      "bytes": 723,
+      "sha256": "0513d549522ee93e38fcabf82bbda38c3761fb20764ca5e6f12db42c58116b51"
+    },
+    {
+      "path": "fresh/firmware-prefix/unresolved-template/report.json",
+      "bytes": 3018,
+      "sha256": "8b03f659dda1be34951bfaa7dc2eb3d8f26e00e32246b8651a0bf1f73ae68a2b"
+    },
+    {
+      "path": "fresh/firmware-prefix/unresolved-template/serial.log",
+      "bytes": 572,
+      "sha256": "48a78f8c45a7c273ba2d441524736a6bdef7901c5c6136e4621dde7bf3d9f819"
+    },
+    {
+      "path": "fresh/firmware-prefix/unresolved-template/stderr.log",
+      "bytes": 79,
+      "sha256": "fe427d40172f792c0ec170cb33c6d64cd3aeed17d7d2f8980bee553be6486e9e"
+    },
+    {
+      "path": "fresh/firmware-prefix/unresolved-template/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-prefix.log",
+      "bytes": 3193,
+      "sha256": "a8ecc281bb46379ee1eb4dc44afb4d79b9f7fc6b67729d438da822d501647562"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-load/command.json",
+      "bytes": 708,
+      "sha256": "f98edbcc8aa7dd7fcbba9c2b235c631eba343eeea9502fc4dd92181df241958d"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-load/report.json",
+      "bytes": 4507,
+      "sha256": "c7c2184c3f85bd241fa8662392665b28a24eca5a98ecc44b4adeaeffb60e8771"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-load/serial.log",
+      "bytes": 1430,
+      "sha256": "5933a610eb06fcd0e0d544df59b53d558f4297d354cb7f098df1797465fa5e90"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-load/stderr.log",
+      "bytes": 79,
+      "sha256": "4a78d4239680d0031c2e5be76716822f3079913403115ff3f4361890d683d888"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-load/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-load.bin",
+      "bytes": 44,
+      "sha256": "9c3e1e6f041bb16ecbec32f6fd4fe3df937592eac1fb532295ecc976faf1c08c"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-load.disassembly.txt",
+      "bytes": 723,
+      "sha256": "615de84a6503482a21d474a4409dde8873ac5f8e5ab59b628c360b08f3abe7cf"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-store/command.json",
+      "bytes": 711,
+      "sha256": "e9eb756b8e592cb9f666ce7c6efa0349bef2a8725a8eae8ae94cb6702dcae0c1"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-store/report.json",
+      "bytes": 4509,
+      "sha256": "7fa21981539fcb32a3a7665fd1bef1132fc7e9c48b97bdc03e7b5ee5a3563c65"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-store/serial.log",
+      "bytes": 1430,
+      "sha256": "9873b04061242aad8af9e0120fdc998d4eee11b4cb40c86e8e8eb81647731768"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-store/stderr.log",
+      "bytes": 79,
+      "sha256": "eaec7fe8ce6bed21c10a4b29d76fa12c835e67a0f5e4bd5143863cbc101da67e"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-store/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-store.bin",
+      "bytes": 44,
+      "sha256": "43dfc5d4e51e8015be9cd6c523e3184d062431da1050b669f25c2307aa840208"
+    },
+    {
+      "path": "fresh/firmware-scalar/a0-device-store.disassembly.txt",
+      "bytes": 725,
+      "sha256": "fc6c8a0adcf14497a8a13eca353d6d298c576916b8e240ab22a50a1276446ceb"
+    },
+    {
+      "path": "fresh/firmware-scalar/byte-signed/command.json",
+      "bytes": 699,
+      "sha256": "d960ae47170066aea7734a518de45ac16934e512c30a40580a6337b55c2b7388"
+    },
+    {
+      "path": "fresh/firmware-scalar/byte-signed/report.json",
+      "bytes": 4430,
+      "sha256": "4566d3ce67625b3a6b6a6a3884355e4cb6a78faf692b4b55d587ca8ab451239a"
+    },
+    {
+      "path": "fresh/firmware-scalar/byte-signed/serial.log",
+      "bytes": 1398,
+      "sha256": "9334ab7c83d2db0bd792e2fe330855614a137571beda1eed1a936a7048d7344e"
+    },
+    {
+      "path": "fresh/firmware-scalar/byte-signed/stderr.log",
+      "bytes": 79,
+      "sha256": "d8c48b36f86f0311f8377b20476037f5f5c28eb5f5a63977229f49e416fe1172"
+    },
+    {
+      "path": "fresh/firmware-scalar/byte-signed/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-scalar/byte-signed.bin",
+      "bytes": 80,
+      "sha256": "453ad6e79b50bd3a709ce93ef6634bca7c62d4d4c41d671dcef359c1b674796a"
+    },
+    {
+      "path": "fresh/firmware-scalar/byte-signed.disassembly.txt",
+      "bytes": 1152,
+      "sha256": "fe6b70540e77cf235991fd4dd38b4974beb2a8f2c7e4e4fb53df3d4308483694"
+    },
+    {
+      "path": "fresh/firmware-scalar/commands.json",
+      "bytes": 16586,
+      "sha256": "92f468703b99a99face4e3c6c0c79edf5f771ef847ece3640455573849264770"
+    },
+    {
+      "path": "fresh/firmware-scalar/half-signed/command.json",
+      "bytes": 699,
+      "sha256": "1660bf7842d55ae8f7dba7f0997772aabd7ce9415325cada4809c3c0c934aa7a"
+    },
+    {
+      "path": "fresh/firmware-scalar/half-signed/report.json",
+      "bytes": 4434,
+      "sha256": "4aa1c865d8e0ea88bdb3464934d62a2022efc383f06696c55c083de26f481699"
+    },
+    {
+      "path": "fresh/firmware-scalar/half-signed/serial.log",
+      "bytes": 1400,
+      "sha256": "62fe9add10e933b8613a49fa89e6a5d3c92459c18142f214da08ce2b0d65d1ec"
+    },
+    {
+      "path": "fresh/firmware-scalar/half-signed/stderr.log",
+      "bytes": 79,
+      "sha256": "23e772271c2f3bfb605f1cf8381e4ac1dd3351a8b3c58abbf914fe41e64f0fe1"
+    },
+    {
+      "path": "fresh/firmware-scalar/half-signed/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-scalar/half-signed.bin",
+      "bytes": 80,
+      "sha256": "97f96cad735e3b96803290d7107f68960e30581b47353c3506cd2bdf4529d51f"
+    },
+    {
+      "path": "fresh/firmware-scalar/half-signed.disassembly.txt",
+      "bytes": 1140,
+      "sha256": "62f0062db58f3360690ded8ece8e80cd6b29cff94c97e2ed3b20a83cb8e40c34"
+    },
+    {
+      "path": "fresh/firmware-scalar/prefetch-rejected/command.json",
+      "bytes": 717,
+      "sha256": "8ef291e97d7180486fdc3cd75428f6f210b6f5c9c6713d62962e686a0774a3c5"
+    },
+    {
+      "path": "fresh/firmware-scalar/prefetch-rejected/report.json",
+      "bytes": 4495,
+      "sha256": "42656479b32bbf2f12a5749b46bdf8f3ef39081338d9e22299f5e40cb3f04433"
+    },
+    {
+      "path": "fresh/firmware-scalar/prefetch-rejected/serial.log",
+      "bytes": 1422,
+      "sha256": "6342f65bda56ee05686d4f2fe2e8a1cd40a28e2fd684e7d27833e7eaba6b5b08"
+    },
+    {
+      "path": "fresh/firmware-scalar/prefetch-rejected/stderr.log",
+      "bytes": 79,
+      "sha256": "a477bbe07eff52072f7ce452bd05c33027f5b5e112b784658bad8e6134911533"
+    },
+    {
+      "path": "fresh/firmware-scalar/prefetch-rejected/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-scalar/prefetch-rejected.bin",
+      "bytes": 36,
+      "sha256": "845c80f21f2b7d9eae60d2ef5d0587c1d7842aceabfc23d81aa432dab9fcfce9"
+    },
+    {
+      "path": "fresh/firmware-scalar/prefetch-rejected.disassembly.txt",
+      "bytes": 650,
+      "sha256": "5c14f9b62c4b3b20b38958fe993987e7a13f0443257bb06125a3c743054749fb"
+    },
+    {
+      "path": "fresh/firmware-scalar/quad-zr/command.json",
+      "bytes": 687,
+      "sha256": "a5940e24e189200588e7cebb80c904e2028ea664e4cbd77ac7eca8d135241c93"
+    },
+    {
+      "path": "fresh/firmware-scalar/quad-zr/report.json",
+      "bytes": 4418,
+      "sha256": "574024d2f0f15a8b8f80e2bdb283a2914fe92b95c8c7bca452d9ca12b7850d1f"
+    },
+    {
+      "path": "fresh/firmware-scalar/quad-zr/serial.log",
+      "bytes": 1397,
+      "sha256": "348155a2083bdb8b67efa06900df5f9626d30ff1dabbe5f92e66067d2a88674d"
+    },
+    {
+      "path": "fresh/firmware-scalar/quad-zr/stderr.log",
+      "bytes": 79,
+      "sha256": "c004cd226e961f8a1477806122a8622d750aa1fccefdbefa87cbe40c0123a991"
+    },
+    {
+      "path": "fresh/firmware-scalar/quad-zr/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-scalar/quad-zr.bin",
+      "bytes": 80,
+      "sha256": "a976842801d477cdc1c470349cfd2a423a5a4cb5dfd94fb834e757c5c1d58a66"
+    },
+    {
+      "path": "fresh/firmware-scalar/quad-zr.disassembly.txt",
+      "bytes": 1131,
+      "sha256": "4d7987a42ca5a061bb40b0517c27fbe29c36e758698d5aea7ab72dce992cd61a"
+    },
+    {
+      "path": "fresh/firmware-scalar/report.json",
+      "bytes": 18890,
+      "sha256": "6db16b2466382e127a400731aa798b2d5740989c4fd1d94aa63dfdf69282acad"
+    },
+    {
+      "path": "fresh/firmware-scalar/reserved-rejected/command.json",
+      "bytes": 717,
+      "sha256": "5c02a68f4b78bec798b97227330ddbe85288cc7710f39de8d423a1a096a669f6"
+    },
+    {
+      "path": "fresh/firmware-scalar/reserved-rejected/report.json",
+      "bytes": 4495,
+      "sha256": "b786dbfd14738b02d18fd0aac965645cff8c48cce2e4175703750fa8408a7991"
+    },
+    {
+      "path": "fresh/firmware-scalar/reserved-rejected/serial.log",
+      "bytes": 1422,
+      "sha256": "8d9769fabef1b023a78b76e1125e541d4c1a5840fab8b1aab3bd1c3967b57cba"
+    },
+    {
+      "path": "fresh/firmware-scalar/reserved-rejected/stderr.log",
+      "bytes": 79,
+      "sha256": "ebc90148886a691d04344f72e540fa420f8278aa09a511f12e538fe624ddef6d"
+    },
+    {
+      "path": "fresh/firmware-scalar/reserved-rejected/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-scalar/reserved-rejected.bin",
+      "bytes": 36,
+      "sha256": "ee4ff5aaa2791634a9929c3698035f072215c6c4955e365042c9218c62dbf268"
+    },
+    {
+      "path": "fresh/firmware-scalar/reserved-rejected.disassembly.txt",
+      "bytes": 639,
+      "sha256": "d6fadb258fb384c0eae3a9de6595356e8913300ad64795dedfcee1c99b467a28"
+    },
+    {
+      "path": "fresh/firmware-scalar/simd-rejected/command.json",
+      "bytes": 705,
+      "sha256": "a648008db8759f248490227e78605601da0e749aa5cb61fafcbd8e4c550b19d9"
+    },
+    {
+      "path": "fresh/firmware-scalar/simd-rejected/report.json",
+      "bytes": 4487,
+      "sha256": "cd502fb6cba96bc505a96008c1be22f7504b53f6b20965b844957297ff7169d1"
+    },
+    {
+      "path": "fresh/firmware-scalar/simd-rejected/serial.log",
+      "bytes": 1422,
+      "sha256": "d794d5d453b390620743a8c03dbb7fa343938216f6679d4bb0591c2ff18794ed"
+    },
+    {
+      "path": "fresh/firmware-scalar/simd-rejected/stderr.log",
+      "bytes": 79,
+      "sha256": "b7072b388ae51d87f1c3e4b9f69777b8094e07d990101db21569f2af84b70649"
+    },
+    {
+      "path": "fresh/firmware-scalar/simd-rejected/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-scalar/simd-rejected.bin",
+      "bytes": 36,
+      "sha256": "0caad27123be2e9461264d78db6549092ea1dcca177a47511c2dcbe639e09ee9"
+    },
+    {
+      "path": "fresh/firmware-scalar/simd-rejected.disassembly.txt",
+      "bytes": 638,
+      "sha256": "a16539a06f3a61fe53874de373023d3219ec8eb511a7cb6be4c906e18e7a7b68"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-load/command.json",
+      "bytes": 687,
+      "sha256": "a9106b0f2977ecb4138b4a83f07333b38115b0c3dcdac8be044701bbde2d233e"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-load/report.json",
+      "bytes": 4494,
+      "sha256": "66838c6926b948cb8e7d12b5db715bb0163f558a7b39b3ac1c1af03c4f76e80f"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-load/serial.log",
+      "bytes": 1431,
+      "sha256": "24e2c2be371233e9b56c28d90de4bdf9f5dfc822f8ed280ae2da6bfd6b2cf647"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-load/stderr.log",
+      "bytes": 79,
+      "sha256": "e5400198c837d7ae0f0cb541770b5c7849dde1d6f1c959a118f4d284177e4700"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-load/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-load.bin",
+      "bytes": 48,
+      "sha256": "4c44528e6000e97ff79542de001cf3c6d6bceefcb1e5b1679aaa264d2a0875fb"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-load.disassembly.txt",
+      "bytes": 774,
+      "sha256": "0d35b5206cb70fa9f833988671ed5ab8dcc692fca77e28cf0910b11192efa350"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-store/command.json",
+      "bytes": 690,
+      "sha256": "567fd008950b8ed39958fdaee4ffb62002376e295c3461425180e4ec60d88d57"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-store/report.json",
+      "bytes": 4497,
+      "sha256": "ad90f56e7ca8a08afc517027353f59422cd7aeeb2975bc4491cf154089c3ced4"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-store/serial.log",
+      "bytes": 1431,
+      "sha256": "7fc8531224a8e59ef6fe803277e6618d8795533fbf6ab601c72428db35920ce0"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-store/stderr.log",
+      "bytes": 79,
+      "sha256": "f4fe99c6110318bc4f7b89f1de6bd914cb3e452da5c0cce125a8d3e28e244e6d"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-store/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-store.bin",
+      "bytes": 48,
+      "sha256": "8a6fd7d896a24f563dd52dccf3b1b597e849c188da434b5e7e0115dcc28b0f9d"
+    },
+    {
+      "path": "fresh/firmware-scalar/sp-store.disassembly.txt",
+      "bytes": 774,
+      "sha256": "6a66425cd3beca703816fcdf77b0df0f63f2c033fd827470af8511e3c5858ba7"
+    },
+    {
+      "path": "fresh/firmware-scalar/word-signed/command.json",
+      "bytes": 699,
+      "sha256": "a0d0fd0d9e65b641b8e60fea5418ba70fd6c07c762d9d20766fa02a5176ed9ea"
+    },
+    {
+      "path": "fresh/firmware-scalar/word-signed/report.json",
+      "bytes": 4443,
+      "sha256": "13f4f712a66316dedb2f8a6b3d3b86f4377f18defbe788339cc134ac54c1a484"
+    },
+    {
+      "path": "fresh/firmware-scalar/word-signed/serial.log",
+      "bytes": 1404,
+      "sha256": "144a176b578b29ec736b4bdceb4babc98c0f580e7db5f12e7f76d27b96e4ef30"
+    },
+    {
+      "path": "fresh/firmware-scalar/word-signed/stderr.log",
+      "bytes": 79,
+      "sha256": "e69b44bebbd71eb0ab7de8a68228a24ab1ceb5be1b6f18ff719d788a394e266d"
+    },
+    {
+      "path": "fresh/firmware-scalar/word-signed/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-scalar/word-signed.bin",
+      "bytes": 68,
+      "sha256": "15fade2f5fb9d7f266485ab36e2d1f984ef030d32df0725cb0919d360b337ebe"
+    },
+    {
+      "path": "fresh/firmware-scalar/word-signed.disassembly.txt",
+      "bytes": 1020,
+      "sha256": "8076f8e0e4ee532291f7a9c7fc750d1d85352c34152c8ea268853dc4ee4caf75"
+    },
+    {
+      "path": "fresh/firmware-scalar.log",
+      "bytes": 13880,
+      "sha256": "e5aff5c2765af2be7230775369d0bbb35135a804d8413f0ff28a75ec1eb44aaf"
+    },
+    {
+      "path": "fresh/firmware-stage1/command.json",
+      "bytes": 654,
+      "sha256": "9d811c1fb7be107823730c09483b40b8ce012fe116958facde877d6cf9a8d448"
+    },
+    {
+      "path": "fresh/firmware-stage1/report.json",
+      "bytes": 116707,
+      "sha256": "9439d909485066e3c62a85675d857baab4ae38e7303bc0ede96ad56f68bfdafd"
+    },
+    {
+      "path": "fresh/firmware-stage1/serial.log",
+      "bytes": 18427,
+      "sha256": "b67978c6df9793cab02b02c2b70f13a84e888ae32ba9674a49e80a42912028a7"
+    },
+    {
+      "path": "fresh/firmware-stage1/stderr.log",
+      "bytes": 70,
+      "sha256": "af7c1f5e8845775405cc7f5b780af69f9274bc4b29d782e53204fd1b0783f91a"
+    },
+    {
+      "path": "fresh/firmware-stage1/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/firmware-stage1.log",
+      "bytes": 126,
+      "sha256": "4c446831f1d1611662b555182c0e0ef4586e77ad61e276be4a7a8b1a13095125"
+    },
+    {
+      "path": "fresh/gui-boundaries.log",
+      "bytes": 3520,
+      "sha256": "a9392b65572106b5377941cbf5bc8b97136978dc5fb3f0baa51321ac0339e521"
+    },
+    {
+      "path": "fresh/legacy-efi.log",
+      "bytes": 21118,
+      "sha256": "68e286b42a8bf456b673809d93d32744be3e6d94a2f7ebb9af7af986159629fe"
+    },
+    {
+      "path": "fresh/memory-service-uefi.log",
+      "bytes": 230,
+      "sha256": "eda1b10a08e1fad2c852d7f9d726cfc58f2eca514059a0cc64133a84653526cb"
+    },
+    {
+      "path": "fresh/memory-service.log",
+      "bytes": 4188,
+      "sha256": "d157b1952be277c5a21e8b3034c5720adc015424aea6a27ee72d5de2a3702bae"
+    },
+    {
+      "path": "fresh/mmu-oracle.json",
+      "bytes": 2297,
+      "sha256": "92e9960a817cf93f377ecd5a7a33fb36dc175881a4b46c05b48dbe34b844b380"
+    },
+    {
+      "path": "fresh/mmu-oracle.log",
+      "bytes": 2297,
+      "sha256": "92e9960a817cf93f377ecd5a7a33fb36dc175881a4b46c05b48dbe34b844b380"
+    },
+    {
+      "path": "fresh/mmu-physical.json",
+      "bytes": 1944,
+      "sha256": "48bf4fdff9746c5e0a7f21a403551e98c2d3628ee3df07e5846f573e015275dd"
+    },
+    {
+      "path": "fresh/mmu-physical.log",
+      "bytes": 1944,
+      "sha256": "48bf4fdff9746c5e0a7f21a403551e98c2d3628ee3df07e5846f573e015275dd"
+    },
+    {
+      "path": "fresh/native-dynamic/cpu_bank_before_commit_ack/jit.c",
+      "bytes": 39895,
+      "sha256": "0168d27a26268f8dfb7b6cc3de9617fd6f1c75efc531f31cb2fa5f34e5162ec1"
+    },
+    {
+      "path": "fresh/native-dynamic/guard_ignores_isb_bytes/dynamic.rs",
+      "bytes": 12899,
+      "sha256": "d499f1b69c581eb0a5d68760cd9c9bcad18ce9d175adf126705faee41f246d01"
+    },
+    {
+      "path": "fresh/native-dynamic/guard_ignores_isb_bytes/lib.rs",
+      "bytes": 8405,
+      "sha256": "09b0522e8fb16705467b6a9afcea06adba1bcae8efcf31aced41c5ac0e1e8dae"
+    },
+    {
+      "path": "fresh/native-dynamic/guard_ignores_isb_bytes/stage1.rs",
+      "bytes": 9883,
+      "sha256": "c09733a87429e96c4af5a6d40af64da715073a44700a0400e658273135a624ce"
+    },
+    {
+      "path": "fresh/native-dynamic/isb_without_effective_commit/jit.c",
+      "bytes": 39897,
+      "sha256": "a437b77bb34d47c19a7a3ede406e46a7fe2ebe600ec8e1941e99c90dd6afceb4"
+    },
+    {
+      "path": "fresh/native-dynamic/memory_dispatch_bypass/jit.c",
+      "bytes": 39792,
+      "sha256": "2425677b0968d7369181a305124f84fdd9e2d08bdd725251a699b8e3c0b6c231"
+    },
+    {
+      "path": "fresh/native-dynamic/omit_actual_tlbi_invalidation/dynamic.rs",
+      "bytes": 12870,
+      "sha256": "0b7d58d7fac36dd1188b65110c6cedeb1555bda32422e3af527e07d1ddcb4010"
+    },
+    {
+      "path": "fresh/native-dynamic/omit_actual_tlbi_invalidation/lib.rs",
+      "bytes": 8405,
+      "sha256": "09b0522e8fb16705467b6a9afcea06adba1bcae8efcf31aced41c5ac0e1e8dae"
+    },
+    {
+      "path": "fresh/native-dynamic/omit_actual_tlbi_invalidation/stage1.rs",
+      "bytes": 9889,
+      "sha256": "e366fafb73e4f6eb48fefc8126c87791688ab8a55dfb48154d797fce51c47dcf"
+    },
+    {
+      "path": "fresh/native-dynamic.json",
+      "bytes": 36961,
+      "sha256": "0bfa92de8bc939478fde92f3bbf54f3dfb69a98dc0faf9790595f5f8b2aaab18"
+    },
+    {
+      "path": "fresh/native-dynamic.log",
+      "bytes": 105,
+      "sha256": "ba91126748542065eef2c7c5e86b52eb62650bfaa82bf4ac4ca6c7faa0d32215"
+    },
+    {
+      "path": "fresh/native-pac.json",
+      "bytes": 33102,
+      "sha256": "b4977c15a8dffc2240502c02456a7ef5d1aeb00e3eaf2ee9bf798fb282b249e8"
+    },
+    {
+      "path": "fresh/native-pac.log",
+      "bytes": 94,
+      "sha256": "912bb5a5b5ff71221b81d968287f16f0ce1ba2dca04e0c80c45f9715f1a3e1ae"
+    },
+    {
+      "path": "fresh/native-provider/jit_provider_bypass.c",
+      "bytes": 39792,
+      "sha256": "2425677b0968d7369181a305124f84fdd9e2d08bdd725251a699b8e3c0b6c231"
+    },
+    {
+      "path": "fresh/native-provider.json",
+      "bytes": 15721,
+      "sha256": "1eea56b25222adcf3324b91d3c6c10ac28faa4e7771f8593e601281f805a816d"
+    },
+    {
+      "path": "fresh/native-provider.log",
+      "bytes": 106,
+      "sha256": "470858c0555b52e0b0b8054503460f06c673b6eb9176edd07d2a1bb007ad6f92"
+    },
+    {
+      "path": "fresh/native-stage1/backing_failure_as_guest_abort/lib.rs",
+      "bytes": 8405,
+      "sha256": "09b0522e8fb16705467b6a9afcea06adba1bcae8efcf31aced41c5ac0e1e8dae"
+    },
+    {
+      "path": "fresh/native-stage1/backing_failure_as_guest_abort/stage1.rs",
+      "bytes": 9957,
+      "sha256": "f3c8738e30803a9b40317be25cb80de8b9d0121f92d83f761e8050dd8270a6d6"
+    },
+    {
+      "path": "fresh/native-stage1/jit_provider_bypass.c",
+      "bytes": 39792,
+      "sha256": "2425677b0968d7369181a305124f84fdd9e2d08bdd725251a699b8e3c0b6c231"
+    },
+    {
+      "path": "fresh/native-stage1/omit_second_store_permission/lib.rs",
+      "bytes": 8405,
+      "sha256": "09b0522e8fb16705467b6a9afcea06adba1bcae8efcf31aced41c5ac0e1e8dae"
+    },
+    {
+      "path": "fresh/native-stage1/omit_second_store_permission/stage1.rs",
+      "bytes": 9999,
+      "sha256": "48b9a02e044588083886c0f0310ad32d6671856805b615d42d28eb9ea77cd26c"
+    },
+    {
+      "path": "fresh/native-stage1/reuse_first_pair_locations/lib.rs",
+      "bytes": 8405,
+      "sha256": "09b0522e8fb16705467b6a9afcea06adba1bcae8efcf31aced41c5ac0e1e8dae"
+    },
+    {
+      "path": "fresh/native-stage1/reuse_first_pair_locations/stage1.rs",
+      "bytes": 10004,
+      "sha256": "2fea357ab5cc0be2d7bdf45ec77180e1d7ddd4c00a878b7c7ee22df404462732"
+    },
+    {
+      "path": "fresh/native-stage1.json",
+      "bytes": 21986,
+      "sha256": "aec3636b439685b6facffefe0a1708ca85aaab464461e850e3938d1f9e938045"
+    },
+    {
+      "path": "fresh/native-stage1.log",
+      "bytes": 104,
+      "sha256": "ff91126e4d966fb23c77c652ddcd301dc774ed4468eb9ac7a521171e650d811c"
+    },
+    {
+      "path": "fresh/pair-oracle.json",
+      "bytes": 1804,
+      "sha256": "7978e5e1e1b912b033f604d2e12c9d9b56825a29a9b9a94a0b464d2d3098403c"
+    },
+    {
+      "path": "fresh/pair-oracle.log",
+      "bytes": 1804,
+      "sha256": "7978e5e1e1b912b033f604d2e12c9d9b56825a29a9b9a94a0b464d2d3098403c"
+    },
+    {
+      "path": "fresh/pc-alignment.json",
+      "bytes": 3194,
+      "sha256": "ccaf1ae5ec7ec7200752c91a6993e58ec1b457a87d67711a8a712d03bdb8fa19"
+    },
+    {
+      "path": "fresh/pc-alignment.log",
+      "bytes": 103,
+      "sha256": "8a8cb045d4fa5b625f2386a37d3cca67c4d7c2f113c0c919f365149cdcab2990"
+    },
+    {
+      "path": "fresh/python.log",
+      "bytes": 34112,
+      "sha256": "8703e43617bffc4c4ce5db0bc34b83d75a63e23c58a66672210202c891985f71"
+    },
+    {
+      "path": "fresh/report.json",
+      "bytes": 20211,
+      "sha256": "49844f1b841379cab857daf0bcbe76a9cb610b800bf1a7dc5cb473e7e0920a6b"
+    },
+    {
+      "path": "fresh/scalar-oracle.json",
+      "bytes": 3065,
+      "sha256": "bd61079a42240b362cc8dc6703e12f3866d2ac70373771848b609b5fcdb0fa1a"
+    },
+    {
+      "path": "fresh/scalar-oracle.log",
+      "bytes": 3065,
+      "sha256": "bd61079a42240b362cc8dc6703e12f3866d2ac70373771848b609b5fcdb0fa1a"
+    },
+    {
+      "path": "fresh/setup.log",
+      "bytes": 2733,
+      "sha256": "2bcb40bec7451e7b8be43fac130dddd09a43074be2ecd59b0d4b6f6e46257f63"
+    },
+    {
+      "path": "fresh/stage1-runner.log",
+      "bytes": 636,
+      "sha256": "912e9de26c5aa2d87046f268346f56390e177c49267d77cdadf6a4dcccbc82e7"
+    },
+    {
+      "path": "fresh/submodules-final.log",
+      "bytes": 2400,
+      "sha256": "1b7d775615f38abc48211fed8632e79932b2ef07c5b60be749138f8fc7131d63"
+    },
+    {
+      "path": "fresh/submodules.log",
+      "bytes": 2400,
+      "sha256": "1b7d775615f38abc48211fed8632e79932b2ef07c5b60be749138f8fc7131d63"
+    },
+    {
+      "path": "fresh/vsk-policy.log",
+      "bytes": 996,
+      "sha256": "406952d1303eebea0a206a5dc3f5fea608566982012f8d074078a525e228b0a0"
+    },
+    {
+      "path": "fresh/vulkan.log",
+      "bytes": 8833,
+      "sha256": "cb37db9d58360e13b885ac38d823f6af34ec0d876b7b15d0e17c3df46b96e295"
+    },
+    {
+      "path": "fresh/workspace.log",
+      "bytes": 46161,
+      "sha256": "b222705609c0b3f749e182cd797fff1c47230bf15f4dc5da7bb3dbf9b490d9e9"
+    },
+    {
+      "path": "historical-native-receipt.json",
+      "bytes": 34010,
+      "sha256": "0f4da5959771a90707ca9da524a62f69cd59b98d15a02116c877f5915ad9b82f"
+    },
+    {
+      "path": "historical-packaging-receipt.json",
+      "bytes": 9873,
+      "sha256": "f4550cb963295061d853bc2f1089312ca715a65c204492c07ee1dee9f146774b"
+    },
+    {
+      "path": "historical-runtime-freeze.json",
+      "bytes": 6609,
+      "sha256": "72f5e7e58ad42c1428cbced6c261d37783061c13b45639a465faada7d51dc7d3"
+    },
+    {
+      "path": "publication/EFI-cleanup.json",
+      "bytes": 240,
+      "sha256": "160edd6d851db0f05f998a8c28a46987bfdf7439e3fbf7e83cb7fb6c4ab55264"
+    },
+    {
+      "path": "publication/EFI-final-checks.json",
+      "bytes": 10119,
+      "sha256": "cac9717a91e185bb8d9f86088967062722552a721aeaca4a7ac8b2fb5e209814"
+    },
+    {
+      "path": "publication/EFI-merge.json",
+      "bytes": 123,
+      "sha256": "e831c1783b0a4d981ad56dcca758f684b89b1ada3ccbbb5c4fe17e29a5dc7403"
+    },
+    {
+      "path": "publication/EFI-source.json",
+      "bytes": 321,
+      "sha256": "1b91b9051820246bde0530ef7e0cff14dcf5046bbe566220fd771fe5f5dc7467"
+    },
+    {
+      "path": "publication/ISE-cleanup.json",
+      "bytes": 195,
+      "sha256": "96b164b87c125eb1fbf5215f0958b3f319c4d89dc950c64f265b7a4062387097"
+    },
+    {
+      "path": "publication/ISE-final-checks.json",
+      "bytes": 10113,
+      "sha256": "3d73c3978ff50edba197f30bbdcc2a2ec5ebdf19ea92306f8f279cae33cd6cea"
+    },
+    {
+      "path": "publication/ISE-merge.json",
+      "bytes": 123,
+      "sha256": "84048d333a6757eb7882642200aebd7575750518b846f7e4478e874b4f38ee5c"
+    },
+    {
+      "path": "publication/ISE-source.json",
+      "bytes": 362,
+      "sha256": "81ce581cc391b97588d71c6ea098238ebf8edb1a920baaf7405d7a0a6cc33456"
+    },
+    {
+      "path": "recorded-local-clone-environment.py",
+      "bytes": 3519,
+      "sha256": "31619b7ba337e41929c45d65c9a31fbc85761d2c580c6c85f1c5d879a295098e"
+    },
+    {
+      "path": "recorded-validation-driver.py",
+      "bytes": 10923,
+      "sha256": "94f6d6e5abcba256d56c2254bbc8e21ff5b615d815fed1043b86d0a2ae17cbed"
+    }
+  ]
+}

@@ -1,3 +1,13 @@
+## BP34 dynamic-MMU integration checkpoint — 2026-09-09
+
+ISE0d722886 and EFIed9ba255 are merged module heads. Standalone canonical builds
+pass, including debug NXAPFS, conditional13/stage1108/DT8/dynamic6 and strict
+capture readers. Separate immutable bundles preserve actual Arm6, native C/Rust6
+comparison and authored EFI6 with a separately compiled omission negative.
+The parent adds native/control/actual-EFI/reader/captured-comparison CI gates;
+Fresh recursive750bda20 passes53commands: workspace502/Python149/GUI25, reference98/service44, actualEFI200 plus6separateCLI, strict DT28/dynamic30 controls, native capturedArm6 and13comparator regressions. Existing Clippy warnings remain. Full receipts are in artifacts/integration-bp34-20260909. Final canonical network verification and CI precede parent merge.
+The earlier BP33 runtime/proofs are retained. No normal OS or guest Metal claim.
+
 ## BP33 owned-memory integration checkpoint — 2026-09-09
 
 Final pins are Core147f4c4, EFI7e7a08b and Tool4bb09da. Core's UEFI-only software

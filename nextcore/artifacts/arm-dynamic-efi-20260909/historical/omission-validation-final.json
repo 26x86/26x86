@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "expected_failure": "actual M0 physical HVC unsupported boundary",
+  "status": 8,
+  "retired": 3,
+  "blocks": 4,
+  "fetch": 4,
+  "data": 0,
+  "control": 2,
+  "ram_sha256": "99db9ab1d91ec82167ca61aa9590c79e4bddc5dca529b21812a4b3ebe32fa883",
+  "normal_boot_verified": false
+}

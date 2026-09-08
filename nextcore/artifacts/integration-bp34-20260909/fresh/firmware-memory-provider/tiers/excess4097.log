@@ -1,0 +1,17 @@
+usage: trace_arm_jit_ovmf.py [-h] --efi EFI --kernel KERNEL --device-tree
+                             DEVICE_TREE --output OUTPUT --physical-base
+                             PHYSICAL_BASE --virtual-base VIRTUAL_BASE
+                             --memory-size MEMORY_SIZE --kernel-physical
+                             KERNEL_PHYSICAL
+                             [--instruction-budget INSTRUCTION_BUDGET]
+                             [--tiered-diagnostic]
+                             [--platform-profile {nextcore-irq-compat-v1}]
+                             [--initial-override INITIAL_OVERRIDE]
+                             [--initial-pstate INITIAL_PSTATE]
+                             [--vector-base VECTOR_BASE]
+                             [--irq-level IRQ_LEVEL] [--fiq-level FIQ_LEVEL]
+                             --allow-incomplete-sptm-prefix [--qemu QEMU]
+                             [--host-memory-mib HOST_MEMORY_MIB]
+                             [--timeout TIMEOUT] [--ovmf-code OVMF_CODE]
+                             [--ovmf-vars OVMF_VARS]
+trace_arm_jit_ovmf.py: error: selected diagnostic budget must be 1..4096

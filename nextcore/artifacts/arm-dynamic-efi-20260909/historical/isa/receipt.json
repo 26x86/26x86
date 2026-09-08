@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "instructions": 16,
+  "word_hex": [
+    "0x91000442",
+    "0xd5181000",
+    "0xd5033fdf",
+    "0xd5381000",
+    "0xf9400023",
+    "0x91000463",
+    "0xf9000023",
+    "0xa9000c22",
+    "0xa9400823",
+    "0xd5033f9f",
+    "0xd508871f",
+    "0xd5033f9f",
+    "0xd5033fdf",
+    "0xf9400020",
+    "0xd4400000",
+    "0xd4000002"
+  ],
+  "assembled_sha256": "0033be41ba30498c3284cac04f3166014a83879aad8b54a3568642cda5fa6a2f",
+  "source_sha256": "ac9574aaf43bfb7b764f5ba48e58cfaac91a17ac5e493acb5aaf2c1481f854ee"
+}

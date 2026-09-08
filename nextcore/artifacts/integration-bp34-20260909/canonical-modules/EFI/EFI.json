@@ -1,0 +1,286 @@
+{
+  "module": "EFI",
+  "commit": "ed9ba25598a52fdf1ba55badfee0d953afdbc20e",
+  "passed": true,
+  "fresh_standalone_clone": true,
+  "empty_cargo_cache": true,
+  "canonical_git_dependencies": true,
+  "root_workspace_patches": false,
+  "commands": [
+    {
+      "name": "clone",
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/work/bp34-efi-dynamic",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/EFI"
+      ],
+      "exit_code": 0,
+      "seconds": 0.31
+    },
+    {
+      "name": "build-default",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 16.93
+    },
+    {
+      "name": "build-direct",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-probe,arm-jit-trace",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 3.85
+    },
+    {
+      "name": "build-combined",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-memory-provider,arm-jit-tiered-trace",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 4.19
+    },
+    {
+      "name": "all-features",
+      "command": [
+        "cargo",
+        "check",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 12.66
+    },
+    {
+      "name": "debug-nxapfs",
+      "command": [
+        "cargo",
+        "build",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features",
+        "--bin",
+        "NXAPFS"
+      ],
+      "exit_code": 0,
+      "seconds": 9.41
+    },
+    {
+      "name": "conditional-firmware",
+      "command": [
+        "python3",
+        "/home/sharh/work/bp32-integration/nextcore/tools/verify_arm_conditional_compare_ovmf.py",
+        "--efi",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/NXARMJIT-combined.efi",
+        "--ise",
+        "/home/sharh/work/bp34-ise-dynamic-control",
+        "--output",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/conditional-firmware",
+        "--require-memory-provider"
+      ],
+      "exit_code": 0,
+      "seconds": 68.38
+    },
+    {
+      "name": "stage1-reader",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_stage1_reader.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.1
+    },
+    {
+      "name": "stage1-build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-stage1-probe",
+        "--bin",
+        "NXMMU"
+      ],
+      "exit_code": 0,
+      "seconds": 4.04
+    },
+    {
+      "name": "stage1-firmware",
+      "command": [
+        "python3",
+        "tools/verify_stage1_ovmf.py",
+        "--efi-probe",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/NXMMU.efi",
+        "--output",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/stage1-firmware"
+      ],
+      "exit_code": 0,
+      "seconds": 6.84
+    },
+    {
+      "name": "dt-build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-dt-probe",
+        "--bin",
+        "NXDT"
+      ],
+      "exit_code": 0,
+      "seconds": 4.57
+    },
+    {
+      "name": "dt-firmware",
+      "command": [
+        "python3",
+        "tools/verify_dt_ledger_ovmf.py",
+        "--efi-probe",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/NXDT.efi",
+        "--output",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/dt-firmware"
+      ],
+      "exit_code": 0,
+      "seconds": 5.95
+    },
+    {
+      "name": "dt-capture-check",
+      "command": [
+        "python3",
+        "tools/check_dt_ledger_capture.py",
+        "--report",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/dt-firmware/report.json",
+        "--output",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/dt-reader.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.11
+    },
+    {
+      "name": "dynamic-build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-dynamic-probe",
+        "--bin",
+        "NXDYN"
+      ],
+      "exit_code": 0,
+      "seconds": 2.36
+    },
+    {
+      "name": "dynamic-firmware",
+      "command": [
+        "python3",
+        "tools/verify_dynamic_ovmf.py",
+        "--efi-probe",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/NXDYN.efi",
+        "--output",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/dynamic-firmware"
+      ],
+      "exit_code": 0,
+      "seconds": 5.58
+    },
+    {
+      "name": "dynamic-reader",
+      "command": [
+        "python3",
+        "tools/check_dynamic_capture.py",
+        "--report",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/dynamic-firmware/report.json",
+        "--output",
+        "/home/sharh/work/module-validation-bp34-efi-20260909/dynamic-reader.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.17
+    }
+  ],
+  "binaries": {
+    "default": {
+      "path": "/home/sharh/work/module-validation-bp34-efi-20260909/NXARMJIT-default.efi",
+      "sha256": "c96fe12b987ba0192b72d1d7e79aee7ef186a2b902ea7dbdb359e4061f7d2c01"
+    },
+    "direct": {
+      "path": "/home/sharh/work/module-validation-bp34-efi-20260909/NXARMJIT-direct.efi",
+      "sha256": "24069878d26e372133603fc8c9e8cfdb959980b64481fdbf8d4d1d3f3277effa"
+    },
+    "combined": {
+      "path": "/home/sharh/work/module-validation-bp34-efi-20260909/NXARMJIT-combined.efi",
+      "sha256": "20c1d9e485867306e0164d740fb61398679b5f40b773f248945e804bd8ae4aff"
+    },
+    "stage1": {
+      "path": "/home/sharh/work/module-validation-bp34-efi-20260909/NXMMU.efi",
+      "sha256": "4a9d26afd832368665d82b7a6a79d4935fa088b3b06f520a66a59b4343bb3f89"
+    },
+    "dt": {
+      "path": "/home/sharh/work/module-validation-bp34-efi-20260909/NXDT.efi",
+      "sha256": "1abcd25406b9ed8a939c5e9d795684a9ecae1bcf5efcd8cd03cb8c36bf791b44"
+    },
+    "dynamic": {
+      "path": "/home/sharh/work/module-validation-bp34-efi-20260909/NXDYN.efi",
+      "sha256": "8d9a630c29e53e19fd54805395ed70b2126a2688667038f28484440d466de550"
+    }
+  },
+  "nextcore_packages": [
+    {
+      "name": "nextcore-core",
+      "source": "git+https://github.com/26x86/Nextcore-Core.git?rev=147f4c4e4969074c9dd12c63bf17c6e8c674dabb#147f4c4e4969074c9dd12c63bf17c6e8c674dabb"
+    },
+    {
+      "name": "nextcore-efi",
+      "source": null
+    },
+    {
+      "name": "nextcore-ise",
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=0d722886753268ec366f068823c37ea10132fb43#0d722886753268ec366f068823c37ea10132fb43"
+    },
+    {
+      "name": "nextcore-memory-service",
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=0d722886753268ec366f068823c37ea10132fb43#0d722886753268ec366f068823c37ea10132fb43"
+    }
+  ]
+}

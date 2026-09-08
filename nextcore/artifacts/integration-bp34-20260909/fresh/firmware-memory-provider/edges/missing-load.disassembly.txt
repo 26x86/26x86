@@ -1,0 +1,14 @@
+
+/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/edges/missing-load.o:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000000000 <probe_start>:
+       0: d2800aa0     	mov	x0, #0x55               // =85
+       4: d2800cc1     	mov	x1, #0x66               // =102
+       8: d2800e03     	mov	x3, #0x70               // =112
+       c: d2a88002     	mov	x2, #0x44000000         // =1140850688
+
+0000000000000010 <probe_fault>:
+      10: f9400040     	ldr	x0, [x2]
+      14: d4400000     	hlt	#0

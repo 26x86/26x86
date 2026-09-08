@@ -1,0 +1,9 @@
+test_actual_counts_and_fault_fields (test_stage1_reader.ReaderTests.test_actual_counts_and_fault_fields) ... ok
+test_same_basename_different_inputs_keep_each_hash (test_stage1_reader.ReaderTests.test_same_basename_different_inputs_keep_each_hash) ... ok
+test_success_marker_does_not_override_numeric_failure (test_stage1_reader.ReaderTests.test_success_marker_does_not_override_numeric_failure) ... ok
+test_unknown_duplicate_shape_and_missing_fields (test_stage1_reader.ReaderTests.test_unknown_duplicate_shape_and_missing_fields) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.004s
+
+OK
