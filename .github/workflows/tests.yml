@@ -1,4 +1,4 @@
-name: Nextcore workspace tests
+name: NextCore workspace tests
 
 on:
   pull_request:
@@ -26,9 +26,13 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy
+          targets: x86_64-unknown-uefi
       - name: Workspace tests
         run: cargo test --workspace
         working-directory: nextcore
       - name: Clippy (host crates, warnings surfaced)
-        run: cargo clippy --workspace --all-targets
+        run: cargo clippy --workspace --exclude nextcore-efi --all-targets
+        working-directory: nextcore
+      - name: Clippy (firmware on its actual UEFI target)
+        run: cargo clippy -p nextcore-efi --target x86_64-unknown-uefi
         working-directory: nextcore

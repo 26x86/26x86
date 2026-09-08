@@ -20,21 +20,8 @@ jobs:
             exit 1
           fi
           echo "OK: no _isolated paths tracked."
-      - name: Verify the pre-commit guard actually rejects forced staging
+      - name: Execute the installed hook against independent Git-output fixtures
         run: |
           set -eu
-          bash tools/git/install-hooks.sh
-          mkdir -p _isolated
-          echo "probe" > _isolated/ci-probe.txt
-          git add -f _isolated/ci-probe.txt
-          git config user.name "ci-guard"
-          git config user.email "ci@localhost"
-          if git commit -m "guard-must-reject" >/tmp/guard.log 2>&1; then
-            echo "::error::commit SUCCEEDED with a forced _isolated path — guard is broken"
-            cat /tmp/guard.log
-            exit 1
-          fi
-          grep -q "COMMIT REJECTED" /tmp/guard.log
-          echo "OK: guard rejected the forced _isolated commit."
-          git restore --staged _isolated/ci-probe.txt
-          rm -rf _isolated
+          bash Tools/git/install-hooks.sh
+          python3 Tools/git/test_isolated_guard.py --hook "$(git rev-parse --git-path hooks)/pre-commit"

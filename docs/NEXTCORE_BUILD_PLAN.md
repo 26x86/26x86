@@ -1099,6 +1099,26 @@ KC의 chain/PAC/header/명령 바이트를 적용하거나 수정하지 않는�
 mapping/boot_args 연결·인증·ARM64E 실행·guest Metal을 승인하지 않는다. 공개 XNU가
 수행하는 chained rebase와 header slide의 소유권은 BP22-C 결정을 유지한다.
 
+### BP23 — 검증된 진척의 원격·조직 동기화
+
+사용자는 진척마다 push하고 조직을 최신화하도록 명시 승인했다. 본체는 PR/CI로,
+7개 module은 검증된 source commit의 tracked crate만 fresh export하여 기존 main
+이력 위에 새 commit/tag를 추가한다. 기존 tag와 history는 변경하지 않는다.
+working-tree의 미검증 변경·격리·runtime artifact는 module 입력이 아니다.
+
+현재 원격 CI는 Linux의 `Tools` 경로 대소문자, QEMU 별도 cwd의 상대 patch 경로,
+Python no-build-isolation의 누락 build dependency로 실패했다. 해당 운영 연결을
+최소 수정하고 원래 검사 조건을 유지한다. 격리 guard 시험은 실제 index에 금지
+경로를 stage하지 않고 독립 git 출력 fixture로 hook의 정상/거부/오류 경로를
+실행한다. 실제 tracked tree 검사는 별도로 유지하고 NUL-delimited 이름을 사용한다.
+root가 이 CI/guard와 문서 배포 정합을 소유하고 cross-platform/Windows packaging
+실패는 x86 담당에게 명시 위임한다. 실패 원인/수정 계약/관련 검증 이후 commit한다.
+
+실제 구조는 tracked Cargo workspace와 독립 module exports이므로 미실행 submodule
+전환을 완료로 서술한 배포 문서를 정정한다. 제품 문서의 브랜드·목표·실행 상태를
+NextCore와 최신 증거에 맞추고 외부 구현의 실제 출처는 유지한다. 조직 profile은
+module publish 담당에게 위임하며 root는 본체 README·wiki·PR을 통합한다.
+
 ## OPEN_QUESTION
 
 - BP9 연속 실행 결정: Design D2-A는 표준 EFI application 중간 경로를 허용했고,
