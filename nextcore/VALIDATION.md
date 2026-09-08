@@ -1,18 +1,463 @@
-# Nextcore 재개 검증 — 2026-09-07
+# NextCore 재개 검증 — 2026-09-08
 
-전체 작업의 통합 설명과 artifact index는
+2026-09-07 작업의 통합 설명과 artifact index는
 `artifacts/NEXTCORE_SESSION_REPORT_20260907.md`에 있다.
 
 ## 현재 상태와 원하는 상태
 
 첨부 세션의 우선순위인 APLS 실행과 QEMU/OVMF 검증을 병렬로 이어서 실제
-프로세스/펌웨어까지 연결했다. macOS 부팅, XNU 진입, userspace, Metal 가속은
-아직 완료되지 않았다. 최종 목표는 이 각각을 실제 게스트에서 관측하는 것이다.
-`docs/NEXTCORE_BUILD_PLAN.md` BP8~BP14가 재개 실행 계약이다.
+프로세스/펌웨어까지 연결했다. 외부 reference와 native NextCore production EFI
+provider 경로 모두 실제 Tahoe XNU, userspace와 읽을 수 있는 Recovery GUI를 확인했다.
+native 경로의 restore-datapartition panic은 VM RAM 조건을 수정해 통과했다. 자체 KC loader 진입,
+전체 native HAL, macOS 전체 부팅과 Metal은 아직 완료되지 않았다.
+`docs/NEXTCORE_BUILD_PLAN.md`의 각 BP가 실행 계약이며 최신 진척은 아래 BP21/BP22다.
 
-재개 시 존재하던 7-crate workspace와 dirty 문서/Python 변경을 보존했다.
-`nextcore/`는 기존 루트 `.gitignore`의 `/nextcore/`에 의해 제외된 로컬
-작업 트리이며 이번 실행에서 Git 추적 정책을 바꾸거나 커밋/push하지 않았다.
+## BP21/BP22 최신 통합 — 2026-09-08
+
+- **EFI 피커·브랜딩**: GOP dark/mint tile, 동일 volume의 명시 EFI 항목,
+  방향키/Tab/Home/End·Enter·Esc 및 text fallback을 구현했다. 실제 OVMF에서
+  두 번째 child와 UTF16 load options, 취소, 기존 auto boot, GOP 없는 fallback을
+  검증했다. core 153개 및 독립 crate 복사 153개, Python policy 28개 통과.
+  최종 EFI SHA256 `8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96`.
+  공개 이미지 `resources/branding/nextcore-picker.png`는 실제 OVMF 화면이다.
+  제품 표기는 NextCore로 통일했고 외부 부품의 실제 이름/출처/라이선스는 보존했다.
+- **Tahoe native 복구 GUI**: 이전 2GiB VM이 2.5GiB tmpfs 요청을 충족하지 못한
+  로그를 근거로 RAM만 8GiB로 올려 launchd/WindowServer까지 진행했다. SMC 추가 뒤
+  no-USB 화면은 210초에도 입력 pairing 안내였고 텍스트는 정상이다. USB keyboard/
+  tablet만 추가한 fresh COW에서는 언어 선택→Recovery 메뉴와 실제 입력이 통과했다.
+  이는 기존 BP20-J EFI를 사용한 조건 대조이며 새 BP21 EFI 직접 macOS 검증과
+  섞지 않는다. 원본·COW·QMP 수명 증거는 `_isolated/nextcore/native-userspace-recovery-20260908/`.
+- **실제 guest Metal 실행**: 외부 reference의 Tahoe 26.6.2/25G83 Recovery Terminal에서
+  13,136B x86 probe가 start→no-metal-device를 기록하고 exit1로 종료했다. guest가
+  실행 파일을 새 파일로 복사했고 host 전체 SHA256이
+  `eae69343a05e096eb2299b6c92e3a15a15b20123d9b23eac346e56cd6e50791b`와 일치했다.
+  전체 NDJSON/exit/version/파일 readback은 격리에 있다. Metal device·compute·readback
+  성공은 false다. 공식 full installer 검증 후 전체 OS/driver 경로를 진행 중이다.
+- **BP22-C ARM64 boot_args**: 공개 XNU의 별도 1152B LE wire, checked PA/KVA·DRAM·DT·
+  NUL/overlap 검사와 15개 tests를 구현했다. 실제 C LP64 sizeof/offsetof와 Darwin ARM64
+  compile, no_std 통과. [공개 계약](artifacts/arm64-boot-args-contract-20260908/README.md).
+- **BP22-D ARM64/ARM64E KC**: 명시 CPU/subtype·단일 ARM thread subset·4B entry 범위를
+  검사하고 Intel 기본 API를 유지한다. 16KiB span의 host staging은 outer 소유 byte와
+  모든 member view를 전량 대조하며 chain/PAC를 적용하지 않는다. 실제 27 원본
+  81,002,496B/7 outer segments/216 headers/1,096 views, 중복 view 비교 총
+  3,463,261,621B가 6.594초에 통과했다. 원본과 실행 도구 hash 전후가 같다.
+  원본 주소·metadata는 격리에 보존한다. host 배치는 guest 물리 배치나 진입이 아니다.
+
+사용자는 검증된 진척의 로컬 commit과 push·원격/조직 최신화를 승인했다.
+본체는 PR/CI, 독립 모듈은 기존 history와 release tag를 보존하는 방식으로 반영한다.
+
+재개 시 존재하던 7-crate workspace와 dirty 변경을 보존했다. 초기 실행 당시의
+로컬 제외 정책과 달리 현재 Nextcore 소스는 Git 추적 대상이며 `nextcore/target/`과
+`nextcore/artifacts/`는 제외된다. BP19에서는 추적 정책을 변경하지 않았다.
+
+## BP20 대상별 실제 실행 (2026-09-08)
+
+사용자 확정 목표: **macOS 27 Golden Gate — AMD64↔Apple Silicon HAL,
+Metal 가속 필수**, **macOS 26 Tahoe — 네이티브 HAL**. 현재 어느 경로도
+XNU/userspace/Metal 전체 수용 조건을 통과하지 않았다.
+
+사용자는 실기기 접근 대신 이 컴퓨터에서 개발을 계속하도록 지정했다. 현재 WSL의
+VT-x와 설치된 KVM 모듈을 확인한 뒤 `kvm_intel`을 적재하고 기존 developer 사용자에게만
+`/dev/kvm` 접근 ACL을 주었다. 재부팅 없이 **KVM API 12, query-kvm enabled=true,
+실제 OVMF Shell 실행**을 확인했다. 3.1837초, QMP quit의 정상 exit 0, 원본 firmware
+해시 유지 및 프로세스 회수를 확인했다. 이전 `/dev/kvm` 부재만으로 이 PC의 KVM을
+불가능으로 분류한 판단은 정정한다. 상세는 `artifacts/local-kvm-20260908/README.md`다.
+
+### EFI 로더 및 Tahoe 입력
+
+- Apple 공식 복구 다운로드를 chunklist 검증한 결과 실제 입력은
+  **macOS 26.6.2 / 25G83, x86_64**다. 960,530,321-byte BaseSystem DMG,
+  실제 PE32+ EFI application과 67,584,000-byte MH_FILESET BootKC를 확인했다.
+  상세 메타는 `artifacts/boot-media-candidates-20260908.md`에 있다.
+- 실제 booter를 Nextcore가 `LoadImage`/`StartImage`한 첫 실행은 `ABORTED`로
+  반환했다. HFS 전체 복구 볼륨을 fresh COW로 제공하고 외부 UEFI Shell/HFS
+  드라이버로 비교해도 초기 booter 설정 조회가 `NOT_FOUND`로 실패했다.
+  파일 복사만의 문제로 단정하지 않으며 XNU 전 boot/platform 계약이 미충족이다.
+- Shell 출력 리다이렉션으로 실제 Apple child의 전체 콘솔을 격리 보존했다.
+  Apple 원문 로그·화면·매체는 `_isolated/nextcore/intel-recovery-20260908`에만
+  있고, 공개 결과는 `artifacts/tahoe-efi-observation-20260908.json`이다.
+  6개 시도의 원본 입력 hash가 모두 유지됐다. 두 초기 관측의 2 MiB screenshot
+  cap/host SIGXFSZ 및 read-only IDE 거절도 실패로 기록했다.
+
+### Tahoe 외부 reference의 실제 XNU 실행
+
+Nextcore→외부 OpenShell/OpenCore 1.0.7→서명 검증된 복구 DMG 경로에서 CPU0의
+CPL0 실행 위치를 정지 관측했다. **185.40초의 PC 256바이트가 원본 KC의 kernel
+member executable segment와 유일하게 일치**했고 후속 관측도 같은 trap 상태였다.
+실행은 298.05초의 제한 종료와 원본 해시 유지, 프로세스 회수로 끝났다. 이 결과는
+`external_reference_xnu_executed=true`이며 native Nextcore provider 완료와 구분한다.
+
+실제 panic stack은 type 13 #GP이고 fault 위치는 시간 초기화의 MSR 읽기다.
+공개 XNU/QEMU 코드의 VMM 주파수 전달 조건을 확인한 뒤 host CPUID invariant TSC와
+`Haswell-v4,vendor=GenuineIntel,invtsc=on,enforce=on` KVM/OVMF probe를 검증했다.
+probe는 3.2948초에 정상 QMP 종료했고 원본 해시가 유지됐다. 추정 주파수, kernel
+patch 또는 host `ignore_msrs` 변경은 사용하지 않았다.
+
+정확한 initial NVRAM의 `-v serial=3 serialbaud=115200 debug=0xA`를 실제 booter가
+소비한 후속 실행은 커널 배치 요청이 EFI ACPI NVS/BootServicesData와 겹쳐 XNU 전
+멈췄다. 242.7352초에 QMP로 종료하고 입력 해시/정리를 확인했다.
+
+동일조건 fresh 재시도는 배치 및 이전 TSC #GP를 통과했다. 185.35초에 실제 kernel
+PC 256바이트를 다시 원본과 매칭했고, 다음 MCA 초기화의 Haswell pre-C0 stepping
+거부 패닉을 확인했다. QOM의 실제 frequency는 3,264,001,000 Hz, CPU identity는
+family 6/model 60/stepping 1이었다. 이 값은 VM 속성 관측이며 guest의 frequency
+출력과 구분한다. 실행은 298.03초에 정리됐고 원본 해시가 유지됐다. 공개 MCA
+consumer의 stepping >=3 조건에 따라 `stepping=3`만 추가한 다음 실행을 진행한다.
+
+stepping 3 실행에서는 **launchd PID 1, recoveryosd의 실제 복구 작업 실행과 세션
+초기화**가 관측됐다. `external_reference_userspace_verified=true`다. 뒤이어
+AppleIntelMCEReporter 115.0이 CMCI 부재를 보고하고 PID 0에서 page fault를 냈다.
+원본 BaseSystem KC와 대조한 backtrace/레지스터는 controller 초기화 실패 후 정리
+경로의 null 기반 읽기와 일치했다. 실행은 298.06초 제한 종료/정리됐고 입력은
+변하지 않았다. 화면은 커널 콘솔이므로 GUI·guest Metal은 미검증이다.
+
+읽기 전용 KVM ioctl은 최대 32 banks와 `supported_mcg_cap=0x9000500`을 반환해
+CMCI 지원을 확인했다. QEMU 기본 MCG_CAP은 이를 노출하지 않는다. 격리된 QEMU의
+default-off `x-cmci` 구현은 실제 guest CTL2 write/read 및 자체 KVM guest의 CMCI
+인터럽트 전달을 통과했다. TCG/미지원 CPU/LAPIC 조건은 거부하고 migration을 막는다.
+
+동일 signed recovery에 적용한 다음 실행은 **이전 CMCI/MCEReporter 패닉을 통과**했다.
+원본 XNU의 CMCI consumer와 실제 반환 저장값, idle PC 256바이트 일치를 확인했고
+launchd PID 1, recoveryosd PID 65, WindowServer PID 81이 실행됐다. 298.0839초
+제한 종료와 원본 hash/정리를 확인했다. 마지막 1280×800 화면은 검정이므로 GUI와
+Metal 성공은 아니다. AHCI Port 2 abort는 같은 토폴로지의 정지 QMP 열거에서
+자동 생성된 빈 `ide-cd`에 대응했고 원본 복구 디스크는 Port 1이었다.
+상세 계약·증거는 `artifacts/tahoe-cmci-contract-20260908.md`와 signed-DMG 결과다.
+
+native booter의 초기 설정 조회 실패도 별도 대조했다. 공개 HW_BID 길이/속성과
+firmware feature 변수의 실제 readback을 맞춰도 초기 실패는 유지됐다. 외부 reference는
+DataHub record publication과 SMBIOS replacement를 둘 다 꺼도 초기 image-load 경계를
+통과했다. 기존 OVMF SMBIOS와 다른 protocol/provider는 남아 있으므로 native provider
+구현의 인과 근거를 계속 좁힌다.
+
+추가 실제 LocateProtocol 관측에서 마지막 누락은 공개 EFI ConsoleControl이었다.
+고정 FAT 디스크의 제어군과 실제 Text/system GOP 정보를 제공한 case를 비교했다.
+출력 리다이렉션을 제거한 case 화면은 원본 KC 읽기 성공과 **EXITBS:START**를
+보였고 동일 무제공 제어군은 초기 ICM/ABORTED로 반환했다. GetMode 1회 SUCCESS,
+SetMode/LockStdIn 호출 0회다. 진단 hook은 production에 넣지 않으며 BP20-J의
+독립 provider로 연결했다. 이 초기 A/B의 범위는 EXITBS:START이며 이후 production
+경로의 XNU/초기 userspace 결과는 아래 BP20-J가 갱신한다.
+
+공개 증거는 `artifacts/tahoe-signed-dmg-selection-20260908.md`,
+`artifacts/tahoe-vmm-frequency-contract-20260908.md`,
+`artifacts/local-kvm-invtsc-20260908/report.json`,
+`artifacts/efi-platform-next-step-20260908.md`다. 원본 CPU bytes, 주소, stack,
+Apple 로그와 매체는 격리 receipt에만 있다. native HAL, macOS 전체 부팅과 guest Metal은 false다.
+
+### BP20-A StartImage 종료 데이터
+
+`uefi` wrapper가 버리던 표준 UEFI ExitData를 Nextcore에서 제한 길이로 읽고
+escape하며 FreePool로 해제한다. 반환 status는 그대로 유지한다. 실제 Apple
+child에 적용한 결과는 **ABORTED, exit data 0 bytes/null**이었다.
+
+- release EFI build 성공, 자체 저작 child의 실제 OVMF **8/8** 통과.
+  정상/오류 반환, null/빈 문자열, 제어문자, 긴 문자열, binary suffix를 포함한다.
+- 독립 검토에서 발견한 하네스의 비정상 QEMU 종료 허용과 deadline 시 receipt
+  유실을 수정했다. 집중 테스트 **7/7**, 기존 raw/receipt 최종 재검증 **8/8**,
+  각각의 SIGXFSZ 변조 **8/8 거부**. 이 변경 뒤 VM을 중복 실행하지 않았다.
+- 최종 EFI SHA-256:
+  `24933c66f5f1028054fef319232a4cd7faa306c4827c6e090d8a9f5e47a7233d`.
+  `artifacts/exit-data-bp20a-20260908/build-receipt.json`,
+  `final-ovmf/report.json`, `harness-review-revalidation.json`이 증거다.
+- `tools/verify_exit_data_ovmf.py --efi <BOOTX64.efi> --child <NXTEST.efi>
+  --output <fresh-dir>`로 재현한다. 정상 child도 firmware로 돌아오므로 QEMU의
+  bounded stop을 자연 종료로 주장하지 않는다.
+
+### BP20-B 실제 host GPU와 외부 게스트 장치
+
+공식 Mesa 25.2.8의 dzn을 전역 설치 없이 빌드하고 WSL D3D12를 통해
+**Intel 8086:7D41 integrated GPU**를 선택했다. 공개 Nextcore
+`ComputePipelineManager::with_vulkan`로 서로 다른 두 입력 세트를 upload/dispatch하고
+**512개 결과**가 모두 일치했다. offset 16의 buffer view 앞뒤 보호 영역 유지와
+실제 Vulkan fence 완료 후 readback, 프로세스 자연 종료 0을 확인했다. CPU
+llvmpipe fallback은 사용하지 않았다. 이 결과는 Vulkan 전 기능 적합성이나
+macOS Metal 성공을 뜻하지 않는다.
+
+binding 불일치, LocalSize 불일치, 잘못된 SPIR-V 명령 3종은 host buffer 변경이나
+가짜 fence 완료 없이 거부됐다. 별도 잘못된 device selector 실행도 CPU fallback
+없이 exit 1로 끝났다. 성공/오류 dispatch 실행은 0.5098초였고 원본 입력 해시와
+프로세스 정리를 확인했다. 공개 API는 optional `vulkan` feature이며 standalone
+crate 빌드가 격리 파일에 의존하지 않는다. 증거는
+`artifacts/vulkan-manager-bp20b-20260908/build-receipt.json`, `final-runtime/report.json`이다.
+
+기본 compute backend와 미연결 VirtualMetalDevice/SGPU는 미실행 명령을 성공으로
+반환하지 않도록 고쳤다. SGPU의 shader/clear/present는 지원되지 않으며 전체 명령
+목록을 검증한 뒤 software copy만 수행한다. 부분 copy와 성공 응답이 생성되지 않는
+transport 회귀 검증을 추가했다. 실제 Vulkan manager API와 별도 경로임을 유지한다.
+
+외부 Reims QEMU 11.1.0에서도 TCG/shared memfd/OVMF를 실제 실행해 PCI 자원
+배정과 GOP 공존을 확인했다. Vulkan 초기화는 guest draw 시 수행되는 구조여서
+이 펌웨어 실행에서는 dzn/D3D12가 열리지 않았다. guest driver/Metal 작업 제출은
+아직 미검증이다. 상세 명령·해시는 `artifacts/graphics-runtime-path-20260908.md`.
+독립 Vulkan 코드 검토에서는 추가 확정 결함을 발견하지 못했다. fence timeout 시
+진행 중 객체/loader를 보존하며 driver 호출 전체 deadline은 외부 supervisor가 맡는다.
+
+### BP20-C native Tahoe KC 준비 검사
+
+공개 XNU/dyld 포맷에 근거한 별도 core `inspect_kernel_collection` API와
+`inspect_kc` example을 구현했다. 실제 67,584,000-byte 입력을 읽기 전용으로
+검사했고 **204개 member, 621개 outer segment, format 11 chained fixup,
+65,260개 local relocation**을 확인했다. outer entry와 nested kernel entry를
+혼동하지 않으며 outer LC_MAIN은 지원 밖으로 거부한다.
+
+이 검사는 파일/VA/명령/section/fixup 시작점 범위와 메타데이터만 검사한다.
+placement, classic relocation, chained rebasing, platform provider 및 entry ABI가
+남으므로 `preparation_ready=false`다. NXKERNEL 입력 제한과 실행 guard는 유지했다.
+자체 저작 KC 경계 테스트 16/16, 전체 core 87/87와 no_std check를 통과했다.
+전체 strict clippy는 기존 파일의 두 lint 종류 때문에 실패했고, 해당 기존 lint만
+허용한 검사에서는 새 코드 경고가 없었다. 계약은
+`artifacts/kc-metadata-contract-20260908.md`, 실제 KC 상세는 격리 receipt에 보존했다.
+
+### BP20-D 실제 native KC 메모리 배치
+
+별도 `KcStagingPlan`이 source를 immutable borrow로 묶고 outer segment만 복사한다.
+호스트의 **67,584,000-byte arena**에 67,575,808바이트를 복사하고 8,192바이트의
+hole을 zero/readback했다. 실제 입력의 outer zero-tail은 0이며, 자체 fixture에서는
+tail·unaligned range·공유 member tail·잘못된 범위·변조를 별도로 검증했다.
+
+620개 nonempty outer mapping, 204개 member header와 826개 member segment view가
+일치했다. 공유 linkedit 때문에 member 비교량 2,679,621,441바이트는 중복 포함이며
+고유 메모리 크기가 아니다. release example은 **0.84초, 자연 exit 0**, 원본 입력과
+실행 파일 해시 유지 및 프로세스 회수를 확인했다. core all-targets **98 passed**와
+no_std UEFI check를 통과했다. 공개 근거는
+`artifacts/kc-staging-bp20d-20260908/build-receipt.json`, 실제 입력 receipt는
+`_isolated/nextcore/kc-staging-bp20d-20260908/final-runtime/report.json`이다.
+
+이 결과는 호스트 배치다. EFI physical placement, relocation 적용, XNU/native HAL
+실행은 false이며 BP20-E에서 classic/chained 대상의 읽기 전용 검증을 이어간다.
+
+### BP20-E 실제 KC 재배치 대상 검사
+
+새 read-only audit는 **classic 65,260개와 format 11 chain 401,606개**, 합계
+**466,866개**의 전체 쓰기 범위를 확인했다. 1,201개 chain이 모두 종료했고 중복
+쓰기·미지원 encoding·외부 cache·범위 오류는 0개였다. 원본과 실행 파일 hash가
+유지됐고 실제 release example은 9.1556초에 자연 exit 0, 전체 receipt는 13.0375초에
+완료됐다. 실행 파일 SHA-256은
+`60988fa5474ccf79384eaee6246287d135d20889ca80a75a425cc221a1fc7467`이다.
+
+초기 검사의 페이지 경계 오류 5개는 원본 이상이 아니었다. 공개 dyld producer가
+시작 주소로 page를 분류하므로 마지막 비정렬 8-byte word가 다음 page에 걸칠 수
+있었다. 시작/다음 시작의 page 범위와 word 전체의 segment/file 범위를 분리해
+검사하도록 고쳤고, metadata의 첫 word 경계에도 같은 수정을 적용했다. 자체 저작
+single/successor straddle, 잘린 segment, page 밖 next와 겹침 회귀를 통과했다.
+
+core **120 passed**, focused audit/metadata **38 passed**, no_std UEFI 및 모든 기존
+EFI bin check가 통과했다. 공개 build/source/aggregate 근거는
+`artifacts/kc-fixup-audit-bp20e-20260908/build-receipt.json`, 독립 통합 검사는
+`artifacts/bp20e-integration-20260908/report.json`이다. 실제 decoded 목록은 격리에만
+있다. 재배치 적용·실행 소유권·EFI 배치·준비 완료는 이 검사만으로 승인하지 않는다.
+
+### BP20-F 실제 EFI KC page 소유권과 배치
+
+새 `LoadedKernelCollection`과 명시적 `NXKC` bin이 같은 staging plan을 실제
+UEFI AllocatePages/FreePages에 연결했다. 실제 Tahoe 입력을 **16,500 LoaderData
+pages = 67,584,000바이트**에 배치하고 전체 arena, 204개 header와 826개 member view를
+readback했다. 이후 FreePages SUCCESS와 다른 할당 전 ConventionalMemory coverage를
+확인했다. source와 destination의 비중첩, raw memory-map stride/range/중복·hole도 검사한다.
+
+실제 Q35/TCG OVMF는 **10.7938초에 자연 exit 87**, 전체 검증은 12.5301초였다.
+원본 입력·EFI·firmware 및 복사본 hash가 같고 프로세스 정리가 완료됐다. 별도 자체
+fixture와 destination 손상→실제 readback 거부→RAII drop 시험도 통과했다. host gate는
+explicit/drop 모두 FreePages 및 직후 memory-map 결과가 SUCCESS일 때만 승인한다.
+
+NXKC SHA-256은 `5e2fc6be99c60ea8a76d5a72d0c3a2f95bfc155e7c7b86554e0ea2897189a6b3`.
+공개 계약·코드·fixture 근거는 `artifacts/kc-efi-staging-contract-20260908.md`와
+`artifacts/kc-efi-staging-bp20f-20260908/`, 실제 입력 receipt는
+`_isolated/nextcore/kc-efi-staging-bp20f-20260908/actual-ovmf/report.json`에 있다.
+이 결과는 실제 EFI physical staging이다. KC 진입 주소/slide를 추정하거나 instruction을
+실행하지 않았고 ExitBootServices, fixup 적용, native HAL 완료 판정은 그대로 보류했다.
+
+### BP20-G KC boot_args revision 1
+
+별도 `encode_fileset_boot_args`가 실제 caller가 준 physical header 범위와 slide를
+version 2/revision 1로 기록한다. header 전체가 낮은 kernel 소유 범위 안에 있고
+map/DT와 겹치지 않는지 검사한다. 기존 revision 0 encoder와 EFI 진입 guard는 유지한다.
+주소 배치나 slide 정책, fixup 적용과 provider 준비는 이 codec의 검증 범위 밖이다.
+
+고정 공개 XNU boot.h를 수정 없이 별도 C11 offsetof probe로 컴파일·실행해 크기
+4096, slide offset 1108, KC header offset 1256을 확인했다. 기존 Rust 공통 필드도
+C offset과 일치했다. 경계/전체 extent/가상주소 거부/기존 revision 보존을 포함해
+boot_args **14 passed**, 전체 core **124 passed**, no_std UEFI check가 통과했다.
+소스 해시는 전후 같으며 독립 코드 검토에서 추가 결함은 발견하지 못했다.
+`artifacts/kc-bootargs-contract-20260908.md`,
+`artifacts/kc-bootargs-bp20g-20260908/report.json`이 근거다.
+
+### BP20-H 실제 kernel proper classic 적용
+
+공개 dyld producer/XNU consumer 계약을 고정한 별도 source-bound API가 outer
+local unsigned width4/8 classic만 처리한다. 명시적 실험 slide `0x200000`으로 실제
+KC의 **65,260 words(4-byte 14, 8-byte 65,246)**를 자체 소유 host arena에 적용했다.
+write 522,024 bytes와 non-target 67,061,976 bytes 전체의 volatile readback이
+일치했다. 401,606 chain words와 205 headers/load-command 범위를 보존했다.
+width 밖 덧셈은 지원 밖으로 거부하며 allocation 주소를 slide로 삼지 않는다.
+
+18개 신규 경계/손상 시험을 포함한 **core 142 tests**, no_std UEFI 검사 통과.
+실제 child는 0.6766초에 natural exit 0, 전체 1.5503초이며 원본/실행파일/core
+source hash 유지와 프로세스 정리를 확인했다. EFI의 classic 적용이나 실제 runtime
+slide 선택은 아직 아니다. 근거는 `artifacts/kc-classic-relocation-contract-20260908.md`,
+결과와 build receipt는 `artifacts/kc-classic-rebase-bp20h-20260908/`에 있다.
+
+### BP20-I guest Metal 실행 도구
+
+`tools/metal_compute_probe.c`는 공개 Metal API의 실제 shader/pipeline 생성과 두
+command completion 뒤 512개 값·입력·guard를 읽는 독립 guest probe다. 90초 alarm과
+command별 제한을 가지며 CPU fallback은 없다. 공개 header의 enum/NSUInteger/MTLSize
+ABI를 대조했고 WSL Clang/LLD로 **x86_64 Mach-O PIE 13,136 bytes**를 빌드했다.
+엄격한 C 컴파일·link·load-command 검사는 통과했으며 실제 guest 실행은 아직 없다.
+`artifacts/guest-metal-probe-bp20i-20260908/build-r4/build-receipt.json`에 저장했다.
+첫 inspector PATH 누락과 lazy binder link 실패는 이전 실패 receipt로 보존했다.
+독립 검토에서 발견한 source 후검증 read failure/compile timeout의 receipt 손실을
+수정하고 두 오류 주입 regression을 통과했다. 실제 guest 실행 증거는 아니다.
+
+외부 Reims+CMCI는 고정 publisher source의 display 통합과 별도 opt-in CMCI를
+QEMU 11.1에 빌드했다. configure/compile 0, 실제 guest MSR default·CTL2 readback,
+TCG/family/MCA 거부를 다시 확인했다. 11.1은 userspace APIC를 CMCI 검사 전에
+거부하므로 이전 8.2의 오류문구 기대와 달랐으며, 원본 실패 receipt와 실제 거부
+판정을 별도로 남겼다. 이 빌드·probe는 아직 Reims Vulkan/guest Metal 실행 증거가
+아니다. 모든 외부 source/build와 guest 입력은 격리에 보존한다.
+
+### BP20-J production EFI ConsoleControl → 원본 XNU/초기 userspace
+
+공개 protocol과 실제 EFI Text/GOP 상태를 연결하는 선택적 ConsoleControl provider를
+구현했다. 기존 instance는 재사용하고 새 instance는 child 반환 후 정확히 uninstall한
+뒤 해제한다. callback code가 firmware에 남아 있으면 부모 image가 반환하지 않는다.
+실제 OVMF 17 checks, 성공/ABORTED child의 반환 상태와 자원 수명 모두 통과했다.
+새 모듈/EFI clippy는 기존 core lint만 제외하고 통과했으며 disabled feature도 빌드됐다.
+
+실측 Haswell/invariant TSC/stepping 3/CMCI profile에서 **NextCore production EFI
+provider → 원본 Tahoe booter → XNU → launchd PID 1**에 도달했다. 같은 실행의
+CPU0 PC 256B가 원본 KC executable segment에 유일하게 일치하고 linked VA +
+실제 collection slide = PC를 확인했다. dmpstore의 12B boot-args/속성과 실제
+booter/kernel의 `-v serial=3` 출력도 일치한다. corrected run은 22.0017초 자연
+종료, 원본 hash 유지, process cleanup 정상이다. 앞선 HMP filename quoting 실패는
+관측 실패로 별도 보존했으며 PC readback 근거로 쓰지 않았다.
+
+다음 원인 계층은 **사용자 공간**이다. launchd의 `restore-datapartition` task가
+exit(1) 후 userspace panic을 일으킨다. 이 경로에는 외부 OpenCore 및 diagnostic
+provider/table hook이 없지만 EFI Shell/HFS helpers와 원본 Apple booter는 있다.
+자체 KC loader 진입, 전체 native HAL/복구 GUI/macOS boot/Metal은 아직 아니다.
+공개 계약은 `artifacts/efi-console-control-contract-20260908.md`, authored receipt는
+`artifacts/efi-console-control-20260908/runs/final/report.json`이며 원본 CPU/Apple
+로그/디스크와 같은 실행의 대응 자료는 격리된 `native-console-result.json`에 있다.
+
+### BP22-A Golden Gate ARM64 guest Metal probe
+
+동일 공개 Metal API probe를 `--target golden-gate-arm64`로 빌드했다. 실제
+Clang18 엄격한 C compile, Darwin LLD link, objdump inspection 및 CPU/PIE/
+LC_BUILD_VERSION 검사 통과: macOS 27 arm64, 33,776B,
+SHA256 `8589a3db81a91f36770b1bfbad191162fb9b931e75a4853d472a3c7e5f682a5a`.
+기본 Tahoe x86_64 재빌드는 13,136B 및 기존 SHA256
+`eae69343a05e096eb2299b6c92e3a15a15b20123d9b23eac346e56cd6e50791b` 그대로다.
+다른 CPU/OS, 잘린 command table, signature 겹침을 거부하는 검증을 포함해
+도구 regression 8개가 통과했다. 독립 ABI 검토는 실제 Objective-C 호출과 C FFI
+호출의 Clang18 ARM64 lowering이 일치함을 확인했다. 검토에서 찾은 arm64e subtype
+오인 승인도 exact subtype/capability 검사로 수정했다. 최종 ARM64 r2 바이너리는
+같은 hash이며 receipt는
+`artifacts/guest-metal-probe-bp22a-20260908/{arm64-r2,x86_64-r1}/build-receipt.json`.
+빌드 산출물에 embedded signature가 있다는 것은 guest 실행/정책 수용 증거가
+아니다. 두 target 모두 guest_executed/guest_metal_verified=false를 유지한다.
+
+### BP22-B ARM firmware fault-time 관측
+
+원본 macOS 27.0/26A5425a recovery 입력으로 같은 4-byte read/decode failure를
+재현하고 **실패 callback 시점**의 실제 dispatch 대상이 unassigned이며 현재
+FlatView 16개 영역 모두 해당 접근을 덮지 않음을 확인했다. guest PC와 작은
+실제 RAM window도 같은 중단과 대응한다. r1의 GDB Int128 변환 실패는 관측 실패로
+보존했고 QEMU의 선언된 16B 정수 저장소를 읽는 r2에서 해결했다.
+
+추가 r3에서는 같은 callback에 도달한 순간의 serial 파일을 먼저 읽었다.
+그 시점에는 panic/double-panic 출력이 없었고 detach 후 panic이 나타났으므로
+이미 출력된 panic을 뒤늦게 본 것으로 간주하지 않는다. 이 관측은 MMIO 장치의
+정상 반환값을 정의하지 않는다. r2는 62.640초, r3는 54.286초에 제한 관측을
+마쳤고 13개 원본 입력과 관측 도구/QEMU hash 유지, PID 회수/cleanup이 통과했다.
+raw trace는 압축 보존 후 원본 hash로 역검증했다. guest/device state 수정은 없고
+ARM XNU/userspace/Metal은 false다. private 원본/주소/바이트/trace/결과는
+`_isolated/nextcore/arm-fault-time-20260908-r{1,2,3}/`에만 남긴다.
+
+현재 primary source delta 조사에서도 해당 device의 공개 read/reset/side-effect
+계약이 충족되지 않았다. 동시에 공개 XNU ARM64 entry/boot_args에서 직접 인계
+경로의 별도 ABI 계약을 작성한다. firmware 장치 모델을 추정하여 성공시킨 것으로
+표시하거나 이 결과를 NextCore 자체 kernel entry 성공으로 사용하지 않는다.
+
+### BP20 통합 검증
+
+`cargo test --locked --workspace --exclude nextcore-efi --all-targets --features
+nextcore-gpu/vulkan`은 **308 passed, 1 ignored**였다. 별도 기본 feature GPU/APLS는
+**143 passed**, 모든 EFI bin의 UEFI target check와 core no_std UEFI check가 통과했다.
+ignored 항목은 외부 EFI fixture가 필요한 기존 패키징 시험이다. 당시 소스 해시 전후는
+같았고 로그와 명령은 `artifacts/bp20-integration-20260908/report.json`에 보존했다.
+이 통합 검증 뒤 추가한 BP20-D/E/G는 위의 별도 후속 검사로 기록한다.
+BP20-F/G 통합 뒤 모든 EFI bin을 `kc-staging`까지 함께 활성화한 UEFI check도
+통과했고 선택한 소스 해시가 유지됐다: `artifacts/bp20fg-integration-20260908/report.json`.
+
+## BP19 OVMF → HAL 실제 바이트 연결 (2026-09-08)
+
+현재 상태: **실제 BOOTX64 → NXHAL chainload, ACPI 수집과 host HAL 파서 연결 통과**.
+원하는 다음 상태는 대상 XNU에 필요한 플랫폼 provider와 게스트 관측의 연결이며,
+이번 결과는 그 provider 또는 운영체제 부팅 성공을 대신하지 않는다.
+
+가설과 변경: 기존 raw parser의 선언 길이 밖 읽기와 PCI header layout 오해를
+수정하고, 합성 fixture 외에 실제 OVMF가 제공하는 동일 bytes도 해석할 수 있는지
+확인했다. `NXHAL`은 ACPI reclaim/NVS descriptor가 전체 범위를 포함할 때만
+읽는다. RSDP/root 검사, 읽기 거부 5종, bus 0 PCI config 읽기는 별도 시험 EFI에서
+수행한다. ACPI typed parser는 checksum/선언 길이/불완전 MADT record를 거부하고,
+PCI decoder는 multifunction bit를 허용하는 Type 0만 지원한다.
+
+실행 결과(QEMU 8.2.2, q35/TCG/SMM off, Nehalem, 256 MiB, 1 CPU):
+
+- RSDP 1개와 SDT **7개**(XSDT/FACP/APIC/HPET/MCFG/WAET/BGRT), PCI Type 0
+  header **5개**를 실제 수집하고 13회 Rust inspector 호출이 모두 통과했다.
+- RSDP→XSDT→6개 child pointer, raw 길이/checksum/count와 JSON 결과가 일치했다.
+  MADT는 LAPIC 1, IOAPIC 1, interrupt override 5, NMI 1의 8개 record다.
+  MCFG는 allocation 1개다. FACP는 선택 필드 요약이며 HPET/WAET/BGRT는 공통
+  SDT header/checksum만 검사했다. AML, HPET register, PCI BAR/IRQ/DMA는 미검증이다.
+- QEMU가 **3.9851초에 exit 67로 자연 종료**, 전체 하네스 **4.3961초**였다.
+  60초 deadline 미초과, harness stop=false, process group/adopted child 잔존 없음.
+- 원본 입력 5개(BOOTX64/NXHAL/inspector/OVMF code/OVMF vars)와 두 EFI 복사본의
+  pre/post SHA-256 일치. vars 복사본의 guest 변경은 별도로 기록했다.
+
+검증: Rust workspace **280 passed, 1 ignored**(별도 EFI fixture 필요), HAL
+all-targets **32 passed**(workspace와 중복 포함), HAL clippy 경고 0, UEFI target
+check 및 BOOTX64/NXHAL release build 통과. Python 하네스 최종 **30 passed**에는
+잘린 dump, 잘못된 pointer/count/schema, checksum, crash 오판, timeout/TERM 무시,
+leader exit와 `setsid` 이탈 child 수거가 포함된다. 기존 ISE 및 feature 미사용
+NXKERNEL 경고는 이번 변경의 실패가 아니다.
+
+독립 검토에서 파서 JSON 불일치 승인, PCI parser crash의 unsupported 오인,
+다른 session으로 이탈한 child 수거 누락을 고쳤다. 실제 OVMF 실행 후에는 typed
+summary gate만 추가 보완했으며, 원본 실행 receipt를 보존하고 **같은 13개 raw와
+stdout를 최종 gate로 offline 재검증**했다. VM은 반복 실행하지 않았다.
+별도 독립 readback에서 원본/13 raw hashes, 같은 UID의 QEMU 잔존 없음과 실제
+수집 bytes를 손상시킨 4종(checksum/truncation/FACP declared length/PCI Type 1)의
+실제 inspector exit 1 거부를 확인했다. 첫 readback helper의 진단 문자열 불일치와
+다른 UID `/proc` 접근 오류는 관측 실패로 보존하고 검사 범위를 수정했다.
+
+파일 근거:
+
+- `artifacts/hal-ovmf-bp19-20260908/`: report/command/serial/raw, 당시 하네스 소스.
+  report SHA-256 `693c038ec3fcf0606ec1dde78049cd2386a840211c2dfce6058ca5646fbc109e`.
+- `artifacts/hal-build-20260908/`: 실행 EFI, workspace log, toolchain,
+  `independent-readback.json`과 재현 helper 및 첫 관측 실패 원본.
+- `artifacts/hal-continuation-review-20260908.md`,
+  `artifacts/hal-firmware-review-20260908.md`: 구현/독립 검토.
+- 실행 하네스 SHA-256 `57b0d9cf5ce746364c75912115aea94a415e9d092fd03ab68738976fdd633add`,
+  최종 gate SHA-256 `c6e8abac1bf9a2574d15a1b138d615c8adb41f1b1ac5302ca4296700fd17553b`.
+
+재현(`nextcore/`, Windows에서 UEFI build, WSL에서 host inspector/build/run):
+
+```text
+cargo build -p nextcore-efi --target x86_64-unknown-uefi --release --bin BOOTX64
+cargo build -p nextcore-efi --target x86_64-unknown-uefi --release --bin NXHAL --features hal-tables
+cargo build -p nextcore-hal --example inspect_firmware --target-dir /tmp/nextcore-hal-bp19-target-20260908
+python3 tools/verify_hal_ovmf.py --efi target/x86_64-unknown-uefi/release/BOOTX64.efi --hal target/x86_64-unknown-uefi/release/NXHAL.efi --inspector /tmp/nextcore-hal-bp19-target-20260908/debug/examples/inspect_firmware --output /tmp/nextcore-hal-ovmf-NEW --timeout 60
+python3 -m unittest discover -s tools -p test_verify_hal_ovmf.py -v
+```
+
+BOOTX64 SHA-256 `2b354c28dda5b673d318782063439853bea795a19aac8044af06157054c9dd1f`,
+NXHAL `065158fdcd8872f92ca9e9be4b242f7c057b59a99ba65cf272365fd5965c2e99`.
+`xnu_executed`, userspace, `macos_boot_verified`, Metal, physical hardware는 모두
+미검증이다. 다음 blocker는 실제 x86_64 target kernel과 그 ABI에 맞는 플랫폼/DT/
+runtime provider다. 현재 raw parser를 곧바로 게스트 장치 게시로 부르지 않는다.
 
 ## 확인된 구현과 근거
 
@@ -312,6 +757,49 @@ python3 tools/verify_kernel_ovmf.py \
 
 `apls run` 종료 코드 0은 검증된 macOS 부팅, 2는 미검증 관측 또는 CLI 인자
 오류, 1은 adapter/setup 오류다. worker 종료 코드와 QEMU 종료 코드는 별개다.
+
+## GPU 추상화 계층 확장 (2026-09-07)
+
+Design D10의 host 그래픽 레이어를 "host 데이터 모델/명령 의미론 검증" 범위 안에서
+확장했다. 실제 Metal/GPU 실행은 아니며 이번 변경으로 `macos_boot_verified`는
+계속 `false`다.
+
+새 모듈 (전부 `nextcore-gpu/src/`):
+
+- `framebuffer.rs` — LinearFramebuffer(BGRA8/RGBA8/BGRX8, stride, dirty
+  tracking, clear/set/get/fill_rect/blit)와 DoubleBuffer. UEFI GOP 선형
+  프레임버퍼 패턴 대응.
+- `texture.rs` — TextureManager(텍스처 생성/업로드/다운로드/삭제, 포맷
+  RGBA8/BGRA8/RGBA16F/RGBA32F/Depth, 2D bilinear/nearest sampling,
+  SamplerDescriptor, clamp/repeat/mirror 주소 모드).
+- `sync.rs` — GpuSyncManager(fence/세마포어/이벤트, signal/wait/timeout/reset).
+  GPU async 경계용 프리미티브.
+- `render_pipeline.rs` — RenderPipeline/Descriptor, VertexInputState,
+  Depth/Stencil/Blend/Rasterizer state, Viewport/Scissor. 공개 GPU pipeline
+  state 모델.
+- `command_executor.rs` — RecordedCommandBuffer와 GpuCommand(draw/indexed/
+  instanced, bound 상태, render pass clear, texture copy, viewport).
+  execute()가 framebuffer clear와 draw call 기록을 수행한다. `execute_with_rasterizer`
+  는 slot 0의 vertex/index buffer에서 `SOFTWARE_RENDER_VERTEX_STRIDE`(52바이트:
+  position+color+tex_coord+normal) 인터리브 정점을 해석해 SoftwareRasterizer로
+  실제 삼각형 래스터화까지 수행하고, render pass 시작 시 depth buffer를
+  프레임버퍼 크기로 재할당·초기화한다. `decode_software_vertex`는 공개 API다.
+- `compute.rs` — ComputePipelineManager(storage buffer, dispatch, fence
+  signal). software compute 디스패치의 host 모델.
+- `rasterizer.rs` — SoftwareRasterizer(NDC→screen, barycentric, depth
+  buffer, line rasterization)와 Vertex/Vec2/Vec3/Vec4/Color 및 blend 함수.
+
+검증: `nextcore-gpu`는 기존 10건 + 신규 81건 = **91 passed**. clippy 0건.
+전체 workspace `cargo test`도 통과. 신규 테스트 파일은 `tests/gpu_framebuffer.rs`,
+`gpu_texture.rs`, `gpu_sync.rs`, `gpu_pipeline.rs`, `gpu_raster.rs`,
+`gpu_executor.rs`, `gpu_compute.rs`, `gpu_render_path.rs`. 통합 경로
+`gpu_render_path.rs`는 clear→Draw/DrawIndexed→SoftwareRasterizer 래스터화→
+DoubleBuffer swap→front 표시까지 한 흐름으로 검증한다.
+
+다음 blocker: D10"게스트 연결 방식과 공개 driver/API 범위". 현재 로그/핸들 확인과
+호스트 렌더 모델은 host 단위 테스트로만 검증됐다. 실제 graphics driver/Metal
+runtime acceptance는 XNU/userspace 부팅 뒤의 별도 관측이다. 이번 확장은
+"호스트 모델의 명령 의미론"이며 GPU 가속 완료로 표시하지 않는다.
 
 ## 남은 구현과 다음 근거
 

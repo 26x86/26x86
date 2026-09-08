@@ -5,7 +5,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 use nextcore_tool::efi::validate_x64_application;
 
-const CONFIG: &[u8] = include_bytes!("../../nextcore-core/tests/sample.plist");
+const CONFIG: &[u8] = include_bytes!("data/sample.plist");
 static SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
 struct Scratch(PathBuf);

@@ -10,7 +10,7 @@ use tauri::{Manager, Url};
 
 fn parse_args() -> (Option<String>, String) {
     let mut url: Option<String> = None;
-    let mut title = "26x86".to_string();
+    let mut title = "NextCore".to_string();
     let args: Vec<String> = env::args().skip(1).collect();
     let mut i = 0;
     while i < args.len() {
@@ -67,7 +67,7 @@ fn main() {
         })
         .run(tauri::generate_context!())
         .unwrap_or_else(|err| {
-            eprintln!("26x86 Tauri shell failed: {err}");
+            eprintln!("NextCore Tauri shell failed: {err}");
             process::exit(1);
         });
 }

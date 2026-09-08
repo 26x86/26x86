@@ -3,13 +3,18 @@
 
 extern crate alloc;
 
+mod exit_data;
+mod picker;
+#[cfg(feature = "console-control")]
+mod console_control;
+
 use alloc::{
     format,
     string::{String, ToString},
     vec,
     vec::Vec,
 };
-use nextcore_core::boot_config::{parse_boot_target, BootTarget};
+use nextcore_core::boot_config::{parse_boot_menu, BootTarget};
 use uefi::boot::LoadImageSource;
 use uefi::mem::memory_map::MemoryType;
 use uefi::prelude::*;
@@ -33,17 +38,30 @@ static ALLOCATOR: uefi::allocator::Allocator = uefi::allocator::Allocator;
 fn efi_main() -> Status {
     uefi::helpers::init().expect("failed to initialize UEFI services");
 
-    report("Nextcore");
+    report("NextCore");
     report("NEXTCORE: EFI_ENTRY");
     match read_config() {
         Ok(bytes) => {
             report(&format!("NEXTCORE: CONFIG_READ bytes={}", bytes.len()));
-            match parse_boot_target(&bytes) {
-                Ok(Some(target)) => {
+            match parse_boot_menu(&bytes) {
+                Ok(menu) if !menu.entries.is_empty() => {
                     report("NEXTCORE: CONFIG_PARSED");
+                    let index = if menu.show_picker {
+                        match picker::choose(&menu.entries, report) {
+                            Ok(Some(index)) => index,
+                            Ok(None) => return Status::ABORTED,
+                            Err(status) => {
+                                report(&format!("NEXTCORE: PICKER_ERROR status={status:?}"));
+                                return status;
+                            }
+                        }
+                    } else { 0 };
+                    let target = menu.entries[index].target.clone();
+                    drop(menu);
                     chainload(target)
                 }
-                Ok(None) => {
+                Ok(_) => {
+                    report("No enabled boot entries");
                     report("NEXTCORE: NO_BOOT_TARGET");
                     Status::NOT_FOUND
                 }
@@ -97,8 +115,19 @@ fn chainload(target: BootTarget) -> Status {
                 report(&format!("NEXTCORE: IMAGE_OPTIONS_ERROR status={status:?}"));
                 return status;
             }
+            #[cfg(feature = "console-control")]
+            let console = match console_control::Lease::acquire(report) {
+                Ok(lease) => lease,
+                Err(status) => {
+                    let _ = boot::unload_image(child);
+                    report(&format!("NEXTCORE: CONSOLE_ERROR status={status:?}"));
+                    return status;
+                }
+            };
             report("NEXTCORE: IMAGE_START");
-            let status = boot::start_image(child).map_or_else(|e| e.status(), |_| Status::SUCCESS);
+            let status = exit_data::start_image(child, report);
+            #[cfg(feature = "console-control")]
+            console.release();
             // Application return/Exit unloads it. StartImage can also fail
             // before entry, leaving a loaded image that needs cleanup.
             match boot::open_protocol_exclusive::<LoadedImage>(child) {

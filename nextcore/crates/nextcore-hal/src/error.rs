@@ -4,6 +4,8 @@ use std::fmt;
 pub enum HalError {
     PatchLengthMismatch { expected: usize, actual: usize },
     PatchOutOfBounds { offset: usize, length: usize, dsdt_len: usize },
+    Truncated { need: usize, have: usize },
+    Invalid { reason: &'static str },
 }
 
 impl fmt::Display for HalError {
@@ -26,6 +28,12 @@ impl fmt::Display for HalError {
                     "Patch out of bounds: offset={}, length={}, dsdt_size={}",
                     offset, length, dsdt_len
                 )
+            }
+            HalError::Truncated { need, have } => {
+                write!(f, "Buffer too short: need {} bytes, have {}", need, have)
+            }
+            HalError::Invalid { reason } => {
+                write!(f, "Invalid firmware table: {}", reason)
             }
         }
     }

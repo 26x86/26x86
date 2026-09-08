@@ -8,7 +8,7 @@
 #
 # Matching rule (deliberately dumb and portable):
 #   Hooks always run from the repository top level, and `git diff
-#   --cached --name-only` prints paths relative to that top level with
+#   --cached --name-only -z` prints unquoted NUL-delimited paths with
 #   forward slashes on every platform. We match those relative strings
 #   only. No absolute paths, no filesystem resolution, no per-host
 #   formatting assumptions (Windows drive paths vs MSYS paths differ and
@@ -22,7 +22,12 @@ set -eu
 violation_found=0
 violations=""
 
-while IFS= read -r staged_path; do
+staged_list="$(mktemp)"
+trap 'rm -f "$staged_list"' EXIT
+# Preserve Git's failure status; process substitution would hide it from set -e.
+git diff --cached --name-only --diff-filter=ACMRT -z > "$staged_list"
+
+while IFS= read -r -d '' staged_path; do
     [ -z "$staged_path" ] && continue
     normalized="$staged_path"
     case "$normalized" in
@@ -35,7 +40,7 @@ while IFS= read -r staged_path; do
 $violations"
             ;;
     esac
-done < <(git diff --cached --name-only --diff-filter=ACMRT)
+done < "$staged_list"
 
 if [ "$violation_found" -eq 1 ]; then
     printf '%s\n' \

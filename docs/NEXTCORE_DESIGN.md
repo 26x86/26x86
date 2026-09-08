@@ -1,11 +1,17 @@
-# Nextcore 설계 (Design Slot)
+# NextCore 설계 (Design Slot)
 
 ## 책임
 
-Nextcore의 *무엇*과 *왜*를 박제한다. *어떻게* 구현할지는 Build Plan 슬롯의
+NextCore의 *무엇*과 *왜*를 박제한다. *어떻게* 구현할지는 Build Plan 슬롯의
 영역이다.
 
 ## 현재 상태
+
+- 2026-09-08 사용자 확정: 제품 표시 브랜드는 **NextCore**다. macOS 27
+  GoldenGate, AMD64↔Apple Silicon HAL 및 실제 Metal 실행은 필수 목표이며,
+  현재 지원 완료라는 표시와 구분한다. D13/D14에서 제품 화면과 EFI 피커의
+  이번 구현 범위를 확정한다. 외부 OpenCore의 출처·파일 호환 규약·과거 실험
+  이름은 제품 브랜드 변경으로 개명하지 않는다.
 
 - D1(정체성) 합의됨 — Design 슬롯이 외형 정의 + 비목표 + 근거 메모를 추가 심화.
 - D2/D3/D4 심화 완료 (에이전트 A) — Design 슬롯이 각 항목에 *근거 메모*를 추가, D3에는 Memory Map / Console / Boot Args / SMBIOS 4행 추가, D4 비승계에 OpenRuntime·OpenCanopy / AptioMemoryFix 2항 추가.
@@ -21,9 +27,9 @@ Nextcore의 *무엇*과 *왜*를 박제한다. *어떻게* 구현할지는 Build
 
 ## 원하는 상태
 
-- Nextcore가 *무엇인지* 한 문단으로 설명된다.
+- NextCore가 *무엇인지* 한 문단으로 설명된다.
 - macOS 부팅 흐름이 *어떤 단계*로 구성되는지 박제된다.
-- iBoot가 하는 일과 Nextcore가 그 일을 *어떤 다른 방식*으로 하는지가
+- iBoot가 하는 일과 NextCore가 그 일을 *어떤 다른 방식*으로 하는지가
   병렬로 박제된다.
 - OpenCore의 *어떤 아이디어가 승계*되고 *어떤 부분이 의도적으로 버려졌는지*
   명시된다.
@@ -31,7 +37,7 @@ Nextcore의 *무엇*과 *왜*를 박제한다. *어떻게* 구현할지는 Build
 
 ## 결정 항목
 
-### D1. Nextcore 정체성
+### D1. NextCore 정체성
 
 (결정: 합의 — 본 세션 Design 슬롯이 심화.)
 
@@ -40,7 +46,7 @@ Nextcore의 *무엇*과 *왜*를 박제한다. *어떻게* 구현할지는 Build
 > 승계 + 소스 비의존. 이 세 원칙을 만족시키는 *외형 정의*는 Design 슬롯이
 > 닫는다 (구현 디테일은 Build Plan).
 
-Nextcore는 UEFI 펌웨어 환경에서 macOS를 부팅하기 위한 *공개* 부트로더다.
+NextCore는 UEFI 펌웨어 환경에서 macOS를 부팅하기 위한 *공개* 부트로더다.
 핵심 사상은 다음 두 가지다.
 
 1. **iBoot의 *역할*을, iBoot와 다른 방식으로 채운다.** macOS가 EFI 이후
@@ -59,7 +65,7 @@ D12의 Apple Silicon host 제어는 macOS 사용자 공간 계층이다. EFI 앱
 부트 코어의 완료와 이들 동반 런타임의 완료는 별도로 검증한다.
 
 구현 언어는 Rust다(이 사실 자체는 Design 합의이며, *모듈 구조*·*의존성*
-·*빌드 단계*는 Build Plan이 결정한다). Nextcore는 부팅 신뢰성 검증
+·*빌드 단계*는 Build Plan이 결정한다). NextCore는 부팅 신뢰성 검증
 (Bootability Manifest, img4)을 *하지 않으며*, 신뢰는 호출자 정책에
 위임된다. iBoot/Apple 보안 메커니즘의 우회 도구가 아니다.
 
@@ -83,10 +89,10 @@ EFI 환경에서 macOS를 부팅하고자 할 때, *공개 트리만으로* 구�
 
 목표 macOS EFI 경로는 다음 단계로 구성한다. 현 EFI 코드가 아래 전부를
 수행한다는 뜻은 아니다. 1~4단계의 *역할*은 기존
-펌웨어 부트로더가 수행하던 것과 기능적으로 동등하나, Nextcore는 그 역할을
+펌웨어 부트로더가 수행하던 것과 기능적으로 동등하나, NextCore는 그 역할을
 *다른 방식*(공개 규격 + Rust 구현)으로 제공한다. 5단계는 macOS 자체 영역이다.
 
-1. **EFI 진입 + 시스템 테이블 인식** — 입력: UEFI firmware가 로드한 Nextcore EFI binary와 시스템 테이블. 출력: 확보된 Boot Services 핸들(메모리 맵, 콘솔, 파일시스템 프로토콜). 경계: firmware 선택·서명 판단에는 관여하지 않고, 전달받은 테이블을 읽기만 한다.
+1. **EFI 진입 + 시스템 테이블 인식** — 입력: UEFI firmware가 로드한 NextCore EFI binary와 시스템 테이블. 출력: 확보된 Boot Services 핸들(메모리 맵, 콘솔, 파일시스템 프로토콜). 경계: firmware 선택·서명 판단에는 관여하지 않고, 전달받은 테이블을 읽기만 한다.
 2. **설정 로드** — 입력: `EFI/OC/config.plist` 호환 형식의 `config.plist` 파일. 출력: 검증된 설정 구조체(SMBIOS, ACPI 목록, kext 목록, DeviceProperties, boot-args). 경계: 설정 *해석*까지가 책임이며, 설정값의 하드웨어 정합성 판단은 later 단계에 위임한다.
 3. **하드웨어 구성 준비** — 입력: D2-2의 설정 구조체와 firmware 제공 ACPI 테이블. 출력: ACPI·DeviceProperties의 적용 계획과 kext 카탈로그. 경계: host 구조체에 기록하는 단계와 EFI 테이블에 실제 게시하는 단계를 구분한다. D11의 런타임 HAL은 별도 계층이다.
 4. **부트 체인 인계** — 입력: 준비한 구성과 명시 선택한 OS EFI loader 또는 커널 이미지. 출력은 아래 D2-A의 표준 EFI child 실행 또는 D5의 대상별 ABI를 만족한 직접 커널 진입으로 구분한다. 내부 handoff roundtrip은 어느 실행의 증거도 아니다. 실제 메모리 수명·진입 상태·오류 처리는 Build Plan이 구현하고 검증한다.
@@ -106,16 +112,16 @@ OS 로더가 이후 시스템 운영을 책임진다. 인계 직전 memory map�
   파일의 EFI device path와 부모 ImageHandle을 사용하여 firmware가 정상
   Loaded Image 환경·SystemTable을 제공하게 한다. 임의 entry 주소 호출로
   이를 대신하지 않는다. 이미지에 대한 firmware의 보안 정책과 오류를 따른다.
-- 대상은 명시 경로로 선택하며, Nextcore 자신을 재귀 실행하지 않는다.
+- 대상은 명시 경로로 선택하며, NextCore 자신을 재귀 실행하지 않는다.
   외부 로컬 원본 매체의 loader를 시험 입력으로 참조할 수 있다(Boundary
   B7-2). 그 파일을 공개 소스·빌드 입력·배포물·CI fixture에 편입하지 않는다.
 - `LoadOptions`는 선택한 child가 명시한 계약이 있을 때만 그 형식으로
-  전달한다. 계약이 없으면 비운다. Nextcore의 내부 직렬화, plist 전체 또는
+  전달한다. 계약이 없으면 비운다. NextCore의 내부 직렬화, plist 전체 또는
   `boot-args` 문자열을 모든 child가 받아들이는 표준으로 간주하지 않는다.
   읽고 검증한 설정과 실제 적용·전달한 설정을 별도로 기록한다.
-- 부모 Nextcore는 child 실행 전에 `ExitBootServices()`를 호출하지 않는다.
+- 부모 NextCore는 child 실행 전에 `ExitBootServices()`를 호출하지 않는다.
   이후 OS별 이미지/KC 준비, 최종 memory map·runtime 처리 및 커널 진입은
-  해당 child의 책임이다. 직접 XNU 경로를 선택할 때는 이 책임을 Nextcore의
+  해당 child의 책임이다. 직접 XNU 경로를 선택할 때는 이 책임을 NextCore의
   D5 adapter와 별도 실행 전환 코드가 맡는다.
 - 로드 결과와 시작 직전 기록, child 자체 진입 증거, 반환 status/ExitData를
   구분한다. `StartImage()` 호출 직전 로그는 child 진입 증거가 아니고,
@@ -140,20 +146,20 @@ OS 로더가 이후 시스템 운영을 책임진다. 인계 직전 memory map�
 > 한정*하며, iBoot의 *내부 동작*을 모방하는 표현은 배제한다. 좌측 열은
 > 기능 영역의 *일반 명칭*이며 내부 구현 명칭이 아니다.
 
-| 기능 영역 (참고) | Nextcore 구현 방향 | 왜 다른 방식인지 |
+| 기능 영역 (참고) | NextCore 구현 방향 | 왜 다른 방식인지 |
 | --- | --- | --- |
-| 부팅 대상 신뢰 목록 검증 | Nextcore는 목록을 검증하지 *않는다*. 부팅 신뢰성은 호출자·상위 정책이 제공한다. | 신뢰 판단은 부트로더 바깥(호출자·플랫폼 정책)의 책임으로 분리하므로 독자 검증기를 품지 않는다. |
+| 부팅 대상 신뢰 목록 검증 | NextCore는 목록을 검증하지 *않는다*. 부팅 신뢰성은 호출자·상위 정책이 제공한다. | 신뢰 판단은 부트로더 바깥(호출자·플랫폼 정책)의 책임으로 분리하므로 독자 검증기를 품지 않는다. |
 | 하드웨어 기술 트리 구성 | 내부 하드웨어 모델과 D7의 공개 XNU 인계 표현을 분리한다. | 공개 출처에서 확인한 외부 형식으로 독립 변환하며 격리된 내부 구현을 이식하지 않는다. |
-| RAM 디스크 구성 | Nextcore는 벤더 전용 ramdisk 포맷 파서에 의존하지 *않고* 표준 ramdisk 인터페이스를 사용한다. | 특정 벤더 포맷 파서는 공개 트리에서 검증할 수 없으므로 표준 인터페이스로 대체한다. |
+| RAM 디스크 구성 | NextCore는 벤더 전용 ramdisk 포맷 파서에 의존하지 *않고* 표준 ramdisk 인터페이스를 사용한다. | 특정 벤더 포맷 파서는 공개 트리에서 검증할 수 없으므로 표준 인터페이스로 대체한다. |
 | 커널 모음 로드 | UEFI 파일·메모리 서비스로 입력을 얻고, 대상별 공개 이미지/KC 요구와 진입 상태를 D5에서 검증한다. | Mach-O 헤더 인식과 실행 가능한 커널 배치를 구분한다. 현재 헤더 시험은 KC 로더 완료가 아니다. |
-| kext 등록 | Nextcore는 공개 호환 kext 목록 형식을 사용한다. | kext 목록 형식은 설정 주도 사상의 공개 인터페이스이므로 호환하되 독자 구현한다. |
-| 서명 검증 (펌웨어·커널 서명 일반) | Nextcore는 서명 검증 책임을 지지 *않는다*. 신뢰는 상위 정책(예: 플랫폼의 공개 UEFI 서명 정책)에 따른다. | 키·인증서 취급은 공개 트리의 책임 밖이므로 검증 책임을 상위 정책에 위임한다. |
+| kext 등록 | NextCore는 공개 호환 kext 목록 형식을 사용한다. | kext 목록 형식은 설정 주도 사상의 공개 인터페이스이므로 호환하되 독자 구현한다. |
+| 서명 검증 (펌웨어·커널 서명 일반) | NextCore는 서명 검증 책임을 지지 *않는다*. 신뢰는 상위 정책(예: 플랫폼의 공개 UEFI 서명 정책)에 따른다. | 키·인증서 취급은 공개 트리의 책임 밖이므로 검증 책임을 상위 정책에 위임한다. |
 | Memory Map 구성 | firmware descriptor의 의미·속성을 보존하고, D5 adapter가 주소·크기·stride·version을 대상 ABI로 표현한다. | 원본 맵과 커널 인계 표현은 구분한다. ABI 변환을 임의 memory map hack과 혼동하지 않는다. |
 | Console / Framebuffer | EFI 중에는 GOP/ConOut, 인계 시에는 검증한 framebuffer 정보와 메모리 수명을 다룬다. | Boot Services 이후 콘솔 프로토콜을 계속 호출하지 않는다. framebuffer 출력과 D10 GPU 가속은 별개다. |
 | Boot Args 전달 | 직접 XNU 경로에서는 D5의 인자 문자열 표현, child 경로에서는 D2-A의 명시 옵션 계약을 따른다. | EFI 변수 쓰기만으로 커널이 그 값을 받았다고 판정하지 않는다. |
 | SMBIOS 노출 | 기본 EFI 경로는 firmware 테이블을 사용한다. 명시한 HAL 프로파일에 따른 별도 변환 목표는 D11에서 다룬다. | 원본 테이블의 수집과 게스트용 변환·게시의 책임을 분리하며, 문자열 변환을 하드웨어 지원으로 판정하지 않는다. |
 
-> 핵심: Nextcore는 기존 부트로더의 *내부 동작*을 모방하지 않는다. macOS가 EFI 환경에서
+> 핵심: NextCore는 기존 부트로더의 *내부 동작*을 모방하지 않는다. macOS가 EFI 환경에서
 > 부팅되기 위해 필요한 *외부 인터페이스*만 *공개 명세 기반으로* 제공한다.
 
 ### D4. OpenCore 아이디어 승계
@@ -168,7 +174,7 @@ OS 로더가 이후 시스템 운영을 책임진다. 인계 직전 memory map�
 승계:
 
 - `config.plist` 기반 설정 (plist 호환 파서). — 근거: 설정 주도형 부트로더라는 공개 아이디어의 핵심이므로 승계한다.
-- `EFI/OC/` 디렉터리 구조 (Nextcore도 같은 위치에 자기 파일 둠). — 근거: 기존 공개 도구·문서와 호환되는 배치 관례이므로 위치만 공유한다(코드·상표 의존 없음).
+- `EFI/OC/` 디렉터리 구조 (NextCore도 같은 위치에 자기 파일 둠). — 근거: 기존 공개 도구·문서와 호환되는 배치 관례이므로 위치만 공유한다(코드·상표 의존 없음).
 - ACPI·DeviceProperties·boot-args 키 호환. — 근거: 공개 인터페이스이므로 키 이름 호환은 형체화가 아니라는 경계 원칙에 따른다.
 - kext 등록 방식 호환. — 근거: 공개 kext 목록 형식은 구현이 아닌 인터페이스이므로 호환한다.
 
@@ -186,7 +192,7 @@ OS 로더가 이후 시스템 운영을 책임진다. 인계 직전 memory map�
 (결정: 2026-09-07 개정 확정 — BP8 및 Boundary B7-1의 질문에 답함.)
 
 **현재 상태:** `nextcore-core/src/handoff.rs`의 `BootArgs` roundtrip은
-Nextcore 내부 형식의 검증이다. **원하는 상태:** 내부 의미 모델에서 실제
+NextCore 내부 형식의 검증이다. **원하는 상태:** 내부 의미 모델에서 실제
 게스트 아키텍처·버전에 맞는 외부 ABI로 검증 가능한 변환을 수행한다.
 두 형식은 이름이 비슷해도 동일하지 않으며, 내부 blob을 XNU 구조체로 cast하거나
 UEFI entry ABI를 커널 entry ABI로 사용하는 것은 허용된 설계가 아니다.
@@ -268,7 +274,7 @@ firmware/커널 인계 실행을 분리하며 최종 수용은 실제 커널 관
 **고정 소스 상세 계약:** `nextcore/artifacts/xnu-entry-contract-20260907.md`에
 `xnu-12377-pstart32` 검토 결과를 기록했다. 4096-byte wire 표현, 초기 필드,
 VA→PA 변환, `__HIB`·`__TEXT` 및 bootstrap 메모리 조건을 구분한다. 그 파일의
-소스 확인·산술 도출·Nextcore 제한·실제 이미지 미확인 표기를 구현에서 유지한다.
+소스 확인·산술 도출·NextCore 제한·실제 이미지 미확인 표기를 구현에서 유지한다.
 공개 tag와 macOS 26/27 매체의 ABI 일치는 아직 확인하지 않았다.
 
 **이전 (F) 결론의 범위:** 당시 4종 상한은 mock 단계의 통합 이력으로 보존한다.
@@ -308,9 +314,9 @@ VA→PA 변환, `__HIB`·`__TEXT` 및 bootstrap 메모리 조건을 구분한다
   공식 공개 인터페이스의 독립 구현과 격리 결과의 코드 이전을 구분한다.
 - 허용 출처의 확정 목록(어떤 공개 규격을 인용하는지)은 Boundary 슬롯의 책임이다.
 
-### D8. 격리 자산→Nextcore 지식 단위의 정의 (Inventory 질문에 대한 답)
+### D8. 격리 자산→NextCore 지식 단위의 정의 (Inventory 질문에 대한 답)
 
-(결정: 합의 — `OPEN_QUESTION: Design:격리 자산에서 Nextcore로 이전 가능한 지식 단위의 정의`에 답함.)
+(결정: 합의 — `OPEN_QUESTION: Design:격리 자산에서 NextCore로 이전 가능한 지식 단위의 정의`에 답함.)
 
 - 이전 가능한 지식 단위는 자연어 한 문장으로 표현되는 *필요한 외부 인터페이스* 서술(예: "커널 인계 시 메모리 맵이 필요하다")에 한정한다.
 - 코드 줄, 구조체 레이아웃, 상수값·오프셋, 바이너리 추출물의 이전은 금지한다. 이전 시에는 다른 표현으로 재서술하며(Boundary B2 규칙), 출처·원문은 인용하지 않는다.
@@ -348,7 +354,7 @@ VA→PA 변환, `__HIB`·`__TEXT` 및 bootstrap 메모리 조건을 구분한다
 
 (결정: 목표 합의 — 정규 드라이버 규격과 런타임 Metal 지원을 구분.)
 
-- **원하는 상태:** AMD/NVIDIA/Intel 장치에 대한 드라이버를 Nextcore 추상화
+- **원하는 상태:** AMD/NVIDIA/Intel 장치에 대한 드라이버를 NextCore 추상화
   레이어 안에 배치하고, 공통 명령·리소스 규격을 통해 게스트가 사용할 수
   있게 한다. 미지원 장치에는 소프트웨어 실행을 제공하고, 가능한 연산은
   메모리 공유·하드웨어 backend로 라우팅한다. 모든 GPU의 지원 완료를
@@ -432,13 +438,64 @@ VA→PA 변환, `__HIB`·`__TEXT` 및 bootstrap 메모리 조건을 구분한다
   QEMU로 연결됐다. `nextcore/VALIDATION.md`의 실행 기록에서 ARM Stage2
   시작과 firmware panic이 관측됐으며 XNU/userspace/Metal은 미관측이다.
   위 native Apple backend의 미완료와 이 TCG 실행 증거를 혼동하지 않는다.
-- **그래픽 수용 조건:** Apple의 VM 화면 설정 API와 Nextcore SGPU의 명령
+- **그래픽 수용 조건:** Apple의 VM 화면 설정 API와 NextCore SGPU의 명령
   계약을 분리한다. VM 화면 표시가 된 뒤에도 게스트 안의 Metal 장치 조회와
   실제 렌더/compute 결과를 확인한다. [Apple VM graphics](https://developer.apple.com/documentation/virtualization/graphics)
 - **재개 순서의 설계 판단:** 로컬에서 가능한 host 계약·EFI 실행 시험을
   진행하면서 실제 매체·기계 모델·backend 연결을 병렬로 확인한다. 부족한
   backend를 단순히 성공으로 반환하거나 QEMU 시작을 macOS 부팅 성공으로
   취급하지 않는다. 명령·코드·증거 파일 경로는 Build Plan이 기록한다.
+
+### D13. NextCore 제품 정체성과 목표 표시 — 2026-09-08 확정
+
+- 사용자에게 보이는 앱 제목, EFI 화면, CLI 제품 설명과 wizard의 제품명은
+  정확히 `NextCore`로 통일한다. Cargo package, 기존 설정 키, bundle identifier,
+  import 경로와 serial receipt marker는 호환 식별자이므로 일괄 개명하지 않는다.
+- 외부 OpenCore 엔진/원본 자산의 attribution과 기능 출처는 유지한다. 외부
+  엔진을 호출하는 기존 wizard의 "OpenCore EFI 생성" 문구는 일반적인 "EFI
+  구성 준비"로 바꾸고, 그 바이너리를 NextCore 독립 구현이라고 표시하지 않는다.
+- 우선 목표는 사용자가 지정한 `macOS 27 GoldenGate`이며 AMD64↔Apple Silicon
+  HAL과 guest Metal을 필수 수용 조건으로 추적한다. 실제 매체 버전/아키텍처와
+  완료한 실행 증거가 없으면 목표를 "검증 완료"나 설치 가능한 매체로 가장하지
+  않는다. D6/P8의 과거 4종 고정 노출·확장 보류는 이 사용자 결정으로 대체한다.
+
+### D14. 실제 EFI 부팅 선택 화면 — 2026-09-08 확정
+
+착수 시 BOOTX64는 설정의 활성 entry 하나를 바로 실행하며 그래픽 피커가 없었다.
+이번 원하는 상태는 실제 UEFI Boot Services 안에서 동작하는 독립 NextCore
+피커다. 부팅 대상은 검증한 `Misc.Entries`의 활성 항목이며 현재 chainloader가
+지원하는 자기 볼륨의 EFI application만 선택한다. 아직 검색하지 않은 디스크나
+설치되지 않은 OS를 타일로 만들어 표시하지 않는다.
+
+- 검은 배경, 상단 NextCore 워드마크, 중앙 OS/entry 이름과 실제 볼륨 레이블을
+  가진 타일, 밝은 선택 테두리, 명확한 선택/부팅/취소 키를 제공한다. 좁은 화면은
+  표시 타일 수를 줄이고 선택 창을 이동한다. 레이블은 길이·제어문자를 제한한다.
+- 좌우/상하 또는 Tab으로 선택, Enter로 해당 항목 실행, Esc로 취소한다.
+  선택이 화면과 일치할 때만 index를 caller에 반환한다. 자동 countdown이나
+  발견되지 않은 OS의 지원 배지, 장치/Metal 검증 성공 표시는 이번에 추가하지 않는다.
+- `Misc.Boot.ShowPicker=true`는 피커를 연다. 누락/false는 기존 단일 entry
+  동작을 유지하고 여러 활성 entry는 모호한 설정으로 거부한다. 기존 단일
+  `parse_boot_target` 계약은 유지하며 별도 menu parser가 다중 선택을 담당한다.
+- GOP의 공개 Blt API로 그리며 raw framebuffer layout을 추정하지 않는다.
+  현재 출력 모드를 이용하고 메모리 상한을 둔다. GOP/해상도/메모리 문제가 있으면
+  동일 선택·Enter·Esc 동작의 Simple Text Output fallback을 제공한다.
+  입력은 SystemTable의 Simple Text Input/WaitForKey를 사용한다.
+- 화면 자원과 protocol guard를 반환 전에 정리한다. 피커는 Boot Services를
+  종료하거나 child를 직접 호출하지 않는다. 선택 뒤 기존 LoadImage/StartImage
+  경로가 실행을 맡고, 취소는 부팅을 수행하지 않는다. ConsoleControl 설치와
+  EFI main/Cargo 연결은 Build Plan 소유자가 조정한다.
+
+근거: [UEFI 2.10 Console/GOP/Input](https://uefi.org/specs/UEFI/2.10/12_Protocols_Console_Support.html),
+현재 `uefi 0.40.0`의 공개 GOP Blt 및 text input API. 폰트·아이콘·레이아웃은
+독립 저작하며 외부 부트 피커 자산을 가져오지 않는다. host 렌더/입력 시험 후
+실제 OVMF의 화면 캡처와 키 입력→선택한 child 진입을 같은 실행에서 검증한다.
+EFI 피커 성공은 OS 부팅/HAL/Metal 성공과 별도로 기록한다.
+
+2026-09-08 구현 결과: 다중 entry menu parser와 `boot_picker` 순수 렌더러,
+UEFI GOP/입력 어댑터가 BOOTX64에 연결됐다. 실제 Q35/TCG OVMF에서 타일 화면,
+두 번째 항목의 Enter 실행, Esc 취소, 단일 자동 실행 및 GOP 없는 text fallback의
+Enter 실행을 확인했다. 자동 실행은 이전에 무시하던 `Name`도 계속 무시한다.
+증거: `nextcore/artifacts/picker-bp21-20260908/README.md`.
 
 ## OPEN_QUESTION
 
@@ -464,7 +521,7 @@ VA→PA 변환, `__HIB`·`__TEXT` 및 bootstrap 메모리 조건을 구분한다
 (F) 통합 검증 회수: 당시 아래 6건 전부를 종결했다. 라인은 추적용으로 유지하고
 하위에 결속 표기를 붙인다.
 
-- `OPEN_QUESTION: Build Plan:Rust 모듈 트리 — Nextcore의 코어 디렉터리 구조`
+- `OPEN_QUESTION: Build Plan:Rust 모듈 트리 — NextCore의 코어 디렉터리 구조`
   → RESOLVED-BY-F: Build Plan BP1이 3-crate + tests 3종 구조를 정본으로
   박제했고 BP6(a)가 D2 1~4단계와의 정합을 닫음으로 확인.
 - `OPEN_QUESTION: Build Plan:handoff.rs 필드 목록을 D5 공개 범위에 맞춰 확정하라`

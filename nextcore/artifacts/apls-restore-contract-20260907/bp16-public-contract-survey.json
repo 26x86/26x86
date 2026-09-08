@@ -117,5 +117,49 @@
   "scope_limit": "Bounded primary-source survey; absence of a match is not proof that no public implementation exists anywhere.",
   "guest_runs": 0,
   "product_source_modifications": 0,
-  "private_raw_details_copied_to_public": false
+  "private_raw_details_copied_to_public": false,
+  "supplemental_survey": {
+    "status": "HOLD",
+    "edk2_tag": "edk2-stable202508",
+    "edk2_tree": "d46aa46c8361194521391aa581593e556c707c6e",
+    "sources": [
+      {
+        "id": "edk2-pl031-binding",
+        "version": "edk2-stable202508",
+        "url": "https://raw.githubusercontent.com/tianocore/edk2/edk2-stable202508/ArmVirtPkg/Library/ArmVirtPL031FdtClientLib/ArmVirtPL031FdtClientLib.c",
+        "sha256": "3507d920865aa94c4f241050110d276f27e046513a40bd0a02e62e308a0d6944",
+        "bytes": 2505,
+        "selected_identity_token_matches": 0
+      },
+      {
+        "id": "edk2-pl031-header",
+        "version": "edk2-stable202508",
+        "url": "https://raw.githubusercontent.com/tianocore/edk2/edk2-stable202508/ArmPlatformPkg/Library/PL031RealTimeClockLib/PL031RealTimeClock.h",
+        "sha256": "e11f4deb6d71422397738b72ec08a630481b823422193307c83be837d145141f",
+        "bytes": 1407,
+        "selected_identity_token_matches": 0
+      },
+      {
+        "id": "edk2-pl031-driver",
+        "version": "edk2-stable202508",
+        "url": "https://raw.githubusercontent.com/tianocore/edk2/edk2-stable202508/ArmPlatformPkg/Library/PL031RealTimeClockLib/PL031RealTimeClockLib.c",
+        "sha256": "97924185b5b120606b732b7e894a05dacef5551914419bfac7f061b3f9cd1481",
+        "bytes": 11747,
+        "selected_identity_token_matches": 0
+      }
+    ],
+    "qemu_master_tree": "cacd3462963a0a4f5bab4263ce79c2aa4b32692d",
+    "qemu_tree_truncated": false,
+    "qemu_rtc_candidate_named_paths": 0,
+    "arm_trm": {
+      "identity_or_binding_for_selected_node_found": false,
+      "register_table_followup_fetch": "timeout",
+      "revision": "DDI 0224C ID052317 r1p3",
+      "general_programming_model_text_read": true,
+      "url": "https://documentation-service.arm.com/static/5fa13c81b1a7c5445f29021e"
+    },
+    "matching_device_contract_found": false,
+    "new_vm_runs": 0,
+    "product_source_changes": 0
+  }
 }

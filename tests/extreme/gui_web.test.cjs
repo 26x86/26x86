@@ -29,7 +29,7 @@ const { pathToFileURL } = require('node:url');
       artifact_available: true, stageable: true, boot_verified: false,
       minimum_cpu: 'SSE4.1 + SSE4.2', supported_targets: [26, 27], blockers: ['원본 macOS 부팅 미검증']});
     const methods = {
-      get_app_info: () => ({app_name:'26x86',version:'0.1.0',host_is_mac:true, status_ready:'준비됨', execution:{can_native_apply:true}}),
+      get_app_info: () => ({app_name:'NextCore',version:'0.1.0',host_is_mac:true, status_ready:'준비됨', execution:{can_native_apply:true}}),
       get_steps: () => ['welcome','detect','build','patch','done'].map((id,i) => ({id,title:['개요','기기 확인','EFI 준비','설치 · 패치','완료'][i],heading:id,desc:''})),
       detect: () => ({ok:true,detect:{model:'MacPro4,1',marketing_name:'Mac Pro (2009)',host_is_mac:true}}),
       get_macos_choices: () => ({choices:[{label:'macOS Tahoe 26',kernel:25}],selected_kernel:25}),
@@ -81,7 +81,7 @@ const { pathToFileURL } = require('node:url');
     await page.locator('#vmapple-storage-inspect').click();
     await page.getByText(/저장장치 읽기 검사 완료/, {exact:false}).waitFor();
     await page.locator('#vmapple-launch').click();
-    await page.getByText(/VMApple GTK 창을 열었습니다/, {exact:false}).waitFor();
+    await page.getByText(/VMApple 실행을 시작했습니다/, {exact:false}).waitFor();
     await page.locator('#sandbox-prepare').click();
     await page.getByText('EFI 자체 검사 패키지 준비 완료 · macOS 부팅 미검증', {exact:true}).waitFor();
     const calls = await page.evaluate(() => window.testCalls);

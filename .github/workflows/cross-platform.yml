@@ -49,6 +49,11 @@ jobs:
         with:
           python-version: '3.13'
       - run: python -m pip install requests packaging markdown2 pywebview
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify GUI transport ownership
+        run: node --test tests/gui_transport.test.cjs
       - name: Install native macOS runtime
         if: runner.os == 'macOS'
         run: python -m pip install pyobjc py-applescript py_sip_xnu 'wxpython<4.2.5' macos-pkg-builder
@@ -56,8 +61,21 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libegl1 libopengl0 libxkbcommon-x11-0 libxcb-cursor0 libnss3 libnspr4 libasound2t64 libxcomposite1 libxdamage1 libxrandr2 libgbm1 xvfb
+          sudo apt-get install -y libegl1 libopengl0 libxkbcommon-x11-0 libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0 libnss3 libnspr4 libasound2t64 libxcomposite1 libxdamage1 libxrandr2 libgbm1 xvfb
           python -m pip install PySide6 qtpy
+      - name: Verify Linux Qt platform dependencies
+        if: runner.os == 'Linux'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          import PySide6
+          plugin = Path(PySide6.__file__).parent / 'Qt/plugins/platforms/libqxcb.so'
+          result = subprocess.run(['ldd', str(plugin)], text=True, capture_output=True, check=True, timeout=10)
+          print(result.stdout)
+          if 'not found' in result.stdout:
+              raise SystemExit('Qt XCB platform dependencies are missing')
+          PY
       - name: Exercise the Linux GUI
         if: runner.os == 'Linux'
         env:

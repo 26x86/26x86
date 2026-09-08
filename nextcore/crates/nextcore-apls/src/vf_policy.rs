@@ -332,7 +332,10 @@ mod tests {
     use super::*;
     use std::collections::HashSet;
 
-    const GT_TEMPLATE: &[u8] = include_bytes!("../../../../sandbox/vsk/config/golden-gate.template.plist");
+    // Keep the unit-test fixture inside the crate so exported-crate tests do not
+    // depend on the workspace layout. The public sandbox template remains the
+    // source-of-truth artifact; this is its minimal contract fixture.
+    const GT_TEMPLATE: &[u8] = include_bytes!("../tests/data/golden-gate.template.plist");
 
     #[test]
     fn golden_gate_template_parses_and_denies() {
@@ -362,7 +365,7 @@ mod tests {
     fn weakens_security_is_rejected() {
         let weak = String::from_utf8_lossy(GT_TEMPLATE)
             .replace("\r\n", "\n")
-            .replace("<key>DMABypass</key>\n\t\t<false/>", "<key>DMABypass</key>\n\t\t<true/>");
+            .replace("<key>DMABypass</key><false/>", "<key>DMABypass</key><true/>");
         let res = VskPolicy::from_plist_bytes(weak.as_bytes());
         assert!(matches!(res, Err(PolicyError::WeakenedSecurity(_))));
     }
@@ -389,7 +392,7 @@ mod tests {
     fn unregistered_guest_profile_rejected() {
         let changed = String::from_utf8_lossy(GT_TEMPLATE)
             .replace("\r\n", "\n")
-            .replace("<key>ProfileID</key>\n\t\t<string></string>", "<key>ProfileID</key>\n\t\t<string>macos28-void</string>");
+            .replace("<key>ProfileID</key><string></string>", "<key>ProfileID</key><string>macos28-void</string>");
         let res = VskPolicy::from_plist_bytes(changed.as_bytes());
         assert!(matches!(res, Err(PolicyError::GuestProfile(_))));
     }

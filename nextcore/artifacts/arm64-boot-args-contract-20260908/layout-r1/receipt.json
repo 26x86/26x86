@@ -1,0 +1,67 @@
+{
+  "source_sha256_before": "fc8e55df4c230b76a289ed786dcb2c4c907d8d4317061914229c01ee6682e984",
+  "commands": [
+    {
+      "name": "darwin-arm64",
+      "argv": [
+        "clang-18",
+        "-target",
+        "arm64-apple-macos27",
+        "-ffreestanding",
+        "-fsyntax-only",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/arm64-boot-args-contract-20260908/layout_fixture.c"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "host-build",
+      "argv": [
+        "cc",
+        "-DHOST_LAYOUT_REPORT",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/arm64-boot-args-contract-20260908/layout_fixture.c",
+        "-o",
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/arm64-boot-args-contract-20260908/layout-r1/layout"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "host-run",
+      "argv": [
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/arm64-boot-args-contract-20260908/layout-r1/layout"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "guest_executed": false,
+  "passed": true,
+  "layout": {
+    "size": 1152,
+    "alignment": 8,
+    "offsets": [
+      0,
+      2,
+      8,
+      16,
+      24,
+      32,
+      40,
+      88,
+      96,
+      104,
+      108,
+      1136,
+      1144
+    ]
+  },
+  "host_binary_sha256": "f936a2c8b2f51325c5da949b7f4148a325c0bdcfffe97b324fcaadc4e4af2317",
+  "source_sha256_after": "fc8e55df4c230b76a289ed786dcb2c4c907d8d4317061914229c01ee6682e984",
+  "source_unchanged": true
+}

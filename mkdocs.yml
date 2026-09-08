@@ -1,0 +1,164 @@
+site_name: NextCore
+site_description: NextCore EFI boot engineering for macOS 26 Tahoe and experimental macOS 27 Golden Gate HAL and Metal support
+site_url: https://26x86.github.io/26x86/
+repo_url: https://github.com/26x86/26x86
+repo_name: 26x86/26x86
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+
+# Drafts, session notes, research scrapbooks and agent-internal documents are
+# not published to the site. Public engineering docs (design/build-plan/
+# boundary) remain reachable from the nav.
+exclude_docs: |
+  EXTREME-*
+  RESEARCH_*
+  IBOOT_*
+  SkyLight-*
+  Tahoe-*
+  STAGE-WORKFLOW.md
+  WIP-STATUS.md
+  KOREAN_EDITION.md
+  ABSTRACTION_BINARIES.md
+  NEXTCORE_CURRENT_CONTEXT.md
+  NEXTCORE_PROMPTS.md
+  ISOLATED_INVENTORY.md
+  LICENSE.md
+  README.en.md
+  SETUP.en.md
+  Icon-Composer-*.zip
+  ResXtreme.zip
+  validation/**
+  wiki/Home.md
+  wiki/README.en.md
+
+theme:
+  name: material
+  language: en
+  icon:
+    logo: material/engine-outline
+    repo: fontawesome/brands/github
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.indexes
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.action.edit
+    - search.suggest
+    - search.highlight
+    - header.autohide
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search
+
+# Legacy wiki pages link to files outside docs/ (../../SOURCE.md, nextcore/…,
+# integration/…). Those are repository-internal references we keep as-is;
+# only structural breakage (nav, templates, missing pages) fails a strict build.
+validation:
+  links:
+    not_found: ignore
+    anchors: ignore
+    unrecognized_links: ignore
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - def_list
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - toc:
+      permalink: true
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+copyright: |
+  <a href="https://github.com/26x86/26x86">NextCore</a> — clean-room EFI boot research and compatibility tooling. Not affiliated with or endorsed by Apple.
+
+nav:
+  - Home: index.md
+  - Quick start:
+      - wiki/README.md
+      - Getting started: wiki/Getting-Started.md
+      - Supported hardware: wiki/Supported-Models.md
+      - Setup guides: SETUP.md
+      - Apple Silicon sandbox: APPLE_SILICON_SANDBOX.md
+  - macOS compatibility:
+      - wiki/macOS-Support.md
+      - Pre-AVX Mac Pro: wiki/Pre-AVX-Mac-Pro.md
+      - T2 Mac notes: wiki/T2-Mac-Notes.md
+      - Surface Pro 6: SURFACE_PRO6.md
+      - MacPro5,1 Vega64 Tahoe profile: profiles/MacPro5-Vega64-Tahoe.md
+      - Tahoe yellow screen: wiki/Mac-Pro-Tahoe-Yellow-Screen.md
+      - Safari pre-AVX fix: wiki/Safari-PreAVX-Fix.md
+  - External EFI integration:
+      - wiki/OpenCore.md
+      - Configuration: wiki/Configuration.md
+      - EFI optimize this Mac: EFI-OPTIMIZE-THIS-MAC.md
+      - Installation notes: wiki/Installation-Notes.md
+      - Migration: wiki/Migration.md
+      - Orphan files archive: wiki/Orphan-Files-Archive.md
+      - Upstream repositories: wiki/Upstream-Repositories.md
+  - Application:
+      - wiki/Application.md
+      - Mellow integration: MELLOW_INTEGRATION.md
+      - VSK: VSK.md
+      - Golden Gate GUI validation: QEMU_GOLDEN_GATE_GUI.md
+  - Troubleshooting:
+      - wiki/Troubleshooting.md
+      - Known issues: wiki/Known-Issues.md
+      - GPU limitations: wiki/GPU-Limitations.md
+      - Warnings: wiki/Warnings.md
+      - Disclaimer: wiki/Disclaimer.md
+  - Boot engineering (NextCore):
+      - Architecture: wiki/Architecture.md
+      - Build and development: wiki/Build-and-Development.md
+      - NextCore design: NEXTCORE_DESIGN.md
+      - NextCore build plan: NEXTCORE_BUILD_PLAN.md
+      - Boot runtime verification: BOOT_RUNTIME_VERIFICATION.md
+      - Boot picker recovery: BOOT_PICKER_RECOVERY.md
+      - Module repositories: wiki/Nextcore-Modules.md
+      - Repository layout: REPOSITORY_LAYOUT.md
+  - Contribution:
+      - Developer guide: wiki/Developer.md
+      - Branching and release policy: wiki/Branching-and-Release.md
+      - Public/private boundary: PUBLIC_VS_PRIVATE_BOUNDARY.md
+      - Privacy and disclosure: wiki/Privacy-and-Disclosure.md
+  - Reference:
+      - Source policy: https://github.com/26x86/26x86/blob/main/SOURCE.md
+      - Security: https://github.com/26x86/26x86/blob/main/SECURITY.md
+      - Notices: https://github.com/26x86/26x86/blob/main/NOTICE.md
+      - Credits: https://github.com/26x86/26x86/blob/main/CREDITS.md

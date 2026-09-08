@@ -24,7 +24,17 @@ QEMU PL031의 잘못된 offset에서 반환하는 fallback 값은 선택된 장�
 - **Apple XNU commit `f6217f891ac0bb64f3d375211650a4c1ff8ca1ea`**: [pe_identify_machine.c](https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/pexpert/arm/pe_identify_machine.c), [pe_init.c](https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/pexpert/arm/pe_init.c). 공개 ARM platform 초기화와 clock/timebase 정보의 범위를 확인했다.
 - **Asahi m1n1 tree `940439b9a407fbfc499bea933269219f3f62d4c7`**: [공식 저장소 tree API](https://api.github.com/repos/AsahiLinux/m1n1/git/trees/940439b9a407fbfc499bea933269219f3f62d4c7?recursive=1). 응답은 truncated=false이며 경로 조사에만 사용했다.
 
-위 pinned 파일 7개를 실제 읽고 각각 SHA256을 메타 JSON에 기록했다. ARM PL031 TRM의 웹 본문과 추가 Linux PL031 binding은 이번 열람에서 확보되지 않아 그 내용에 의존하지 않았다. 검색에 나타난 추출 DeviceTree gist와 사용자 부팅 로그는 primary register contract로 채택하지 않았다.
+초기 조사에서는 위 pinned 파일 7개를 실제 읽고 각각 SHA256을 메타 JSON에 기록했다. 당시 ARM PL031 TRM의 웹 본문과 추가 Linux PL031 binding은 확보되지 않았다. 아래 후속 조사에서 ARM 문서의 일반 프로그래밍 모델 본문을 추가 확인했다. 검색에 나타난 추출 DeviceTree gist와 사용자 부팅 로그는 primary register contract로 채택하지 않았다.
+
+## 추가 조사 — EDK2·ARM 및 QEMU 최신 tree
+
+후속 위임에 따라 공개 자료만 추가 열람했다. **동일 compatible/device binding 또는 선택된 access의 정상 반환 계약은 새로 발견되지 않아 HOLD를 유지한다.**
+
+- **EDK2 `edk2-stable202508`**의 [ArmVirt PL031 FDT client](https://github.com/tianocore/edk2/blob/edk2-stable202508/ArmVirtPkg/Library/ArmVirtPL031FdtClientLib/ArmVirtPL031FdtClientLib.c)는 `arm,pl031` compatible을 명시적으로 찾고 해당 node의 `reg`를 RTC base로 설정한다. 선택된 private compatible에 연결하는 binding은 없다. [PL031 header](https://github.com/tianocore/edk2/blob/edk2-stable202508/ArmPlatformPkg/Library/PL031RealTimeClockLib/PL031RealTimeClock.h)의 register 집합도 기존 QEMU 후보와 같아 문제 access를 설명하지 않는다. [RTC library](https://github.com/tianocore/edk2/blob/edk2-stable202508/ArmPlatformPkg/Library/PL031RealTimeClockLib/PL031RealTimeClockLib.c)는 표준 register에 `MmioRead32`/`MmioWrite32`를 사용한다. 32-bit 접근이 존재한다는 사실은 다른 compatible 장치와의 동등성 근거가 아니다.
+- **ARM DDI 0224C, ID052317, PL031 r1p3**의 [공식 TRM](https://documentation-service.arm.com/static/5fa13c81b1a7c5445f29021e)에서 AMBA APB, 32-bit counter, data/load/match/interrupt 및 reset 관련 일반 모델을 확인했다. 이 문서는 PL031의 계약이며 선택된 가상 장치의 binding을 제공하지 않는다. register table 페이지의 후속 fetch/screenshot은 timeout이므로 해당 표를 직접 검증했다고 주장하지 않는다.
+- **QEMU 최신 tree `cacd3462963a0a4f5bab4263ce79c2aa4b32692d`**의 [공식 경로 목록](https://api.github.com/repos/qemu/qemu/git/trees/cacd3462963a0a4f5bab4263ce79c2aa4b32692d?recursive=1)은 truncated=false였고 Apple/AVP와 RTC가 결합된 이름의 새 구현 경로를 찾지 못했다. 이는 파일명 조사 결과이며 전체 소스의 기능 부재 증명은 아니다. 실제 실행에 사용한 pinned 모델의 no-overlap 판정을 바꾸지 않는다.
+
+추가 EDK2 파일 3개는 실제 읽고 SHA256을 `supplemental_survey.sources`에 보존했다. EDK2 tree는 `d46aa46c8361194521391aa581593e556c707c6e`다. 정확한 private compatible·offset은 추가 공개 문서에도 복사하지 않았다. 새 VM 실행 및 제품 코드 변경은 0회다.
 
 ## 산출물과 남은 게이트
 

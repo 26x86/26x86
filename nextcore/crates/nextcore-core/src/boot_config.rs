@@ -6,7 +6,7 @@
 //! Sources: https://www.apple.com/DTDs/PropertyList-1.0.dtd and
 //! https://docs.rs/roxmltree/0.21.1/roxmltree/struct.ParsingOptions.html
 
-use alloc::{collections::BTreeSet, string::String};
+use alloc::{collections::BTreeSet, format, string::String, vec::Vec};
 use core::fmt;
 use roxmltree::{Document, Node, ParsingOptions};
 
@@ -25,6 +25,19 @@ pub struct BootTarget {
     /// Absolute path on the image's own filesystem, normalized to backslashes.
     pub path: String,
     pub arguments: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BootMenuEntry {
+    pub name: String,
+    pub target: BootTarget,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BootMenu {
+    /// Explicit opt-in. Missing/false preserves the single-target behavior.
+    pub show_picker: bool,
+    pub entries: Vec<BootMenuEntry>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -60,6 +73,7 @@ pub enum BootConfigError {
     ArgumentsTooLong,
     MissingKernelTarget,
     UnsupportedKernelProfile,
+    InvalidDisplayName,
 }
 
 impl fmt::Display for BootConfigError {
@@ -84,6 +98,7 @@ impl fmt::Display for BootConfigError {
             Self::ArgumentsTooLong => "ARGUMENTS_TOO_LONG",
             Self::MissingKernelTarget => "MISSING_KERNEL_TARGET",
             Self::UnsupportedKernelProfile => "UNSUPPORTED_KERNEL_PROFILE",
+            Self::InvalidDisplayName => "INVALID_DISPLAY_NAME",
         })
     }
 }
@@ -97,6 +112,104 @@ type Result<T> = core::result::Result<T, BootConfigError>;
 pub fn parse_boot_target(input: &[u8]) -> Result<Option<BootTarget>> {
     let document = parse_document(input)?;
     select_boot_target(&document)
+}
+
+/// Parse a keyboard boot menu separately; the original single-target parser
+/// retains its ambiguity rejection even when ShowPicker is true.
+pub fn parse_boot_menu(input: &[u8]) -> Result<BootMenu> {
+    let document = parse_document(input)?;
+    let dictionary = document
+        .root_element()
+        .children()
+        .find(Node::is_element)
+        .ok_or(BootConfigError::InvalidPlist)?;
+    let mut menu = BootMenu {
+        show_picker: false,
+        entries: Vec::new(),
+    };
+    let Some(misc) = dictionary_value(dictionary, "Misc")? else {
+        return Ok(menu);
+    };
+    require_tag(misc, "dict")?;
+    if let Some(boot) = dictionary_value(misc, "Boot")? {
+        require_tag(boot, "dict")?;
+        menu.show_picker = match dictionary_value(boot, "ShowPicker")? {
+            None => false,
+            Some(v) if v.has_tag_name("true") => true,
+            Some(v) if v.has_tag_name("false") => false,
+            Some(_) => return Err(BootConfigError::InvalidType),
+        };
+    }
+    let Some(entries) = dictionary_value(misc, "Entries")? else {
+        return Ok(menu);
+    };
+    require_tag(entries, "array")?;
+    for (index, entry) in entries.children().filter(Node::is_element).enumerate() {
+        if index >= MAX_ENTRIES {
+            return Err(BootConfigError::EntryLimit);
+        }
+        require_tag(entry, "dict")?;
+        let enabled = match dictionary_value(entry, "Enabled")? {
+            None => false,
+            Some(v) if v.has_tag_name("true") => true,
+            Some(v) if v.has_tag_name("false") => false,
+            Some(_) => return Err(BootConfigError::InvalidType),
+        };
+        let path = match dictionary_value(entry, "Path")? {
+            None => None,
+            Some(v) => {
+                require_tag(v, "string")?;
+                Some(normalize_path(&scalar_text(v)?)?)
+            }
+        };
+        let arguments = match dictionary_value(entry, "Arguments")? {
+            None => String::new(),
+            Some(v) => {
+                require_tag(v, "string")?;
+                let text = scalar_text(v)?;
+                if text.chars().any(char::is_control) {
+                    return Err(BootConfigError::InvalidArguments);
+                }
+                if text.encode_utf16().count() > MAX_ARGUMENTS_UTF16_UNITS {
+                    return Err(BootConfigError::ArgumentsTooLong);
+                }
+                text
+            }
+        };
+        // Automatic boot historically ignores Name entirely. Display-only
+        // validation must not reject a previously accepted single target.
+        let name = if !menu.show_picker {
+            format!("EFI entry {}", index + 1)
+        } else {
+            match dictionary_value(entry, "Name")? {
+                None => format!("EFI entry {}", index + 1),
+                Some(v) => {
+                    require_tag(v, "string")?;
+                    let text = scalar_text(v)?;
+                    if text.trim().is_empty()
+                        || text.chars().any(char::is_control)
+                        || text.encode_utf16().count() > 64
+                    {
+                        return Err(BootConfigError::InvalidDisplayName);
+                    }
+                    text
+                }
+            }
+        };
+        if enabled {
+            if !menu.show_picker && !menu.entries.is_empty() {
+                return Err(BootConfigError::AmbiguousTarget);
+            }
+            menu.entries.push(BootMenuEntry {
+                name,
+                target: BootTarget {
+                    path: path.ok_or(BootConfigError::MissingPath)?,
+                    arguments,
+                },
+            });
+        }
+    }
+    Ok(menu)
 }
 
 fn parse_document(input: &[u8]) -> Result<Document<'_>> {

@@ -53,7 +53,7 @@ class SimplifiedSettingsDialog(wx.Dialog):
 
         note = wx.StaticText(
             card,
-            label="고급 OpenCore·개발자 설정은 X86_ADVANCED=1 환경에서 고급 모드로 변경할 수 있습니다.",
+            label="고급 EFI·개발자 설정은 X86_ADVANCED=1 환경에서 고급 모드로 변경할 수 있습니다.",
         )
         theme.style_static_muted(note)
         theme.wrap_static_text(note, theme.DIALOG_MIN_WIDTH - theme.SPACE_XL * 2)

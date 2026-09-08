@@ -1,4 +1,4 @@
-//! Independent byte encoder for the standalone xnu-12377-pstart32 profile.
+//! Independent byte encoders for the public xnu-12377 boot-argument profiles.
 //!
 //! Public format reference, not an imported C layout:
 //! <https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/pexpert/pexpert/i386/boot.h>
@@ -37,6 +37,22 @@ pub struct XnuBootArgsInput<'a> {
     pub command_line: &'a str,
 }
 
+/// Explicit revision-1 extension. This is supplied range metadata, not proof
+/// of an allocated/relocated KC or of its entry-point VA-to-PA correspondence.
+#[derive(Clone, Copy, Debug)]
+pub struct XnuFilesetBootArgsInput<'a> {
+    pub common: XnuBootArgsInput<'a>,
+    /// Physical address consumed by early i386 initialization despite the
+    /// public wire field's name. Do not pass an already translated kernel VA.
+    pub collection_header_phys: u64,
+    /// Actual validated outer header plus load-command extent. The encoder
+    /// checks its range but does not read or authenticate those bytes.
+    pub collection_header_size: u64,
+    /// A caller-selected slide. Encoding does not choose or validate the
+    /// platform's placement/relocation policy, alignment or entry mapping.
+    pub kernel_slide: u32,
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum BootArgsError {
     InvalidCommandLine,
@@ -47,6 +63,7 @@ pub enum BootArgsError {
     InvalidEfiSystemTable,
     HandoffOutsideKernel,
     OverlappingHandoff,
+    InvalidCollectionHeader,
 }
 
 impl fmt::Display for BootArgsError {
@@ -60,6 +77,7 @@ impl fmt::Display for BootArgsError {
             Self::InvalidEfiSystemTable => "INVALID_EFI_SYSTEM_TABLE",
             Self::HandoffOutsideKernel => "HANDOFF_OUTSIDE_KERNEL",
             Self::OverlappingHandoff => "OVERLAPPING_HANDOFF",
+            Self::InvalidCollectionHeader => "INVALID_COLLECTION_HEADER",
         })
     }
 }
@@ -154,6 +172,47 @@ pub fn encode_boot_args(
     write_u32(&mut bytes, 0x43c, kernel_size);
     write_u32(&mut bytes, 0x450, system_table);
     bytes[0x478..0x480].copy_from_slice(&input.physical_memory_size.to_le_bytes());
+    Ok(bytes)
+}
+
+/// Encode version 2, revision 1 with an explicit physical fileset header.
+///
+/// The header must fit the caller's protected low kernel range without
+/// overlapping the map or DT. The caller must additionally keep boot_args,
+/// loaded segments and every other live handoff allocation disjoint, apply
+/// only firmware-owned fixups and establish all required platform providers.
+/// No existing EFI entry path is enabled by this codec.
+///
+/// Offsets were independently compiled from pinned public boot.h (C11,
+/// x86_64): slide=1108, KC header=1256, total size=4096.
+pub fn encode_fileset_boot_args(
+    input: &XnuFilesetBootArgsInput<'_>,
+) -> Result<[u8; BOOT_ARGS_SIZE], BootArgsError> {
+    let mut bytes = encode_boot_args(&input.common)?;
+    if input.collection_header_phys % 8 != 0 || input.collection_header_size < 32 {
+        return Err(BootArgsError::InvalidCollectionHeader);
+    }
+    let (_, _, header_end) = low_range(
+        input.collection_header_phys,
+        input.collection_header_size,
+        BootArgsError::InvalidCollectionHeader,
+    )?;
+    let common = &input.common;
+    // These sums were checked by the common encoder before producing bytes.
+    let kernel_end = common.kernel_phys + common.kernel_size;
+    let map_end = common.memory_map_phys + common.memory_map_size;
+    let dt_end = common.device_tree_phys + common.device_tree_size;
+    if input.collection_header_phys < common.kernel_phys || header_end > kernel_end {
+        return Err(BootArgsError::InvalidCollectionHeader);
+    }
+    if (input.collection_header_phys < map_end && common.memory_map_phys < header_end)
+        || (input.collection_header_phys < dt_end && common.device_tree_phys < header_end)
+    {
+        return Err(BootArgsError::OverlappingHandoff);
+    }
+    bytes[..2].copy_from_slice(&1u16.to_le_bytes());
+    write_u32(&mut bytes, 1108, input.kernel_slide);
+    bytes[1256..1264].copy_from_slice(&input.collection_header_phys.to_le_bytes());
     Ok(bytes)
 }
 

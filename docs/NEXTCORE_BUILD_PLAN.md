@@ -709,6 +709,422 @@ metadata와 inventory를 검토한다. public repository 생성 뒤 branch/tag p
 확인하고, clone한 독립 tree에서 module별 Cargo test 또는 EFI target check가
 통과해야 배포 성공으로 기록한다.
 
+### BP19. OVMF ACPI/PCI 수집과 HAL 파서의 실제 바이트 연결
+
+현재 상태: 2026-09-08 작업 트리에 `NXHAL` 시험 EFI와 `acpi_raw`/`pci_raw`
+파서가 있으나 수집→파서 연결 하네스와 해당 실행 receipt가 없다. MADT/FACP는
+선언된 길이 밖의 trailing bytes를 해석할 수 있고 PCI bridge header를 Type 0으로
+오해할 수 있다. 기존 Linux handoff 및 모듈 배포 변경은 별도 미커밋 작업이다.
+
+결정(확정): 이번 작업은 x86 UEFI → host HAL 계층에 한정한다. 공개 ACPI 6.6
+§5.2와 Linux 공개 `pci_regs.h`의 header layout을 근거로 파서를 보완한다.
+SDT header의 checksum 진단 API는 유지하되 typed parser는 잘못된 checksum,
+선언 길이 밖의 데이터, 불완전 MADT record를 거부한다. PCI Type 1/2는 현재
+`PciDevice`가 선택적인 subsystem ID를 표현하지 못하므로 명시 거부한다.
+
+`NXHAL`은 feature-gated 별도 EFI 시험 도구로 유지한다. EFI memory map의
+ACPI reclaim/NVS descriptor가 전체 주소 범위를 포함할 때만 물리 바이트를 읽고,
+root signature/checksum/entry width/cap 오류는 실패 처리한다. q35의 bus 0에서
+CF8 주소 선택과 CFC 읽기만 수행한다. 장치 config data 쓰기와 AML 실행은 없다.
+
+root는 EFI 수집기와 Python OVMF 하네스를 소유한다. HAL 담당에게 raw parser,
+집중 회귀, `examples/inspect_firmware.rs`를 명시 위임한다. 이 example의 입력은
+`inspect_firmware <RSDP|SDT|PCI> <binary-file>`, 출력은 성공 시 단일 JSON object,
+실패 시 stderr+nonzero다. SDT 종류별 checksum/구조 검사와 PCI decode를 실제
+crate API로 수행한다. Python은 JSON을 모으고 raw byte 길이, record count와
+RSDP/root pointer 관계를 별도로 검증한다. reviewer는 변경 파일을 읽기만 한다.
+
+완료 기준: fresh ESP/vars에서 BOOTX64가 NXHAL을 chainload하고, RSDP/root와
+FACP/APIC/HPET/MCFG 및 하나 이상의 PCI Type 0 header의 정확한 bytes가 HAL
+parser를 통과한다. 자연 isa-debug-exit 67, 정상 marker 순서, 입력 원본 pre/post
+SHA-256 일치, QEMU 수거가 모두 필요하다. timeout은 cleanup을 포함한 총 상한이며
+잘린 dump, forged count, checksum 손상을 성공으로 받아들이지 않는 회귀를 둔다.
+실행 command, artifact hash, serial, parser 결과, 실패 이유를 새 receipt에 보존한다.
+
+이 결과는 OVMF 테이블 수집/host 해석 증거다. XNU 인계 provider, 게스트 장치 게시,
+사용자 공간, Metal, 물리 하드웨어 및 `macos_boot_verified`는 검증하지 않는다.
+
+공개 근거: [ACPI 6.6](https://uefi.org/specs/ACPI/6.6/05_ACPI_Software_Programming_Model.html),
+[Linux PCI header definitions](https://raw.githubusercontent.com/torvalds/linux/master/include/uapi/linux/pci_regs.h).
+
+BP19 결과(확정): 실제 OVMF에서 RSDP+7 SDT+5 PCI header가 13회 HAL inspector를
+통과했다. QEMU natural exit 67, 전체 4.3961초, 원본 5개와 EFI 복사본 hash 유지,
+소유 process 수거를 확인했다. workspace 280 passed/1 ignored, HAL all-targets
+32 passed, Python 30 passed와 독립 검토를 기록했다. 실행 후 typed summary gate
+보완은 같은 raw/JSON 13개를 offline 재검증했다. HPET 등의 공통 SDT 검사와
+FACP 선택 필드 요약을 전체 장치 ABI 검증으로 확대하지 않는다. 자세한 재현,
+source hash와 다음 target-provider blocker는 `nextcore/VALIDATION.md` BP19에 있다.
+
+### BP20. 실제 macOS 부팅 입력 확보와 가속 실행 경로 연결
+
+현재 상태: BP19는 OVMF 수집/host 파서 경계까지다. 사용자는 2026-09-08에
+실제 부팅부터 그래픽 가속까지 본래 목적을 수행하도록 지시했다. 현재 로컬
+macOS 27.0/26A5425a 매체의 확인된 커널 2개는 ARM64 MH_FILESET이고, 기존
+정상 recovery 경로는 bootx 뒤 MMIO decode failure에서 멈춘다. 현재 x86_64
+호스트에서 사용할 실제 Intel macOS 입력은 아직 확인되지 않았다.
+
+결정: 원래 ARM64 목표/receipt를 유지하면서 공식 Apple 서버의 Intel recovery
+매체를 별도 실행 입력으로 확보한다. 공개 다운로드 도구는 외부 도구로 사용하고
+Nextcore 소스 의존성에 편입하지 않는다. 다운로드 도구/매체/추출물은
+`_isolated/nextcore/intel-recovery-20260908/`에 두며 원본 해시와 Apple chunklist
+검증을 남긴다. Intel 경로 결과는 ARM64 macOS 27 성공으로 바꾸어 기록하지 않는다.
+실제 매체의 architecture/version/boot loader/kernel 형식을 확인한 후 대상별
+EFI 인계 변경과 fresh COW 실행을 결정한다. 사용자 대상 지정이 도착하면 우선한다.
+
+그래픽은 소프트웨어 렌더 테스트가 아니라 실제 guest API→driver→host GPU
+실행과 결과 readback을 요구한다. 새로운 공개 external backend 후보 Reims의
+적격성을 host KVM/Vulkan/device enumeration으로 판별한다. 공개 repo라는
+이유만으로 reverse-derived implementation을 Nextcore에 복사하지 않으며,
+외부 실험 도구와 공개 clean-room crate의 경계를 유지한다. 현재 rate-limit을
+재확인하지 않은 과거 기록을 구현 보류 근거로 사용하지 않는다.
+
+완료 판정은 Nextcore EFI 진입, 대상 일치 XNU, userspace, 실제 graphics API
+작업 결과를 각각 같은 실행에 연결한다. 매체 확보나 backend probe만으로 완료
+처리하지 않는다. ARM unknown MMIO의 임의 응답/alias/firmware patch는 추가하지 않는다.
+
+### BP20 대상 확정 — 사용자 답변 (2026-09-08)
+
+박제된 목표는 **macOS 27 Golden Gate — 실험적 Apple Silicon 대응,
+Intel Mac 부분 가속**과 **macOS 26 Tahoe — 네이티브 HAL** 두 경로다.
+현재 확보한 26.6.2/25G83 x86_64 복구 매체는 Tahoe 실행 입력으로 사용한다.
+ARM64 27.0/26A5425a 입력은 Golden Gate 실험 경로로 유지한다. Intel Tahoe의
+부팅이나 WSL host Vulkan 결과를 Golden Gate 대응 또는 guest Metal 완료로
+전용하지 않는다. 외부 EFI 도구는 실제 실패 계층을 밝히는 진단용이며,
+Tahoe의 Nextcore native HAL 최종 acceptance를 대신하지 않는다.
+사용자는 추가 답변에서 **이 컴퓨터에서 계속 개발**하도록 지정했다. 원격/물리
+Mac 확보를 선행 조건으로 두지 않고 Windows/WSL, QEMU/OVMF, 실제 host Intel GPU
+경로에서 구현과 검증을 계속한다.
+
+### BP20-A — 실제 EFI 로더의 실패 원인 보존
+
+첫 Intel 26.6.2/25G83 원본 `boot.efi` 실행에서 Nextcore의 `StartImage`가
+`ABORTED`를 반환했다. FAT에 booter/KC만 복사한 관측이며 HFS volume과 플랫폼
+계약이 아직 준비되지 않아 XNU 진입 증거가 아니다. 원본 입력 hash는 유지됐다.
+현재 `uefi` 0.40 `start_image` wrapper는 UEFI exit data를 호출자에게 돌려주지
+않는다. 표준 UEFI Boot Services ABI만으로 이 데이터를 제한 길이로 읽어
+진단하고 `FreePool`로 해제한다. 오류 텍스트와 고정 NEXTCORE marker는 별도
+출력하고 제어문자/개행을 escape하여 guest text가 증거 marker를 만들지 못하게
+한다. return status는 변경하지 않는다. authored child가 명시적 Exit 데이터와
+ABORTED를 반환하는 OVMF 회귀 검증 후 실제 Apple child에 적용한다.
+
+booter 진단 설정은 외부 공개 문서에 따른 VM 전용 NVRAM 사본에서만 적용한다.
+원본 OVMF 변수/복구 매체는 수정하지 않는다. 자식 실패 로그를 확보한 후 필요한
+filesystem/platform 계약을 결정하며, 오류를 우회해 실행 성공으로 처리하지 않는다.
+
+### BP20-B — Nextcore host GPU의 실제 compute 실행
+
+현재 `ComputePipelineManager::dispatch`는 bytecode를 실행하지 않고 fence를
+signal하며, `VirtualMetalDevice`도 capability만으로 HardwareWrapped 이름을
+선택한다. 이것은 실제 가속 완료가 아니다. 박제된 구현은 공개 Khronos Vulkan
+API 기반의 명시적 `vulkan` 선택 기능과 SPIR-V compute 경로다. public crate는
+Mesa/Reims/Apple source 또는 격리 파일을 빌드 의존성으로 사용하지 않는다.
+Vulkan loader/ICD는 실행 시 외부 호스트가 제공하고, CPU device fallback을
+허용하지 않는 명시 device selector로 실제 장치를 선택한다.
+
+일차 범위는 storage buffer upload, SPIR-V pipeline, bounded dispatch 크기,
+compute write→host read memory barrier, fence 완료 및 결과 readback이다.
+기존 compute descriptor는 이 기능에 명시 연결하며 지원하지 않는 bytecode,
+binding 또는 backend는 실행하지 않고 오류를 반환한다. 성공 fence는 GPU
+완료/readback 뒤에만 signal한다. 기본 backend는 미실행을 성공으로 반환하지
+않으며 이 동작 변경은 호출 테스트에 반영한다. guest Metal bytecode를
+SPIR-V라고 간주하거나 SGPU의 미확정 guest ABI를 임의로 확대하지 않는다.
+
+자원은 Vulkan 수명 규칙에 따라 해제한다. timeout/device-lost 경로에서 진행 중
+command가 참조하는 자원을 먼저 파괴하지 않는다. 드라이버 호출 자체는 외부
+프로세스 deadline으로도 제한하는 실행 예제를 제공한다. 호스트 driver 호출의
+일반적인 무한 정지 가능성을 라이브러리의 짧은 fence timeout만으로 해결했다고
+주장하지 않는다. 자체 저작 shader와 256값 결과의 실제 Intel GPU 검증을 public
+crate API로 재실행하고, 그 결과는 host GPU 계층에 한정한다.
+
+BP20-B 통합 결정: 기존 `VirtualMetalDevice`/SGPU 경로는 shader나 render target을
+등록하지 않으므로 compute/clear/present를 로그만 남기고 완료 처리하지 않는다.
+지원하지 않는 명령이 섞인 목록은 host copy를 수행하기 전에 거부한다. 이 모델의
+Metal 실행 지원과 SGPU compute 지원은 false이며, public Vulkan manager의
+실제 실행 능력을 미연결 guest 경로로 전용하지 않는다. 소프트웨어 buffer copy는
+유지하고 overflow 범위를 거부한다. SGPU transport가 오류를 성공 응답으로
+바꾸지 않는 회귀 시험을 포함한다.
+
+### BP20-C — Tahoe BootKC의 공개 포맷 준비 검사
+
+현재 실제 Tahoe KC는 기존 standalone MH_EXECUTE 프로필의 입력이 아니며
+MH_FILESET·중첩 이미지·chained fixup·local relocation을 포함한다. 기존
+`NXKERNEL`의 작은 fixture 범위나 크기 제한만 풀어서 실행하지 않는다.
+공식 공개 XNU/dyld의 Mach-O·chained-fixup 헤더 및 XNU bootstrap 소비 코드에
+근거한 read-only `KcMetadataInspection`을 별도 core API와 CLI/example로
+구현한다. 계약 출처와 source revision은 전용 artifact에 먼저 고정한다.
+
+검사는 outer/nested load command, 파일/VA 범위, entry의 출처, fixup 종류와
+local relocation 요구를 구분한다. metadata가 유효해도 relocation/provider가
+준비되지 않았으면 `preparation_ready=false`와 구체 사유를 반환한다. 공개 tree
+fixture는 자체 저작하고, 실제 KC는 명시적 외부 런타임 입력으로만 사용한다.
+이 검사는 native Tahoe handoff의 다음 구현 대상을 좁히며 XNU 실행은 별도다.
+
+### BP20-D — native KC의 실제 메모리 배치·readback
+
+현재 BP20-C는 구조 검사까지이며 실제 커널 컬렉션 바이트를 배치하지 않는다.
+다음 구현은 별도 `KcStagingPlan`과 host arena 배치 API/example이다. 가장 낮은
+outer VA를 기준으로 한 상대 범위, 실제 Mach-O header VA, outer entry 출처를
+각각 보존한다. checked arithmetic과 명시적인 host arena 상한을 적용하고,
+outer segment만 copy/zero 대상으로 삼는다. nested member는 같은 outer
+메모리를 보는 view이며 따로 copy/zero하여 공유 데이터를 덮지 않는다.
+
+공개 source 계약과 근거는 `nextcore/artifacts/native-kc-next-step-20260908.md`에
+먼저 기록한다. 공개 fixture는 자체 저작하며, 실제 Tahoe KC는 격리 경로의 명시적
+외부 입력으로만 읽는다. 실제 arena를 할당하고 각 file-backed byte의 copy와
+zero-fill/hole readback을 확인하며 원본 입력 해시 전후와 종료 상태를 기록한다.
+EFI physical placement, 32-bit entry 주소, classic relocation 및 format 11
+chained rebasing은 이 단계에 포함하지 않으며 `preparation_ready=false`다.
+XNU의 kernel proper/collection fixup 처리 소유권을 확인하지 않은 전체 chain
+선적용은 double-rebase 가능성이 있어 하지 않는다. 호스트 배치 성공을 XNU 실행
+또는 native HAL 완료로 기록하지 않는다.
+
+### BP20-E — KC classic/chained 재배치 대상의 읽기 전용 검증
+
+BP20-D에서 실제 arena copy/readback은 통과했다. 다음 단계는 재배치가 쓸 범위를
+공개 XNU/dyld consumer와 대조하는 별도 audit API/example이다. 고정 source revision의
+계약을 전용 artifact에 먼저 기록하고 자체 저작 fixture로 signed classic displacement,
+type/width/PC-relative/external 분류와 format 11의 stride/page/segment 범위·종료·
+중복 방문을 검사한다. 파일 범위를 벗어나는 chain, 부족한 cache base, 지원 밖
+authentication/type/width 또는 다른 mechanism과 겹치는 write는 명시적으로 기록한다.
+
+실제 KC는 격리된 명시 입력으로 읽기만 하며 decoded 대상 목록은 격리에 보존한다.
+공개 결과에는 합계·실패 분류와 원본 hash/종료 증거만 둔다. source와 staged arena에
+어떠한 fixup도 적용하지 않고, kernel proper와 XNU 후속 collection consumer의 작업
+소유권을 분리한다. 명세로 해소되지 않은 해석은 unsupported로 남기며 target value를
+임의 보정하지 않는다. `relocations_applied`와 `preparation_ready`는 계속 false다.
+
+BP20-E page 경계 정정: 고정 dyld producer의 `AppCacheBuilder.cpp`는 fixup의
+시작 주소로 page를 분류하며 x86_64의 비정렬 8-byte terminal word가 다음 page에
+걸칠 수 있다. 따라서 chain 시작·다음 시작은 원래 page 안에 있어야 하지만,
+word 전체의 안전 범위는 owning segment의 file-backed mapping으로 검사한다.
+페이지 밖 next, segment/file 밖 word, 겹치는 쓰기는 계속 거부한다. 공개 producer
+근거와 자체 저작 경계 시험을 먼저 추가하고 실제 KC를 다시 읽기 전용 검사한다.
+동일 제약을 사용하던 BP20-C page-start metadata 검증도 최소 diff로 수정한다.
+첫 word 역시 시작의 page 범위와 전체 word의 file/segment 범위를 따로 검증하며,
+메타데이터 경로의 첫 terminal straddle과 segment 끝 잘림을 별도 시험한다.
+
+### BP20-F — native KC의 실제 EFI page 소유권과 배치
+
+BP20-D/E의 실제 입력 host 검증 뒤, 동일 `KcStagingPlan`을 UEFI의 실제
+AllocatePages/FreePages 소유권과 연결한다. 별도 `LoadedKernelCollection`은 4 GiB
+아래의 연속 LoaderData pages를 할당하고, source와의 겹침을 거부한 뒤 outer copy,
+zero/hole 및 member view 전체 readback을 수행한다. 메모리맵의 실제 descriptor로
+할당 범위를 확인한다. 실패와 정상 반환 모두 Boot Services가 살아 있을 때 전체
+pages를 해제하며 해제 결과를 관측한다. 기존 standalone `LoadedKernel`은 유지한다.
+
+명시적 시험 bin `NXKC`와 `kc-staging` feature는 설정에 주어진 파일만 제한 길이로
+읽어 이 경로를 실행한다. 자체 fixture와 실제 격리 KC 모두 실제 OVMF에서 검증한다.
+Apple 원본·런타임 복사본·raw 출력은 격리에 두며 원본/EFI/firmware hash와 bounded
+종료·프로세스 정리를 receipt로 남긴다. 모든 공개 빌드는 격리 파일 없이 가능해야 한다.
+
+여기서 얻는 것은 실제 EFI 물리 메모리의 소유권·배치 증거다. 임의 할당 주소를 XNU
+slide/진입 주소로 해석하지 않고 ExitBootServices 또는 KC instruction 실행은 하지
+않는다. classic 적용, XNU가 처리할 chained fixup, KC boot_args revision/entry ABI,
+platform provider 계약은 별도 조건이며 `preparation_ready=false`를 유지한다.
+
+### BP20-G — KC용 boot_args revision 1 codec
+
+공개 XNU boot.h를 별도 C offsetof probe로 컴파일해 기존 revision 0 필드와
+revision 1의 KC header 필드 위치를 대조한다. 기존 standalone encoder를 유지하고,
+명시적인 revision 1 encoder에 물리 KC header 범위와 실제 선택 slide 값을 받는다.
+header는 저위 kernel 소유 범위 안에 있고 memory map/DT와 겹치지 않아야 한다.
+codec은 주어진 slide를 표현할 뿐 CPU 진입용 VA↔PA 대응이나 허용 slide 정책을
+만들지 않는다. 이 값들의 실제 생성·수명·KC header 내용은 caller의 별도 책임이다.
+
+고정 consumer는 revision >=1의 nonzero KC header를 초기 physical→virtual 변환한
+뒤, firmware가 이미 처리한 kernel proper와 XNU가 처리할 collection chains를
+구분한다. 새 codec만으로 fixup 완료나 handoff 준비를 승인하지 않고 기존 EFI 진입
+guard도 그대로 둔다. C layout 결과 및 정상/경계/겹침/기존 revision 보존을 검증한다.
+
+### BP20-H — kernel proper classic relocation의 실제 적용
+
+BP20-E/F/G는 대상 범위·EFI 배치·boot_args 표현까지 확인했다. 고정 공개 dyld
+producer는 kernel proper에 속한 local unsigned fixup을 classic table로 출력하고
+chain tracker에서 제거한다. 공개 XNU는 firmware가 kernel proper를 준비한 뒤
+collection chains 및 header/section/symbol 주소를 처리하는 경계를 명시한다.
+근거와 제한은 `nextcore/artifacts/kc-classic-relocation-contract-20260908.md`에
+기록하며, 이를 따르는 별도 source-bound classic 적용 API/example을 구현한다.
+
+첫 profile은 정확히 하나의 executable member가 있는 fileset의 outer local
+dynamic table만 허용한다. type 0, symbol 0, non-external, non-PC-relative,
+width 4/8 및 kernel member의 전체 file-backed write 범위를 확인한다. 전체
+audit의 오류, 다른 classic table, header/load-command 대상 또는 chain과 겹치는
+쓰기는 적용 전에 거부한다. 명시적으로 받은 u32 slide를 원본 word에 더하되
+width 범위 밖 덧셈은 거부한다. 이는 wrap을 추정하지 않는 제한된 적용 정책이며
+모든 firmware relocation 사례를 지원한다는 주장이 아니다.
+
+계획 전체의 대상·값·자원 검사를 끝낸 뒤, source와 동일함을 검증한 자체 소유
+arena에만 적용한다. 변경 word와 나머지 모든 byte를 실제 readback하며 원본,
+chained words, Mach-O header/load commands를 유지한다. header 선행 수정이나
+할당 주소를 slide로 해석하지 않는다. 결과는 immutable 소유 객체이며 재진입
+함수나 전체 handoff 승인 권한을 갖지 않는다. 자체 fixture 경계 시험, no_std
+검사 후 실제 KC의 명시적 실험 slide로 host 적용·readback과 해시 보존을 검증한다.
+실제 EFI relocation 연결·slide/entry 배치·native XNU/GUI는 별도 조건이다.
+
+### BP20-I — guest 사용자 공간 Metal 실행 probe
+
+외부 reference는 실제 XNU/userspace와 WindowServer 실행까지 관측했지만 guest
+GPU 실행은 아직 없다. 공개 Metal·Objective-C runtime API만 호출하는 자체 C
+probe를 추가한다. Windows/WSL에서 Mach-O x86_64로 cross-compile하고 실제 guest
+실행은 별도 판정한다. public API header에서 enum/NSUInteger/MTLSize ABI를 확인하며,
+SDK나 추출 framework를 공개 빌드 입력으로 사용하지 않는다. 최소 linker stub은
+호출하는 공개 libSystem 심볼만 선언하고 framework는 정상 dlopen으로 연다.
+
+probe는 실제 MTLDevice identity, shader compilation, compute pipeline과 command
+buffer completion을 관측하고 두 입력의 512개 계산값 및 buffer guard를 읽어
+검증한다. completion 전에 CPU로 결과를 합성하지 않으며 device/compile/queue/
+timeout/readback 실패는 명시적 실패다. process alarm으로 blocking API를 제한한다.
+guest 성공은 그 guest API 경로의 compute 증거이며 Reims host의 실제 Intel GPU
+selection/submission은 별도 로그로 대조한다. native HAL·완전 Metal conformance·
+물리 Mac 검증 또는 전체 macOS boot를 이 probe 하나로 승인하지 않는다.
+
+### BP20-J — 실제 검증된 EFI ConsoleControl provider 연결
+
+같은 직접 EFI 부팅의 control은 ICM NOT_FOUND/ABORTED였으며, 공개 ConsoleControl
+계약에 따라 실제 console text mode와 system GOP 존재를 제공한 case는 원본 KC
+읽기 및 EXITBS:START까지 진행했다. 별도 진단 hook·원본 화면 증거와 callback
+횟수를 보존했다. 이 근거로 Nextcore EFI에 최소 독립 provider를 연결한다.
+
+공개 GUID/함수 ABI만 사용하고 기존 provider가 있으면 재사용한다. 누락된 경우
+Boot Services가 살아 있는 소유 범위에 설치하고, child가 반환하면 실제 uninstall
+상태를 관측해 소유 메모리의 수명을 보장한다. GetMode는 실제 console mode 및
+시스템 GOP 조회를 사용한다. 지원하는 Text 설정은 실제 firmware 동작을 호출하고
+미구현 Graphics 전환이나 입력 잠금은 명시적으로 거부한다. 존재/성공을 조작하는
+빈 callback이나 전역 Boot Services table hook은 production에 넣지 않는다.
+
+독립 feature와 명시적 호출 경로로 도입하며 자체 EFI callback/lifetime 시험,
+기존 provider 보존 및 실제 원본 booter 실행을 검증한다. 이 provider만으로
+ExitBootServices 완료·XNU entry·native HAL 전체 완료를 승인하지 않는다. 이후
+중단은 실제 CPU/메모리/로그로 별도 원인 계층을 특정한다.
+
+### BP21 — NextCore 제품 브랜딩과 실제 EFI 피커
+
+사용자 2026-09-08 추가 결정: 제품명은 **NextCore**로 통일하고 부트 피커를
+반드시 구현한다. Design/Prompts 소유 에이전트에게 해당 시작 문서와 사용자 표시
+수정을 명시 위임했다. 외부 구현의 출처·라이선스·과거 실행 증거는 사실대로 유지하며
+제품 제목·wizard·CLI 도움말·picker 표시는 NextCore를 사용한다.
+
+현재 단일 target parser는 여러 enabled entry를 거부하고 실제 BOOTX64 피커가 없다.
+기존 단일 parser의 의미를 유지한 별도 menu parser와 독립 GOP picker 모듈을
+구현한다. 검정 기반 화면의 OS/볼륨 선택 항목, 명확한 선택 표시, 키보드 이동,
+Enter 부팅·Esc 취소 및 텍스트 fallback을 제공한다. EFI main의 기존 entry
+LoadImage/StartImage와 ConsoleControl 수명 관리는 유지한 채 선택 결과만 연결한다.
+제품 이미지 mock만으로 완료하지 않고 자체 EFI target으로 실제 OVMF 화면·입력·
+선택된 child 실행과 취소 경로를 검증한다. 소유 파일과 연결 diff는 협업자가 조정한다.
+
+### BP22 — macOS 27 양방향 HAL과 Metal 필수 경로
+
+사용자 추가 결정: **macOS 27 Golden Gate의 AMD64↔Apple Silicon HAL과 Metal
+가속은 필수 목표**이며 Tahoe/x86 작업과 병렬로 진행한다. x86 부팅·guest GPU는
+서브에이전트가 계속 맡고 root는 현재 ARM firmware 중단 및 실제 host GPU 연결
+계약을 다시 확인한다. 현재 PC에서 개발하며 실기기 제공을 선행 조건으로 재요청하지 않는다.
+
+기존 BP16의 미확인 MMIO 의미를 zero-return이나 임의 alias로 대체하지 않는다.
+현재 source/device coverage와 원본 입력 역할을 재대조하고 공개 의미가 확인되는
+CPU·장치·GPU 요청부터 실제 구현·실행으로 연결한다. AMD64 host↔ARM64 guest와
+ARM64 host↔AMD64 guest의 CPU 실행·장치 HAL·GPU API 조건은 각각 판정하며,
+한 방향의 성공이나 host Vulkan compute만으로 양방향 macOS/Metal을 승인하지 않는다.
+새 구현은 공개 계약 또는 독립 클린룸 근거를 먼저 기록하고, 실제 guest command
+completion/readback을 Metal 수용 조건으로 둔다.
+
+진척이 검증되거나 작업이 완료되면 소유 슬롯별로 항상 커밋한다. 공유 index는
+root가 조정하며 명시 파일만 stage한다. `_isolated/`와 무관한 기존 변경은 포함하지
+않고 force-push는 하지 않는다. 이 추가 요청은 로컬 commit 승인이다.
+
+### BP22-A — Golden Gate ARM64 guest Metal 검증 실행 파일
+
+현재 BP20-I 도구는 Tahoe x86_64 전용이다. 동일한 공개 Metal compute/readback
+계약을 Golden Gate ARM64에도 실행할 수 있도록 두 target profile을 명시한다.
+기본 Tahoe x86_64/macOS 26 동작을 보존하고 Golden Gate arm64/macOS 27을 추가한다.
+Apple의 공개 ARM64 ABI 문서와 고정 Metal-cpp API 선언을 근거로 구조체 인자를
+검토하고 Clang의 Objective-C 호출 lowering과 C FFI lowering을 두 아키텍처에서
+각각 비교한다. arm64e/PAC 실행 지원은 이 arm64 profile로 승인하지 않는다.
+
+빌드 성공에는 실제 Mach-O CPU type, PIE, LC_BUILD_VERSION의 최소 OS/SDK 및
+embedded signature 범위 검사를 요구한다. 다른 아키텍처/최소 OS 실행 파일을
+요청 profile 성공으로 기록하지 않는다. 두 파일의 실제 guest command completion,
+512개 결과 및 guard readback 전에는 guest Metal verified 상태를 변경하지 않는다.
+
+### BP22-B — ARM firmware fault 시점의 메모리 매핑 관측
+
+BP14의 같은 실패 callback은 unassigned MemoryRegion 경로를 보였으나 전체
+FlatView는 reset 시점에만 수집했다. 원본 firmware/media를 새 COW 실행에 공급하고
+같은 callback에서 host debugger로 현재 FlatView, 실제 dispatch MemoryRegion,
+guest CPU 상태 및 범위가 검증된 작은 RAM window를 읽는다. inferior 함수 호출,
+register 수정, 임의 MMIO 응답·alias·원본 변경은 하지 않는다. 원본 hash, PID 수명,
+시간/로그 상한 및 정리를 기존 감독 계약으로 보존한다. private 주소·바이트와
+분석은 `_isolated/`에만 저장하며 이는 장치 모델 또는 XNU 실행 성공 판정이 아니다.
+
+### BP22-C — 독립 ARM64 XNU boot_args codec
+
+현재 Intel 전용 boot_args를 ARM으로 재사용하지 않는다. 공개 XNU
+`ac9718fb1af618d5ce8678d0dc6e8a58f252216f`의 ARM revision 2/version 2 LP64
+1152B wire를 별도 `xnu_arm64_boot_args` module에 explicit LE codec로 구현한다.
+공개 헤더의 layout을 독립 C offsetof/sizeof로 대조하고 RAM/커널/인자/DT 범위,
+정렬·겹침·NUL 종료를 검사한다. x0의 boot_args PA와 wire DT 초기 KVA는 구분한다.
+DT KVA는 공개 entry/초기 C 소비 규칙에 따라 virtBase + dtPA - physBase로 계산하며
+checked arithmetic을 요구한다. Intel module은 수정하지 않는다.
+
+공개 VMAPPLE 16K profile의 bootstrap mapping 제약과 EL1/MMU-off/DAIF/cache/PAC/
+CPU device 요건은 codec과 별도의 준비 조건이다. 실제 Golden Gate 원본 KC는
+ARM64E이므로 ordinary arm64 guest probe 빌드가 이 kernel의 PAC 실행을 검증하지
+않는다. ARM64 KC의 실제 배치·인증·entry, 대상 27의 ABI 동등성 및 게스트 장치
+구현은 이 첫 codec 완료 판정에 포함하지 않는다. 공개 XNU가 담당하는 fileset
+chained rebase/PAC 및 header slide를 로더가 미리 중복 적용하지 않는다.
+
+Build Plan 구현 하위 작업을 ARM 계약 담당에게 위임한다. 소유 파일은 별도 ARM64
+core module, tests, 필요 lib export와 공개 계약 결과이며 root가 문서/commit을
+통합한다. 코드 이후 최소 no_std build와 독립 layout 및 malformed-input 시험을
+수행하고 execution-ready/guest Metal 상태는 실제 실행 전 false로 유지한다.
+
+### BP22-D — ARM64 KC 메타데이터와 불변 host staging
+
+현재 KC 검사·staging API는 Intel 전용이다. 공개 Mach-O/ARM thread 구조를
+근거로 별도 ARM64 진입 API를 추가하고 기존 x86 기본 API와 rebase/EFI 경로의
+CPU gate는 보존한다. 각 header의 raw CPU type/subtype을 보존하여 ARM64E의
+capability를 ordinary ARM64로 지우지 않는다. ARM thread는 공개 flavor/count와
+명령 크기를 검증하는 명시 subset이며, PC는 4B 정렬과 executable file-backed
+outer segment 안의 완전한 4B 범위를 요구한다. member entry를 boot entry로
+대체하지 않는다. unknown 형식·불일치·중복·겹침·overflow는 거부한다.
+
+root가 `kernel_collection.rs`, `kc_staging.rs`, 별도 ARM fixture/host example을
+소유하고 ARM 계약 담당이 공개 자료와 실제 입력의 형식 일치 여부를 독립 검토한다.
+staging은 기존 128MiB 상한과 불변 source borrow를 유지하고 ARM profile의 16KiB
+단위 arena 범위를 계산한다. host Vec의 주소·정렬을 guest 물리 메모리로 간주하지
+않는다. outer copy/zero-fill/hole 및 모든 member view를 전량 readback하며 원본
+KC의 chain/PAC/header/명령 바이트를 적용하거나 수정하지 않는다.
+
+원본 27 입력은 실행 때만 공급하며 주소·원본 분석 결과는 `_isolated/`에 저장한다.
+공개 fixture에는 독립 작성한 형식만 사용한다. 실제 staging 완료는 allocation/
+mapping/boot_args 연결·인증·ARM64E 실행·guest Metal을 승인하지 않는다. 공개 XNU가
+수행하는 chained rebase와 header slide의 소유권은 BP22-C 결정을 유지한다.
+
+### BP23 — 검증된 진척의 원격·조직 동기화
+
+사용자는 진척마다 push하고 조직을 최신화하도록 명시 승인했다. 본체는 PR/CI로,
+7개 module은 검증된 source commit의 tracked crate만 fresh export하여 기존 main
+이력 위에 새 commit/tag를 추가한다. 기존 tag와 history는 변경하지 않는다.
+working-tree의 미검증 변경·격리·runtime artifact는 module 입력이 아니다.
+
+현재 원격 CI는 Linux의 `Tools` 경로 대소문자, QEMU 별도 cwd의 상대 patch 경로,
+Python no-build-isolation의 누락 build dependency로 실패했다. 해당 운영 연결을
+최소 수정하고 원래 검사 조건을 유지한다. 격리 guard 시험은 실제 index에 금지
+경로를 stage하지 않고 독립 git 출력 fixture로 hook의 정상/거부/오류 경로를
+실행한다. 실제 tracked tree 검사는 별도로 유지하고 NUL-delimited 이름을 사용한다.
+root가 이 CI/guard와 문서 배포 정합을 소유하고 cross-platform/Windows packaging
+실패는 x86 담당에게 명시 위임한다. 실패 원인/수정 계약/관련 검증 이후 commit한다.
+
+실제 구조는 tracked Cargo workspace와 독립 module exports이므로 미실행 submodule
+전환을 완료로 서술한 배포 문서를 정정한다. 제품 문서의 브랜드·목표·실행 상태를
+NextCore와 최신 증거에 맞추고 외부 구현의 실제 출처는 유지한다. 조직 profile은
+module publish 담당에게 위임하며 root는 본체 README·wiki·PR을 통합한다.
+
+독립 module 원격 CI는 Tool 테스트가 sibling Core의 fixture를 읽는 결함을 발견했다.
+Windows의 대소문자 비구분/인접 clone 때문에 로컬 검증이 이를 놓쳤다. 독립 작성한
+동일 fixture를 Tool 테스트 소유 경로로 복사하고 상대 include를 해당 crate 내부로
+제한한다. 기존 v0.1.1은 보존하고 Tool v0.1.2로 수정하며, 다음 검증은 Linux의
+단일 독립 clone에서 수행한다. 동등 fixture hash와 원격 exact-head CI를 확인한다.
+
 ## OPEN_QUESTION
 
 - BP9 연속 실행 결정: Design D2-A는 표준 EFI application 중간 경로를 허용했고,

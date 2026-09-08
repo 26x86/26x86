@@ -1,0 +1,42 @@
+{
+  "passed_local": true,
+  "layer": "Host preparation tests and actual Qt wizard runtime",
+  "causes": [
+    "Authored temporary fixture passed a host path alias into the strict payload loader",
+    "Linux Qt XCB platform dependencies missing",
+    "HTTP/Qt fallback clobbered pywebview runtime object"
+  ],
+  "modified_files": {
+    ".github/workflows/cross-platform.yml": "24f77adac7fcf9659891bc28a6ecfadf6121608f3684a7c438c28a1158f59946",
+    "tests/test_mellow_payload.py": "9231362e25529b6b0716f941c2a4077483027c192f3278323a7dc70a1508e7a8",
+    "tests/gui_transport.test.cjs": "4ee419af024d505b09bf53f76e76e0b8fcfdc719fb8181929b757881b0848965",
+    "x86/gui/web/app.js": "9c95cb1693359d625e59d8cc472eb2c5d4e3d38a2e1efa117c013d8d3a5f9b2f"
+  },
+  "windows_python": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+  "windows_preparation_tests": 132,
+  "windows_preparation_skipped": 1,
+  "windows_payload_tests": 27,
+  "windows_bridge_tests": 25,
+  "windows_bridge_skipped": 1,
+  "linux_payload_tests": 27,
+  "node_transport_tests": 4,
+  "old_dcc9001_source_failed_transport_tests": 4,
+  "linux_gui": {
+    "backend": "qt",
+    "ok": true,
+    "status": "준비됨",
+    "title": "NextCore",
+    "url": "http://127.0.0.1:34873/index.html"
+  },
+  "linux_gui_natural_returncode": 0,
+  "linux_gui_seconds": 2.7415,
+  "linux_gui_cleanup_complete": true,
+  "linux_gui_evidence_sha256": "4965d080f5ff8786aa71bdae3f3bf9cae0024fa51d3dca16853b307bf024520c",
+  "previous_windows_exe_ci_pass": "https://github.com/26x86/26x86/actions/runs/34195631076",
+  "source_ci_failure": "https://github.com/26x86/26x86/actions/runs/34195631087",
+  "corrected_remote_ci_verified": false,
+  "corrected_macos_runtime_verified": false,
+  "corrected_windows_exe_verified": false,
+  "payload_guard_changed": false,
+  "guest_or_metal_claim": false
+}

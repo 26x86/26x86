@@ -1,4 +1,4 @@
-# Nextcore 프롬프트 (User Flow Slot)
+# NextCore 프롬프트 (User Flow Slot)
 
 ## 책임
 
@@ -6,6 +6,10 @@
 Design 슬롯, *구현*은 Build Plan 슬롯의 영역이다.
 
 ## 현재 상태
+
+- 2026-09-08 사용자 확정: 제품명은 `NextCore`이며 실제 EFI 피커를 구현한다.
+  macOS 27 GoldenGate와 양방향 아키텍처 HAL/Metal은 목표로 표시한다. P10이
+  과거 P2의 검증 완료 표현과 P8의 4종 고정/확장 보류보다 우선한다.
 
 - P1~P9 박제 완료 — (F) 정정: 종전 "없음 — 아직 시작되지 않았다"는 본문
   (P1~P7)과 어긋난 기재였고, P8·P9는 F 통합 검증으로 신설된 박제다.
@@ -60,22 +64,22 @@ Design 슬롯, *구현*은 Build Plan 슬롯의 영역이다.
 
 옵션 (각 항목 *설명 한 줄* 추가):
 
-- **macOS Ventura (13)** — macOS 13세대. 호환성 검증 범위가 가장 넓고, 구형 하드웨어에 권장된다.
-- **macOS Sonoma (14)** — macOS 14세대. 일반 데스크톱 부팅에서 가장 흔히 쓰이는 검증 빌드다.
-- **macOS Sequoia (15)** — macOS 15세대. Apple Intelligence 기능군을 포함하며, 최신 kext/드라이버를 반영한다.
-- **macOS Tahoe (26)** — macOS 26세대. Apple Silicon / Intel 모두 지원하며, Nextcore가 *최신* 빌드로 검증한 타깃이다.
+- **macOS Ventura (13)** — macOS 13세대. 대상 기기와 실행 경로의 검증 결과를 따로 확인한다.
+- **macOS Sonoma (14)** — macOS 14세대. 대상 기기와 실행 경로의 검증 결과를 따로 확인한다.
+- **macOS Sequoia (15)** — macOS 15세대. 설치 매체와 드라이버의 호환성을 확인한다.
+- **macOS Tahoe (26)** — macOS 26세대. 현재 부팅 개발 대상이며 완전한 macOS/Metal 검증은 완료되지 않았다.
 
-> 근거: 4개 버전이 현재 Nextcore가 검증 대상으로 박제하는 범위(Build Plan BP3 단계 9와 일치)와 같다. 카피는 짧게, 설명 한 줄로 *검증 상태*만 알린다 — 사용자가 추가로 알아야 할 결정(예: SMBIOS, ACPI)은 wizard에 노출하지 않는다.
+> 근거: 위 4개 버전은 기존 wizard 선택 범위이며 GoldenGate 27은 새 개발 목표다. 버전명만으로 지원을 승인하지 않는다. 기존에 검증 대상으로 박제한 범위(Build Plan BP3 단계 9와 일치)와 같다. 카피는 짧게, 설명 한 줄로 *검증 상태*만 알린다 — 사용자가 추가로 알아야 할 결정(예: SMBIOS, ACPI)은 wizard에 노출하지 않는다.
 
 ### P3. Step 2 카피
 
 한국어 우선:
 
-> "Nextcore 부트로더를 생성합니다. 1~3분 정도 걸릴 수 있습니다."
+> "NextCore 부트로더를 생성합니다. 1~3분 정도 걸릴 수 있습니다."
 
 영어:
 
-> "Generating Nextcore bootloader. This may take 1–3 minutes."
+> "Generating NextCore bootloader. This may take 1–3 minutes."
 
 진행률 단계별 *사용자용 메시지*:
 
@@ -85,9 +89,9 @@ Design 슬롯, *구현*은 Build Plan 슬롯의 영역이다.
 - **단계 1 — config.plist 작성**
   - KO: "선택한 macOS에 맞게 config.plist를 작성하는 중…"
   - EN: "Writing config.plist for the selected macOS…"
-- **단계 2 — Nextcore EFI binary 빌드**
-  - KO: "Nextcore EFI 바이너리를 빌드하는 중…"
-  - EN: "Building the Nextcore EFI binary…"
+- **단계 2 — NextCore EFI binary 빌드**
+  - KO: "NextCore EFI 바이너리를 빌드하는 중…"
+  - EN: "Building the NextCore EFI binary…"
 - **단계 3 — EFI 디렉터리 구조 검증**
   - KO: "EFI 디렉터리 구조를 확인하는 중…"
   - EN: "Verifying the EFI directory structure…"
@@ -121,8 +125,8 @@ USB 드라이브를 선택하는 순간 표시되는 *경고 문구*:
 > **(F) 호스트 OS 분기 문구 (Build Plan BP3.9/BP6(b) 정합 — 분기 카피 누락 보강):**
 > - macOS 호스트: 위 "시작" 뒤 안내를 그대로 사용한다(공개 도구 직접 호출). 카피 변경 없음.
 > - Windows(비-macOS) 호스트: "시작" 버튼을 누른 뒤 안내를 아래로 대체한다.
->   - KO: "이 OS에서는 createinstallmedia를 직접 실행할 수 없어 Nextcore는 EFI 산출물만 USB에 복사합니다. 복사가 끝나면 macOS로 부팅해서 화면 안내에 따라 설치 USB 만들기를 마무리하세요."
->   - EN: "createinstallmedia can't run directly on this OS, so Nextcore copies the EFI payload to the USB. When the copy finishes, boot macOS and follow the on-screen instructions to complete the installer USB."
+>   - KO: "이 OS에서는 createinstallmedia를 직접 실행할 수 없어 NextCore는 EFI 산출물만 USB에 복사합니다. 복사가 끝나면 macOS로 부팅해서 화면 안내에 따라 설치 USB 만들기를 마무리하세요."
+>   - EN: "createinstallmedia can't run directly on this OS, so NextCore copies the EFI payload to the USB. When the copy finishes, boot macOS and follow the on-screen instructions to complete the installer USB."
 >   - 완료 표시: KO "EFI 복사 완료 — macOS에서 계속하세요." / EN "EFI copy complete — continue on macOS."
 > - 정합 확인 결과: BP3.9의 Windows 분기(EFI 복사 + macOS 측 실행 안내 1줄)와 위 카피가 1:1 대응한다. macOS 분기는 BP3.9의 `make-usb: done` 게이트 문구와 충돌 없이 병존한다.
 
@@ -149,10 +153,10 @@ USB 드라이브를 선택하는 순간 표시되는 *경고 문구*:
 | 유지 항목 | 왜 유지했는지 |
 | --- | --- |
 | macOS 버전 선택 | 이후 단계의 EFI 템플릿을 결정하는 *유일한* 핵심 입력이다. |
-| Nextcore EFI 생성 | Nextcore라는 프로젝트의 *핵심 산출물*을 만드는 단계이며, 없으면 부팅 자체가 불가능하다. |
+| NextCore EFI 생성 | NextCore라는 프로젝트의 *핵심 산출물*을 만드는 단계이며, 없으면 부팅 자체가 불가능하다. |
 | macOS 설치 USB 생성 | 사용자가 macOS를 *실제로 설치할 매체*를 만드는 단계이며, EFI만으로는 설치가 진행되지 않는다. |
 
-> 근거: 세 항목은 Nextcore의 정의(Design D1 — EFI 기반 macOS 부팅)와 1:1 대응. 사용자가 "심플한 흐름"을 요구했지만, 이 세 단계는 *최소* 단위라 줄일 수 없다.
+> 근거: 세 항목은 NextCore의 정의(Design D1 — EFI 기반 macOS 부팅)와 1:1 대응. 사용자가 "심플한 흐름"을 요구했지만, 이 세 단계는 *최소* 단위라 줄일 수 없다.
 
 ### P7. 에러 메시지
 
@@ -179,8 +183,8 @@ USB 드라이브를 선택하는 순간 표시되는 *경고 문구*:
 
 - KO: "EFI 디렉터리를 만들 수 없습니다. 쓰기 권한이 있는 폴더를 선택하고 다시 시도하세요. 로그 파일: <log path>"
 - EN: "Could not create the EFI directory. Choose a folder you have write access to and try again. Log file: <log path>"
-- KO: "Nextcore EFI 바이너리 빌드에 실패했습니다. 자세한 내용은 로그 파일을 확인하세요: <log path>"
-- EN: "Nextcore EFI binary build failed. See the log file for details: <log path>"
+- KO: "NextCore EFI 바이너리 빌드에 실패했습니다. 자세한 내용은 로그 파일을 확인하세요: <log path>"
+- EN: "NextCore EFI binary build failed. See the log file for details: <log path>"
 
 **Step 3 (설치 USB 생성)**
 
@@ -221,6 +225,46 @@ USB 드라이브를 선택하는 순간 표시되는 *경고 문구*:
   키/blob 입력은 어느 경우에도 노출하지 않는다.
   - KO: "고급 옵션에는 격리 자산 참조, 내부 포맷 의존 옵션, 키/블롭 입력이 포함될 수 없습니다."
   - EN: "Advanced options must not expose isolated-asset references, internal-format-dependent options, or key/blob inputs."
+
+### P10. NextCore 브랜드와 EFI 피커 카피 — 2026-09-08 확정
+
+제품 제목은 모든 화면에서 `NextCore`로 표기한다. 호환 설정·외부 컴포넌트의
+고유 이름을 제품 이름으로 바꾸지는 않는다. 기존 wizard의 외부 엔진 동작은
+"EFI 구성 준비"처럼 실제 작업을 설명하며 독립 NextCore 바이너리 생성으로
+표시하지 않는다. 설치 버전 목록은 확인된 매체를 기반으로 하며, 사용자 목표
+`macOS 27 GoldenGate`는 별도 목표 항목으로 명확히 표시한다. 현재 성공 증거가
+없는 버전에 "검증됨", "권장", "지원 완료"를 붙이지 않는다.
+
+EFI 화면은 내장 Basic Latin 폰트로 읽을 수 있는 영어를 기본으로 한다.
+이는 한국어를 표시할 수 있는 wizard의 한국어 우선 정책과 다른 firmware
+표시 제약이며, 제공하지 않는 글리프는 안전한 대체 문자로 표시한다.
+
+| 요소 | EFI 카피 | 의미 |
+| --- | --- | --- |
+| 제품 | NextCore | 정확한 제품명 |
+| 화면 제목 | Choose your system | 부팅할 설정 항목 선택 |
+| 선택 상태 | Selected | 밝은 테두리와 함께 표시 |
+| 실행 전 | Starting selected system | Enter로 확정한 상태 |
+| 탐색 | Arrow keys / Tab to choose | 선택 이동 |
+| 부팅 | Enter to boot | 현재 항목 확정 |
+| 취소 | Esc to cancel | 부팅 없이 caller 복귀 |
+| 볼륨 미확인 | Current EFI volume | 확인하지 못한 이름을 만들지 않음 |
+| 빈 목록 | No enabled boot entries | 비어 있는 OS 타일을 만들지 않음 |
+| 텍스트 fallback | NextCore boot menu | 동일한 선택/부팅 키 유지 |
+
+타일 제목은 사용자 설정의 검증된 `Name`, 없으면 `EFI entry N`이다. 볼륨은
+firmware에서 읽은 레이블만 표시한다. 화면 한계를 넘는 제목은 잘라 말줄임표로
+표시하고 내부 선택 항목/경로는 변경하지 않는다. 타일 클릭/마우스/자동 부팅은
+이번 지원 범위에 없으므로 해당 조작을 안내하지 않는다.
+
+Design D13/D14와 이 P10은 공동 확정된 최소 구현 계약이다. 키 선택, 취소,
+GOP 화면과 텍스트 fallback은 host 시험과 실제 OVMF 증거로 검증한다. 설치
+USB 삭제 경고·외부 엔진 출처·실행 성공 판정은 브랜딩 작업으로 약화하지 않는다.
+
+2026-09-08 결과: 실제 GOP 화면과 text fallback의 키 입력→EFI 실행을 확인했다.
+제품명은 BOOTX64, CLI 도움말, 웹/wx wizard 공용 제목, Tauri 표시 설정에 적용했다.
+웹 회귀는 실제 브라우저와 deterministic bridge를 사용했으며 390px 레이아웃,
+실행 경로 분리와 미검증 상태 표시를 확인했다. 이 검증은 native macOS shell 실행이 아니다.
 
 ## OPEN_QUESTION
 

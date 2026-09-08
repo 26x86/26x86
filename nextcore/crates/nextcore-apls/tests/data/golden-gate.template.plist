@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>SchemaVersion</key><integer>1</integer>
+  <key>PlatformPolicy</key><string>AppleIntelOnly</string>
+  <key>CPU</key><dict>
+    <key>MinimumISA</key><string>sse4.2</string>
+    <key>Codegen</key><string>auto</string>
+    <key>HybridScheduling</key><string>capacity-aware</string>
+    <key>VCPUs</key><string>auto</string>
+    <key>ServiceLogicalCPUs</key><integer>1</integer>
+    <key>SMTPolicy</key><string>isolate-cells</string>
+  </dict>
+  <key>Security</key><dict>
+    <key>VMXRequired</key><true/>
+    <key>EPTRequired</key><true/>
+    <key>IOMMURequired</key><true/>
+    <key>InterruptRemappingRequired</key><true/>
+    <key>DMABypass</key><false/>
+  </dict>
+  <key>Memory</key><dict>
+    <key>GuestMiB</key><integer>8192</integer>
+    <key>HostReserveMiB</key><integer>2048</integer>
+    <key>JITCacheMiB</key><integer>256</integer>
+  </dict>
+  <key>Graphics</key><dict>
+    <key>Device</key><string>auto</string>
+    <key>DriverPolicy</key><string>allowlist</string>
+    <key>MinimumProfile</key><string>vfgp-base1</string>
+    <key>OnUnsupported</key><string>halt</string>
+  </dict>
+  <key>Guest</key><dict>
+    <key>ProfileID</key><string></string>
+    <key>RequireMetal</key><true/>
+  </dict>
+</dict>
+</plist>

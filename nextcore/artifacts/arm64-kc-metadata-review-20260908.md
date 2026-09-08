@@ -1,0 +1,35 @@
+# ARM64 KC metadata and opaque staging review — BP22-D
+
+Current state: the existing metadata/staging APIs select the Intel profile. The reviewed extension adds explicit ARM APIs while preserving that default. Desired state: bounded ARM metadata and verified ordinary host-memory copies, with no execution or relocation authority.
+
+DECIDED review scope: public contracts and read-only source review. No production source was changed by this reviewer. Actual-image metadata, addresses and helper outputs remain isolated. This report does not establish macOS 27 ABI equivalence, physical placement, authenticated-pointer execution, userspace or Metal.
+
+## CPU identity
+
+Public XNU `ac9718fb1af618d5ce8678d0dc6e8a58f252216f` [machine.h](https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/mach/machine.h) defines ARM64 type `0x0100000c`, base subtypes ALL=0, V8=1 and ARM64E=2, plus the upper-byte capability mask and pointer-authentication version nibble. Preserve the full raw subtype separately from its base subtype. Recognizing a base subtype is not CPU/ABI compatibility evidence.
+
+The pinned dyld `fd8d0c4d52320ebf64db34f3cb280310d905c5ae` [Architecture.cpp](https://github.com/apple-oss-distributions/dyld/blob/fd8d0c4d52320ebf64db34f3cb280310d905c5ae/mach_o/Architecture.cpp) explicitly names these ARM64E values: `2` (pre-versioned), `0x80000002`, `0x81000002`, `0xc0000002`, `0xc1000002`, `0xc2000002`. Kernel identity uses the `0xc0000000` high-bit pattern plus the version nibble; ARM64 equality compares the capability byte too. The user ABI v1 entry is marked future/unsupported in that source. These are a defensible **metadata recognition subset**, not a list of executable profiles. User value `0x82000002` lacks an explicit named entry at this pin and should remain unsupported in the initial subset.
+
+The same pin's [GradedArchitectures.cpp](https://github.com/apple-oss-distributions/dyld/blob/fd8d0c4d52320ebf64db34f3cb280310d905c5ae/mach_o/GradedArchitectures.cpp) selects only kernel ABI v0 for its ARM64E kernel list. Its [kernel collection builder](https://github.com/apple-oss-distributions/dyld/blob/fd8d0c4d52320ebf64db34f3cb280310d905c5ae/kernel-collection-builder/kernel_collection_builder.cpp) requests that kernel profile for inputs. Requiring the same raw subtype for all headers is therefore a reasonable conservative inspection subset. It must be documented as that subset; this review does not claim that all possible collections forbid mixed subtypes.
+
+## Entry provenance and wire shape
+
+XNU's [loader.h](https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/EXTERNAL_HEADERS/mach-o/loader.h) permits repeated flavor/count/state triples inside one thread command. Accepting only a single triple is a deliberate subset, with unsupported combinations rejected rather than silently ignored. An outer LC_MAIN remains unsupported; member entries retain their own provenance and are never selected for collection boot.
+
+The public [ARM thread header](https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/mach/arm/thread_status.h) defines flavor 6 and derives its count from the state size. The [structure header](https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/mach/arm/_structs.h) places 29 64-bit general registers before FP/LR/SP/PC and two 32-bit fields. An independently authored C layout probe compiled with strict warnings and actually reported state size 272, state PC offset 256, single-command size 288 and command PC offset 272; the count is 68 32-bit words. Command-relative SP/CPSR/flags offsets are 264/280/284. Preserve these fields without PAC stripping or installing them into a CPU.
+
+For the **outer** ARM entry, require 4-byte PC alignment and all four bytes inside an executable, file-backed outer mapping. Metadata validation does not decode those bytes. Do not require member PC equality or apply the outer boot-entry range rule to member entries. Their command fields may be descriptive leftovers rather than usable collection entry points.
+
+## Staging and chains
+
+The [public cache builder](https://github.com/apple-oss-distributions/dyld/blob/fd8d0c4d52320ebf64db34f3cb280310d905c5ae/kernel-collection-builder/AppCacheBuilder.cpp) selects 16-KiB fixup pages and format 8 for its non-Intel cache output. A 16-KiB arena-span rounding profile is appropriate. It does not guarantee the address of a host `Vec` is page aligned, reserve guest RAM, or establish the separate 32-MiB bootstrap mapping conditions.
+
+Outer segments own copies and zero-fill. Member segments are views, may be smaller or less aligned than an outer page, and must not receive independent zero-fill. Keep checked arena rounding, bounded spans and full readback of copied bytes, tails and holes. A physical placement adapter will need its own aligned allocation, checked base-plus-offset calculation, backing lifetime and overlap proof before connecting to boot arguments.
+
+[fixup-chains.h](https://github.com/apple-oss-distributions/dyld/blob/fd8d0c4d52320ebf64db34f3cb280310d905c5ae/include/mach-o/fixup-chains.h) defines format 8 as a 64-bit kernel-cache word with authentication metadata. The [XNU consumer](https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/mach/dyld_kernel_fixups.h) uses four-byte link strides for format 8, distinct from format 11's byte strides. Even an opaque first-chain-start check must require eight file-backed bytes. Keeping format 8 unsupported/unapplied in preparation requirements is correct; copying its bytes does not validate chain targets or PAC.
+
+## Source-review result and minimum validation
+
+The reviewed explicit ARM entry variant, single-triple check, outer PC extent, first format-8 word extent, separate 16-KiB constructor, source borrow and readback logic match these contracts. The interim permissive ARM64E high-byte gate needs the named-subtype restriction discussed above; the implementation owner already accepted that correction. No additional blocking issue was found in the reviewed diff. The Intel classic-rebase and fixup-audit entry points still call their Intel-only constructors/inspector, so adding the ARM staging constructor does not route ARM bytes into those paths.
+
+Minimum regressions: accepted named subtype values and rejection of unknown capability/version combinations; mixed-member rejection; unsupported or truncated thread shapes; outer PC misalignment and a two-byte file tail; member PC unrelated to the outer entry; an unaligned member segment view; format-8 first word truncated at the segment end; unchanged source and opaque fixup bytes; exact copy/tail/hole readback; default Intel API rejection of ARM input. Keep all readiness and guest execution status false. Actual input checks support the stated view/provenance distinctions, and their full results remain isolated.

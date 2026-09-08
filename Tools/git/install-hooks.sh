@@ -4,10 +4,10 @@
 set -euo pipefail
 
 repo_root="$(git rev-parse --show-toplevel)"
-hooks_dir="$repo_root/.git/hooks"
+hooks_dir="$(git -C "$repo_root" rev-parse --path-format=absolute --git-path hooks)"
 mkdir -p "$hooks_dir"
 
-template="$repo_root/tools/git/hooks/pre-commit"
+template="$repo_root/Tools/git/hooks/pre-commit"
 target="$hooks_dir/pre-commit"
 
 if [ ! -f "$template" ]; then

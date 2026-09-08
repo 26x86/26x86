@@ -1,0 +1,10 @@
+#version 450
+// Authored Nextcore storage-buffer acceptance fixture; no Apple shader input.
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+layout(set = 0, binding = 0, std430) buffer Values { uint data[]; } values;
+void main() {
+    uint i = gl_GlobalInvocationID.x;
+    if (i < values.data.length()) {
+        values.data[i] = values.data[i] * 3u + 7u;
+    }
+}

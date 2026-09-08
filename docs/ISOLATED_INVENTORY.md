@@ -23,6 +23,39 @@
 - 자산 *내용*은 절대 본 문서에 적지 않는다.
 - 자산 *도입*/*폐기* 모두 인벤토리 갱신이 *커밋* 단위로 강제된다.
 
+## 2026-09-08 Intel recovery 실행 입력 (위임된 신규 메타)
+
+현재 상태: BP20에 따라 Apple 서버에서 받은 별도 Intel recovery 입력의 chunklist
+검증을 root가 완료했다. 아래 목록은 이번 입력만 추가하며, 위의 과거 빈 목록
+판정이나 이전 격리 조사 전체 인벤토리를 재작성하지 않는다. 원하는 상태는 실제
+버전·아키텍처·매체 역할을 읽기 전용으로 판별한 뒤 정확한 부팅 입력을 선택하는 것이다.
+
+- `_isolated/nextcore/intel-recovery-20260908/recovery/` :: 출처=apple-public-recovery-server 도입=2026-09-08 격리=external-runtime-media 소유=user 검토=2026-09-08 유효=permanent 근거=B1-사용자 보유 원본 macOS 설치·복구·게스트 디스크 매체
+- `_isolated/nextcore/intel-recovery-20260908/extracted/` :: 출처=apple-public-recovery-server 도입=2026-09-08 격리=runtime-media-derived-input 소유=user 검토=2026-09-08 유효=permanent 근거=B1-macOS 원본 .kext 캐시 / System 프레임워크
+- `_isolated/nextcore/intel-recovery-20260908/inspection/` :: 출처=local-read-only-media-inspection 도입=2026-09-08 격리=private-raw-metadata-audit 소유=user 검토=2026-09-08 유효=permanent 근거=B1-IPSW 추출 / BuildManifest 원본
+
+- `_isolated/nextcore/tahoe-baseline-20260908/release/` :: 출처=acidanthera-OpenCorePkg-official-release 도입=2026-09-08 격리=external-reference-only 소유=user 검토=2026-09-08 유효=permanent 근거=B1-OpenCore EFI 빌드 도구
+- `_isolated/nextcore/tahoe-baseline-20260908/completed-observations/` :: 출처=authorized-local-recovery-VM-observation 도입=2026-09-08 격리=private-runtime-analysis 소유=user 검토=2026-09-08 유효=permanent 근거=B1-사용자 보유 원본 macOS 설치·복구·게스트 디스크 매체
+
+- `_isolated/nextcore/tahoe-mca-contract-20260908/` :: 출처=authorized-original-recovery-kext-inspection 도입=2026-09-08 격리=private-runtime-fault-analysis 소유=user 검토=2026-09-08 유효=permanent 근거=B1-macOS 원본 .kext 캐시 / System 프레임워크
+- `_isolated/nextcore/qemu-cmci-20260908/` :: 출처=qemu-official-source-and-local-kvm-probes 도입=2026-09-08 격리=external-experiment-only 소유=user 검토=2026-09-08 유효=permanent 근거=B1-OpenCore fork / 일반 호환성 도구
+- `_isolated/nextcore/kc-bootargs-contract-20260908/` :: 출처=apple-official-public-xnu-header-and-local-abi-probe 도입=2026-09-08 격리=public-source-contract-audit 소유=user 검토=2026-09-08 유효=permanent 근거=B1-Apple 공식 공개 XNU 헤더 / 공개 소스에서 확인되는 ABI
+
+
+- `_isolated/nextcore/tahoe-guest-gpu-20260908/` :: 출처=original-recovery-kext-metadata-and-public-xnu-contract 도입=2026-09-08 격리=private-media-inventory-and-guest-diagnostic 소유=user 검토=2026-09-08 유효=permanent 근거=B1-macOS 원본 .kext 캐시 / System 프레임워크
+- `_isolated/nextcore/tahoe-full-installer-20260908/` :: 출처=apple-official-software-update-production-catalog 도입=2026-09-08 격리=original-installer-and-download-audit 소유=user 검토=2026-09-08 유효=permanent 근거=B1-사용자 보유 원본 macOS 설치·복구·게스트 디스크 매체
+
+- `_isolated/nextcore/arm-fault-time-20260908-r1/` :: 출처=original-arm-guest-readonly-mmio-observation 도입=2026-09-08 격리=private-runtime-observation 소유=user 검토=2026-09-08 유효=permanent 근거=B1-IPSW 추출 / BuildManifest 원본
+- `_isolated/nextcore/arm-fault-time-20260908-r2/` :: 출처=original-arm-guest-readonly-mmio-observation 도입=2026-09-08 격리=private-runtime-observation 소유=user 검토=2026-09-08 유효=permanent 근거=B1-IPSW 추출 / BuildManifest 원본
+- `_isolated/nextcore/arm-fault-time-20260908-r3/` :: 출처=original-arm-guest-readonly-mmio-observation 도입=2026-09-08 격리=private-runtime-observation 소유=user 검토=2026-09-08 유효=permanent 근거=B1-IPSW 추출 / BuildManifest 원본
+- `_isolated/nextcore/bp16-public-delta-20260908/` :: 출처=official-primary-source-pin-review 도입=2026-09-08 격리=source-comparison-audit 소유=user 검토=2026-09-08 유효=permanent 근거=B1-VMApple 디바이스 모델 패치 시리즈
+
+결정: 매체 본체·추출물·원시 조사 결과는 stage하지 않는다. 공개 결과는 빌드 식별자,
+아키텍처, 역할, 해시, 종료 상태 메타로 제한하며 `nextcore/artifacts/boot-media-candidates-20260908.md`에 기록한다.
+외부 다운로드/추출 도구는 같은 실행 작업 디렉터리의 `tools/`에 별도 보관하고
+Nextcore 소스 또는 Cargo 빌드 의존성에 포함하지 않는다. 이는 도구 자체를 Apple
+비공개 자산으로 분류하는 결정이 아니다.
+
 ## 결정 항목
 
 ### I1. 메타 형식
