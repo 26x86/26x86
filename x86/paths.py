@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 BUNDLE_ID: str = "com.niseullent.26x86"
-APP_NAME: str = "26x86"
+APP_NAME: str = "NextCore"
 APP_BUNDLE_NAME: str = "26x86.app"
 
 BUNDLE_ID_PRIVILEGED_HELPER: str = f"{BUNDLE_ID}.privileged-helper"

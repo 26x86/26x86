@@ -14,7 +14,7 @@ mod apls;
 #[command(
     name = "nextcore-tool",
     version,
-    about = "Nextcore configuration and EFI build tool"
+    about = "NextCore configuration and EFI build tool"
 )]
 struct Cli {
     #[command(subcommand)]

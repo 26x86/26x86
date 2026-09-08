@@ -2,9 +2,9 @@
   "use strict";
 
   const DEFAULT_STEPS = [
-    { id: "welcome", title: "시작", heading: "26x86에 오신 것을 환영합니다", desc: "오래된 Mac에서 최신 macOS를 사용할 수 있도록 단계별로 안내합니다." },
+    { id: "welcome", title: "시작", heading: "NextCore에 오신 것을 환영합니다", desc: "오래된 Mac에서 최신 macOS를 사용할 수 있도록 단계별로 안내합니다." },
     { id: "detect", title: "1. 내 Mac 확인", heading: "내 Mac 확인", desc: "하드웨어 정보를 확인합니다." },
-    { id: "build", title: "2. 패치 생성", heading: "패치 생성", desc: "OpenCore EFI를 만듭니다." },
+    { id: "build", title: "2. 패치 생성", heading: "패치 생성", desc: "부팅할 EFI 구성을 준비합니다." },
     { id: "patch", title: "3. 설치·패치", heading: "설치·패치", desc: "EFI 설치와 루트 패치를 진행합니다." },
     { id: "done", title: "검증 · 활동", heading: "작업과 검증 기록", desc: "생성 결과와 실제 기기 검증을 따로 확인합니다." },
   ];
@@ -356,7 +356,7 @@
 
   function renderWelcome() {
     const sandbox = state.mode === "sandbox";
-    return `<div class="welcome-hero"><span class="eyebrow">26x86 / CONTROL CENTER</span>
+    return `<div class="welcome-hero"><span class="eyebrow">NextCore / CONTROL CENTER</span>
       <h2>당신의 Mac, 다음 장으로.</h2><p class="lead">기기를 확인하고, 실행 방식을 선택하세요.<br>모든 작업의 준비 상태와 검증 결과를 한곳에서 확인합니다.</p>
       <p class="lead">버전 ${escapeHtml(state.appInfo?.version || "")} · ${escapeHtml(state.appInfo?.bundle_id || "")}</p>
       <p class="lead">${sandbox ? "Apple Silicon Sandbox Mode · native 드라이버 사용 안 함" : "x86 Mode"} · Mellow: ${escapeHtml(state.appInfo?.mellow_deployment || "disabled")}</p>
@@ -364,7 +364,7 @@
       <div class="overview-meta"><span class="badge">macOS Tahoe 26</span><span class="badge">Golden Gate 27 · 개발 대상</span><span class="badge warning">실험적 프로젝트</span></div></div>
       <div class="section-label"><h3>실행 방식</h3><span>선택 시 디스크를 변경하지 않습니다</span></div>
       <div class="mode-grid" role="group" aria-label="실행 방식">
-        <button class="mode-card${!sandbox ? " selected" : ""}" id="mode-native" aria-pressed="${!sandbox}"><span class="mode-kicker">01 / NATIVE</span><span class="mode-selected" aria-hidden="true"></span><strong>Native Patch</strong><p>OpenCore EFI와 기기별 루트 패치.<br>현재 하드웨어에서 실행할 구성을 준비합니다.</p><span class="badge">OpenCore · Root patches</span></button>
+        <button class="mode-card${!sandbox ? " selected" : ""}" id="mode-native" aria-pressed="${!sandbox}"><span class="mode-kicker">01 / NATIVE</span><span class="mode-selected" aria-hidden="true"></span><strong>Native Patch</strong><p>EFI 구성과 기기별 루트 패치.<br>현재 하드웨어에서 실행할 구성을 준비합니다.</p><span class="badge">EFI · Root patches</span></button>
         <button class="mode-card${sandbox ? " selected" : ""}" id="mode-sandbox" aria-pressed="${sandbox}"><span class="mode-kicker">02 / VIRTUAL APPLE SILICON</span><span class="mode-selected" aria-hidden="true"></span><strong>Apple Silicon Sandbox</strong><p>EFI에서 직접 실행하는 가상 Apple Silicon.<br>macOS 26 이상을 위한 실험적 실행 경로입니다.</p><span class="badge warning">개발 중 · macOS 부팅 미검증</span></button>
       </div>
       <p class="support-note">Sandbox 최소 대상: Mac Pro 2009 · SSE4.1 + SSE4.2. 비 Apple 기기는 동작을 보증하지 않으며 관련 이슈를 받지 않습니다.</p>
@@ -456,14 +456,14 @@
     return `<span class="eyebrow">EFI NATIVE / APPLE SILICON SANDBOX</span><h2>${stage === "patch" ? "EFI 준비 결과" : "Sandbox 준비"}</h2>
       <p class="lead">macOS 게스트 부팅에 필요한 구성 요소와 현재 구현 상태를 확인합니다.</p>
       <div class="metric-grid"><div class="metric"><span>실행 계층</span><strong>EFI · AIC · ARM64 JIT</strong></div><div class="metric"><span>최소 CPU</span><strong>SSE4.1 + SSE4.2</strong></div><div class="metric"><span>macOS 실제 부팅</span><strong>미검증</strong></div></div>
-      <div class="form-row"><div><label for="sandbox-target">대상 macOS</label><select class="field" id="sandbox-target"><option value="26" ${state.sandboxTarget === 26 ? "selected" : ""}>macOS Tahoe 26</option><option value="27" ${state.sandboxTarget === 27 ? "selected" : ""}>macOS Golden Gate 27</option></select></div><div><label for="sandbox-output">새 출력 폴더 경로</label><input class="field" id="sandbox-output" value="${escapeHtml(state.sandboxOutput)}" placeholder="예: C:/26x86-Sandbox 또는 /Users/me/26x86-Sandbox" /></div></div>
+      <div class="form-row"><div><label for="sandbox-target">대상 macOS</label><select class="field" id="sandbox-target"><option value="26" ${state.sandboxTarget === 26 ? "selected" : ""}>macOS Tahoe 26</option><option value="27" ${state.sandboxTarget === 27 ? "selected" : ""}>macOS Golden Gate 27</option></select></div><div><label for="sandbox-output">새 출력 폴더 경로</label><input class="field" id="sandbox-output" value="${escapeHtml(state.sandboxOutput)}" placeholder="예: C:/NextCore-Sandbox 또는 /Users/me/NextCore-Sandbox" /></div></div>
       <div class="policy-grid"><div class="policy-card"><span>MachineType</span><strong>${escapeHtml(vm.machine_type || vmConfig.machine_type || "iBoot(AArch64)")}</strong></div><div class="policy-card"><span>게스트 OS</span><strong class="good-text">${escapeHtml(vm.guest_os || vmConfig.guest_os || "macOS")}</strong></div><div class="policy-card"><span>복구</span><strong>${escapeHtml(vm.recovery_scope?.protocol || vmConfig.recovery_protocol || "DFU/IPSW")} · ${escapeHtml(vm.recovery_scope?.default_image_name || vmConfig.recovery_image_name || "_default.ipsw")}</strong></div></div>
       <p class="support-note policy-note"><strong>iBoot(AArch64) 범위:</strong> macOS만 지원합니다. iOS · iPadOS · 기타 모바일 Apple OS는 부팅·DFU·<code>_default.ipsw</code> 복구 대상으로 받지 않습니다. VMApple 게스트 메타데이터는 <strong>Apple M1 (Virtual)</strong>로 고정되며 실제 Apple 하드웨어 인증을 뜻하지 않습니다.</p>
        <section class="soc-profile" aria-labelledby="soc-profile-heading"><div class="boot-picker-heading"><div><span class="eyebrow">REFERENCE DERIVED / APPLE SILICON</span><h3 id="soc-profile-heading">Apple Silicon 장치 프로필</h3></div><span class="badge warning">참조·검증 분리</span></div><div class="policy-grid"><div class="policy-card"><span>인터럽트</span><strong>AIC</strong><small>현재 VMApple QEMU: ${escapeHtml(socInterrupt.current_vmapple_qemu || "GICv3 baseline")}</small></div><div class="policy-card"><span>스토리지</span><strong>ANS/NVMe → BDIF</strong><small>AUX/root COW와 hardware-model 영수증 필요</small></div><div class="policy-card"><span>그래픽</span><strong>미검증</strong><small>m1_fb · xnu_ramfb 참조, PV 그래픽은 연구 모드에서 제외</small></div></div><p class="support-note">${escapeHtml(socReference.name || "qemu-t8030")}의 ${escapeHtml(socReference.machine_type || "t8030")} 장치 구성을 토폴로지 참고로만 사용합니다. 이 참조는 ${escapeHtml(socReference.guest_scope || "iPhone 11 / iOS")}용이며 macOS 펌웨어·복구 이미지·서명 검증을 제공하지 않습니다.</p>${socDevices.length ? `<details><summary>장치 매핑 보기 (${socDevices.length})</summary><ul class="support-note soc-device-list">${socDevices.map((device) => `<li><strong>${escapeHtml(device.name || "device")}</strong> · ${escapeHtml(device.status || "unknown")} · 현재 QEMU: ${escapeHtml(device.current_vmapple_qemu || "미기록")}</li>`).join("")}</ul></details>` : ""}</section>
        <section class="boot-picker-card" aria-labelledby="boot-picker-heading"><div class="boot-picker-heading"><div><span class="eyebrow">POWER ON / 2.0 SEC WINDOW</span><h3 id="boot-picker-heading">부트 피커 · macOS / Recovery</h3></div><span class="badge${picker.state === "picker" || picker.state === "selected" ? " good" : " warning"}">${escapeHtml(pickerStateLabel)}</span></div><p class="support-note">전원 인가 후 정확히 2초 동안 <kbd>Alt</kbd>/<kbd>Option</kbd>을 누르면 피커가 표시됩니다. 일반 macOS 선택은 DFU 없이 AVPBooter의 AUX/root 직접 부팅을 관찰하고, Recovery 선택만 DFU/IPSW 복구 VM을 시작합니다.</p><div class="boot-picker-status">${infoRow("선택 항목", picker.selection === "recovery" ? "macOS Recovery · _default.ipsw" : picker.selection === "macos" ? `macOS ${state.sandboxTarget}` : "선택 대기")} ${infoRow("입력 기록", picker.trigger || "—")}</div><div class="boot-entries" ${picker.picker_visible ? "" : "hidden"}>${pickerEntries || '<span class="muted">표시할 부트 항목이 없습니다.</span>'}</div><div class="actions"><button type="button" class="btn secondary" id="vmapple-boot-start" ${state.busy ? "disabled" : ""}>2초 부트 피커 시작</button><button type="button" class="btn primary" id="vmapple-launch" ${vmReady && state.bridgeReady && bootSelectionReady && storageLaunchAllowed ? "" : "disabled"}>${launchLabel}</button></div>${picker.state === "default" ? `<p class="support-note${macosSelected ? "" : " warning-text"}">${macosSelected ? "시간이 만료되어 macOS 기본 항목이 선택되었습니다. 직접 부팅은 DFU를 사용하지 않고 UART에서 XNU/userspace 증거를 관찰합니다." : "시간이 만료되어 macOS 기본 항목이 선택되었습니다. Recovery를 실행하려면 Alt/Option으로 Recovery를 선택하세요."}</p>` : ""}</section>
       <div class="proof-list"><div class="proof-item"><span>EFI 자체 검사 파일</span><span class="badge${report.artifact_available ? " good" : " warning"}">${report.artifact_available ? "파일 존재" : "미생성"}</span></div><div class="proof-item"><span>VSK 생산 EFI · 외부 trust anchor</span><span class="badge${report.vsk_artifact_available ? " good" : " warning"}">${report.vsk_artifact_available ? "생성됨 · EBS 미호출" : "미생성"}</span></div><div class="proof-item"><span>원본 macOS 부팅</span><span class="badge warning">아직 준비되지 않음</span></div><div class="proof-item"><span>실제 Mac USB 부팅</span><span class="badge warning">실기 검증 필요</span></div></div>
       ${blockers.length ? `<div class="note"><strong>남은 구현 항목</strong><ul>${blockers.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
-      <p class="support-note">구성: OpenCore config.plist · iBoot 엔진 · SandboxSMBIOS · Hardware/DevProp. 현재 준비 기능은 EFI 자체 검사 패키지를 생성합니다. macOS 설치 또는 부팅을 시작하지 않습니다. 기존 디스크에 자동으로 기록하지 않습니다.</p>
+      <p class="support-note">구성: config.plist · EFI 실행 환경 · SandboxSMBIOS · Hardware/DevProp. 현재 준비 기능은 EFI 자체 검사 패키지를 생성합니다. macOS 설치 또는 부팅을 시작하지 않습니다. 기존 디스크에 자동으로 기록하지 않습니다.</p>
       <div class="actions"><button class="btn secondary" id="sandbox-refresh">준비 상태 다시 확인</button><button class="btn primary" id="sandbox-prepare" ${report.stageable && state.bridgeReady ? "" : "disabled"}>EFI 자체 검사 패키지 준비</button></div>
       ${receipt ? `<pre class="patch-summary" role="status">${escapeHtml(JSON.stringify(receipt, null, 2))}</pre>` : ""}
       <details class="vm-panel" open><summary>실제 보이는 VMApple 복구 VM · <span class="badge${vmConfigured.includes("확인됨") || vmConfigured.includes("입력 확인") ? " good" : " warning"}">${vmConfigured}</span></summary>
@@ -564,7 +564,7 @@
       <button type="button" class="btn primary" id="action-mellow-efi">EFI 준비</button>
       <pre class="patch-summary" id="mellow-result"></pre>`;
     if (isSurface()) return `<h2>Surface Pro 6 루트 패치</h2>
-      <p>설치된 Tahoe에서 AppleHDA와 KDK 조건을 검사한 뒤 기존 26x86 패치 엔진을 실행합니다. 먼저 USB EFI로 macOS를 부팅하세요.</p>
+      <p>설치된 Tahoe에서 AppleHDA와 KDK 조건을 검사한 뒤 기존 외부 패치 엔진을 실행합니다. 먼저 USB EFI로 macOS를 부팅하세요.</p>
       <div class="patch-summary" id="patch-summary">${escapeHtml(state.patchSummary)}</div>
       <div class="actions">
         <button type="button" class="btn primary" id="action-patch"${state.appInfo?.host_is_mac ? "" : " disabled"}>macOS 루트 패치 열기</button>
@@ -1002,7 +1002,7 @@
     });
 
     els.appTitle.textContent = appInfo.app_name;
-    els.appSubtitle.textContent = appInfo.bundle_id;
+    els.appSubtitle.textContent = "Boot & compatibility";
     els.versionText.textContent = `v${appInfo.version}`;
 
     if (appInfo.logo_url) {

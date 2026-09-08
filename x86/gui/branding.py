@@ -11,13 +11,13 @@ from typing import Optional
 from x86.manifest import APP_NAME, BUNDLE_ID
 from x86.paths import Paths
 
-LOGO_BASENAME = "26x86-logo"
+LOGO_BASENAME = "nextcore-logo"
 APP_ICON_BASENAME = "26x86"
 
 
 def window_title(version: str = "") -> str:
-    """Primary window title: ``26x86 (com.niseullent.26x86)``."""
-    base = f"{APP_NAME} ({BUNDLE_ID})"
+    """Product title; the persistent bundle identifier remains unchanged."""
+    base = APP_NAME
     if version:
         return f"{base} {version}"
     return base
@@ -31,6 +31,7 @@ def about_description_lines() -> list[str]:
     return [
         "오래된 Mac에서 Apple이 공식 지원하지 않는",
         "최신 macOS를 사용할 수 있도록 돕는 도구입니다.",
+        "외부 구성요소: OpenCore / OpenCore Legacy Patcher",
         "",
         BUNDLE_ID,
     ]

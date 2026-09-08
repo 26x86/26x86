@@ -48,7 +48,7 @@ WEB_STEPS: list[dict[str, str]] = [
     {
         "id": "welcome",
         "title": "시작",
-        "heading": "26x86에 오신 것을 환영합니다",
+        "heading": "NextCore에 오신 것을 환영합니다",
         "desc": "오래된 Mac에서 최신 macOS를 사용할 수 있도록 단계별로 안내합니다.",
     },
     {

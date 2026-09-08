@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "26x86",
+  "productName": "NextCore",
   "version": "0.1.0",
   "identifier": "com.niseullent.26x86",
   "build": {
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "26x86",
+        "title": "NextCore",
         "width": 1180,
         "height": 820,
         "minWidth": 760,
@@ -49,8 +49,8 @@
         "type": "downloadBootstrapper"
       }
     },
-    "shortDescription": "26x86 wizard GUI (Tauri / WKWebView)",
-    "longDescription": "Native WebView shell for the 26x86 HTML wizard. Uses WKWebView on macOS and WebView2 on Windows \u2014 not Qt WebEngine/Chromium."
+    "shortDescription": "NextCore wizard GUI (Tauri / WKWebView)",
+    "longDescription": "Native WebView shell for the NextCore HTML wizard. Uses WKWebView on macOS and WebView2 on Windows \u2014 not Qt WebEngine/Chromium."
   },
   "plugins": {}
 }
