@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "restore_task_failure_resolved": true,
+  "correction": "Configured guest RAM 2048 -> 8192 MiB; no EFI/kernel patch",
+  "xnu_and_launchd_observed": true,
+  "windowserver_started": true,
+  "smc_followup_visible_gui_surface": true,
+  "recovery_gui_readable_verified": true,
+  "metal_verified": false,
+  "native_hal_verified": false,
+  "original_helpers_media_unchanged": true,
+  "copied_efi_helpers_readback_match": true,
+  "cleanup_complete": true,
+  "raw_evidence_isolated": "_isolated/nextcore/native-userspace-recovery-20260908/result.json",
+  "raw_evidence_sha256": "c91386a918e1da9a8254544b45f0c86343a363131e98b6aeb8774b5cf365eacb",
+  "guest_runtime_seconds": {
+    "memory8g": 68.0624,
+    "memory8g-smc": 68.0311
+  },
+  "source_bootx64_sha256": "ac7a48240ab34b8032c39f9fededb81957f7d32e0a8f626526df303a9ac9ae22",
+  "recovery_menu_access_verified": true,
+  "recovery_terminal_input_verified": true,
+  "keyboard_and_pointer_verified": true,
+  "gui_profile_additions": [
+    "8 GiB RAM",
+    "QEMU SMC",
+    "XHCI controller",
+    "USB keyboard",
+    "USB tablet"
+  ],
+  "gui_observation": "Previous UI was an input-pairing screen; readable GUI required USB input, not a framebuffer patch",
+  "gui_resolution": [
+    1280,
+    800
+  ],
+  "production_source_changed": false,
+  "full_installed_os_verified": false,
+  "bp21_picker_binary_run": false,
+  "gui_evidence_isolated": "_isolated/nextcore/native-userspace-recovery-20260908/gui-result.json",
+  "gui_evidence_sha256": "5a4930c5431de4e278880fc6b57d273c524e42b4d2e2377079148f579603a4ec",
+  "gui_runtime_seconds": {
+    "gui-long": 298.0323,
+    "gui-usb": 298.0537,
+    "gui-terminal": 292.632
+  },
+  "terminal_ended_by_explicit_qmp_quit": true
+}
