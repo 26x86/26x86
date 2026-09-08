@@ -79,6 +79,11 @@ jobs:
           python3 nextcore/tools/verify_arm_platform_irq_ovmf.py \
             --efi "$RUNNER_TEMP/NXARMJIT-probe.efi" \
             --output "$RUNNER_TEMP/nextcore-platform-irq-proof"
+      - name: Execute integer pair memory and precise faults in x86 EFI
+        run: |
+          python3 nextcore/artifacts/arm-pair-memory-20260909/verify_pair_ovmf.py \
+            --tools nextcore/tools --efi "$RUNNER_TEMP/NXARMJIT-probe.efi" \
+            --output "$RUNNER_TEMP/nextcore-pair-memory-proof"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -91,3 +96,5 @@ jobs:
             ${{ runner.temp }}/nextcore-sptm-prefix-proof/*/serial.log
             ${{ runner.temp }}/nextcore-platform-irq-proof/report.json
             ${{ runner.temp }}/nextcore-platform-irq-proof/*/serial.log
+            ${{ runner.temp }}/nextcore-pair-memory-proof/report.json
+            ${{ runner.temp }}/nextcore-pair-memory-proof/*/serial.log

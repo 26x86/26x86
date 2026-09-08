@@ -1,0 +1,10 @@
+{
+  "schema": "nextcore.pair-device-alignment-negative-control/1",
+  "passed": true,
+  "mutation": "Restore old SCTLR.A-only pair alignment check in an external C copy",
+  "exit_code": 1,
+  "stderr": "line84: status==(sa?VF_SP_ALIGNMENT_FAULT:VF_ALIGNMENT_FAULT)\n",
+  "original_jit_sha256": "08146f4381a3254077fd2187dd307fb0583315453006fed4b936fabd06d2cfe3",
+  "modified_jit_sha256": "2124a50fc51069f9645ab7c3fa7bde8d93a0192e11240c5c86a7d560dfec5cf9",
+  "source_tree_modified": false
+}

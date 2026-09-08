@@ -1497,3 +1497,42 @@ BP27 CI repair: the independent EFI runner installed clang/lld but omitted
 LLVM tools; archive creation failed because llvm-ar was absent. Declare llvm
 in the module workflow and both root firmware-building jobs, including
 llvm-objcopy needed by authored fixtures. Runtime source behavior is unchanged.
+
+
+BP27 publication closure: all six changed module pull requests and parent PR #9
+passed required CI and merged into main. The parent merge is f345a8a4. Completed
+module/task branches were deleted only after merge/reachability checks; unrelated
+unmerged work remains. Cleanup artifacts and tested hashes are preserved.
+
+## BP28 — integer pair memory and portable GPU selection
+
+Current: the BP27 original prefix stops at an integer store pair after 26
+instructions. The host Vulkan backend cannot disambiguate identical PCI device
+IDs and excludes valid noncoherent HOST_VISIBLE allocations. Actual native MMU,
+normal macOS startup and guest Metal remain incomplete.
+
+Decision: the existing delegated CPU work implements integer STP/LDP 32/64-bit
+signed-offset/pre/post addressing, complete RAM span validation, precise data/SP
+alignment faults and success-only writeback. SIMD, MMIO pairs and translated
+pairs remain explicit unsupported paths. The GPU delegation extends existing
+Vulkan selection with observed device UUID, feature/queue/memory diagnostics,
+and correct noncoherent flush/invalidate, without vendor filtering or fallback.
+Detailed contracts live in the ISE/GPU submodules. Root owns dependency pins,
+CI, inventories, independent integration tests and authorized PR/main publication.
+
+The EFI agent supplies independently authored pair/fault fixtures and the bounded
+original r4 diagnostic with no original bytes or execution coordinates published.
+A fresh recursive clone must execute the same immutable module revisions.
+The CPU agent is delegated the next unsigned-immediate scalar integer memory
+family in a separate BP29 worktree after immutable BP28 source, with its own
+contract and oracle; this cannot alter the BP28 validation input.
+
+
+BP28 review correction: MMU-disabled/HCR=0 data is Device-nGnRnE, requiring
+element alignment even when SCTLR.A=0. The first pair implementation incorrectly
+allowed unaligned RAM in this case. Corrected ISE 07cd3e19 supersedes that
+expectation before PR #2 merge. Reference/native regressions and a restored-bug
+negative control prove the correction. QEMU omits this A=0 check and SP alignment;
+those limits are explicit rather than treating oracle success as full coverage.
+EFI observation covers status/ESR/registers/SP/retirement; host C/Rust probes
+also inspect FAR and unchanged memory, which the EFI v2 result does not expose.
