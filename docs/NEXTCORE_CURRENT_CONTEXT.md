@@ -107,21 +107,24 @@ macOS host가 없으므로 Virtualization.framework 기반 ARM guest boot는 이
 ## 모듈 배포 상태
 
 NextCore의 다음 public repositories를 기존 이력 위에서 갱신했다. Core/GPU/HAL/
-ISE/APLS/EFI의 최신 tag는 `26x86-Nextcore-<Module>-v0.1.1`, Tool은
-`26x86-Nextcore-Tool-v0.1.2`이며 각 원격 main과 해당 tag commit이 일치한다:
+ISE/APLS/EFI/Tool 중 Core·EFI의 최신 tag는 v0.1.2, Tool은 v0.1.3,
+GPU/HAL/ISE/APLS는 v0.1.1이다. 각 원격 main과 해당 tag commit이 일치한다:
 
 - `26x86/Nextcore-Core`, `Nextcore-GPU`, `Nextcore-HAL`, `Nextcore-ISE`
 - `26x86/Nextcore-APLS`, `Nextcore-EFI`, `Nextcore-Tool`
 
-이번 source는 고정 commit `dcc9001`이며 Tool fixture 수정은 `0450657`이다.
-7개 최신 snapshot 모두 게시 전후 fresh-clone gate 및 exact-head GitHub CI가
-통과했다. 최초 Tool v0.1.1의 sibling fixture 결함은 Windows 인접 clone이 놓쳤고
-Linux CI가 발견했다. 실패 tag를 보존하고 v0.1.2를 Linux 단독 clone에서 검증했다.
-기존 exporter의 작업 중 변경은 사용하지 않았으며 source Git object와 fixed
-dependency tag, canonical blob inventory로 배포했다. 조직 profile은 `4e446a4`로
-NextCore 브랜딩·목표·7개 release link를 반영하고 원격 readback을 확인했다.
-[전체 release 증거](../nextcore/artifacts/module-release-v011-20260908/README.md)는
-소프트웨어/배포 검사이며 guest Metal 실행을 뜻하지 않는다.
+APFS release source는 고정 main `65d1e85`다. Core `6547be4`, EFI `64a2d4c`,
+Tool `36e0fd5`는 각각 Linux의 단일 repository만 있는 별도 parent에서 게시 전후
+검증을 통과했다. Core 203 tests/no-default APFS 23/no_std, EFI all-feature UEFI
+check와 NXAPFS 실제 link, Tool 17 passed/1 ignored 및 모든 exact-head CI가 통과했다.
+나머지 4개 crate subtree는 이전 source와 동일해 기존 tag를 유지했다. 최종 7개
+원격 ref와 모든 이전 tag 보존을 다시 확인했다. 최초 Tool v0.1.1 실패도 보존한다.
+기존 exporter의 작업 중 변경은 사용하지 않았으며 source Git object와 고정
+dependency tag만 배포 입력이다. 조직 profile `440e6a9`는 해당 release와 APFS
+driver 실행 경계를 반영했고 원격 byte readback이 일치했다.
+[최신 release 증거](../nextcore/artifacts/module-release-apfs-20260908/README.md)는
+소프트웨어/배포 검사이며 guest Metal 실행을 뜻하지 않는다. 이후 BP24-B 파일시스템
+관찰 기능은 이 고정 source release에 포함되지 않았다.
 
 ## 최소 재개 절차
 

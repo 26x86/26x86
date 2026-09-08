@@ -1,0 +1,133 @@
+{
+  "only_task_owned_finished_targets": true,
+  "records": [
+    {
+      "module": "Core",
+      "phase": "pre",
+      "checked_target": "/tmp/nextcore-apfs-release-core-pre-zkgvycjn/module/target",
+      "argv": [
+        "cargo",
+        "clean",
+        "--profile",
+        "dev",
+        "--manifest-path",
+        "/tmp/nextcore-apfs-release-core-pre-zkgvycjn/module/Cargo.toml",
+        "--target-dir",
+        "/tmp/nextcore-apfs-release-core-pre-zkgvycjn/module/target"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "     Removed 1909 files, 869.6MiB total\n",
+      "before_bytes": 920120193,
+      "after_bytes": 8244872,
+      "elapsed_seconds": 0.043
+    },
+    {
+      "module": "EFI",
+      "phase": "pre",
+      "checked_target": "/tmp/nextcore-apfs-release-efi-pre-39_v6tn2/module/target",
+      "argv": [
+        "cargo",
+        "clean",
+        "--profile",
+        "dev",
+        "--manifest-path",
+        "/tmp/nextcore-apfs-release-efi-pre-39_v6tn2/module/Cargo.toml",
+        "--target-dir",
+        "/tmp/nextcore-apfs-release-efi-pre-39_v6tn2/module/target"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "     Removed 76 files, 91.4MiB total\n",
+      "before_bytes": 207831363,
+      "after_bytes": 112023320,
+      "elapsed_seconds": 0.018
+    },
+    {
+      "module": "Tool",
+      "phase": "pre",
+      "checked_target": "/tmp/nextcore-apfs-release-tool-pre-1paxobns/module/target",
+      "argv": [
+        "cargo",
+        "clean",
+        "--profile",
+        "dev",
+        "--manifest-path",
+        "/tmp/nextcore-apfs-release-tool-pre-1paxobns/module/Cargo.toml",
+        "--target-dir",
+        "/tmp/nextcore-apfs-release-tool-pre-1paxobns/module/target"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "     Removed 894 files, 453.4MiB total\n",
+      "before_bytes": 475453589,
+      "after_bytes": 1449,
+      "elapsed_seconds": 0.023
+    },
+    {
+      "module": "Core",
+      "phase": "post",
+      "checked_target": "/tmp/nextcore-apfs-release-core-post-9lvdpusr/module/target",
+      "argv": [
+        "cargo",
+        "clean",
+        "--profile",
+        "dev",
+        "--manifest-path",
+        "/tmp/nextcore-apfs-release-core-post-9lvdpusr/module/Cargo.toml",
+        "--target-dir",
+        "/tmp/nextcore-apfs-release-core-post-9lvdpusr/module/target"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "     Removed 1909 files, 869.6MiB total\n",
+      "before_bytes": 920122405,
+      "after_bytes": 8244926,
+      "elapsed_seconds": 0.026
+    },
+    {
+      "module": "EFI",
+      "phase": "post",
+      "checked_target": "/tmp/nextcore-apfs-release-efi-post-ttvunwlg/module/target",
+      "argv": [
+        "cargo",
+        "clean",
+        "--profile",
+        "dev",
+        "--manifest-path",
+        "/tmp/nextcore-apfs-release-efi-post-ttvunwlg/module/Cargo.toml",
+        "--target-dir",
+        "/tmp/nextcore-apfs-release-efi-post-ttvunwlg/module/target"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "     Removed 76 files, 91.4MiB total\n",
+      "before_bytes": 207839711,
+      "after_bytes": 112031643,
+      "elapsed_seconds": 0.019
+    },
+    {
+      "module": "Tool",
+      "phase": "post",
+      "checked_target": "/tmp/nextcore-apfs-release-tool-post-bzdmmwnv/module/target",
+      "argv": [
+        "cargo",
+        "clean",
+        "--profile",
+        "dev",
+        "--manifest-path",
+        "/tmp/nextcore-apfs-release-tool-post-bzdmmwnv/module/Cargo.toml",
+        "--target-dir",
+        "/tmp/nextcore-apfs-release-tool-post-bzdmmwnv/module/target"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "     Removed 894 files, 453.4MiB total\n",
+      "before_bytes": 475454211,
+      "after_bytes": 1449,
+      "elapsed_seconds": 0.035
+    }
+  ],
+  "reclaimed_bytes": 2966273813,
+  "source_clones_logs_and_nxapfs_binaries_preserved": true
+}

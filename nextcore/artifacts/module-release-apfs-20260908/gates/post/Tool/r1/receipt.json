@@ -1,0 +1,111 @@
+{
+  "module": "Tool",
+  "phase": "post",
+  "attempt": 1,
+  "source_commit": "65d1e85db2dfcd4e1c07656bb0bfc315d36fac83",
+  "expected_head": "36e0fd50047182ee6b2abdca87249d8c1a084e73",
+  "tag": "26x86-Nextcore-Tool-v0.1.3",
+  "single_repo_parent": "/tmp/nextcore-apfs-release-tool-post-bzdmmwnv",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--no-local",
+        "--config",
+        "core.autocrlf=false",
+        "--config",
+        "core.eol=lf",
+        "--branch",
+        "26x86-Nextcore-Tool-v0.1.3",
+        "https://github.com/26x86/Nextcore-Tool.git",
+        "/tmp/nextcore-apfs-release-tool-post-bzdmmwnv/module"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.042,
+      "stdout": "0.stdout",
+      "stderr": "0.stderr"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.02,
+      "stdout": "1.stdout",
+      "stderr": "1.stderr"
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.014,
+      "stdout": "2.stdout",
+      "stderr": "2.stderr"
+    },
+    {
+      "argv": [
+        "rustc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.189,
+      "stdout": "3.stdout",
+      "stderr": "3.stderr"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 29.541,
+      "stdout": "4.stdout",
+      "stderr": "4.stderr"
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.017,
+      "stdout": "5.stdout",
+      "stderr": "5.stderr"
+    }
+  ],
+  "passed": true,
+  "guest_execution_claimed": false,
+  "inventory_files_verified": 12,
+  "inventory_basis": "committed Git blobs and exact Linux checkout bytes",
+  "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+  "cargo_lock_sha256": "265591b3ead2cfc47d683f7d583f54e8128396cb2fb272dd2cc2cdd8347f3f82",
+  "resolved_nextcore": [
+    {
+      "name": "nextcore-apls",
+      "version": "0.1.0",
+      "source": "git+https://github.com/26x86/Nextcore-APLS.git?tag=26x86-Nextcore-APLS-v0.1.1#f4d640e362fbcf160994d833b330e16506de9110"
+    },
+    {
+      "name": "nextcore-core",
+      "version": "0.1.0",
+      "source": "git+https://github.com/26x86/Nextcore-Core.git?tag=26x86-Nextcore-Core-v0.1.2#6547be4bbf6b75cf706b89ade4d4a60d5441d223"
+    },
+    {
+      "name": "nextcore-gpu",
+      "version": "0.1.0",
+      "source": "git+https://github.com/26x86/Nextcore-GPU.git?tag=26x86-Nextcore-GPU-v0.1.1#8962199b5a7381850ef9aa9e72e98b45a8671d46"
+    },
+    {
+      "name": "nextcore-tool",
+      "version": "0.1.0"
+    }
+  ]
+}

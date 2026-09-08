@@ -1,0 +1,69 @@
+{
+  "observed_utc": "2026-09-08T07:56:44.057208+00:00",
+  "modules": [
+    {
+      "module": "Core",
+      "head": "6547be4bbf6b75cf706b89ade4d4a60d5441d223",
+      "runs": [
+        {
+          "id": 34201618686,
+          "head_sha": "6547be4bbf6b75cf706b89ade4d4a60d5441d223",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-Core/actions/runs/34201618686"
+        },
+        {
+          "id": 34201618481,
+          "head_sha": "6547be4bbf6b75cf706b89ade4d4a60d5441d223",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-Core/actions/runs/34201618481"
+        }
+      ],
+      "all_success": true
+    },
+    {
+      "module": "EFI",
+      "head": "64a2d4ce432c2f5ccd300728309556c898317436",
+      "runs": [
+        {
+          "id": 34201700787,
+          "head_sha": "64a2d4ce432c2f5ccd300728309556c898317436",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-EFI/actions/runs/34201700787"
+        },
+        {
+          "id": 34201700605,
+          "head_sha": "64a2d4ce432c2f5ccd300728309556c898317436",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-EFI/actions/runs/34201700605"
+        }
+      ],
+      "all_success": true
+    },
+    {
+      "module": "Tool",
+      "head": "36e0fd50047182ee6b2abdca87249d8c1a084e73",
+      "runs": [
+        {
+          "id": 34201708364,
+          "head_sha": "36e0fd50047182ee6b2abdca87249d8c1a084e73",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-Tool/actions/runs/34201708364"
+        },
+        {
+          "id": 34201708296,
+          "head_sha": "36e0fd50047182ee6b2abdca87249d8c1a084e73",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-Tool/actions/runs/34201708296"
+        }
+      ],
+      "all_success": true
+    }
+  ],
+  "passed": true
+}

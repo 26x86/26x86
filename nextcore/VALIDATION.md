@@ -96,6 +96,15 @@ binary·격리 receipt hash를 기록했다. 원본 파일명/volume ID/경로·
 
 ## BP23 원격 동기화 (2026-09-08)
 
+후속 APFS module release는 고정 main `65d1e85`에서 Core/EFI v0.1.2와 Tool
+v0.1.3을 게시했다. 독립 Linux single-parent clone의 전후 gate와 exact-head
+main/tag CI 모두 통과했고 기존 tag를 보존했다. Core 203 tests/APFS 23/no_std,
+EFI all-feature check/NXAPFS 실제 link, Tool 17 passed/1 ignored다. 변경 없는
+GPU/HAL/ISE/APLS는 v0.1.1을 유지한다. 조직 profile `440e6a9`의 원격 byte readback과
+7개 repository 최종 ref audit도 통과했다.
+[후속 release receipt](artifacts/module-release-apfs-20260908/release-receipt.json)를
+보존한다. 해당 고정 release에는 이후 BP24-B 파일시스템 관찰 변경이 들어 있지 않다.
+
 PR #5의 head `ee04ddad4d7cbba8033df1d48082a513b931e43d`에서 모든 원격 검사가
 통과한 뒤 main `06262cb970ef482415493e9f5f9a32c05476dc9c`로 squash merge했다.
 Pages run `34197153249`의 build/deploy도 성공했다. 실제 배포 페이지 검사에서

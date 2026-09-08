@@ -1,0 +1,28 @@
+
+running 23 tests
+test aggregate_extent_capacity_overflow_is_rejected ... ok
+test changed_prefix_is_rejected ... ok
+test bad_checksums_stop_before_dependent_reads ... ok
+test driver_payload_is_opaque_and_not_mistaken_for_checksummed_or_valid_pe ... ok
+test excess_allocated_capacity_is_not_read_or_returned ... ok
+test extra_extents_are_validated_even_when_they_are_not_read ... ok
+test caller_limits_are_enforced ... ok
+test absent_negative_and_outside_jumpstart_addresses_do_not_seek ... ok
+test container_geometry_is_checked_without_wrapping ... ok
+test extent_count_and_complete_table_must_fit_the_checksum_block ... ok
+test all_fusion_indicators_fail_before_jumpstart_read ... ok
+test block_size_prefix_is_bounded_before_allocation_or_full_read ... ok
+test device_errors_and_short_reads_are_preserved_at_each_boundary ... ok
+test incompatible_features_fail_closed ... ok
+test fletcher_matches_independent_c_vectors_and_checksum_field_is_excluded ... ok
+test bad_magic_and_object_headers_are_rejected_after_valid_checksum ... ok
+test insufficient_capacity_does_not_return_partial_bytes ... ok
+test jumpstart_reserved_and_optional_feature_bits_are_preserved_as_opaque ... ok
+test partition_bounds_stop_reads_before_callback ... ok
+test physical_jumpstart_must_match_its_address_and_storage_type ... ok
+test signed_and_overflowing_extent_ranges_fail_before_data_reads ... ok
+test unsupported_jumpstart_version_and_zero_file_length_are_rejected ... ok
+test ordered_extents_return_exact_file_size_for_small_and_large_blocks ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

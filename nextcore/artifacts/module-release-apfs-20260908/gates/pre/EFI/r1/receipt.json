@@ -1,0 +1,126 @@
+{
+  "module": "EFI",
+  "phase": "pre",
+  "attempt": 1,
+  "source_commit": "65d1e85db2dfcd4e1c07656bb0bfc315d36fac83",
+  "expected_head": "64a2d4ce432c2f5ccd300728309556c898317436",
+  "tag": "26x86-Nextcore-EFI-v0.1.2",
+  "single_repo_parent": "/tmp/nextcore-apfs-release-efi-pre-39_v6tn2",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--no-local",
+        "--config",
+        "core.autocrlf=false",
+        "--config",
+        "core.eol=lf",
+        "/mnt/c/Users/Admin/AppData/Local/Temp/nextcore-modules-apfs-20260908-a9t5f8l2/Nextcore-EFI",
+        "/tmp/nextcore-apfs-release-efi-pre-39_v6tn2/module"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.172,
+      "stdout": "0.stdout",
+      "stderr": "0.stderr"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.011,
+      "stdout": "1.stdout",
+      "stderr": "1.stderr"
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.011,
+      "stdout": "2.stdout",
+      "stderr": "2.stderr"
+    },
+    {
+      "argv": [
+        "rustc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.091,
+      "stdout": "3.stdout",
+      "stderr": "3.stderr"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 13.817,
+      "stdout": "4.stdout",
+      "stderr": "4.stderr"
+    },
+    {
+      "argv": [
+        "cargo",
+        "build",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features",
+        "--bin",
+        "NXAPFS"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 8.164,
+      "stdout": "5.stdout",
+      "stderr": "5.stderr"
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.016,
+      "stdout": "6.stdout",
+      "stderr": "6.stderr"
+    }
+  ],
+  "passed": true,
+  "guest_execution_claimed": false,
+  "inventory_files_verified": 21,
+  "inventory_basis": "committed Git blobs and exact Linux checkout bytes",
+  "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+  "cargo_lock_sha256": "e284cf2dc9606cc33394471c16577c04dd871b6f8832c77ad96959a4128fd411",
+  "resolved_nextcore": [
+    {
+      "name": "nextcore-core",
+      "version": "0.1.0",
+      "source": "git+https://github.com/26x86/Nextcore-Core.git?tag=26x86-Nextcore-Core-v0.1.2#6547be4bbf6b75cf706b89ade4d4a60d5441d223"
+    },
+    {
+      "name": "nextcore-efi",
+      "version": "0.1.0"
+    }
+  ],
+  "nxapfs": {
+    "bytes": 176128,
+    "sha256": "1400ed3caf28c4e94e5423bc26b1a30b08872b7760cfe41570a201ae470646fb",
+    "machine": 34404,
+    "optional_magic": 523,
+    "subsystem": 10,
+    "entry_rva_nonzero": true,
+    "preserved_path": "/mnt/c/Users/Admin/AppData/Local/Temp/nextcore-modules-apfs-20260908-a9t5f8l2/preserved-binaries/pre/NXAPFS.efi",
+    "executed": false
+  }
+}

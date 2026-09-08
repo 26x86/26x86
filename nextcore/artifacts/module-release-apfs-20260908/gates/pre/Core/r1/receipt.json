@@ -1,0 +1,121 @@
+{
+  "module": "Core",
+  "phase": "pre",
+  "attempt": 1,
+  "source_commit": "65d1e85db2dfcd4e1c07656bb0bfc315d36fac83",
+  "expected_head": "6547be4bbf6b75cf706b89ade4d4a60d5441d223",
+  "tag": "26x86-Nextcore-Core-v0.1.2",
+  "single_repo_parent": "/tmp/nextcore-apfs-release-core-pre-zkgvycjn",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--no-local",
+        "--config",
+        "core.autocrlf=false",
+        "--config",
+        "core.eol=lf",
+        "/mnt/c/Users/Admin/AppData/Local/Temp/nextcore-modules-apfs-20260908-a9t5f8l2/Nextcore-Core",
+        "/tmp/nextcore-apfs-release-core-pre-zkgvycjn/module"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.254,
+      "stdout": "0.stdout",
+      "stderr": "0.stderr"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.013,
+      "stdout": "1.stdout",
+      "stderr": "1.stderr"
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.015,
+      "stdout": "2.stdout",
+      "stderr": "2.stderr"
+    },
+    {
+      "argv": [
+        "rustc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.033,
+      "stdout": "3.stdout",
+      "stderr": "3.stderr"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 22.357,
+      "stdout": "4.stdout",
+      "stderr": "4.stderr"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--no-default-features",
+        "--test",
+        "apfs_jumpstart"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.343,
+      "stdout": "5.stdout",
+      "stderr": "5.stderr"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--no-default-features",
+        "--lib",
+        "--target",
+        "x86_64-unknown-uefi"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.145,
+      "stdout": "6.stdout",
+      "stderr": "6.stderr"
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.02,
+      "stdout": "7.stdout",
+      "stderr": "7.stderr"
+    }
+  ],
+  "passed": true,
+  "guest_execution_claimed": false,
+  "inventory_files_verified": 51,
+  "inventory_basis": "committed Git blobs and exact Linux checkout bytes",
+  "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+  "cargo_lock_sha256": "fa5cbe26b3f4286902c0512a0e6cf60d1117b0790bc9138808e59158b985eb6c",
+  "resolved_nextcore": [
+    {
+      "name": "nextcore-core",
+      "version": "0.1.0"
+    }
+  ]
+}

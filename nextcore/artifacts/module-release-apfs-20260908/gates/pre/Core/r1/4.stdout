@@ -1,0 +1,333 @@
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+test test_find_table ... ok
+test test_xsdt_parse ... ok
+test test_rsdp_detection ... ok
+test test_table_signatures ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 23 tests
+test aggregate_extent_capacity_overflow_is_rejected ... ok
+test bad_checksums_stop_before_dependent_reads ... ok
+test absent_negative_and_outside_jumpstart_addresses_do_not_seek ... ok
+test changed_prefix_is_rejected ... ok
+test driver_payload_is_opaque_and_not_mistaken_for_checksummed_or_valid_pe ... ok
+test caller_limits_are_enforced ... ok
+test block_size_prefix_is_bounded_before_allocation_or_full_read ... ok
+test container_geometry_is_checked_without_wrapping ... ok
+test excess_allocated_capacity_is_not_read_or_returned ... ok
+test all_fusion_indicators_fail_before_jumpstart_read ... ok
+test extra_extents_are_validated_even_when_they_are_not_read ... ok
+test insufficient_capacity_does_not_return_partial_bytes ... ok
+test jumpstart_reserved_and_optional_feature_bits_are_preserved_as_opaque ... ok
+test extent_count_and_complete_table_must_fit_the_checksum_block ... ok
+test device_errors_and_short_reads_are_preserved_at_each_boundary ... ok
+test partition_bounds_stop_reads_before_callback ... ok
+test physical_jumpstart_must_match_its_address_and_storage_type ... ok
+test incompatible_features_fail_closed ... ok
+test signed_and_overflowing_extent_ranges_fail_before_data_reads ... ok
+test bad_magic_and_object_headers_are_rejected_after_valid_checksum ... ok
+test unsupported_jumpstart_version_and_zero_file_length_are_rejected ... ok
+test fletcher_matches_independent_c_vectors_and_checksum_field_is_excluded ... ok
+test ordered_extents_return_exact_file_size_for_small_and_large_blocks ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 12 tests
+test default_intel_inspection_and_staging_still_reject_arm ... ok
+test format8_start_requires_full_opaque_word ... ok
+test last_complete_instruction_extent_is_accepted ... ok
+test explicit_plain_arm64_profiles_are_not_inferred_from_arm64e ... ok
+test malformed_outer_and_member_ranges_stay_bounded ... ok
+test pc_requires_alignment_and_all_four_file_backed_bytes ... ok
+test raw_cpu_and_thread_provenance_survive_inspection ... ok
+test thread_flavor_count_and_single_state_subset_are_checked ... ok
+test member_shared_views_do_not_require_outer_page_alignment ... ok
+test wrong_cpu_and_mixed_member_subtypes_are_rejected ... ok
+test staging_rounds_16k_and_preserves_every_source_view ... ok
+test staging_detects_corrupt_header_payload_tail_and_hole ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 12 tests
+test disabled_fields_are_still_checked_and_error_tokens_cannot_inject_markers ... ok
+test duplicate_keys_and_mixed_text_are_rejected_in_the_entire_document ... ok
+test missing_or_disabled_selection_returns_none_and_arguments_default_empty ... ok
+test external_plist_doctype_works_without_resolving_or_accepting_entities ... ok
+test path_rejects_non_ucs2_characters_but_arguments_keep_utf16 ... ok
+test multiple_active_entries_are_ambiguous_and_entry_count_is_bounded ... ok
+test root_version_structure_and_known_types_are_required ... ok
+test selects_one_target_and_decodes_xml_text_without_changing_arguments ... ok
+test path_validation_rejects_escape_aliases_non_efi_and_control_characters ... ok
+test binary_non_utf8_and_all_truncated_document_prefixes_are_rejected ... ok
+test utf16_limits_count_surrogate_pairs_and_allow_exact_boundary ... ok
+test input_depth_and_node_limits_are_enforced_before_unbounded_work ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 7 tests
+test absent_name_has_stable_fallback_and_empty_list_stays_empty ... ok
+test invalid_picker_type_and_later_unsafe_path_are_rejected ... ok
+test no_opt_in_keeps_single_target_and_rejects_ambiguity ... ok
+test explicit_picker_preserves_order_names_targets_and_single_parser_semantics ... ok
+test display_names_are_bounded_and_checked_even_for_disabled_entries ... ok
+test automatic_boot_ignores_display_names_like_the_original_parser ... ok
+test total_entry_cap_applies_before_disabled_filter ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 5 tests
+test test_config_mlb ... ok
+test test_config_boot_args ... ok
+test test_config_from_xml_bytes ... ok
+test test_config_system_name ... ok
+test test_config_validate ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test test_config_binary_roundtrip ... ok
+test test_config_xml_roundtrip ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+test test_apply_empty_config ... ok
+test test_apply_from_config ... ok
+test test_encode_decode_roundtrip ... ok
+test test_property_data_types ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 12 tests
+test duplicate_properties_and_children_are_rejected_in_models_and_wire ... ok
+test depth_limit_applies_to_both_encoder_and_untrusted_wire ... ok
+test error_display_does_not_include_untrusted_names ... ok
+test longest_names_and_binary_values_remain_supported ... ok
+test malicious_lengths_counts_and_missing_name_do_not_drive_unbounded_work ... ok
+test every_truncated_prefix_and_trailing_bytes_are_rejected ... ok
+test minimal_root_matches_independently_authored_wire_fixture ... ok
+test properties_precede_child_subtrees_and_payloads_are_padded_to_four_bytes ... ok
+test unterminated_noncanonical_or_invalid_names_and_padding_are_rejected ... ok
+test aggregate_node_budget_also_applies_to_individually_valid_subtrees ... ok
+test per_node_and_total_limits_precede_serialization ... ok
+test aggregate_property_budget_also_applies_to_individually_valid_subtrees ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 4 tests
+test test_deterministic ... ok
+test test_bad_magic ... ok
+test test_roundtrip ... ok
+test test_truncated ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 18 tests
+test classic_chain_overlap_rejected_before_profile_application ... ok
+test duplicate_classic_write_rejected ... ok
+test empty_classic_table_is_not_success ... ok
+test external_dynamic_table_is_rejected_even_with_local_flags ... ok
+test no_executable_is_rejected ... ok
+test header_and_load_commands_are_preserved_by_rejection ... ok
+test applies_both_widths_and_preserves_every_other_byte ... ok
+test non_outer_classic_table_is_rejected ... ok
+test symbol_nonzero_is_outside_profile ... ok
+test target_in_kext_is_not_kernel_proper ... ok
+test two_executables_are_rejected ... ok
+test readback_detects_target_chain_header_hole_and_tail_damage ... ok
+test width4_overflow_rejected_without_wrapping ... ok
+test width8_overflow_rejected_without_wrapping ... ok
+test word_crossing_kernel_file_end_is_rejected ... ok
+test unsupported_type_pc_external_width_are_rejected ... ok
+test width4_exact_max_is_supported ... ok
+test zero_slide_preserves_image_and_still_reads_back ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 21 tests
+test bad_next_stops_at_page_boundary ... ok
+test classic_chain_and_classic_classic_overlaps_have_distinct_witnesses ... ok
+test absent_primary_base_and_unsupported_format_are_explicit ... ok
+test later_word_cannot_enter_segment_zero_fill ... ok
+test first_and_only_chain_word_can_straddle_its_page ... ok
+test duplicate_multistart_visits_and_consumer_limit_are_reported ... ok
+test classic_write_must_fit_its_entire_file_backed_word ... ok
+test missing_classic_base_does_not_guess_header_address ... ok
+test next_start_cannot_leave_the_page_even_in_a_larger_segment ... ok
+test page_start_budget_is_independent_from_record_budget ... ok
+test page_straddle_does_not_permit_crossing_a_segment_file_end ... ok
+test pointer_into_hole_or_outside_collection_is_not_covered ... ok
+test resource_limits_reject_partial_audits ... ok
+test signed_classic_and_unaligned_byte_stride_are_audited_without_writes ... ok
+test section_relative_record_cannot_write_outside_its_section ... ok
+test truncated_or_forged_metadata_never_returns_an_audit ... ok
+test terminal_word_may_straddle_its_page_inside_one_file_backed_segment ... ok
+test unknown_cache_and_authentication_remain_issues ... ok
+test unsupported_external_table_is_reported_even_if_record_flag_is_clear ... ok
+test unsigned_classic_flags_and_widths_are_not_silently_supported ... ok
+test zero_size_segment_affects_declared_primary_base_without_fake_adjustment ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 11 tests
+test exact_span_cap_is_accepted_without_allocating_arena_and_next_byte_rejected ... ok
+test actual_copy_zero_holes_and_shared_views_match_independent_layout ... ok
+test page_rounding_overflow_is_rejected_before_arena_allocation ... ok
+test header_minimum_entry_and_original_segment_indices_stay_distinct ... ok
+test overlapping_outer_memory_and_file_ranges_remain_metadata_errors ... ok
+test sparse_virtual_span_is_bounded_independently_of_file_size ... ok
+test supplied_buffer_size_rejection_leaves_every_byte_unchanged ... ok
+test wrong_member_mapping_and_truncated_source_cannot_be_staged ... ok
+test zero_sized_extreme_segment_does_not_expand_the_arena ... ok
+test zero_file_backed_outer_segment_is_initialized_without_copying_source ... ok
+test readback_detects_payload_zero_tail_hole_page_tail_and_member_corruption ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 17 tests
+test collection_and_member_entries_remain_distinct_and_never_ready ... ok
+test collection_entry_requires_file_backed_execute_mapping ... ok
+test fixup_starts_cannot_reference_unbacked_bytes_or_other_tables ... ok
+test main_entry_is_member_provenance_and_not_a_collection_entry ... ok
+test imports_and_compressed_symbols_remain_explicit_requirements ... ok
+test member_identifiers_and_references_are_checked ... ok
+test fixup_headers_segments_and_pages_are_strictly_bounded ... ok
+test multiple_page_starts_need_a_bounded_terminator ... ok
+test page_starts_allow_a_file_backed_straddling_word_but_not_a_start_on_next_page ... ok
+test relocation_and_linkedit_ranges_are_bounded ... ok
+test segment_before_header_uses_only_metadata_modulo_displacement ... ok
+test segment_overflow_overlap_protection_and_member_tail_fail ... ok
+test truncation_and_command_size_mutations_fail ... ok
+test zero_segments_and_member_shared_linkedit_are_valid_views ... ok
+test unknown_pointer_format_is_a_preparation_blocker ... ok
+test section_layout_relocations_and_aggregate_budget_are_checked ... ok
+test unsupported_headers_and_recursive_filesets_fail ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test explicit_profile_and_independent_kernel_path_are_required ... ok
+test kernel_c_string_and_whole_document_validation_precede_loading ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 3 tests
+test test_parse_info_plist ... ok
+test test_scan_kexts ... ok
+test test_skip_invalid ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 3 tests
+test test_bad_magic ... ok
+test test_parse_header ... ok
+test test_calculate_entry ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 10 tests
+test command_segment_section_and_image_span_limits_are_enforced ... ok
+test duplicate_missing_and_outside_executable_entries_are_rejected ... ok
+test main_file_offset_is_mapped_through_its_executable_segment_and_zero_fill_is_exact ... ok
+test metadata_ranges_and_header_mapping_are_bounded ... ok
+test pagezero_is_an_unmapped_guard_and_non_page_aligned_segments_have_page_rounded_span ... ok
+test sections_follow_segment_copy_mapping_and_zero_fill_tail ... ok
+test segment_virtual_and_file_overlap_overflow_and_invalid_ranges_are_rejected ... ok
+test unixthread_rip_is_absolute_and_not_a_file_offset ... ok
+test unsupported_format_cpu_filetypes_and_execution_mechanisms_are_explicit ... ok
+test file_command_and_thread_truncations_fail_without_panics ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 4 tests
+test navigation_wraps_and_boots_only_current_selection ... ok
+test allocation_limits_invalid_selection_and_starting_state_are_explicit ... ok
+test unsupported_glyphs_and_long_text_stay_inside_canvas ... ok
+test renders_resolutions_and_scrolls_all_entries_without_changing_identity ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+
+running 15 tests
+test all_handoff_pairs_must_be_disjoint ... ok
+test command_line_limit_preserves_nul_and_rejects_lossy_inputs ... ok
+test actual_dt_bytes_are_validated_not_just_their_length ... ok
+test argument_alignment_overflow_and_extent_are_checked ... ok
+test dram_properties_must_exist_at_the_public_chosen_path ... ok
+test disjoint_handoff_before_kernel_is_still_rejected ... ok
+test flags_outside_public_subset_are_rejected ... ok
+test dram_values_must_match_contain_and_not_wrap ... ok
+test kernel_range_is_checked_before_handoff_layout ... ok
+test managed_ram_overflow_zero_and_alignment_are_rejected ... ok
+test managed_window_may_be_a_subset_of_actual_dram ... ok
+test occupied_top_must_be_inside_managed_ram_and_page_aligned ... ok
+test public_layout_and_pa_kva_roles_are_distinct ... ok
+test virtual_window_overflow_and_alignment_are_rejected ... ok
+test touching_ranges_and_exact_occupied_end_are_valid ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 14 tests
+test efi_pointer_is_not_forced_into_kernel_arena_but_must_fit_its_wire_field ... ok
+test errors_are_fixed_log_tokens ... ok
+test fileset_extension_matches_independently_compiled_public_c_layout ... ok
+test fileset_checks_full_header_extent_against_map_and_tree ... ok
+test fileset_keeps_common_validation_and_never_truncates_slide ... ok
+test fileset_rejects_virtual_null_unaligned_overflow_and_unowned_header_ranges ... ok
+test kernel_cursor_must_not_overflow_when_rounded_to_page ... ok
+test physical_ram_can_exceed_four_gib_but_cannot_overflow_early_physmap_addition ... ok
+test maximum_command_leaves_one_nul_before_memory_map ... ok
+test pinned_public_offsets_are_little_endian_and_reserved_bytes_stay_zero ... ok
+test prevents_early_allocator_reusing_map_or_tree_and_rejects_overlap ... ok
+test refuses_null_unaligned_high_and_wrapping_references ... ok
+test rejects_command_truncation_nul_and_non_ascii ... ok
+test requires_actual_efi_descriptor_shape_without_silently_repacking ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

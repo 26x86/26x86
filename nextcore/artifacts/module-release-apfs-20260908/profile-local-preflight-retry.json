@@ -1,0 +1,9 @@
+{
+  "initial_failure": "draft had Windows CRLF while prepared Git clone used LF; byte equality preflight failed before staging/commit/push",
+  "remote_mutations_in_failed_attempt": 0,
+  "draft_before_sha256": "752bf258f1ee8ba43b2b4e5431b4de4aa05adf0ac805a1113ce8f9628bf07d05",
+  "draft_after_sha256": "fab6c897888c33e56a85e420fdb55c11689a344ad6e5a7efcc105c7df0badad3",
+  "correction": "normalize inherited line endings to LF once, copy exact prepared bytes to draft",
+  "second_failure": "inherited trailing CRLF became two LF in artifact universal-newline read; content stripped equal",
+  "attempts_before_mutation": 2
+}
