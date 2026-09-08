@@ -186,6 +186,9 @@
     if (window.pywebview && window.pywebview.api) {
       return window.pywebview.api;
     }
+    if (window.__x86QtBridge && window.__x86QtBridge.__qtWrapped) {
+      return window.__x86QtBridge;
+    }
     if (window.__x86HttpBridge && window.__x86HttpBridge.__httpWrapped) {
       return window.__x86HttpBridge;
     }
@@ -201,7 +204,7 @@
     }
     new QWebChannel(qt.webChannelTransport, (channel) => {
       if (channel.objects && channel.objects.bridge) {
-        window.pywebview = { api: promisifyQtBridge(channel.objects.bridge) };
+        window.__x86QtBridge = promisifyQtBridge(channel.objects.bridge);
         window.dispatchEvent(new Event("pywebviewready"));
       }
     });
@@ -215,8 +218,7 @@
       .then((response) => (response.ok ? response.json() : null))
       .then((payload) => {
         if (payload && payload.ok) {
-          const apiSurface = ensureHttpBridge();
-          window.pywebview = { api: apiSurface };
+          ensureHttpBridge();
           window.dispatchEvent(new Event("pywebviewready"));
           return true;
         }

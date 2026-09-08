@@ -19,7 +19,9 @@ class PayloadTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.path = Path(self.temp.name) / "Mellow"
+        # macOS /var and Windows short TMP aliases are not package contents.
+        # Use the actual test directory while preserving the loader's link guard.
+        self.path = Path(self.temp.name).resolve() / "Mellow"
         shutil.copytree(PACKAGE, self.path)
 
     def manifest(self, edit):
@@ -177,6 +179,15 @@ class PayloadTests(unittest.TestCase):
         except OSError:
             self.skipTest("Host does not permit unprivileged symlink creation")
         self.reject()
+
+    def test_symlink_ancestor_is_rejected(self):
+        alias = self.path.parent / "package-parent-link"
+        try:
+            alias.symlink_to(self.path.parent, target_is_directory=True)
+        except OSError:
+            self.skipTest("Host does not permit unprivileged symlink creation")
+        with self.assertRaisesRegex(PayloadError, "symlink/reparse point"):
+            load_payload(alias / self.path.name)
 
 
 if __name__ == "__main__":
