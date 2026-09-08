@@ -36,3 +36,8 @@ passed. Build snapshot hashes match the final edited app sources. Evidence is in
 [the validation receipt](validation/windows-app-cleanup-20260908/receipt.json).
 The startup check does not exercise a rendered EXE WebView window, and these
 results do not establish guest macOS boot, guest Metal or an EFI GPU backend.
+
+PR regression follow-up: the separate GUI smoke suites still expected removed
+application endpoints. Update their real HTTP GET/POST checks to require404,
+verify the WebView facade no longer exports the removed operation, and retain
+the existing settings roundtrip. No application endpoint is reintroduced.

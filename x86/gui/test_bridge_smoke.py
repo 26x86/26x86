@@ -6,6 +6,7 @@ import json
 import sys
 import unittest
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import urlopen
 
 REPO = Path(__file__).resolve().parent.parent.parent
@@ -123,10 +124,11 @@ class BridgeSmokeTest(unittest.TestCase):
                 payload = json.loads(resp.read().decode("utf-8"))
             self.assertTrue(payload["ok"])
             self.assertEqual(payload["result"]["bundle_id"], "com.niseullent.26x86")
-            with urlopen(f"{base}/api/get_vmapple_status", timeout=30) as resp:
-                vm_payload = json.loads(resp.read().decode("utf-8"))
-            self.assertTrue(vm_payload["ok"])
-            self.assertIn("configured", vm_payload["result"])
+            # Retired application test endpoints are absent on the real bridge.
+            with self.assertRaises(HTTPError) as caught:
+                urlopen(f"{base}/api/get_vmapple_status", timeout=5)
+            self.assertEqual(caught.exception.code, 404)
+            self.assertFalse(json.load(caught.exception)["ok"])
         finally:
             httpd.shutdown()
             httpd.server_close()
