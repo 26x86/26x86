@@ -1,0 +1,30 @@
+{
+  "schema": "nextcore.bp30-source-freeze/1",
+  "source_root": "/home/sharh/work/bp30-ise-memory-provider",
+  "source_sha256": {
+    "runtime/jit.c": "514332f41e952fd747ca1fc27832692c02e198473d48c7955ba1db1f090f9e39",
+    "runtime/jit.h": "6d36e0ecdd5cc71f0bcf82609bc23915b4a8c217e0d188988a9b3d8a3b10c7f0",
+    "runtime/boot_jit.c": "4885d29d7f6d7954a816b00d55600acf47992cf8ada469175b2d6130af62c8de",
+    "runtime/boot_jit.h": "def7ee05c4051107257407f3f4eed6ab6551ba04b61f7178e051f4e95126af81",
+    "runtime/memory_abi.h": "0ef6a89d512ef2d1fd0f92d0a25018536fa9c45106372e6c27f749b427b1f515",
+    "runtime/memory_boot.c": "df874fc52f1a43ba71f137ebf45cf165b724d3435de9a2fa74a393adeca03dac",
+    "runtime/memory_boot.h": "d2972ffc34487e5c328ebdd51e8333d82282df9e7305b6c60426aea3c4fd11f8",
+    "runtime/memory_boot.rs": "5031838160f1d9490f03d15ca479bcd3076ce2a0758129c121cace74781ea658",
+    "runtime/memory-service/Cargo.toml": "de0adfb9b7194d455b380c5eb787db4c95318700bedec00687ee6b2e523d8f67",
+    "runtime/memory-service/src/lib.rs": "e2a00f7ed51e353c645234325ce3cbd86a9b2082f0887a656f2ba61b621c0726",
+    "runtime/memory-service/src/abi.rs": "66b794a18316deaa7f566b8584a258ea077a6305ef8abe18cb648aa30dd07415",
+    "runtime/memory_layout.c": "df5dda0e88b0a37c3d656e45a2dc807a569831e7c223b474479fcd03a565ec65",
+    "runtime/test_memory_provider.rs": "a9a047c60d509c9502b4bcb8fb3201025d7d5a13a6dfc61eefa2f33a5394d005",
+    "tools/probe_efi_memory_provider.py": "5729f9cf850c4ff924f89535071f52ec062ca4a9728c2f576ea202f5df9e5201",
+    "tools/probe_pc_alignment.py": "6e279cc889a1e45e484cc5aba9a7b02951c011968447bb46a82db6d32c7c3a1b",
+    "tools/pc_alignment_probe.S": "4e79a0fbcff31177f91055c06e2b52070728c26c12b5cc91313069ad29ecb9c9",
+    "tools/probe_efi_native_pauth.py": "21831fda0d282105ddde7a9ea55a19e63102de3ebb2e1f6bfc4ba58cb0453d14",
+    "docs/NATIVE_MEMORY_PROVIDER_V1.md": "af40fc8387213f762c0ff7f6a2f868e95ccb92d27b73471184f706465f19e99b"
+  },
+  "host_provider_receipt": "/home/sharh/work/bp30-memory-host/receipt.json",
+  "pc_oracle_receipt": "/home/sharh/work/bp30-pc-oracle/receipt.json",
+  "legacy_receipt": "/home/sharh/work/bp30-legacy-native-proof.json",
+  "uefi_service_target": "x86_64-unknown-uefi",
+  "service_package": "runtime/memory-service",
+  "mmu_source_changed": false
+}

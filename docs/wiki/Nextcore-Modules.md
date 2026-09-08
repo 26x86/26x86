@@ -122,3 +122,29 @@ These independent AArch64 oracle commands additionally need `qemu-system-arm`.
 The actual x86 EFI scalar harness and recorded boundary checks are under
 `nextcore/artifacts/arm-scalar-memory-20260909`. It executes the same native C
 JIT in OVMF and keeps original-image diagnostics separate from authored fixtures.
+
+## Checked native memory service
+
+There are still seven repositories and seven parent workspace members. ISE also
+owns the allocation-free `nextcore-memory-service` package at
+`runtime/memory-service`. Both EFI ISE dependencies use the same canonical Git URL
+and immutable revision; the parent patches both package names to that submodule.
+The ownership check includes feature-enabled host and UEFI Cargo resolution,
+rejecting an auxiliary copy, remote duplicate or conflicting owner revision.
+
+```bash
+cargo build --locked --manifest-path nextcore/Cargo.toml -p nextcore-efi --release \
+  --target x86_64-unknown-uefi --features arm-jit-memory-provider --bin NXARMJIT
+python3 Tools/verify_nextcore_submodules.py --cargo --require-clean
+```
+
+This diagnostic feature routes fetch and integer memory through the Rust service;
+it still rejects native SCTLR.M. Add `arm-jit-tiered-trace` only for explicit bounded
+256/1024/4096 diagnostics and pass `--tiered-diagnostic` to the trace tool. The
+ordinary trace keeps its 64/8 limits. The current integrated firmware runner is
+`nextcore/tools/verify_arm_memory_provider_ovmf.py`; it checks actual callback
+counters, precise failure state and a direct-execution negative control.
+
+Normal macOS27 entry additionally needs the target-specific live SPTM/boot-argument
+and runtime-device-tree contracts described in
+[the entry audit](../NEXTCORE_ARM64E_ENTRY_CONTRACT.md). These remain incomplete.

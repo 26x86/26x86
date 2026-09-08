@@ -1,0 +1,63 @@
+{
+  "schema": "nextcore.combined-tiered-provider-observations.v1",
+  "passed": true,
+  "checks": {
+    "legacy_tiered_suite": true,
+    "provider_marker": true,
+    "exact_retirement": true,
+    "exact_native_entries": true,
+    "pc_after_final_add": true,
+    "counter_value": true,
+    "abi": true,
+    "provider_status": true,
+    "guest_far": true,
+    "last_address": true,
+    "fetch_requests": true,
+    "data_requests": true,
+    "completed_data_operations": true
+  },
+  "expected": {
+    "abi": 1,
+    "provider_status": 0,
+    "guest_far": 0,
+    "last_address": 1107313668,
+    "fetch_requests": 256,
+    "data_requests": 0,
+    "completed_data_operations": 0
+  },
+  "observed": {
+    "abi": 1,
+    "provider_status": 0,
+    "guest_far": 0,
+    "last_address": 1107313668,
+    "fetch_requests": 256,
+    "data_requests": 0,
+    "completed_data_operations": 0
+  },
+  "execution": {
+    "status": 5,
+    "retired": 256,
+    "pc": 1107313672,
+    "compiled_blocks": 256,
+    "fault_instruction": 0,
+    "registers": {
+      "x0": 128,
+      "x1": 1107345408,
+      "x2": 0,
+      "x3": 41
+    },
+    "platform": {
+      "profile": 1,
+      "override": 0,
+      "pending": 0,
+      "pstate": 965,
+      "sp": 1107443712
+    },
+    "exception": {
+      "elr": 0,
+      "spsr": 0,
+      "vector": 0,
+      "esr": 0
+    }
+  }
+}

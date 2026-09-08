@@ -103,3 +103,42 @@ jobs:
             ${{ runner.temp }}/nextcore-scalar-memory-proof/*/serial.log
             ${{ runner.temp }}/nextcore-pair-memory-proof/report.json
             ${{ runner.temp }}/nextcore-pair-memory-proof/*/serial.log
+
+  x86-efi-memory-provider:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-uefi
+      - name: Install native memory firmware test tools
+        run: sudo apt-get update && sudo apt-get install -y clang lld llvm qemu-system-x86 ovmf
+      - name: Check memory proof failure detection
+        run: python3 tests/test_arm_memory_provider_runner.py -v
+      - name: Build direct, provider and combined bounded-tier firmware
+        working-directory: nextcore
+        run: |
+          cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-probe,arm-jit-trace --bin NXARMJIT
+          cp target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/NXARMJIT-direct.efi"
+          cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-memory-provider --bin NXARMJIT
+          cp target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/NXARMJIT-memory.efi"
+          cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-memory-provider,arm-jit-tiered-trace --bin NXARMJIT
+          cp target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/NXARMJIT-tiered.efi"
+      - name: Execute Rust memory callbacks, precise faults and bounded tiers
+        run: |
+          python3 nextcore/tools/verify_arm_memory_provider_ovmf.py \
+            --provider-efi "$RUNNER_TEMP/NXARMJIT-memory.efi" \
+            --direct-efi "$RUNNER_TEMP/NXARMJIT-direct.efi" \
+            --tiered-efi "$RUNNER_TEMP/NXARMJIT-tiered.efi" \
+            --output "$RUNNER_TEMP/nextcore-memory-proof"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nextcore-x86-efi-memory-provider
+          path: |
+            ${{ runner.temp }}/NXARMJIT-*.efi
+            ${{ runner.temp }}/nextcore-memory-proof/**/*.json
+            ${{ runner.temp }}/nextcore-memory-proof/**/*.log

@@ -1605,3 +1605,67 @@ and their completed branches are removed after ancestry checks. Raw receipts
 and the initial CI artifact-finalization403 are preserved in
 nextcore/artifacts/integration-bp29-20260909. The final evidence-only commit
 receives its own canonical recursive clone/hash checks and final-head CI.
+
+
+## BP30 — native Rust memory service and bounded execution tiers
+
+
+The seven existing Git module repositories remain the ownership boundary. ISE
+adds one no_std auxiliary Rust package at runtime/memory-service; this is not an
+eighth module repository or a copy in the parent. EFI takes it through the same
+canonical ISE Git URL and immutable revision as nextcore-ise. Its optional feature
+and caller wiring remain explicitly diagnostic until normal startup is complete.
+
+The parent workspace adds an explicit path patch for nextcore-memory-service to
+the ISE-owned package. Exclude that nested standalone workspace from automatic
+parent membership; keep the original seven members. Test cargo metadata on the
+actual package layout before deciding whether the exclusion is required.
+
+Extend Tools/verify_nextcore_submodules.py with a fixed auxiliary-package owner
+mapping. Any nextcore-prefixed dependency must be a known primary or auxiliary
+package and pin its owner's canonical URL and integrated commit. An auxiliary
+manifest may live only at the declared path inside its owner module and must be
+covered by that module's existing full file inventory. Cargo resolution must
+contain exactly one local instance of every selected Nextcore package, including
+the memory service when the feature is enabled. Verify host and UEFI dependency
+resolution with that feature; no remote duplicate may hide behind an unused patch.
+
+The existing metadata refresher must record one ISE revision even when EFI has
+two package dependencies from that URL. It must reject conflicting revisions
+instead of allowing the second dictionary assignment to conceal them. Auxiliary
+package dependency manifests, if any, must obey the same module pin policy.
+
+Validation uses an independent standalone EFI clone from canonical Git revisions,
+a fresh parent recursive clone with --locked builds, and actual x86 OVMF provider
+execution. Mutation checks must reject an unknown auxiliary package, wrong owner
+path, mismatched ISE revisions and Cargo resolving a remote duplicate. These are
+packaging checks, separate from native memory semantics, OS boot and guest Metal.
+
+
+BP30 implementation and independent evidence: ISE41e8997 owns the80/80/192-byte
+callback ABI, no_std RAM service and native dispatcher with no guest-RAM pointer.
+Core40833dc keeps default64/8 trace limits and exposes explicit bounded tiers.
+EFI2414067 joins both opt-in features; Tool926c777 pins that Core revision.
+All four module PRs passed final CI and merged into their independent main.
+
+An independent EFI clone with an empty Cargo Git cache resolved canonical Core,
+ISE and its auxiliary service without parent patches. Five build modes passed;
+actual combined firmware passed23 provider cases, one separately mutated callback
+failure, a successful direct execution rejected as a provider bypass, and8 tier
+checks. The combined tier's256 retirements/fetches/native entries were checked
+separately. Historical and combined binaries retain separate public manifests.
+
+The parent shared package policy validates7 modules/7 workspace members/8 owned
+packages, aliases and target dependencies, same-owner revision agreement and
+local auxiliary resolution. Actual temporary Git/Cargo duplicate resolution is
+a rejected control. The integrated EFI runner requires an actual failure receipt
+for its bypass control rather than accepting any exit1, and verifies that the
+combined tier really uses the Rust service. Its real EFI execution is part of the
+fresh recursive integration gate; host callback-failure variants stay separate.
+
+The normal-entry audit in NEXTCORE_ARM64E_ENTRY_CONTRACT.md corrects the prior
+assumption that j274 lacks SPTM components. Full manifest/member digest evidence
+supports the current selected inputs, while exact target boot_args/SPTM layout,
+live state and runtime-DT providers remain unresolved. No native M=1 or OS/Metal
+success is asserted. BP31 conditional compares are independently implemented in
+a separate frozen ISE worktree and are not part of this BP30 integration.

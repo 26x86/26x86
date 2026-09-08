@@ -1,0 +1,232 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -8,6 +8,7 @@
+ uefi = { version = "0.40", features = ["alloc", "panic_handler"] }
+ nextcore-core = { git = "https://github.com/26x86/Nextcore-Core.git", rev = "6105cd7996ef2ea4db35d7d3a1e8822d0703aae9", default-features = false }
+ uefi-raw = { version = "0.16", optional = true }
++nextcore-memory-service = { git = "https://github.com/26x86/Nextcore-ISE.git", rev = "41e8997c4b8d6f029ed3a3fbec0669374046ab6f", optional = true }
+ 
+ [features]
+ test-child = []
+@@ -22,6 +23,7 @@
+ arm-jit = []
+ arm-jit-probe = ["arm-jit"]
+ arm-jit-trace = ["arm-jit"]
++arm-jit-memory-provider = ["arm-jit-trace", "arm-jit-probe", "dep:nextcore-memory-service"]
+ 
+ [[bin]]
+ name = "NXARMJIT"
+@@ -92,4 +94,4 @@
+ required-features = ["apfs-jumpstart", "test-child"]
+ 
+ [build-dependencies]
+-nextcore-ise = { git = "https://github.com/26x86/Nextcore-ISE.git", rev = "33fea9fdea844bc7c2d3228b8888600270210562" }
++nextcore-ise = { git = "https://github.com/26x86/Nextcore-ISE.git", rev = "41e8997c4b8d6f029ed3a3fbec0669374046ab6f" }
+--- a/build.rs
++++ b/build.rs
+@@ -17,6 +17,7 @@
+         .map(PathBuf::from)
+         .unwrap_or_else(|| PathBuf::from(nextcore_ise::EFI_RUNTIME_DIR));
+     let output = PathBuf::from(env::var_os("OUT_DIR").unwrap());
++    let memory_provider = env::var_os("CARGO_FEATURE_ARM_JIT_MEMORY_PROVIDER").is_some();
+     let mut shared_modules = String::new();
+     for module in ["pauth", "platform"] {
+         if module == "platform" && env::var_os("CARGO_FEATURE_ARM_JIT_TRACE").is_none() {
+@@ -32,18 +33,33 @@
+                 .to_string_lossy()
+         ));
+     }
++    if memory_provider {
++        let source = runtime.join("memory_boot.rs");
++        println!("cargo:rerun-if-changed={}", source.display());
++        shared_modules.push_str(&format!(
++            "#[allow(dead_code)]\n#[path = {:?}]\nmod memory_boot;\n",
++            source
++                .canonicalize()
++                .expect("missing canonical memory result ABI")
++                .to_string_lossy()
++        ));
++    }
+     std::fs::write(output.join("jit_pauth.rs"), shared_modules)
+         .expect("write shared runtime module paths");
+     let compiler = env::var_os("NEXTCORE_CLANG").unwrap_or_else(|| "clang".into());
+     let archive = output.join("libnextcore_arm_jit.a");
+     let mut objects = Vec::new();
+-    for source in [
++    let mut sources = vec![
+         "jit.c",
+         "arch.c",
+         "boot_jit.c",
+         "jit_protection.c",
+         "gop_scanout.c",
+-    ] {
++    ];
++    if memory_provider {
++        sources.push("memory_boot.c");
++    }
++    for source in sources {
+         let input = runtime.join(source);
+         println!("cargo:rerun-if-changed={}", input.display());
+         let object = output.join(source.replace(".c", ".obj"));
+@@ -74,6 +90,11 @@
+     ] {
+         println!("cargo:rerun-if-changed={}", runtime.join(header).display());
+     }
++    if memory_provider {
++        for header in ["memory_abi.h", "memory_boot.h"] {
++            println!("cargo:rerun-if-changed={}", runtime.join(header).display());
++        }
++    }
+     run(
+         Command::new(env::var_os("NEXTCORE_LLVM_AR").unwrap_or_else(|| "llvm-ar".into()))
+             .arg("crs")
+--- a/src/arm_jit.rs
++++ b/src/arm_jit.rs
+@@ -131,7 +131,31 @@
+     any(feature = "arm-jit-probe", feature = "arm-jit-trace")
+ ))]
+ unsafe extern "C" {
+-    #[cfg(feature = "arm-jit-trace")]
++    #[cfg(feature = "arm-jit-memory-provider")]
++    fn vf_boot_run_memory_v1(
++        ram_base: u64,
++        ram_size: u64,
++        entry: u64,
++        args: u64,
++        stack: u64,
++        code: *mut u8,
++        code_bytes: usize,
++        budget: u64,
++        protect: unsafe extern "C" fn(
++            *mut core::ffi::c_void,
++            usize,
++            i32,
++            *mut core::ffi::c_void,
++        ) -> i32,
++        protect_owner: *mut core::ffi::c_void,
++        initial_x0_x3: *const u64,
++        pauth: unsafe extern "C" fn(*mut core::ffi::c_void, u32) -> i32,
++        options: *const platform::BootOptionsV2,
++        memory: nextcore_memory_service::abi::Callback,
++        owner: *mut core::ffi::c_void,
++        result: *mut memory_boot::MemoryRunResultV1,
++    ) -> i32;
++    #[cfg(all(feature = "arm-jit-trace", not(feature = "arm-jit-memory-provider")))]
+     fn vf_boot_run_v2(
+         ram: *mut u8,
+         ram_size: usize,
+@@ -528,25 +552,64 @@
+         "NXARMJIT: TRACE_ENTER entry={:#x} x0=0 x1={:#x} x2=0 x3=0 budget={}",
+         layout.entry_phys, initial[1], trace.instruction_budget
+     ));
+-    let mut result_v2 = platform::BootResultV2::default();
+-    let status = unsafe {
+-        vf_boot_run_v2(
+-            ram.bytes_mut().as_mut_ptr(),
+-            memory_size,
+-            trace.physical_base,
+-            layout.entry_phys,
+-            layout.boot_args_phys,
+-            layout.stack_top_phys,
+-            code.bytes_mut().as_mut_ptr(),
+-            code.bytes(),
+-            trace.instruction_budget,
+-            vf_efi_jit_protect,
+-            opaque,
+-            initial.as_ptr(),
+-            pauth_step,
+-            &options,
+-            &mut result_v2,
+-        )
++    #[cfg(feature = "arm-jit-memory-provider")]
++    let mut memory_result = memory_boot::MemoryRunResultV1::default();
++    #[cfg(feature = "arm-jit-memory-provider")]
++    let (status, result_v2) = {
++        use nextcore_memory_service::{vf_memory_service_step, MemoryService};
++        report("NXARMJIT: TRACE_MEMORY_PROVIDER abi=1 mode=m0-only");
++        let mut service = MemoryService::new(ram.bytes_mut(), trace.physical_base)
++            .map_err(|_| Status::INVALID_PARAMETER)?;
++        // SAFETY: service owns the only mutable RAM borrow until this synchronous
++        // call returns. Its address stays stable and callbacks cannot reenter.
++        // Code pages, result, options, initial registers and protection storage
++        // are separate retained allocations/stack records. Both extern C sides
++        // use Win64 on this target; no guest RAM pointer enters generated code.
++        let status = unsafe {
++            vf_boot_run_memory_v1(
++                trace.physical_base,
++                trace.memory_size,
++                layout.entry_phys,
++                layout.boot_args_phys,
++                layout.stack_top_phys,
++                code.bytes_mut().as_mut_ptr(),
++                code.bytes(),
++                trace.instruction_budget,
++                vf_efi_jit_protect,
++                opaque,
++                initial.as_ptr(),
++                pauth_step,
++                &options,
++                vf_memory_service_step,
++                (&mut service as *mut MemoryService<'_>).cast(),
++                &mut memory_result,
++            )
++        };
++        (status, memory_result.execution)
++    };
++    #[cfg(not(feature = "arm-jit-memory-provider"))]
++    let (status, result_v2) = {
++        let mut result_v2 = platform::BootResultV2::default();
++        let status = unsafe {
++            vf_boot_run_v2(
++                ram.bytes_mut().as_mut_ptr(),
++                memory_size,
++                trace.physical_base,
++                layout.entry_phys,
++                layout.boot_args_phys,
++                layout.stack_top_phys,
++                code.bytes_mut().as_mut_ptr(),
++                code.bytes(),
++                trace.instruction_budget,
++                vf_efi_jit_protect,
++                opaque,
++                initial.as_ptr(),
++                pauth_step,
++                &options,
++                &mut result_v2,
++            )
++        };
++        (status, result_v2)
+     };
+     let result = &result_v2.base;
+     let restore = unsafe { vf_efi_jit_protect(code.base() as *mut _, code.bytes(), 0, opaque) };
+@@ -570,10 +633,30 @@
+         "NXARMJIT: TRACE_EXCEPTION_STATE elr={:#x} spsr={:#x} vector={:#x} esr={:#x} handler_executed=false",
+         result_v2.elr, result_v2.spsr, result_v2.exception_vector, result_v2.esr
+     ));
++    #[cfg(feature = "arm-jit-memory-provider")]
++    report(&format!(
++        "NXARMJIT: TRACE_MEMORY_RESULT abi={} provider_status={} guest_far={:#x} last_address={:#x} fetch_requests={} data_requests={} completed_data_operations={}",
++        memory_result.abi_version,
++        memory_result.provider_status,
++        memory_result.guest_far,
++        memory_result.last_address,
++        memory_result.fetch_requests,
++        memory_result.data_requests,
++        memory_result.completed_data_operations
++    ));
+     report("NXARMJIT: TRACE_ONLY macos_boot_verified=false metal_verified=false");
+     if restore != 0 {
+         return Err(Status::DEVICE_ERROR);
+     }
++    #[cfg(feature = "arm-jit-memory-provider")]
++    if memory_result.abi_version != 1
++        || memory_result.struct_size != core::mem::size_of_val(&memory_result) as u32
++        || memory_result.reserved0 != 0
++        || memory_result.reserved1 != 0
++        || result_v2.base.status != status as u32
++    {
++        return Err(Status::COMPROMISED_DATA);
++    }
+     // A completed diagnostic is deliberately not EFI/OS launch success.
+     Err(Status::ABORTED)
+ }

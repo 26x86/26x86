@@ -301,6 +301,7 @@ version = "0.1.0"
 dependencies = [
  "nextcore-core",
  "nextcore-ise",
+ "nextcore-memory-service",
  "uefi",
  "uefi-raw",
 ]
@@ -335,6 +336,10 @@ dependencies = [
  "log",
  "thiserror",
 ]
+
+[[package]]
+name = "nextcore-memory-service"
+version = "0.1.0"
 
 [[package]]
 name = "nextcore-tool"

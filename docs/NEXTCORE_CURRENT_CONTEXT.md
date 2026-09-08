@@ -1,8 +1,28 @@
 # NextCore 현재 맥락과 재개 기준
 
-갱신: 2026-09-09. 아래 BP29 요약이 이후 역사 기록보다 우선한다. 이 문서는 다음 작업자가 가벼운 모델이더라도 현재 상태를
+갱신: 2026-09-09. 아래 최신 BP 요약이 이후 역사 기록보다 우선한다. 이 문서는 다음 작업자가 가벼운 모델이더라도 현재 상태를
 과장하지 않고 이어갈 수 있게 하는 정본 요약이다. 상세 설계는
 `docs/NEXTCORE_BUILD_PLAN.md`, 검증 결과는 `nextcore/VALIDATION.md`를 따른다.
+
+## BP30 최신 개발 상태
+
+BP29는 상위 PR #11/main7db1a709로 병합했고 최종 CI27개 및 공개 재귀 클론이 통과했다.
+BP30은 ISE의 no_std Rust 메모리 서비스를 실제 x86 EFI에 연결한다. Core40833dc,
+ISE41e8997, EFI2414067, Tool926c777의 변경 PR도 각각 main에 병합했다. 상위 통합에서는
+7개 Git 모듈과 7개 workspace 구성원을 유지하고, 보조 패키지 nextcore-memory-service는
+ISE 안의 정식 소스로 고정한다. 별칭·대상별 의존성·중복 Git revision과 실제 Cargo
+해석 결과를 검사한다. 새 standalone EFI 클론의 canonical Git fetch/5개 빌드와 실제
+메모리 provider23개·별도 callback 오류1개·직접 호출 우회 대조·진단 예산8개 검사가 통과했다.
+
+`arm-jit-memory-provider`는 fetch/scalar/pair를 호출자 소유 Rust 서비스로 연결하는
+명시적 진단 feature다. `arm-jit-tiered-trace`는256/1024/4096 예산을 따로 허용한다.
+일반 빌드의64/8 제한과 native SCTLR.M 차단을 유지한다. 상위 새 EFI runner와 재귀
+통합 결과는 별도 commit/binary로 검증한다. 과거 독립 실행을 현재 바이너리로 바꿔 쓰지 않는다.
+
+정상 진입 입력은 M1/j274의 현재 KC와 outer LC_UNIXTHREAD를 유지한다. 전체 manifest에는
+해당 SPTM/TXM 구성 요소가 있으며, 정확한 macOS27 부팅 인자/서비스의 실제 상태 계약은
+아직 미확정이다. 세부 공개 감사는 `NEXTCORE_ARM64E_ENTRY_CONTRACT.md`에 있다.
+BP31 CCMP/CCMN과 원본4096명령 진단은 별도 다음 변경이며 BP30 소스에 섞지 않는다.
 
 ## BP29 현재 구현과 실행 대상
 

@@ -1,0 +1,28 @@
+{
+  "schema": "nextcore.combined-efi-transport-variant.v1",
+  "command": [
+    "cargo",
+    "--config",
+    "/home/sharh/work/bp30-efi-combined-validation/transport-patch.toml",
+    "build",
+    "--offline",
+    "--release",
+    "--target",
+    "x86_64-unknown-uefi",
+    "--bin",
+    "NXARMJIT",
+    "--features",
+    "arm-jit-memory-provider,arm-jit-tiered-trace"
+  ],
+  "cwd": "/home/sharh/work/bp30-efi-combined-validation/efi-transport",
+  "returncode": 0,
+  "canonical_production_dependencies_validation": false,
+  "variant_purpose": "Actual external callback failure before data transfer; FETCH remains canonical.",
+  "patch_scope": "Only nextcore-memory-service in this separate variant via explicit --config",
+  "runtime_override": false,
+  "canonical_service_source": "/home/sharh/work/bp30-efi-combined-validation/cargo-home/git/checkouts/nextcore-ise-4cebcf906001f6ff/41e8997/runtime/memory-service/src/lib.rs",
+  "canonical_sha256": "e2a00f7ed51e353c645234325ce3cbd86a9b2082f0887a656f2ba61b621c0726",
+  "mutated_sha256": "56c13d3a5fd66c9844afe11d62988a76a4c10444e18174502cd3c3c3ee36abfa",
+  "variant_binary_sha256": "f16ad5c3fcbc0d8c11d971ed9c4d58eb6ff525f44cbe2f862aec1adad509fd38",
+  "canonical_git_source_modified": false
+}

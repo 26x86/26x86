@@ -1,0 +1,165 @@
+{
+  "schema": "nextcore.efi-memory-provider-replay.v1",
+  "passed": true,
+  "positive_provider_cases": 23,
+  "transport_failure_cases": 1,
+  "actual_direct_bypass_negative_detected": true,
+  "commands": [
+    {
+      "name": "scalar",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/verify_scalar_ovmf.py",
+        "--efi",
+        "/home/sharh/work/bp30-efi-combined-validation/binaries/combined/NXARMJIT.efi",
+        "--tools",
+        "/home/sharh/work/bp30-efi-combined-validation/helpers/tools",
+        "--output",
+        "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/scalar"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "pair",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/verify_pair_ovmf.py",
+        "--efi",
+        "/home/sharh/work/bp30-efi-combined-validation/binaries/combined/NXARMJIT.efi",
+        "--tools",
+        "/home/sharh/work/bp30-efi-combined-validation/helpers/tools",
+        "--output",
+        "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/pair"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "observations",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/verify_provider_results.py",
+        "--scalar",
+        "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/scalar",
+        "--pair",
+        "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/pair",
+        "--output",
+        "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/observations.json"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "edges",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/run_provider_edges.py",
+        "--efi",
+        "/home/sharh/work/bp30-efi-combined-validation/binaries/combined/NXARMJIT.efi",
+        "--tools",
+        "/home/sharh/work/bp30-efi-combined-validation/helpers/tools",
+        "--output",
+        "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/edges"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "transport",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/run_provider_edges.py",
+        "--efi",
+        "/home/sharh/work/bp30-efi-combined-validation/binaries/transport/NXARMJIT.efi",
+        "--tools",
+        "/home/sharh/work/bp30-efi-combined-validation/helpers/tools",
+        "--output",
+        "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/transport",
+        "--transport-failure"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "bypass",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/bp30-efi-combined-validation/helpers/tools/trace_arm_jit_ovmf.py",
+        "--efi",
+        "/home/sharh/work/bp30-efi-combined-validation/binaries/direct/NXARMJIT.efi",
+        "--kernel",
+        "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/scalar/byte-signed.kc",
+        "--device-tree",
+        "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/scalar/diagnostic.dt",
+        "--output",
+        "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/bypass",
+        "--physical-base",
+        "0x40000000",
+        "--virtual-base",
+        "0xfffffe0000000000",
+        "--memory-size",
+        "67108864",
+        "--kernel-physical",
+        "0x42000000",
+        "--instruction-budget",
+        "64",
+        "--platform-profile",
+        "nextcore-irq-compat-v1",
+        "--allow-incomplete-sptm-prefix",
+        "--host-memory-mib",
+        "256",
+        "--timeout",
+        "30"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "bypass-negative",
+      "command": [
+        "/usr/bin/python3",
+        "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/verify_provider_results.py",
+        "--byte-case",
+        "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/bypass",
+        "--output",
+        "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/bypass-negative.json"
+      ],
+      "returncode": 1,
+      "expected_returncode": 1
+    }
+  ],
+  "input_sha256_before": {
+    "/home/sharh/work/bp30-efi-combined-validation/binaries/combined/NXARMJIT.efi": "4c4371e0e69e0e4d0374dd69ddf9d63b26ddfa01656c6aea25ff78b49c474c12",
+    "/home/sharh/work/bp30-efi-combined-validation/binaries/direct/NXARMJIT.efi": "63beaa787edc5e07e6bfc9e182afcf486c249ef197221d854fbe6befd39d0c55",
+    "/home/sharh/work/bp30-efi-combined-validation/binaries/transport/NXARMJIT.efi": "f16ad5c3fcbc0d8c11d971ed9c4d58eb6ff525f44cbe2f862aec1adad509fd38",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/verify_provider_results.py": "6ae08df90146b84884eeaee57998df6f720764cc2837383fe6c6fef4e13702b6",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/verify_pair_ovmf.py": "46535f72bd2c7976530efe34a0b72c9458412ba732e428b291749874c2589e78",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/build_variants.py": "295517282c1e7b7c4114896db11d56999e5463d7c5b716de72c730e60d35a12b",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/verify_scalar_ovmf.py": "f39ac6dde8776a33bf9494e25e041822883b3158fab996fbde6fc08554154202",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/run_provider_edges.py": "956fa3236398e3ec93a15bcd6087a9246d18336396c12f1851b12d61c4285d80",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/reproduce.py": "3b13668157ad777e77a187ae588819fa32da2168c2c0bb10d52c010a38bac361",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/arm64_provider_edges.S": "50567811f5cf8f316beabc113606a34101a5cd3e166d7037047ed89c3cc2a672",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/arm64_scalar_probe.S": "f3ef5bf3ed964380a32f21f9fcdb35e3e7ebfc6190aa408b7302d86d5b461de0",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/arm64_pair_probe.S": "22fbe0fa54811b5f89f510e013d00f45a12932363b28e16ad3be2a14f09a6706"
+  },
+  "input_sha256_after": {
+    "/home/sharh/work/bp30-efi-combined-validation/binaries/combined/NXARMJIT.efi": "4c4371e0e69e0e4d0374dd69ddf9d63b26ddfa01656c6aea25ff78b49c474c12",
+    "/home/sharh/work/bp30-efi-combined-validation/binaries/direct/NXARMJIT.efi": "63beaa787edc5e07e6bfc9e182afcf486c249ef197221d854fbe6befd39d0c55",
+    "/home/sharh/work/bp30-efi-combined-validation/binaries/transport/NXARMJIT.efi": "f16ad5c3fcbc0d8c11d971ed9c4d58eb6ff525f44cbe2f862aec1adad509fd38",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/verify_provider_results.py": "6ae08df90146b84884eeaee57998df6f720764cc2837383fe6c6fef4e13702b6",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/verify_pair_ovmf.py": "46535f72bd2c7976530efe34a0b72c9458412ba732e428b291749874c2589e78",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/build_variants.py": "295517282c1e7b7c4114896db11d56999e5463d7c5b716de72c730e60d35a12b",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/verify_scalar_ovmf.py": "f39ac6dde8776a33bf9494e25e041822883b3158fab996fbde6fc08554154202",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/run_provider_edges.py": "956fa3236398e3ec93a15bcd6087a9246d18336396c12f1851b12d61c4285d80",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/reproduce.py": "3b13668157ad777e77a187ae588819fa32da2168c2c0bb10d52c010a38bac361",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/arm64_provider_edges.S": "50567811f5cf8f316beabc113606a34101a5cd3e166d7037047ed89c3cc2a672",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/arm64_scalar_probe.S": "f3ef5bf3ed964380a32f21f9fcdb35e3e7ebfc6190aa408b7302d86d5b461de0",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/arm64_pair_probe.S": "22fbe0fa54811b5f89f510e013d00f45a12932363b28e16ad3be2a14f09a6706"
+  },
+  "physical_machine_efi_verified": false,
+  "mmu_enabled_verified": false,
+  "guest_ram_after_fault_observed": false,
+  "macos_boot_verified": false,
+  "guest_metal_verified": false
+}

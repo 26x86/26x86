@@ -1,0 +1,93 @@
+diff --git a/src/boot_config.rs b/src/boot_config.rs
+index 132ea9b..eb67cbb 100644
+--- a/src/boot_config.rs
++++ b/src/boot_config.rs
+@@ -373,6 +373,18 @@ fn parse_named_kernel_target(input: &[u8], arm: bool) -> Result<KernelTarget> {
+ /// provisioned. The prefix is bounded to eight instructions without a platform
+ /// profile, or64 with the explicit software interrupt compatibility profile.
+ pub fn parse_arm64_trace_configuration(input: &[u8]) -> Result<Arm64TraceConfiguration> {
++    parse_arm64_trace_configuration_with_limit(input, 64)
++}
++
++/// Explicit diagnostic-only extension. Default callers retain the64/8 entry.
++/// The limit and any budget above64 must be an approved bounded tier.
++pub fn parse_arm64_trace_configuration_with_limit(
++    input: &[u8],
++    maximum_budget: u64,
++) -> Result<Arm64TraceConfiguration> {
++    if !matches!(maximum_budget, 64 | 256 | 1024 | 4096) {
++        return Err(BootConfigError::InvalidTraceConfiguration);
++    }
+     if parse_arm64_kernel_target(input)?.profile != KernelProfile::X86EfiArm64Trace {
+         return Err(BootConfigError::UnsupportedKernelProfile);
+     }
+@@ -440,7 +452,9 @@ pub fn parse_arm64_trace_configuration(input: &[u8]) -> Result<Arm64TraceConfigu
+         || result.kernel_phys < result.physical_base
+         || result.kernel_phys >= result.physical_base + result.memory_size
+         || result.instruction_budget == 0
+-        || result.instruction_budget > if result.platform.is_some() { 64 } else { 8 }
++        || result.instruction_budget > if result.platform.is_some() { maximum_budget } else { 8 }
++        || (result.instruction_budget > 64
++            && !matches!(result.instruction_budget, 256 | 1024 | 4096))
+     {
+         return Err(BootConfigError::InvalidTraceConfiguration);
+     }
+diff --git a/tests/arm64_platform_config.rs b/tests/arm64_platform_config.rs
+index 8487408..219fa02 100644
+--- a/tests/arm64_platform_config.rs
++++ b/tests/arm64_platform_config.rs
+@@ -1,5 +1,6 @@
+ use nextcore_core::boot_config::{
+     parse_arm64_trace_configuration as parse, Arm64PlatformProfile, BootConfigError as E,
++    parse_arm64_trace_configuration_with_limit as parse_with_limit,
+ };
+ 
+ fn config(profile: Option<&str>, options: Option<&str>, budget: u64) -> Vec<u8> {
+@@ -23,6 +24,47 @@ fn integer(name: &str, value: u64) -> String {
+ }
+ const PROFILE: &str = "nextcore-irq-compat-v1";
+ 
++#[test]
++fn explicit_tiers_require_a_valid_ceiling_and_do_not_change_the_default_entry() {
++    for maximum in [64, 256, 1024, 4096] {
++        for budget in [1, 8, 63, 64, 256, 1024, 4096] {
++            let input = config(Some(PROFILE), None, budget);
++            assert_eq!(parse_with_limit(&input, maximum).is_ok(), budget <= maximum);
++            assert_eq!(parse(&input).is_ok(), budget <= 64);
++        }
++    }
++    for maximum in [0, 8, 65, 255, 1023, 4097, u64::MAX] {
++        assert_eq!(parse_with_limit(&config(Some(PROFILE), None, 8), maximum), Err(E::InvalidTraceConfiguration));
++    }
++}
++
++#[test]
++fn unsupported_extended_budgets_never_become_arbitrary_long_runs() {
++    for budget in [0, 65, 128, 255, 257, 512, 1023, 1025, 2048, 4095, 4097, u64::MAX] {
++        assert_eq!(parse_with_limit(&config(Some(PROFILE), None, budget), 4096), Err(E::InvalidTraceConfiguration));
++    }
++}
++
++#[test]
++fn extended_ceiling_does_not_provision_a_profile_or_expand_its_absent_bound() {
++    for maximum in [64, 256, 1024, 4096] {
++        assert_eq!(parse_with_limit(&config(None, None, 8), maximum).unwrap().platform, None);
++        for budget in [9, 64, 256, 1024, 4096] {
++            assert_eq!(parse_with_limit(&config(None, None, budget), maximum), Err(E::InvalidTraceConfiguration));
++        }
++    }
++}
++
++#[test]
++fn extended_configuration_retains_handoff_memory_and_platform_validation() {
++    let valid = String::from_utf8(config(Some(PROFILE), None, 256)).unwrap();
++    for input in [valid.replace("unprovisioned-sptm-prefix", "automatic"),
++                  valid.replace("0x40000000", "0x40000001")] {
++        assert_eq!(parse_with_limit(input.as_bytes(), 4096), Err(E::InvalidTraceConfiguration));
++    }
++    assert_eq!(parse_with_limit(&config(Some(PROFILE), Some(&integer("IrqLevel", 2)), 256), 4096), Err(E::InvalidPlatformConfiguration));
++}
++
+ #[test]
+ fn absent_profile_retains_old_bound_and_does_not_create_a_provider() {
+     assert_eq!(parse(&config(None, None, 8)).unwrap().platform, None);

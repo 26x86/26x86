@@ -1,0 +1,1111 @@
+{
+  "schema": "nextcore.efi-provider-observations.v1",
+  "passed": true,
+  "cases": [
+    {
+      "kind": "scalar",
+      "name": "byte-signed",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true,
+        "provider_guest_far": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 18,
+        "data_requests": 6,
+        "completed_data_operations": 6,
+        "last_address": 1107313732,
+        "guest_far": 0
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 0,
+        "last_address": 1107313732,
+        "fetch_requests": 18,
+        "data_requests": 6,
+        "completed_data_operations": 6
+      },
+      "execution": {
+        "status": 1,
+        "retired": 18,
+        "pc": 1107313736,
+        "compiled_blocks": 18,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 129,
+          "x1": 18446744073709551489,
+          "x2": 4294967169,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "serial_sha256": "71bb08de1f7350d61e0519a50499d2855e3071c28f4aa3ac30e2f5601410c55e",
+      "report_sha256": "ac7d72b0f8e4758bc0517716f00cf22d069012dd7800539b3ead5d37f3fc8ca5"
+    },
+    {
+      "kind": "scalar",
+      "name": "half-signed",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true,
+        "provider_guest_far": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 18,
+        "data_requests": 5,
+        "completed_data_operations": 5,
+        "last_address": 1107313732,
+        "guest_far": 0
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 0,
+        "last_address": 1107313732,
+        "fetch_requests": 18,
+        "data_requests": 5,
+        "completed_data_operations": 5
+      },
+      "execution": {
+        "status": 1,
+        "retired": 18,
+        "pc": 1107313736,
+        "compiled_blocks": 18,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 32769,
+          "x1": 18446744073709518849,
+          "x2": 4294934529,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "serial_sha256": "6058bdc33cb6f6d1b7a5e744066f25269c5cb952a9d4199ea7b6ce51f15d9522",
+      "report_sha256": "e5379fb424da68e40e27ac61506dfa6c6f962650ce98e4d3f730d030561f27f8"
+    },
+    {
+      "kind": "scalar",
+      "name": "word-signed",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true,
+        "provider_guest_far": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 15,
+        "data_requests": 3,
+        "completed_data_operations": 3,
+        "last_address": 1107313720,
+        "guest_far": 0
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 0,
+        "last_address": 1107313720,
+        "fetch_requests": 15,
+        "data_requests": 3,
+        "completed_data_operations": 3
+      },
+      "execution": {
+        "status": 1,
+        "retired": 15,
+        "pc": 1107313724,
+        "compiled_blocks": 15,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 2147483653,
+          "x1": 18446744071562067973,
+          "x2": 1107443712,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "serial_sha256": "a395835fba7a054fd09344e90433911e38240a0785fd8c4c4bfb4371432a6da8",
+      "report_sha256": "8bdf38bd6831c90bf7a250175e98fb039b728be17c990d6fb4f7e2aee058d962"
+    },
+    {
+      "kind": "scalar",
+      "name": "quad-zr",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true,
+        "provider_guest_far": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 18,
+        "data_requests": 5,
+        "completed_data_operations": 5,
+        "last_address": 1107313732,
+        "guest_far": 0
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 0,
+        "last_address": 1107313732,
+        "fetch_requests": 18,
+        "data_requests": 5,
+        "completed_data_operations": 5
+      },
+      "execution": {
+        "status": 1,
+        "retired": 18,
+        "pc": 1107313736,
+        "compiled_blocks": 18,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 1311768467015204869,
+          "x1": 1107443712,
+          "x2": 0,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "serial_sha256": "2145590578d1a4cf71dff16fcd6b77352d7c520c96fd79772d2e8b2e8332e709",
+      "report_sha256": "38f492f49e28d5ecccf7249f94bda42a684beab4a775f11545b704605d2c1f05"
+    },
+    {
+      "kind": "scalar",
+      "name": "a0-device-load",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_guest_far": true,
+        "provider_last_address": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 10,
+        "data_requests": 1,
+        "completed_data_operations": 0,
+        "guest_far": 1107443713,
+        "last_address": 1107443713
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 1107443713,
+        "last_address": 1107443713,
+        "fetch_requests": 10,
+        "data_requests": 1,
+        "completed_data_operations": 0
+      },
+      "execution": {
+        "status": 12,
+        "retired": 9,
+        "pc": 1107313700,
+        "compiled_blocks": 10,
+        "fault_instruction": 3107979328,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443713,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313700,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 2516582433
+        }
+      },
+      "serial_sha256": "7f28bc0eb41775423db175a32dc51b1aa82bd1be9f21c09159521f4b88d03af0",
+      "report_sha256": "4fb50f638db6e80a18fed4537eedda7a1710e5d041245d9ff6ed76961f66edca"
+    },
+    {
+      "kind": "scalar",
+      "name": "a0-device-store",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_guest_far": true,
+        "provider_last_address": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 10,
+        "data_requests": 1,
+        "completed_data_operations": 0,
+        "guest_far": 1107443713,
+        "last_address": 1107443713
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 1107443713,
+        "last_address": 1107443713,
+        "fetch_requests": 10,
+        "data_requests": 1,
+        "completed_data_operations": 0
+      },
+      "execution": {
+        "status": 12,
+        "retired": 9,
+        "pc": 1107313700,
+        "compiled_blocks": 10,
+        "fault_instruction": 2030043200,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443713,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313700,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 2516582497
+        }
+      },
+      "serial_sha256": "cf71809e5290353cf78d7e3b255517d1120a03dfcc6a361a0667a04782af90df",
+      "report_sha256": "258c0e8168220a86d14c6cd29f1b28ec078d627cd381ff427341e2e8048a1eca"
+    },
+    {
+      "kind": "scalar",
+      "name": "sp-load",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 11,
+        "data_requests": 0,
+        "completed_data_operations": 0,
+        "last_address": 1107313704
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 1107443720,
+        "last_address": 1107313704,
+        "fetch_requests": 11,
+        "data_requests": 0,
+        "completed_data_operations": 0
+      },
+      "execution": {
+        "status": 19,
+        "retired": 10,
+        "pc": 1107313704,
+        "compiled_blocks": 11,
+        "fault_instruction": 960496608,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443712,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443720
+        },
+        "exception": {
+          "elr": 1107313704,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 2583691264
+        }
+      },
+      "serial_sha256": "a587b58778b04aa5c5ebaf0ec288abeb7d9116ceca9d177dd339d0439e55cb62",
+      "report_sha256": "5a558805ea4bb423cd7c56dd6cc858509e04de7170dd424e8f4972aaad5abd46"
+    },
+    {
+      "kind": "scalar",
+      "name": "sp-store",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 11,
+        "data_requests": 0,
+        "completed_data_operations": 0,
+        "last_address": 1107313704
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 1107443720,
+        "last_address": 1107313704,
+        "fetch_requests": 11,
+        "data_requests": 0,
+        "completed_data_operations": 0
+      },
+      "execution": {
+        "status": 19,
+        "retired": 10,
+        "pc": 1107313704,
+        "compiled_blocks": 11,
+        "fault_instruction": 4177527776,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443712,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443720
+        },
+        "exception": {
+          "elr": 1107313704,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 2583691264
+        }
+      },
+      "serial_sha256": "a30a0d7c8180523e0cab1c09863d5ff91719b7bc0fa199a28fcec4c5d5566b52",
+      "report_sha256": "7ecf1ae62733826e3ad2da8da0da1fca426d1c28ff3a5a3ee65079fcca184e27"
+    },
+    {
+      "kind": "scalar",
+      "name": "simd-rejected",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true,
+        "provider_guest_far": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 8,
+        "data_requests": 0,
+        "completed_data_operations": 0,
+        "last_address": 1107313692,
+        "guest_far": 0
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 0,
+        "last_address": 1107313692,
+        "fetch_requests": 8,
+        "data_requests": 0,
+        "completed_data_operations": 0
+      },
+      "execution": {
+        "status": 8,
+        "retired": 7,
+        "pc": 1107313692,
+        "compiled_blocks": 8,
+        "fault_instruction": 4244635712,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443712,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313692,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "serial_sha256": "028f93fca68d09f81c01b2b76c3b9551e78f9dd7b26d1690f6498cc8dffe060a",
+      "report_sha256": "a6e1c7d616d085616d44c9143ceb3c314acf2a9e3cb631c12e16e1cb034eace2"
+    },
+    {
+      "kind": "scalar",
+      "name": "reserved-rejected",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true,
+        "provider_guest_far": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 8,
+        "data_requests": 0,
+        "completed_data_operations": 0,
+        "last_address": 1107313692,
+        "guest_far": 0
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 0,
+        "last_address": 1107313692,
+        "fetch_requests": 8,
+        "data_requests": 0,
+        "completed_data_operations": 0
+      },
+      "execution": {
+        "status": 8,
+        "retired": 7,
+        "pc": 1107313692,
+        "compiled_blocks": 8,
+        "fault_instruction": 4190109760,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443712,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313692,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "serial_sha256": "0df589a8848f7e770ecdad73d41a436c9b0304654b8235c07033ad5fabefa619",
+      "report_sha256": "f2b72db07afc75edda1a44744e05a4f4ff3c8ba33849a2b390bb04444503fe03"
+    },
+    {
+      "kind": "scalar",
+      "name": "prefetch-rejected",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true,
+        "provider_guest_far": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 8,
+        "data_requests": 0,
+        "completed_data_operations": 0,
+        "last_address": 1107313692,
+        "guest_far": 0
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 0,
+        "last_address": 1107313692,
+        "fetch_requests": 8,
+        "data_requests": 0,
+        "completed_data_operations": 0
+      },
+      "execution": {
+        "status": 8,
+        "retired": 7,
+        "pc": 1107313692,
+        "compiled_blocks": 8,
+        "fault_instruction": 4185915456,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443712,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313692,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "serial_sha256": "c5d1ce6f062de1e3483b48326eaf1ad4ea739e32bb58577273ca17dee8832a3a",
+      "report_sha256": "79005deea183d9334eb040ea2cb979b147bed2747cf552d21c8638dc9f5b0bb4"
+    },
+    {
+      "kind": "pair",
+      "name": "pair-readback",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true,
+        "provider_guest_far": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 48,
+        "data_requests": 12,
+        "completed_data_operations": 12,
+        "last_address": 1107313852,
+        "guest_far": 0
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 0,
+        "last_address": 1107313852,
+        "fetch_requests": 48,
+        "data_requests": 12,
+        "completed_data_operations": 12
+      },
+      "execution": {
+        "status": 1,
+        "retired": 48,
+        "pc": 1107313856,
+        "compiled_blocks": 48,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 4919112987704430865,
+          "x1": 9838244740693644629,
+          "x2": 1107443712,
+          "x3": 49
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "serial_sha256": "657c517fdca2b6581989d02ea354e1122c04f96d6be0e74bb08be6fdda570c70",
+      "report_sha256": "3f3fee59fb941e51a6998c7307c18bbb79e7446f38886ae1958945db9774f7af"
+    },
+    {
+      "kind": "pair",
+      "name": "sp-store-fault",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 8,
+        "data_requests": 0,
+        "completed_data_operations": 0,
+        "last_address": 1107313692
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 1107443720,
+        "last_address": 1107313692,
+        "fetch_requests": 8,
+        "data_requests": 0,
+        "completed_data_operations": 0
+      },
+      "execution": {
+        "status": 19,
+        "retired": 7,
+        "pc": 1107313692,
+        "compiled_blocks": 8,
+        "fault_instruction": 2847901664,
+        "registers": {
+          "x0": 30583,
+          "x1": 34952,
+          "x2": 1107443712,
+          "x3": 49
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443720
+        },
+        "exception": {
+          "elr": 1107313692,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 2583691264
+        }
+      },
+      "serial_sha256": "420bbe47f1e47a71e2c84de2c1df93d47acfad1b67719987607d5754a480bb1f",
+      "report_sha256": "a6694a75f1dd26143fdb473d135fe1a666506e51652383fda9e0e7da806e8697"
+    },
+    {
+      "kind": "pair",
+      "name": "sp-load-fault",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 8,
+        "data_requests": 0,
+        "completed_data_operations": 0,
+        "last_address": 1107313692
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 1107443720,
+        "last_address": 1107313692,
+        "fetch_requests": 8,
+        "data_requests": 0,
+        "completed_data_operations": 0
+      },
+      "execution": {
+        "status": 19,
+        "retired": 7,
+        "pc": 1107313692,
+        "compiled_blocks": 8,
+        "fault_instruction": 2852095968,
+        "registers": {
+          "x0": 30583,
+          "x1": 34952,
+          "x2": 1107443712,
+          "x3": 49
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443720
+        },
+        "exception": {
+          "elr": 1107313692,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 2583691264
+        }
+      },
+      "serial_sha256": "94ffa913de741d031e3bd748c7aa899257cd2c1d9100a09e972b62598052fe72",
+      "report_sha256": "6287d12bb2841ebf1777022b2f898fff3c56bd59e5d394ed1246e42109d9419b"
+    },
+    {
+      "kind": "pair",
+      "name": "invalid-writeback-pair",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_last_address": true,
+        "provider_guest_far": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 5,
+        "data_requests": 0,
+        "completed_data_operations": 0,
+        "last_address": 1107313680,
+        "guest_far": 0
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 0,
+        "last_address": 1107313680,
+        "fetch_requests": 5,
+        "data_requests": 0,
+        "completed_data_operations": 0
+      },
+      "execution": {
+        "status": 8,
+        "retired": 4,
+        "pc": 1107313680,
+        "compiled_blocks": 5,
+        "fault_instruction": 2843804672,
+        "registers": {
+          "x0": 1107443712,
+          "x1": 34952,
+          "x2": 1107443712,
+          "x3": 49
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313680,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "serial_sha256": "196cce9b607b1da709afcbb8d7f672cd7968b99eb13fd0c75df8fcba0974e5a4",
+      "report_sha256": "1e1a912842ee3aed331227ead7bc4c24ce1c427cc58db1ee1b8b8305855ea26d"
+    },
+    {
+      "kind": "pair",
+      "name": "a0-device-store-fault",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_guest_far": true,
+        "provider_last_address": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 10,
+        "data_requests": 1,
+        "completed_data_operations": 0,
+        "guest_far": 1107443697,
+        "last_address": 1107443697
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 1107443697,
+        "last_address": 1107443697,
+        "fetch_requests": 10,
+        "data_requests": 1,
+        "completed_data_operations": 0
+      },
+      "execution": {
+        "status": 12,
+        "retired": 9,
+        "pc": 1107313700,
+        "compiled_blocks": 10,
+        "fault_instruction": 2847867968,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443713,
+          "x3": 49
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313700,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 2516582497
+        }
+      },
+      "serial_sha256": "7920f3c0e5081e61c51aa4c295f134bdbc7d9184323c7cbacc1c72562fab4bfb",
+      "report_sha256": "6074b3238ed262abbebc78463bbf67fe4a113e99491d2a5749ea147bb70bc65b"
+    },
+    {
+      "kind": "pair",
+      "name": "a0-device-load-fault",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": true,
+        "provider_result_present": true,
+        "one_native_entry_per_executed_instruction": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true,
+        "provider_guest_far": true,
+        "provider_last_address": true
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 10,
+        "data_requests": 1,
+        "completed_data_operations": 0,
+        "guest_far": 1107443705,
+        "last_address": 1107443705
+      },
+      "observed": {
+        "abi": 1,
+        "provider_status": 0,
+        "guest_far": 1107443705,
+        "last_address": 1107443705,
+        "fetch_requests": 10,
+        "data_requests": 1,
+        "completed_data_operations": 0
+      },
+      "execution": {
+        "status": 12,
+        "retired": 9,
+        "pc": 1107313700,
+        "compiled_blocks": 10,
+        "fault_instruction": 704578624,
+        "registers": {
+          "x0": 12297641732488591223,
+          "x1": 13527405905737451656,
+          "x2": 1107443713,
+          "x3": 49
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313700,
+          "spsr": 965,
+          "vector": 0,
+          "esr": 2516582433
+        }
+      },
+      "serial_sha256": "aaa2776f923f340cc7a1b7603ff21ad7b8820a14620b740538cebe6f7890a5c6",
+      "report_sha256": "db12d7f522ea09dd61b32bd61231542da1fe7298aad88b733cd9d89ace1ed8dd"
+    }
+  ],
+  "legacy_fixture_verifiers_passed": true,
+  "actual_win64_c_rust_callback_observed": true,
+  "sp_alignment_far_asserted": false,
+  "guest_ram_after_fault_observed": false,
+  "physical_machine_efi_verified": false,
+  "mmu_enabled_verified": false,
+  "macos_boot_verified": false,
+  "guest_metal_verified": false
+}

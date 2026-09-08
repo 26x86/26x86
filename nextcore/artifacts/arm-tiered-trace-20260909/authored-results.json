@@ -1,0 +1,78 @@
+{
+  "schema": "nextcore.tiered-efi-budget.v1",
+  "passed": true,
+  "cases": [
+    {
+      "name": "default256",
+      "passed": true,
+      "returncode": 2
+    },
+    {
+      "name": "unsupported65",
+      "passed": true,
+      "returncode": 2
+    },
+    {
+      "name": "unsupported512",
+      "passed": true,
+      "returncode": 2
+    },
+    {
+      "name": "excess4097",
+      "passed": true,
+      "returncode": 2
+    },
+    {
+      "name": "absent9",
+      "passed": true,
+      "returncode": 2
+    },
+    {
+      "name": "absent256",
+      "passed": true,
+      "returncode": 2
+    },
+    {
+      "name": "tiered256",
+      "passed": true,
+      "checks": {
+        "exit": true,
+        "completed": true,
+        "build_marker": true,
+        "budget": true,
+        "exact_retirement": true,
+        "loop_readback": true,
+        "native_blocks": true,
+        "no_fault_word": true,
+        "no_exception": true,
+        "inputs": true
+      },
+      "status": 5,
+      "retired": 256,
+      "compiled_blocks": 128
+    },
+    {
+      "name": "default-firmware256",
+      "passed": true,
+      "checks": {
+        "exit": true,
+        "config_rejected": true,
+        "no_guest_entry": true,
+        "no_execution": true,
+        "inputs": true
+      },
+      "status": null,
+      "retired": null,
+      "compiled_blocks": null
+    }
+  ],
+  "efi_sha256": "2330a2f62d65ca8f812d583f484a177b36798717c10995b17b5bbd6917dc512a",
+  "default_efi_sha256": "4b84b09ede15b84334b81ca93574d426050a37bc6fca74ae2eab2c9f15e4d5be",
+  "source_sha256": {
+    "verify_tiered_budget_ovmf.py": "a731834e84af22841612ceaf7ca0197228d93d6b3c8647e955b421ad4773ca17",
+    "tiered_budget_probe.S": "b7a8fe2ccb96b5102c902b53d34e4445f24f90d2df5cadb1211108a74ea51ec3",
+    "trace_arm_jit_ovmf.py": "2831b9208673839fa445c6f6e6a888fad5d7a31d97fe3f7314d546244c73915e"
+  },
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

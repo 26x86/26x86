@@ -1,0 +1,151 @@
+{
+  "schema": "nextcore.efi-provider-edges.v1",
+  "passed": true,
+  "cases": [
+    {
+      "name": "transport-failure",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "provider_marker": true,
+        "provider_result": true,
+        "native_executed": true,
+        "inputs_preserved": true,
+        "status": true,
+        "retirement": true,
+        "fault_pc": true,
+        "native_entry_count": true,
+        "no_fabricated_fault_instruction": true,
+        "x0_unchanged": true,
+        "x1_unchanged": true,
+        "base_no_writeback": true,
+        "marker": true,
+        "esr": true,
+        "elr": true,
+        "no_exception_vector": true,
+        "provider_abi": true,
+        "provider_provider_status": true,
+        "provider_guest_far": true,
+        "provider_last_address": true,
+        "provider_fetch_requests": true,
+        "provider_data_requests": true,
+        "provider_completed_data_operations": true
+      },
+      "execution": {
+        "status": 4,
+        "retired": 4,
+        "pc": 1107313680,
+        "compiled_blocks": 5,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 85,
+          "x1": 102,
+          "x2": 1124073472,
+          "x3": 112
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "provider": {
+        "abi": 1,
+        "provider_status": 4,
+        "guest_far": 0,
+        "last_address": 1124073472,
+        "fetch_requests": 5,
+        "data_requests": 1,
+        "completed_data_operations": 0
+      },
+      "expected_provider": {
+        "abi": 1,
+        "provider_status": 4,
+        "guest_far": 0,
+        "last_address": 1124073472,
+        "fetch_requests": 5,
+        "data_requests": 1,
+        "completed_data_operations": 0
+      },
+      "kernel_sha256": "6533df07c524e4c540b6d6b0747d5b06cb02fff3cfc6348258f0ca6d96aba9d8",
+      "serial_sha256": "2ece704185af41e265051cdaf96eefdf8300a3b4ac92480defd44acb064998a5"
+    }
+  ],
+  "transport_failure_variant": true,
+  "input_sha256_before": {
+    "/home/sharh/work/bp30-efi-memory-validation/public/arm64_provider_edges.S": "50567811f5cf8f316beabc113606a34101a5cd3e166d7037047ed89c3cc2a672",
+    "/home/sharh/work/bp30-efi-memory-validation/rebuild-script/target-transport/x86_64-unknown-uefi/release/NXARMJIT.efi": "535ce5a3a85a3b9df8ce5c015983176a5299e465f20b288d6f5ba992790377c1",
+    "/home/sharh/work/bp30-efi-memory-validation/public/run_provider_edges.py": "956fa3236398e3ec93a15bcd6087a9246d18336396c12f1851b12d61c4285d80",
+    "/home/sharh/work/bp30-efi-memory-validation/public/verify_provider_results.py": "6ae08df90146b84884eeaee57998df6f720764cc2837383fe6c6fef4e13702b6",
+    "/home/sharh/src/26x86/nextcore/tools/trace_arm_jit_ovmf.py": "e0c7b2666c8997058ca5ee2b7560da8eac5ccef24adfdc887b47e092f541bb49",
+    "/home/sharh/src/26x86/nextcore/tools/build_arm64_handoff_probe.py": "57ac29fc0558f79152978e6f7660d8ddcb8b0d98a69cc571b13349dc032cf3ee"
+  },
+  "input_sha256_after": {
+    "/home/sharh/work/bp30-efi-memory-validation/public/arm64_provider_edges.S": "50567811f5cf8f316beabc113606a34101a5cd3e166d7037047ed89c3cc2a672",
+    "/home/sharh/work/bp30-efi-memory-validation/rebuild-script/target-transport/x86_64-unknown-uefi/release/NXARMJIT.efi": "535ce5a3a85a3b9df8ce5c015983176a5299e465f20b288d6f5ba992790377c1",
+    "/home/sharh/work/bp30-efi-memory-validation/public/run_provider_edges.py": "956fa3236398e3ec93a15bcd6087a9246d18336396c12f1851b12d61c4285d80",
+    "/home/sharh/work/bp30-efi-memory-validation/public/verify_provider_results.py": "6ae08df90146b84884eeaee57998df6f720764cc2837383fe6c6fef4e13702b6",
+    "/home/sharh/src/26x86/nextcore/tools/trace_arm_jit_ovmf.py": "e0c7b2666c8997058ca5ee2b7560da8eac5ccef24adfdc887b47e092f541bb49",
+    "/home/sharh/src/26x86/nextcore/tools/build_arm64_handoff_probe.py": "57ac29fc0558f79152978e6f7660d8ddcb8b0d98a69cc571b13349dc032cf3ee"
+  },
+  "commands": [
+    [
+      "clang",
+      "--target=aarch64-none-elf",
+      "-c",
+      "/home/sharh/work/bp30-efi-memory-validation/public/arm64_provider_edges.S",
+      "-DPROBE_TRANSPORT",
+      "-o",
+      "/home/sharh/work/bp30-efi-memory-validation/replay-script/transport/transport-failure.o"
+    ],
+    [
+      "llvm-objcopy",
+      "-O",
+      "binary",
+      "--only-section=.text",
+      "/home/sharh/work/bp30-efi-memory-validation/replay-script/transport/transport-failure.o",
+      "/home/sharh/work/bp30-efi-memory-validation/replay-script/transport/transport-failure.bin"
+    ],
+    [
+      "/usr/bin/python3",
+      "/home/sharh/src/26x86/nextcore/tools/trace_arm_jit_ovmf.py",
+      "--efi",
+      "/home/sharh/work/bp30-efi-memory-validation/rebuild-script/target-transport/x86_64-unknown-uefi/release/NXARMJIT.efi",
+      "--kernel",
+      "/home/sharh/work/bp30-efi-memory-validation/replay-script/transport/transport-failure.kc",
+      "--device-tree",
+      "/home/sharh/work/bp30-efi-memory-validation/replay-script/transport/diagnostic.dt",
+      "--output",
+      "/home/sharh/work/bp30-efi-memory-validation/replay-script/transport/transport-failure",
+      "--physical-base",
+      "0x40000000",
+      "--virtual-base",
+      "0xfffffe0000000000",
+      "--memory-size",
+      "67108864",
+      "--kernel-physical",
+      "0x42000000",
+      "--instruction-budget",
+      "64",
+      "--platform-profile",
+      "nextcore-irq-compat-v1",
+      "--allow-incomplete-sptm-prefix",
+      "--host-memory-mib",
+      "256",
+      "--timeout",
+      "30"
+    ]
+  ],
+  "guest_ram_after_fault_observed": false,
+  "physical_machine_efi_verified": false,
+  "macos_boot_verified": false,
+  "guest_metal_verified": false
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "nextcore.combined-efi-standalone-validation.v1",
+  "passed": true,
+  "efi_revision": "24140677e8fb806f701d1cdc8cdea10fd161445f",
+  "efi_clone_origin": "immutable local integration checkout; separate object store (--no-hardlinks)",
+  "canonical_dependencies": {
+    "nextcore-core": {
+      "source": "git+https://github.com/26x86/Nextcore-Core.git?rev=40833dc29d8bcd2976d0a13c2f120533d02500c4#40833dc29d8bcd2976d0a13c2f120533d02500c4",
+      "manifest_path": "/home/sharh/work/bp30-efi-combined-validation/cargo-home/git/checkouts/nextcore-core-c4feaf670d105f65/40833dc/Cargo.toml"
+    },
+    "nextcore-ise": {
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=41e8997c4b8d6f029ed3a3fbec0669374046ab6f#41e8997c4b8d6f029ed3a3fbec0669374046ab6f",
+      "manifest_path": "/home/sharh/work/bp30-efi-combined-validation/cargo-home/git/checkouts/nextcore-ise-4cebcf906001f6ff/41e8997/Cargo.toml"
+    },
+    "nextcore-memory-service": {
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=41e8997c4b8d6f029ed3a3fbec0669374046ab6f#41e8997c4b8d6f029ed3a3fbec0669374046ab6f",
+      "manifest_path": "/home/sharh/work/bp30-efi-combined-validation/cargo-home/git/checkouts/nextcore-ise-4cebcf906001f6ff/41e8997/runtime/memory-service/Cargo.toml"
+    }
+  },
+  "git_dependencies_fetched_from_github_with_empty_git_cache": true,
+  "registry_cache_reused": true,
+  "parent_workspace_used": false,
+  "canonical_build_path_patches_used": false,
+  "canonical_build_runtime_override_used": false,
+  "build_matrix": [
+    "default",
+    "direct",
+    "provider",
+    "combined",
+    "all-features"
+  ],
+  "provider_cases_passed": 23,
+  "separate_transport_failure_variant_passed": true,
+  "direct_bypass_negative_detected": true,
+  "tiered_suite_checks_passed": 8,
+  "tiered_retired": 256,
+  "tiered_native_entries": 256,
+  "tiered_fetch_requests": 256,
+  "helpers_preserved": true,
+  "canonical_tracked_source_preserved": true,
+  "untracked_cargo_ok_cache_markers_excluded_from_source_claim": true,
+  "transport_variant_uses_explicit_local_auxiliary_patch_only": true,
+  "physical_machine_efi_verified": false,
+  "mmu_enabled_verified": false,
+  "macos_boot_verified": false,
+  "guest_metal_verified": false
+}

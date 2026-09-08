@@ -1,0 +1,20 @@
+[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01HBdsDxe: loading Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+BdsDxe: starting Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64
+NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64
+NXARMJIT: CONFIG_PARSED
+NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152
+NXARMJIT: TRACE_TIERED_DIAGNOSTIC maximum=4096
+NXARMJIT: TRACE_DT_CHECKED templates=0 platform_complete=false
+NXARMJIT: TRACE_STAGING_VERIFIED source_unchanged=true
+NXARMJIT: TRACE_HANDOFF_UNPROVISIONED abi=unprovisioned-sptm-prefix sptm_args=false sptm_services=false platform_device_tree=false
+NXARMJIT: TRACE_PLATFORM_PROFILE name=nextcore-irq-compat-v1 reset_origin=software_defined initial_override=0x0 initial_pstate=0x3c5 irq=0 fiq=0
+NXARMJIT: TRACE_ENTER entry=0x42004400 x0=0 x1=0x4200c000 x2=0 x3=0 budget=64
+NXARMJIT: TRACE_MEMORY_PROVIDER abi=1 mode=m0-only
+NXARMJIT: TRACE_RETURN status=8 retired=4 pc=0x42004410 blocks=5 instruction=0xa9810400
+NXARMJIT: TRACE_REGISTERS x0=0x42024000 x1=0x8888 x2=0x42024000 x3=0x31
+NXARMJIT: TRACE_PLATFORM_STATE profile=1 override=0x0 pending=0 pstate=0x3c5 sp=0x42024000
+NXARMJIT: TRACE_EXCEPTION_STATE elr=0x42004410 spsr=0x3c5 vector=0x0 esr=0x0 handler_executed=false
+NXARMJIT: TRACE_MEMORY_RESULT abi=1 provider_status=0 guest_far=0x0 last_address=0x42004410 fetch_requests=5 data_requests=0 completed_data_operations=0
+NXARMJIT: TRACE_ONLY macos_boot_verified=false metal_verified=false
+NXARMJIT: ERROR status=ABORTED

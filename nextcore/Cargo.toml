@@ -1,5 +1,6 @@
 [workspace]
 resolver = "2"
+exclude = ["crates/nextcore-ise/runtime/memory-service"]
 members = [
     "crates/nextcore-core",
     "crates/nextcore-efi",
@@ -21,6 +22,7 @@ nextcore-tool = { path = "crates/nextcore-tool" }
 
 [patch."https://github.com/26x86/Nextcore-ISE.git"]
 nextcore-ise = { path = "crates/nextcore-ise" }
+nextcore-memory-service = { path = "crates/nextcore-ise/runtime/memory-service" }
 
 [patch."https://github.com/26x86/Nextcore-GPU.git"]
 nextcore-gpu = { path = "crates/nextcore-gpu" }

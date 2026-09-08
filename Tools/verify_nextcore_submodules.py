@@ -9,8 +9,12 @@ from pathlib import Path
 import subprocess
 import tomllib
 
+from nextcore_package_policy import (
+    MEMORY_FEATURE, PACKAGES, PRIMARY_PACKAGES, module_manifests,
+    validate_auxiliary_inventory, validate_cargo_metadata, validate_workspace,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
-MODULES = ("Core", "EFI", "Tool", "ISE", "GPU", "HAL", "APLS")
 
 def run(*args: str) -> str:
     return subprocess.check_output(args, cwd=ROOT, text=True).strip()
@@ -18,7 +22,7 @@ def run(*args: str) -> str:
 def verify(cargo: bool = False, clean: bool = False) -> dict:
     config = configparser.ConfigParser()
     config.read(ROOT / ".gitmodules")
-    expected = {"nextcore-" + name.lower(): name for name in MODULES}
+    expected = {name: owner.module for name, owner in PRIMARY_PACKAGES.items()}
     if set(config.sections()) != {f'submodule "{crate}"' for crate in expected}:
         raise ValueError(".gitmodules must describe exactly the seven NextCore modules")
     receipts = []
@@ -54,21 +58,19 @@ def verify(cargo: bool = False, clean: bool = False) -> dict:
     heads = {entry["crate"]: entry["commit"] for entry in receipts}
     for entry in receipts:
         absolute = ROOT / entry["path"]
-        manifest = tomllib.loads((absolute / "Cargo.toml").read_text())
-        for section_name in ("dependencies", "build-dependencies", "dev-dependencies"):
-            for dependency, specification in manifest.get(section_name, {}).items():
-                if dependency not in expected:
-                    continue
-                expected_url = f"https://github.com/26x86/Nextcore-{expected[dependency]}.git"
-                if (not isinstance(specification, dict) or "path" in specification
-                        or specification.get("git") != expected_url
-                        or specification.get("rev") != heads[dependency]):
-                    raise ValueError(f'{entry["crate"]}: {dependency} must pin the integrated remote revision')
+        tracked_files = set(subprocess.check_output(
+            ["git", "-C", str(absolute), "ls-files", "-z"], text=True
+        ).split("\0")) - {""}
+        public_paths = subprocess.check_output(
+            ["git", "-C", str(absolute), "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+            text=True,
+        ).split("\0")
+        owned = module_manifests(absolute, entry["crate"], public_paths, heads)
+        entry["packages"] = sorted(owned.manifests)
+        inventory = json.loads((absolute / "repository-files.json").read_text())
+        validate_auxiliary_inventory(absolute, entry["crate"], tracked_files, inventory)
         if clean:
-            inventory = json.loads((absolute / "repository-files.json").read_text())
-            tracked_files = set(subprocess.check_output(
-                ["git", "-C", str(absolute), "ls-files", "-z"], text=True
-            ).split("\0")) - {"", "repository-files.json", "repository.json"}
+            tracked_files -= {"repository-files.json", "repository.json"}
             inventoried_files = {item["path"] for item in inventory["files"]} - {"repository.json"}
             if tracked_files != inventoried_files or len(inventory["files"]) != len({item["path"] for item in inventory["files"]}):
                 raise ValueError(f'{entry["crate"]}: inventory does not cover the tracked public files exactly')
@@ -79,21 +81,20 @@ def verify(cargo: bool = False, clean: bool = False) -> dict:
                 data = (absolute / relative).read_bytes()
                 if len(data) != item["bytes"] or hashlib.sha256(data).hexdigest() != item["sha256"]:
                     raise ValueError(f'{entry["crate"]}: stale inventory for {relative}')
+    validate_workspace(ROOT, tomllib.loads((ROOT / "nextcore/Cargo.toml").read_text()))
+    resolutions = []
     if cargo:
         host = next(line.removeprefix("host: ") for line in run("rustc", "-vV").splitlines() if line.startswith("host: "))
-        metadata = json.loads(run("cargo", "metadata", "--locked", "--format-version", "1", "--filter-platform", host,
-                                  "--manifest-path", str(ROOT / "nextcore/Cargo.toml")))
-        members = set(metadata["workspace_members"])
-        packages = [p for p in metadata["packages"] if p["name"] in expected]
-        if len(packages) != len(expected):
-            raise ValueError("Cargo resolved missing or duplicate NextCore packages")
-        for package in packages:
-            manifest = ROOT / "nextcore/crates" / package["name"] / "Cargo.toml"
-            if (Path(package["manifest_path"]).resolve() != manifest.resolve()
-                    or package["source"] is not None or package["id"] not in members):
-                raise ValueError(f'{package["name"]}: Cargo did not resolve the local submodule')
-    return {"schema": "nextcore-submodules/1", "modules": receipts,
-            "cargo_local_resolution_checked": cargo, "clean_required": clean}
+        for platform in dict.fromkeys((host, "x86_64-unknown-uefi")):
+            metadata = json.loads(run(
+                "cargo", "metadata", "--locked", "--format-version", "1", "--filter-platform", platform,
+                "--features", MEMORY_FEATURE, "--manifest-path", str(ROOT / "nextcore/Cargo.toml"),
+            ))
+            resolutions.append({"platform": platform, **validate_cargo_metadata(ROOT, metadata)})
+    return {"schema": "nextcore-submodules/2", "modules": receipts,
+            "auxiliary_packages": sorted(set(PACKAGES) - set(PRIMARY_PACKAGES)),
+            "cargo_local_resolution_checked": cargo, "cargo_resolutions": resolutions,
+            "clean_required": clean}
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
