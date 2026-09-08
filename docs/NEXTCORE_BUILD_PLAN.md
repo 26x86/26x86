@@ -1374,4 +1374,126 @@ Clippy checks. Original startup advanced to seven retired instructions; the
 CPU override provider, native JIT MMU, SPTM services and runtime DT remain open.
 The full macOS 27 build 26A5425a archive and selected input hashes are verified.
 Detailed receipts: `nextcore/artifacts/integration-bp26-20260908/results.md`.
-Remote push remains pending the previously requested explicit approval.
+BP26 publication completed on the authorized feature branch; canonical GitHub
+recursive clone and dependency resolution were verified. BP27 supersedes the
+earlier pending-push state.
+
+
+## BP27 — authorized publication and next EFI execution boundary
+
+Current: BP26 passes recursive builds and authored EFI execution; original
+startup stops after seven instructions at a platform interrupt-override read.
+The user explicitly authorized remote pushes and continued implementation.
+Publish immutable submodule objects before parent gitlinks, retain branch
+codex/arm64e-boot-metal and verify canonical network clones without URL mapping.
+
+Decision and ownership: the CPU agent owns ISE native/reference interrupt
+pending state, PSTATE I/F routing, correct EL0/EL1t/EL1h vectors, and an explicit
+optional platform-register provider with public-source semantics. It must
+implement real mask effects and preserve pending levels, not a scratch/no-op
+register. A named software compatibility profile may define its own initial
+state, distinct from observed Apple reset; all unsupported fields/access modes
+remain errors. Existing callers retain absent-provider behavior. The CPU agent
+owns versioned C/Rust bridges and may add the standard logical-immediate ARM
+instructions needed at the next generic boundary after documenting their ISA
+contract. Native generated-code and reference tests must agree; the API contract
+must be shared with the EFI agent before integration.
+
+The EFI/Core agent owns explicit optional profile configuration, diagnostics,
+independently authored firmware interrupt/provider tests and bounded original
+input re-execution only after a working provider contract. Preserve the default
+provider gate and all missing SPTM/runtime-DT outcome fields. Original bytes and
+execution coordinates stay isolated. The GPU agent owns a concrete checked
+adapter between existing APLS inline SGPU frames and the existing VSK grant-based
+transport, using their real public ABI; no duplicate wire protocol, unchecked
+pointers, fake guest driver or claimed EFI GPU backend. Write a narrow transport
+contract before code and validate through existing compute sessions where
+possible. Root owns Build Plan, remote publication, dependency pins, inventories,
+CI, native-memory integration review and final cross-module regressions.
+
+Wanted: make interrupt/platform state executable with explicit semantics,
+advance the actual EFI compatibility path, connect an existing GPU transport
+boundary, and publish reproducible independently linked modules. Actual XNU
+boot and macOS Metal remain unverified until their own end-to-end outcomes.
+
+
+BP27-A root memory scope: the reference walker currently ignores TCR_EL1.IPS
+and can return a physical address beyond the configured output width. Root owns
+only ISE/runtime/preos/src/mmu.rs plus independent physical-width oracle tools,
+with public Arm TCR/AddressSize semantics. Add supported 32/36/40/42/44/48-bit
+limits, explicit rejection of unsupported wider regimes, and fault-before-read
+checks for out-of-range table/leaf outputs. Retain current configuration on
+rejection. Verify boundary PAs and fault classes in authored descriptor tests
+and an independent Arm CPU oracle. Do not change the native SCTLR.M gate or
+CPU-owned arch/bridge files. This fixes reference semantics needed before native
+MMU integration; it does not assert native translated-memory execution.
+Reference: Arm Cortex-A73 TRM TCR_EL1 and Arm A-profile memory pseudocode.
+
+
+BP27 goal update: the user requires continued development until ARM64e macOS27
+is stably usable after boot inside an x86_64 EFI test machine, with milestone
+pushes and final build/use documentation in the GitHub wiki. Treat authored
+fixtures, original-prefix retirement and host compute as intermediate evidence.
+Completion requires the real OS to reach its usable interface, preserve storage
+across repeated cold boots/restarts, accept input, and pass sustained basic use;
+actual graphics/Metal outcomes need their own receipt. Keep physical execution
+architecture x86_64 and EFI entry explicit. Do not mark the active goal complete
+while native MMU, SPTM/platform providers, OS boot, stability or wiki work remains.
+
+
+BP27-B CPU delegation extends the existing shifted-register ADD/SUB family to
+its flag-setting comparison aliases after the observed generic startup boundary.
+Document and implement defined32/64-bit shifts, NZCV, x31 semantics and invalid
+encodings, with independent native/reference checks. This extends an existing
+ISA path; no platform values or original bytes are incorporated. Final original
+prefix tracing follows the working provider and ALU implementation.
+
+
+BP27-C user scope update: remove the retired machine-specific profile and its
+content and unnecessary Windows application sandbox tester features. The GPU
+agent is delegated a separate cleanup contract and the affected application,
+profile, documentation and reference files; runtime VSK grant authority and
+boot/JIT validation remain required dependencies. NVIDIA and Intel integrated
+graphics join AMD as explicit implementation targets; hardware support requires
+backend evidence and is never inferred from an API/device enumeration.
+
+The user authorizes milestone commits, publication, pull requests into main and
+merging after required checks. Publish dependency commits before parent gitlinks.
+Clean up completed merged task branches only after proving their commits remain
+reachable from main; preserve unrelated or unmerged work. Root owns integration,
+PRs, merges and branch cleanup. The active stable macOS boot goal remains open.
+
+BP27-D root independent MMU validation extends the physical-width oracle with
+L3 page outputs and both low/high offsets within a 16 KiB L1 block. These cases
+address a review gap in the initial eight block/table/root checks. Keep expected
+architectural faults explicit and compare against the independent CPU model.
+
+BP27-D oracle outcome correction: independent execution and Arm FEAT_LPA2
+documentation establish that 16 KiB L1 block descriptors are reserved when DS=0.
+The existing reference walker and new huge-block unit fixture wrongly accepted
+them. Reject that descriptor before address/permission checks, replace the
+incorrect fixture with low/high-offset Translation faults, and keep valid L2
+cache-boundary checks. LPA2 remains unsupported. This supersedes the earlier
+assumption that a 64 GiB block could be valid in the selected regime.
+
+BP27 implementation milestone: Core/ISE/APLS/EFI/Tool source commits passed
+fresh standalone dependency builds and were pushed before the parent gitlinks.
+The original diagnostic reaches 26 retired instructions in 10 native blocks
+before a standard integer store-pair boundary. Eight authored x86 EFI profile
+and vector cases pass; handlers and native MMU remain separate work. The
+reference suite has 73 tests, with 14 independent physical-width/descriptor
+oracle cases and a deliberately failing changed-descriptor control. APLS grant
+submission was differentially checked against the existing C policy and ran
+on the available AMD GPU. This is neither complete macOS boot nor guest Metal.
+
+BP28 delegation: after immutable BP27 ISE commit a6f1c46c, the CPU agent works
+only in a separate ISE worktree on integer STP/LDP addressing, bounded memory
+access, precise faults and writeback. The EFI agent investigates the public
+SPTM startup contract and version-specific normal boot prerequisites without
+fabricating private structure layouts. Root integrates and publishes BP27 in
+parallel. The GPU agent completes the authorized legacy app/profile cleanup.
+
+BP27 CI repair: the independent EFI runner installed clang/lld but omitted
+LLVM tools; archive creation failed because llvm-ar was absent. Declare llvm
+in the module workflow and both root firmware-building jobs, including
+llvm-objcopy needed by authored fixtures. Runtime source behavior is unchanged.

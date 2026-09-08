@@ -25,3 +25,6 @@ Tools/git/hooks/pre-commit text eol=lf
 nextcore/artifacts/arm-efi-20260908/**/serial.log -text -whitespace
 nextcore/artifacts/arm-startup-continuation-20260908/**/serial.log -text -whitespace
 nextcore/artifacts/integration-bp26-20260908/*.log -text -whitespace
+
+nextcore/artifacts/arm-platform-profile-20260908/**/*.log -text -whitespace
+nextcore/artifacts/integration-bp27-20260908/**/*.log -text -whitespace

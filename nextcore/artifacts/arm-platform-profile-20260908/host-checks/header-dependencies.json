@@ -1,0 +1,24 @@
+{
+  "sources": [
+    "jit.c",
+    "arch.c",
+    "boot_jit.c",
+    "jit_protection.c",
+    "gop_scanout.c"
+  ],
+  "transitive_local_headers": [
+    "boot_jit.h",
+    "gop_scanout.h",
+    "jit.h",
+    "platform_abi.h",
+    "uefi.h"
+  ],
+  "rerun_headers": [
+    "boot_jit.h",
+    "gop_scanout.h",
+    "jit.h",
+    "platform_abi.h",
+    "uefi.h"
+  ],
+  "all_headers_tracked": true
+}

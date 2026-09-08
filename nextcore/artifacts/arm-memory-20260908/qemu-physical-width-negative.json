@@ -1,0 +1,10 @@
+{
+  "schema": "nextcore.mmu-physical-negative/1",
+  "expected_failure": true,
+  "exit_code": 1,
+  "positive_source_sha256": "3e1af639bc8811c8aa326117e303c96423957874c9de701b5b59a2ef3bd6abff",
+  "control_source_sha256": "621f0279fb0737a82b56c906c58d230790dfcfb65c78486584e3a5f852d7a321",
+  "change": "First block descriptor output changed from4GiB to3GiB under32-bit IPS; expected-fault check must reject success.",
+  "stderr": "Traceback (most recent call last):\n  File \"/home/sharh/work/bp27-mmu/negative/probe_mmu_physical.py\", line 36, in <module>\n    args=parser.parse_args();result=probe()\n                                    ^^^^^^^\n  File \"/home/sharh/work/bp27-mmu/negative/probe_mmu_physical.py\", line 25, in probe\n    if result.returncode:raise RuntimeError(json.dumps(records[-1]))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: {\"command\": [\"qemu-system-aarch64\", \"-machine\", \"virt\", \"-cpu\", \"max\", \"-m\", \"128\", \"-nographic\", \"-monitor\", \"none\", \"-serial\", \"none\", \"-net\", \"none\", \"-semihosting-config\", \"enable=on,target=native\", \"-kernel\", \"/tmp/nextcore-mmu-pa-62paam1m/probe.elf\"], \"exit_code\": 1, \"stdout\": \"\", \"stderr\": \"MMU_PA_ORACLE: FAIL\\n\"}\n",
+  "apple_assets_used": false
+}
