@@ -2,11 +2,11 @@
 
 <div align="center">
   <img src="resources/branding/26x86-logo-256.png" alt="26x86" width="144" />
-  <h3>macOS 26 on x86-based Macintosh hardware</h3>
-  <p>OpenCore integration, clean-room boot research, and evidence-first compatibility tooling.</p>
+  <h3>Modern Intel/Apple Silicon macOS Bootloader</h3>
+  <p>Clean-room EFI boot research, OpenCore integration, and evidence-first compatibility tooling for macOS Tahoe.</p>
   <p>
     <a href="https://github.com/26x86/26x86/actions">Actions</a> ·
-    <a href="docs/wiki/README.md">Docs</a> ·
+    <a href="https://26x86.github.io/26x86/">Documentation</a> ·
     <a href="docs/MELLOW_INTEGRATION.md">Mellow</a> ·
     <a href="SECURITY.md">Security</a>
   </p>
@@ -20,8 +20,10 @@
 
 | I want to… | Go to |
 | --- | --- |
+| Browse the documentation site | [26x86 docs](https://26x86.github.io/26x86/) |
 | Understand the public architecture | [Documentation hub](docs/wiki/README.md) |
-| Prepare an Intel Mac for Tahoe | [Setup and compatibility guide](docs/wiki/Home.md) |
+| Boot macOS on Intel hardware | [Setup and compatibility guide](docs/wiki/Home.md) |
+| Boot macOS on Apple Silicon | [Apple Silicon guide](docs/APPLE_SILICON_SANDBOX.md) |
 | Run the guided tool | `26x86.command` or `python3 -m x86 wizard` |
 | Build on Windows | [Windows EXE workflow](#windows-exe) |
 | Inspect supported operating modes | [Mellow integration](docs/MELLOW_INTEGRATION.md) |
@@ -30,10 +32,17 @@
 
 ## The platform
 
-26x86 is organized as small, inspectable modules. The core repository carries
+26x86 is a modern macOS bootloader designed for both Intel and Apple Silicon hardware. It is organized as small, inspectable modules. The core repository carries
 the user-facing patcher, OpenCore integration, EFI preparation, diagnostics,
 and cross-layer contracts. The companion repositories isolate reusable boot
-and runtime components so their evidence can be reviewed independently.
+and runtime components so their evidence can be reviewed independently. Those
+components are vendored into this repository as **git submodules** (one per
+crate under `nextcore/crates/`), so module source lives in exactly one place.
+
+Changes to `main` arrive **only through pull requests**. `main` is protected:
+required reviews, required status checks (`docs-build`, `isolated-asset-guard`,
+`workspace-tests`), and the documentation site deploys from `main` after a PR
+merge. See the [branching and release policy](docs/wiki/Branching-and-Release.md).
 
 | Area | Repository | What it owns |
 | --- | --- | --- |

@@ -1,0 +1,39 @@
+name: Documentation build check
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  docs-build:
+    name: docs-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install MkDocs Material
+        run: pip install -r requirements-docs.txt
+      - name: Build site (strict)
+        run: mkdocs build --strict
+      - name: Verify assembled nav coverage
+        run: |
+          python - <<'EOF'
+          import re, pathlib
+          md = pathlib.Path("mkdocs.yml").read_text(encoding="utf-8")
+          assert "Home: index.md" in md, "landing page missing from nav"
+          for page in ("wiki/Branching-and-Release.md", "wiki/Nextcore-Modules.md"):
+              assert page in md, f"{page} missing from nav"
+          print("nav coverage OK")
+          EOF

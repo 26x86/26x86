@@ -1,0 +1,38 @@
+/* 26x86 site customizations (MkDocs Material) */
+
+.hero {
+  padding: 1.6rem 0 0.4rem 0;
+}
+
+.hero h1 {
+  margin: 0 0 0.4rem 0;
+  font-weight: 700;
+}
+
+.hero-sub {
+  font-size: 1.12rem;
+  color: var(--md-default-fg-color--light);
+  max-width: 44rem;
+  margin-bottom: 1.2rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.md-nav__title {
+  font-weight: 700;
+}
+
+/* Slightly wider content column for tables and code */
+.md-grid {
+  max-width: 64rem;
+}
+
+/* Tables inline with a lighter header */
+.md-typeset table:not([class]) th {
+  font-weight: 700;
+}

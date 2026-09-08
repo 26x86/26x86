@@ -1,0 +1,34 @@
+name: Nextcore workspace tests
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workspace-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  workspace-tests:
+    name: workspace-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (with module submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - name: Workspace tests
+        run: cargo test --workspace
+        working-directory: nextcore
+      - name: Clippy (host crates, warnings surfaced)
+        run: cargo clippy --workspace --all-targets
+        working-directory: nextcore
