@@ -24,3 +24,4 @@ Tools/git/hooks/pre-commit text eol=lf
 # Firmware UART evidence preserves original CRLF bytes.
 nextcore/artifacts/arm-efi-20260908/**/serial.log -text -whitespace
 nextcore/artifacts/arm-startup-continuation-20260908/**/serial.log -text -whitespace
+nextcore/artifacts/integration-bp26-20260908/*.log -text -whitespace

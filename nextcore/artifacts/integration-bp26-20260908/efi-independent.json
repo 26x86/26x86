@@ -1,0 +1,86 @@
+{
+  "module": "EFI",
+  "commit": "7a42084f92c7eadcd11ece0f2d06962c73450598",
+  "passed": true,
+  "fresh_clone": true,
+  "root_workspace_patches": false,
+  "dependency_transport": "local committed objects via temporary Git URL mapping; remote publication not asserted",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-efi",
+        "/home/sharh/work/module-validation-20260908/EFI-7a42084f92"
+      ],
+      "exit_code": 0,
+      "seconds": 1.27
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--detach",
+        "7a42084f92c7eadcd11ece0f2d06962c73450598"
+      ],
+      "exit_code": 0,
+      "seconds": 0.01
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 16.76
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-probe",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 2.63
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 12.7
+    }
+  ],
+  "nextcore_packages": [
+    {
+      "name": "nextcore-core",
+      "source": "git+https://github.com/26x86/Nextcore-Core.git?rev=757d8e668141ebc15a265f13383448bc609defb9#757d8e668141ebc15a265f13383448bc609defb9"
+    },
+    {
+      "name": "nextcore-efi",
+      "source": null
+    },
+    {
+      "name": "nextcore-ise",
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=1d5ffb56799f70ce622e4813be66d0592cb5a292#1d5ffb56799f70ce622e4813be66d0592cb5a292"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "module": "GPU",
+  "commit": "34d617cca37d563d13ed0b0c966e2557921c6125",
+  "passed": true,
+  "fresh_clone": true,
+  "root_workspace_patches": false,
+  "dependency_transport": "local committed objects via temporary Git URL mapping; remote publication not asserted",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--detach",
+        "34d617cca37d563d13ed0b0c966e2557921c6125"
+      ],
+      "exit_code": 0,
+      "seconds": 0.01
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 52.67
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-targets",
+        "--features",
+        "vulkan"
+      ],
+      "exit_code": 0,
+      "seconds": 18.85
+    }
+  ],
+  "nextcore_packages": [
+    {
+      "name": "nextcore-gpu",
+      "source": null
+    }
+  ]
+}

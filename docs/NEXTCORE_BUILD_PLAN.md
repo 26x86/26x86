@@ -1364,3 +1364,14 @@ resource-creation ingress. Existing wire bytes stay compatible; malformed frame
 acceptance and allocator panics become explicit errors. Regression fixtures must
 cover valid existing traffic and rejected boundary inputs. GPU backend policy
 and original-input startup prerequisites remain outside this follow-up.
+
+
+BP26 final verification: source integration e1f64b3f passed a fresh recursive
+clone check, standalone module dependency builds, 461 workspace tests plus the
+compiled-EFI opt-in test, 65 reference runtime tests, four independent MMU
+oracle cases, 14 authored x86 EFI cases, Python regression tests and required
+Clippy checks. Original startup advanced to seven retired instructions; the
+CPU override provider, native JIT MMU, SPTM services and runtime DT remain open.
+The full macOS 27 build 26A5425a archive and selected input hashes are verified.
+Detailed receipts: `nextcore/artifacts/integration-bp26-20260908/results.md`.
+Remote push remains pending the previously requested explicit approval.
