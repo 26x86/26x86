@@ -1,0 +1,4 @@
+docs/index.md
+docs/wiki/README.md
+docs/wiki/Getting-Started.md
+docs/assets/stylesheets/extra.css

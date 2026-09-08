@@ -1,0 +1,38 @@
+{
+  "passed_local": true,
+  "strict_build_passed": true,
+  "local_entry_pages": 4,
+  "local_internal_routes_and_assets_http_200": 47,
+  "live_original_button_md_statuses": [
+    404,
+    404,
+    404
+  ],
+  "live_excluded_home_status": 404,
+  "live_destination_routes_statuses": [
+    200,
+    200,
+    200
+  ],
+  "site_title": "NextCore",
+  "browser_desktop_and_narrow_verified": true,
+  "browser_three_buttons_clicked": true,
+  "modified_sources": {
+    "docs/index.md": "9c45739815d264125af68b4a10c1d91ae63baf59bd4267bce25d6364deef3751",
+    "docs/wiki/README.md": "5a4cc4425892b6df67ffb7a64b963b5d9e53d50134cc6abfae1c6eb2ae131a61",
+    "docs/wiki/Getting-Started.md": "f00a53e952f96bb0b5d87ca001793d426e92470763926a2b0adf289f84a805f2",
+    "docs/assets/stylesheets/extra.css": "dfc8b0b4b0f839774fac5cbde813d1e1eb5e3c72da80d418046c43e0ea2e3bcb"
+  },
+  "mkdocs_config_changed": false,
+  "link_validation_weakened": false,
+  "upstream_opencore_attribution_preserved": true,
+  "corrected_live_deployment_verified": false,
+  "evidence": {
+    "live-before.json": "a98b8b6694211b475d51903b7ee8411db9ef7de33861359f8273f0333a8790a8",
+    "local-before.json": "5c9611cbbab706949b500fd04b5f00001e18b4da08b10eba249efdcab7fe618d",
+    "local-after.json": "197b7bce3ac9f95a0fd151a203e26dd083e67a2345b5b8ed8b7ca3d233b61fee",
+    "browser.json": "a2f6c3d258ccb650e40e8ee4aaa737ad55717c0ca908f412c3d357cfc30ec629",
+    "build.log": "d2b48dc789d15f4d00e27e4b2d84df0f9448b748cf1d709b4463e30a7a560fa7"
+  },
+  "temporary_browser_and_http_server_cleaned_up": true
+}

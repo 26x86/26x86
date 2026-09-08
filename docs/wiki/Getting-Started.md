@@ -1,6 +1,6 @@
 # Getting started
 
-26x86 prepares an OpenCore-based EFI workflow for Intel Macs and related
+NextCore's companion tools prepare an external OpenCore-based EFI workflow for Intel Macs and related
 experimental targets. Begin with a complete backup and identify the exact Mac
 model, GPU, storage layout, firmware mode, and target macOS release.
 
