@@ -1,0 +1,17 @@
+   Compiling scroll_derive v0.13.2
+   Compiling thiserror-impl v2.0.20
+   Compiling serde_json v1.0.151
+   Compiling scroll v0.13.0
+   Compiling goblin v0.10.7
+   Compiling thiserror v2.0.20
+   Compiling nextcore-core v0.1.0 (/home/sharh/work/module-validation-bp35-core-corrected-20260909/Core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.55s
+   Doc-tests nextcore_core
+
+running 3 tests
+test src/guest_memory.rs - guest_memory::GuestMemory<'a>::from_borrowed (line 215) - compile fail ... ok
+test src/guest_memory.rs - guest_memory::GuestMemory<'a>::with_guest_memory (line 475) - compile fail ... ok
+test src/guest_memory.rs - guest_memory::GuestMemory<'a>::with_guest_memory (line 482) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+

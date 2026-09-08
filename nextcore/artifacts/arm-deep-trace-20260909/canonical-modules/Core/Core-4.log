@@ -1,0 +1,13 @@
+   Compiling version_check v0.9.5
+   Compiling typenum v1.20.1
+   Compiling cfg-if v1.0.4
+   Compiling memchr v2.8.3
+   Compiling cpufeatures v0.2.17
+   Compiling generic-array v0.14.7
+   Compiling roxmltree v0.21.1
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling nextcore-core v0.1.0 (/home/sharh/work/module-validation-bp35-core-corrected-20260909/Core)
+    Finished `release` profile [optimized] target(s) in 4.71s

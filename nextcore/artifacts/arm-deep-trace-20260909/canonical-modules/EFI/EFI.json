@@ -1,0 +1,306 @@
+{
+  "module": "EFI",
+  "commit": "03a376d6652fdaabe8b567c047dad9d41926dc84",
+  "passed": true,
+  "fresh_standalone_clone": true,
+  "empty_cargo_cache": true,
+  "canonical_git_dependencies": true,
+  "root_workspace_patches": false,
+  "commands": [
+    {
+      "name": "clone",
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/work/bp35-efi-deep-trace",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/EFI"
+      ],
+      "exit_code": 0,
+      "seconds": 2.95
+    },
+    {
+      "name": "build-default",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 35.15
+    },
+    {
+      "name": "build-direct",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-probe,arm-jit-trace",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 5.22
+    },
+    {
+      "name": "build-combined",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-memory-provider,arm-jit-tiered-trace",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 1.63
+    },
+    {
+      "name": "all-features",
+      "command": [
+        "cargo",
+        "check",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 12.44
+    },
+    {
+      "name": "debug-nxapfs",
+      "command": [
+        "cargo",
+        "build",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features",
+        "--bin",
+        "NXAPFS"
+      ],
+      "exit_code": 0,
+      "seconds": 10.26
+    },
+    {
+      "name": "conditional-firmware",
+      "command": [
+        "python3",
+        "/home/sharh/work/bp32-integration/nextcore/tools/verify_arm_conditional_compare_ovmf.py",
+        "--efi",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/NXARMJIT-combined.efi",
+        "--ise",
+        "/home/sharh/work/bp34-ise-dynamic-control",
+        "--output",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/conditional-firmware",
+        "--require-memory-provider"
+      ],
+      "exit_code": 0,
+      "seconds": 72.01
+    },
+    {
+      "name": "stage1-reader",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_stage1_reader.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.14
+    },
+    {
+      "name": "stage1-build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-stage1-probe",
+        "--bin",
+        "NXMMU"
+      ],
+      "exit_code": 0,
+      "seconds": 4.01
+    },
+    {
+      "name": "stage1-firmware",
+      "command": [
+        "python3",
+        "tools/verify_stage1_ovmf.py",
+        "--efi-probe",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/NXMMU.efi",
+        "--output",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/stage1-firmware"
+      ],
+      "exit_code": 0,
+      "seconds": 6.04
+    },
+    {
+      "name": "dt-build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-dt-probe",
+        "--bin",
+        "NXDT"
+      ],
+      "exit_code": 0,
+      "seconds": 4.22
+    },
+    {
+      "name": "dt-firmware",
+      "command": [
+        "python3",
+        "tools/verify_dt_ledger_ovmf.py",
+        "--efi-probe",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/NXDT.efi",
+        "--output",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/dt-firmware"
+      ],
+      "exit_code": 0,
+      "seconds": 5.25
+    },
+    {
+      "name": "dt-capture-check",
+      "command": [
+        "python3",
+        "tools/check_dt_ledger_capture.py",
+        "--report",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/dt-firmware/report.json",
+        "--output",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/dt-reader.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.1
+    },
+    {
+      "name": "dynamic-build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-dynamic-probe",
+        "--bin",
+        "NXDYN"
+      ],
+      "exit_code": 0,
+      "seconds": 4.41
+    },
+    {
+      "name": "dynamic-firmware",
+      "command": [
+        "python3",
+        "tools/verify_dynamic_ovmf.py",
+        "--efi-probe",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/NXDYN.efi",
+        "--output",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/dynamic-firmware"
+      ],
+      "exit_code": 0,
+      "seconds": 3.03
+    },
+    {
+      "name": "dynamic-reader",
+      "command": [
+        "python3",
+        "tools/check_dynamic_capture.py",
+        "--report",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/dynamic-firmware/report.json",
+        "--output",
+        "/home/sharh/work/module-validation-bp35-efi-20260909/dynamic-reader.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.19
+    },
+    {
+      "name": "deep-build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-deep-trace",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 4.07
+    }
+  ],
+  "binaries": {
+    "default": {
+      "path": "/home/sharh/work/module-validation-bp35-efi-20260909/NXARMJIT-default.efi",
+      "sha256": "a97e735b4f35133e2b1224999c531433426bde1e0212ba99bd9e056238f4ed56"
+    },
+    "direct": {
+      "path": "/home/sharh/work/module-validation-bp35-efi-20260909/NXARMJIT-direct.efi",
+      "sha256": "4dd30c919ac9687300ba93480ba6df8120e36b2f2b1c839f930e0ecc34208fc5"
+    },
+    "combined": {
+      "path": "/home/sharh/work/module-validation-bp35-efi-20260909/NXARMJIT-combined.efi",
+      "sha256": "7f27172d7211c79604ef15e22dd316bbda9080309f1d9e5de00c6140078793a8"
+    },
+    "stage1": {
+      "path": "/home/sharh/work/module-validation-bp35-efi-20260909/NXMMU.efi",
+      "sha256": "bd69ae46702d2f776382eab7b518731934be0a59005ada93b290afb345a0f7be"
+    },
+    "dt": {
+      "path": "/home/sharh/work/module-validation-bp35-efi-20260909/NXDT.efi",
+      "sha256": "775cb0054c6bfdde4d3eed72fbc0dad86bf79fa3464c968f857cb2b935dbcd27"
+    },
+    "dynamic": {
+      "path": "/home/sharh/work/module-validation-bp35-efi-20260909/NXDYN.efi",
+      "sha256": "f5674d58161f57368412ebb5256eba07fd0a2c7188d93377e06e071bdd31cd93"
+    },
+    "deep": {
+      "path": "/home/sharh/work/module-validation-bp35-efi-20260909/NXARMJIT-deep.efi",
+      "sha256": "97c8b1c8d997fd2bf2e31454a77c8113be3d4293d7081187f868e163c7f5e952"
+    }
+  },
+  "nextcore_packages": [
+    {
+      "name": "nextcore-core",
+      "source": "git+https://github.com/26x86/Nextcore-Core.git?rev=bab7ac453a0f8ceab558eca1ad069bcfaf139776#bab7ac453a0f8ceab558eca1ad069bcfaf139776"
+    },
+    {
+      "name": "nextcore-efi",
+      "source": null
+    },
+    {
+      "name": "nextcore-ise",
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=0d722886753268ec366f068823c37ea10132fb43#0d722886753268ec366f068823c37ea10132fb43"
+    },
+    {
+      "name": "nextcore-memory-service",
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=0d722886753268ec366f068823c37ea10132fb43#0d722886753268ec366f068823c37ea10132fb43"
+    }
+  ]
+}

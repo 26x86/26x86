@@ -1872,3 +1872,9 @@ CI retains all existing jobs and adds one actual deep execution with28 preflight
 rejections and x1 corruption rejection. The separately compiled clamp and five
 actual canonical controls retain their own recorded evidence. No repeated
 original run or new unsupported instruction support belongs to this milestone.
+
+
+BP35 validation closure: fresh recursive6bca2907 passes the14-command targeted
+suite with workspace505/Core235+3doctests/Python149, actual integrated4 and
+separately built canonical clamp1,28 CLI rejections and x1 negative. Legacy full
+CI remains and final public bytes/network checkout are independently checked.

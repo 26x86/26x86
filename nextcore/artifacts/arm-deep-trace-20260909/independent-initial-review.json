@@ -1,0 +1,77 @@
+{
+  "schema": "nextcore.bp35-deep-independent-review.v1",
+  "status": "corrections_pending",
+  "read_only": true,
+  "source_sha256_before": {
+    "/home/sharh/work/bp35-core-deep-trace/src/boot_config.rs": "b8355f5e37adb84558de81ce7d03ff0e7c727c49ee11263ccd1872a20764a016",
+    "/home/sharh/work/bp35-core-deep-trace/tests/arm64_platform_config.rs": "6adc66e59b459f85d6a0842fcbbdb7d3576726be4be99b95dc72a5825dd918c4",
+    "/home/sharh/work/bp35-core-deep-trace/docs/DEEP_ARM_TRACE.md": "a982580a0f6e45bb28673fc84b5e7cccc1e3818ce05d2d6c90ef8eb860d5195a",
+    "/home/sharh/work/bp35-efi-deep-trace/Cargo.toml": "c2be6809f81b3c7d7d8f37c4031aae7d12489beb431c3f816a4311fd850d2636",
+    "/home/sharh/work/bp35-efi-deep-trace/src/arm_jit.rs": "860698c11f273ef8938218de982b7e48900b7770fbc1cde1801d353813b1c3bb",
+    "/home/sharh/work/bp35-efi-deep-trace/docs/DEEP_ARM_TRACE.md": "a6587ed34b47fbac79ef93c51dac525d79c861c147927094436f326feee17b8f",
+    "/home/sharh/work/bp35-deep-trace/trace_deep_arm_jit_ovmf.py": "4d5c5b14d0d249d74894d6dd59ba10385e6751b7bfd5ae1fbce716da00590e8e",
+    "/home/sharh/work/bp35-deep-trace/verify_deep_budget_ovmf.py": "54e51328a1c15eb8ffefd41f356f2f18ba1b440dd09b383ccd72f8a63a9718c7",
+    "/home/sharh/work/bp35-deep-trace/deep_budget_probe.S": "7a410c87311209211566d3b1b6462a03983ba2e29813527084f64e83f572e6ed",
+    "/home/sharh/work/bp35-deep-trace/parent-runner-source.json": "ad293a8f9687bcbcf0227d7719f8fc45262a790c41acf6f42304f02038a3efa2"
+  },
+  "source_sha256_at_review_checkpoint": {
+    "/home/sharh/work/bp35-core-deep-trace/src/boot_config.rs": "b8355f5e37adb84558de81ce7d03ff0e7c727c49ee11263ccd1872a20764a016",
+    "/home/sharh/work/bp35-core-deep-trace/tests/arm64_platform_config.rs": "6adc66e59b459f85d6a0842fcbbdb7d3576726be4be99b95dc72a5825dd918c4",
+    "/home/sharh/work/bp35-core-deep-trace/docs/DEEP_ARM_TRACE.md": "a982580a0f6e45bb28673fc84b5e7cccc1e3818ce05d2d6c90ef8eb860d5195a",
+    "/home/sharh/work/bp35-efi-deep-trace/Cargo.toml": "c2be6809f81b3c7d7d8f37c4031aae7d12489beb431c3f816a4311fd850d2636",
+    "/home/sharh/work/bp35-efi-deep-trace/src/arm_jit.rs": "860698c11f273ef8938218de982b7e48900b7770fbc1cde1801d353813b1c3bb",
+    "/home/sharh/work/bp35-efi-deep-trace/docs/DEEP_ARM_TRACE.md": "a6587ed34b47fbac79ef93c51dac525d79c861c147927094436f326feee17b8f",
+    "/home/sharh/work/bp35-deep-trace/trace_deep_arm_jit_ovmf.py": "4d5c5b14d0d249d74894d6dd59ba10385e6751b7bfd5ae1fbce716da00590e8e",
+    "/home/sharh/work/bp35-deep-trace/verify_deep_budget_ovmf.py": "54e51328a1c15eb8ffefd41f356f2f18ba1b440dd09b383ccd72f8a63a9718c7",
+    "/home/sharh/work/bp35-deep-trace/deep_budget_probe.S": "7a410c87311209211566d3b1b6462a03983ba2e29813527084f64e83f572e6ed",
+    "/home/sharh/work/bp35-deep-trace/parent-runner-source.json": "ad293a8f9687bcbcf0227d7719f8fc45262a790c41acf6f42304f02038a3efa2"
+  },
+  "source_changes_during_review": [],
+  "findings": [
+    {
+      "id": "DEEP-CLI-1",
+      "state": "owner_correction_pending",
+      "problem": "Core-invalid platform fields and checked placement ranges reach output creation/process launch",
+      "verified_probes": [
+        "irq2",
+        "pstate0",
+        "vector_outside",
+        "physical_end_wrap"
+      ]
+    },
+    {
+      "id": "DEEP-PROVENANCE-2",
+      "state": "owner_correction_pending",
+      "problem": "Source-before snapshot begins after authored assembly/image construction"
+    },
+    {
+      "id": "DEEP-REGISTER-3",
+      "state": "owner_correction_pending",
+      "problem": "Authored exact result predicate does not test final x1 preservation"
+    }
+  ],
+  "no_core_or_efi_runtime_defect_found": true,
+  "actual_qemu_repeated": false,
+  "original_inputs_accessed": false,
+  "evidence": {
+    "invalid-cli-probes.json": "0deeb27c87a73a32a7f31d1eba1720e1c06ba7f0ee06b91c51d97d492acb234f",
+    "x1-counter-predicate-probe.json": "5a9f143c3a6019f1266e202e93250df828f894f229165a2895ae262c609f4c8e"
+  },
+  "review_complete": true,
+  "source_accepted_for_original_execution": false,
+  "positive_review": [
+    "Private shared parser preserves the default64/8 and legacy with_limit64/256/1024/4096 entry policies",
+    "Distinct deep parser requires exact selector string deep-16384, budget16384 and named profile; legacy entries explicitly reject selector",
+    "EFI deep feature requires tiered+memory provider, preserves old capability marker and emits deep selection only after successful parsing",
+    "Three-instruction authored loop independently yields x0=budget/2, final PC at branch and final fetched ADD for even budgets",
+    "Recorded actual r1 deep16384/old4096/old64 and clamped4096 counters/register values match these loop expectations",
+    "Actual default firmware rejection has configuration error and no guest entry/execution",
+    "Clamped source differs only by execution-budget min4096 at the existing provider/direct call sites; actual clamped image executes4096 with configured16384 retained"
+  ],
+  "evidence_limits": [
+    "No original inputs or coordinates were accessed",
+    "No repeated QEMU/OVMF execution; invalid CLI probes used a deliberately absent QEMU path",
+    "r1 raw captures precede added per-child tool hashes; they are historical evidence and not relabeled as execution of the current upgraded runner",
+    "Acceptance remains pending owner correction of the three reported proof/preflight gaps and final source-hash/replay review"
+  ]
+}

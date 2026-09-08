@@ -1,0 +1,78 @@
+{
+  "schema": "nextcore.x86-efi-arm-deep-trace.v1",
+  "host_architecture": "x86_64",
+  "handoff_abi": "unprovisioned-sptm-prefix",
+  "sptm_args_provided": false,
+  "platform_profile": "nextcore-irq-compat-v1",
+  "profile_reset_origin": "software_defined",
+  "sptm_services_provided": false,
+  "platform_device_tree_provided": false,
+  "config": {
+    "Nextcore": {
+      "Kernel": {
+        "Profile": "x86-efi-arm64-trace",
+        "Path": "\\EFI\\NEXTCORE\\kernel.kc",
+        "Arguments": "-v",
+        "Trace": {
+          "HandoffAbi": "unprovisioned-sptm-prefix",
+          "PhysicalBase": 1073741824,
+          "VirtualBase": 18446741874686296064,
+          "MemorySize": 67108864,
+          "ActualMemorySize": 67108864,
+          "KernelPhysical": 1107296256,
+          "InstructionBudget": 16384,
+          "DeviceTreePath": "\\EFI\\NEXTCORE\\diagnostic.dt",
+          "DiagnosticTier": "deep-16384",
+          "PlatformProfile": "nextcore-irq-compat-v1"
+        }
+      }
+    }
+  },
+  "execution": null,
+  "deep_diagnostic_requested": true,
+  "deep_diagnostic_build_observed": false,
+  "deep_diagnostic_selected_observed": false,
+  "tool_source_sha256_before": {
+    "/home/sharh/work/bp35-deep-trace/trace_deep_arm_jit_ovmf.py": "4d5c5b14d0d249d74894d6dd59ba10385e6751b7bfd5ae1fbce716da00590e8e",
+    "/home/sharh/src/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "29a14a20596e1f68bbb48c77f20ae8565c26f4802567ac83596ada05c4f352a2"
+  },
+  "tool_source_sha256_after": {
+    "/home/sharh/work/bp35-deep-trace/trace_deep_arm_jit_ovmf.py": "4d5c5b14d0d249d74894d6dd59ba10385e6751b7bfd5ae1fbce716da00590e8e",
+    "/home/sharh/src/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "29a14a20596e1f68bbb48c77f20ae8565c26f4802567ac83596ada05c4f352a2"
+  },
+  "tool_sources_preserved": true,
+  "tiered_diagnostic_requested": false,
+  "tiered_diagnostic_build_observed": false,
+  "markers": [
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: CONFIG_PARSED",
+    "NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152",
+    "NXARMJIT: TRACE_CONFIG_INVALID reason=INVALID_ARM64_TRACE_CONFIGURATION",
+    "NXARMJIT: ERROR status=INVALID_PARAMETER"
+  ],
+  "input_sha256_before": {
+    "/home/sharh/work/bp35-deep-trace/binaries/default.efi": "bf10b24789ee74e3df5a67e2f4a4a7501b527971c04eca9453dec881207a582f",
+    "/home/sharh/work/bp35-efi-authored-final/loop.kc": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83",
+    "/home/sharh/work/bp35-efi-authored-final/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "input_sha256_after": {
+    "/home/sharh/work/bp35-deep-trace/binaries/default.efi": "bf10b24789ee74e3df5a67e2f4a4a7501b527971c04eca9453dec881207a582f",
+    "/home/sharh/work/bp35-efi-authored-final/loop.kc": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83",
+    "/home/sharh/work/bp35-efi-authored-final/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "original_inputs_preserved": true,
+  "esp_copies_preserved": true,
+  "diagnostic_completed": false,
+  "native_execution_observed": false,
+  "elapsed_seconds": 5.238,
+  "failure": null,
+  "qemu_exit_code": 0,
+  "stopped_by_harness": true,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

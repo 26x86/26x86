@@ -1,0 +1,15 @@
+{
+  "sha": "03a376d6652fdaabe8b567c047dad9d41926dc84",
+  "checks": [
+    {
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ]
+}

@@ -1,0 +1,2640 @@
+{
+  "schema": "nextcore.artifact-files/1",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2895,
+      "sha256": "5a9455c173281aaa10f35aacad3987e27c7fb9d9003638a5f93079a78739ba87"
+    },
+    {
+      "path": "canonical-build/authored-gate.log",
+      "bytes": 95,
+      "sha256": "1dbf0029b777a0e28c92caa185cd6a8d95e58e6d4e031e7df509fab1697ae506"
+    },
+    {
+      "path": "canonical-build/authored-r2.log",
+      "bytes": 97,
+      "sha256": "e284cdd9776b48944c43a2b80654e2d163e3e43b913ca6d14d3b8d5ed2a554f5"
+    },
+    {
+      "path": "canonical-build/mutation.json",
+      "bytes": 347,
+      "sha256": "63e82dad7ee49e72ad188d036343515d7b5d837409943248749711ea27a011b4"
+    },
+    {
+      "path": "canonical-build/negative-build.log",
+      "bytes": 1456,
+      "sha256": "abb3f4e26f97b088ef357be7900249f1917cbe9a1a0c7a4b53427778e2e1b6aa"
+    },
+    {
+      "path": "canonical-build/receipt.json",
+      "bytes": 1119,
+      "sha256": "b3c26bfd46ebe00e58bd5945fb0c59df64e85f4798827d9b480bda9b639e085e"
+    },
+    {
+      "path": "canonical-build/replay-selection-correction.md",
+      "bytes": 546,
+      "sha256": "7e8f8d80e29572f0f553446cecf19da2afb6b768cf42b1aeb4f13c25a567c274"
+    },
+    {
+      "path": "canonical-deep/absent-profile.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "canonical-deep/clamped4096-semantic-negative/command.json",
+      "bytes": 708,
+      "sha256": "79143f2c5e030f10e72e3fcc226eac9da878f8b9dfa7c29050f8e60f8503ca87"
+    },
+    {
+      "path": "canonical-deep/clamped4096-semantic-negative/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-deep/clamped4096-semantic-negative/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "canonical-deep/clamped4096-semantic-negative/report.json",
+      "bytes": 5838,
+      "sha256": "619ba24d6f14841f984cd314ad1e9113fd9e5e1f37f14d21415487b721b4db43"
+    },
+    {
+      "path": "canonical-deep/clamped4096-semantic-negative/serial.log",
+      "bytes": 1750,
+      "sha256": "e5754a9ec69cacfa09ea66d8d6d4102e5a605a6980996666aa00b279ea5d658b"
+    },
+    {
+      "path": "canonical-deep/clamped4096-semantic-negative/stderr.log",
+      "bytes": 79,
+      "sha256": "df783dddbfe28d0dcd07a43464e276ae3882fe513bd994c2f2ff21e39038a697"
+    },
+    {
+      "path": "canonical-deep/clamped4096-semantic-negative/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-deep/clamped4096-semantic-negative.log",
+      "bytes": 193,
+      "sha256": "6911bd203a1c189805afd331d4003f5a767707b04524bcb90dad9fe9288c43ab"
+    },
+    {
+      "path": "canonical-deep/conflicting-flags.log",
+      "bytes": 1319,
+      "sha256": "0868e4291c11df2fc4623e74b4322f6a408f40634256824a1ce74bbd6bf407eb"
+    },
+    {
+      "path": "canonical-deep/deep16384/command.json",
+      "bytes": 648,
+      "sha256": "a6c62fff01182a1e1b1c1b46fc63736d6ade959ca87fbbf1c431ea7965736f28"
+    },
+    {
+      "path": "canonical-deep/deep16384/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-deep/deep16384/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "canonical-deep/deep16384/report.json",
+      "bytes": 5781,
+      "sha256": "fc4beee480222dccd2ff468ad2da3745280a3df4cd1b883da98a4362a6bd21a2"
+    },
+    {
+      "path": "canonical-deep/deep16384/serial.log",
+      "bytes": 1754,
+      "sha256": "b120dc550320cf0c53f72af1664eb7ace8d248ef19b389f0364ea2c13a0d9726"
+    },
+    {
+      "path": "canonical-deep/deep16384/stderr.log",
+      "bytes": 78,
+      "sha256": "89a48a69f9c50c51283e740dabc8e63f5282f802811f8ff5097bd88d0ef8a30a"
+    },
+    {
+      "path": "canonical-deep/deep16384/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-deep/deep16384.log",
+      "bytes": 173,
+      "sha256": "cef19a5a7f7d95be8bd3c7f9ce66273779f171ae0abe9bf028607226404b18cb"
+    },
+    {
+      "path": "canonical-deep/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-deep/fiq-not-boolean.log",
+      "bytes": 1294,
+      "sha256": "e88a4630278d063909e3b0a45878960cd89b74a58e9f8b0b5b20ae8532f45a52"
+    },
+    {
+      "path": "canonical-deep/irq-negative.log",
+      "bytes": 1301,
+      "sha256": "3069829b9c9d1d2542d2881795c6367de38b218e34c1109baa7e5f560528d6c7"
+    },
+    {
+      "path": "canonical-deep/irq-not-boolean.log",
+      "bytes": 1294,
+      "sha256": "e88a4630278d063909e3b0a45878960cd89b74a58e9f8b0b5b20ae8532f45a52"
+    },
+    {
+      "path": "canonical-deep/kernel-above.log",
+      "bytes": 1305,
+      "sha256": "182f1278e4bf8f651c4d58211008b2ca840c60a76613c44740b7aa4dc6a44483"
+    },
+    {
+      "path": "canonical-deep/kernel-at-end.log",
+      "bytes": 1305,
+      "sha256": "182f1278e4bf8f651c4d58211008b2ca840c60a76613c44740b7aa4dc6a44483"
+    },
+    {
+      "path": "canonical-deep/kernel-below.log",
+      "bytes": 1305,
+      "sha256": "182f1278e4bf8f651c4d58211008b2ca840c60a76613c44740b7aa4dc6a44483"
+    },
+    {
+      "path": "canonical-deep/loop.bin",
+      "bytes": 12,
+      "sha256": "3eddf2869917cc7a21ea531af387056b75ea34526548f0503dc4ade4fdaf41f7"
+    },
+    {
+      "path": "canonical-deep/loop.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "canonical-deep/missing-deep.log",
+      "bytes": 1286,
+      "sha256": "fde97854e72e5883d387166dee2de3019a60c32ad4f2bd3e362f158a02325943"
+    },
+    {
+      "path": "canonical-deep/missing-handoff-authorization.log",
+      "bytes": 1314,
+      "sha256": "89d434ee73cbdf205354e34ff42296aab0a70ca09327a9863b4cb04c47e92487"
+    },
+    {
+      "path": "canonical-deep/old4096/command.json",
+      "bytes": 642,
+      "sha256": "73360f21f0e2cdbd8107604f998ce64f5c7696202005e3fdb759635bcf2f81da"
+    },
+    {
+      "path": "canonical-deep/old4096/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-deep/old4096/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "canonical-deep/old4096/report.json",
+      "bytes": 5672,
+      "sha256": "836aaaf7dceb6ea22cf728d7f35b2c51e7d94f61741a6b350ab72829f7059475"
+    },
+    {
+      "path": "canonical-deep/old4096/serial.log",
+      "bytes": 1696,
+      "sha256": "70505a2e55836c9b2f61151c1974b76116431e93f0d43045ce5443381ff6ca31"
+    },
+    {
+      "path": "canonical-deep/old4096/stderr.log",
+      "bytes": 79,
+      "sha256": "e713b3ebde2e7e9eb6c0e32a93754680d263886b86f08869b613bc0cc52cce70"
+    },
+    {
+      "path": "canonical-deep/old4096/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-deep/old4096.log",
+      "bytes": 171,
+      "sha256": "4874c2435730e0492e8d9626a543c732486acb45680fc7edd777f87905d4b9aa"
+    },
+    {
+      "path": "canonical-deep/old64/command.json",
+      "bytes": 636,
+      "sha256": "1112b9e534223a0f899c7339a715d9d7a3e21ed9b9a294ed586f8c21bf7e95c6"
+    },
+    {
+      "path": "canonical-deep/old64/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-deep/old64/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "canonical-deep/old64/report.json",
+      "bytes": 5654,
+      "sha256": "de6ba3c898efae4ee5f2d77558cc0147cd573708872c35b6d0b6ab90c37a6441"
+    },
+    {
+      "path": "canonical-deep/old64/serial.log",
+      "bytes": 1687,
+      "sha256": "b08ef9b49716508817a2d07b4a947254c7de2f63e4f2642e28d5cc24e96f678a"
+    },
+    {
+      "path": "canonical-deep/old64/stderr.log",
+      "bytes": 79,
+      "sha256": "ce7b8212877d74aa6a221da4ad85920af3d39b41a45f09d6d1f13abeaa2aa5e8"
+    },
+    {
+      "path": "canonical-deep/old64/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-deep/old64.log",
+      "bytes": 169,
+      "sha256": "5cb50926cefa5ac9c28c28ef5e24386c434e5d277e73840a0e66e488e0095ec2"
+    },
+    {
+      "path": "canonical-deep/ordinary-firmware-rejects-deep/command.json",
+      "bytes": 711,
+      "sha256": "cd32f54381755a7fee79947c9aa41c3563bfe12404294220cf8318a0549d1700"
+    },
+    {
+      "path": "canonical-deep/ordinary-firmware-rejects-deep/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-deep/ordinary-firmware-rejects-deep/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "canonical-deep/ordinary-firmware-rejects-deep/report.json",
+      "bytes": 3936,
+      "sha256": "36fad97ed0da1977fb63f9f18ba438ece067261c81597644a3cba63e4fcf054e"
+    },
+    {
+      "path": "canonical-deep/ordinary-firmware-rejects-deep/serial.log",
+      "bytes": 632,
+      "sha256": "3ec1162c6909f03cd81426dc1693e40c3a1c3ea3af96bc468d523211362b9ea8"
+    },
+    {
+      "path": "canonical-deep/ordinary-firmware-rejects-deep/stderr.log",
+      "bytes": 79,
+      "sha256": "5df353481f274fabd9864bec5d4b1822b886702c4934e7d2eb629637eccab2f0"
+    },
+    {
+      "path": "canonical-deep/ordinary-firmware-rejects-deep/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-deep/ordinary-firmware-rejects-deep.log",
+      "bytes": 196,
+      "sha256": "2f8fb53a751a66aebaf217149d19d81c0324dad0c56925f09d8e58604b21b866"
+    },
+    {
+      "path": "canonical-deep/override-invalid-fiq-field.log",
+      "bytes": 1312,
+      "sha256": "a7394cc2dbbd2e64a6eb6e64daedd9c1cc4620d861c61f3bd7549e30fba7d273"
+    },
+    {
+      "path": "canonical-deep/override-invalid-irq-field.log",
+      "bytes": 1312,
+      "sha256": "a7394cc2dbbd2e64a6eb6e64daedd9c1cc4620d861c61f3bd7549e30fba7d273"
+    },
+    {
+      "path": "canonical-deep/override-unsupported-bit.log",
+      "bytes": 1312,
+      "sha256": "a7394cc2dbbd2e64a6eb6e64daedd9c1cc4620d861c61f3bd7549e30fba7d273"
+    },
+    {
+      "path": "canonical-deep/physical-exclusive-end-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "canonical-deep/physical-span-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "canonical-deep/pstate-invalid-mode.log",
+      "bytes": 1311,
+      "sha256": "cc03837a920f4a7e8be301abefcd5f4bdd7a881be18cf297de03792168738b23"
+    },
+    {
+      "path": "canonical-deep/pstate-unsupported-bits.log",
+      "bytes": 1311,
+      "sha256": "cc03837a920f4a7e8be301abefcd5f4bdd7a881be18cf297de03792168738b23"
+    },
+    {
+      "path": "canonical-deep/report.json",
+      "bytes": 37401,
+      "sha256": "9117237f4016792e7b9df15da3aa7d2bace24b9fb4f205505f32578f004004cd"
+    },
+    {
+      "path": "canonical-deep/vector-at-end.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "canonical-deep/vector-below.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "canonical-deep/vector-outside.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "canonical-deep/vector-span-wrap.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "canonical-deep/vector-unaligned.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "canonical-deep/virtual-exclusive-end-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "canonical-deep/virtual-span-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "canonical-deep/wrong-budget-16383.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "canonical-deep/wrong-budget-16385.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "canonical-deep/wrong-budget-4096.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "canonical-deep/wrong-budget-8192.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "canonical-initial-control-failure/absent-profile.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "canonical-initial-control-failure/clamped4096-semantic-negative/command.json",
+      "bytes": 699,
+      "sha256": "fc66d2c42ba087c87a1f22f8aaedf8f6ae93a6d5f96ad2f70d37e69005a507f4"
+    },
+    {
+      "path": "canonical-initial-control-failure/clamped4096-semantic-negative/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-initial-control-failure/clamped4096-semantic-negative/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "canonical-initial-control-failure/clamped4096-semantic-negative/report.json",
+      "bytes": 5826,
+      "sha256": "5a37908a08b26a78055d3536f9617bbe4a280c195bc327e44cba22bca0a48f24"
+    },
+    {
+      "path": "canonical-initial-control-failure/clamped4096-semantic-negative/serial.log",
+      "bytes": 1750,
+      "sha256": "e5754a9ec69cacfa09ea66d8d6d4102e5a605a6980996666aa00b279ea5d658b"
+    },
+    {
+      "path": "canonical-initial-control-failure/clamped4096-semantic-negative/stderr.log",
+      "bytes": 78,
+      "sha256": "8e9ff44d330db9a77be68951498b9d0b705989867c1202d0b4f786a52156396c"
+    },
+    {
+      "path": "canonical-initial-control-failure/clamped4096-semantic-negative/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-initial-control-failure/clamped4096-semantic-negative.log",
+      "bytes": 190,
+      "sha256": "7cb46bbb28eb0b27a7cf3517271b71c4340892296aca90850d87b4cd63077963"
+    },
+    {
+      "path": "canonical-initial-control-failure/conflicting-flags.log",
+      "bytes": 1319,
+      "sha256": "0868e4291c11df2fc4623e74b4322f6a408f40634256824a1ce74bbd6bf407eb"
+    },
+    {
+      "path": "canonical-initial-control-failure/deep16384/command.json",
+      "bytes": 639,
+      "sha256": "5351a66497af4fabc3441fb2fd5b17ec7689ee37db3cd900ed373c54c5145e0f"
+    },
+    {
+      "path": "canonical-initial-control-failure/deep16384/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-initial-control-failure/deep16384/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "canonical-initial-control-failure/deep16384/report.json",
+      "bytes": 5770,
+      "sha256": "ea7560868ea09c21b2f95b205e76ae87c84f831f15dd4c29b20abe485e1c77c8"
+    },
+    {
+      "path": "canonical-initial-control-failure/deep16384/serial.log",
+      "bytes": 1754,
+      "sha256": "b120dc550320cf0c53f72af1664eb7ace8d248ef19b389f0364ea2c13a0d9726"
+    },
+    {
+      "path": "canonical-initial-control-failure/deep16384/stderr.log",
+      "bytes": 78,
+      "sha256": "2a3d5bed81d4f21f5cedbcc56efc5b7292dd569c5ee4f80b2c7e82ebffa5b3fc"
+    },
+    {
+      "path": "canonical-initial-control-failure/deep16384/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-initial-control-failure/deep16384.log",
+      "bytes": 170,
+      "sha256": "3e43c0df2014867dfbc586363f95137357a5516f1ac7135bb0de6b221be0a8ff"
+    },
+    {
+      "path": "canonical-initial-control-failure/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-initial-control-failure/fiq-not-boolean.log",
+      "bytes": 1294,
+      "sha256": "e88a4630278d063909e3b0a45878960cd89b74a58e9f8b0b5b20ae8532f45a52"
+    },
+    {
+      "path": "canonical-initial-control-failure/irq-negative.log",
+      "bytes": 1301,
+      "sha256": "3069829b9c9d1d2542d2881795c6367de38b218e34c1109baa7e5f560528d6c7"
+    },
+    {
+      "path": "canonical-initial-control-failure/irq-not-boolean.log",
+      "bytes": 1294,
+      "sha256": "e88a4630278d063909e3b0a45878960cd89b74a58e9f8b0b5b20ae8532f45a52"
+    },
+    {
+      "path": "canonical-initial-control-failure/kernel-above.log",
+      "bytes": 1305,
+      "sha256": "182f1278e4bf8f651c4d58211008b2ca840c60a76613c44740b7aa4dc6a44483"
+    },
+    {
+      "path": "canonical-initial-control-failure/kernel-at-end.log",
+      "bytes": 1305,
+      "sha256": "182f1278e4bf8f651c4d58211008b2ca840c60a76613c44740b7aa4dc6a44483"
+    },
+    {
+      "path": "canonical-initial-control-failure/kernel-below.log",
+      "bytes": 1305,
+      "sha256": "182f1278e4bf8f651c4d58211008b2ca840c60a76613c44740b7aa4dc6a44483"
+    },
+    {
+      "path": "canonical-initial-control-failure/loop.bin",
+      "bytes": 12,
+      "sha256": "3eddf2869917cc7a21ea531af387056b75ea34526548f0503dc4ade4fdaf41f7"
+    },
+    {
+      "path": "canonical-initial-control-failure/loop.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "canonical-initial-control-failure/missing-deep.log",
+      "bytes": 1286,
+      "sha256": "fde97854e72e5883d387166dee2de3019a60c32ad4f2bd3e362f158a02325943"
+    },
+    {
+      "path": "canonical-initial-control-failure/missing-handoff-authorization.log",
+      "bytes": 1314,
+      "sha256": "89d434ee73cbdf205354e34ff42296aab0a70ca09327a9863b4cb04c47e92487"
+    },
+    {
+      "path": "canonical-initial-control-failure/old4096/command.json",
+      "bytes": 633,
+      "sha256": "4fd13cc2b6f379b93c0ee56d0aa9ad76f58905a4a9055266fafc8148de4c27aa"
+    },
+    {
+      "path": "canonical-initial-control-failure/old4096/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-initial-control-failure/old4096/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "canonical-initial-control-failure/old4096/report.json",
+      "bytes": 5660,
+      "sha256": "64b892cc88590efa3459973cb8499ba9c52a85fb4ee5834f7e8be2a67dfe15d5"
+    },
+    {
+      "path": "canonical-initial-control-failure/old4096/serial.log",
+      "bytes": 1696,
+      "sha256": "70505a2e55836c9b2f61151c1974b76116431e93f0d43045ce5443381ff6ca31"
+    },
+    {
+      "path": "canonical-initial-control-failure/old4096/stderr.log",
+      "bytes": 78,
+      "sha256": "6156efd7dd271e831dfd2653c125db29a0930ff906fad365dc70aa4fef327351"
+    },
+    {
+      "path": "canonical-initial-control-failure/old4096/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-initial-control-failure/old4096.log",
+      "bytes": 168,
+      "sha256": "aa7f8a427dc80e4b2b92e9740e5988257dfabf346de53dee5f74af3155398f28"
+    },
+    {
+      "path": "canonical-initial-control-failure/old64/command.json",
+      "bytes": 627,
+      "sha256": "26f3aa32851acd937752682d91f9e9d0da76fee48abceebcea698581897edc4c"
+    },
+    {
+      "path": "canonical-initial-control-failure/old64/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-initial-control-failure/old64/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "canonical-initial-control-failure/old64/report.json",
+      "bytes": 5642,
+      "sha256": "9e2f27395d386b7544ff01014d0fe4555de102b74de54551d7ca51b23d2ce8a3"
+    },
+    {
+      "path": "canonical-initial-control-failure/old64/serial.log",
+      "bytes": 1687,
+      "sha256": "b08ef9b49716508817a2d07b4a947254c7de2f63e4f2642e28d5cc24e96f678a"
+    },
+    {
+      "path": "canonical-initial-control-failure/old64/stderr.log",
+      "bytes": 78,
+      "sha256": "fe3ecad2249b95de57b83d925f175dd2394ae4a72f7ad58234896df3aa0dbd16"
+    },
+    {
+      "path": "canonical-initial-control-failure/old64/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-initial-control-failure/old64.log",
+      "bytes": 166,
+      "sha256": "63a5dabac306fa4727b74118bb96f583f17e1bcc36fcdd3ab62889d5f3298b7e"
+    },
+    {
+      "path": "canonical-initial-control-failure/ordinary-firmware-rejects-deep/command.json",
+      "bytes": 702,
+      "sha256": "cecadf0cfc231bf758d4e9cb85e1726f9326d90e09da191873e2db5d356e0f6d"
+    },
+    {
+      "path": "canonical-initial-control-failure/ordinary-firmware-rejects-deep/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-initial-control-failure/ordinary-firmware-rejects-deep/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "canonical-initial-control-failure/ordinary-firmware-rejects-deep/report.json",
+      "bytes": 3957,
+      "sha256": "c463619ae0894ddc0ec1cfe809dd41f2929f9735b04c00c247b121ab34ee4442"
+    },
+    {
+      "path": "canonical-initial-control-failure/ordinary-firmware-rejects-deep/serial.log",
+      "bytes": 666,
+      "sha256": "9499a380f285fc7db1fed3f5689768ffd6f5b1d09fef698c2e80c77f68f4afcc"
+    },
+    {
+      "path": "canonical-initial-control-failure/ordinary-firmware-rejects-deep/stderr.log",
+      "bytes": 78,
+      "sha256": "e545ce4a0800abb8cc46c9459ae54117819fe6cab3aa77b3fd1cbdbe264a5fef"
+    },
+    {
+      "path": "canonical-initial-control-failure/ordinary-firmware-rejects-deep/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-initial-control-failure/ordinary-firmware-rejects-deep.log",
+      "bytes": 193,
+      "sha256": "923f239a46ad0cf14e3c8d427f30430633e1be4ba9766b3eb70b2b6468264c50"
+    },
+    {
+      "path": "canonical-initial-control-failure/override-invalid-fiq-field.log",
+      "bytes": 1312,
+      "sha256": "a7394cc2dbbd2e64a6eb6e64daedd9c1cc4620d861c61f3bd7549e30fba7d273"
+    },
+    {
+      "path": "canonical-initial-control-failure/override-invalid-irq-field.log",
+      "bytes": 1312,
+      "sha256": "a7394cc2dbbd2e64a6eb6e64daedd9c1cc4620d861c61f3bd7549e30fba7d273"
+    },
+    {
+      "path": "canonical-initial-control-failure/override-unsupported-bit.log",
+      "bytes": 1312,
+      "sha256": "a7394cc2dbbd2e64a6eb6e64daedd9c1cc4620d861c61f3bd7549e30fba7d273"
+    },
+    {
+      "path": "canonical-initial-control-failure/physical-exclusive-end-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "canonical-initial-control-failure/physical-span-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "canonical-initial-control-failure/pstate-invalid-mode.log",
+      "bytes": 1311,
+      "sha256": "cc03837a920f4a7e8be301abefcd5f4bdd7a881be18cf297de03792168738b23"
+    },
+    {
+      "path": "canonical-initial-control-failure/pstate-unsupported-bits.log",
+      "bytes": 1311,
+      "sha256": "cc03837a920f4a7e8be301abefcd5f4bdd7a881be18cf297de03792168738b23"
+    },
+    {
+      "path": "canonical-initial-control-failure/report.json",
+      "bytes": 37402,
+      "sha256": "6c604f0e1873ea246cefc4c31ec8705f6d42bdb47f90b0831e69d91f8f8d5651"
+    },
+    {
+      "path": "canonical-initial-control-failure/vector-at-end.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "canonical-initial-control-failure/vector-below.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "canonical-initial-control-failure/vector-outside.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "canonical-initial-control-failure/vector-span-wrap.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "canonical-initial-control-failure/vector-unaligned.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "canonical-initial-control-failure/virtual-exclusive-end-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "canonical-initial-control-failure/virtual-span-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "canonical-initial-control-failure/wrong-budget-16383.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "canonical-initial-control-failure/wrong-budget-16385.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "canonical-initial-control-failure/wrong-budget-4096.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "canonical-initial-control-failure/wrong-budget-8192.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "canonical-modules/Core/Core-0.log",
+      "bytes": 87,
+      "sha256": "c0c93464f1d3f0ea48ccd74556cb645277bce024d04c62c22b1694998493a1c7"
+    },
+    {
+      "path": "canonical-modules/Core/Core-1.log",
+      "bytes": 25492,
+      "sha256": "13c7bd3a8dffff6ab17cfdd073f19c394e2cd70045952953e5183bf83f2ac81d"
+    },
+    {
+      "path": "canonical-modules/Core/Core-2.log",
+      "bytes": 21453,
+      "sha256": "5cfb7c7c42b8d2331ee7e464af5aad9e73ddae0da0853d7449b0f3bea577a741"
+    },
+    {
+      "path": "canonical-modules/Core/Core-3.log",
+      "bytes": 832,
+      "sha256": "7c538ba93e31222e1595e495ef19bacac3b4c0d353c118a2497110b9fd095b45"
+    },
+    {
+      "path": "canonical-modules/Core/Core-4.log",
+      "bytes": 505,
+      "sha256": "a5e1dbbc059f99aba8a5f6fdad7c69a2fc8643b23d7c9664bd67d48b6dc7996e"
+    },
+    {
+      "path": "canonical-modules/Core/Core-5.log",
+      "bytes": 515,
+      "sha256": "4710dbfc444e6a20214dff6f3f0b524aa5d880c77a8fe58074d26ea1dc89260b"
+    },
+    {
+      "path": "canonical-modules/Core/Core.json",
+      "bytes": 1323,
+      "sha256": "a1bdf0da7ee3255cd2d76dd3fad3d20720eaaec39ee5edc838b83eeee93632bf"
+    },
+    {
+      "path": "canonical-modules/EFI/EFI.json",
+      "bytes": 7970,
+      "sha256": "21dcacee341fee9679cc11984d5dc5cf30058bece18383c410778aa1361465e0"
+    },
+    {
+      "path": "canonical-modules/EFI/all-features.log",
+      "bytes": 1979,
+      "sha256": "f0072607f51b50465d30b869622531fb7662a7a16055256de865e72eac5ef323"
+    },
+    {
+      "path": "canonical-modules/EFI/build-combined.log",
+      "bytes": 296,
+      "sha256": "a72dcd7da42c82d3c62f01a3db6d513fbb2a5feabac051c3df90f4dabe54a70e"
+    },
+    {
+      "path": "canonical-modules/EFI/build-default.log",
+      "bytes": 3301,
+      "sha256": "4178339b7feca93fc2c23dcb4adae017a08931af7ed4c17446392f2a2b093efb"
+    },
+    {
+      "path": "canonical-modules/EFI/build-direct.log",
+      "bytes": 205,
+      "sha256": "e321f7271824943591641e4adceed57bdb99051a98077ce51f8a413acb45f9c0"
+    },
+    {
+      "path": "canonical-modules/EFI/clone.log",
+      "bytes": 75,
+      "sha256": "7a4795fb45f99c726c965ad8e3c4a293a0ee2921671903443df688daec2bcc10"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback/command.json",
+      "bytes": 717,
+      "sha256": "c44c0d94bc1f317a82a90cadd7d1bad53cd60c9c7865e9fdfa2ae61fbf08b785"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback/report.json",
+      "bytes": 4768,
+      "sha256": "06d7df14307a93b43571add743471fbc1fee6baa7e4fdd317384242ed03a27ff"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback/serial.log",
+      "bytes": 1640,
+      "sha256": "1227514ba513db6f48208e40495c4d324bcd1945490503e6c4ea36e03d3d628b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback/stderr.log",
+      "bytes": 78,
+      "sha256": "f8969ea8faf6bc29f7ee1e70346cace2b1b8ebb024a849f4c98a966f1d70ad26"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback.S",
+      "bytes": 236,
+      "sha256": "9461363fbf77fd7e4a992cd6bc55078db427e112ecf57cab8d69a32213dddeab"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback.bin",
+      "bytes": 48,
+      "sha256": "c27464150aee4456f124465085fd374946b07300d889f73e7d6b5a7839a4f56e"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback.disassembly.txt",
+      "bytes": 795,
+      "sha256": "2559fc21347537efb7b19b8732b5b7135e65f5b60a31560b1e8b71b9fc3b8458"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback.kc",
+      "bytes": 40960,
+      "sha256": "360e84cab559046ddda59439a53025c98343e5c7e6cadc59d3123affb37a9b63"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-fallback.log",
+      "bytes": 196,
+      "sha256": "cd10fa09547f824a17763a148b3f4f108b35904a5de99cc4b1cf68290051971c"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm/command.json",
+      "bytes": 708,
+      "sha256": "99db37d74257994292d1b17d31b6811e6c9ef126028c0f06bb075438793c6ca4"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm/report.json",
+      "bytes": 4776,
+      "sha256": "6554fe314e9e4fe3cf0c3538cecc9334178e4c83ffdf80bc3a104c99f9fc1418"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm/serial.log",
+      "bytes": 1647,
+      "sha256": "2afd5f660e13719213d823eb32974ddae02d0cfa3f0e10bc7d30019c110d1901"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm/stderr.log",
+      "bytes": 78,
+      "sha256": "aef45bfc76fc7a54ed86dd93dd952c8003405ed3f6fb7e3d508e6c6b2885d055"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm.S",
+      "bytes": 241,
+      "sha256": "5c6a03636f069df917940bdfe2cf5c576e218a5d0b1f619b3dc689e39fd6fb17"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm.bin",
+      "bytes": 48,
+      "sha256": "c718be41bdd77023a99b8cd560e9577c4dff40f9e71f28f102778fe2c749b2e1"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm.disassembly.txt",
+      "bytes": 796,
+      "sha256": "4389284d6863bc02ccd66926322046b837e32d28fb8af3b56790b3b3089371e5"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm.kc",
+      "bytes": 40960,
+      "sha256": "c29a0aaacf4d387a391bc8d279aedad02ea635151f72d491c47f70fc0445a1bb"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-imm.log",
+      "bytes": 193,
+      "sha256": "57b95a22422fd5b085948d6390123f1b09c6fa10b193e14a501d15dabb2ea9b7"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg/command.json",
+      "bytes": 708,
+      "sha256": "e363fb2aadd2f6c7b184f7587b1f9e4cc57a8dc61bfd6fd9fba75bb27100eb5e"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg/report.json",
+      "bytes": 4776,
+      "sha256": "d804599b7c8cf1b56a8d8c1c7d85bfeca893b561699f2e04c97a0ba54c365d8e"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg/serial.log",
+      "bytes": 1647,
+      "sha256": "9b4e74c60f7c237b3442cfb96dbf480a3bb0bdb409c113172bacd1868f63e67b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg/stderr.log",
+      "bytes": 78,
+      "sha256": "540f4489d113af994206f9db35c6f0f06bc97c60c5be815bb99bdf4a30da6bcc"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg.S",
+      "bytes": 241,
+      "sha256": "ce6c4135d9464bfab28421221c2d8956b1b86728722ed02dfa6efad8320906a1"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg.bin",
+      "bytes": 48,
+      "sha256": "02326f427487a3548f29820f9f9e07e7c71eb83ff2237f5d64e656e92184d0fb"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg.disassembly.txt",
+      "bytes": 794,
+      "sha256": "b2704c5214333f56b0aeccebcf1e044d2a69c12cf1f39c78a98ab21af3e8fdda"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg.kc",
+      "bytes": 40960,
+      "sha256": "f00fb257dadea98908c4d8bd50491a7c3437535a620eceb1c42d24ab8bce73d2"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-w-reg.log",
+      "bytes": 193,
+      "sha256": "ac98e8b64b2c56c7ee8b2f5a99f20ac1cebf0f41a0b394006311b5b4e924ba50"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm/command.json",
+      "bytes": 708,
+      "sha256": "a880ac68fd6308ceaa0a36bf542019fec74e895618e8a8bf5183295b32252e66"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm/report.json",
+      "bytes": 4793,
+      "sha256": "ceadbeb0c78d594a92fbac2285e573a2d642bf118d0b0bdcbfb4fec895ff2fe6"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm/serial.log",
+      "bytes": 1655,
+      "sha256": "7e2bfe21a91c6914644b41b3d83630f4c53bd88e634abf1f61823512147d8658"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm/stderr.log",
+      "bytes": 78,
+      "sha256": "cd6cbf4d0c293cf2e6dc01f238d4ba559cfe94ab820c3311e4274a707735be91"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm.S",
+      "bytes": 249,
+      "sha256": "4bd629f8c4ccd3b3cba26f491ebe8b1293a0145a588df24bfe96a92163ac0587"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm.bin",
+      "bytes": 48,
+      "sha256": "9f13081417fc68a96a0584b6c1c4e88ff1d5782511939c4bc21b57b8392fffd0"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm.disassembly.txt",
+      "bytes": 802,
+      "sha256": "08149c5129738e208fc86839abc04ee032be28fc5c0228a2b3ad392ff5aab3a6"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm.kc",
+      "bytes": 40960,
+      "sha256": "cf9c83d062b415bf93ea524db9003ff2d620984dcdab7b3cd1513ce55bbe887c"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-imm.log",
+      "bytes": 193,
+      "sha256": "e486c17d6c5e823e87fde631e4bb034bb454ce0cf0439b3ab38c396ce376f38f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg/command.json",
+      "bytes": 708,
+      "sha256": "a639601332ad305cfabec2bf9e3a1f6bc4e6f95c6840f6415cee788e01cfec1b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg/report.json",
+      "bytes": 4794,
+      "sha256": "8efc4284a42a3810e9434ade7ae4e51d7ea5b47cb620e6d06066519fbd7bb7fa"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg/serial.log",
+      "bytes": 1655,
+      "sha256": "70c1c5fbf72a99397445ae983fe548ccb3cb653876714c7d2c295033b06257bb"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg/stderr.log",
+      "bytes": 78,
+      "sha256": "4b56c24d49c2398a802b5c02376b9796ffcb1e6382a7ec7d2d63453c3b2cfbf3"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg.S",
+      "bytes": 249,
+      "sha256": "7fd2fe1f1061a11e408c681541c2b08ab106f33923cc70c88584ad644ddd4574"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg.bin",
+      "bytes": 48,
+      "sha256": "3f50d2dc63cbfd5a6b6719448408f516e75a2b4d7bb526ec81d8cce2aaeebd95"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg.disassembly.txt",
+      "bytes": 800,
+      "sha256": "6f1046d3dfe6f4cf314168d07c405f810fac880c1910323571c26a6a71a98ad3"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg.kc",
+      "bytes": 40960,
+      "sha256": "50a387bec9a7eaa4c071a931c0c1bb2a62b99c52785b4f33b00ed0012fc5d66b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-x-reg.log",
+      "bytes": 193,
+      "sha256": "e0f91a3933959eb7477cf4d02f36765a5e9ee1e2eaebbaf6876811a4cce204d4"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv/command.json",
+      "bytes": 711,
+      "sha256": "37dab5d5f13a36c3224070d3d53963a2b6281cde5c69cb69695a540c1e2ca7ed"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv/report.json",
+      "bytes": 4764,
+      "sha256": "4684a2ca4d14b6ba4ec62e6b181ac5578fe5da7d2c9225a9ffde59200c04ba2f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv/serial.log",
+      "bytes": 1640,
+      "sha256": "7ea16dd10342562a95155a86ee130ae096705b117d4bcf3f1940f6b1cf6c1f18"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv/stderr.log",
+      "bytes": 78,
+      "sha256": "4feb2bf8fbccae0bcc83f4cd2866513cca60f26b9bcee84329ee088aac6d7da6"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv.S",
+      "bytes": 237,
+      "sha256": "8e65b01d944f1261340295b0a7f20b1485ea8eab3d30a5fa05ae6c9579164050"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv.bin",
+      "bytes": 48,
+      "sha256": "d7833147cfaf082327ecaa2fb6a9a6d02c3a27a3d86a21a43fe62cc2f30ca862"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv.disassembly.txt",
+      "bytes": 792,
+      "sha256": "50a2eb9701d0455827f6e6f7f2ec28d99e853d979ad76225b9445e2979d792c1"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv.kc",
+      "bytes": 40960,
+      "sha256": "bbd552525e73d055e174a1eaedece6f17d9ab37da34fd0a013d9d535f727c14f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmn-xzr-nv.log",
+      "bytes": 194,
+      "sha256": "e32b7a45c92d62c7f1f258aeb51ad718e103b1c20a2cd23ecd37963ecb8611e6"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback/command.json",
+      "bytes": 717,
+      "sha256": "97b9b4bc6ec78674ee5f96c5c577a04633e7842e688d7dab60d195b74763f065"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback/report.json",
+      "bytes": 4780,
+      "sha256": "4a93e8ade264d71a5129b40cb596ec18718c7708d0a93b1fedcd46621797645b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback/serial.log",
+      "bytes": 1645,
+      "sha256": "ccc46ca3082f522e8b6c3d29ee9ebc7ab3d4e96c7cb77e2726ece9cc10e535b2"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback/stderr.log",
+      "bytes": 78,
+      "sha256": "9225f6f29b91263c10ed48dab8f72a20a0ebcca76fe9f1e7750c1500b37ad954"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback.S",
+      "bytes": 235,
+      "sha256": "a0d7098bae1a76a965a7c362f7cc8e4d3f8c8ebb5c8b4a12ee5073164f4314a2"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback.bin",
+      "bytes": 48,
+      "sha256": "7cf1bfcd9061f24b3573d53548e0f5325f0435d7cd4773b39ea74929a902745d"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback.disassembly.txt",
+      "bytes": 792,
+      "sha256": "b0ef43b624cc94be5e7b324ae66d5dd9f27a6f27efab192c806952071034a5b1"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback.kc",
+      "bytes": 40960,
+      "sha256": "a5af0e74110ec91bd8547b660397a82f047fcac5516aadf49cc84f2053d94156"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-fallback.log",
+      "bytes": 196,
+      "sha256": "93039d6aac28a79707573487ce762c5822fc418d8fe651810cadcd254116c7f3"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm/command.json",
+      "bytes": 708,
+      "sha256": "0b2daf481a05106d79bf7eb2bf2c6d87ee8b7e7bd24825543a0b38e40de78a2b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm/report.json",
+      "bytes": 4760,
+      "sha256": "726ce59970f0bc8b0a818488b4e3be417bd3b884f0a864b6d70464ed8d00b6a8"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm/serial.log",
+      "bytes": 1640,
+      "sha256": "739a44bc1cd3bf1dcab469814980b31757fd8e9134be9743f9531ae07a40d125"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm/stderr.log",
+      "bytes": 78,
+      "sha256": "db00808b0411b2b2c38caea8a61faf489abe4156a9905116dbc5101ecf2a6d68"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm.S",
+      "bytes": 234,
+      "sha256": "55cb77aae6e7b24b41e8aec83447e8ec1ea5a29aad0c4bbb7ea75b884ad60478"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm.bin",
+      "bytes": 48,
+      "sha256": "c1d12e899747f64066f0f7c8208ddf31a16ba8b807cac9def4e9417a2482324a"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm.disassembly.txt",
+      "bytes": 790,
+      "sha256": "d84ac47596484492ce9f841f552f79ae146c9b1b2ad85d4fd25d432c5a15788f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm.kc",
+      "bytes": 40960,
+      "sha256": "364c1c548b506663c613295191f18e3ed3a337c4025b82dc33b588d18582fc3f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-imm.log",
+      "bytes": 193,
+      "sha256": "7b862c7838199dc6dae2f58422ce12bded68dfda2fa776f86fadfe71a1be7968"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg/command.json",
+      "bytes": 708,
+      "sha256": "0fd3295b11255a96c3a0c606dcdcee28fbedcdb6366f80d9b306e739553cbcfe"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg/report.json",
+      "bytes": 4793,
+      "sha256": "67cb2ff166abfcbbba5e91fb66a9b6e9f77627f6d5172aaf686062ba1c635f2b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg/serial.log",
+      "bytes": 1655,
+      "sha256": "e127283e624b4c221ecde2c6bb748dbf1e43cacab43b2fa9b2a2091d3c2e71f1"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg/stderr.log",
+      "bytes": 78,
+      "sha256": "13699bc06a4e69795c6848bc790f4a946ea07acfc0cc76ffd70f454de055fc9c"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg.S",
+      "bytes": 240,
+      "sha256": "47503baa357e403453972e795e493a7e73e39efae90ece7a59cd113a3feb047c"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg.bin",
+      "bytes": 48,
+      "sha256": "5a37d961c63b6186279dba837dc64d15d84cfb48ea2333b8c1765a115a46eb2c"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg.disassembly.txt",
+      "bytes": 793,
+      "sha256": "f7570b87f05d705f2c76561cc7254d02013fa8de5a2d742faf60227f16f7f7ae"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg.kc",
+      "bytes": 40960,
+      "sha256": "ccec86c857f2dcfbdce48fec0db39aa7a02642684432afdaec53b62dcfa5c423"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-w-reg.log",
+      "bytes": 193,
+      "sha256": "aee8f95d3754ac3927c5a2442c971b64f4c5701d6724a9e51b98a49ded6afbd5"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr/command.json",
+      "bytes": 702,
+      "sha256": "257cdf630a982d816126e9e9619068feb61f3c55a56e9722914943ec876e0795"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr/report.json",
+      "bytes": 4758,
+      "sha256": "32d484609a62b8a6a5b2f6edb9a927bb5f5d405be19dcb0ecc370b9fb8c0076a"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr/serial.log",
+      "bytes": 1640,
+      "sha256": "456eded8fcf4174509bfb73adf30967da5b88e628db9669f213e7a266dd88a99"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr/stderr.log",
+      "bytes": 78,
+      "sha256": "0a19095aea6fec6923c10b8f26e1895aa1aae28937d79b529fd99223db58cacc"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr.S",
+      "bytes": 237,
+      "sha256": "6f4916b0ecdc777f4dc90e07f1aa71bfe56fe776bee1df85997e94cd74d6bc57"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr.bin",
+      "bytes": 48,
+      "sha256": "f4ebd3435196e8b93b0eef9186fbb9cbb77f9e00eb4063e8f7a76181ed2a169f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr.disassembly.txt",
+      "bytes": 789,
+      "sha256": "f6922df6715620e195084ae6188e233e91970833bb6c34034c4892a89170419f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr.kc",
+      "bytes": 40960,
+      "sha256": "df30cf8472c3391795ccab061d639cafce48353c51ff2dcdf5774f7a58a66fa6"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-wzr.log",
+      "bytes": 191,
+      "sha256": "4d235d97196464b86b9b30884b2f27714ae22baa6865e8484ea92944fef7b782"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm/command.json",
+      "bytes": 708,
+      "sha256": "6e546569a5b33944b826a23bbcddece8ff0c96091b92a591e343a7dc921398f1"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm/report.json",
+      "bytes": 4762,
+      "sha256": "3942873cc3611d84ca8a245f727b5d7e4c86853a7757e192779aaa3ac8bb762b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm/serial.log",
+      "bytes": 1641,
+      "sha256": "52df03bc8eb1861cac31742136978bea12052b6b5695f0a8937ff6bf42d60982"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm/stderr.log",
+      "bytes": 78,
+      "sha256": "16ebfc74e2da0c52ab3949f872af54c5b349e142b426de8f912916b2ef8692e1"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm.S",
+      "bytes": 235,
+      "sha256": "2e2297e38c68312a6b31dbf25be67c3df99d2a0cc57f7e075b05c11d6072633b"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm.bin",
+      "bytes": 48,
+      "sha256": "c7e148e4f5e89e55e5c5a586455ecd0adea46bae4d80007a582f451b3efa361a"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm.disassembly.txt",
+      "bytes": 791,
+      "sha256": "3d2ec763170f45a20589089c12540754e018d52e0bc47bde451442fedcf91ec0"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm.kc",
+      "bytes": 40960,
+      "sha256": "d4d48a2c72e1c88455705a187aeeaf93aef520c1ac24c77b72bf51742cfde485"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-imm.log",
+      "bytes": 193,
+      "sha256": "1cedcc43ffc81a7cc22f4837a3c6df99a2e8f4ed2a8bdd13060705a0459ea1d1"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg/command.json",
+      "bytes": 708,
+      "sha256": "ab8a5f348bc3fdefcb64814f56d842f688d1f4e9ed9971a1eee713dc5a983f65"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg/report.json",
+      "bytes": 4791,
+      "sha256": "1367ee41e8bd671fa61b0e1557c7cab7d28933d0c3134008c6b5752415a04e1c"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg/serial.log",
+      "bytes": 1655,
+      "sha256": "030b9d5f0755970be55dda3f2f445d13a8b2b84d1740e25a0646f4f6e6c73982"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg/stderr.log",
+      "bytes": 78,
+      "sha256": "7dfcb50ea46c365af536f64ddeada89ba0ab5fa56e7e7a01ce617ca32699aff1"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg.S",
+      "bytes": 237,
+      "sha256": "6253c25a8585f3d7229bbda76884d43cdc4fe27491db2bb20112120670afb1fa"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg.bin",
+      "bytes": 48,
+      "sha256": "dc57e9de0b0271a5574684a9454720d96e1cc0c6ce45ff83afcac2e47e92a02d"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg.disassembly.txt",
+      "bytes": 790,
+      "sha256": "d36fccdda6c4082cffe351db82d894076c65a141e1d034afb3374828e24f7484"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg.kc",
+      "bytes": 40960,
+      "sha256": "c176a27f70a1b1341c94c002b7ae9b7c35b07ee32a4277fcd2c039af05c4ae75"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/ccmp-x-reg.log",
+      "bytes": 193,
+      "sha256": "a46c8c63322da99257d211f185675f3d8f273abef1c36396b9d8bd057c052106"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain/command.json",
+      "bytes": 714,
+      "sha256": "8a8533c6d4fa7eaf3506b99f92d27a0f4521f86e9ce6b10a869e29fc09e42ddf"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain/report.json",
+      "bytes": 4768,
+      "sha256": "1775301a47b15f387516020b937788f869927672f6e52ef4806193bd42ec1048"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain/serial.log",
+      "bytes": 1642,
+      "sha256": "6f65e2753f3711aedc5258960ffddcd65909f0cbdc76c7d7453737443b3ab19f"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain/stderr.log",
+      "bytes": 78,
+      "sha256": "95932d158e1796882e1110103f580641980e342a72ced471516ff44de4546266"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain.S",
+      "bytes": 310,
+      "sha256": "242cd21d4bcd306c3f988da586f27751ec740fe775cc7d43e529691c81a93c72"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain.bin",
+      "bytes": 68,
+      "sha256": "995137e95f9ef5eb58e6712821698b9cb9aabf318c0b9a99f0c703a438d592c7"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain.disassembly.txt",
+      "bytes": 1028,
+      "sha256": "799f1633fa6c1dfb0c40cbf4bb0af39544e46003112ac03a145615b895a4785a"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain.kc",
+      "bytes": 40960,
+      "sha256": "f3b3ca2c6b3ea5237598363b92b74ffdbd7a98091208f0d2426a087116405aa7"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/native-chain.log",
+      "bytes": 195,
+      "sha256": "719a89e30485b6387073ac00f9c534bcb670c9d8c16cab5297e8de68e9585ec2"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware/report.json",
+      "bytes": 37192,
+      "sha256": "1c64ed80bcb8b3de38b64b225a10ba9d324da63cf669da4b7c7255aedef843af"
+    },
+    {
+      "path": "canonical-modules/EFI/conditional-firmware.log",
+      "bytes": 11700,
+      "sha256": "8449980f610a96bc0eb95d7f7feeacccbb77320b759feb2a84c7ee280b31b540"
+    },
+    {
+      "path": "canonical-modules/EFI/debug-nxapfs.log",
+      "bytes": 966,
+      "sha256": "1b9fb317b9e36efbbad28fdbd0449a5187ce347ecb7877792e56229e7c82a3d0"
+    },
+    {
+      "path": "canonical-modules/EFI/deep-build.log",
+      "bytes": 154,
+      "sha256": "266ac4efb9115e8c6ebb5c5bdc352fa3dc39a376a4e158139db152de3e5b4c9d"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-build.log",
+      "bytes": 154,
+      "sha256": "27ccdeba7b4a6f5beeafc0df8c8c7891f2485158424fde808065690eec7e9e89"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-capture-check.log",
+      "bytes": 39,
+      "sha256": "4178628069c22e9850c0dbdd1086766bda512e2ebdceb19d76470392d266b0d5"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-firmware/command.json",
+      "bytes": 639,
+      "sha256": "4d8dc5fd812c0e3e36aa759be3603d4203ee1a6cf7a74c3cd405bfeeb6d958de"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-firmware/report.json",
+      "bytes": 33781,
+      "sha256": "99319e2887211b89d700e9f881e41b0e38e008be3774438baaa842991ae40720"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-firmware/serial.log",
+      "bytes": 10874,
+      "sha256": "eaa4f76567c617372c053fe19470f5fc5a5bdfda5f17f761059df23e1b74bfaf"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-firmware/stderr.log",
+      "bytes": 69,
+      "sha256": "bfa82e71700f20db08eb907bc438fd2bb6c0e6d136a1467dac160171052d6f52"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-firmware/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-firmware.log",
+      "bytes": 119,
+      "sha256": "392d68a941eb008901a9c778e575ba9e713ab5d506e7f45845266e1890ea73f8"
+    },
+    {
+      "path": "canonical-modules/EFI/dt-reader.json",
+      "bytes": 4956,
+      "sha256": "1e52589f33fee2ecd9aa75692de2e9fb39a43e069d4e72e19fe80bf2f8f3893d"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-build.log",
+      "bytes": 154,
+      "sha256": "1f010c4cb63372b481ac1a382c4e6f4bf0786dc04871455589705baf7561a1ff"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware/command.json",
+      "bytes": 654,
+      "sha256": "a2a62081ff721ec09b2f36d20668774d38d5bfb999da44cdbd078c4dac1f69e4"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware/report.json",
+      "bytes": 83191,
+      "sha256": "259041af10f89658b9093c6d6b4ee9cde3af0ecc7c6e9811edc319cf94d13787"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware/serial.log",
+      "bytes": 26402,
+      "sha256": "5acbd6bddd01924ea5b6f2287eec26d009685b443046bb5d6d901e94cdddfc6e"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware/stderr.log",
+      "bytes": 69,
+      "sha256": "7257c3bb97e834c293d2d049287e10282b9c3090323e07ec91abe899dc9a7dbe"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware/validation.json",
+      "bytes": 167,
+      "sha256": "e3d4ee4cb2b64d9605e0ca6c7b715fc0237ffbe8b2a1762dc4b8dceb36b947a3"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-firmware.log",
+      "bytes": 294,
+      "sha256": "7b5ae8b1bf984120452816f11eefedb405033bef58ead4d971d6d3e0e2a3b13b"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-reader.json",
+      "bytes": 3840,
+      "sha256": "ab5b321e140909ca24bba628ddc8e0987c23fba7d6c4d55b7e6c0e7b3f72fcf1"
+    },
+    {
+      "path": "canonical-modules/EFI/dynamic-reader.log",
+      "bytes": 39,
+      "sha256": "f55f2f6a20e0ceecea728e3be18083625e415f9e74167e5757374875a66f198e"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-build.log",
+      "bytes": 154,
+      "sha256": "fc0a72149735fdf745dbf4943e9bd701e6bd5dd080eccf50061ef8f4a668fa96"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-firmware/command.json",
+      "bytes": 651,
+      "sha256": "8548e0f798c5ab5340b146e6f494d23707f4b21a594078dbd63e170814f084b6"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-firmware/report.json",
+      "bytes": 116674,
+      "sha256": "3fc6d4120cad418042ed14cd452e4c3da4775bb5e0755b9c5765f8ceb42d2561"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-firmware/serial.log",
+      "bytes": 18427,
+      "sha256": "b67978c6df9793cab02b02c2b70f13a84e888ae32ba9674a49e80a42912028a7"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-firmware/stderr.log",
+      "bytes": 69,
+      "sha256": "61abfeabcea272848d7ed42c9bd6ef185c92285999144a62e3a1b5440b1302e7"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-firmware/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-firmware.log",
+      "bytes": 125,
+      "sha256": "b09c0bbe8875db548651f39399dc87287b9943bec60314807c365c52deacc8a9"
+    },
+    {
+      "path": "canonical-modules/EFI/stage1-reader.log",
+      "bytes": 636,
+      "sha256": "c3a8d7121870f4a3e3045a624bf56b31cd5b6c5d79562bba9d0004e41b23e7c7"
+    },
+    {
+      "path": "canonical-modules/Tool/Tool.json",
+      "bytes": 783,
+      "sha256": "904cf23f5e5287d2df0e8c54e7331e3d4c98b543c117a712432ea2e381bd617b"
+    },
+    {
+      "path": "canonical-modules/Tool/clone.log",
+      "bytes": 77,
+      "sha256": "2cbb98f3dc6db5f6ab33671a1194d3ddb51dde612d0e144f3cfd927e252b6f79"
+    },
+    {
+      "path": "canonical-modules/Tool/test.log",
+      "bytes": 4678,
+      "sha256": "6d2977b47e43e2d1eeb5d9bcaf3f4ec29b0187fe795ec67ea159c9ceae2f1e72"
+    },
+    {
+      "path": "fresh/clippy-efi.log",
+      "bytes": 33227,
+      "sha256": "7ef26ed00ab91e311228ecc0f5c7fb391429677ff6303ce01bd414378f65f9f2"
+    },
+    {
+      "path": "fresh/clippy-host.log",
+      "bytes": 38304,
+      "sha256": "a0636683bb04aa0f51ed4ad3e875ae9780ca6e321a5c3477afc6a2a3825bbc75"
+    },
+    {
+      "path": "fresh/core-no-default.log",
+      "bytes": 21823,
+      "sha256": "564a0aeef4855b9e91d9eabf1e96e994914a16366f07717f40683e689ad9d5f2"
+    },
+    {
+      "path": "fresh/debug-nxapfs.log",
+      "bytes": 2922,
+      "sha256": "879fa9fc65e1514ab6c8648c39228b8f74bff46da7fe84662f036bfad14f7cb3"
+    },
+    {
+      "path": "fresh/deep-authored/absent-profile.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "fresh/deep-authored/clamped4096-semantic-negative/command.json",
+      "bytes": 747,
+      "sha256": "e88cbf55e140fbde1dcf1197cf23cee3645e6fff98de58484eb9140e24d86c5c"
+    },
+    {
+      "path": "fresh/deep-authored/clamped4096-semantic-negative/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "fresh/deep-authored/clamped4096-semantic-negative/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "fresh/deep-authored/clamped4096-semantic-negative/report.json",
+      "bytes": 6026,
+      "sha256": "1a526aa581c0d4eebef66e82849a8d33875efd6289b757f5a08191cb93955ffa"
+    },
+    {
+      "path": "fresh/deep-authored/clamped4096-semantic-negative/serial.log",
+      "bytes": 1750,
+      "sha256": "e5754a9ec69cacfa09ea66d8d6d4102e5a605a6980996666aa00b279ea5d658b"
+    },
+    {
+      "path": "fresh/deep-authored/clamped4096-semantic-negative/stderr.log",
+      "bytes": 79,
+      "sha256": "8dcd981b4276b70dff519e3ea963a7eedd3cd934702c2bd69a5f2545aecd25b4"
+    },
+    {
+      "path": "fresh/deep-authored/clamped4096-semantic-negative/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/deep-authored/clamped4096-semantic-negative.log",
+      "bytes": 206,
+      "sha256": "c597f6029903f1a5d21c2ac40874ad868b1bb60de0e55756f338b17149dfb0ec"
+    },
+    {
+      "path": "fresh/deep-authored/conflicting-flags.log",
+      "bytes": 1319,
+      "sha256": "0868e4291c11df2fc4623e74b4322f6a408f40634256824a1ce74bbd6bf407eb"
+    },
+    {
+      "path": "fresh/deep-authored/deep16384/command.json",
+      "bytes": 687,
+      "sha256": "7716950666542b489f5281b358cff1d1e12dbc50b56a3290a5bcc022ec3d25ca"
+    },
+    {
+      "path": "fresh/deep-authored/deep16384/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "fresh/deep-authored/deep16384/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "fresh/deep-authored/deep16384/report.json",
+      "bytes": 5972,
+      "sha256": "a51e487683fdb2d1b0d0e8efba0a43bd6d4c1d5f936f7b6d8e68bce52fd6423b"
+    },
+    {
+      "path": "fresh/deep-authored/deep16384/serial.log",
+      "bytes": 1754,
+      "sha256": "b120dc550320cf0c53f72af1664eb7ace8d248ef19b389f0364ea2c13a0d9726"
+    },
+    {
+      "path": "fresh/deep-authored/deep16384/stderr.log",
+      "bytes": 79,
+      "sha256": "11e3b7dc2b7e80caf32dbc921bf6da2d84e4efd5b7597504b032125d00b42d06"
+    },
+    {
+      "path": "fresh/deep-authored/deep16384/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/deep-authored/deep16384.log",
+      "bytes": 186,
+      "sha256": "f32182635291d2478ea5b7c63972b2db458e9cebe13ca981cfe9682a4fd51b6d"
+    },
+    {
+      "path": "fresh/deep-authored/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "fresh/deep-authored/fiq-not-boolean.log",
+      "bytes": 1294,
+      "sha256": "e88a4630278d063909e3b0a45878960cd89b74a58e9f8b0b5b20ae8532f45a52"
+    },
+    {
+      "path": "fresh/deep-authored/irq-negative.log",
+      "bytes": 1301,
+      "sha256": "3069829b9c9d1d2542d2881795c6367de38b218e34c1109baa7e5f560528d6c7"
+    },
+    {
+      "path": "fresh/deep-authored/irq-not-boolean.log",
+      "bytes": 1294,
+      "sha256": "e88a4630278d063909e3b0a45878960cd89b74a58e9f8b0b5b20ae8532f45a52"
+    },
+    {
+      "path": "fresh/deep-authored/kernel-above.log",
+      "bytes": 1305,
+      "sha256": "182f1278e4bf8f651c4d58211008b2ca840c60a76613c44740b7aa4dc6a44483"
+    },
+    {
+      "path": "fresh/deep-authored/kernel-at-end.log",
+      "bytes": 1305,
+      "sha256": "182f1278e4bf8f651c4d58211008b2ca840c60a76613c44740b7aa4dc6a44483"
+    },
+    {
+      "path": "fresh/deep-authored/kernel-below.log",
+      "bytes": 1305,
+      "sha256": "182f1278e4bf8f651c4d58211008b2ca840c60a76613c44740b7aa4dc6a44483"
+    },
+    {
+      "path": "fresh/deep-authored/loop.bin",
+      "bytes": 12,
+      "sha256": "3eddf2869917cc7a21ea531af387056b75ea34526548f0503dc4ade4fdaf41f7"
+    },
+    {
+      "path": "fresh/deep-authored/loop.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "fresh/deep-authored/missing-deep.log",
+      "bytes": 1286,
+      "sha256": "fde97854e72e5883d387166dee2de3019a60c32ad4f2bd3e362f158a02325943"
+    },
+    {
+      "path": "fresh/deep-authored/missing-handoff-authorization.log",
+      "bytes": 1314,
+      "sha256": "89d434ee73cbdf205354e34ff42296aab0a70ca09327a9863b4cb04c47e92487"
+    },
+    {
+      "path": "fresh/deep-authored/old4096/command.json",
+      "bytes": 681,
+      "sha256": "b63d08ebe2ddee1dfaaf01a0ebe27fa0c434ea1d6553d1ab928f186390329dab"
+    },
+    {
+      "path": "fresh/deep-authored/old4096/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "fresh/deep-authored/old4096/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "fresh/deep-authored/old4096/report.json",
+      "bytes": 5862,
+      "sha256": "c1132ec6b24ab1ca67cfdc99441ffd8c4313d048808aee793fa65a8a125f4fef"
+    },
+    {
+      "path": "fresh/deep-authored/old4096/serial.log",
+      "bytes": 1696,
+      "sha256": "70505a2e55836c9b2f61151c1974b76116431e93f0d43045ce5443381ff6ca31"
+    },
+    {
+      "path": "fresh/deep-authored/old4096/stderr.log",
+      "bytes": 79,
+      "sha256": "599574f3eb2adaf517dc6f4cf00ad910bca534b79e7933363a41ed7f5cdb6385"
+    },
+    {
+      "path": "fresh/deep-authored/old4096/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/deep-authored/old4096.log",
+      "bytes": 184,
+      "sha256": "a994a512a90d4f1f7cb6a7c41ba8b23f7fe9418a090308d6040b981f7aff819e"
+    },
+    {
+      "path": "fresh/deep-authored/old64/command.json",
+      "bytes": 675,
+      "sha256": "ea3c4a50f1204a9afcdf2660103a8de3f2330e4a39da2c865ebf4de652a346ad"
+    },
+    {
+      "path": "fresh/deep-authored/old64/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "fresh/deep-authored/old64/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "fresh/deep-authored/old64/report.json",
+      "bytes": 5844,
+      "sha256": "57a5c42aa9531404c264be8ec7d7038a6e73d8300cc7a58e9ccf6c3676eca6f6"
+    },
+    {
+      "path": "fresh/deep-authored/old64/serial.log",
+      "bytes": 1687,
+      "sha256": "b08ef9b49716508817a2d07b4a947254c7de2f63e4f2642e28d5cc24e96f678a"
+    },
+    {
+      "path": "fresh/deep-authored/old64/stderr.log",
+      "bytes": 79,
+      "sha256": "6c32454912fc19fdb940fdc203d9df7a3468d900e1cacbf7cac9f0f2234cd205"
+    },
+    {
+      "path": "fresh/deep-authored/old64/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/deep-authored/old64.log",
+      "bytes": 182,
+      "sha256": "c0bf2696dad2b543012b2a5f0bcf6d084c7783e38087277e70ab6495507f6847"
+    },
+    {
+      "path": "fresh/deep-authored/ordinary-firmware-rejects-deep/command.json",
+      "bytes": 750,
+      "sha256": "cca4b0b3130306d69ed2d09ec34169f110fb30da9df78ff6a0601785a7fd5a16"
+    },
+    {
+      "path": "fresh/deep-authored/ordinary-firmware-rejects-deep/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "fresh/deep-authored/ordinary-firmware-rejects-deep/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "fresh/deep-authored/ordinary-firmware-rejects-deep/report.json",
+      "bytes": 4122,
+      "sha256": "f64b5945e85b380355fb3dac39c632a10736163330198e9895dc860203a9733c"
+    },
+    {
+      "path": "fresh/deep-authored/ordinary-firmware-rejects-deep/serial.log",
+      "bytes": 632,
+      "sha256": "3ec1162c6909f03cd81426dc1693e40c3a1c3ea3af96bc468d523211362b9ea8"
+    },
+    {
+      "path": "fresh/deep-authored/ordinary-firmware-rejects-deep/stderr.log",
+      "bytes": 79,
+      "sha256": "2fb91f1bce8257a57115721e82ee5e792a3e89a3a5cbab93f3ec18afe4d220e5"
+    },
+    {
+      "path": "fresh/deep-authored/ordinary-firmware-rejects-deep/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fresh/deep-authored/ordinary-firmware-rejects-deep.log",
+      "bytes": 209,
+      "sha256": "2dcd9c333ab50f15eed15e1ddce39b613d4ec8d38f1586d9fceb25822c24d6b1"
+    },
+    {
+      "path": "fresh/deep-authored/override-invalid-fiq-field.log",
+      "bytes": 1312,
+      "sha256": "a7394cc2dbbd2e64a6eb6e64daedd9c1cc4620d861c61f3bd7549e30fba7d273"
+    },
+    {
+      "path": "fresh/deep-authored/override-invalid-irq-field.log",
+      "bytes": 1312,
+      "sha256": "a7394cc2dbbd2e64a6eb6e64daedd9c1cc4620d861c61f3bd7549e30fba7d273"
+    },
+    {
+      "path": "fresh/deep-authored/override-unsupported-bit.log",
+      "bytes": 1312,
+      "sha256": "a7394cc2dbbd2e64a6eb6e64daedd9c1cc4620d861c61f3bd7549e30fba7d273"
+    },
+    {
+      "path": "fresh/deep-authored/physical-exclusive-end-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "fresh/deep-authored/physical-span-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "fresh/deep-authored/pstate-invalid-mode.log",
+      "bytes": 1311,
+      "sha256": "cc03837a920f4a7e8be301abefcd5f4bdd7a881be18cf297de03792168738b23"
+    },
+    {
+      "path": "fresh/deep-authored/pstate-unsupported-bits.log",
+      "bytes": 1311,
+      "sha256": "cc03837a920f4a7e8be301abefcd5f4bdd7a881be18cf297de03792168738b23"
+    },
+    {
+      "path": "fresh/deep-authored/report.json",
+      "bytes": 46613,
+      "sha256": "cb549d80c97fb662c7113f7b2691ef62378bc839bf193a22fdf2fcbe9ef902e7"
+    },
+    {
+      "path": "fresh/deep-authored/vector-at-end.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "fresh/deep-authored/vector-below.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "fresh/deep-authored/vector-outside.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "fresh/deep-authored/vector-span-wrap.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "fresh/deep-authored/vector-unaligned.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "fresh/deep-authored/virtual-exclusive-end-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "fresh/deep-authored/virtual-span-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "fresh/deep-authored/wrong-budget-16383.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "fresh/deep-authored/wrong-budget-16385.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "fresh/deep-authored/wrong-budget-4096.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "fresh/deep-authored/wrong-budget-8192.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "fresh/deep-authored.log",
+      "bytes": 110,
+      "sha256": "e80282a258d070ee9c34be4a3fde182f10ba830703bc22cb26b7473249fe1c46"
+    },
+    {
+      "path": "fresh/deep-cli-help.log",
+      "bytes": 2423,
+      "sha256": "e5b3b5833f162321a858612b69fb6ea22a0de4d995261e44e61acbfe2ab93015"
+    },
+    {
+      "path": "fresh/efi-deep.log",
+      "bytes": 1661,
+      "sha256": "8ebdecb05eb5ea5d6e43451d93ddda479a924c19890e1d67f17db858e95d48a6"
+    },
+    {
+      "path": "fresh/efi-tiered.log",
+      "bytes": 2912,
+      "sha256": "b948b1a6ebb6706c9615422f6040bc786ec8fe413ec5c4bc379b7351b44211ee"
+    },
+    {
+      "path": "fresh/memory-service.log",
+      "bytes": 4188,
+      "sha256": "72713ff5a303e246c8a6f2105a08e25abe07239c2eef9f7c15d0c2ebd9ef8254"
+    },
+    {
+      "path": "fresh/package-policy.log",
+      "bytes": 2322,
+      "sha256": "3e25970923ccf78532510fe89543fc74e1c160bc9520e6a4e9831fd301fa3ff8"
+    },
+    {
+      "path": "fresh/python.log",
+      "bytes": 34112,
+      "sha256": "4c99879ddd479324c8b66f6a1aab6f5907dc262a499d36a14db6364880836ead"
+    },
+    {
+      "path": "fresh/report.json",
+      "bytes": 5532,
+      "sha256": "a79d4580337b4fcf2978fc3fd1bb54bc8c40714f3c63e66283a04610547fef88"
+    },
+    {
+      "path": "fresh/setup.log",
+      "bytes": 2898,
+      "sha256": "0ced0e04f769e9fb1f65d2cc9835540f102e3a7f958b21b85b3328fbbd822a83"
+    },
+    {
+      "path": "fresh/submodules-final.log",
+      "bytes": 2400,
+      "sha256": "6d3fdcd42b8fd39bbc456001411b04f29f15a2b3d684c643642f7b5188c2ed59"
+    },
+    {
+      "path": "fresh/submodules.log",
+      "bytes": 2400,
+      "sha256": "6d3fdcd42b8fd39bbc456001411b04f29f15a2b3d684c643642f7b5188c2ed59"
+    },
+    {
+      "path": "fresh/workspace.log",
+      "bytes": 46387,
+      "sha256": "47283487dcb4666e4dbefc0f6b01c7f4bfa91443d1a081cf21df512621ac8bda"
+    },
+    {
+      "path": "historical-authored-corrected/absent-profile.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "historical-authored-corrected/conflicting-flags.log",
+      "bytes": 1319,
+      "sha256": "0868e4291c11df2fc4623e74b4322f6a408f40634256824a1ce74bbd6bf407eb"
+    },
+    {
+      "path": "historical-authored-corrected/deep16384/command.json",
+      "bytes": 627,
+      "sha256": "2d310898ae7b3b2717dc2147cc7652053bc7a4d559117fca9ac50ab96a267127"
+    },
+    {
+      "path": "historical-authored-corrected/deep16384/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "historical-authored-corrected/deep16384/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "historical-authored-corrected/deep16384/report.json",
+      "bytes": 5690,
+      "sha256": "652cd88ddb8d66521f0d06e0e3076ea57a2edb37baa0224e1add4d3d1620fee6"
+    },
+    {
+      "path": "historical-authored-corrected/deep16384/serial.log",
+      "bytes": 1754,
+      "sha256": "b120dc550320cf0c53f72af1664eb7ace8d248ef19b389f0364ea2c13a0d9726"
+    },
+    {
+      "path": "historical-authored-corrected/deep16384/stderr.log",
+      "bytes": 78,
+      "sha256": "4dffd45a9a5faf8d278123bd653fc3015b9bf2d0fb35c171104061714c8763e7"
+    },
+    {
+      "path": "historical-authored-corrected/deep16384/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "historical-authored-corrected/deep16384.log",
+      "bytes": 166,
+      "sha256": "352e02c9b01f33175c4c94f419aabab23fbe0f76126b7de4f5e076325c146eb8"
+    },
+    {
+      "path": "historical-authored-corrected/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "historical-authored-corrected/fiq-not-boolean.log",
+      "bytes": 1294,
+      "sha256": "e88a4630278d063909e3b0a45878960cd89b74a58e9f8b0b5b20ae8532f45a52"
+    },
+    {
+      "path": "historical-authored-corrected/irq-negative.log",
+      "bytes": 1301,
+      "sha256": "3069829b9c9d1d2542d2881795c6367de38b218e34c1109baa7e5f560528d6c7"
+    },
+    {
+      "path": "historical-authored-corrected/irq-not-boolean.log",
+      "bytes": 1294,
+      "sha256": "e88a4630278d063909e3b0a45878960cd89b74a58e9f8b0b5b20ae8532f45a52"
+    },
+    {
+      "path": "historical-authored-corrected/kernel-above.log",
+      "bytes": 1305,
+      "sha256": "182f1278e4bf8f651c4d58211008b2ca840c60a76613c44740b7aa4dc6a44483"
+    },
+    {
+      "path": "historical-authored-corrected/kernel-at-end.log",
+      "bytes": 1305,
+      "sha256": "182f1278e4bf8f651c4d58211008b2ca840c60a76613c44740b7aa4dc6a44483"
+    },
+    {
+      "path": "historical-authored-corrected/kernel-below.log",
+      "bytes": 1305,
+      "sha256": "182f1278e4bf8f651c4d58211008b2ca840c60a76613c44740b7aa4dc6a44483"
+    },
+    {
+      "path": "historical-authored-corrected/loop.bin",
+      "bytes": 12,
+      "sha256": "3eddf2869917cc7a21ea531af387056b75ea34526548f0503dc4ade4fdaf41f7"
+    },
+    {
+      "path": "historical-authored-corrected/loop.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "historical-authored-corrected/missing-deep.log",
+      "bytes": 1286,
+      "sha256": "fde97854e72e5883d387166dee2de3019a60c32ad4f2bd3e362f158a02325943"
+    },
+    {
+      "path": "historical-authored-corrected/missing-handoff-authorization.log",
+      "bytes": 1314,
+      "sha256": "89d434ee73cbdf205354e34ff42296aab0a70ca09327a9863b4cb04c47e92487"
+    },
+    {
+      "path": "historical-authored-corrected/override-invalid-fiq-field.log",
+      "bytes": 1312,
+      "sha256": "a7394cc2dbbd2e64a6eb6e64daedd9c1cc4620d861c61f3bd7549e30fba7d273"
+    },
+    {
+      "path": "historical-authored-corrected/override-invalid-irq-field.log",
+      "bytes": 1312,
+      "sha256": "a7394cc2dbbd2e64a6eb6e64daedd9c1cc4620d861c61f3bd7549e30fba7d273"
+    },
+    {
+      "path": "historical-authored-corrected/override-unsupported-bit.log",
+      "bytes": 1312,
+      "sha256": "a7394cc2dbbd2e64a6eb6e64daedd9c1cc4620d861c61f3bd7549e30fba7d273"
+    },
+    {
+      "path": "historical-authored-corrected/physical-exclusive-end-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "historical-authored-corrected/physical-span-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "historical-authored-corrected/pstate-invalid-mode.log",
+      "bytes": 1311,
+      "sha256": "cc03837a920f4a7e8be301abefcd5f4bdd7a881be18cf297de03792168738b23"
+    },
+    {
+      "path": "historical-authored-corrected/pstate-unsupported-bits.log",
+      "bytes": 1311,
+      "sha256": "cc03837a920f4a7e8be301abefcd5f4bdd7a881be18cf297de03792168738b23"
+    },
+    {
+      "path": "historical-authored-corrected/report.json",
+      "bytes": 32587,
+      "sha256": "e705094e9e972e37e905effc9e149b640fb208f73046bbe422f9e66c875e0702"
+    },
+    {
+      "path": "historical-authored-corrected/vector-at-end.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "historical-authored-corrected/vector-below.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "historical-authored-corrected/vector-outside.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "historical-authored-corrected/vector-span-wrap.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "historical-authored-corrected/vector-unaligned.log",
+      "bytes": 1327,
+      "sha256": "bec252cb7b9383a9c9db4c6776f4e1b27253a41fb7f900dd8860a155ca5a764b"
+    },
+    {
+      "path": "historical-authored-corrected/virtual-exclusive-end-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "historical-authored-corrected/virtual-span-wrap.log",
+      "bytes": 1317,
+      "sha256": "215edbc7cb5b9720b0a38c7d1cd45c3fd185644fd90eaf6ab3e2531df2df62ff"
+    },
+    {
+      "path": "historical-authored-corrected/wrong-budget-16383.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "historical-authored-corrected/wrong-budget-16385.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "historical-authored-corrected/wrong-budget-4096.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "historical-authored-corrected/wrong-budget-8192.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "historical-authored-first/absent-profile.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "historical-authored-first/clamped4096-semantic-negative/command.json",
+      "bytes": 666,
+      "sha256": "40a61588688db5d40fb4804eda0a6219a3d6bffbe2b944ff931fdb6bb3183812"
+    },
+    {
+      "path": "historical-authored-first/clamped4096-semantic-negative/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "historical-authored-first/clamped4096-semantic-negative/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "historical-authored-first/clamped4096-semantic-negative/report.json",
+      "bytes": 5660,
+      "sha256": "7a6677ae67b266605d6176cf5eb7c916df0bb906c10662c12302f8f7a8332c3b"
+    },
+    {
+      "path": "historical-authored-first/clamped4096-semantic-negative/serial.log",
+      "bytes": 1750,
+      "sha256": "e5754a9ec69cacfa09ea66d8d6d4102e5a605a6980996666aa00b279ea5d658b"
+    },
+    {
+      "path": "historical-authored-first/clamped4096-semantic-negative/stderr.log",
+      "bytes": 78,
+      "sha256": "3e1ce899b719517157dec5ae582548707fc57413eed383cd8f3b6c0d8ae8f03d"
+    },
+    {
+      "path": "historical-authored-first/clamped4096-semantic-negative/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "historical-authored-first/clamped4096-semantic-negative.log",
+      "bytes": 179,
+      "sha256": "12eb1c5ce102f91c72e98b5624c5a3c592366bf41b8d8ecfe805912c509f37f2"
+    },
+    {
+      "path": "historical-authored-first/conflicting-flags.log",
+      "bytes": 1319,
+      "sha256": "0868e4291c11df2fc4623e74b4322f6a408f40634256824a1ce74bbd6bf407eb"
+    },
+    {
+      "path": "historical-authored-first/deep16384/command.json",
+      "bytes": 606,
+      "sha256": "cf16e4993a8c32f6982eb07fb48a46cddaa4055dcab59fef2464b3761454aeae"
+    },
+    {
+      "path": "historical-authored-first/deep16384/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "historical-authored-first/deep16384/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "historical-authored-first/deep16384/report.json",
+      "bytes": 5662,
+      "sha256": "029f1b3a954aa223a5ec77d66b7754d820a9ddf09153666fff6687d70151d222"
+    },
+    {
+      "path": "historical-authored-first/deep16384/serial.log",
+      "bytes": 1754,
+      "sha256": "b120dc550320cf0c53f72af1664eb7ace8d248ef19b389f0364ea2c13a0d9726"
+    },
+    {
+      "path": "historical-authored-first/deep16384/stderr.log",
+      "bytes": 77,
+      "sha256": "a528f096e8b40c41db7583ca630635334a58fa13a9ccc4d680514fa243c8124e"
+    },
+    {
+      "path": "historical-authored-first/deep16384/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "historical-authored-first/deep16384.log",
+      "bytes": 159,
+      "sha256": "9351eb838c51bcdcf95f0c887cbe64583a0960d6409efae54ce1dbbe97e21a17"
+    },
+    {
+      "path": "historical-authored-first/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "historical-authored-first/loop.bin",
+      "bytes": 12,
+      "sha256": "3eddf2869917cc7a21ea531af387056b75ea34526548f0503dc4ade4fdaf41f7"
+    },
+    {
+      "path": "historical-authored-first/loop.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "historical-authored-first/missing-deep.log",
+      "bytes": 1286,
+      "sha256": "fde97854e72e5883d387166dee2de3019a60c32ad4f2bd3e362f158a02325943"
+    },
+    {
+      "path": "historical-authored-first/missing-handoff-authorization.log",
+      "bytes": 1314,
+      "sha256": "89d434ee73cbdf205354e34ff42296aab0a70ca09327a9863b4cb04c47e92487"
+    },
+    {
+      "path": "historical-authored-first/old4096/command.json",
+      "bytes": 600,
+      "sha256": "7afe4e4f900b0b7df5f01eba2df2160278c8244aa3281fced7793547f029e946"
+    },
+    {
+      "path": "historical-authored-first/old4096/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "historical-authored-first/old4096/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "historical-authored-first/old4096/report.json",
+      "bytes": 5552,
+      "sha256": "605deb06365f3097f7438242b135024abe1055309efc88e1c9c1e02b1f265bff"
+    },
+    {
+      "path": "historical-authored-first/old4096/serial.log",
+      "bytes": 1696,
+      "sha256": "70505a2e55836c9b2f61151c1974b76116431e93f0d43045ce5443381ff6ca31"
+    },
+    {
+      "path": "historical-authored-first/old4096/stderr.log",
+      "bytes": 77,
+      "sha256": "71f973307d8ba496ffa8469c767adae5985f9c340edc0abe60598881e1d84020"
+    },
+    {
+      "path": "historical-authored-first/old4096/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "historical-authored-first/old4096.log",
+      "bytes": 157,
+      "sha256": "7f1d63f7bf23547845e2bdfcae1532890833f49ac44ea3a35ec19989593de519"
+    },
+    {
+      "path": "historical-authored-first/old64/command.json",
+      "bytes": 594,
+      "sha256": "adb30e5c0aaa7a17b6f2dc7214b62dd9e1d5db0197c2fd073dae042cc76d873e"
+    },
+    {
+      "path": "historical-authored-first/old64/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "historical-authored-first/old64/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "historical-authored-first/old64/report.json",
+      "bytes": 5534,
+      "sha256": "7e587fc2d333224a11db498134638819f379153e5fb7441fbf49caed63c2c61b"
+    },
+    {
+      "path": "historical-authored-first/old64/serial.log",
+      "bytes": 1687,
+      "sha256": "b08ef9b49716508817a2d07b4a947254c7de2f63e4f2642e28d5cc24e96f678a"
+    },
+    {
+      "path": "historical-authored-first/old64/stderr.log",
+      "bytes": 78,
+      "sha256": "43e1dc7c85b717e4e9b70b58d604d86d0901a697733de19bd5ba6d7257880201"
+    },
+    {
+      "path": "historical-authored-first/old64/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "historical-authored-first/old64.log",
+      "bytes": 155,
+      "sha256": "06eaec334d55ad9415903c39b3c2594ce3bbf72cd0587f15ddd7b11aef1f4025"
+    },
+    {
+      "path": "historical-authored-first/ordinary-firmware-rejects-deep/command.json",
+      "bytes": 669,
+      "sha256": "1b1548ae087e44c5c945b057c8cf9ae8cd31f16dfbcb78304688eaed272e84b8"
+    },
+    {
+      "path": "historical-authored-first/ordinary-firmware-rejects-deep/esp/EFI/NEXTCORE/diagnostic.dt",
+      "bytes": 188,
+      "sha256": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd"
+    },
+    {
+      "path": "historical-authored-first/ordinary-firmware-rejects-deep/esp/EFI/NEXTCORE/kernel.kc",
+      "bytes": 40960,
+      "sha256": "1507ba43c548b3ffdb0debde16a3fe76fe2fb85860ebdee15b25c0fd71c3ec83"
+    },
+    {
+      "path": "historical-authored-first/ordinary-firmware-rejects-deep/report.json",
+      "bytes": 3761,
+      "sha256": "04ce5e5d2686933bdee23bedee3ac7b806724ca443a225129dbd3e3a058f6bcf"
+    },
+    {
+      "path": "historical-authored-first/ordinary-firmware-rejects-deep/serial.log",
+      "bytes": 584,
+      "sha256": "b8879dd4caf275e1cf848ba587ecebf5bc104e9cf4eeec45c3de96947a42ae12"
+    },
+    {
+      "path": "historical-authored-first/ordinary-firmware-rejects-deep/stderr.log",
+      "bytes": 78,
+      "sha256": "868c44fc10dc8e569fb2305503f07c48f7504e7fa9c585def17045585c714f20"
+    },
+    {
+      "path": "historical-authored-first/ordinary-firmware-rejects-deep/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "historical-authored-first/ordinary-firmware-rejects-deep.log",
+      "bytes": 182,
+      "sha256": "df11374442daeeaf753387210373cb5c3c659ffe00519d793d55f14c9451b709"
+    },
+    {
+      "path": "historical-authored-first/report.json",
+      "bytes": 31759,
+      "sha256": "b510df082316a7b7b77817297d19fc93cc5c03722b5ac9b21be2554ce1877178"
+    },
+    {
+      "path": "historical-authored-first/wrong-budget-16383.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "historical-authored-first/wrong-budget-16385.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "historical-authored-first/wrong-budget-4096.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "historical-authored-first/wrong-budget-8192.log",
+      "bytes": 1312,
+      "sha256": "560fce5c6890c64c9b16d1adfdb85fa96a71114e150ff14e79ece8160c7a2cf8"
+    },
+    {
+      "path": "historical-source-freeze-r2.json",
+      "bytes": 4531,
+      "sha256": "781f5e81899fa393affbe0a5dd391bb6b2392db6225d678005f55aaefcdbfcef"
+    },
+    {
+      "path": "independent-correction-review.json",
+      "bytes": 17818,
+      "sha256": "9e109a52b1ce0f6b8a39ba98f93433521160c59f6d30aa0b1c019b9ff032b508"
+    },
+    {
+      "path": "independent-initial-review.json",
+      "bytes": 5405,
+      "sha256": "aa13efd7be72e7ddbbaf9ab31950c7dde3494e0e1416d73b4fff3fd9d8a34a45"
+    },
+    {
+      "path": "original-aggregate.json",
+      "bytes": 1644,
+      "sha256": "21750ff6d897a7719b2e4842203973a9cf3ce7522c3cdb24877bc66baaa591a5"
+    },
+    {
+      "path": "publication/Core-cleanup.json",
+      "bytes": 184,
+      "sha256": "949f468fc6f731ccfe95f9b9efbe7e1037fa33c50991ac6e42c0d0475e6147d7"
+    },
+    {
+      "path": "publication/Core-final-checks.json",
+      "bytes": 10117,
+      "sha256": "f17ddd15ad11b4039b4601657cd58f4f1a5367af25f83e22824f0a9a74249abc"
+    },
+    {
+      "path": "publication/Core-merge.json",
+      "bytes": 123,
+      "sha256": "6a0bd8cea7d04326c46951a084958dc41a459a789c5adc8a2d7fe9ca48c9873e"
+    },
+    {
+      "path": "publication/Core-source.json",
+      "bytes": 237,
+      "sha256": "5719b276b0bfe5781cfb666f79c335a76152658e9c040834141c288573492a0a"
+    },
+    {
+      "path": "publication/EFI-cleanup.json",
+      "bytes": 174,
+      "sha256": "ddd2c4efb7e6f519388eecd512ce7108285890c39486f125bcf26b3452b88774"
+    },
+    {
+      "path": "publication/EFI-final-checks.json",
+      "bytes": 266,
+      "sha256": "c13307bd46875b024a794f91507cafe4eaf611bfc0aeef43a864c4a2b0ecf4d4"
+    },
+    {
+      "path": "publication/EFI-merge.json",
+      "bytes": 123,
+      "sha256": "d83389a681216dd7aba0d9044bbe3fa97f1644def4a3fd610de3ed5c909a6f34"
+    },
+    {
+      "path": "publication/EFI-source.json",
+      "bytes": 380,
+      "sha256": "d11d33ff0bb80948249c84e185b290f78ebd54c117c555faf7ef3a40d63b3363"
+    },
+    {
+      "path": "publication/Tool-cleanup.json",
+      "bytes": 175,
+      "sha256": "ab825b53d93d34f5ef07082c34458529ee142e9c9afe38099952028ad9a0ee76"
+    },
+    {
+      "path": "publication/Tool-final-checks.json",
+      "bytes": 266,
+      "sha256": "43fdf73b69210a77a91ca0cf45edd09834bab57e854662a02ce60581652bc41c"
+    },
+    {
+      "path": "publication/Tool-merge.json",
+      "bytes": 123,
+      "sha256": "5e87d0d7e3407e1009133c22ed861294ee4a88d67946eacf8db73a2a823e56d9"
+    },
+    {
+      "path": "publication/Tool-source.json",
+      "bytes": 113,
+      "sha256": "e748bdec9850b044259c7748cf3e84df7c1e6e7b773b1dc4b698b31da04d6377"
+    },
+    {
+      "path": "recorded-local-clone-environment.py",
+      "bytes": 3519,
+      "sha256": "84516f2b39efc120fed3045368a35a6cc46a02431afa5c9d06294249390af706"
+    },
+    {
+      "path": "recorded-validation-driver.py",
+      "bytes": 4627,
+      "sha256": "178d14d33aaf517ca754d2ad7c48d41097e2b48e82d3498b2830cea74d990841"
+    }
+  ]
+}

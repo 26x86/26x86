@@ -12,7 +12,11 @@ Core PR6/mainc08d10b, EFI PR9/main76964c0, Tool PR6/main391adb7를 병합했다.
 정식 standalone EFI와 실제 deep5개, CLI 거부28개 및 x1변조 거부가 통과했다.
 초기 control에서 non-trace 빌드를 지정해 기대한 TRACE_CONFIG_INVALID 대신
 PROVIDERS_PENDING에 멈췄다. 그 실패를 보존하고 올바른 tiered-only control로
-소스·판정식 변경 없이 재검증했다. 새 상위 재귀 검사와 최종 CI를 진행한다.
+소스·판정식 변경 없이 재검증했다. 새 상위6bca2907 재귀14명령 검사에서 workspace505,
+Python149, Core235+3doctests, 실제deep gate5개(통합4+별도clamp1), CLI28개와
+x1변조 거부가 통과했다. debug NXAPFS/service44/패키지/Clippy도 통과했으며
+기존 경고는 보존한다. 전체 증거는 nextcore/artifacts/arm-deep-trace-20260909다.
+최종 정식 GitHub 재귀 클론과 CI 후 병합한다.
 
 역사적 원본 macOS27 진단은 한 번 실행해5311명령,5312fetch,783data 이후
 UBFM/LSL 미지원 경계에 도달했다. 원본 좌표·바이트는 공개하지 않는다. 이 결과는
