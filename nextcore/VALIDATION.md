@@ -14,6 +14,15 @@ native 경로의 restore-datapartition panic은 VM RAM 조건을 수정해 통�
 
 ## BP21/BP22 최신 통합 — 2026-09-08
 
+- **최종 BP21 → 실제 Tahoe Terminal 통합**: 보관된 최종 EFI `8d29af21…0e96`를
+  재빌드 없이 사용해 GOP 피커→Enter→기존 Shell/HFS helper→원본 booter→언어 선택→
+  Recovery Utilities→Terminal을 실제 조작했다. `uname -a`와 `sw_vers`는 x86_64
+  Darwin 25.6.0/macOS 26.6.2/25G83을 출력했다. QEMU 329.1601초에 QMP quit 뒤
+  자연 exit0, 전체 감독 344.0045초, 잔여 프로세스 0이다. 기존 9개 입력과 모든
+  신규 실행 입력의 전후 hash가 일치하고 ESP 차이는 BOOTX64/config뿐이다.
+  [결과](artifacts/picker-native-recovery-20260908/result.json)와
+  [자체 피커 화면](artifacts/picker-native-recovery-20260908/picker.png)을 보존했다.
+  전체 설치 OS·native HAL·guest Metal은 이 복구 세션의 수용 범위에 포함하지 않는다.
 - **EFI 피커·브랜딩**: GOP dark/mint tile, 동일 volume의 명시 EFI 항목,
   방향키/Tab/Home/End·Enter·Esc 및 text fallback을 구현했다. 실제 OVMF에서
   두 번째 child와 UTF16 load options, 취소, 기존 auto boot, GOP 없는 fallback을

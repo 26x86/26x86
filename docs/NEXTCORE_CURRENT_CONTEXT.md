@@ -26,12 +26,12 @@ AMD64↔Apple Silicon HAL 및 필수 Metal 가속**, **macOS 26 Tahoe의
 | local virtualization | WSL KVM 모듈 적재 후 API 12·query-kvm·실제 OVMF Shell 실행, developer 전용 device ACL | 이 결과만으로 macOS boot 판정 |
 | x86 UEFI → host HAL | BP19 실제 OVMF RSDP+7 SDT+5 PCI header 수집/파싱, exit 67와 원본 hash 유지 | XNU platform provider, AML 실행, 게스트 장치 게시, 물리 하드웨어 |
 | Tahoe 외부 reference | 원본 XNU/launchd/WindowServer와 읽을 수 있는 복구 GUI; Terminal에서 실제 Metal probe 실행 | 전체 OS 설치, Metal device/compute 성공 |
-| Tahoe native EFI | ConsoleControl → 원본 booter → 실제 XNU, 8GiB·SMC·USB 입력 조건에서 읽을 수 있는 언어 선택/복구 메뉴와 실제 조작 | 자체 KC loader 진입, 전체 native HAL/Metal |
+| Tahoe native EFI | 최종 BP21 피커 → ConsoleControl → 원본 booter → 실제 XNU/Recovery/Terminal, 키보드 명령으로 26.6.2/25G83 확인 | 자체 KC loader 진입, 전체 설치 OS/native HAL/Metal |
 | native KC 준비 | 67,584,000-byte 실제 EFI pages 배치/readback/해제, 65,260 classic host 적용·전체 readback, 401,606 chains/header 보존, rev1 boot_args codec, core 142 tests | EFI relocation 연결, entry/slide/provider 계약, native XNU 실행 |
 | ARM recovery | DFU, iBEC endpoint/prompt, 5 restore role, `bootx` ACK 관측 | XNU, userspace, Metal, macOS boot |
 | ARM firmware | `bootx` 뒤 4-byte MMIO decode failure를 same-event trace로 확인 | 장치 register/access contract 또는 안전한 장치 모델 |
 | ARM KC 준비 | 별도 1152B boot_args codec/C layout, 실제 ARM64E KC 81,002,496B 불변 staging·216 headers/1,096 views readback | 물리 배치/CPU/PAC/DT 연결, 실제 27 XNU 진입 |
-| firmware 피커 | NextCore GOP 디자인, 방향키·선택된 child 실행·Esc·text fallback 실제 OVMF 검증 | 자동 OS volume discovery |
+| firmware 피커 | NextCore GOP 디자인, 방향키·선택된 child 실행·Esc·text fallback, 최종 EFI에서 원본 Tahoe Recovery/Terminal까지 연결 | 자동 OS volume discovery |
 | graphics | Intel host GPU 512값/fence; 두 guest probe 빌드, 실제 Tahoe Recovery 실행은 no-metal-device/exit1 | guest Metal device와 GPU command completion/readback |
 
 현재 Windows host와 `zuzunza`, `koreaidc2`는 x86_64다. native Apple Silicon

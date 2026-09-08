@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "production_source_changed": false,
+  "source_bootx64_sha256": "8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96",
+  "variables_startup_unchanged": true,
+  "command_profile_unchanged": true,
+  "all_input_pre_post_final_hashes_match": true,
+  "original_control_helper_preserved": true,
+  "run_disk_bytes": 316218876,
+  "run_disk_cap_bytes": 805306368,
+  "native_hal_verified": false,
+  "metal_verified": false,
+  "full_installed_os_verified": false,
+  "raw_evidence_isolated": "_isolated/nextcore/picker-native-recovery-20260908/result.json",
+  "raw_evidence_sha256": "ff2d62ef8287f79b070c650aa7183735395aaf981e99e6505415e6de7969e73b",
+  "bp21_picker_to_original_tahoe_recovery": true,
+  "keyboard_and_pointer_verified": true,
+  "terminal_input_verified": true,
+  "source_media_unchanged": true,
+  "copied_esp_readback_match": true,
+  "cleanup_complete": true,
+  "qemu_natural_returncode": 0,
+  "qemu_seconds": 329.1601,
+  "supervisor_seconds": 344.0045,
+  "configured_chain": "NextCore picker -> unchanged Shell/HFS helper -> original Tahoe booter",
+  "target": {
+    "version": "26.6.2",
+    "build": "25G83",
+    "arch": "x86_64"
+  },
+  "authored_picker_png_sha256": "2423accd2c8a8111798a6a27c2f39b38f5fde3a205b5c0336e2bc6496c916c59"
+}
