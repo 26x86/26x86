@@ -1,0 +1,87 @@
+{
+  "schema": "nextcore.bp33-dt-independent-review.v1",
+  "passed": true,
+  "scope": "Consumer/allocation read-only review plus root-delegated strict-reader correction in two Python tools; no repeated OVMF execution",
+  "worktree": "/home/sharh/work/bp33-efi-ledger-dt",
+  "head": "93286527c9624d4ca8d46d2c4221fa58a4aa0854",
+  "source_sha256_before": {
+    "src/dt_probe.rs": "e8906bf108166ca880816721ef3df1fb905a35d1d17fdf4a3b7c66f5872ba248",
+    "tools/verify_dt_ledger_ovmf.py": "23d0919738640f59e3ec11a5a170d13c12efdfd3d51900452ab4ef0393c085bc",
+    "tools/check_dt_ledger_capture.py": "1cb6a5c1401958e86932a796614b2a81ef0292e436d576f39e17208a3158b3de",
+    "src/arm_pages.rs": "049b9d32b2129434d955b216e49d9785aed16aa439601f46f8811070b8ec1624",
+    "docs/ARM_DT_LEDGER_EFI_PROBE.md": "dbc6738cf2695dc18f100f33f1e4e87b2b87be5676d2481927d4a3cce18b0c90",
+    "docs/fixtures/dt_ledger.S": "c482a5c196fe872da49acfcfeb008fb3b0218b51093d49acc8d5f8274fb65da3",
+    "Cargo.toml": "786af00947a2af9b6bd8cf9da7d8d09fc7ad660a190e0c8ea8b5923133134688"
+  },
+  "source_sha256_after": {
+    "src/dt_probe.rs": "e8906bf108166ca880816721ef3df1fb905a35d1d17fdf4a3b7c66f5872ba248",
+    "tools/verify_dt_ledger_ovmf.py": "7c281fba318c99de35fd44f0e670a1be07ffa0998347d36b85f5bd1acfb1dd5f",
+    "tools/check_dt_ledger_capture.py": "582da32c36b9ea01341bd0fbf0995f8158ac2faf6a92485d4cc0b33727ebc43c",
+    "src/arm_pages.rs": "049b9d32b2129434d955b216e49d9785aed16aa439601f46f8811070b8ec1624",
+    "docs/ARM_DT_LEDGER_EFI_PROBE.md": "279c0b598a9591ad44de78517571745c9d86e9e52b4146c80e51c6d9bbef1bbc",
+    "docs/fixtures/dt_ledger.S": "c482a5c196fe872da49acfcfeb008fb3b0218b51093d49acc8d5f8274fb65da3",
+    "Cargo.toml": "b0d6290713d1e100a18255aa77280608db7560441b66a82f4cc6f49da9ddd459"
+  },
+  "consumer_unchanged": true,
+  "edited_paths": [
+    "tools/verify_dt_ledger_ovmf.py",
+    "tools/check_dt_ledger_capture.py"
+  ],
+  "findings": [
+    {
+      "id": "DT-READER-1",
+      "status": "fixed",
+      "problem": "Secondary checker accepted a failed envelope, eight duplicates of one case and absent envelope while reporting success",
+      "resolution": "Shared successful envelope validator requires actual raw serial agreement, complete ordered8-case matrix, recomputed validations, marker grammar and scope/hash fields; checker fails explicitly without Python asserts"
+    },
+    {
+      "id": "DT-READER-2",
+      "status": "fixed",
+      "problem": "Host numeric fields admitted 2^64 and overflowing host spans",
+      "resolution": "All host bases and exclusive ends must fit u64 before disjointness checks"
+    }
+  ],
+  "consumer_review": {
+    "concrete_defects": [],
+    "verified": [
+      "ArmPages owns aligned initialized LoaderData/LoaderCode allocations and validates map type/range before exposing slices",
+      "Host RAM/table/code extents and guest RAM/table extents checked disjoint; no host pointer used as guest PA",
+      "Ledger reservations supply actual placement; stale generation is rejected before the sole C JIT call without RAM changes",
+      "Serialized source identity/template replacement and structural offset are checked before typed DT commit",
+      "Scoped synchronous service holds exclusive RAM and immutable table borrow through real native entry",
+      "Firmware compares complete RAM to expected image, table/source preservation, precise fault/control/counters and restored code permissions",
+      "Independent reader decodes exact DT schema and recomputes full RAM SHA from guard/code/wire/output placement"
+    ],
+    "limits": [
+      "This review reuses prior actual x86 OVMF raw evidence; it does not execute new EFI or physical hardware",
+      "Detailed invalid-case ELR/SPSR/leaf level/fault_instruction are enforced inside the reviewed firmware predicate but not separately printed as raw CASE fields",
+      "Historical input digests are recorded provenance; upgraded checker does not claim original runner equals its current source",
+      "No production boot, original DT provider/ABI, macOS acceptance or guest Metal claim"
+    ]
+  },
+  "validation": {
+    "actual_cases_checked": 8,
+    "copied_mutation_rejections": 28,
+    "prior_three_false_acceptances_now_cli_exit1": true,
+    "actual_capture_cli_exit0": true,
+    "new_serial_digest_report_shape": {
+      "passed": true,
+      "actual_cases_checked": 8,
+      "serial_sha256": "2fa5aacef9a45612afc91a160d77c6c370e90d2830325fc2c366cc3bd84d807c",
+      "input_hashes_preserved": true,
+      "input_hashes_are_recorded_provenance": true
+    },
+    "diff_check_passed": true,
+    "source_compile_passed": true
+  },
+  "evidence": {
+    "malformed-reader-probes.json": "24f2cdb17aea41f140788badcf9841f5d1b71039d0065fde6cb49eb54d30a7c7",
+    "correction-cli-tests.json": "d7b81b449d1c280cc7ecec04cc1887103aa04786918cb9bd8301ab6e223ee8b9",
+    "actual.corrected.json": "7dfd67324cb5b776f01985255c486d3c825bd3d20ffe21fe16eeea5c5efade71"
+  },
+  "original_capture_sha256": "35b9868d4da8ead673693b236f2c9b520d6438432eaa3198c625e319383d599e",
+  "original_serial_sha256": "2fa5aacef9a45612afc91a160d77c6c370e90d2830325fc2c366cc3bd84d807c",
+  "original_capture_preserved": true,
+  "normal_boot_verified": false,
+  "guest_metal_verified": false
+}

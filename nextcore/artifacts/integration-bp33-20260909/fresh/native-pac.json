@@ -1,0 +1,635 @@
+{
+  "schema": "nextcore.efi-native-pauth-proof/1",
+  "passed": true,
+  "host": {
+    "system": "Linux",
+    "machine": "x86_64"
+  },
+  "compiler_versions": {
+    "clang": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+    "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)"
+  },
+  "runtime_sources": {
+    "jit.c": "6be2be04cd7f4f8ee091dcbd0218bb5f149924c153084244de6a164fd201a804",
+    "jit.h": "82ec08a23294a0d02dc95de0b98cc3c6b0d29f2de0656cbdcc4801f7c3161ce9",
+    "arch.c": "99b5cf138ed60b7a98a6d94036567aa3538d5d05f880ce7bcb742c375eb2fbf9",
+    "boot_jit.c": "4885d29d7f6d7954a816b00d55600acf47992cf8ada469175b2d6130af62c8de",
+    "boot_jit.h": "def7ee05c4051107257407f3f4eed6ab6551ba04b61f7178e051f4e95126af81",
+    "memory_abi.h": "0ef6a89d512ef2d1fd0f92d0a25018536fa9c45106372e6c27f749b427b1f515",
+    "memory_boot.h": "d2972ffc34487e5c328ebdd51e8333d82282df9e7305b6c60426aea3c4fd11f8",
+    "memory_abi_v2.h": "a22bd4f1b264c521889bb3650c5c3abcbed5cab9bd4fca72938ec2512d936264",
+    "memory_boot_v2.h": "67564f55e7dbce6d19d6d3ae3daaa936c3d8801daae6dca027db62c225f70f7d",
+    "memory_stage1.inc": "c0a1fdd8debc75bd418bae475d1e97a097df47ddd1dd30ccf499b4241822dfb6",
+    "test_jit.c": "dffedb72d4d3706d0dfd4b975be279db3f140a7d821eff16b7a2172fabe7c726",
+    "test_boot_jit.c": "eb0d2c371567d6998e35592a550016b2e12ae6ab5e752cdbc4fe7be4eaf6258a",
+    "test_pauth_jit.c": "bf6ad778a24182ed128d69334a7cbceed3f8fa79e684955b536a353f5906fe1e",
+    "test_flags_jit.c": "5c8c5bd854fd73577b72b81e0d8fd50d02ea601ecae27d1343ab98df59f3a777",
+    "test_thread_jit.c": "935a1f5e41e14001a23d900e41fdafc3e40ea2ce6c23efe00254ab90e7cb6fc1",
+    "test_irq_jit.c": "0b129c5403c17a650fe280572fa86c75afbb1a6f78d39420c7e2c0ce985cc3d5",
+    "platform_abi.h": "e0c19055be84de172df89495c822a18deae24d04315e4350cc42cba07fc90eba",
+    "platform_layout.c": "70ce0c588e602f06c3be49982c9060b736f08ee118a32039ff9df918d46f9d0d",
+    "preos/src/platform.rs": "8034a1b63c14ef6dc420f2a61adbcce21cc6d990dc777962cc7fe063c8205769",
+    "test_logical_jit.c": "2f53c9c225b08ecd7a9122b42398c624a8ac6b39357c5d2e5dc308d1bc509766",
+    "test_shift_jit.c": "cc44fa1d2e599e99bd2038b6bd78c2a29fa662f5274a2a8afb6754bc7fae6760",
+    "test_conditional_jit.c": "91525044f0ebac2d8f6b158e548979c74c8d2b8834025f5f94d114307441c737",
+    "test_pair_jit.c": "b9ab8e6431f0fb26095dfce49584893f6fa1d3d099f4f9a475587ddd446a5f38",
+    "test_scalar_jit.c": "b0ac953e238ac06c2d6c7c7c87d94d3fda9bd53860a92949001d5874360dacdd",
+    "abi_layout.c": "03b71dd9958a85655a50c30387c83d542ae51c808b1913f6a349b531d69f7617",
+    "preos_abi.h": "f355c3ab92457c569c3a4833b91ec8ad51ccdef6d0e8142d3ba236db5f37d5dc",
+    "preos/src/pauth.rs": "f0c93ce49e3b8fa27bc28805d60fd6689edb41acd299bc914b192c329938604c",
+    "preos/src/lib.rs": "2a60d25587bdb48e3ef725628129cafcdc989493d1e61efc02ea2d889b15f04b",
+    "preos/src/arch.rs": "d184faf2c6135fd92796f3b7596c2059c03c2d798589b5d4cea3437a692e7506",
+    "preos/src/mmu.rs": "c17c6d3332ee88697eb412e867befbb1c2b87263c50b027b7b68d6c1e0502955",
+    "preos/src/exception_level.rs": "254bbee46dfeab1015ad98e3953f51b4ca07f5527e26340f2746aed374c58ed7",
+    "preos/src/m1.rs": "cada02dd5bc459683ebebf3e28d0436933dba8097ba274ed0404a95010cd19f9",
+    "preos/src/machine.rs": "57c0ead54a9757281acc3abc00412355326e4aa9407692f085b76bfed5245592",
+    "preos/src/vmapple.rs": "bb4967dcd409c1679eb4acafe5d0bfe51a47a57768c86f45deb9b5abbc308c98"
+  },
+  "tests": {
+    "test_jit": {
+      "passed": true,
+      "assertions": 84,
+      "native_jit_executed": true,
+      "wx_enforced": true,
+      "executable_sha256": "1349c8e0ab45a6c800a8e638b1e9df9802da9b317bea3c2c7b348119727df1af"
+    },
+    "test_boot_jit": {
+      "passed": true,
+      "assertions": 34,
+      "native_jit_executed": true,
+      "nonzero_guest_ram_base": true,
+      "wx_enforced": true,
+      "executable_sha256": "771e579eef90668958af51ab231a189d10518ea3389584d8407b0e6b905f2ddf"
+    },
+    "test_pauth_jit": {
+      "passed": true,
+      "assertions": 21,
+      "native_jit_executed": true,
+      "software_qarma5": true,
+      "wx_enforced": true,
+      "executable_sha256": "1a69cdeabbbcec33dd2082af06e97f89c329c310a1aab3ca63c7b53a64aa0e62"
+    },
+    "test_flags_jit": {
+      "passed": true,
+      "assertions": 841,
+      "native_jit_executed": true,
+      "nzcv_and_conditions": true,
+      "explicit_initial_registers": true,
+      "wx_enforced": true,
+      "executable_sha256": "597467e157f5e9913253aba662759cb98266083b8a741845e888b82944a384e0"
+    },
+    "test_thread_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 624,
+      "thread_registers": 3,
+      "exception_levels": 4,
+      "opaque_cpu_size": 888,
+      "boot_result_size": 64,
+      "pauth_context_size": 368,
+      "executable_sha256": "a4b4082c67d152ae54700a6bab650e12c56e0d857cc7fa652e5ce81b575056f5"
+    },
+    "test_irq_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 1472,
+      "irq_fiq_levels": true,
+      "platform_profile": 1,
+      "executable_sha256": "adad474382fca5d7478e0c7fe6db2851ad0ff066aeb5ed22537a8eff9108ea2b"
+    },
+    "test_logical_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 79668,
+      "logical_cases": 26544,
+      "executable_sha256": "4ec82088feb9c51caa0e1f57b5a668974f2bc7ef58d20275a3a7b6b48278cbbd"
+    },
+    "test_shift_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 13834,
+      "shift_cases": 4608,
+      "executable_sha256": "04344c3e05f5cbee1ce49f2e89c9d0ed7f5d20b9d36227eb23a498a1b4960f0d"
+    },
+    "test_conditional_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 137070,
+      "conditional_cases": 34264,
+      "executable_sha256": "eca49e55463f50dee82b8aca80b8300c68403517e258db85b1f9e30fee418528"
+    },
+    "test_pair_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 14452,
+      "pair_cases": 3072,
+      "executable_sha256": "40d6afd536ec9634012d140b32c79e1e2e1785e9153f1e973022fa4605cd5972"
+    },
+    "test_scalar_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 426981,
+      "scalar_cases": 106496,
+      "executable_sha256": "d6a8ff6ed510c77df7f797f248718beada8707bec72ba884ae4778d6750d0d9e"
+    }
+  },
+  "c_rust_abi": {
+    "passed": true,
+    "values": {
+      "context_size": 152,
+      "context_align": 8,
+      "context_budget_offset": 16,
+      "context_guest_offset": 24,
+      "context_ram_offset": 40,
+      "context_handle_offset": 56,
+      "context_trace_offset": 64,
+      "context_expected_x1_offset": 80,
+      "context_reserved_offset": 128,
+      "request_size": 88,
+      "request_align": 8,
+      "request_handle_offset": 56,
+      "jit_result_size": 88,
+      "jit_result_align": 8,
+      "preos_result_size": 88,
+      "preos_result_align": 8,
+      "preos_result_x1_offset": 48
+    }
+  },
+  "platform_abi_v2": {
+    "passed": true,
+    "values": {
+      "options_size": 64,
+      "options_align": 8,
+      "options_override": 16,
+      "options_vbar": 32,
+      "result_size": 128,
+      "result_align": 8,
+      "result_override": 64,
+      "result_pending": 72,
+      "result_elr": 80,
+      "result_sp": 120
+    }
+  },
+  "reference_tests_passed": true,
+  "commands": [
+    {
+      "command": [
+        "/home/sharh/.cargo/bin/rustc",
+        "--edition=2021",
+        "--crate-type=staticlib",
+        "-C",
+        "panic=abort",
+        "-C",
+        "opt-level=2",
+        "/tmp/nextcore-native-pauth-mffjrf44/pauth_provider.rs",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/libpauth.a"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/test_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/test_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/test_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"assertions\":84,\"native_jit_executed\":true,\"wx_enforced\":true}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/boot_jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/test_boot_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/test_boot_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/test_boot_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"assertions\":34,\"native_jit_executed\":true,\"nonzero_guest_ram_base\":true,\"wx_enforced\":true}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/boot_jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/test_pauth_jit.c",
+        "/tmp/nextcore-native-pauth-mffjrf44/libpauth.a",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/test_pauth_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/test_pauth_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"assertions\":21,\"native_jit_executed\":true,\"software_qarma5\":true,\"wx_enforced\":true}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/boot_jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/test_flags_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/test_flags_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/test_flags_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"assertions\":841,\"native_jit_executed\":true,\"nzcv_and_conditions\":true,\"explicit_initial_registers\":true,\"wx_enforced\":true}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/boot_jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/test_thread_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/test_thread_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/test_thread_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"native_jit_executed\":true,\"assertions\":624,\"thread_registers\":3,\"exception_levels\":4,\"opaque_cpu_size\":888,\"boot_result_size\":64,\"pauth_context_size\":368}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/boot_jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/test_irq_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/test_irq_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/test_irq_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"native_jit_executed\":true,\"assertions\":1472,\"irq_fiq_levels\":true,\"platform_profile\":1}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/test_logical_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/test_logical_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/test_logical_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"native_jit_executed\":true,\"assertions\":79668,\"logical_cases\":26544}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/test_shift_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/test_shift_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/test_shift_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"native_jit_executed\":true,\"assertions\":13834,\"shift_cases\":4608}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/test_conditional_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/test_conditional_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/test_conditional_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"native_jit_executed\":true,\"assertions\":137070,\"conditional_cases\":34264}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/boot_jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/test_pair_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/test_pair_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/test_pair_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"native_jit_executed\":true,\"assertions\":14452,\"pair_cases\":3072}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/boot_jit.c",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/test_scalar_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/test_scalar_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/test_scalar_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"native_jit_executed\":true,\"assertions\":426981,\"scalar_cases\":106496}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/.cargo/bin/rustc",
+        "--edition=2021",
+        "--test",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/preos/src/pauth.rs",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/qarma5_tests"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "warning: associated function `new` is never used\n   --> /home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/preos/src/pauth.rs:181:19\n    |\n180 | impl PauthContext {\n    | ----------------- associated function in this implementation\n181 |     pub(crate) fn new(x: [u64; 31], sp: u64, pc: u64, sctlr: u64, tcr: u64,\n    |                   ^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: 1 warning emitted\n\n"
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/qarma5_tests"
+      ],
+      "returncode": 0,
+      "stdout": "\nrunning 4 tests\ntest tests::layer_inverses_and_involutory_matrix ... ok\ntest tests::qemu_executed_pacia_vector ... ok\ntest tests::qemu_executed_generic_mac_vectors ... ok\ntest tests::authentication_failure_and_unsupported_modes ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/abi_layout.c",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/abi_layout"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/abi_layout"
+      ],
+      "returncode": 0,
+      "stdout": "{\"context_size\":152,\"context_align\":8,\"context_budget_offset\":16,\"context_guest_offset\":24,\"context_ram_offset\":40,\"context_handle_offset\":56,\"context_trace_offset\":64,\"context_expected_x1_offset\":80,\"context_reserved_offset\":128,\"request_size\":88,\"request_align\":8,\"request_handle_offset\":56,\"jit_result_size\":88,\"jit_result_align\":8,\"preos_result_size\":88,\"preos_result_align\":8,\"preos_result_x1_offset\":48}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/.cargo/bin/rustc",
+        "--edition=2021",
+        "--test",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/preos/src/lib.rs",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/reference_tests"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/reference_tests",
+        "--nocapture"
+      ],
+      "returncode": 0,
+      "stdout": "\nrunning 98 tests\ntest arch::tests::conditional_comparison_invalid_fixed_fields_leave_flags_and_registers_intact ... ok\ntest arch::tests::data_abort_syndrome_preserves_store_direction ... ok\ntest arch::tests::el2_and_el3_register_banks_and_vectors_are_not_el1_aliases ... ok\ntest arch::tests::failed_store_exclusive_reports_failure_and_clrex_clears_reservation ... ok\ntest arch::tests::iboot_panic_range_data_abort_preserves_wnr_and_far ... ok\ntest arch::tests::iboot_panic_range_instruction_abort_classifies_fetch_fault ... ok\ntest arch::tests::irq_fiq_levels_obey_override_and_pstate_at_each_vector_group ... ok\ntest arch::tests::mair_uses_architectural_crm2_encoding_and_old_alias_is_unknown ... ok\ntest arch::tests::mmu_off_device_pairs_always_require_element_alignment ... ok\ntest arch::tests::pair_faults_preserve_memory_writeback_and_encode_alignment ... ok\ntest arch::tests::nonzero_hlt_traps_without_committing_a_next_pc ... ok\ntest arch::tests::pair_rejects_unmodeled_bus_mmu_and_overlaps_without_side_effects ... ok\ntest arch::tests::pending_timer_interrupt_commits_exception_entry_at_instruction_boundary ... ok\ntest arch::tests::platform_write_unmasks_a_pending_level_without_consuming_it ... ok\ntest arch::tests::reference_core_accepts_daif_spsel_and_tlbi_boundaries ... ok\ntest arch::tests::reference_core_budget_is_per_bounded_invocation ... ok\ntest arch::tests::reference_core_converts_non_timer_m1_irq_into_external_exception ... ok\ntest arch::tests::reference_core_executes_acquire_release_exclusive_sequence ... ok\ntest arch::tests::reference_core_dispatches_guest_mmio_through_the_m1_bus ... ok\ntest arch::tests::reference_core_executes_guest_and_commits_halt ... ok\ntest arch::tests::reference_core_exposes_current_el_identity_and_correct_timer_encodings ... ok\ntest arch::tests::reference_core_keeps_fault_instruction_distinct_from_esr ... ok\ntest arch::tests::reference_core_reads_counter_through_mrs ... ok\ntest arch::tests::reference_core_records_exception_before_explicit_vector_take ... ok\ntest arch::tests::reset_and_exception_commit_are_explicit ... ok\ntest arch::tests::scalar_bounds_alignment_and_sp_faults_are_precise_for_every_width ... ok\nVF_PLATFORM_ABI {\"options_size\":64,\"options_align\":8,\"options_override\":16,\"options_vbar\":32,\"result_size\":128,\"result_align\":8,\"result_override\":64,\"result_pending\":72,\"result_elr\":80,\"result_sp\":120}\ntest arch::tests::scalar_bus_direction_width_and_rejected_regimes_are_explicit ... ok\ntest arch::tests::scalar_invalid_vector_prefetch_and_reserved_do_not_read_or_write ... ok\nVF_ABI_LAYOUT {\"context_size\":152,\"context_align\":8,\"context_budget_offset\":16,\"context_guest_offset\":24,\"context_ram_offset\":40,\"context_handle_offset\":56,\"context_trace_offset\":64,\"context_expected_x1_offset\":80,\"context_reserved_offset\":128,\"request_size\":88,\"request_align\":8,\"request_handle_offset\":56,\"jit_result_size\":88,\"jit_result_align\":8,\"preos_result_size\":88,\"preos_result_align\":8,\"preos_result_x1_offset\":48}\ntest arch::tests::scalar_translated_aligned_access_retains_permissions_and_no_span_guessing ... ok\ntest arch::tests::scalar_zero_base_overlap_wrap_and_store_exclusives_are_consistent ... ok\ntest arch::tests::smp_exclusive_and_pauth_boundaries_are_explicit ... ok\ntest arch::tests::thread_register_access_matrix_matches_baseline_aarch64 ... ok\ntest arch::tests::system_register_bank_enforces_el_and_timer_contract ... ok\ntest arch::tests::thread_values_survive_el_change_and_xzr_never_aliases_sp ... ok\ntest m1::tests::dart_mapping_executes_bounded_dma_and_invalidates ... ok\ntest m1::tests::dart_permissions_and_ram_bounds_are_distinct ... ok\ntest m1::tests::display_contract_has_mmio_and_present_irq ... ok\ntest m1::tests::firmware_handoff_requires_in_ram_aligned_metadata ... ok\ntest m1::tests::graph_is_m1_only_and_reset_is_synchronous ... ok\ntest m1::tests::logical_mmio_connects_timer_and_aic_semantics ... ok\ntest m1::tests::logical_mmio_dispatch_covers_every_m1_graph_device ... ok\ntest m1::tests::logical_mmio_is_bounded_and_fail_closed ... ok\ntest m1::tests::recovery_envelope_checks_length_crc_sequence_and_keeps_signature_unknown ... ok\ntest m1::tests::runtime_activation_wires_contract_sources_to_cpu_zero ... ok\ntest m1::tests::storage_backend_is_caller_owned_and_bounded ... ok\ntest m1::tests::timer_is_routed_through_aic_and_acknowledged ... ok\ntest machine::tests::execution_result_is_bounded_and_aligned ... ok\ntest machine::tests::reset_preserves_topology_and_clears_execution_state ... ok\ntest machine::tests::seed_reset_and_topology_are_explicit ... ok\ntest arch::tests::shifted_arithmetic_matches_unsigned_wide_math_at_every_shift_count ... ok\ntest machine::tests::static_mmio_registry_rejects_overlap_and_proves_permissions ... ok\ntest mmu::tests::detailed_access_flags_and_reserved_blocks_keep_their_level ... ok\ntest mmu::tests::detailed_epd_and_root_address_errors_use_aarch64_level_zero ... ok\ntest mmu::tests::detailed_input_errors_never_invent_a_leaf_or_table_read ... ok\ntest mmu::tests::detailed_invalid_descriptors_preserve_level_and_read_address ... ok\ntest mmu::tests::detailed_leaf_and_cached_permission_failures_agree ... ok\ntest mmu::tests::detailed_output_address_errors_keep_descriptor_level ... ok\ntest mmu::tests::detailed_table_failures_are_not_invalid_descriptors ... ok\ntest mmu::tests::disabled_is_identity_and_instruction_alignment_is_four_bytes ... ok\ntest mmu::tests::disabled_translation_accepts_full_guest_address_width ... ok\ntest mmu::tests::disabled_walk_is_translation_fault_without_reading_descriptors ... ok\ntest mmu::tests::dynamic_start_level_supports_t0sz_25_four_kib_blocks ... ok\ntest mmu::tests::el0_execute_only_tlb_fill_preserves_later_el1_write_permission ... ok\ntest mmu::tests::page_walk_and_asid_tlb_hit ... ok\ntest mmu::tests::partial_initial_tables_exclude_upper_canonical_bits ... ok\ntest mmu::tests::permission_and_access_flag_faults_are_distinct ... ok\ntest mmu::tests::execution_permission_matrix_matches_arm_table_in_cold_and_cached_walks ... ok\ntest mmu::tests::physical_output_width_bounds_roots_tables_and_leaf_pages ... ok\ntest mmu::tests::sixteen_kib_l1_blocks_require_unsupported_lpa2 ... ok\ntest mmu::tests::rejected_tcr_preserves_previous_configuration_and_cached_mapping ... ok\ntest mmu::tests::sixteen_kib_tcr_selects_l2_block_and_preserves_fault_class ... ok\ntest mmu::tests::sixteen_kib_upper_page_uses_distinct_tg1_encoding ... ok\ntest mmu::tests::strict_profile_rejects_unmodeled_attributes_and_preserves_legacy_mode ... ok\ntest mmu::tests::strict_profile_validates_table_hierarchy_and_block_output_bits ... ok\ntest mmu::tests::tlb_does_not_bypass_el0_access_permission ... ok\ntest mmu::tests::tlb_keeps_el0_uxn_and_privileged_pxn_permissions_distinct ... ok\ntest mmu::tests::unsupported_physical_regime_preserves_cached_configuration ... ok\ntest mmu::tests::upper_canonical_addresses_use_ttbr1_and_asid_tlb ... ok\ntest mmu::tests::virtual_range_gaps_are_translation_faults_without_reading_tables ... ok\ntest pauth::tests::layer_inverses_and_involutory_matrix ... ok\ntest pauth::tests::qemu_executed_pacia_vector ... ok\ntest platform::tests::platform_abi_receipt ... ok\ntest pauth::tests::qemu_executed_generic_mac_vectors ... ok\ntest tests::abi_and_reserved_fields_fail_closed ... ok\ntest tests::abi_layout_is_fixed ... ok\ntest tests::abi_layout_receipt ... ok\ntest tests::expectation_contract_is_checked ... ok\ntest pauth::tests::authentication_failure_and_unsupported_modes ... ok\ntest tests::jit_result_terminal_pair_is_closed ... ok\ntest tests::profile_pointer_budget_and_alignment_fail_closed ... ok\ntest tests::termination_mapping_preserves_failure_class ... ok\ntest tests::valid_context_is_accepted ... ok\ntest vmapple::tests::graph_has_fixed_guest_visible_devices_and_reset ... ok\ntest vmapple::tests::invalid_width_alignment_and_unknown_registers_fail_closed ... ok\ntest arch::tests::conditional_comparison_matches_independent_truth_table_and_bounded_math ... ok\ntest arch::tests::logical_masks_and_native_class_semantics_match_circular_bit_runs ... ok\ntest arch::tests::scalar_width_sign_and_every_imm12_match_independent_byte_model ... ok\ntest arch::tests::integer_pair_modes_match_independent_byte_memory ... ok\n\ntest result: ok. 98 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-ise/runtime/platform_layout.c",
+        "-o",
+        "/tmp/nextcore-native-pauth-mffjrf44/platform_layout"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mffjrf44/platform_layout"
+      ],
+      "returncode": 0,
+      "stdout": "{\"options_size\":64,\"options_align\":8,\"options_override\":16,\"options_vbar\":32,\"result_size\":128,\"result_align\":8,\"result_override\":64,\"result_pending\":72,\"result_elr\":80,\"result_sp\":120}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Ubuntu clang version 18.1.3 (1ubuntu1)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/.cargo/bin/rustc",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "rustc 1.98.1 (48a229cea 2026-09-01)\n",
+      "stderr": ""
+    }
+  ],
+  "macos_boot_verified": false,
+  "scope": "Native x86_64 C JIT, NZCV/branches, TPIDR thread registers, explicit registers, nonzero physical RAM, QARMA5 callback and W^X",
+  "limitations": [
+    "EL1 PAuth, 48-bit address ranges, TBI disabled",
+    "C JIT stops when the guest enables its MMU",
+    "Thread registers use baseline AArch64 access rules; FGT and AArch32 aliases absent",
+    "PACGA and enhanced PAuth instruction features unadvertised"
+  ]
+}

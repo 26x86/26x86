@@ -1,0 +1,9 @@
+[
+  "/home/sharh/.cargo/bin/cargo",
+  "test",
+  "--no-default-features",
+  "--manifest-path",
+  "/home/sharh/work/bp33-core-allocation-ledger/Cargo.toml",
+  "--offline",
+  "--locked"
+]

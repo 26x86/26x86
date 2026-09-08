@@ -1,0 +1,19 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling thiserror v2.0.20
+   Compiling generic-array v0.14.7
+   Compiling syn v3.0.5
+   Compiling syn v2.0.119
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling nextcore-core v0.1.0 (https://github.com/26x86/Nextcore-Core.git?rev=147f4c4e4969074c9dd12c63bf17c6e8c674dabb#147f4c4e)
+   Compiling uefi-macros v0.19.0
+   Compiling thiserror-impl v2.0.20
+   Compiling ptr_meta_derive v0.3.2
+   Compiling ptr_meta v0.3.2
+   Compiling uefi v0.40.0
+   Compiling nextcore-ise v0.1.0 (https://github.com/26x86/Nextcore-ISE.git?rev=720d7c61140e39da0f457192bd88138a52017e22#720d7c61)
+   Compiling nextcore-efi v0.1.0 (/home/sharh/work/module-validation-bp33-efi-sha2-20260909/EFI)
+    Finished `release` profile [optimized] target(s) in 9.86s

@@ -1,0 +1,11 @@
+[
+  "/home/sharh/.cargo/bin/cargo",
+  "check",
+  "--no-default-features",
+  "--target",
+  "x86_64-unknown-uefi",
+  "--manifest-path",
+  "/home/sharh/work/bp33-core-allocation-ledger/Cargo.toml",
+  "--offline",
+  "--locked"
+]

@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/home/sharh/work/integration-validation-bp33-final-20260909/26x86/nextcore/tools/trace_arm_jit_ovmf.py", line 144, in main
+    process.wait(timeout=5)
+  File "/usr/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2045, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/usr/bin/qemu-system-x86_64', '-machine', 'q35,accel=tcg,smm=off', '-cpu', 'Nehalem', '-m', '256', '-smp', '1', '-display', 'none', '-vga', 'std', '-monitor', 'none', '-serial', 'file:/home/sharh/work/integration-validation-bp33-final-20260909/firmware-memory-provider/bypass/serial.log', '-net', 'none', '-no-reboot', '-drive', 'if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd', '-drive', 'if=pflash,format=raw,file=/home/sharh/work/integration-validation-bp33-final-20260909/firmware-memory-provider/bypass/vars.fd', '-drive', 'format=raw,file=fat:rw:/home/sharh/work/integration-validation-bp33-final-20260909/firmware-memory-provider/bypass/esp']' timed out after 5 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sharh/work/integration-validation-bp33-final-20260909/26x86/nextcore/tools/trace_arm_jit_ovmf.py", line 199, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/sharh/work/integration-validation-bp33-final-20260909/26x86/nextcore/tools/trace_arm_jit_ovmf.py", line 147, in main
+    process.wait(timeout=5)
+  File "/usr/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2045, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/usr/bin/qemu-system-x86_64', '-machine', 'q35,accel=tcg,smm=off', '-cpu', 'Nehalem', '-m', '256', '-smp', '1', '-display', 'none', '-vga', 'std', '-monitor', 'none', '-serial', 'file:/home/sharh/work/integration-validation-bp33-final-20260909/firmware-memory-provider/bypass/serial.log', '-net', 'none', '-no-reboot', '-drive', 'if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd', '-drive', 'if=pflash,format=raw,file=/home/sharh/work/integration-validation-bp33-final-20260909/firmware-memory-provider/bypass/vars.fd', '-drive', 'format=raw,file=fat:rw:/home/sharh/work/integration-validation-bp33-final-20260909/firmware-memory-provider/bypass/esp']' timed out after 5 seconds

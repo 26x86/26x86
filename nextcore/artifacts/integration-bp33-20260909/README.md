@@ -1,0 +1,9 @@
+# BP33 canonical owned-memory integration
+
+Fresh recursive e0351bd00c4d541a40fcb0cef633524e94b24702 passes47 commands. It selects merged Core147f4c4, EFI7e7a08b, Tool4bb09da and unchanged ISE720. The checkout is clean and the seven-module/eight-package ownership policy passes before and after validation. The setup temporarily maps canonical module URLs to local committed objects; final publication additionally requires a canonical GitHub recursive clone.
+
+The suite reports502 workspace tests (including doctests),149 Python tests (one skipped),25 GUI tests (one skipped),98 architectural reference tests,39 memory-service tests and119 Vulkan tests (one ignored). Core no-default reports232 tests plus3 compile-fail doctests. Actual x86 firmware covers the previous186 cases plus8 owned-DT cases;6 CLI-only rejection cases are separate. New DT checker rejects28 malformed captures. Native/provider/MMU/oracle/package checks and actual debug NXAPFS linking pass. Clippy completes with existing warnings recorded, not warning-free.
+
+Core's original no_std hashing dependency failed real debug UEFI code generation in sha2's accelerated x86 backend. Core147 selects the supported software backend only for UEFI, and actual debug/release code generation is now a permanent gate. Standalone canonical EFI uses an empty Cargo cache and passes existing conditional13/stage1108 and newDT8 cases with the corrected dependency. Original failed CI/local logs and independent review are in the separate guest-memory-dt bundle. The initial recursive30a8e2e harness-shutdown failure is retained here and is not counted as success.
+
+The actual firmware connection uses authored memory and serialized DT values. It does not establish the macOS27 target handoff, SPTM service, normal desktop startup, EFI GPU or guest Metal. GPU host tests are not guest acceleration evidence. Module implementations remain in their own repositories; this directory contains validation records.

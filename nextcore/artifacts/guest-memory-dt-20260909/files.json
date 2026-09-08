@@ -1,0 +1,260 @@
+{
+  "schema": "nextcore.proof-files/1",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 1751,
+      "sha256": "fdbbb5f5e0b90ab15d38a56133dcce801bcafb424042f725a05bf8ba2c717554"
+    },
+    {
+      "path": "historical-dt/build-final-command.json",
+      "bytes": 460,
+      "sha256": "f6046ce0a24382e7eb1cf21d1eaf9c5ecc5f75b91f7bde6d4dbb6cdae82ac39a"
+    },
+    {
+      "path": "historical-dt/build-final.log",
+      "bytes": 2796,
+      "sha256": "ca89c453e96c7cc43e840d9ba35fca96aad40def81424de0d20274e4c2b6b48b"
+    },
+    {
+      "path": "historical-dt/isa/receipt.json",
+      "bytes": 546,
+      "sha256": "5c477cff1bed0a450f8ed6d585d997ef6e5d8af676b57e65551efceff6cf0876"
+    },
+    {
+      "path": "historical-dt/ovmf-final/command.json",
+      "bytes": 582,
+      "sha256": "ad3f65cee6ec68337f29d59c91db30f8712b387e44462e0d151b6e800a24f802"
+    },
+    {
+      "path": "historical-dt/ovmf-final/report.json",
+      "bytes": 33696,
+      "sha256": "35b9868d4da8ead673693b236f2c9b520d6438432eaa3198c625e319383d599e"
+    },
+    {
+      "path": "historical-dt/ovmf-final/serial.log",
+      "bytes": 10874,
+      "sha256": "2fa5aacef9a45612afc91a160d77c6c370e90d2830325fc2c366cc3bd84d807c"
+    },
+    {
+      "path": "historical-dt/ovmf-final/stderr.log",
+      "bytes": 69,
+      "sha256": "f3d524d02c3ab169b55bf4a189534845fd899925d6aa8d3438e04372315f651c"
+    },
+    {
+      "path": "historical-dt/ovmf-final/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "historical-dt/ovmf-negative-wrong-dt/command.json",
+      "bytes": 618,
+      "sha256": "327defd3c34168a5ed512c0d7a63d2c84e003147063a30fa9e36b74bbdaa5f4e"
+    },
+    {
+      "path": "historical-dt/ovmf-negative-wrong-dt/report.json",
+      "bytes": 4817,
+      "sha256": "b1fd4256bf9735534c2f3fd53f0d25689c2f8b19fbdd587130d008f89320be0a"
+    },
+    {
+      "path": "historical-dt/ovmf-negative-wrong-dt/serial.log",
+      "bytes": 1781,
+      "sha256": "323ba0ec201e8eb21cabafe05fc8a6d90b0912e972b7829290d42faaa4015d9b"
+    },
+    {
+      "path": "historical-dt/ovmf-negative-wrong-dt/stderr.log",
+      "bytes": 69,
+      "sha256": "48ed1b03bb5ac017fc54619ad3f8f02c44c9e0fa3434707d7a5a99ca9f706847"
+    },
+    {
+      "path": "historical-dt/ovmf-negative-wrong-dt/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "historical-dt/reader-negative-checks.json",
+      "bytes": 1037,
+      "sha256": "14c55f5540270c8ae1301954e671b6778c75bdfaf4cff59fbebcb69e177cabfa"
+    },
+    {
+      "path": "historical-dt/runtime-source-freeze.json",
+      "bytes": 6303,
+      "sha256": "5b7bed1dfaf821592a1f6c95b408a9a5b9205cbfefa7eca35b703b8ce0221808"
+    },
+    {
+      "path": "historical-dt/source-freeze.json",
+      "bytes": 3692,
+      "sha256": "acd7a9e6cde67516a99903c375288ffabe0026a19e4c02085bfdaa7ca4dbe7af"
+    },
+    {
+      "path": "historical-dt/tools/check_dt_ledger_capture.py",
+      "bytes": 2082,
+      "sha256": "1cb6a5c1401958e86932a796614b2a81ef0292e436d576f39e17208a3158b3de"
+    },
+    {
+      "path": "historical-dt/tools/verify_dt_ledger_ovmf.py",
+      "bytes": 11090,
+      "sha256": "23d0919738640f59e3ec11a5a170d13c12efdfd3d51900452ab4ef0393c085bc"
+    },
+    {
+      "path": "ledger/all-default-command.json",
+      "bytes": 157,
+      "sha256": "d09b7580d5940bf5b04c79c0327983f923b9781a35fe2e62a6653a5cd3fc0dd6"
+    },
+    {
+      "path": "ledger/all-default.log",
+      "bytes": 25457,
+      "sha256": "63539e25907dd9f6d2572ea7b013602952e503a9401256bf58049708729fd98c"
+    },
+    {
+      "path": "ledger/all-no-default-command.json",
+      "bytes": 184,
+      "sha256": "5c819fa68b35224b425225b811cde97c672d79a1dec1254fb89006cf5eb35632"
+    },
+    {
+      "path": "ledger/all-no-default.log",
+      "bytes": 22091,
+      "sha256": "4e012b2cfa4f2d824d23e0f9ea6a1f4d092f5a4ede0727aaf707a6551b46835c"
+    },
+    {
+      "path": "ledger/doctest.log",
+      "bytes": 536,
+      "sha256": "30c9863366de2ea356028473b486d6aa536ee593a348f8dcf931125327082ace"
+    },
+    {
+      "path": "ledger/final-staging.log",
+      "bytes": 473,
+      "sha256": "94e265b611a08035b060530661406da4d3f9ef095c8a454b6875b707ac0c5d58"
+    },
+    {
+      "path": "ledger/source-freeze.json",
+      "bytes": 3621,
+      "sha256": "8bab679f653752c3e3e4fa0f14d38b7109b8a49f921eeef07beca50e0f042d9d"
+    },
+    {
+      "path": "ledger/uefi-no-default-command.json",
+      "bytes": 224,
+      "sha256": "e57d67124c56eb78ad57ef62fb7f8754cbb41ef95fdea9f0f35d78f479b7949e"
+    },
+    {
+      "path": "ledger/uefi-no-default.log",
+      "bytes": 491,
+      "sha256": "ff11529ea683fca0b6543ce707380429ecf7bd9ea10db7ff5ae0aec030f8d2a2"
+    },
+    {
+      "path": "review/dt-reader/actual.corrected.json",
+      "bytes": 4876,
+      "sha256": "7dfd67324cb5b776f01985255c486d3c825bd3d20ffe21fe16eeea5c5efade71"
+    },
+    {
+      "path": "review/dt-reader/correction-cli-tests.json",
+      "bytes": 2434,
+      "sha256": "d7b81b449d1c280cc7ecec04cc1887103aa04786918cb9bd8301ab6e223ee8b9"
+    },
+    {
+      "path": "review/dt-reader/eight_duplicate_case.corrected.json",
+      "bytes": 129,
+      "sha256": "88572085c9ee396dee82c0f36962b32a2a0c07620c4f7ed8ca98831438577afa"
+    },
+    {
+      "path": "review/dt-reader/eight_duplicate_case.json",
+      "bytes": 33452,
+      "sha256": "f689cfba9529944633c59e731337367924d759a72b3db03cea6953608ed4e0fe"
+    },
+    {
+      "path": "review/dt-reader/eight_duplicate_case.result.json",
+      "bytes": 1049,
+      "sha256": "fd4efb78acd36c6be2d112bfba54bf14dc37f03390fa02287ba2f432cf3fe6a0"
+    },
+    {
+      "path": "review/dt-reader/failed_envelope.corrected.json",
+      "bytes": 125,
+      "sha256": "c8a8d561a2181e89f4cccc32538f91a8ecdd0e9bc1b04dd90cb33b803979c2c5"
+    },
+    {
+      "path": "review/dt-reader/failed_envelope.json",
+      "bytes": 23087,
+      "sha256": "282d597bce8dd8471d9d47fc8dab1db216508a6d74803317a04b5805989893c0"
+    },
+    {
+      "path": "review/dt-reader/failed_envelope.result.json",
+      "bytes": 1044,
+      "sha256": "38a45f1d4ab031f0e3055881be57d00808b52c2bbcfc950915081290c83af420"
+    },
+    {
+      "path": "review/dt-reader/malformed-reader-probes.json",
+      "bytes": 3183,
+      "sha256": "24f2cdb17aea41f140788badcf9841f5d1b71039d0065fde6cb49eb54d30a7c7"
+    },
+    {
+      "path": "review/dt-reader/missing_envelope.corrected.json",
+      "bytes": 117,
+      "sha256": "f749ee11cb3c02914f5da81cab464f8d2f4507fc3b7b0b56587fb85e6f68a58f"
+    },
+    {
+      "path": "review/dt-reader/missing_envelope.json",
+      "bytes": 14536,
+      "sha256": "cdbef80d66458fe39694fdbdbbd7d5321ef836e466af8ae38d62a30bd786d66e"
+    },
+    {
+      "path": "review/dt-reader/missing_envelope.result.json",
+      "bytes": 1045,
+      "sha256": "7e1877aea89123ee578f9d020bb708f526cd83433dae6e427d390c1739e2eb67"
+    },
+    {
+      "path": "review/dt-reader/original.json",
+      "bytes": 33696,
+      "sha256": "35b9868d4da8ead673693b236f2c9b520d6438432eaa3198c625e319383d599e"
+    },
+    {
+      "path": "review/dt-reader/original.result.json",
+      "bytes": 1037,
+      "sha256": "fecbb202823e8098f89ea8d572f05f4be8313b5cea4666a68d086cc50a4b32e7"
+    },
+    {
+      "path": "review/dt-reader/receipt.json",
+      "bytes": 5230,
+      "sha256": "f97eac68c6da5aff26a286840c69a1045169dc2264f9efb00886de8fc834420d"
+    },
+    {
+      "path": "review/dt-reader/sources-after.json",
+      "bytes": 680,
+      "sha256": "4184b9057c4202bcff1b4aa09e93258b2aa323671e937ed49109163c3549e2d4"
+    },
+    {
+      "path": "review/dt-reader/sources-before.json",
+      "bytes": 680,
+      "sha256": "eda6c46418deecefd83b12d9195a711036e3c81d477395c65563b92b578e6a26"
+    },
+    {
+      "path": "review/independent-ledger.json",
+      "bytes": 3676,
+      "sha256": "fb0978897582d34dd490bad7bad688ccdccd714f0b358684ba0cf165ff6c82a9"
+    },
+    {
+      "path": "review/root-ledger.json",
+      "bytes": 713,
+      "sha256": "2a9085dd2ea632e7c60832a41548fa731aa0c49b3d74004ae2497d45e15259c0"
+    },
+    {
+      "path": "review/uefi-hash/ci-debug-failure.log",
+      "bytes": 3971,
+      "sha256": "4ad2c0e01e077f53de36ca593013dfce7e6983ebd3dc6d11305cbb0ae7af70b3"
+    },
+    {
+      "path": "review/uefi-hash/local-debug-failure.log",
+      "bytes": 2599,
+      "sha256": "ffabec88bb076b9a7b15ba8627c8cc84feadf3193c65e8a649e9050e904a53ea"
+    },
+    {
+      "path": "review/uefi-hash/review.json",
+      "bytes": 2725,
+      "sha256": "bbdb2513fc283acdfa5d29293dac5c31bd1be812c322efddbbd75684197b92de"
+    },
+    {
+      "path": "review/uefi-hash/standalone-core.json",
+      "bytes": 1314,
+      "sha256": "8a6d7d4569d61e8110ae9b9c47f00a2083fa3b01d39eb737bf9019e708e89525"
+    }
+  ]
+}

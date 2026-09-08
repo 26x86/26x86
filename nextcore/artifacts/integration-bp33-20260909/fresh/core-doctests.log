@@ -1,0 +1,20 @@
+   Compiling syn v3.0.5
+   Compiling scroll_derive v0.13.2
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.20
+   Compiling scroll v0.13.0
+   Compiling goblin v0.10.7
+   Compiling thiserror v2.0.20
+   Compiling serde v1.0.229
+   Compiling plist v1.10.1
+   Compiling nextcore-core v0.1.0 (/home/sharh/work/integration-validation-bp33-corrected-20260909/26x86/nextcore/crates/nextcore-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.99s
+   Doc-tests nextcore_core
+
+running 3 tests
+test crates/nextcore-core/src/guest_memory.rs - guest_memory::GuestMemory<'a>::from_borrowed (line 215) - compile fail ... ok
+test crates/nextcore-core/src/guest_memory.rs - guest_memory::GuestMemory<'a>::with_guest_memory (line 475) - compile fail ... ok
+test crates/nextcore-core/src/guest_memory.rs - guest_memory::GuestMemory<'a>::with_guest_memory (line 482) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+

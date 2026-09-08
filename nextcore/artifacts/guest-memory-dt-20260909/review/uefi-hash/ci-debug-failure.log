@@ -1,0 +1,35 @@
+﻿2026-09-08T20:09:15.8300187Z ##[group]Run cargo build --target x86_64-unknown-uefi --all-features --bin NXAPFS
+2026-09-08T20:09:15.8300807Z [36;1mcargo build --target x86_64-unknown-uefi --all-features --bin NXAPFS[0m
+2026-09-08T20:09:15.8337729Z shell: /usr/bin/bash -e {0}
+2026-09-08T20:09:15.8337985Z env:
+2026-09-08T20:09:15.8338186Z   CARGO_HOME: /home/runner/.cargo
+2026-09-08T20:09:15.8338460Z   CARGO_INCREMENTAL: 0
+2026-09-08T20:09:15.8338681Z   CARGO_TERM_COLOR: always
+2026-09-08T20:09:15.8338901Z ##[endgroup]
+2026-09-08T20:09:15.8734052Z [1m[92m   Compiling[0m typenum v1.20.1
+2026-09-08T20:09:15.8736273Z [1m[92m   Compiling[0m cfg-if v1.0.4
+2026-09-08T20:09:15.8752524Z [1m[92m   Compiling[0m bitflags v2.13.1
+2026-09-08T20:09:15.8773046Z [1m[92m   Compiling[0m uguid v2.2.1
+2026-09-08T20:09:15.9032768Z [1m[92m   Compiling[0m bit_field v0.10.3
+2026-09-08T20:09:15.9747148Z [1m[92m   Compiling[0m memchr v2.8.3
+2026-09-08T20:09:16.0055202Z [1m[92m   Compiling[0m cpufeatures v0.2.17
+2026-09-08T20:09:16.0314881Z [1m[92m   Compiling[0m ucs2 v0.3.3
+2026-09-08T20:09:16.0482985Z [1m[92m   Compiling[0m uefi-raw v0.16.0
+2026-09-08T20:09:16.1092731Z [1m[92m   Compiling[0m ptr_meta v0.3.2
+2026-09-08T20:09:16.1572583Z [1m[92m   Compiling[0m log v0.4.34
+2026-09-08T20:09:16.2750043Z [1m[92m   Compiling[0m nextcore-memory-service v0.1.0 (https://github.com/26x86/Nextcore-ISE.git?rev=720d7c61140e39da0f457192bd88138a52017e22#720d7c61)
+2026-09-08T20:09:16.4633444Z [1m[92m   Compiling[0m roxmltree v0.21.1
+2026-09-08T20:09:16.5762959Z [1m[92m   Compiling[0m generic-array v0.14.7
+2026-09-08T20:09:17.1388408Z [1m[92m   Compiling[0m crypto-common v0.1.7
+2026-09-08T20:09:17.1610559Z [1m[92m   Compiling[0m block-buffer v0.10.4
+2026-09-08T20:09:17.2019442Z [1m[92m   Compiling[0m digest v0.10.7
+2026-09-08T20:09:17.2699667Z [1m[92m   Compiling[0m sha2 v0.10.9
+2026-09-08T20:09:17.4038929Z [1m[92m   Compiling[0m nextcore-core v0.1.0 (https://github.com/26x86/Nextcore-Core.git?rev=f77c98f0b457ab488f37e5be10a608a364d996c7#f77c98f0)
+2026-09-08T20:09:17.4783873Z rustc-LLVM ERROR: Do not know how to split the result of this operator!
+2026-09-08T20:09:17.4784517Z 
+2026-09-08T20:09:17.4821014Z [1m[91merror[0m: could not compile `sha2` (lib)
+2026-09-08T20:09:17.4821844Z 
+2026-09-08T20:09:17.4823896Z Caused by:
+2026-09-08T20:09:17.4830935Z   process didn't exit successfully: `/home/runner/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name sha2 --edition=2018 /home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.9/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("asm", "asm-aarch64", "compress", "default", "force-soft", "force-soft-compact", "loongarch64_asm", "oid", "sha2-asm", "std"))' -C metadata=7cd0ad885f917129 -C extra-filename=-5f95ae3c2065fe2e --out-dir /home/runner/work/Nextcore-EFI/Nextcore-EFI/target/x86_64-unknown-uefi/debug/deps --target x86_64-unknown-uefi -L dependency=/home/runner/work/Nextcore-EFI/Nextcore-EFI/target/x86_64-unknown-uefi/debug/deps -L dependency=/home/runner/work/Nextcore-EFI/Nextcore-EFI/target/debug/deps --extern cfg_if=/home/runner/work/Nextcore-EFI/Nextcore-EFI/target/x86_64-unknown-uefi/debug/deps/libcfg_if-d04b7247869471d2.rmeta --extern cpufeatures=/home/runner/work/Nextcore-EFI/Nextcore-EFI/target/x86_64-unknown-uefi/debug/deps/libcpufeatures-348a9c1d30117502.rmeta --extern digest=/home/runner/work/Nextcore-EFI/Nextcore-EFI/target/x86_64-unknown-uefi/debug/deps/libdigest-a2768b23b2de1ad5.rmeta --cap-lints allow` (exit status: 101)
+2026-09-08T20:09:17.4837120Z [1m[33mwarning[0m: build failed, waiting for other jobs to finish...
+2026-09-08T20:09:18.9483759Z ##[error]Process completed with exit code 101.

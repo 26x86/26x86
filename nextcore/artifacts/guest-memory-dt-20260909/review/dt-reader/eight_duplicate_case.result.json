@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "actual_cases_checked": 8,
+  "tampered_case_rejections": [
+    {
+      "name": "pass_true_wrong_retirement",
+      "rejected": true,
+      "error": "retired: actual 17 != expected 16"
+    },
+    {
+      "name": "pass_true_wrong_far",
+      "rejected": true,
+      "error": "far: actual 1 != expected 0"
+    },
+    {
+      "name": "pass_true_wrong_ram_digest",
+      "rejected": true,
+      "error": "complete RAM/guard digest mismatch"
+    },
+    {
+      "name": "pass_true_table_mutation",
+      "rejected": true,
+      "error": "table mutation or invalid digest"
+    },
+    {
+      "name": "wrong_property_offset",
+      "rejected": true,
+      "error": "property offset mismatch"
+    },
+    {
+      "name": "missing_field",
+      "rejected": true,
+      "error": "missing/extra keys"
+    },
+    {
+      "name": "extra_field",
+      "rejected": true,
+      "error": "missing/extra keys"
+    }
+  ],
+  "duplicate_key_rejected": true,
+  "input_capture": "/home/sharh/work/bp33-dt-independent-review/eight_duplicate_case.json"
+}

@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "capture_validation": {
+    "passed": false,
+    "error": "unsuccessful or wrong report schema"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "src/dt_probe.rs": "e8906bf108166ca880816721ef3df1fb905a35d1d17fdf4a3b7c66f5872ba248",
+  "tools/verify_dt_ledger_ovmf.py": "23d0919738640f59e3ec11a5a170d13c12efdfd3d51900452ab4ef0393c085bc",
+  "tools/check_dt_ledger_capture.py": "1cb6a5c1401958e86932a796614b2a81ef0292e436d576f39e17208a3158b3de",
+  "src/arm_pages.rs": "049b9d32b2129434d955b216e49d9785aed16aa439601f46f8811070b8ec1624",
+  "docs/ARM_DT_LEDGER_EFI_PROBE.md": "dbc6738cf2695dc18f100f33f1e4e87b2b87be5676d2481927d4a3cce18b0c90",
+  "docs/fixtures/dt_ledger.S": "c482a5c196fe872da49acfcfeb008fb3b0218b51093d49acc8d5f8274fb65da3",
+  "Cargo.toml": "786af00947a2af9b6bd8cf9da7d8d09fc7ad660a190e0c8ea8b5923133134688"
+}

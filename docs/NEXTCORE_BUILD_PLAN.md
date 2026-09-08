@@ -1781,3 +1781,54 @@ and higher-ranked execution loan. Arbitrary provider semantics and callback
 rollback are not inferred. Root source review found no concrete range/token/
 lifetime defect; full tests/final freeze and actual authored EFI consumption
 remain independent of this BP32 closure.
+
+
+## BP33 — owned guest staging and actual DeviceTree consumption
+
+Core305 introduced a source-bound runtime DT transformer; Coref77c98f adds
+exclusive owned/borrowed backing,64 purpose reservations and opaque owner/
+generation binding. The frozen implementation passes standalone default/no-std
+tests, lifetime rejection and UEFI code generation. Root owns Core/EFI/Tool
+pin updates, inventories, recursive validation and authorized PR/main publication.
+The Tool Core dependency must advance with the same integrated Core revision;
+there is no new Windows UI feature.
+
+The EFI agent is delegated a separate opt-in NXDT consumer from BP32f3f7938:
+actual ArmPages ownership, ledger-derived code/DT/stack/output placements, typed
+DT commit and generated-x86 ARM loads/stores through the canonical M=1 service.
+Its authored source property carries observed guest aperture values, not an
+invented target ABI. Wrong-DT mapping and stale preparation are checked at their
+actual different boundaries. Separate table backing stays disjoint and immutable
+while the service is borrowed. Core/EFI source freezes and independent proof
+remain separate from final canonical source integration.
+
+
+BP34 actual dynamic EFI consumption is delegated to the EFI agent in a new
+worktree from the immutable BP33 source: separate opt-in caller, one-way MMU
+activation, post-ISB nonidentity accesses/faults and compiled omission negative.
+BP35 is delegated to the CPU agent in separate Core/EFI worktrees: exactly one
+explicit16384 diagnostic tier, unchanged legacy caps and selector rejection,
+authored actual-EFI acceptance before any original replay. Root owns the
+external CLI review, all integration pins and publication.
+
+
+BP33 canonical EFI CI exposed a real debug code-generation failure in sha2's
+x86 accelerated backend; cargo check and release-only builds had not exercised
+that compiler path. Root owns the corrective Core target-UEFI force-soft
+dependency, actual debug/release codegen CI, dependent EFI/Tool pins and fresh
+firmware validation. Existing successful/failed source identities stay separate.
+
+
+BP35's single original16384 diagnostic reached5311 retired instructions and
+stopped at a real UBFM/LSL-immediate unsupported boundary; original coordinates
+and bytes remain isolated. BP36 is delegated to CPU (complete UBFM32/64 native
+and reference semantics), GPU (independent authored Arm oracle), and EFI
+(authored existing-bin consumer proof), all in new worktrees/external fixtures.
+No BFM/SBFM support or additional original run is implied.
+
+
+BP33 closure: merged Core147/EFI7e7/Tool4bb pins pass the corrected fresh recursive
+e0351bd47-command suite, including194actualEFI and6CLI-only cases. Core SHA2
+debug failure and the earlier separate QEMU shutdown timeout remain failed
+historical records. Final artifact bytes, canonical network clone and exact-head
+CI are required before parent merge; subsequent BP34/35 module work is separate.

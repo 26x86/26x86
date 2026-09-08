@@ -1,0 +1,14 @@
+scalar 0
+pair 0
+observations 0
+edges 0
+direct-bypass 1
+Traceback (most recent call last):
+  File "/home/sharh/work/integration-validation-bp33-final-20260909/26x86/nextcore/tools/verify_arm_memory_provider_ovmf.py", line 140, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/sharh/work/integration-validation-bp33-final-20260909/26x86/nextcore/tools/verify_arm_memory_provider_ovmf.py", line 112, in main
+    run("direct-bypass", command)
+  File "/home/sharh/work/integration-validation-bp33-final-20260909/26x86/nextcore/tools/verify_arm_memory_provider_ovmf.py", line 95, in run
+    raise RuntimeError(f"{name} failed; inspect its log")
+RuntimeError: direct-bypass failed; inspect its log
