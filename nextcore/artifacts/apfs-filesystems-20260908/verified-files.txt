@@ -1,0 +1,8 @@
+nextcore/crates/nextcore-efi/Cargo.toml
+nextcore/crates/nextcore-efi/src/apfs_driver.rs
+nextcore/crates/nextcore-efi/src/apfs_probe.rs
+nextcore/crates/nextcore-efi/src/apfs_filesystems.rs
+nextcore/crates/nextcore-efi/src/apfs_observation.rs
+nextcore/tools/verify_apfs_jumpstart.py
+nextcore/tools/test_verify_apfs_jumpstart.py
+nextcore/artifacts/apfs-filesystems-20260908/

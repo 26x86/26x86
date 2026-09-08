@@ -78,7 +78,7 @@ class GateTests(unittest.TestCase):
     def test_all_expected_outcomes_are_separate(self):
         for case in gate.CASES:
             result = gate.validate_serial(serial(case), case, 10001)
-            self.assertEqual(result["driver_entered"], case == "start-driver")
+            self.assertEqual(result["driver_entered"], case in ("start-driver", "filesystems-no-binding"))
             self.assertFalse(result["filesystem_connected"])
 
     def test_marker_duplicates_missing_and_order_rejected(self):

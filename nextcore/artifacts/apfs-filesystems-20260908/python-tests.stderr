@@ -1,0 +1,14 @@
+test_discontiguous_exact_payload_and_padding (test_verify_apfs_jumpstart.FixtureTests.test_discontiguous_exact_payload_and_padding) ... ok
+test_driver_changes_only_authored_subsystem (test_verify_apfs_jumpstart.FixtureTests.test_driver_changes_only_authored_subsystem) ... ok
+test_metadata_checksums_and_independent_residue (test_verify_apfs_jumpstart.FixtureTests.test_metadata_checksums_and_independent_residue) ... ok
+test_primary_backup_gpt_crc_and_ambiguity (test_verify_apfs_jumpstart.FixtureTests.test_primary_backup_gpt_crc_and_ambiguity) ... ok
+test_all_expected_outcomes_are_separate (test_verify_apfs_jumpstart.GateTests.test_all_expected_outcomes_are_separate) ... ok
+test_child_execution_in_default_mode_rejected (test_verify_apfs_jumpstart.GateTests.test_child_execution_in_default_mode_rejected) ... ok
+test_marker_duplicates_missing_and_order_rejected (test_verify_apfs_jumpstart.GateTests.test_marker_duplicates_missing_and_order_rejected) ... ok
+test_post_hash_failure_still_writes_receipt (test_verify_apfs_jumpstart.GateTests.test_post_hash_failure_still_writes_receipt) ... ok
+test_unnatural_exit_and_unreaped_children_rejected (test_verify_apfs_jumpstart.GateTests.test_unnatural_exit_and_unreaped_children_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.038s
+
+OK

@@ -82,6 +82,18 @@ PR #7의 exact head `8f21c876757dc571c4e09b36a779e6239dec15a1`에서 전체 원�
 신규 `apfs-firmware` run `34200621847`이 통과했다. 이 CI는 EFI를 다시 빌드하고
 6개 합성 OVMF를 실제 실행한다. main `65d1e85`로 merge했고 관련 module 배포를 진행한다.
 
+### BP24-B 실제 APFS root 관찰
+
+명시 `--inspect-filesystems`의 NXAPFS r1 `1e63c89b…ec725`를 완료된 첫 설치 snapshot의
+별도 COW에서 실행했다. SFS 6개 중 선택한 APFS partition의 정확한 node 후손 4개를
+열어 root GetInfo와 전체 root Read/EOF를 확인했다. 4 records/8 Read 호출,
+metadata 응답 17,240B이며 모든 root Close·protocol Close·parent cleanup/return이
+SUCCESS다. supervisor 2.8096초, 전후 검증 포함 56.3239초, QMP 자연 exit0와
+잔여 process0, 입력 9개 SHA256와 ESP 파일 유지가 통과했다.
+[공개 집계 결과](artifacts/apfs-filesystems-20260908/original-result.json)에 정확한
+binary·격리 receipt hash를 기록했다. 원본 파일명/volume ID/경로·로그는 격리한다.
+이는 APFS 파일시스템 접근 성공이며 APFS에서 booter 실행·설치 OS/Metal 성공은 아니다.
+
 ## BP23 원격 동기화 (2026-09-08)
 
 PR #5의 head `ee04ddad4d7cbba8033df1d48082a513b931e43d`에서 모든 원격 검사가

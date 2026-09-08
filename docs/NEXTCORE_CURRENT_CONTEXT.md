@@ -27,7 +27,7 @@ AMD64↔Apple Silicon HAL 및 필수 Metal 가속**, **macOS 26 Tahoe의
 | x86 UEFI → host HAL | BP19 실제 OVMF RSDP+7 SDT+5 PCI header 수집/파싱, exit 67와 원본 hash 유지 | XNU platform provider, AML 실행, 게스트 장치 게시, 물리 하드웨어 |
 | Tahoe 외부 reference | 원본 XNU/launchd/WindowServer와 읽을 수 있는 복구 GUI; Terminal에서 실제 Metal probe 실행 | 전체 OS 설치, Metal device/compute 성공 |
 | Tahoe native EFI | 최종 BP21 피커 → ConsoleControl → 원본 booter → 실제 XNU/Recovery/Terminal, 키보드 명령으로 26.6.2/25G83 확인 | 자체 KC loader 진입, 전체 설치 OS/native HAL/Metal |
-| native APFS driver | 공개 Jumpstart parser, 실제 설치 snapshot의 원본 745,080B 전량 재읽기, EFI StartImage·controller 연결·parent 반환 SUCCESS | APFS root 열기, 설치 OS로 연결 |
+| native APFS driver | 공개 Jumpstart parser, 원본 745,080B 전량 재읽기·EFI 실행·controller 연결, 실제 후손 볼륨 4개의 root GetInfo/Read/EOF/Close SUCCESS | APFS booter 실행, 설치 OS로 연결 |
 | native KC 준비 | 67,584,000-byte 실제 EFI pages 배치/readback/해제, 65,260 classic host 적용·전체 readback, 401,606 chains/header 보존, rev1 boot_args codec, core 142 tests | EFI relocation 연결, entry/slide/provider 계약, native XNU 실행 |
 | ARM recovery | DFU, iBEC endpoint/prompt, 5 restore role, `bootx` ACK 관측 | XNU, userspace, Metal, macOS boot |
 | ARM firmware | `bootx` 뒤 4-byte MMIO decode failure를 same-event trace로 확인 | 장치 register/access contract 또는 안전한 장치 모델 |
@@ -91,7 +91,8 @@ macOS host가 없으므로 Virtualization.framework 기반 ARM guest boot는 이
    전체 installer는 첫 설치와 APFS installer의 적용 단계를 마치고 각각 정상
    재부팅했다. 별도 native EFI COW에서 원본 APFS Jumpstart driver를 실제 실행하고
    controller 연결까지 확인했으며, 완료된 첫 설치 backing의 hash는 유지됐다.
-   현재 파일시스템 열기와 전체 설치 OS의 후속 부팅/guest Metal을 각각 진행한다.
+   별도 COW의 실제 APFS 후손 볼륨 4개에서 root 열기/GetInfo/Read/EOF/Close도
+   통과했다. 현재 APFS booter 연결과 전체 설치 OS의 후속 부팅/guest Metal을 진행한다.
    AHCI Port 2 abort는 원본 복구 디스크가 아닌 자동 생성된
    빈 CD-ROM에 대응한다는 QMP 실측이 있다.
    WSL 재시작 후 device가 없으면 설치 모듈의 적재 여부를 먼저 확인한다.

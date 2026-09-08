@@ -1,0 +1,426 @@
+{
+  "apfs_mounted": false,
+  "case": "app-reject",
+  "command": [
+    "/usr/bin/qemu-system-x86_64",
+    "-machine",
+    "q35,accel=tcg",
+    "-cpu",
+    "qemu64",
+    "-m",
+    "512",
+    "-smp",
+    "1",
+    "-display",
+    "none",
+    "-monitor",
+    "none",
+    "-no-reboot",
+    "-net",
+    "none",
+    "-drive",
+    "if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd",
+    "-drive",
+    "if=pflash,format=raw,file=/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/vars.fd",
+    "-drive",
+    "if=none,id=disk,format=qcow2,file=/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/disk.qcow2",
+    "-device",
+    "ide-hd,drive=disk,bus=ide.0,bootindex=1",
+    "-serial",
+    "file:/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/serial.log",
+    "-qmp",
+    "unix:/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/qmp.sock,server=on,wait=off"
+  ],
+  "commands": [
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "/usr/sbin/mkfs.vfat",
+        "-F",
+        "16",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/esp.img"
+      ],
+      "elapsed_seconds": 0.0249,
+      "label": "mkfs",
+      "natural_returncode": 0,
+      "pid": 71,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/mkfs.stderr",
+      "stdout_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/mkfs.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "/usr/bin/mmd",
+        "-i",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/esp.img",
+        "::/EFI",
+        "::/EFI/BOOT",
+        "::/EFI/OC"
+      ],
+      "elapsed_seconds": 0.0251,
+      "label": "mmd",
+      "natural_returncode": 0,
+      "pid": 72,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/mmd.stderr",
+      "stdout_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/mmd.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "/usr/bin/mcopy",
+        "-i",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/esp.img",
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/picker-bp21-20260908/build/BOOTX64.efi",
+        "::/EFI/BOOT/BOOTX64.efi"
+      ],
+      "elapsed_seconds": 0.0242,
+      "label": "copy-BOOTX64",
+      "natural_returncode": 0,
+      "pid": 73,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/copy-BOOTX64.stderr",
+      "stdout_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/copy-BOOTX64.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "/usr/bin/mcopy",
+        "-i",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/esp.img",
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/r1/NXAPFS.efi",
+        "::/EFI/OC/NXAPFS.efi"
+      ],
+      "elapsed_seconds": 0.0255,
+      "label": "copy-NXAPFS",
+      "natural_returncode": 0,
+      "pid": 74,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/copy-NXAPFS.stderr",
+      "stdout_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/copy-NXAPFS.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "/usr/bin/mcopy",
+        "-i",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/esp.img",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/config.plist",
+        "::/EFI/OC/config.plist"
+      ],
+      "elapsed_seconds": 0.0245,
+      "label": "copy-config",
+      "natural_returncode": 0,
+      "pid": 75,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/copy-config.stderr",
+      "stdout_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/copy-config.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "/usr/bin/qemu-img",
+        "create",
+        "-f",
+        "qcow2",
+        "-F",
+        "raw",
+        "-b",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/authored-gpt-apfs.raw",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/disk.qcow2"
+      ],
+      "elapsed_seconds": 0.0448,
+      "label": "overlay-disk",
+      "natural_returncode": 0,
+      "pid": 76,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/overlay-disk.stderr",
+      "stdout_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/overlay-disk.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "/usr/bin/qemu-img",
+        "convert",
+        "-f",
+        "qcow2",
+        "-O",
+        "raw",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/disk.qcow2",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/guest-disk.raw"
+      ],
+      "elapsed_seconds": 0.0253,
+      "label": "guest-esp",
+      "natural_returncode": 0,
+      "pid": 86,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/guest-esp.stderr",
+      "stdout_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/guest-esp.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "/usr/bin/mcopy",
+        "-i",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/guest-esp.raw",
+        "::/EFI/BOOT/BOOTX64.efi",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/readback-BOOTX64.bin"
+      ],
+      "elapsed_seconds": 0.0256,
+      "label": "readback-BOOTX64",
+      "natural_returncode": 0,
+      "pid": 95,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/readback-BOOTX64.stderr",
+      "stdout_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/readback-BOOTX64.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "/usr/bin/mcopy",
+        "-i",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/guest-esp.raw",
+        "::/EFI/OC/NXAPFS.efi",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/readback-NXAPFS.bin"
+      ],
+      "elapsed_seconds": 0.0255,
+      "label": "readback-NXAPFS",
+      "natural_returncode": 0,
+      "pid": 96,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/readback-NXAPFS.stderr",
+      "stdout_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/readback-NXAPFS.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "/usr/bin/mcopy",
+        "-i",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/guest-esp.raw",
+        "::/EFI/OC/config.plist",
+        "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/readback-config.bin"
+      ],
+      "elapsed_seconds": 0.0255,
+      "label": "readback-config",
+      "natural_returncode": 0,
+      "pid": 97,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/readback-config.stderr",
+      "stdout_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/readback-config.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    }
+  ],
+  "elapsed_seconds": 3.015,
+  "esp_readback": {
+    "BOOTX64": "8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96",
+    "NXAPFS": "1e63c89b5426a2a9d589ee3ffcc93db4c0f8d79a8a1c828d01fea4e5ce5ec725",
+    "config": "2d01397c334e653d5df5d5467d277584b76acaa2ae116071c87dac71798654ed"
+  },
+  "execution": {
+    "adopted_children": [],
+    "adopted_children_remaining": [],
+    "cleanup_complete": true,
+    "command": [
+      "/usr/bin/qemu-system-x86_64",
+      "-machine",
+      "q35,accel=tcg",
+      "-cpu",
+      "qemu64",
+      "-m",
+      "512",
+      "-smp",
+      "1",
+      "-display",
+      "none",
+      "-monitor",
+      "none",
+      "-no-reboot",
+      "-net",
+      "none",
+      "-drive",
+      "if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd",
+      "-drive",
+      "if=pflash,format=raw,file=/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/vars.fd",
+      "-drive",
+      "if=none,id=disk,format=qcow2,file=/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/disk.qcow2",
+      "-device",
+      "ide-hd,drive=disk,bus=ide.0,bootindex=1",
+      "-serial",
+      "file:/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/serial.log",
+      "-qmp",
+      "unix:/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/qmp.sock,server=on,wait=off"
+    ],
+    "elapsed_seconds": 2.4239,
+    "natural_returncode": 0,
+    "pid": 80,
+    "process_group_remaining": false,
+    "returncode": 0,
+    "stderr_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/qemu.stderr",
+    "stdout_path": "/tmp/nextcore-apfs-fs-ovmf-r1-20260908/app-reject/qemu.stdout",
+    "stopped_by_harness": false,
+    "timed_out": false
+  },
+  "fresh_vars_initial_sha256": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e",
+  "guest_disk_sha256": "363e0fb6690161c2a2fd9753aab2bbf0c6c50c3963137f8bdecd8a3d9c99a791",
+  "hardware_tested": false,
+  "hashes_after": {
+    "child": "e2b3f8d2a9295039ece76a6bd8f67150a8ed5f7b35117ede5af718334f8ade2e",
+    "config": "2d01397c334e653d5df5d5467d277584b76acaa2ae116071c87dac71798654ed",
+    "efi": "8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96",
+    "esp": "95a1abaea079b1b4b48df1a72afd086fbccfbcb51380a8b3979e978bfc818193",
+    "fixture": "363e0fb6690161c2a2fd9753aab2bbf0c6c50c3963137f8bdecd8a3d9c99a791",
+    "harness": "57bb6e29697ce8c820354e4ac70ac7d66b1f795d0b90b71c00e579d5ec3294fe",
+    "mcopy": "4c8364b843223f44f008fa48f97ce48cce615799ac3d254069cff777d9110e0b",
+    "mkfs": "46e35f0cfe7ad5e63080dee3ed9a7e775950b1aca27246478b894704fef0065c",
+    "mmd": "4c8364b843223f44f008fa48f97ce48cce615799ac3d254069cff777d9110e0b",
+    "ovmf_code": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "ovmf_vars": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e",
+    "probe": "1e63c89b5426a2a9d589ee3ffcc93db4c0f8d79a8a1c828d01fea4e5ce5ec725",
+    "process_helper": "c6e8abac1bf9a2574d15a1b138d615c8adb41f1b1ac5302ca4296700fd17553b",
+    "qemu": "8a35ccba41582fc6c38b9df85fc9e35fa1d42f414d2d7d8090ee9b2f5e7c0854",
+    "qemu_img": "634320b91165669917123e8e79cce1c4d00cee0a4aa4d662d7c0a8186479b3fb"
+  },
+  "hashes_before": {
+    "child": "e2b3f8d2a9295039ece76a6bd8f67150a8ed5f7b35117ede5af718334f8ade2e",
+    "config": "2d01397c334e653d5df5d5467d277584b76acaa2ae116071c87dac71798654ed",
+    "efi": "8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96",
+    "esp": "95a1abaea079b1b4b48df1a72afd086fbccfbcb51380a8b3979e978bfc818193",
+    "fixture": "363e0fb6690161c2a2fd9753aab2bbf0c6c50c3963137f8bdecd8a3d9c99a791",
+    "harness": "57bb6e29697ce8c820354e4ac70ac7d66b1f795d0b90b71c00e579d5ec3294fe",
+    "mcopy": "4c8364b843223f44f008fa48f97ce48cce615799ac3d254069cff777d9110e0b",
+    "mkfs": "46e35f0cfe7ad5e63080dee3ed9a7e775950b1aca27246478b894704fef0065c",
+    "mmd": "4c8364b843223f44f008fa48f97ce48cce615799ac3d254069cff777d9110e0b",
+    "ovmf_code": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "ovmf_vars": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e",
+    "probe": "1e63c89b5426a2a9d589ee3ffcc93db4c0f8d79a8a1c828d01fea4e5ce5ec725",
+    "process_helper": "c6e8abac1bf9a2574d15a1b138d615c8adb41f1b1ac5302ca4296700fd17553b",
+    "qemu": "8a35ccba41582fc6c38b9df85fc9e35fa1d42f414d2d7d8090ee9b2f5e7c0854",
+    "qemu_img": "634320b91165669917123e8e79cce1c4d00cee0a4aa4d662d7c0a8186479b3fb"
+  },
+  "macos_booted": false,
+  "metal_verified": false,
+  "originals_unchanged": true,
+  "output_hashes": {
+    "disk.qcow2": "4eaad17e73407018092a3e4861ea3cda3761fa889cfff1ef7d6b7a4a1435ec60",
+    "qemu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "qemu.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "serial.log": "25dc71f71fece260250b260364724f68a7b193995a53455140325ce44be4308a",
+    "vars.fd": "2c44ee74810cf8611accec136216ae5c43ff6758af045b159a648d909077fc64"
+  },
+  "passed": true,
+  "post_hash_errors": {},
+  "qmp": {
+    "quit_acknowledged": true,
+    "responses": [
+      {
+        "id": "qmp_capabilities",
+        "return": {}
+      },
+      {
+        "data": {
+          "offset": 0,
+          "qom-path": "/machine/unattached/device[2]/rtc"
+        },
+        "event": "RTC_CHANGE",
+        "timestamp": {
+          "microseconds": 815087,
+          "seconds": 1788854075
+        }
+      },
+      {
+        "data": {
+          "offset": 0,
+          "qom-path": "/machine/unattached/device[2]/rtc"
+        },
+        "event": "RTC_CHANGE",
+        "timestamp": {
+          "microseconds": 683198,
+          "seconds": 1788854076
+        }
+      },
+      {
+        "data": {
+          "guest": false,
+          "reason": "host-qmp-quit"
+        },
+        "event": "SHUTDOWN",
+        "timestamp": {
+          "microseconds": 500399,
+          "seconds": 1788854077
+        }
+      },
+      {
+        "id": "quit",
+        "return": {}
+      }
+    ]
+  },
+  "serial_validation": {
+    "driver_entered": false,
+    "expected_status": "UNSUPPORTED",
+    "filesystem_connected": false,
+    "markers": [
+      "NXAPFS: EFI_ENTRY",
+      "NXAPFS: EXTRACT_OK bytes=29696 block_size=4096 extents=2 readback=true",
+      "NXAPFS: NOT_BOOT_DRIVER cleanup=SUCCESS",
+      "NXAPFS: RESULT status=UNSUPPORTED"
+    ],
+    "parent_markers": [
+      "NEXTCORE: EFI_ENTRY",
+      "NEXTCORE: CONFIG_PARSED",
+      "NEXTCORE: IMAGE_LOAD_BEGIN",
+      "NEXTCORE: IMAGE_START",
+      "NEXTCORE: IMAGE_RETURN status=UNSUPPORTED"
+    ]
+  }
+}

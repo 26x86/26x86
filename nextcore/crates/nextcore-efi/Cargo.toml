@@ -16,7 +16,7 @@ hal-tables = []
 kc-staging = []
 console-control = ["dep:uefi-raw"]
 console-probe = ["console-control"]
-apfs-jumpstart = []
+apfs-jumpstart = ["dep:uefi-raw"]
 
 [[bin]]
 name = "NXKERNEL"
