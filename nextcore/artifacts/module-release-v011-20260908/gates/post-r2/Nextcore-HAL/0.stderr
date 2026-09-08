@@ -1,0 +1,36 @@
+    Blocking waiting for file lock on package cache
+    Updating crates.io index
+    Blocking waiting for file lock on package cache
+     Locking 26 packages to latest compatible versions
+    Blocking waiting for file lock on package cache
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling memchr v2.8.3
+   Compiling serde v1.0.229
+   Compiling powerfmt v0.2.0
+   Compiling hashbrown v0.17.1
+   Compiling time-core v0.1.9
+   Compiling equivalent v1.0.2
+   Compiling num-conv v0.2.2
+   Compiling thiserror v2.0.20
+   Compiling deranged v0.5.8
+   Compiling zmij v1.0.23
+   Compiling base64 v0.23.1
+   Compiling serde_json v1.0.151
+   Compiling itoa v1.0.18
+   Compiling log v0.4.34
+   Compiling quick-xml v0.42.0
+   Compiling indexmap v2.14.2
+   Compiling time v0.3.55
+   Compiling syn v3.0.5
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.20
+   Compiling plist v1.10.1
+   Compiling nextcore-hal v0.1.0 (C:\Users\Admin\AppData\Local\Temp\nextcore-modules-v011-20260908-153614\verification\Nextcore-HAL)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 33.37s
+     Running unittests src\lib.rs (target\debug\deps\nextcore_hal-86e1d69d507b99b7.exe)
+     Running tests\hal_translate.rs (target\debug\deps\hal_translate-77dde578cbf0b6aa.exe)
+     Running tests\raw_firmware.rs (target\debug\deps\raw_firmware-d5e60ad3ffd89b75.exe)
+     Running unittests examples\inspect_firmware.rs (target\debug\examples\inspect_firmware-b9ddec51910cdf4e.exe)

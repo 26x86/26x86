@@ -1,0 +1,41 @@
+{
+  "phase": "post",
+  "attempt": 1,
+  "source_commit": "045065700cbd037eaaa974faf957ba15cb628370",
+  "expected_head": "c53645672d940290ed383b348e751c0a6e4e36c6",
+  "single_repo_parent": "/tmp/nextcore-tool-v012-post-20260908",
+  "passed": true,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--no-local",
+        "https://github.com/26x86/Nextcore-Tool.git",
+        "/tmp/nextcore-tool-v012-post-20260908/module"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.9
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.008
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 14.744
+    }
+  ],
+  "guest_execution_claimed": false,
+  "lock_sha256": "2a8cbe5f4ee3e317606a366c7df009d2664e62106149b2cadd663d4ca38162d4"
+}

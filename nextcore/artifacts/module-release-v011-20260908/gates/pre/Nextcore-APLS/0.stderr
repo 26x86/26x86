@@ -1,0 +1,49 @@
+    Updating git repository `https://github.com/26x86/Nextcore-GPU.git`
+    Updating crates.io index
+    Blocking waiting for file lock on package cache
+     Locking 37 packages to latest compatible versions
+      Adding generic-array v0.14.7 (available: v0.14.9)
+      Adding sha2 v0.10.9 (available: v0.11.0)
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on shared package cache
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling version_check v0.9.5
+   Compiling serde_core v1.0.229
+   Compiling typenum v1.20.1
+   Compiling zmij v1.0.23
+   Compiling memchr v2.8.3
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.151
+   Compiling thiserror v2.0.20
+   Compiling equivalent v1.0.2
+   Compiling num-conv v0.2.2
+   Compiling itoa v1.0.18
+   Compiling deranged v0.5.8
+   Compiling time-core v0.1.9
+   Compiling hashbrown v0.17.1
+   Compiling generic-array v0.14.7
+   Compiling powerfmt v0.2.0
+   Compiling base64 v0.23.1
+   Compiling cpufeatures v0.2.17
+   Compiling log v0.4.34
+   Compiling cfg-if v1.0.4
+   Compiling indexmap v2.14.2
+   Compiling quick-xml v0.42.0
+   Compiling time v0.3.55
+   Compiling syn v3.0.5
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.20
+   Compiling nextcore-gpu v0.1.0 (https://github.com/26x86/Nextcore-GPU.git?tag=26x86-Nextcore-GPU-v0.1.1#8962199b)
+   Compiling plist v1.10.1
+   Compiling nextcore-apls v0.1.0 (C:\Users\Admin\AppData\Local\Temp\nextcore-modules-v011-20260908-153614\Nextcore-APLS)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 31.40s
+     Running unittests src\lib.rs (target\debug\deps\nextcore_apls-a4f84f2aa9343188.exe)
+     Running unittests examples\run_host.rs (target\debug\examples\run_host-5f7b6d874312077d.exe)

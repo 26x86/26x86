@@ -1,0 +1,135 @@
+verify	Run cargo test --all-targets	﻿2026-09-08T06:48:57.9802919Z ##[group]Run cargo test --all-targets
+verify	Run cargo test --all-targets	2026-09-08T06:48:57.9803362Z ^[[36;1mcargo test --all-targets^[[0m
+verify	Run cargo test --all-targets	2026-09-08T06:48:57.9842453Z shell: /usr/bin/bash -e {0}
+verify	Run cargo test --all-targets	2026-09-08T06:48:57.9842770Z env:
+verify	Run cargo test --all-targets	2026-09-08T06:48:57.9843015Z   CARGO_HOME: /home/runner/.cargo
+verify	Run cargo test --all-targets	2026-09-08T06:48:57.9843329Z   CARGO_INCREMENTAL: 0
+verify	Run cargo test --all-targets	2026-09-08T06:48:57.9843598Z   CARGO_TERM_COLOR: always
+verify	Run cargo test --all-targets	2026-09-08T06:48:57.9843869Z ##[endgroup]
+verify	Run cargo test --all-targets	2026-09-08T06:48:58.0212110Z ^[[1m^[[92m    Updating^[[0m crates.io index
+verify	Run cargo test --all-targets	2026-09-08T06:48:58.0222345Z ^[[1m^[[92m    Updating^[[0m git repository `https://github.com/26x86/Nextcore-APLS.git`
+verify	Run cargo test --all-targets	2026-09-08T06:48:58.5350947Z ^[[1m^[[92m    Updating^[[0m git repository `https://github.com/26x86/Nextcore-Core.git`
+verify	Run cargo test --all-targets	2026-09-08T06:48:59.3123192Z ^[[1m^[[92m    Updating^[[0m git repository `https://github.com/26x86/Nextcore-GPU.git`
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7120934Z ^[[1m^[[92m     Locking^[[0m 62 packages to latest compatible versions
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7155256Z ^[[1m^[[92m      Adding^[[0m generic-array v0.14.7 ^[[1m^[[33m(available: v0.14.9)^[[0m
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7269854Z ^[[1m^[[92m Downloading^[[0m crates ...
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7534082Z ^[[1m^[[92m  Downloaded^[[0m anstream v1.0.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7563638Z ^[[1m^[[92m  Downloaded^[[0m anstyle v1.0.14
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7581000Z ^[[1m^[[92m  Downloaded^[[0m cfg-if v1.0.4
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7617223Z ^[[1m^[[92m  Downloaded^[[0m anstyle-parse v1.0.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7634798Z ^[[1m^[[92m  Downloaded^[[0m clap v4.6.6
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7771794Z ^[[1m^[[92m  Downloaded^[[0m crypto-common v0.1.7
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7787951Z ^[[1m^[[92m  Downloaded^[[0m digest v0.10.7
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7814632Z ^[[1m^[[92m  Downloaded^[[0m clap_lex v1.1.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7825825Z ^[[1m^[[92m  Downloaded^[[0m is_terminal_polyfill v1.70.2
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7835281Z ^[[1m^[[92m  Downloaded^[[0m deranged v0.5.8
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7848705Z ^[[1m^[[92m  Downloaded^[[0m generic-array v0.14.7
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7862905Z ^[[1m^[[92m  Downloaded^[[0m memchr v2.8.3
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7919346Z ^[[1m^[[92m  Downloaded^[[0m plain v0.2.3
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7930375Z ^[[1m^[[92m  Downloaded^[[0m anstyle-query v1.1.5
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7941552Z ^[[1m^[[92m  Downloaded^[[0m colorchoice v1.0.5
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7952613Z ^[[1m^[[92m  Downloaded^[[0m proc-macro2 v1.0.107
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.7982149Z ^[[1m^[[92m  Downloaded^[[0m quote v1.0.47
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8009322Z ^[[1m^[[92m  Downloaded^[[0m scroll_derive v0.13.2
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8017226Z ^[[1m^[[92m  Downloaded^[[0m itoa v1.0.18
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8031616Z ^[[1m^[[92m  Downloaded^[[0m roxmltree v0.21.1
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8166714Z ^[[1m^[[92m  Downloaded^[[0m strsim v0.11.1
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8179341Z ^[[1m^[[92m  Downloaded^[[0m block-buffer v0.10.4
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8189749Z ^[[1m^[[92m  Downloaded^[[0m num-conv v0.2.2
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8198188Z ^[[1m^[[92m  Downloaded^[[0m plist v1.10.1
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8239849Z ^[[1m^[[92m  Downloaded^[[0m powerfmt v0.2.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8251089Z ^[[1m^[[92m  Downloaded^[[0m scroll v0.13.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8264879Z ^[[1m^[[92m  Downloaded^[[0m unicode-ident v1.0.24
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8292984Z ^[[1m^[[92m  Downloaded^[[0m version_check v0.9.5
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8305134Z ^[[1m^[[92m  Downloaded^[[0m clap_builder v4.6.6
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8369608Z ^[[1m^[[92m  Downloaded^[[0m cpufeatures v0.2.17
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8383386Z ^[[1m^[[92m  Downloaded^[[0m time-macros v0.2.32
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8407524Z ^[[1m^[[92m  Downloaded^[[0m equivalent v1.0.2
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8417237Z ^[[1m^[[92m  Downloaded^[[0m thiserror v2.0.20
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8482876Z ^[[1m^[[92m  Downloaded^[[0m time-core v0.1.9
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8493453Z ^[[1m^[[92m  Downloaded^[[0m utf8parse v0.2.2
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8502940Z ^[[1m^[[92m  Downloaded^[[0m heck v0.5.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8515479Z ^[[1m^[[92m  Downloaded^[[0m sha2 v0.10.9
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8540801Z ^[[1m^[[92m  Downloaded^[[0m clap_derive v4.6.4
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8562974Z ^[[1m^[[92m  Downloaded^[[0m serde_core v1.0.229
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8590022Z ^[[1m^[[92m  Downloaded^[[0m zmij v1.0.23
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8607919Z ^[[1m^[[92m  Downloaded^[[0m anyhow v1.0.104
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8649141Z ^[[1m^[[92m  Downloaded^[[0m thiserror-impl v2.0.20
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8663461Z ^[[1m^[[92m  Downloaded^[[0m serde v1.0.229
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8697889Z ^[[1m^[[92m  Downloaded^[[0m serde_derive v1.0.229
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8728241Z ^[[1m^[[92m  Downloaded^[[0m base64 v0.23.1
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8767674Z ^[[1m^[[92m  Downloaded^[[0m indexmap v2.14.2
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8811477Z ^[[1m^[[92m  Downloaded^[[0m typenum v1.20.1
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8846517Z ^[[1m^[[92m  Downloaded^[[0m hashbrown v0.17.1
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8899111Z ^[[1m^[[92m  Downloaded^[[0m serde_json v1.0.151
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.8974036Z ^[[1m^[[92m  Downloaded^[[0m time v0.3.55
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.9173459Z ^[[1m^[[92m  Downloaded^[[0m goblin v0.10.7
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.9248308Z ^[[1m^[[92m  Downloaded^[[0m quick-xml v0.42.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.9308541Z ^[[1m^[[92m  Downloaded^[[0m syn v3.0.5
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.9419207Z ^[[1m^[[92m  Downloaded^[[0m log v0.4.34
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.9712531Z ^[[1m^[[92m   Compiling^[[0m proc-macro2 v1.0.107
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.9713665Z ^[[1m^[[92m   Compiling^[[0m unicode-ident v1.0.24
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.9714402Z ^[[1m^[[92m   Compiling^[[0m quote v1.0.47
+verify	Run cargo test --all-targets	2026-09-08T06:49:00.9714812Z ^[[1m^[[92m   Compiling^[[0m version_check v0.9.5
+verify	Run cargo test --all-targets	2026-09-08T06:49:01.0342633Z ^[[1m^[[92m   Compiling^[[0m serde_core v1.0.229
+verify	Run cargo test --all-targets	2026-09-08T06:49:01.1818679Z ^[[1m^[[92m   Compiling^[[0m generic-array v0.14.7
+verify	Run cargo test --all-targets	2026-09-08T06:49:01.1988037Z ^[[1m^[[92m   Compiling^[[0m memchr v2.8.3
+verify	Run cargo test --all-targets	2026-09-08T06:49:01.2832895Z ^[[1m^[[92m   Compiling^[[0m serde v1.0.229
+verify	Run cargo test --all-targets	2026-09-08T06:49:01.4443049Z ^[[1m^[[92m   Compiling^[[0m typenum v1.20.1
+verify	Run cargo test --all-targets	2026-09-08T06:49:01.9782287Z ^[[1m^[[92m   Compiling^[[0m syn v3.0.5
+verify	Run cargo test --all-targets	2026-09-08T06:49:02.0472757Z ^[[1m^[[92m   Compiling^[[0m thiserror v2.0.20
+verify	Run cargo test --all-targets	2026-09-08T06:49:02.2662934Z ^[[1m^[[92m   Compiling^[[0m zmij v1.0.23
+verify	Run cargo test --all-targets	2026-09-08T06:49:02.4615799Z ^[[1m^[[92m   Compiling^[[0m serde_json v1.0.151
+verify	Run cargo test --all-targets	2026-09-08T06:49:02.5532415Z ^[[1m^[[92m   Compiling^[[0m deranged v0.5.8
+verify	Run cargo test --all-targets	2026-09-08T06:49:02.7352961Z ^[[1m^[[92m   Compiling^[[0m time-core v0.1.9
+verify	Run cargo test --all-targets	2026-09-08T06:49:02.8833150Z ^[[1m^[[92m   Compiling^[[0m powerfmt v0.2.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:03.0292669Z ^[[1m^[[92m   Compiling^[[0m log v0.4.34
+verify	Run cargo test --all-targets	2026-09-08T06:49:03.1732700Z ^[[1m^[[92m   Compiling^[[0m hashbrown v0.17.1
+verify	Run cargo test --all-targets	2026-09-08T06:49:03.6203359Z ^[[1m^[[92m   Compiling^[[0m num-conv v0.2.2
+verify	Run cargo test --all-targets	2026-09-08T06:49:03.6682759Z ^[[1m^[[92m   Compiling^[[0m utf8parse v0.2.2
+verify	Run cargo test --all-targets	2026-09-08T06:49:03.7159713Z ^[[1m^[[92m   Compiling^[[0m equivalent v1.0.2
+verify	Run cargo test --all-targets	2026-09-08T06:49:03.7226046Z ^[[1m^[[92m   Compiling^[[0m time v0.3.55
+verify	Run cargo test --all-targets	2026-09-08T06:49:03.7592522Z ^[[1m^[[92m   Compiling^[[0m indexmap v2.14.2
+verify	Run cargo test --all-targets	2026-09-08T06:49:03.7602648Z ^[[1m^[[92m   Compiling^[[0m anstyle-parse v1.0.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:03.8802603Z ^[[1m^[[92m   Compiling^[[0m crypto-common v0.1.7
+verify	Run cargo test --all-targets	2026-09-08T06:49:03.9442685Z ^[[1m^[[92m   Compiling^[[0m block-buffer v0.10.4
+verify	Run cargo test --all-targets	2026-09-08T06:49:04.3012734Z ^[[1m^[[92m   Compiling^[[0m quick-xml v0.42.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:04.4313159Z ^[[1m^[[92m   Compiling^[[0m colorchoice v1.0.5
+verify	Run cargo test --all-targets	2026-09-08T06:49:04.4732551Z ^[[1m^[[92m   Compiling^[[0m is_terminal_polyfill v1.70.2
+verify	Run cargo test --all-targets	2026-09-08T06:49:04.5112792Z ^[[1m^[[92m   Compiling^[[0m itoa v1.0.18
+verify	Run cargo test --all-targets	2026-09-08T06:49:04.6363465Z ^[[1m^[[92m   Compiling^[[0m anstyle v1.0.14
+verify	Run cargo test --all-targets	2026-09-08T06:49:04.8282734Z ^[[1m^[[92m   Compiling^[[0m base64 v0.23.1
+verify	Run cargo test --all-targets	2026-09-08T06:49:05.2322722Z ^[[1m^[[92m   Compiling^[[0m anstyle-query v1.1.5
+verify	Run cargo test --all-targets	2026-09-08T06:49:05.2712670Z ^[[1m^[[92m   Compiling^[[0m anstream v1.0.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:05.5223975Z ^[[1m^[[92m   Compiling^[[0m digest v0.10.7
+verify	Run cargo test --all-targets	2026-09-08T06:49:05.6552567Z ^[[1m^[[92m   Compiling^[[0m cfg-if v1.0.4
+verify	Run cargo test --all-targets	2026-09-08T06:49:05.6772825Z ^[[1m^[[92m   Compiling^[[0m anyhow v1.0.104
+verify	Run cargo test --all-targets	2026-09-08T06:49:05.8572525Z ^[[1m^[[92m   Compiling^[[0m strsim v0.11.1
+verify	Run cargo test --all-targets	2026-09-08T06:49:05.9202839Z ^[[1m^[[92m   Compiling^[[0m serde_derive v1.0.229
+verify	Run cargo test --all-targets	2026-09-08T06:49:06.1913447Z ^[[1m^[[92m   Compiling^[[0m thiserror-impl v2.0.20
+verify	Run cargo test --all-targets	2026-09-08T06:49:06.2012889Z ^[[1m^[[92m   Compiling^[[0m scroll_derive v0.13.2
+verify	Run cargo test --all-targets	2026-09-08T06:49:06.7530177Z ^[[1m^[[92m   Compiling^[[0m plain v0.2.3
+verify	Run cargo test --all-targets	2026-09-08T06:49:06.8018284Z ^[[1m^[[92m   Compiling^[[0m cpufeatures v0.2.17
+verify	Run cargo test --all-targets	2026-09-08T06:49:06.8352659Z ^[[1m^[[92m   Compiling^[[0m clap_lex v1.1.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:06.8652566Z ^[[1m^[[92m   Compiling^[[0m scroll v0.13.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:07.0092624Z ^[[1m^[[92m   Compiling^[[0m heck v0.5.0
+verify	Run cargo test --all-targets	2026-09-08T06:49:07.0512735Z ^[[1m^[[92m   Compiling^[[0m goblin v0.10.7
+verify	Run cargo test --all-targets	2026-09-08T06:49:07.1543029Z ^[[1m^[[92m   Compiling^[[0m clap_derive v4.6.4
+verify	Run cargo test --all-targets	2026-09-08T06:49:07.3790085Z ^[[1m^[[92m   Compiling^[[0m clap_builder v4.6.6
+verify	Run cargo test --all-targets	2026-09-08T06:49:08.9492838Z ^[[1m^[[92m   Compiling^[[0m sha2 v0.10.9
+verify	Run cargo test --all-targets	2026-09-08T06:49:09.3743071Z ^[[1m^[[92m   Compiling^[[0m roxmltree v0.21.1
+verify	Run cargo test --all-targets	2026-09-08T06:49:09.6352558Z ^[[1m^[[92m   Compiling^[[0m plist v1.10.1
+verify	Run cargo test --all-targets	2026-09-08T06:49:09.7191084Z ^[[1m^[[92m   Compiling^[[0m nextcore-gpu v0.1.0 (https://github.com/26x86/Nextcore-GPU.git?tag=26x86-Nextcore-GPU-v0.1.1#8962199b)
+verify	Run cargo test --all-targets	2026-09-08T06:49:10.2678197Z ^[[1m^[[92m   Compiling^[[0m clap v4.6.6
+verify	Run cargo test --all-targets	2026-09-08T06:49:10.4314967Z ^[[1m^[[92m   Compiling^[[0m nextcore-core v0.1.0 (https://github.com/26x86/Nextcore-Core.git?tag=26x86-Nextcore-Core-v0.1.1#66eb6988)
+verify	Run cargo test --all-targets	2026-09-08T06:49:10.6793565Z ^[[1m^[[92m   Compiling^[[0m nextcore-apls v0.1.0 (https://github.com/26x86/Nextcore-APLS.git?tag=26x86-Nextcore-APLS-v0.1.1#f4d640e3)
+verify	Run cargo test --all-targets	2026-09-08T06:49:12.1924871Z ^[[1m^[[92m   Compiling^[[0m nextcore-tool v0.1.0 (/home/runner/work/Nextcore-Tool/Nextcore-Tool)
+verify	Run cargo test --all-targets	2026-09-08T06:49:13.3493383Z ^[[1m^[[91merror^[[0m^[[1m: couldn't read `tests/../../nextcore-core/tests/sample.plist`: No such file or directory (os error 2)^[[0m
+verify	Run cargo test --all-targets	2026-09-08T06:49:13.3522248Z  ^[[1m^[[94m--> ^[[0mtests/bundle_cli.rs:8:23
+verify	Run cargo test --all-targets	2026-09-08T06:49:13.3523152Z   ^[[1m^[[94m|^[[0m
+verify	Run cargo test --all-targets	2026-09-08T06:49:13.3553244Z ^[[1m^[[94m8^[[0m ^[[1m^[[94m|^[[0m const CONFIG: &[u8] = include_bytes!("../../nextcore-core/tests/sample.plist");
+verify	Run cargo test --all-targets	2026-09-08T06:49:13.3582451Z   ^[[1m^[[94m|^[[0m                       ^[[1m^[[91m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[[0m
+verify	Run cargo test --all-targets	2026-09-08T06:49:13.3611703Z 
+verify	Run cargo test --all-targets	2026-09-08T06:49:13.4125911Z ^[[1m^[[91merror^[[0m: could not compile `nextcore-tool` (test "bundle_cli") due to 1 previous error
+verify	Run cargo test --all-targets	2026-09-08T06:49:13.4143081Z ^[[1m^[[33mwarning^[[0m: build failed, waiting for other jobs to finish...
+verify	Run cargo test --all-targets	2026-09-08T06:49:14.1647607Z ##[error]Process completed with exit code 101.

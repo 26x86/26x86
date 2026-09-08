@@ -1,0 +1,32 @@
+{
+  "module": "Nextcore-Core",
+  "phase": "pre",
+  "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "inventory_files_verified": 49,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 34.578,
+      "stdout": "0.stdout",
+      "stderr": "0.stderr"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.953,
+      "stdout": "1.stdout",
+      "stderr": "1.stderr"
+    }
+  ],
+  "passed": true,
+  "guest_execution_claimed": false
+}

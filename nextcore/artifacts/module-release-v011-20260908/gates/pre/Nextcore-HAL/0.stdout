@@ -1,0 +1,52 @@
+
+running 10 tests
+test acpi_raw::tests::read_u16_helper_covers_pci_paths ... ok
+test acpi_raw::tests::rejects_truncated_inputs ... ok
+test acpi_raw::tests::rsdp_v2_roundtrip ... ok
+test acpi_raw::tests::sdt_header_accepts_real_shape ... ok
+test acpi_raw::tests::sdt_header_rejects_bad_checksum_only_as_flag ... ok
+test acpi_raw::tests::xsdt_entries_decode ... ok
+test acpi_translator::tests::test_patch_dsdt ... ok
+test pci_raw::tests::decodes_q35_host_bridge_shape ... ok
+test pci_raw::tests::rejects_empty_slot_and_truncation ... ok
+test smbios_translator::tests::test_translate_to_mac ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 9 tests
+test test_serial_deterministic ... ok
+test test_acpi_patch ... ok
+test test_device_tree_translate ... ok
+test test_build_device_tree ... ok
+test test_pci_unknown ... ok
+test test_acpi_patch_bad_len ... ok
+test test_smbios_serial_unknown ... ok
+test test_smbios_translate ... ok
+test test_pci_rx580 ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 8 tests
+test every_typed_sdt_parser_rejects_bad_checksum ... ok
+test facp_optional_x_dsdt_uses_declared_length ... ok
+test fixed_fields_cannot_come_from_after_declared_table ... ok
+test madt_known_records_require_complete_layouts ... ok
+test madt_preserves_unknown_records_without_decoding_them ... ok
+test pci_layout_mask_accepts_multifunction_type0_and_rejects_other_layouts ... ok
+test madt_rejects_dangling_header_and_overlong_body ... ok
+test root_entry_width_and_mcfg_allocation_width_are_enforced ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 5 tests
+test tests::invalid_invocation_is_an_error ... ok
+test tests::adapter_rejects_bad_checksum_and_typed_structure ... ok
+test tests::generic_table_reports_no_device_specific_summary ... ok
+test tests::reports_root_addresses_as_json_integers ... ok
+test tests::pci_report_preserves_ids_without_translator_policy ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

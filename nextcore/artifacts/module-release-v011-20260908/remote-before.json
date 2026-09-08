@@ -1,0 +1,79 @@
+[
+  {
+    "name": "Nextcore-Core",
+    "head": "4b8b3801b5bcd2e7ed519cc64feada7d76aa2082",
+    "tags": [
+      "26x86-Nextcore-Core-v0.1.0"
+    ],
+    "source_commit": "3acb61b5c60e3519debb5a65cf47629c387e12cf",
+    "initial_tag": "26x86-Nextcore-Core-v0.1.0",
+    "files": 33,
+    "working_state": []
+  },
+  {
+    "name": "Nextcore-GPU",
+    "head": "29701f17ea98b64bbabd05d75a7e09a25f64f246",
+    "tags": [
+      "26x86-Nextcore-GPU-v0.1.0"
+    ],
+    "source_commit": "3acb61b5c60e3519debb5a65cf47629c387e12cf",
+    "initial_tag": "26x86-Nextcore-GPU-v0.1.0",
+    "files": 17,
+    "working_state": []
+  },
+  {
+    "name": "Nextcore-HAL",
+    "head": "e00dcb4a731505de8e15d89900f3298eb05feca8",
+    "tags": [
+      "26x86-Nextcore-HAL-v0.1.0"
+    ],
+    "source_commit": "3acb61b5c60e3519debb5a65cf47629c387e12cf",
+    "initial_tag": "26x86-Nextcore-HAL-v0.1.0",
+    "files": 15,
+    "working_state": []
+  },
+  {
+    "name": "Nextcore-ISE",
+    "head": "073b8ced31d43c419ed2d9ea78d9ab8d8b372180",
+    "tags": [
+      "26x86-Nextcore-ISE-v0.1.0"
+    ],
+    "source_commit": "3acb61b5c60e3519debb5a65cf47629c387e12cf",
+    "initial_tag": "26x86-Nextcore-ISE-v0.1.0",
+    "files": 13,
+    "working_state": []
+  },
+  {
+    "name": "Nextcore-APLS",
+    "head": "76a0b8c32f9fa5f4408cf8dc678bdea78905113b",
+    "tags": [
+      "26x86-Nextcore-APLS-v0.1.0"
+    ],
+    "source_commit": "3acb61b5c60e3519debb5a65cf47629c387e12cf",
+    "initial_tag": "26x86-Nextcore-APLS-v0.1.0",
+    "files": 17,
+    "working_state": []
+  },
+  {
+    "name": "Nextcore-EFI",
+    "head": "4cec82e25fbfc1eeebd475adb25e2da308c2378c",
+    "tags": [
+      "26x86-Nextcore-EFI-v0.1.0"
+    ],
+    "source_commit": "3acb61b5c60e3519debb5a65cf47629c387e12cf",
+    "initial_tag": "26x86-Nextcore-EFI-v0.1.0",
+    "files": 14,
+    "working_state": []
+  },
+  {
+    "name": "Nextcore-Tool",
+    "head": "37e374749a06690b14ac93dd94eed7df8b366c31",
+    "tags": [
+      "26x86-Nextcore-Tool-v0.1.0"
+    ],
+    "source_commit": "3acb61b5c60e3519debb5a65cf47629c387e12cf",
+    "initial_tag": "26x86-Nextcore-Tool-v0.1.0",
+    "files": 13,
+    "working_state": []
+  }
+]

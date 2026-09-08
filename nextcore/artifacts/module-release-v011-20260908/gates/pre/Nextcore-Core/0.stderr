@@ -1,0 +1,64 @@
+    Blocking waiting for file lock on package cache
+    Updating crates.io index
+    Blocking waiting for file lock on package cache
+     Locking 31 packages to latest compatible versions
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling memchr v2.8.3
+   Compiling serde v1.0.229
+   Compiling powerfmt v0.2.0
+   Compiling time-core v0.1.9
+   Compiling num-conv v0.2.2
+   Compiling thiserror v2.0.20
+   Compiling zmij v1.0.23
+   Compiling deranged v0.5.8
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.2
+   Compiling serde_json v1.0.151
+   Compiling base64 v0.23.1
+   Compiling log v0.4.34
+   Compiling quick-xml v0.42.0
+   Compiling indexmap v2.14.2
+   Compiling plain v0.2.3
+   Compiling roxmltree v0.21.1
+   Compiling itoa v1.0.18
+   Compiling time v0.3.55
+   Compiling syn v3.0.5
+   Compiling serde_derive v1.0.229
+   Compiling scroll_derive v0.13.2
+   Compiling thiserror-impl v2.0.20
+   Compiling scroll v0.13.0
+   Compiling goblin v0.10.7
+   Compiling plist v1.10.1
+   Compiling nextcore-core v0.1.0 (C:\Users\Admin\AppData\Local\Temp\nextcore-modules-v011-20260908-153614\Nextcore-Core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 33.56s
+     Running unittests src\lib.rs (target\debug\deps\nextcore_core-a39714ef89a23043.exe)
+     Running tests\acpi_parse.rs (target\debug\deps\acpi_parse-e5e4b5b1aa2a20db.exe)
+     Running tests\arm64_kernel_collection.rs (target\debug\deps\arm64_kernel_collection-08058afa65ce7b94.exe)
+     Running tests\boot_config.rs (target\debug\deps\boot_config-1a181f8a821d0b74.exe)
+     Running tests\boot_menu.rs (target\debug\deps\boot_menu-00d6543c92763807.exe)
+     Running tests\config_parse.rs (target\debug\deps\config_parse-71382f829abdd468.exe)
+     Running tests\config_roundtrip.rs (target\debug\deps\config_roundtrip-806bc5ea39a86e23.exe)
+     Running tests\device_props.rs (target\debug\deps\device_props-7a854851dded8c00.exe)
+     Running tests\flat_dt.rs (target\debug\deps\flat_dt-8928520bf3347d18.exe)
+     Running tests\handoff_roundtrip.rs (target\debug\deps\handoff_roundtrip-f33c5759a150597e.exe)
+     Running tests\kc_classic_rebase.rs (target\debug\deps\kc_classic_rebase-83a20f0cb04cc081.exe)
+     Running tests\kc_fixup_audit.rs (target\debug\deps\kc_fixup_audit-a573939f8c6629d1.exe)
+     Running tests\kc_staging.rs (target\debug\deps\kc_staging-da0cafb6a263c9d7.exe)
+     Running tests\kernel_collection.rs (target\debug\deps\kernel_collection-4dbfbb3a9d4353f9.exe)
+     Running tests\kernel_target.rs (target\debug\deps\kernel_target-6c5ad2a6eacc28c4.exe)
+     Running tests\kext_scan.rs (target\debug\deps\kext_scan-19c3e16c8bd18c5b.exe)
+     Running tests\mach_o_load.rs (target\debug\deps\mach_o_load-ad82c4f0ce89ada2.exe)
+     Running tests\macho_image.rs (target\debug\deps\macho_image-f65f70e94825813f.exe)
+     Running tests\picker_view.rs (target\debug\deps\picker_view-d5a54c6234806817.exe)
+     Running tests\xnu_arm64_boot_args.rs (target\debug\deps\xnu_arm64_boot_args-f6dd1754b045101b.exe)
+     Running tests\xnu_boot_args.rs (target\debug\deps\xnu_boot_args-7905f61c5d023a5d.exe)
+     Running unittests examples\audit_kc.rs (target\debug\examples\audit_kc-19e22498ca7aa6bc.exe)
+     Running unittests examples\inspect_kc.rs (target\debug\examples\inspect_kc-15e1288d62150f1d.exe)
+     Running unittests examples\rebase_kc.rs (target\debug\examples\rebase_kc-6bdc5127ec71cece.exe)
+     Running unittests examples\stage_kc.rs (target\debug\examples\stage_kc-179a39db293e87b9.exe)

@@ -1,0 +1,11 @@
+{
+  "repository": "26x86/.github",
+  "previous_head": "7c1a1007d659b6db9e0fc8533a0da32d1adf169d",
+  "head": "4e446a4b7debc714ff2ec7ac6ead069bb2860618",
+  "remote_head_matches": true,
+  "api_readback_verified": true,
+  "changed_file": "profile/README.md",
+  "peer_review": "hal_harness: source/evidence boundaries and links accepted; product logo corrected",
+  "source_snapshot": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "tool_fix_source": "045065700cbd037eaaa974faf957ba15cb628370"
+}

@@ -59,6 +59,21 @@ native 경로의 restore-datapartition panic은 VM RAM 조건을 수정해 통�
 로컬 제외 정책과 달리 현재 Nextcore 소스는 Git 추적 대상이며 `nextcore/target/`과
 `nextcore/artifacts/`는 제외된다. BP19에서는 추적 정책을 변경하지 않았다.
 
+## BP23 원격 동기화 (2026-09-08)
+
+PR #5의 head `ee04ddad4d7cbba8033df1d48082a513b931e43d`에서 모든 원격 검사가
+통과한 뒤 main `06262cb970ef482415493e9f5f9a32c05476dc9c`로 squash merge했다.
+Pages run `34197153249`의 build/deploy도 성공했다. 실제 배포 페이지 링크 검사는
+별도 후속 작업으로 유지한다.
+
+독립 module 6개는 v0.1.1, Tool은 v0.1.2로 게시했고 최신 7개 모두 원격 main/tag
+일치, 게시 전후 fresh-clone gate, exact-head GitHub CI를 확인했다. 최초 Tool
+v0.1.1의 실패와 태그는 보존한다. 수정판은 sibling checkout이 없는 Linux 단독
+clone에서 실제 all-target 검사를 통과했다. 조직 profile `4e446a4`의 NextCore
+브랜딩과 release link도 원격 API readback을 마쳤다.
+[release receipt](artifacts/module-release-v011-20260908/release-receipt.json)에
+각 source/parent/tag/CI와 보존한 실패를 기록했다. guest Metal 상태는 변하지 않는다.
+
 ## BP20 대상별 실제 실행 (2026-09-08)
 
 사용자 확정 목표: **macOS 27 Golden Gate — AMD64↔Apple Silicon HAL,

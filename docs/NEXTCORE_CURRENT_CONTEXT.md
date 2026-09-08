@@ -100,20 +100,22 @@ macOS host가 없으므로 Virtualization.framework 기반 ARM guest boot는 이
 
 ## 모듈 배포 상태
 
-Nextcore는 다음 public GitHub repositories로 배포됐고 각각 `main`과
-`26x86-Nextcore-<Module>-v0.1.0` tag를 갖는다:
+NextCore의 다음 public repositories를 기존 이력 위에서 갱신했다. Core/GPU/HAL/
+ISE/APLS/EFI의 최신 tag는 `26x86-Nextcore-<Module>-v0.1.1`, Tool은
+`26x86-Nextcore-Tool-v0.1.2`이며 각 원격 main과 해당 tag commit이 일치한다:
 
 - `26x86/Nextcore-Core`, `Nextcore-GPU`, `Nextcore-HAL`, `Nextcore-ISE`
 - `26x86/Nextcore-APLS`, `Nextcore-EFI`, `Nextcore-Tool`
 
-`Tools/export_nextcore_repositories.py`가 fresh export, fixed dependency tag,
-`repository.json`, sha256 inventory와 CI를 만든다. clone verification에서 Core
-test, Tool test (8 passed, 1 externally supplied EFI fixture ignored), EFI UEFI
-check는 통과했다. APLS standalone build는 `vf_policy.rs`의 workspace 외부
-`include_bytes!` 경계 때문에 실패했으나, 2026-09-07에 crate 소유 테스트 fixture로
-교체했다. 현재 `cargo test -p nextcore-apls`는 48개 테스트가 통과한다. 이는
-APLS 계약/소프트웨어 테스트 통과이며 실제 macOS/XNU/Metal 또는 물리 화면 출력의
-증거는 아니다.
+이번 source는 고정 commit `dcc9001`이며 Tool fixture 수정은 `0450657`이다.
+7개 최신 snapshot 모두 게시 전후 fresh-clone gate 및 exact-head GitHub CI가
+통과했다. 최초 Tool v0.1.1의 sibling fixture 결함은 Windows 인접 clone이 놓쳤고
+Linux CI가 발견했다. 실패 tag를 보존하고 v0.1.2를 Linux 단독 clone에서 검증했다.
+기존 exporter의 작업 중 변경은 사용하지 않았으며 source Git object와 fixed
+dependency tag, canonical blob inventory로 배포했다. 조직 profile은 `4e446a4`로
+NextCore 브랜딩·목표·7개 release link를 반영하고 원격 readback을 확인했다.
+[전체 release 증거](../nextcore/artifacts/module-release-v011-20260908/README.md)는
+소프트웨어/배포 검사이며 guest Metal 실행을 뜻하지 않는다.
 
 ## 최소 재개 절차
 

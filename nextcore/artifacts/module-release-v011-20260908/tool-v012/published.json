@@ -1,0 +1,11 @@
+{
+  "repository": "26x86/Nextcore-Tool",
+  "source_commit": "045065700cbd037eaaa974faf957ba15cb628370",
+  "previous_head": "f1d26043f3f8c8f4bb663ef9f9b203dbf42c8c2d",
+  "head": "c53645672d940290ed383b348e751c0a6e4e36c6",
+  "tag": "26x86-Nextcore-Tool-v0.1.2",
+  "main_and_tag_match": true,
+  "atomic_push": true,
+  "force_push": false,
+  "pre_linux_single_clone_passed": true
+}

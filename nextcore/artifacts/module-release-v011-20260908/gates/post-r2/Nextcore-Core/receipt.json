@@ -1,0 +1,34 @@
+{
+  "module": "Nextcore-Core",
+  "phase": "post",
+  "attempt": 2,
+  "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "inventory_files_verified": 49,
+  "inventory_basis": "committed Git blobs and clean worktree",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 47.985,
+      "stdout": "0.stdout",
+      "stderr": "0.stderr"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.968,
+      "stdout": "1.stdout",
+      "stderr": "1.stderr"
+    }
+  ],
+  "passed": true,
+  "guest_execution_claimed": false
+}

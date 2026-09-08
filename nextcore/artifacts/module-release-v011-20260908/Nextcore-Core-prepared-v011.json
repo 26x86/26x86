@@ -1,0 +1,524 @@
+{
+  "repository": "26x86/Nextcore-Core",
+  "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-Core",
+  "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "previous_head": "4b8b3801b5bcd2e7ed519cc64feada7d76aa2082",
+  "tag": "26x86-Nextcore-Core-v0.1.1",
+  "source_files": [
+    {
+      "path": "Cargo.toml",
+      "source_path": "nextcore/crates/nextcore-core/Cargo.toml",
+      "bytes": 1320,
+      "sha256": "b2393acefdc9c6878b1212d7b8114c417a0170dfe372ce42c6b9cdf398eb0580"
+    },
+    {
+      "path": "examples/audit_kc.rs",
+      "source_path": "nextcore/crates/nextcore-core/examples/audit_kc.rs",
+      "bytes": 3210,
+      "sha256": "b793f1610ff09470b20bdc1458987ab24f03faf642ea87a8165dc583c1ad7afe"
+    },
+    {
+      "path": "examples/inspect_kc.rs",
+      "source_path": "nextcore/crates/nextcore-core/examples/inspect_kc.rs",
+      "bytes": 1141,
+      "sha256": "5cf838dd5b803ebe7f98d47feae1fe40e48bb9391b6593fd470922f2e03db28f"
+    },
+    {
+      "path": "examples/rebase_kc.rs",
+      "source_path": "nextcore/crates/nextcore-core/examples/rebase_kc.rs",
+      "bytes": 2650,
+      "sha256": "827cb9fb0d6a183640bbfd398a59065be5e82174dde2a2466e4b6e3e6ca8c93c"
+    },
+    {
+      "path": "examples/stage_kc.rs",
+      "source_path": "nextcore/crates/nextcore-core/examples/stage_kc.rs",
+      "bytes": 3495,
+      "sha256": "502ce4e129dc6342acfe1aeee9aabd6f1b97d33e2bce4eca6ca1a6de61fdd940"
+    },
+    {
+      "path": "src/acpi.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/acpi.rs",
+      "bytes": 7863,
+      "sha256": "1f8b0e7ce514dcbe11caa4da4e464cd35f907015353bdb75faf47bc0464ab063"
+    },
+    {
+      "path": "src/boot_config.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/boot_config.rs",
+      "bytes": 21002,
+      "sha256": "dc9faf72db5361f4cd77c8d9b2f8b69844f7308eb83d7cf1b9b146c803f90e71"
+    },
+    {
+      "path": "src/boot_picker.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/boot_picker.rs",
+      "bytes": 11518,
+      "sha256": "dfc8e3cdfae9e6ce62755f9f470f5e03ad83eea02f2ca427e11816db5c56cba8"
+    },
+    {
+      "path": "src/config.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/config.rs",
+      "bytes": 11327,
+      "sha256": "bc6d0b3e2bfa6ea9edcbaf3139667320a2a40c9964f64db3ca3cd81a3aa51326"
+    },
+    {
+      "path": "src/device_props.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/device_props.rs",
+      "bytes": 3658,
+      "sha256": "5b5ff995bf504bdc2c9e373527e57d4d7ec263a4d2bdbdc2cabd0840d8e3f685"
+    },
+    {
+      "path": "src/error.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/error.rs",
+      "bytes": 1030,
+      "sha256": "2f736d1824ddb93803c8be5a5e8baabbbb901d868b172a4fe27392d807588d7a"
+    },
+    {
+      "path": "src/flat_dt.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/flat_dt.rs",
+      "bytes": 10870,
+      "sha256": "63be9283a55fa40ec66ec1723e004cf041db0029e34421404795a3281c6148cc"
+    },
+    {
+      "path": "src/handoff.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/handoff.rs",
+      "bytes": 7421,
+      "sha256": "deed72010a0393c53e33b8181a4f7965589ef7d51bf5aad755b8da7d619e7369"
+    },
+    {
+      "path": "src/kc_classic_rebase.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/kc_classic_rebase.rs",
+      "bytes": 14586,
+      "sha256": "6fc3198dfa3584c1366064590f95e85cd594f58514a0ef410cad23fbd742ebc0"
+    },
+    {
+      "path": "src/kc_fixup_audit.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/kc_fixup_audit.rs",
+      "bytes": 28902,
+      "sha256": "dff49a5d3224377cd0be570719a6ba5c07e5a2b945ec3706e906da1a399912da"
+    },
+    {
+      "path": "src/kc_staging.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/kc_staging.rs",
+      "bytes": 19019,
+      "sha256": "052c9abb2965199e88c46444bf374303d84382a9ded9370c9586fa491aa258bf"
+    },
+    {
+      "path": "src/kernel_collection.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/kernel_collection.rs",
+      "bytes": 34166,
+      "sha256": "80e0bc63ff9f3567b90265ea892e32ef2ed7aa88b713304ed6c604a99f259c48"
+    },
+    {
+      "path": "src/kext.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/kext.rs",
+      "bytes": 2421,
+      "sha256": "f853691c518f8401069903d2fe6630ba2d245882d5666127b9741b362db33594"
+    },
+    {
+      "path": "src/lib.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/lib.rs",
+      "bytes": 683,
+      "sha256": "1b085a67a687f746f841c47557ece6588ff86a6f3274b64abce0a79d47bd0609"
+    },
+    {
+      "path": "src/mach_o.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/mach_o.rs",
+      "bytes": 2692,
+      "sha256": "97b52018ee6ffadedb6e4a23da01e302f1f29881eb40482c9611035d46afcd8f"
+    },
+    {
+      "path": "src/macho_image.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/macho_image.rs",
+      "bytes": 17374,
+      "sha256": "5172454ba59f73558899b31c65eb153b62568de718e6ce38079d71132676ee6e"
+    },
+    {
+      "path": "src/xnu_arm64_boot_args.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/xnu_arm64_boot_args.rs",
+      "bytes": 12193,
+      "sha256": "47945c5210fc8e9cfbb928328d41a8e0761acaccc61e3c7223bfd04255955175"
+    },
+    {
+      "path": "src/xnu_boot_args.rs",
+      "source_path": "nextcore/crates/nextcore-core/src/xnu_boot_args.rs",
+      "bytes": 9741,
+      "sha256": "6ea54cc90189d98bb01b5dea73e40a2d9bd0b80edeea7562d56589b8c50232c3"
+    },
+    {
+      "path": "tests/acpi_parse.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/acpi_parse.rs",
+      "bytes": 4952,
+      "sha256": "f159719e5e14b11dd4241d2bc4dcf73bfc66126a68059c30b3b213673db868ce"
+    },
+    {
+      "path": "tests/arm64_kernel_collection.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/arm64_kernel_collection.rs",
+      "bytes": 11665,
+      "sha256": "130bc4b732d0ac86084c5a83f39630ee155f4c030118f0749f2b0ea001964351"
+    },
+    {
+      "path": "tests/boot_config.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/boot_config.rs",
+      "bytes": 10874,
+      "sha256": "1419d439aa315acd31aaec0af3b23beacaa6d07f6a4c74b74fad51250523156d"
+    },
+    {
+      "path": "tests/boot_menu.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/boot_menu.rs",
+      "bytes": 3996,
+      "sha256": "0a38dad8c7d5c43c128d94065c2d21f4a6095e2dedd73dc66f517ba5b525f956"
+    },
+    {
+      "path": "tests/config_parse.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/config_parse.rs",
+      "bytes": 1325,
+      "sha256": "98e086c68cd69e262c378b0aa19450300dda62c010f90cfecf2fb4ba51820fea"
+    },
+    {
+      "path": "tests/config_roundtrip.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/config_roundtrip.rs",
+      "bytes": 739,
+      "sha256": "cb7b46a77c4ecb3dd7505a3a21cac7fb7d3bdb84cc4140b99fa88287c3312240"
+    },
+    {
+      "path": "tests/device_props.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/device_props.rs",
+      "bytes": 3056,
+      "sha256": "a604aa98f79372a04beb2e6f2a68d50ece7015bef63bb06381f18f08f1f85f36"
+    },
+    {
+      "path": "tests/flat_dt.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/flat_dt.rs",
+      "bytes": 8636,
+      "sha256": "3473feb34f220c6befe8a6c3098ae3fc377482df914353689378881b570511fe"
+    },
+    {
+      "path": "tests/handoff_roundtrip.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/handoff_roundtrip.rs",
+      "bytes": 3280,
+      "sha256": "8b8df1a79802ba207eae64e3458a3fb4348704f9bf98612a23fa6a478a33c42b"
+    },
+    {
+      "path": "tests/kc_classic_rebase.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/kc_classic_rebase.rs",
+      "bytes": 10341,
+      "sha256": "17868a93fb2446906212fd37b87452b770d01bed1cd0c744b1c812402161f845"
+    },
+    {
+      "path": "tests/kc_fixup_audit.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/kc_fixup_audit.rs",
+      "bytes": 15270,
+      "sha256": "6fce63437e13607b6d2b03dc441c45ca9e577720df8c694ef127092e3a54adf9"
+    },
+    {
+      "path": "tests/kc_staging.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/kc_staging.rs",
+      "bytes": 9703,
+      "sha256": "3fb08c31189fc8634f0cf7fad669ad964ce8e92d376d3603bf0efbab7554aa05"
+    },
+    {
+      "path": "tests/kernel_collection.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/kernel_collection.rs",
+      "bytes": 18606,
+      "sha256": "fe4080b1bb59f4fb7ea13c66a923e8a6273b10ed1f9966cadf162b0171419a77"
+    },
+    {
+      "path": "tests/kernel_target.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/kernel_target.rs",
+      "bytes": 2152,
+      "sha256": "09dfbfa76ea3d8d9e8afb480ae9db0a01d4dc56d89298c5409454a5533b1a721"
+    },
+    {
+      "path": "tests/kext_scan.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/kext_scan.rs",
+      "bytes": 3031,
+      "sha256": "4aa63382d20703898b2e351f6f740570836381d46ecba435d9777439d250f8d7"
+    },
+    {
+      "path": "tests/mach_o_load.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/mach_o_load.rs",
+      "bytes": 4412,
+      "sha256": "2dba2758099181a690f7fcfead3a88d38ac6d70896fe05b96d3e193c6c5f9445"
+    },
+    {
+      "path": "tests/macho_image.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/macho_image.rs",
+      "bytes": 12748,
+      "sha256": "ec24acdb533c7015433d7df845430a39f7b16b9548a8b97e64c3931558baf043"
+    },
+    {
+      "path": "tests/picker_view.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/picker_view.rs",
+      "bytes": 2815,
+      "sha256": "4c31b98ba31a8f63181a56735afb7a4e777d4490b5c045c480dce5fcc8333e9e"
+    },
+    {
+      "path": "tests/sample.plist",
+      "source_path": "nextcore/crates/nextcore-core/tests/sample.plist",
+      "bytes": 1786,
+      "sha256": "b5b840c3cd72295b40c057a26be3932fc60886bb3628b9eed1456359f103bf09"
+    },
+    {
+      "path": "tests/xnu_arm64_boot_args.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/xnu_arm64_boot_args.rs",
+      "bytes": 10995,
+      "sha256": "4cdaaf6315930e9a12507d93d50db9ec3016040e1ed11966fbfd9724cee917a2"
+    },
+    {
+      "path": "tests/xnu_boot_args.rs",
+      "source_path": "nextcore/crates/nextcore-core/tests/xnu_boot_args.rs",
+      "bytes": 9890,
+      "sha256": "1c357a7f6e87a86b9de33bd0da348a32e40256609492461cd4c7c88fd08dcebf"
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 28,
+      "sha256": "4b0f1fc438f30f25abe421b7542e9f3803b8b5c15ca3695614222e2bc547a9fe"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 318,
+      "sha256": "4bb046649716bc97130177637500bb472a7c6ee3c1878b05b8ced5dbc1ac66b8"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 20,
+      "sha256": "9cc2c8cc102e0b2a0a177c8f594abc9b9776300a04473c24b45d52c1007a4119"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 1320,
+      "sha256": "b2393acefdc9c6878b1212d7b8114c417a0170dfe372ce42c6b9cdf398eb0580"
+    },
+    {
+      "path": "LICENSE.txt",
+      "bytes": 1851,
+      "sha256": "77c458ccb6116400cf960f8951630bc3b8b34731b56ffbd736b95c2b78449104"
+    },
+    {
+      "path": "README.md",
+      "bytes": 468,
+      "sha256": "ac6f52aa40cc7ab4c33b5ac8587fbce1237bcd97ab77ce894bc558fbf31c4665"
+    },
+    {
+      "path": "examples/audit_kc.rs",
+      "bytes": 3210,
+      "sha256": "b793f1610ff09470b20bdc1458987ab24f03faf642ea87a8165dc583c1ad7afe"
+    },
+    {
+      "path": "examples/inspect_kc.rs",
+      "bytes": 1141,
+      "sha256": "5cf838dd5b803ebe7f98d47feae1fe40e48bb9391b6593fd470922f2e03db28f"
+    },
+    {
+      "path": "examples/rebase_kc.rs",
+      "bytes": 2650,
+      "sha256": "827cb9fb0d6a183640bbfd398a59065be5e82174dde2a2466e4b6e3e6ca8c93c"
+    },
+    {
+      "path": "examples/stage_kc.rs",
+      "bytes": 3495,
+      "sha256": "502ce4e129dc6342acfe1aeee9aabd6f1b97d33e2bce4eca6ca1a6de61fdd940"
+    },
+    {
+      "path": "src/acpi.rs",
+      "bytes": 7863,
+      "sha256": "1f8b0e7ce514dcbe11caa4da4e464cd35f907015353bdb75faf47bc0464ab063"
+    },
+    {
+      "path": "src/boot_config.rs",
+      "bytes": 21002,
+      "sha256": "dc9faf72db5361f4cd77c8d9b2f8b69844f7308eb83d7cf1b9b146c803f90e71"
+    },
+    {
+      "path": "src/boot_picker.rs",
+      "bytes": 11518,
+      "sha256": "dfc8e3cdfae9e6ce62755f9f470f5e03ad83eea02f2ca427e11816db5c56cba8"
+    },
+    {
+      "path": "src/config.rs",
+      "bytes": 11327,
+      "sha256": "bc6d0b3e2bfa6ea9edcbaf3139667320a2a40c9964f64db3ca3cd81a3aa51326"
+    },
+    {
+      "path": "src/device_props.rs",
+      "bytes": 3658,
+      "sha256": "5b5ff995bf504bdc2c9e373527e57d4d7ec263a4d2bdbdc2cabd0840d8e3f685"
+    },
+    {
+      "path": "src/error.rs",
+      "bytes": 1030,
+      "sha256": "2f736d1824ddb93803c8be5a5e8baabbbb901d868b172a4fe27392d807588d7a"
+    },
+    {
+      "path": "src/flat_dt.rs",
+      "bytes": 10870,
+      "sha256": "63be9283a55fa40ec66ec1723e004cf041db0029e34421404795a3281c6148cc"
+    },
+    {
+      "path": "src/handoff.rs",
+      "bytes": 7421,
+      "sha256": "deed72010a0393c53e33b8181a4f7965589ef7d51bf5aad755b8da7d619e7369"
+    },
+    {
+      "path": "src/kc_classic_rebase.rs",
+      "bytes": 14586,
+      "sha256": "6fc3198dfa3584c1366064590f95e85cd594f58514a0ef410cad23fbd742ebc0"
+    },
+    {
+      "path": "src/kc_fixup_audit.rs",
+      "bytes": 28902,
+      "sha256": "dff49a5d3224377cd0be570719a6ba5c07e5a2b945ec3706e906da1a399912da"
+    },
+    {
+      "path": "src/kc_staging.rs",
+      "bytes": 19019,
+      "sha256": "052c9abb2965199e88c46444bf374303d84382a9ded9370c9586fa491aa258bf"
+    },
+    {
+      "path": "src/kernel_collection.rs",
+      "bytes": 34166,
+      "sha256": "80e0bc63ff9f3567b90265ea892e32ef2ed7aa88b713304ed6c604a99f259c48"
+    },
+    {
+      "path": "src/kext.rs",
+      "bytes": 2421,
+      "sha256": "f853691c518f8401069903d2fe6630ba2d245882d5666127b9741b362db33594"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 683,
+      "sha256": "1b085a67a687f746f841c47557ece6588ff86a6f3274b64abce0a79d47bd0609"
+    },
+    {
+      "path": "src/mach_o.rs",
+      "bytes": 2692,
+      "sha256": "97b52018ee6ffadedb6e4a23da01e302f1f29881eb40482c9611035d46afcd8f"
+    },
+    {
+      "path": "src/macho_image.rs",
+      "bytes": 17374,
+      "sha256": "5172454ba59f73558899b31c65eb153b62568de718e6ce38079d71132676ee6e"
+    },
+    {
+      "path": "src/xnu_arm64_boot_args.rs",
+      "bytes": 12193,
+      "sha256": "47945c5210fc8e9cfbb928328d41a8e0761acaccc61e3c7223bfd04255955175"
+    },
+    {
+      "path": "src/xnu_boot_args.rs",
+      "bytes": 9741,
+      "sha256": "6ea54cc90189d98bb01b5dea73e40a2d9bd0b80edeea7562d56589b8c50232c3"
+    },
+    {
+      "path": "tests/acpi_parse.rs",
+      "bytes": 4952,
+      "sha256": "f159719e5e14b11dd4241d2bc4dcf73bfc66126a68059c30b3b213673db868ce"
+    },
+    {
+      "path": "tests/arm64_kernel_collection.rs",
+      "bytes": 11665,
+      "sha256": "130bc4b732d0ac86084c5a83f39630ee155f4c030118f0749f2b0ea001964351"
+    },
+    {
+      "path": "tests/boot_config.rs",
+      "bytes": 10874,
+      "sha256": "1419d439aa315acd31aaec0af3b23beacaa6d07f6a4c74b74fad51250523156d"
+    },
+    {
+      "path": "tests/boot_menu.rs",
+      "bytes": 3996,
+      "sha256": "0a38dad8c7d5c43c128d94065c2d21f4a6095e2dedd73dc66f517ba5b525f956"
+    },
+    {
+      "path": "tests/config_parse.rs",
+      "bytes": 1325,
+      "sha256": "98e086c68cd69e262c378b0aa19450300dda62c010f90cfecf2fb4ba51820fea"
+    },
+    {
+      "path": "tests/config_roundtrip.rs",
+      "bytes": 739,
+      "sha256": "cb7b46a77c4ecb3dd7505a3a21cac7fb7d3bdb84cc4140b99fa88287c3312240"
+    },
+    {
+      "path": "tests/device_props.rs",
+      "bytes": 3056,
+      "sha256": "a604aa98f79372a04beb2e6f2a68d50ece7015bef63bb06381f18f08f1f85f36"
+    },
+    {
+      "path": "tests/flat_dt.rs",
+      "bytes": 8636,
+      "sha256": "3473feb34f220c6befe8a6c3098ae3fc377482df914353689378881b570511fe"
+    },
+    {
+      "path": "tests/handoff_roundtrip.rs",
+      "bytes": 3280,
+      "sha256": "8b8df1a79802ba207eae64e3458a3fb4348704f9bf98612a23fa6a478a33c42b"
+    },
+    {
+      "path": "tests/kc_classic_rebase.rs",
+      "bytes": 10341,
+      "sha256": "17868a93fb2446906212fd37b87452b770d01bed1cd0c744b1c812402161f845"
+    },
+    {
+      "path": "tests/kc_fixup_audit.rs",
+      "bytes": 15270,
+      "sha256": "6fce63437e13607b6d2b03dc441c45ca9e577720df8c694ef127092e3a54adf9"
+    },
+    {
+      "path": "tests/kc_staging.rs",
+      "bytes": 9703,
+      "sha256": "3fb08c31189fc8634f0cf7fad669ad964ce8e92d376d3603bf0efbab7554aa05"
+    },
+    {
+      "path": "tests/kernel_collection.rs",
+      "bytes": 18606,
+      "sha256": "fe4080b1bb59f4fb7ea13c66a923e8a6273b10ed1f9966cadf162b0171419a77"
+    },
+    {
+      "path": "tests/kernel_target.rs",
+      "bytes": 2152,
+      "sha256": "09dfbfa76ea3d8d9e8afb480ae9db0a01d4dc56d89298c5409454a5533b1a721"
+    },
+    {
+      "path": "tests/kext_scan.rs",
+      "bytes": 3031,
+      "sha256": "4aa63382d20703898b2e351f6f740570836381d46ecba435d9777439d250f8d7"
+    },
+    {
+      "path": "tests/mach_o_load.rs",
+      "bytes": 4412,
+      "sha256": "2dba2758099181a690f7fcfead3a88d38ac6d70896fe05b96d3e193c6c5f9445"
+    },
+    {
+      "path": "tests/macho_image.rs",
+      "bytes": 12748,
+      "sha256": "ec24acdb533c7015433d7df845430a39f7b16b9548a8b97e64c3931558baf043"
+    },
+    {
+      "path": "tests/picker_view.rs",
+      "bytes": 2815,
+      "sha256": "4c31b98ba31a8f63181a56735afb7a4e777d4490b5c045c480dce5fcc8333e9e"
+    },
+    {
+      "path": "tests/sample.plist",
+      "bytes": 1786,
+      "sha256": "b5b840c3cd72295b40c057a26be3932fc60886bb3628b9eed1456359f103bf09"
+    },
+    {
+      "path": "tests/xnu_arm64_boot_args.rs",
+      "bytes": 10995,
+      "sha256": "4cdaaf6315930e9a12507d93d50db9ec3016040e1ed11966fbfd9724cee917a2"
+    },
+    {
+      "path": "tests/xnu_boot_args.rs",
+      "bytes": 9890,
+      "sha256": "1c357a7f6e87a86b9de33bd0da348a32e40256609492461cd4c7c88fd08dcebf"
+    }
+  ],
+  "transformed_source_files": [],
+  "forbidden_paths_present": false,
+  "existing_history_preserved": true,
+  "package_version_preserved": true
+}

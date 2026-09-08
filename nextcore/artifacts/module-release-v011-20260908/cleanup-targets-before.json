@@ -1,0 +1,58 @@
+[
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-Core\\target",
+    "bytes": 946503585.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-Core\\target",
+    "bytes": 946722662.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-GPU\\target",
+    "bytes": 679784886.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-GPU\\target",
+    "bytes": 679936762.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-HAL\\target",
+    "bytes": 209330449.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-HAL\\target",
+    "bytes": 209360619.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-ISE\\target",
+    "bytes": 63495103.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-ISE\\target",
+    "bytes": 63498452.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-APLS\\target",
+    "bytes": 269856835.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-APLS\\target",
+    "bytes": 269879517.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-EFI\\target",
+    "bytes": 106563991.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-EFI\\target",
+    "bytes": 106565252.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-Tool\\target",
+    "bytes": 503525330.0
+  },
+  {
+    "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-Tool\\target",
+    "bytes": 503551152.0
+  }
+]

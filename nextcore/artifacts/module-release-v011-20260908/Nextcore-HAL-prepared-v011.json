@@ -1,0 +1,172 @@
+{
+  "repository": "26x86/Nextcore-HAL",
+  "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-HAL",
+  "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "previous_head": "e00dcb4a731505de8e15d89900f3298eb05feca8",
+  "tag": "26x86-Nextcore-HAL-v0.1.1",
+  "source_files": [
+    {
+      "path": "Cargo.toml",
+      "source_path": "nextcore/crates/nextcore-hal/Cargo.toml",
+      "bytes": 268,
+      "sha256": "c967959335833080189b63fec78fd243f7116f638880dec10f3d18d7d3266a1c"
+    },
+    {
+      "path": "examples/inspect_firmware.rs",
+      "source_path": "nextcore/crates/nextcore-hal/examples/inspect_firmware.rs",
+      "bytes": 6807,
+      "sha256": "3c24a1dc026d1f1d683ae07cceae5dc07f45828ea97c5efc066a23f3594fd7cf"
+    },
+    {
+      "path": "src/acpi_raw.rs",
+      "source_path": "nextcore/crates/nextcore-hal/src/acpi_raw.rs",
+      "bytes": 15399,
+      "sha256": "55bc3d84e8b9ddedfd6da06ad9f090f86a0c7295ec44f3e5102f340915d0f3a2"
+    },
+    {
+      "path": "src/acpi_translator.rs",
+      "source_path": "nextcore/crates/nextcore-hal/src/acpi_translator.rs",
+      "bytes": 1875,
+      "sha256": "a392c0b323e47052982f1bfa25aa09cf9b2b5c00a8e3301afa376435328ad8f3"
+    },
+    {
+      "path": "src/device_tree.rs",
+      "source_path": "nextcore/crates/nextcore-hal/src/device_tree.rs",
+      "bytes": 4715,
+      "sha256": "8a014112b7a8724eff51a0a4af8ffdbd3a1db462ae5ddad4b07ac97ebbeb425f"
+    },
+    {
+      "path": "src/error.rs",
+      "source_path": "nextcore/crates/nextcore-hal/src/error.rs",
+      "bytes": 1339,
+      "sha256": "c9aa94289c5c76a4588e504f43fb07baf36ca7db573be6b2171b0e3f847f07b3"
+    },
+    {
+      "path": "src/lib.rs",
+      "source_path": "nextcore/crates/nextcore-hal/src/lib.rs",
+      "bytes": 147,
+      "sha256": "686a7adae5c129fbb7cc0fe9339df99d1c21bf83221252cce07ee2f12523bb3b"
+    },
+    {
+      "path": "src/pci_raw.rs",
+      "source_path": "nextcore/crates/nextcore-hal/src/pci_raw.rs",
+      "bytes": 2496,
+      "sha256": "9e29a7285c450a5e4d717a71bb1aaf468a26467db65bebd56e6c87c19dbb31fb"
+    },
+    {
+      "path": "src/pci_translator.rs",
+      "source_path": "nextcore/crates/nextcore-hal/src/pci_translator.rs",
+      "bytes": 2836,
+      "sha256": "3ce4f032686fd8626caba75c2d268c7a99d4a6bf69d14a6142a35ecb0e3a93b3"
+    },
+    {
+      "path": "src/smbios_translator.rs",
+      "source_path": "nextcore/crates/nextcore-hal/src/smbios_translator.rs",
+      "bytes": 3908,
+      "sha256": "9c55af6673187ef3b3b12e5ea21070e72f60b1469daedb30762f343770b9e70c"
+    },
+    {
+      "path": "tests/hal_translate.rs",
+      "source_path": "nextcore/crates/nextcore-hal/tests/hal_translate.rs",
+      "bytes": 4283,
+      "sha256": "bf4adbdba90240990816df51fc4d31af864e3146e5cfcc9519eb07f1ba5cc43e"
+    },
+    {
+      "path": "tests/raw_firmware.rs",
+      "source_path": "nextcore/crates/nextcore-hal/tests/raw_firmware.rs",
+      "bytes": 4734,
+      "sha256": "29a6241fd751927570445d86cac9c2be59da3693fc6d344b2a7ca4e6b7489586"
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 28,
+      "sha256": "4b0f1fc438f30f25abe421b7542e9f3803b8b5c15ca3695614222e2bc547a9fe"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 270,
+      "sha256": "28b595997d658442d084b66690bfede681131796aaa772c67a27b6df4c8ec3ed"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 20,
+      "sha256": "9cc2c8cc102e0b2a0a177c8f594abc9b9776300a04473c24b45d52c1007a4119"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 268,
+      "sha256": "c967959335833080189b63fec78fd243f7116f638880dec10f3d18d7d3266a1c"
+    },
+    {
+      "path": "LICENSE.txt",
+      "bytes": 1851,
+      "sha256": "77c458ccb6116400cf960f8951630bc3b8b34731b56ffbd736b95c2b78449104"
+    },
+    {
+      "path": "README.md",
+      "bytes": 467,
+      "sha256": "be7a30f29d7b5f80b3c977d58aba9853001efc0d5ac4e3ebcba9d60a574ff473"
+    },
+    {
+      "path": "examples/inspect_firmware.rs",
+      "bytes": 6807,
+      "sha256": "3c24a1dc026d1f1d683ae07cceae5dc07f45828ea97c5efc066a23f3594fd7cf"
+    },
+    {
+      "path": "src/acpi_raw.rs",
+      "bytes": 15399,
+      "sha256": "55bc3d84e8b9ddedfd6da06ad9f090f86a0c7295ec44f3e5102f340915d0f3a2"
+    },
+    {
+      "path": "src/acpi_translator.rs",
+      "bytes": 1875,
+      "sha256": "a392c0b323e47052982f1bfa25aa09cf9b2b5c00a8e3301afa376435328ad8f3"
+    },
+    {
+      "path": "src/device_tree.rs",
+      "bytes": 4715,
+      "sha256": "8a014112b7a8724eff51a0a4af8ffdbd3a1db462ae5ddad4b07ac97ebbeb425f"
+    },
+    {
+      "path": "src/error.rs",
+      "bytes": 1339,
+      "sha256": "c9aa94289c5c76a4588e504f43fb07baf36ca7db573be6b2171b0e3f847f07b3"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 147,
+      "sha256": "686a7adae5c129fbb7cc0fe9339df99d1c21bf83221252cce07ee2f12523bb3b"
+    },
+    {
+      "path": "src/pci_raw.rs",
+      "bytes": 2496,
+      "sha256": "9e29a7285c450a5e4d717a71bb1aaf468a26467db65bebd56e6c87c19dbb31fb"
+    },
+    {
+      "path": "src/pci_translator.rs",
+      "bytes": 2836,
+      "sha256": "3ce4f032686fd8626caba75c2d268c7a99d4a6bf69d14a6142a35ecb0e3a93b3"
+    },
+    {
+      "path": "src/smbios_translator.rs",
+      "bytes": 3908,
+      "sha256": "9c55af6673187ef3b3b12e5ea21070e72f60b1469daedb30762f343770b9e70c"
+    },
+    {
+      "path": "tests/hal_translate.rs",
+      "bytes": 4283,
+      "sha256": "bf4adbdba90240990816df51fc4d31af864e3146e5cfcc9519eb07f1ba5cc43e"
+    },
+    {
+      "path": "tests/raw_firmware.rs",
+      "bytes": 4734,
+      "sha256": "29a6241fd751927570445d86cac9c2be59da3693fc6d344b2a7ca4e6b7489586"
+    }
+  ],
+  "transformed_source_files": [],
+  "forbidden_paths_present": false,
+  "existing_history_preserved": true,
+  "package_version_preserved": true
+}

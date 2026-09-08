@@ -1,0 +1,31 @@
+{
+  "phase": "pre",
+  "source_commit": "045065700cbd037eaaa974faf957ba15cb628370",
+  "expected_head": "c53645672d940290ed383b348e751c0a6e4e36c6",
+  "single_repo_parent": "/tmp/nextcore-tool-v012-pre-20260908",
+  "passed": false,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--no-local",
+        "/mnt/c/Users/Admin/AppData/Local/Temp/nextcore-modules-v011-20260908-153614/Nextcore-Tool",
+        "/tmp/nextcore-tool-v012-pre-20260908/module"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.364
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.013
+    }
+  ],
+  "guest_execution_claimed": false,
+  "error": "[Errno 2] No such file or directory: 'cargo'"
+}

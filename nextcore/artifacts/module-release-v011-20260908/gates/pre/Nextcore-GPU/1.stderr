@@ -1,0 +1,16 @@
+   Compiling windows-link v0.2.1
+   Compiling ash v0.38.0+1.3.281
+   Compiling libloading v0.8.9
+   Compiling nextcore-gpu v0.1.0 (C:\Users\Admin\AppData\Local\Temp\nextcore-modules-v011-20260908-153614\Nextcore-GPU)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.10s
+     Running unittests src\lib.rs (target\debug\deps\nextcore_gpu-bae0b5a7c8bbcf9b.exe)
+     Running tests\gpu_compute.rs (target\debug\deps\gpu_compute-b9dc07281957e78e.exe)
+     Running tests\gpu_executor.rs (target\debug\deps\gpu_executor-ae0a4247ab355353.exe)
+     Running tests\gpu_framebuffer.rs (target\debug\deps\gpu_framebuffer-b0e15e8b08e96b59.exe)
+     Running tests\gpu_pipeline.rs (target\debug\deps\gpu_pipeline-9e8e8985736ff8c4.exe)
+     Running tests\gpu_raster.rs (target\debug\deps\gpu_raster-48a3e1fa6bfec7b9.exe)
+     Running tests\gpu_render_path.rs (target\debug\deps\gpu_render_path-17941b015f61500b.exe)
+     Running tests\gpu_sync.rs (target\debug\deps\gpu_sync-e1e4d64c1da2f391.exe)
+     Running tests\gpu_texture.rs (target\debug\deps\gpu_texture-40f45b09855e06a7.exe)
+     Running tests\gpu_virtual.rs (target\debug\deps\gpu_virtual-28c5a0855ab76af4.exe)
+     Running unittests examples\vulkan_compute.rs (target\debug\examples\vulkan_compute-3f0bb520df4b8803.exe)

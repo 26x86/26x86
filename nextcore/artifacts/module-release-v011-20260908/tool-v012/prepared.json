@@ -1,0 +1,110 @@
+{
+  "source_commit": "045065700cbd037eaaa974faf957ba15cb628370",
+  "head": "c53645672d940290ed383b348e751c0a6e4e36c6",
+  "previous_head": "f1d26043f3f8c8f4bb663ef9f9b203dbf42c8c2d",
+  "tag": "26x86-Nextcore-Tool-v0.1.2",
+  "dependency_tags": {
+    "26x86/Nextcore-Core": "26x86-Nextcore-Core-v0.1.1",
+    "26x86/Nextcore-APLS": "26x86-Nextcore-APLS-v0.1.1"
+  },
+  "source_inventory": [
+    {
+      "path": "Cargo.toml",
+      "bytes": 334,
+      "sha256": "38c95e9f5b782e38e9a65c759129c72ea66f22be01ea0a6f671a61c0d16a063f"
+    },
+    {
+      "path": "src/apls.rs",
+      "bytes": 26268,
+      "sha256": "a33439d666b64d1036bf26d10732731fa1cf580c2dccac0bf1dd5fb378429362"
+    },
+    {
+      "path": "src/efi.rs",
+      "bytes": 6622,
+      "sha256": "012fcdd1860267fc771ad701784ce493e6f2323fe544ec5519c80b20ae9350f4"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 3078,
+      "sha256": "8a584b9f6edc6fca29ea517627f769f7d9a29fc5e62458262b0c2c0ff68f4263"
+    },
+    {
+      "path": "src/main.rs",
+      "bytes": 4525,
+      "sha256": "eb96082cc4623395ca93e50c42a3c1e6674bc16b8eac4e24befb64201dcb28ad"
+    },
+    {
+      "path": "tests/bundle_cli.rs",
+      "bytes": 10925,
+      "sha256": "882ff603344f6eb8b6ea499540955382bece9efec4eb39e0811aca9f78ccb0d9"
+    },
+    {
+      "path": "tests/data/sample.plist",
+      "bytes": 1786,
+      "sha256": "b5b840c3cd72295b40c057a26be3932fc60886bb3628b9eed1456359f103bf09"
+    }
+  ],
+  "inventory": [
+    {
+      "path": ".gitattributes",
+      "bytes": 28,
+      "sha256": "4b0f1fc438f30f25abe421b7542e9f3803b8b5c15ca3695614222e2bc547a9fe"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 271,
+      "sha256": "597eacc2180a274a4119f43015e4ceaa1d86d5c878006a9e612988bdaf23f7f5"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 20,
+      "sha256": "9cc2c8cc102e0b2a0a177c8f594abc9b9776300a04473c24b45d52c1007a4119"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 456,
+      "sha256": "55622a33d122bfb55258eaaa6d7bf1e6625ea919c0b7794f2e10d45a91248a06"
+    },
+    {
+      "path": "LICENSE.txt",
+      "bytes": 1851,
+      "sha256": "77c458ccb6116400cf960f8951630bc3b8b34731b56ffbd736b95c2b78449104"
+    },
+    {
+      "path": "README.md",
+      "bytes": 648,
+      "sha256": "c9040c6110e2401b66eff4cf141a46c7c9df16d0b988d889fd31b6f693fadf89"
+    },
+    {
+      "path": "src/apls.rs",
+      "bytes": 26268,
+      "sha256": "a33439d666b64d1036bf26d10732731fa1cf580c2dccac0bf1dd5fb378429362"
+    },
+    {
+      "path": "src/efi.rs",
+      "bytes": 6622,
+      "sha256": "012fcdd1860267fc771ad701784ce493e6f2323fe544ec5519c80b20ae9350f4"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 3078,
+      "sha256": "8a584b9f6edc6fca29ea517627f769f7d9a29fc5e62458262b0c2c0ff68f4263"
+    },
+    {
+      "path": "src/main.rs",
+      "bytes": 4525,
+      "sha256": "eb96082cc4623395ca93e50c42a3c1e6674bc16b8eac4e24befb64201dcb28ad"
+    },
+    {
+      "path": "tests/bundle_cli.rs",
+      "bytes": 10925,
+      "sha256": "882ff603344f6eb8b6ea499540955382bece9efec4eb39e0811aca9f78ccb0d9"
+    },
+    {
+      "path": "tests/data/sample.plist",
+      "bytes": 1786,
+      "sha256": "b5b840c3cd72295b40c057a26be3932fc60886bb3628b9eed1456359f103bf09"
+    }
+  ],
+  "pushed": false
+}
