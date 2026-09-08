@@ -1,0 +1,34 @@
+{
+  "schema": "nextcore.stage1-service-public-comparison.v1",
+  "passed": true,
+  "source_freeze_sha256": "752402ad50e24d43fb528e842c4f5bc8f3b8d2f2f7b0c7857a9063c8fdb5649b",
+  "owner_runtime_freeze_sha256": "5b7bed1dfaf821592a1f6c95b408a9a5b9205cbfefa7eca35b703b8ce0221808",
+  "owner_implementation_freeze_sha256": "e50c376fc856f5939b9801dba16993ed43d058cf6a642df0b64e30b846aad890",
+  "frozen_owner_runtime_files_verified": 60,
+  "original_oracle_manifest_sha256": "b8fe9ddeeb7a97d0e44d79bde4d84ff9e3c35812b95edfc6cd365f0d76afa8b1",
+  "original_oracle_files_preserved": 28,
+  "original428": {
+    "architectural_comparisons_passed": 354,
+    "exact_captured_btype_requests_rejected": 74,
+    "all428_architectural_match": false,
+    "receipt_sha256": "09779abf1133a68ab7a527f91d9e49d387d1ec51f38f5cd7305cfa9192cb5ea7"
+  },
+  "new_eret_fetch": {
+    "actual_arm_model_cases_passed": 78,
+    "corresponding_fault_cases": 74,
+    "valid_ret_controls": 4,
+    "actual_saved_btype_zero": true,
+    "service_architectural_comparisons_passed": 78,
+    "oracle_receipt_sha256": "14c01bbae5f9fb1bce4545857f85a4e544e9dc2d2ddad7969b74b140f4a0fd6a",
+    "service_receipt_sha256": "bb739794d91ad60d18af1d0085e092f609729375fe70f12a4ff02ae2f3fb5d61"
+  },
+  "negative_controls": {
+    "original_a0_case_kept_separate": true,
+    "known12_pc_priority_model_deviations_kept_separate": true,
+    "new_actual_eret_target_alignment_mutation_detected": true,
+    "service_expected_esr_mutation_detected_in_both_runs": true
+  },
+  "scope": "Actual QEMU Arm exception capture to canonical Rust MemoryServiceV2; no native x86 JIT, Win64 EFI, physical Arm or original OS boot execution in this comparison",
+  "production_edits": false,
+  "source_and_backing_provenance": "README.md and individual receipts; full Controls80 explicitly adapted, exact captured PSTATE never masked."
+}

@@ -1717,3 +1717,49 @@ actual bypass rejection using canonical standaloneEFI7495633. Final-head CI uses
 that stronger predicate on newly built integrated firmware. Raw evidence preserves
 these separate identities in integration-bp31-20260909; final publication gets its
 own canonical recursive checkout and artifact-byte validation.
+
+
+## BP32 — native immutable stage-1 memory execution
+
+Current: BP31 parent0509118 is merged; normal macOS startup and guest Metal
+remain incomplete. The explicitly delegated ISE implementation introduces a
+separate80/160/128/320-byte C/Rust ABI for M=1 fetch/scalar/pair execution through
+the canonical Rust walker. The fixed Normal-NC/A=1 profile has immutable table
+backing and controls, and rejects unsupported control changes and attributes.
+No guest RAM pointer enters the native dispatcher. Detailed scope and the
+trusted synchronous callback failure boundary live in the ISE module contract.
+
+Root owns immutable pins, CI, metadata, proof publication and PR/main merges.
+The original BP29 oracle helpers and indexed receipts remain byte-for-byte
+historical. A separately named compare_current_walker.py imports the current
+canonical enum/walker; active CI and reproduction commands use that adapter.
+No historical receipt is relabeled as execution of the changed helper.
+
+Independent ARM execution distinguishes354 recorded-value matches and74 exact
+BTYPE profile rejections from the original428 cases. A separately authored
+ERET-entry set provides78 BTYPE=0 fetch cases, with captured state retained.
+Of354 matches,32 successful fetch cases use completion snapshots, not target
+fetch captures;322 are data operations. The12 QEMU PC-priority disagreements
+remain failed comparisons. Controls record
+explicit harness HCR adaptation and uncaptured inactive fields. The opt-in EFI
+NXMMU probe executes108 authored nonidentity cases on an x86 outer computer.
+Final frozen replay, canonical module builds and recursive integration are
+required before closure. The separately merged Core305 runtime-DT transformer
+is excluded from BP32 EFI's frozen Core408 dependency; root integration and
+actual allocation/consumer execution remain a subsequent milestone.
+
+
+BP34 is explicitly delegated to the CPU agent in a new ISE worktree from720d7c6:
+implement one-way M=0 to M=1 activation with immutable tables, separate
+architectural/effective snapshots, a new dynamic memory discriminator3 and
+192-byte prepare/commit/cancel control records. Existing v1/v2/vf_cpu remain
+unchanged. Full flat transition-ISB span/bytes/ownership, M=0 Device semantics,
+real canonical TLBI and precise failure/uncertain-host-commit boundaries must
+be validated. Exact enums and final512-byte state tags are frozen in the new
+module contract before code. This is subsequent work, excluded from BP32 pins.
+
+BP33 allocation work is delegated to the EFI agent in a separate Core worktree
+from305e66a. Its design must bind observed exclusive backing, guest aperture,
+nonoverlapping purpose reservations and owner/generation to DT patch commit.
+No original provider values or target ABI are guessed. Root reviews the design
+before implementation; Core/EFI/Tool integration remains a separate milestone.

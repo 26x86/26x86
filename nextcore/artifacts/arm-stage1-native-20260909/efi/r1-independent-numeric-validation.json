@@ -1,0 +1,3139 @@
+{
+  "passed": true,
+  "cases": 108,
+  "reader_sha256": "0a7589f66733f0403bdd5521110f1b43420e06fb7a815eb3d8af9874fed2cff9",
+  "validations": [
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 4,
+        "blocks": 4,
+        "fetch": 4,
+        "data": 2,
+        "completed": 2,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 4,
+        "completed": 2,
+        "retired": 4,
+        "fetch": 4,
+        "esr": 0,
+        "provider": 0,
+        "data": 2,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 4,
+        "blocks": 4,
+        "fetch": 4,
+        "data": 2,
+        "completed": 2,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 4,
+        "completed": 2,
+        "retired": 4,
+        "fetch": 4,
+        "esr": 0,
+        "provider": 0,
+        "data": 2,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 4,
+        "blocks": 4,
+        "fetch": 4,
+        "data": 2,
+        "completed": 2,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 4,
+        "completed": 2,
+        "retired": 4,
+        "fetch": 4,
+        "esr": 0,
+        "provider": 0,
+        "data": 2,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582471,
+        "far": 536891392,
+        "reply": 1,
+        "fsc": 7
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582471,
+        "provider": 0,
+        "data": 1,
+        "fsc": 7,
+        "far": 536891392
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582407,
+        "far": 536891392,
+        "reply": 1,
+        "fsc": 7
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582407,
+        "provider": 0,
+        "data": 1,
+        "fsc": 7,
+        "far": 536891392
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582475,
+        "far": 536891392,
+        "reply": 1,
+        "fsc": 11
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582475,
+        "provider": 0,
+        "data": 1,
+        "fsc": 11,
+        "far": 536891392
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582411,
+        "far": 536891392,
+        "reply": 1,
+        "fsc": 11
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582411,
+        "provider": 0,
+        "data": 1,
+        "fsc": 11,
+        "far": 536891392
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 5,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 3,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 3,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 5,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 5,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 3,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 3,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 5,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 1,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 2,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 2,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 1,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 1,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 2,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 2,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 1,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582479,
+        "far": 536891392,
+        "reply": 1,
+        "fsc": 15
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582479,
+        "provider": 0,
+        "data": 1,
+        "fsc": 15,
+        "far": 536891392
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 16,
+        "provider": 0,
+        "retired": 0,
+        "blocks": 0,
+        "fetch": 1,
+        "data": 0,
+        "completed": 0,
+        "esr": 2248146951,
+        "far": 536870912,
+        "reply": 1,
+        "fsc": 7
+      },
+      "actual": {
+        "status": 16,
+        "reply": 1,
+        "blocks": 0,
+        "completed": 0,
+        "retired": 0,
+        "fetch": 1,
+        "esr": 2248146951,
+        "provider": 0,
+        "data": 0,
+        "fsc": 7,
+        "far": 536870912
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 16,
+        "provider": 0,
+        "retired": 0,
+        "blocks": 0,
+        "fetch": 1,
+        "data": 0,
+        "completed": 0,
+        "esr": 2248146959,
+        "far": 536870912,
+        "reply": 1,
+        "fsc": 15
+      },
+      "actual": {
+        "status": 16,
+        "reply": 1,
+        "blocks": 0,
+        "completed": 0,
+        "retired": 0,
+        "fetch": 1,
+        "esr": 2248146959,
+        "provider": 0,
+        "data": 0,
+        "fsc": 15,
+        "far": 536870912
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 4,
+        "blocks": 4,
+        "fetch": 4,
+        "data": 2,
+        "completed": 2,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 4,
+        "completed": 2,
+        "retired": 4,
+        "fetch": 4,
+        "esr": 0,
+        "provider": 0,
+        "data": 2,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 4,
+        "blocks": 4,
+        "fetch": 4,
+        "data": 2,
+        "completed": 2,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 4,
+        "completed": 2,
+        "retired": 4,
+        "fetch": 4,
+        "esr": 0,
+        "provider": 0,
+        "data": 2,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 4,
+        "blocks": 4,
+        "fetch": 4,
+        "data": 2,
+        "completed": 2,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 4,
+        "completed": 2,
+        "retired": 4,
+        "fetch": 4,
+        "esr": 0,
+        "provider": 0,
+        "data": 2,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582471,
+        "far": 18446603336758087680,
+        "reply": 1,
+        "fsc": 7
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582471,
+        "provider": 0,
+        "data": 1,
+        "fsc": 7,
+        "far": 18446603336758087680
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582407,
+        "far": 18446603336758087680,
+        "reply": 1,
+        "fsc": 7
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582407,
+        "provider": 0,
+        "data": 1,
+        "fsc": 7,
+        "far": 18446603336758087680
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582475,
+        "far": 18446603336758087680,
+        "reply": 1,
+        "fsc": 11
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582475,
+        "provider": 0,
+        "data": 1,
+        "fsc": 11,
+        "far": 18446603336758087680
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582411,
+        "far": 18446603336758087680,
+        "reply": 1,
+        "fsc": 11
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582411,
+        "provider": 0,
+        "data": 1,
+        "fsc": 11,
+        "far": 18446603336758087680
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 5,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 3,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 3,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 5,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 5,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 3,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 3,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 5,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 1,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 2,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 2,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 1,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 1,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 2,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 2,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 1,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582479,
+        "far": 18446603336758087680,
+        "reply": 1,
+        "fsc": 15
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582479,
+        "provider": 0,
+        "data": 1,
+        "fsc": 15,
+        "far": 18446603336758087680
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 16,
+        "provider": 0,
+        "retired": 0,
+        "blocks": 0,
+        "fetch": 1,
+        "data": 0,
+        "completed": 0,
+        "esr": 2248146951,
+        "far": 18446603336758067200,
+        "reply": 1,
+        "fsc": 7
+      },
+      "actual": {
+        "status": 16,
+        "reply": 1,
+        "blocks": 0,
+        "completed": 0,
+        "retired": 0,
+        "fetch": 1,
+        "esr": 2248146951,
+        "provider": 0,
+        "data": 0,
+        "fsc": 7,
+        "far": 18446603336758067200
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 16,
+        "provider": 0,
+        "retired": 0,
+        "blocks": 0,
+        "fetch": 1,
+        "data": 0,
+        "completed": 0,
+        "esr": 2248146959,
+        "far": 18446603336758067200,
+        "reply": 1,
+        "fsc": 15
+      },
+      "actual": {
+        "status": 16,
+        "reply": 1,
+        "blocks": 0,
+        "completed": 0,
+        "retired": 0,
+        "fetch": 1,
+        "esr": 2248146959,
+        "provider": 0,
+        "data": 0,
+        "fsc": 15,
+        "far": 18446603336758067200
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 4,
+        "blocks": 4,
+        "fetch": 4,
+        "data": 2,
+        "completed": 2,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 4,
+        "completed": 2,
+        "retired": 4,
+        "fetch": 4,
+        "esr": 0,
+        "provider": 0,
+        "data": 2,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 4,
+        "blocks": 4,
+        "fetch": 4,
+        "data": 2,
+        "completed": 2,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 4,
+        "completed": 2,
+        "retired": 4,
+        "fetch": 4,
+        "esr": 0,
+        "provider": 0,
+        "data": 2,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 4,
+        "blocks": 4,
+        "fetch": 4,
+        "data": 2,
+        "completed": 2,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 4,
+        "completed": 2,
+        "retired": 4,
+        "fetch": 4,
+        "esr": 0,
+        "provider": 0,
+        "data": 2,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582471,
+        "far": 536952832,
+        "reply": 1,
+        "fsc": 7
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582471,
+        "provider": 0,
+        "data": 1,
+        "fsc": 7,
+        "far": 536952832
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582407,
+        "far": 536952832,
+        "reply": 1,
+        "fsc": 7
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582407,
+        "provider": 0,
+        "data": 1,
+        "fsc": 7,
+        "far": 536952832
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582475,
+        "far": 536952832,
+        "reply": 1,
+        "fsc": 11
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582475,
+        "provider": 0,
+        "data": 1,
+        "fsc": 11,
+        "far": 536952832
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582411,
+        "far": 536952832,
+        "reply": 1,
+        "fsc": 11
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582411,
+        "provider": 0,
+        "data": 1,
+        "fsc": 11,
+        "far": 536952832
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 5,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 3,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 3,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 5,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 5,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 3,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 3,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 5,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 1,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 2,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 2,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 1,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 1,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 2,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 2,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 1,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582479,
+        "far": 536952832,
+        "reply": 1,
+        "fsc": 15
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582479,
+        "provider": 0,
+        "data": 1,
+        "fsc": 15,
+        "far": 536952832
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 16,
+        "provider": 0,
+        "retired": 0,
+        "blocks": 0,
+        "fetch": 1,
+        "data": 0,
+        "completed": 0,
+        "esr": 2248146951,
+        "far": 536870912,
+        "reply": 1,
+        "fsc": 7
+      },
+      "actual": {
+        "status": 16,
+        "reply": 1,
+        "blocks": 0,
+        "completed": 0,
+        "retired": 0,
+        "fetch": 1,
+        "esr": 2248146951,
+        "provider": 0,
+        "data": 0,
+        "fsc": 7,
+        "far": 536870912
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 16,
+        "provider": 0,
+        "retired": 0,
+        "blocks": 0,
+        "fetch": 1,
+        "data": 0,
+        "completed": 0,
+        "esr": 2248146959,
+        "far": 536870912,
+        "reply": 1,
+        "fsc": 15
+      },
+      "actual": {
+        "status": 16,
+        "reply": 1,
+        "blocks": 0,
+        "completed": 0,
+        "retired": 0,
+        "fetch": 1,
+        "esr": 2248146959,
+        "provider": 0,
+        "data": 0,
+        "fsc": 15,
+        "far": 536870912
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 3,
+        "blocks": 3,
+        "fetch": 3,
+        "data": 1,
+        "completed": 1,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 3,
+        "completed": 1,
+        "retired": 3,
+        "fetch": 3,
+        "esr": 0,
+        "provider": 0,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 4,
+        "blocks": 4,
+        "fetch": 4,
+        "data": 2,
+        "completed": 2,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 4,
+        "completed": 2,
+        "retired": 4,
+        "fetch": 4,
+        "esr": 0,
+        "provider": 0,
+        "data": 2,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 4,
+        "blocks": 4,
+        "fetch": 4,
+        "data": 2,
+        "completed": 2,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 4,
+        "completed": 2,
+        "retired": 4,
+        "fetch": 4,
+        "esr": 0,
+        "provider": 0,
+        "data": 2,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 1,
+        "provider": 0,
+        "retired": 4,
+        "blocks": 4,
+        "fetch": 4,
+        "data": 2,
+        "completed": 2,
+        "esr": 0,
+        "far": 0,
+        "reply": 0,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 1,
+        "reply": 0,
+        "blocks": 4,
+        "completed": 2,
+        "retired": 4,
+        "fetch": 4,
+        "esr": 0,
+        "provider": 0,
+        "data": 2,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582471,
+        "far": 18446603336758149120,
+        "reply": 1,
+        "fsc": 7
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582471,
+        "provider": 0,
+        "data": 1,
+        "fsc": 7,
+        "far": 18446603336758149120
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582407,
+        "far": 18446603336758149120,
+        "reply": 1,
+        "fsc": 7
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582407,
+        "provider": 0,
+        "data": 1,
+        "fsc": 7,
+        "far": 18446603336758149120
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582475,
+        "far": 18446603336758149120,
+        "reply": 1,
+        "fsc": 11
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582475,
+        "provider": 0,
+        "data": 1,
+        "fsc": 11,
+        "far": 18446603336758149120
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582411,
+        "far": 18446603336758149120,
+        "reply": 1,
+        "fsc": 11
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582411,
+        "provider": 0,
+        "data": 1,
+        "fsc": 11,
+        "far": 18446603336758149120
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 5,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 3,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 3,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 5,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 5,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 3,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 3,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 5,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 1,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 2,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 2,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 1,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 4,
+        "provider": 1,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 0,
+        "far": 0,
+        "reply": 2,
+        "fsc": 0
+      },
+      "actual": {
+        "status": 4,
+        "reply": 2,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 0,
+        "provider": 1,
+        "data": 1,
+        "fsc": 0,
+        "far": 0
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 17,
+        "provider": 0,
+        "retired": 1,
+        "blocks": 2,
+        "fetch": 2,
+        "data": 1,
+        "completed": 0,
+        "esr": 2516582479,
+        "far": 18446603336758149120,
+        "reply": 1,
+        "fsc": 15
+      },
+      "actual": {
+        "status": 17,
+        "reply": 1,
+        "blocks": 2,
+        "completed": 0,
+        "retired": 1,
+        "fetch": 2,
+        "esr": 2516582479,
+        "provider": 0,
+        "data": 1,
+        "fsc": 15,
+        "far": 18446603336758149120
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 16,
+        "provider": 0,
+        "retired": 0,
+        "blocks": 0,
+        "fetch": 1,
+        "data": 0,
+        "completed": 0,
+        "esr": 2248146951,
+        "far": 18446603336758067200,
+        "reply": 1,
+        "fsc": 7
+      },
+      "actual": {
+        "status": 16,
+        "reply": 1,
+        "blocks": 0,
+        "completed": 0,
+        "retired": 0,
+        "fetch": 1,
+        "esr": 2248146951,
+        "provider": 0,
+        "data": 0,
+        "fsc": 7,
+        "far": 18446603336758067200
+      }
+    },
+    {
+      "passed": true,
+      "expected": {
+        "status": 16,
+        "provider": 0,
+        "retired": 0,
+        "blocks": 0,
+        "fetch": 1,
+        "data": 0,
+        "completed": 0,
+        "esr": 2248146959,
+        "far": 18446603336758067200,
+        "reply": 1,
+        "fsc": 15
+      },
+      "actual": {
+        "status": 16,
+        "reply": 1,
+        "blocks": 0,
+        "completed": 0,
+        "retired": 0,
+        "fetch": 1,
+        "esr": 2248146959,
+        "provider": 0,
+        "data": 0,
+        "fsc": 15,
+        "far": 18446603336758067200
+      }
+    }
+  ]
+}

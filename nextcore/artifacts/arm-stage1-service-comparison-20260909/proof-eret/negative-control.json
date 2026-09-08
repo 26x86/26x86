@@ -1,0 +1,38 @@
+{
+  "passed": false,
+  "expected_failure": true,
+  "change": "first expected observed ESR xor1 only; actual execution unchanged",
+  "case": {
+    "name": "g4096_el1_a2_L3_k0_u1_cross0",
+    "expected": {
+      "result": 1,
+      "fault": 1,
+      "level": 4294967295,
+      "fsc": 0,
+      "esr": 2315255809,
+      "address": 18446462598732841521
+    },
+    "actual": {
+      "result": 1,
+      "fault": 1,
+      "level": 4294967295,
+      "fsc": 0,
+      "esr": 2315255808,
+      "address": 18446462598732841521,
+      "value0": 0,
+      "value1": 0,
+      "ram_unchanged": 1
+    },
+    "checks": {
+      "result": true,
+      "fault": true,
+      "level": true,
+      "fsc": true,
+      "esr": false,
+      "address": true,
+      "no_values_on_failure": true,
+      "original_zero_store_backing_unchanged": true
+    },
+    "passed": false
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "command": [
+    "cargo",
+    "build",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "/home/sharh/work/bp32-efi-stage1-proof/negative-va-as-pa/workspace/Cargo.toml",
+    "-p",
+    "nextcore-efi",
+    "--bin",
+    "NXMMU",
+    "--features",
+    "arm-jit-stage1-probe",
+    "--release",
+    "--target",
+    "x86_64-unknown-uefi"
+  ],
+  "environment": {
+    "CARGO_TARGET_DIR": "/home/sharh/work/bp32-efi-stage1-proof/negative-va-as-pa/target",
+    "NEXTCORE_PREOS_RUNTIME": "/home/sharh/work/bp32-ise-native-mmu/runtime"
+  }
+}

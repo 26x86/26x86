@@ -1,0 +1,63 @@
+{
+  "schema": "nextcore.stage1-oracle-review.v1",
+  "completed": true,
+  "default_architectural_cases_passed": 428,
+  "case_groups": {
+    "scalar": 142,
+    "pair": 120,
+    "pair_cross_page": 60,
+    "fetch": 42,
+    "fetch_matrix": 64
+  },
+  "default_negative_control_semantic_change_detected": true,
+  "known_qemu_pc_priority_cases": 12,
+  "known_qemu_pc_priority_architecture_passed": false,
+  "known_qemu_case_verifier_exit": 1,
+  "framework_sha256_before": {
+    "abort_start.S": "7bb9fc87363f259200ea456a44dd401957b515fdffbaf82c91a332b2bae29f4a",
+    "abort_oracle.c": "fff9af94deb18b1cc96f132b4c008807cd4363dae2104395f408b2723dfaf879",
+    "probe_abort_levels.py": "6db0dd4d5f76b2a4235e9165e4a9bd0be5e1f668510803a2b0553853debd3d86",
+    "oracle.ld": "bda09dbcfbd0b5580ecb0121f524e8f95267c8433e643928603ccd810daf539a"
+  },
+  "framework_sha256_after": {
+    "abort_start.S": "7bb9fc87363f259200ea456a44dd401957b515fdffbaf82c91a332b2bae29f4a",
+    "abort_oracle.c": "fff9af94deb18b1cc96f132b4c008807cd4363dae2104395f408b2723dfaf879",
+    "probe_abort_levels.py": "6db0dd4d5f76b2a4235e9165e4a9bd0be5e1f668510803a2b0553853debd3d86",
+    "oracle.ld": "bda09dbcfbd0b5580ecb0121f524e8f95267c8433e643928603ccd810daf539a"
+  },
+  "framework_preserved": true,
+  "source_sha256": {
+    "operation_start.S": "9dce34271e0f8a8525d40761202cc7462cc850c412195b7af4e0db97d9381ec6",
+    "operation_oracle.c": "0105e3d82e6e9c44c33c1e50c1ebcadabe781f88548c9a0a57ef94668f524692",
+    "oracle.ld": "bda09dbcfbd0b5580ecb0121f524e8f95267c8433e643928603ccd810daf539a",
+    "probe_operations.py": "9a0f75631dc6784898475115798b7e8a7d54c673adeb26ab5df18a2feea7dbe2"
+  },
+  "default_report_sha256": "61ada4442287b044e5f2dc0c0dbc16ea463127ed4a3092091585e1148095f8eb",
+  "model_limit_report_sha256": "2610422d45944fec698662846eca1b23c4f8406ba762e129aa414454202519c2",
+  "public_arm_manual_mirror": "https://cs140e.sergio.bz/docs/ARMv8-Reference-Manual.pdf",
+  "public_arm_manual_sha256": "24ebe2e085a4f9e6588ac8118e2b8747baec35184c44211e01751eb176c1d76e",
+  "production_source_edited": false,
+  "apple_assets_opened": false,
+  "native_mmu_verified": false,
+  "physical_arm_verified": false,
+  "x86_efi_verified": false,
+  "macos_boot_verified": false,
+  "guest_metal_verified": false,
+  "confirmed_findings": [
+    {
+      "kind": "EL1 fetch permission",
+      "source_observed": "runtime/preos/src/mmu.rs permissions executable_privileged used PXN only",
+      "required_behavior": "EL0-writable AP01 implies privileged execute-never even when PXN=0 and SCTLR.WXN=0; cold and cached result must agree.",
+      "normative_reference": "DDI0487B.a TableD4-34 D4-2077/2078",
+      "actual_cases": "Both granules, AP01/AP11, all UXN/PXN combinations, saved PAN0 and SCTLR WXN0."
+    },
+    {
+      "kind": "EL0 fetch permission",
+      "source_observed": "runtime/preos/src/mmu.rs permissions rejected EL0 !user_accessible before access-kind distinction",
+      "required_behavior": "With WXN0 and UXN0, AP00/AP10 can execute at EL0 while data reads remain denied; cold and cached result must agree.",
+      "normative_reference": "DDI0487B.a TableD4-34 D4-2077/2078",
+      "actual_cases": "Both granules, AP00/AP10, all UXN/PXN combinations, correct EL0 saved mode."
+    }
+  ],
+  "model_limit": "QEMU8.2.2 raises a mapping instruction abort before PC alignment when both exist. Arm D1.13.3 requires PC alignment first. Keep production PC-first and retain12 failed comparisons separately."
+}

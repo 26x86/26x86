@@ -1,0 +1,249 @@
+{
+  "schema": "nextcore-native-memory-provider-v1",
+  "passed": true,
+  "native_jit_executed": true,
+  "actual_c_rust_callbacks": true,
+  "source_preserved": true,
+  "negative_control_detected": true,
+  "source_sha256": {
+    "jit.c": "6be2be04cd7f4f8ee091dcbd0218bb5f149924c153084244de6a164fd201a804",
+    "jit.h": "82ec08a23294a0d02dc95de0b98cc3c6b0d29f2de0656cbdcc4801f7c3161ce9",
+    "arch.c": "99b5cf138ed60b7a98a6d94036567aa3538d5d05f880ce7bcb742c375eb2fbf9",
+    "boot_jit.c": "4885d29d7f6d7954a816b00d55600acf47992cf8ada469175b2d6130af62c8de",
+    "boot_jit.h": "def7ee05c4051107257407f3f4eed6ab6551ba04b61f7178e051f4e95126af81",
+    "platform_abi.h": "e0c19055be84de172df89495c822a18deae24d04315e4350cc42cba07fc90eba",
+    "memory_abi.h": "0ef6a89d512ef2d1fd0f92d0a25018536fa9c45106372e6c27f749b427b1f515",
+    "memory_boot.h": "d2972ffc34487e5c328ebdd51e8333d82282df9e7305b6c60426aea3c4fd11f8",
+    "memory_boot.c": "df874fc52f1a43ba71f137ebf45cf165b724d3435de9a2fa74a393adeca03dac",
+    "memory_boot.rs": "5031838160f1d9490f03d15ca479bcd3076ce2a0758129c121cace74781ea658",
+    "memory_layout.c": "df5dda0e88b0a37c3d656e45a2dc807a569831e7c223b474479fcd03a565ec65",
+    "test_memory_provider.rs": "8536474a38b83f76f665aaf1aed54145e8546cf3e4198b29c99fdc497bcb82d6",
+    "memory_abi_v2.h": "a22bd4f1b264c521889bb3650c5c3abcbed5cab9bd4fca72938ec2512d936264",
+    "memory_boot_v2.h": "67564f55e7dbce6d19d6d3ae3daaa936c3d8801daae6dca027db62c225f70f7d",
+    "memory_stage1.inc": "c0a1fdd8debc75bd418bae475d1e97a097df47ddd1dd30ccf499b4241822dfb6",
+    "preos/src/mmu.rs": "c17c6d3332ee88697eb412e867befbb1c2b87263c50b027b7b68d6c1e0502955",
+    "preos/src/exception_level.rs": "254bbee46dfeab1015ad98e3953f51b4ca07f5527e26340f2746aed374c58ed7",
+    "preos/src/platform.rs": "8034a1b63c14ef6dc420f2a61adbcce21cc6d990dc777962cc7fe063c8205769",
+    "memory-service/Cargo.toml": "de0adfb9b7194d455b380c5eb787db4c95318700bedec00687ee6b2e523d8f67",
+    "memory-service/src/lib.rs": "2a32dfe97b22c03aafcacbad9817d8aaf83a97f183f181952dfc2b9189eda367",
+    "memory-service/src/abi.rs": "66b794a18316deaa7f566b8584a258ea077a6305ef8abe18cb648aa30dd07415",
+    "memory-service/src/abi_v2.rs": "95840ea60a9e148dd273966e416d3a90083c3617aa0d89d268705e1285dc4b73",
+    "memory-service/src/stage1.rs": "9a5081e4c281b9a2fc9866ec2996296731a5c91ece3494fb64c08bcff0be627a",
+    "memory-service/src/stage1_tests.rs": "584c0dcbd4d11c11c078ebd0726589e82a762d3f785cd3b1ae266074c631d1a4"
+  },
+  "records": [
+    {
+      "command": [
+        "/home/sharh/.cargo/bin/rustc",
+        "--edition=2021",
+        "--crate-type=rlib",
+        "--crate-name=nextcore_memory_service",
+        "-Copt-level=2",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/memory-service/src/lib.rs",
+        "-o",
+        "/home/sharh/work/bp32-legacy-v1-proof/libnextcore_memory_service.rlib"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/jit.c",
+        "-o",
+        "/home/sharh/work/bp32-legacy-v1-proof/jit.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/arch.c",
+        "-o",
+        "/home/sharh/work/bp32-legacy-v1-proof/arch.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/boot_jit.c",
+        "-o",
+        "/home/sharh/work/bp32-legacy-v1-proof/boot_jit.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/memory_boot.c",
+        "-o",
+        "/home/sharh/work/bp32-legacy-v1-proof/memory_boot.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/memory_layout.c",
+        "-o",
+        "/home/sharh/work/bp32-legacy-v1-proof/memory_layout.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/.cargo/bin/rustc",
+        "--edition=2021",
+        "--test",
+        "-Copt-level=2",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/test_memory_provider.rs",
+        "--extern",
+        "nextcore_memory_service=/home/sharh/work/bp32-legacy-v1-proof/libnextcore_memory_service.rlib",
+        "-o",
+        "/home/sharh/work/bp32-legacy-v1-proof/memory_provider_tests",
+        "-Clink-arg=/home/sharh/work/bp32-legacy-v1-proof/jit.o",
+        "-Clink-arg=/home/sharh/work/bp32-legacy-v1-proof/arch.o",
+        "-Clink-arg=/home/sharh/work/bp32-legacy-v1-proof/boot_jit.o",
+        "-Clink-arg=/home/sharh/work/bp32-legacy-v1-proof/memory_boot.o",
+        "-Clink-arg=/home/sharh/work/bp32-legacy-v1-proof/memory_layout.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/work/bp32-legacy-v1-proof/memory_provider_tests",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "returncode": 0,
+      "stdout": "\nrunning 12 tests\ntest actual_c_and_rust_layouts_match_every_field_and_mmu_gate_prevents_callbacks ... ok\ntest all_thirteen_scalar_forms_use_provider_with_signed_and_zero_register_semantics ... ok\ntest callback_failures_and_malformed_replies_are_not_guest_exceptions ... ok\ntest conditional_comparison_stays_native_between_provider_fetches ... ok\ntest data_alignment_has_exact_esr_far_and_unchanged_memory_registers ... ok\ntest lower_el_fault_and_original_sp_priority_keep_the_precise_saved_state ... ok\ntest missing_second_element_and_invalid_encoding_never_partially_commit ... ok\ntest native_alu_and_memory_commit_through_actual_rust_callbacks ... ok\ntest only_committed_control_flow_is_fetched_and_pc_alignment_is_precise ... ok\ntest pair_modes_widths_and_success_only_writeback_use_one_full_span_request ... ok\ntest platform::tests::platform_abi_receipt ... VF_PLATFORM_ABI {\"options_size\":64,\"options_align\":8,\"options_override\":16,\"options_vbar\":32,\"result_size\":128,\"result_align\":8,\"result_override\":64,\"result_pending\":72,\"result_elr\":80,\"result_sp\":120}\nok\ntest public_entry_rejects_missing_callback_overflow_and_known_alias_before_effects ... ok\n\ntest result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/.cargo/bin/rustc",
+        "--edition=2021",
+        "--test",
+        "-Copt-level=2",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/memory-service/src/lib.rs",
+        "-o",
+        "/home/sharh/work/bp32-legacy-v1-proof/memory_service_tests"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/work/bp32-legacy-v1-proof/memory_service_tests",
+        "--nocapture"
+      ],
+      "returncode": 0,
+      "stdout": "\nrunning 38 tests\ntest abi_v2::tests::v2_layout_is_fixed_and_separate_from_v1 ... ok\ntest mmu::tests::detailed_access_flags_and_reserved_blocks_keep_their_level ... ok\ntest mmu::tests::detailed_epd_and_root_address_errors_use_aarch64_level_zero ... ok\ntest mmu::tests::detailed_input_errors_never_invent_a_leaf_or_table_read ... ok\ntest mmu::tests::detailed_invalid_descriptors_preserve_level_and_read_address ... ok\ntest mmu::tests::detailed_leaf_and_cached_permission_failures_agree ... ok\ntest mmu::tests::detailed_output_address_errors_keep_descriptor_level ... ok\ntest mmu::tests::detailed_table_failures_are_not_invalid_descriptors ... ok\ntest mmu::tests::disabled_is_identity_and_instruction_alignment_is_four_bytes ... ok\ntest mmu::tests::disabled_translation_accepts_full_guest_address_width ... ok\ntest mmu::tests::disabled_walk_is_translation_fault_without_reading_descriptors ... ok\ntest mmu::tests::dynamic_start_level_supports_t0sz_25_four_kib_blocks ... ok\ntest mmu::tests::el0_execute_only_tlb_fill_preserves_later_el1_write_permission ... ok\ntest mmu::tests::execution_permission_matrix_matches_arm_table_in_cold_and_cached_walks ... ok\ntest mmu::tests::partial_initial_tables_exclude_upper_canonical_bits ... ok\ntest mmu::tests::page_walk_and_asid_tlb_hit ... ok\ntest mmu::tests::permission_and_access_flag_faults_are_distinct ... ok\ntest mmu::tests::physical_output_width_bounds_roots_tables_and_leaf_pages ... ok\ntest mmu::tests::rejected_tcr_preserves_previous_configuration_and_cached_mapping ... ok\ntest mmu::tests::sixteen_kib_l1_blocks_require_unsupported_lpa2 ... ok\ntest mmu::tests::sixteen_kib_tcr_selects_l2_block_and_preserves_fault_class ... ok\ntest mmu::tests::sixteen_kib_upper_page_uses_distinct_tg1_encoding ... ok\ntest mmu::tests::strict_profile_rejects_unmodeled_attributes_and_preserves_legacy_mode ... ok\ntest mmu::tests::strict_profile_validates_table_hierarchy_and_block_output_bits ... ok\ntest mmu::tests::tlb_does_not_bypass_el0_access_permission ... ok\ntest mmu::tests::tlb_keeps_el0_uxn_and_privileged_pxn_permissions_distinct ... ok\ntest mmu::tests::unsupported_physical_regime_preserves_cached_configuration ... ok\ntest mmu::tests::upper_canonical_addresses_use_ttbr1_and_asid_tlb ... ok\ntest mmu::tests::virtual_range_gaps_are_translation_faults_without_reading_tables ... ok\ntest stage1::tests::controls_requests_and_missing_tables_have_fresh_diagnostics ... ok\ntest stage1::tests::fetch_uses_execute_permissions_and_upper_va_root ... ok\ntest stage1::tests::nonidentity_scalar_and_discontiguous_pair_transfers_both_granules ... ok\ntest tests::all_widths_and_counts_preflight_and_transfer_raw_elements ... ok\ntest tests::device_alignment_and_pc_alignment_have_exact_syndromes ... ok\ntest tests::malformed_requests_are_rejected_without_effects ... ok\ntest tests::rejected_pair_never_partially_writes_the_first_element ... ok\ntest tests::unsupported_modes_and_backing_do_not_invent_guest_faults ... ok\ntest stage1::tests::pair_second_page_failure_never_commits_a_first_transfer ... ok\n\ntest result: ok. 38 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime",
+        "-c",
+        "/home/sharh/work/bp32-legacy-v1-proof/jit_provider_bypass.c",
+        "-o",
+        "/home/sharh/work/bp32-legacy-v1-proof/jit_provider_bypass.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/.cargo/bin/rustc",
+        "--edition=2021",
+        "--test",
+        "-Copt-level=2",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/test_memory_provider.rs",
+        "--extern",
+        "nextcore_memory_service=/home/sharh/work/bp32-legacy-v1-proof/libnextcore_memory_service.rlib",
+        "-o",
+        "/home/sharh/work/bp32-legacy-v1-proof/memory_provider_bypass_tests",
+        "-Clink-arg=/home/sharh/work/bp32-legacy-v1-proof/jit_provider_bypass.o",
+        "-Clink-arg=/home/sharh/work/bp32-legacy-v1-proof/arch.o",
+        "-Clink-arg=/home/sharh/work/bp32-legacy-v1-proof/boot_jit.o",
+        "-Clink-arg=/home/sharh/work/bp32-legacy-v1-proof/memory_boot.o",
+        "-Clink-arg=/home/sharh/work/bp32-legacy-v1-proof/memory_layout.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/work/bp32-legacy-v1-proof/memory_provider_bypass_tests",
+        "--exact",
+        "native_alu_and_memory_commit_through_actual_rust_callbacks",
+        "--nocapture"
+      ],
+      "returncode": 101,
+      "stdout": "\nrunning 1 test\ntest native_alu_and_memory_commit_through_actual_rust_callbacks ... FAILED\n\nfailures:\n\nfailures:\n    native_alu_and_memory_commit_through_actual_rust_callbacks\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.00s\n\n",
+      "stderr": "\nthread 'native_alu_and_memory_commit_through_actual_rust_callbacks' (1127) panicked at /home/sharh/work/bp32-ise-native-mmu/runtime/test_memory_provider.rs:84:5:\nassertion `left == right` failed\n  left: (17, 1, 2, 42, 0, 0)\n right: (1, 5, 5, 42, 42, 47)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+      "expected_failure": true
+    }
+  ],
+  "scope": "M=0 caller-owned RAM only; no macOS boot claim"
+}

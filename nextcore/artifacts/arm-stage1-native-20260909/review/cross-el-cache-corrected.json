@@ -1,0 +1,25 @@
+{
+  "mmu_sha256": "c17c6d3332ee88697eb412e867befbb1c2b87263c50b027b7b68d6c1e0502955",
+  "records": [
+    {
+      "command": [
+        "/home/sharh/.rustup/toolchains/1.98.1-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2021",
+        "/home/sharh/work/bp32-native-review/cross_el_cache_corrected.rs",
+        "-o",
+        "/home/sharh/work/bp32-native-review/cross_el_cache_corrected"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "warning: variants `El2` and `El3` are never constructed\n --> /home/sharh/work/bp32-ise-native-mmu/runtime/preos/src/exception_level.rs:7:5\n  |\n4 | pub(crate) enum ExceptionLevel {\n  |                 -------------- variants in this enum\n...\n7 |     El2 = 2,\n  |     ^^^\n8 |     El3 = 3,\n  |     ^^^\n  |\n  = note: `ExceptionLevel` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis\n  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: associated function `from_u8` is never used\n  --> /home/sharh/work/bp32-ise-native-mmu/runtime/preos/src/exception_level.rs:12:19\n   |\n11 | impl ExceptionLevel {\n   | ------------------- associated function in this implementation\n12 |     pub(crate) fn from_u8(value: u8) -> Option<Self> {\n   |                   ^^^^^^^\n\nwarning: 2 warnings emitted\n\n"
+    },
+    {
+      "command": [
+        "/home/sharh/work/bp32-native-review/cross_el_cache_corrected"
+      ],
+      "returncode": 0,
+      "stdout": "strict=false cold_EL1_write=Ok(Translation { pa: 32776, writable: true, executable: true, page_shift: 12, attributes: None }) after_EL0_fetch=Ok(Translation { pa: 32776, writable: true, executable: true, page_shift: 12, attributes: None })\nstrict=true cold_EL1_write=Ok(Translation { pa: 32776, writable: true, executable: true, page_shift: 12, attributes: Some(MemoryAttributes { attr_index: 0, shareability: 0, mair: 68 }) }) after_EL0_fetch=Ok(Translation { pa: 32776, writable: true, executable: true, page_shift: 12, attributes: Some(MemoryAttributes { attr_index: 0, shareability: 0, mair: 68 }) })\n",
+      "stderr": ""
+    }
+  ]
+}

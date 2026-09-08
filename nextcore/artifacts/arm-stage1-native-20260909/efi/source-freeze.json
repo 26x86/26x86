@@ -1,0 +1,33 @@
+{
+  "schema": "nextcore.bp32-authored-efi-stage1-freeze.v1",
+  "source_frozen": true,
+  "base_efi_commit": "74956333503abe5724b13d22b1337d18a380bbf7",
+  "core_commit": "40833dc29d8bcd2976d0a13c2f120533d02500c4",
+  "runtime_manifest_sha256": "5b7bed1dfaf821592a1f6c95b408a9a5b9205cbfefa7eca35b703b8ce0221808",
+  "efi_sha256": "589d48ea8e4da5cfdfb764f29759ae7032ce8574cd65adf786617a8240e94692",
+  "strict_actual_efi_cases_passed": 108,
+  "host_reader_tests_passed": 4,
+  "negative_expected_failure": true,
+  "source_sha256": {
+    "Cargo.toml": "dadf76abeadabd15265745c859a7e525f1123a9c4fe5b968dd56175dc0f6e353",
+    "build.rs": "bf1adb4f27b7e989e7cbaf84cab32cdf3d61c5acb84c61735875f4ee94970243",
+    "src/mmu_probe.rs": "f3813c51ba2c0f9fd9f89f75248b51b1a3454b815ba93cca60e67981fee9c8d7",
+    "docs/ARM_STAGE1_EFI_PROBE.md": "3e58ec06547771628101036843fef14c3aa7a22357cf10f01981717bc2132033",
+    "docs/fixtures/stage1_pair.S": "8e1a62d2a191dfc6576a70829be21e52bc30686a3a25751f1a13f4dd321c7060",
+    "docs/fixtures/stage1_scalar.S": "75673c3f3b0f9525bc1146e022a5265fe779e26d995013c4b774fac7577576bd",
+    "tools/verify_stage1_ovmf.py": "0a7589f66733f0403bdd5521110f1b43420e06fb7a815eb3d8af9874fed2cff9",
+    "tools/test_stage1_reader.py": "5fefb30f31987722cf9f5ac4fc6a3917b3bc323927ab5a0beb9384988c1f5b77"
+  },
+  "evidence_sha256": {
+    "runtime-source-freeze.json": "5b7bed1dfaf821592a1f6c95b408a9a5b9205cbfefa7eca35b703b8ce0221808",
+    "binary-final.json": "9ae350bcd9b924ae6bc3f15b0ead666a6eee51c9211bad7c173f7fb743b87e2d",
+    "reader-tests.log": "35f17990fb2be6b58879a0e0ffdd444b5a4c661d87e9d8bd4039df066a4b58cc",
+    "isa/instruction-receipt.json": "58c78a5999904f5707848ad4faede4a8365e2e1e37aad549d0227f7759c85d6f",
+    "ovmf-final-r2/report.json": "4ed01c6aa74e162079387d2f6e0b598b73624b733b010d8bf3ab78a987aa5990",
+    "ovmf-negative-va-as-pa/report.json": "cafdf5f69b43ff4ab1f8981afd4fd813aa3baaa453ddc0cfa491074f4b269a8d",
+    "negative-va-as-pa/mutation.json": "9a80233959ddb7b79ea3178c4b6efb988e6745beb09ad1c4adaf1bc2f6f7bb0c"
+  },
+  "original_inputs_used": false,
+  "normal_boot_verified": false,
+  "pins_or_index_modified": false
+}

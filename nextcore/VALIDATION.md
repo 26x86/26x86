@@ -1,3 +1,13 @@
+## BP32 implementation checkpoint — 2026-09-09
+
+ISE720d7c6 has passed final standalone source tests and module PR6 CI; it is
+merged as91721d0. EFI8d53dd2 pins it for both native sources and the Rust service.
+Full parent recursive validation is pending for this implementation commit.
+Historical authored native/EFI and independent Arm replay evidence retain their
+own provenance in artifacts/arm-stage1-{native,oracle,service-comparison}-20260909.
+The capture overlay distinguishes32 completion-state fetch comparisons from
+actual target-state evidence. Normal macOS boot and guest Metal remain unverified.
+
 # NextCore 재개 검증 — 2026-09-09
 
 2026-09-07 작업의 통합 설명과 artifact index는

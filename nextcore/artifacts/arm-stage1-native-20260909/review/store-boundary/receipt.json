@@ -1,0 +1,142 @@
+{
+  "inputs": {
+    "test_stage1_provider.rs": "534f420042b894e88a951b7eb393402877daa38ecb1c546724b3356760865290",
+    "memory_stage1.inc": "ba87a10f4a53144eff86c1b97f474fc490d520b74f114507f9a6669c95c18f7f",
+    "memory-service/src/stage1.rs": "9a5081e4c281b9a2fc9866ec2996296731a5c91ece3494fb64c08bcff0be627a",
+    "preos/src/mmu.rs": "c17c6d3332ee88697eb412e867befbb1c2b87263c50b027b7b68d6c1e0502955"
+  },
+  "records": [
+    {
+      "command": [
+        "/home/sharh/.rustup/toolchains/1.98.1-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2021",
+        "--crate-type=rlib",
+        "--crate-name=nextcore_memory_service",
+        "-Copt-level=1",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/memory-service/src/lib.rs",
+        "-o",
+        "/home/sharh/work/bp32-native-review/store-boundary/libnextcore_memory_service.rlib"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O1",
+        "-c",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/jit.c",
+        "-o",
+        "/home/sharh/work/bp32-native-review/store-boundary/jit.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O1",
+        "-c",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/arch.c",
+        "-o",
+        "/home/sharh/work/bp32-native-review/store-boundary/arch.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O1",
+        "-c",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/boot_jit.c",
+        "-o",
+        "/home/sharh/work/bp32-native-review/store-boundary/boot_jit.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O1",
+        "-c",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/memory_boot.c",
+        "-o",
+        "/home/sharh/work/bp32-native-review/store-boundary/memory_boot.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O1",
+        "-c",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/memory_boot_v2.c",
+        "-o",
+        "/home/sharh/work/bp32-native-review/store-boundary/memory_boot_v2.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O1",
+        "-c",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/memory_layout_v2.c",
+        "-o",
+        "/home/sharh/work/bp32-native-review/store-boundary/memory_layout_v2.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/.rustup/toolchains/1.98.1-x86_64-unknown-linux-gnu/bin/rustc",
+        "--edition=2021",
+        "--test",
+        "-Copt-level=1",
+        "/home/sharh/work/bp32-native-review/store-boundary/store_boundary.rs",
+        "--extern",
+        "nextcore_memory_service=/home/sharh/work/bp32-native-review/store-boundary/libnextcore_memory_service.rlib",
+        "-o",
+        "/home/sharh/work/bp32-native-review/store-boundary/store_boundary",
+        "-Clink-arg=/home/sharh/work/bp32-native-review/store-boundary/jit.o",
+        "-Clink-arg=/home/sharh/work/bp32-native-review/store-boundary/arch.o",
+        "-Clink-arg=/home/sharh/work/bp32-native-review/store-boundary/boot_jit.o",
+        "-Clink-arg=/home/sharh/work/bp32-native-review/store-boundary/memory_boot.o",
+        "-Clink-arg=/home/sharh/work/bp32-native-review/store-boundary/memory_boot_v2.o",
+        "-Clink-arg=/home/sharh/work/bp32-native-review/store-boundary/memory_layout_v2.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/work/bp32-native-review/store-boundary/store_boundary",
+        "--exact",
+        "review_store_malformed_after_commit",
+        "--nocapture"
+      ],
+      "returncode": 0,
+      "stdout": "\nrunning 1 test\nstatus=4 provider=3 retired=0 completed=0 old=[165, 165, 165, 165, 165, 165, 165, 165] new=[42, 0, 0, 0, 0, 0, 0, 0]\ntest review_store_malformed_after_commit ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s\n\n",
+      "stderr": ""
+    }
+  ]
+}

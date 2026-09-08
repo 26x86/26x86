@@ -1,0 +1,41 @@
+{
+  "schema": "nextcore-bp32-independent-native-memory-review-v1",
+  "review_complete": true,
+  "production_source_frozen": false,
+  "production_edits": false,
+  "ovmf_executed": false,
+  "original_os_assets_accessed": false,
+  "findings": [
+    {
+      "id": "cross-el-cache-write-capability",
+      "confirmed": true,
+      "owner_fix_reported": true,
+      "independent_corrected_reproduction_passed": true
+    },
+    {
+      "id": "malformed-fault-reply-combinations",
+      "confirmed": true,
+      "owner_notified": true,
+      "independent_corrected_reproduction_passed": false,
+      "status": "awaiting CPU owner correction"
+    }
+  ],
+  "verified_limits": [
+    "C cannot roll back RAM already written by a broken trusted STORE callback before malformed reply or transport failure; canonical-service preflight failure guarantee is distinct."
+  ],
+  "remaining_review_scope": "Callback correction may receive a subsequent narrowly scoped retest receipt. No broad native, EFI or OS boot success asserted.",
+  "files": {
+    "contract.md": "3d091c4dbb5fc3e431bb78c2f644a92c89f50225155b899e99b6ab31537ab109",
+    "review.md": "0a1d792e41a4c3a023d36ac6c3ffaf1b425f85dfb93435c561460de416b522e0",
+    "initial-source-sha256.json": "5accab4bfbf6693ecb9e332b93658da1ec7cff68651f21ca3e6167a493942cc1",
+    "cross_el_cache.rs": "f36b5de69d0264fa732516abd3c24ed31437fb6442e3b09b933a431f45d4f16c",
+    "cross-el-cache-reproduction.json": "22abc80fa0bed6d7dae93a456fc9f5decd277519e5029f0f4cb7fce58f0710a9",
+    "cross_el_cache_corrected.rs": "6cefaca913444bd704dcb57ccae237b049f832d55d9ec8e1e6a8dc33e81b5122",
+    "cross-el-cache-corrected.json": "bbeac809a91faf9cfe2989a2fe6e6052be0c2e21784ae9979e754927d74bfddf",
+    "malformed_reply.c": "6b42d2c4babf47734afacfa93be2f62d49f62836db19c74f18536e0ff3a43dbe",
+    "malformed-reply-reproduction.json": "d016d8803a473fe1827f5aea2055cd02201c6b06a22ad3e04a394252a3839fed",
+    "reviewed-source-files.json": "72f7ce32f044f129e815df970251d942f4a56b13459e832c844a001d7f735c41",
+    "store-boundary/store_boundary.rs": "9554a7f706093826d7be72284c3c7aef2b06fdb135ee8a83d6ec62e99b22d5d1",
+    "store-boundary/receipt.json": "2c9d384c0efb5be5f8575c4aec747238bc17cce94e97093fc6524b02b0f31656"
+  }
+}

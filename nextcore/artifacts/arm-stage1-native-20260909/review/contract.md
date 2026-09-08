@@ -1,0 +1,3 @@
+# BP32 independent native memory review
+
+Read-only review of the current stage1 memory service, native v2 dispatcher/boot entry/ABI and strict canonical walker. CPU tests are still under development. Only this external review directory may be written. No production changes, pin/index/metadata operations, original OS assets or OVMF execution. Record exact source SHA at inspection and report concrete findings to CPU/root. Focus trusted response validation, ESR/FAR/VA/PA distinctions, effects and retirement on failure, complete memory routing, immutable controls/table lifecycle, unsupported instruction boundaries and C/Rust ABI assumptions. Root already owns review of shared privileged-XN semantics at EL2/EL3; avoid duplicating it.

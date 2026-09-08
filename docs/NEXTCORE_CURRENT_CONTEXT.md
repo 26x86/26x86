@@ -4,6 +4,31 @@
 과장하지 않고 이어갈 수 있게 하는 정본 요약이다. 상세 설계는
 `docs/NEXTCORE_BUILD_PLAN.md`, 검증 결과는 `nextcore/VALIDATION.md`를 따른다.
 
+## BP32 최신 개발 상태
+
+BP31은 PR #13/main0509118로 최종 CI28개 및 정식 재귀 클론 검사 후 병합했다.
+BP32 ISE720d7c6는 PR #6/main91721d0으로 병합했고, 실제 native M=1 fetch/scalar/pair를
+Rust의 동일 canonical walker로 실행한다. EFI8d53dd2는 ISE의 두 의존성을 같은 커밋으로
+고정하고 명시적 NXMMU 진단 feature를 제공한다.7개 모듈과 기존8개 패키지 소유 구조는 유지한다.
+상위 통합 검증과 EFI 최종 공개 검증은 이 구현 커밋에서 별도로 수행한다.
+
+고정 Normal-NC/A=1 프로필에서 테이블과 제어 상태는 변경하지 않는다. 기존 v1/M=0 경로를
+보존하고 새80/160/128/320-byte ABI에서 번역된 VA와 실제 RAM 주소를 구분한다.
+EL0/EL1 실행 권한, 교차 EL TLB 쓰기 권한, MAIR 인코딩과 잘못된 콜백 오류 응답을 수정했다.
+ISE의 최종 독립 클론은98 참조 테스트,10 C/Rust 실행,39 서비스/공유 테스트와 기존158
+Arm 비교 및 의미 오류 대조를 통과했다. 과거 BP29 비교 도구/영수증은 그대로 두고
+현재 검증은 compare_current_walker.py를 사용한다.
+
+역사적 authored EFI108개 및 잘못된 VA-as-PA 대조를 별도 바이너리/해시로 보존한다.
+Arm 서비스 비교는 기록된354개 값(322 data/32 완료 시점 fetch 상태)과74 BTYPE 거부다.
+완료 시점 상태는 원래 target fetch 상태를 증명하지 않는다. 별도 ERET78개는 실제 BTYPE=0
+진입과 서비스 결과가 일치한다. QEMU의12 PC-priority 불일치는 실패로 유지한다.
+공개 증거는 arm-stage1-native/oracle/service-comparison-20260909 세 디렉터리다.
+
+동적 MMU 켜기/제어 변경, mutable table, 예외 처리기, 실제 macOS27 정상 진입/데스크톱,
+EFI GPU와 guest Metal은 남아 있다. Core305 runtime-DT 변환기는 별도 모듈 main에만 있으며
+이번 통합 Core408에는 포함하지 않는다. 실제 메모리 예약/수명 연결과 EFI 소비를 이어 개발한다.
+
 ## BP31 최신 개발 상태
 
 상위 PR #13의 새 재귀 baseline8bcf5c52는 workspace476/Python149/GUI25/참조93,

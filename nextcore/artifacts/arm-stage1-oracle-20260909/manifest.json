@@ -1,0 +1,33 @@
+{
+  "schema": "nextcore.stage1-oracle-public-manifest.v1",
+  "files": {
+    "README.md": "001fbb2b6c73bd3a5687123460576760d7062efba16dbb74965b15966cd628b2",
+    "baseline-framework-sha256.json": "ab2dae0135462384531e4f0d1f56bdd42723bbf6415ef72a9c283ddab2cf8001",
+    "contract.md": "7e9c5a99547ed2084fe71b73bdc60ce3122f078f80e184362f35c31a5520a5e6",
+    "operation_oracle.c": "0105e3d82e6e9c44c33c1e50c1ebcadabe781f88548c9a0a57ef94668f524692",
+    "operation_start.S": "9dce34271e0f8a8525d40761202cc7462cc850c412195b7af4e0db97d9381ec6",
+    "oracle.ld": "bda09dbcfbd0b5580ecb0121f524e8f95267c8433e643928603ccd810daf539a",
+    "probe_operations.py": "9a0f75631dc6784898475115798b7e8a7d54c673adeb26ab5df18a2feea7dbe2",
+    "review-receipt.json": "9e8ef67dd9659c3e056f08f46e9f8679f52a40136393c704035cc1f7e1bd5c47",
+    "run4-accepted/commands.json": "fb30f61808772c07608813c6ffc10edd04fde90a9c39f92adf9a4aec8f4e360b",
+    "run4-accepted/expectations.json": "b613c157c7eb0a84f8e39da4d4da1a547085194ab059fc94025edffd6f5c4aba",
+    "run4-accepted/negative.log": "60f3732766a654877661f551617e2d8adc3cbb8b1fbb048143103092c5a9025f",
+    "run4-accepted/normal.log": "28b8f3f37859628f8fd3b1be039ca9dbc589fd255e0e419233de633b59e5305b",
+    "run4-accepted/operation_cases.h": "146483e41196b5b25dd83cd385658ded68e9579fee13ca5fb2230a7e934bea16",
+    "run4-accepted/operation_oracle.c": "0105e3d82e6e9c44c33c1e50c1ebcadabe781f88548c9a0a57ef94668f524692",
+    "run4-accepted/operation_start.S": "9dce34271e0f8a8525d40761202cc7462cc850c412195b7af4e0db97d9381ec6",
+    "run4-accepted/oracle.ld": "bda09dbcfbd0b5580ecb0121f524e8f95267c8433e643928603ccd810daf539a",
+    "run4-accepted/probe_operations.py": "9a0f75631dc6784898475115798b7e8a7d54c673adeb26ab5df18a2feea7dbe2",
+    "run4-accepted/report.json": "61ada4442287b044e5f2dc0c0dbc16ea463127ed4a3092091585e1148095f8eb",
+    "run5-pc-model-limit/commands.json": "7724df0743cf2d64d39bf6a1d758b590ba99f6af69362bf2c8d1243f56ce1b00",
+    "run5-pc-model-limit/expectations.json": "ca69a3efc2fe9d60dc5a07d9e95b1132e36d89cd0114e5688ebc7e9d2f8c1ccf",
+    "run5-pc-model-limit/negative.log": "3f11892d6b758126d7c661499af6443acbd8f59fdb8127d52abfb7370a40410f",
+    "run5-pc-model-limit/normal.log": "96a41d596475f59d1ae4221ad8d83904ecfbfccec4844ad5c0f163b91ae2a8e8",
+    "run5-pc-model-limit/operation_cases.h": "e76a5c8ec78e8711fb4d97cb7b515146cf1d7ffcb78b12b869acb7c74b688c77",
+    "run5-pc-model-limit/operation_oracle.c": "0105e3d82e6e9c44c33c1e50c1ebcadabe781f88548c9a0a57ef94668f524692",
+    "run5-pc-model-limit/operation_start.S": "9dce34271e0f8a8525d40761202cc7462cc850c412195b7af4e0db97d9381ec6",
+    "run5-pc-model-limit/oracle.ld": "bda09dbcfbd0b5580ecb0121f524e8f95267c8433e643928603ccd810daf539a",
+    "run5-pc-model-limit/probe_operations.py": "9a0f75631dc6784898475115798b7e8a7d54c673adeb26ab5df18a2feea7dbe2",
+    "run5-pc-model-limit/report.json": "2610422d45944fec698662846eca1b23c4f8406ba762e129aa414454202519c2"
+  }
+}

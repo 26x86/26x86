@@ -1,0 +1,19 @@
+{
+  "schema": "nextcore-bp32-review-correction-retest-v1",
+  "prior_receipt_sha256": "4d9cdd8a3052bdaefe8cf76cb6dd41e4aeda126ce14783c0f907961eca9ee2b9",
+  "corrected_findings": [
+    "cross-el-cache-write-capability",
+    "malformed-fault-reply-combinations"
+  ],
+  "independent_retests_passed": true,
+  "cases": "Legacy/strict cold-vs-hot EL0fetch->EL1write and four exact malformed callback replies",
+  "source_frozen": false,
+  "production_edits": false,
+  "ovmf_executed": false,
+  "files": {
+    "cross-el-cache-corrected.json": "bbeac809a91faf9cfe2989a2fe6e6052be0c2e21784ae9979e754927d74bfddf",
+    "cross_el_cache_corrected.rs": "6cefaca913444bd704dcb57ccae237b049f832d55d9ec8e1e6a8dc33e81b5122",
+    "malformed-reply-corrected.json": "edc7e948d3ad0c0fbb26ae2c7d5863647aa3400fe07ba54d563f7a34552699e3",
+    "malformed_reply_corrected.c": "e611d847547bf82cc3542bee961e2ce9e9f440566a01b1b6a52d249ffa590f3b"
+  }
+}
