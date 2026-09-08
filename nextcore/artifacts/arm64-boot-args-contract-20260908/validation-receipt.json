@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "layer": "public ARM64 boot-argument encoding, no guest entry",
+  "source_profile": "xnu-12377.121.6",
+  "source_commit": "ac9718fb1af618d5ce8678d0dc6e8a58f252216f",
+  "sources": [
+    {
+      "path": "nextcore/crates/nextcore-core/src/xnu_arm64_boot_args.rs",
+      "sha256": "47945c5210fc8e9cfbb928328d41a8e0761acaccc61e3c7223bfd04255955175"
+    },
+    {
+      "path": "nextcore/crates/nextcore-core/tests/xnu_arm64_boot_args.rs",
+      "sha256": "4cdaaf6315930e9a12507d93d50db9ec3016040e1ed11966fbfd9724cee917a2"
+    },
+    {
+      "path": "nextcore/artifacts/arm64-boot-args-contract-20260908/layout_fixture.c",
+      "sha256": "fc8e55df4c230b76a289ed786dcb2c4c907d8d4317061914229c01ee6682e984"
+    },
+    {
+      "path": "nextcore/artifacts/arm64-boot-args-contract-20260908/verify_layout.py",
+      "sha256": "5a5068fb58c80213928c94c7bccb99a9ef9cef05ea5cbaf24065b9c2fafb06cb"
+    }
+  ],
+  "checks": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "nextcore-core",
+        "--test",
+        "xnu_arm64_boot_args"
+      ],
+      "cwd": "nextcore",
+      "exit_code": 0,
+      "tests_passed": 15,
+      "tests_failed": 0,
+      "evidence": "Executed in this implementation session before final clippy gate"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "-p",
+        "nextcore-core",
+        "--no-default-features"
+      ],
+      "cwd": "nextcore",
+      "exit_code": 0,
+      "evidence": "Executed in this implementation session before final clippy gate"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "nextcore-core",
+        "--test",
+        "xnu_arm64_boot_args",
+        "--",
+        "-D",
+        "warnings",
+        "-A",
+        "clippy::manual_is_multiple_of"
+      ],
+      "cwd": "nextcore",
+      "exit_code": 1,
+      "unrelated_diagnostics": [
+        "acpi.rs unnecessary_lazy_evaluations: 3",
+        "boot_picker.rs implicit_saturating_sub: 1"
+      ],
+      "tool_chunk": "6bbcff"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "nextcore-core",
+        "--test",
+        "xnu_arm64_boot_args",
+        "--",
+        "-D",
+        "warnings",
+        "-A",
+        "clippy::manual_is_multiple_of",
+        "-A",
+        "clippy::unnecessary_lazy_evaluations",
+        "-A",
+        "clippy::implicit_saturating_sub"
+      ],
+      "cwd": "nextcore",
+      "exit_code": 0,
+      "tool_chunk": "2bfe69"
+    }
+  ],
+  "c_layout_receipt": "layout-r1/receipt.json",
+  "guest_executed": false,
+  "execution_ready": false,
+  "actual_macos27_abi_verified": false,
+  "bootstrap_mapping_verified": false,
+  "physical_memory_placement_verified": false,
+  "metal_verified": false,
+  "decision": "Source frozen for independent review; no private asset or kernel execution implementation added"
+}

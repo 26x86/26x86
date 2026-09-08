@@ -1055,6 +1055,28 @@ register 수정, 임의 MMIO 응답·alias·원본 변경은 하지 않는다. �
 시간/로그 상한 및 정리를 기존 감독 계약으로 보존한다. private 주소·바이트와
 분석은 `_isolated/`에만 저장하며 이는 장치 모델 또는 XNU 실행 성공 판정이 아니다.
 
+### BP22-C — 독립 ARM64 XNU boot_args codec
+
+현재 Intel 전용 boot_args를 ARM으로 재사용하지 않는다. 공개 XNU
+`ac9718fb1af618d5ce8678d0dc6e8a58f252216f`의 ARM revision 2/version 2 LP64
+1152B wire를 별도 `xnu_arm64_boot_args` module에 explicit LE codec로 구현한다.
+공개 헤더의 layout을 독립 C offsetof/sizeof로 대조하고 RAM/커널/인자/DT 범위,
+정렬·겹침·NUL 종료를 검사한다. x0의 boot_args PA와 wire DT 초기 KVA는 구분한다.
+DT KVA는 공개 entry/초기 C 소비 규칙에 따라 virtBase + dtPA - physBase로 계산하며
+checked arithmetic을 요구한다. Intel module은 수정하지 않는다.
+
+공개 VMAPPLE 16K profile의 bootstrap mapping 제약과 EL1/MMU-off/DAIF/cache/PAC/
+CPU device 요건은 codec과 별도의 준비 조건이다. 실제 Golden Gate 원본 KC는
+ARM64E이므로 ordinary arm64 guest probe 빌드가 이 kernel의 PAC 실행을 검증하지
+않는다. ARM64 KC의 실제 배치·인증·entry, 대상 27의 ABI 동등성 및 게스트 장치
+구현은 이 첫 codec 완료 판정에 포함하지 않는다. 공개 XNU가 담당하는 fileset
+chained rebase/PAC 및 header slide를 로더가 미리 중복 적용하지 않는다.
+
+Build Plan 구현 하위 작업을 ARM 계약 담당에게 위임한다. 소유 파일은 별도 ARM64
+core module, tests, 필요 lib export와 공개 계약 결과이며 root가 문서/commit을
+통합한다. 코드 이후 최소 no_std build와 독립 layout 및 malformed-input 시험을
+수행하고 execution-ready/guest Metal 상태는 실제 실행 전 false로 유지한다.
+
 ## OPEN_QUESTION
 
 - BP9 연속 실행 결정: Design D2-A는 표준 EFI application 중간 경로를 허용했고,
