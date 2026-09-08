@@ -1,0 +1,149 @@
+{
+  "schema": "nextcore.fresh-integration/1",
+  "passed": true,
+  "integration_commit": "d43cc52755dae6e1103b0483b7621521bdad2ce0",
+  "clone_transport": "local committed repositories with temporary Git URL mappings; remote publication not asserted",
+  "recursive_modules": true,
+  "working_tree_clean": true,
+  "commands": [
+    {
+      "name": "submodules",
+      "command": [
+        "python3",
+        "Tools/verify_nextcore_submodules.py",
+        "--cargo",
+        "--require-clean"
+      ],
+      "exit_code": 0,
+      "seconds": 0.359
+    },
+    {
+      "name": "native-pac",
+      "command": [
+        "python3",
+        "nextcore/tools/probe_efi_native_pauth.py"
+      ],
+      "exit_code": 0,
+      "seconds": 5.67
+    },
+    {
+      "name": "workspace",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "--workspace"
+      ],
+      "exit_code": 0,
+      "seconds": 21.221
+    },
+    {
+      "name": "python",
+      "command": [
+        "/home/sharh/.venvs/nextcore/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 34.274
+    },
+    {
+      "name": "efi-default",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "--release",
+        "-p",
+        "nextcore-efi",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--bin",
+        "NXARMJIT",
+        "--features",
+        "arm-jit"
+      ],
+      "exit_code": 0,
+      "seconds": 11.007
+    },
+    {
+      "name": "efi-probe",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "--release",
+        "-p",
+        "nextcore-efi",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--bin",
+        "NXARMJIT",
+        "--features",
+        "arm-jit-probe,arm-jit-trace"
+      ],
+      "exit_code": 0,
+      "seconds": 2.626
+    },
+    {
+      "name": "firmware-nine",
+      "command": [
+        "python3",
+        "nextcore/tools/verify_arm_jit_ovmf.py",
+        "--efi-default",
+        "/home/sharh/work/integration-validation-20260908/NXARMJIT-default.efi",
+        "--efi-probe",
+        "/home/sharh/work/integration-validation-20260908/NXARMJIT-probe.efi",
+        "--output",
+        "/home/sharh/work/integration-validation-20260908/firmware-nine"
+      ],
+      "exit_code": 0,
+      "seconds": 51.628
+    },
+    {
+      "name": "firmware-prefix",
+      "command": [
+        "python3",
+        "nextcore/tools/verify_arm_sptm_prefix_ovmf.py",
+        "--efi-default",
+        "/home/sharh/work/integration-validation-20260908/NXARMJIT-default.efi",
+        "--efi-trace",
+        "/home/sharh/work/integration-validation-20260908/NXARMJIT-probe.efi",
+        "--output",
+        "/home/sharh/work/integration-validation-20260908/firmware-prefix"
+      ],
+      "exit_code": 0,
+      "seconds": 16.39
+    },
+    {
+      "name": "legacy-efi",
+      "command": [
+        "python3",
+        "sandbox/efi/build.py"
+      ],
+      "exit_code": 0,
+      "seconds": 9.485
+    },
+    {
+      "name": "submodules-final",
+      "command": [
+        "python3",
+        "Tools/verify_nextcore_submodules.py",
+        "--cargo",
+        "--require-clean"
+      ],
+      "exit_code": 0,
+      "seconds": 0.539
+    }
+  ]
+}

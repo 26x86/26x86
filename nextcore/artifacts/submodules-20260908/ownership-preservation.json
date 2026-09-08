@@ -1,0 +1,106 @@
+{
+  "schema": "nextcore.module-ownership-preservation/1",
+  "base_integration_commit": "1852ae3dddc5f9d9adf0f2d2b18ed6f85bbe4241",
+  "integration_commit": "d43cc52755dae6e1103b0483b7621521bdad2ce0",
+  "previously_tracked_crate_files": 134,
+  "missing_crate_files": [],
+  "runtime_source_moves": [
+    {
+      "old": "sandbox/devices/aic_v1.c",
+      "new": "nextcore/crates/nextcore-ise/devices/aic_v1.c"
+    },
+    {
+      "old": "sandbox/devices/aic_v1.h",
+      "new": "nextcore/crates/nextcore-ise/devices/aic_v1.h"
+    },
+    {
+      "old": "sandbox/devices/test_aic.c",
+      "new": "nextcore/crates/nextcore-ise/devices/test_aic.c"
+    },
+    {
+      "old": "sandbox/efi/abi_layout.c",
+      "new": "nextcore/crates/nextcore-ise/runtime/abi_layout.c"
+    },
+    {
+      "old": "sandbox/efi/arch.c",
+      "new": "nextcore/crates/nextcore-ise/runtime/arch.c"
+    },
+    {
+      "old": "sandbox/efi/handoff.h",
+      "new": "nextcore/crates/nextcore-ise/runtime/handoff.h"
+    },
+    {
+      "old": "sandbox/efi/jit.c",
+      "new": "nextcore/crates/nextcore-ise/runtime/jit.c"
+    },
+    {
+      "old": "sandbox/efi/jit.h",
+      "new": "nextcore/crates/nextcore-ise/runtime/jit.h"
+    },
+    {
+      "old": "sandbox/efi/main.c",
+      "new": "nextcore/crates/nextcore-ise/runtime/main.c"
+    },
+    {
+      "old": "sandbox/efi/preos/Cargo.lock",
+      "new": "nextcore/crates/nextcore-ise/runtime/preos/Cargo.lock"
+    },
+    {
+      "old": "sandbox/efi/preos/Cargo.toml",
+      "new": "nextcore/crates/nextcore-ise/runtime/preos/Cargo.toml"
+    },
+    {
+      "old": "sandbox/efi/preos/src/arch.rs",
+      "new": "nextcore/crates/nextcore-ise/runtime/preos/src/arch.rs"
+    },
+    {
+      "old": "sandbox/efi/preos/src/lib.rs",
+      "new": "nextcore/crates/nextcore-ise/runtime/preos/src/lib.rs"
+    },
+    {
+      "old": "sandbox/efi/preos/src/m1.rs",
+      "new": "nextcore/crates/nextcore-ise/runtime/preos/src/m1.rs"
+    },
+    {
+      "old": "sandbox/efi/preos/src/machine.rs",
+      "new": "nextcore/crates/nextcore-ise/runtime/preos/src/machine.rs"
+    },
+    {
+      "old": "sandbox/efi/preos/src/mmu.rs",
+      "new": "nextcore/crates/nextcore-ise/runtime/preos/src/mmu.rs"
+    },
+    {
+      "old": "sandbox/efi/preos/src/vmapple.rs",
+      "new": "nextcore/crates/nextcore-ise/runtime/preos/src/vmapple.rs"
+    },
+    {
+      "old": "sandbox/efi/preos_abi.h",
+      "new": "nextcore/crates/nextcore-ise/runtime/preos_abi.h"
+    },
+    {
+      "old": "sandbox/efi/preos_bridge.c",
+      "new": "nextcore/crates/nextcore-ise/runtime/preos_bridge.c"
+    },
+    {
+      "old": "sandbox/efi/preos_bridge.h",
+      "new": "nextcore/crates/nextcore-ise/runtime/preos_bridge.h"
+    },
+    {
+      "old": "sandbox/efi/preos_host_test.c",
+      "new": "nextcore/crates/nextcore-ise/runtime/preos_host_test.c"
+    },
+    {
+      "old": "sandbox/efi/test_jit.c",
+      "new": "nextcore/crates/nextcore-ise/runtime/test_jit.c"
+    },
+    {
+      "old": "sandbox/efi/test_wx.c",
+      "new": "nextcore/crates/nextcore-ise/runtime/test_wx.c"
+    },
+    {
+      "old": "sandbox/efi/uefi.h",
+      "new": "nextcore/crates/nextcore-ise/runtime/uefi.h"
+    }
+  ],
+  "passed": true
+}
