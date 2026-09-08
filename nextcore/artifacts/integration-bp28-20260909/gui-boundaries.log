@@ -1,0 +1,30 @@
+test_boot_picker_alt_recovery_roundtrip (x86.gui.test_bridge_smoke.BridgeSmokeTest.test_boot_picker_alt_recovery_roundtrip) ... ok
+test_bridge_roundtrip (x86.gui.test_bridge_smoke.BridgeSmokeTest.test_bridge_roundtrip) ... ok
+test_frozen_webengine_lookup_is_safe (x86.gui.test_bridge_smoke.BridgeSmokeTest.test_frozen_webengine_lookup_is_safe) ... ok
+test_html_bootstraps_http_and_legacy_bridges (x86.gui.test_bridge_smoke.BridgeSmokeTest.test_html_bootstraps_http_and_legacy_bridges) ... ok
+test_http_bridge_api (x86.gui.test_bridge_smoke.BridgeSmokeTest.test_http_bridge_api) ... ok
+test_macos_gui_prefers_tauri_not_chromium (x86.gui.test_bridge_smoke.BridgeSmokeTest.test_macos_gui_prefers_tauri_not_chromium) ... skipped 'macOS-only backend preference'
+test_tauri_project_scaffolded (x86.gui.test_bridge_smoke.BridgeSmokeTest.test_tauri_project_scaffolded) ... ok
+test_webview_smoke_helper (x86.gui.test_bridge_smoke.BridgeSmokeTest.test_webview_smoke_helper) ... ok
+test_all_native_actions_denied_in_sandbox_no_spawn (x86.gui.test_mellow_gui.MellowGuiTests.test_all_native_actions_denied_in_sandbox_no_spawn) ... ok
+test_apple_silicon_stale_native_settings_can_be_repaired (x86.gui.test_mellow_gui.MellowGuiTests.test_apple_silicon_stale_native_settings_can_be_repaired) ... ok
+test_atomic_replace_failure_preserves_settings (x86.gui.test_mellow_gui.MellowGuiTests.test_atomic_replace_failure_preserves_settings) ... ok
+test_bootstrap_sandbox_on_darwin_skips_native_imports (x86.gui.test_mellow_gui.MellowGuiTests.test_bootstrap_sandbox_on_darwin_skips_native_imports) ... ok
+test_both_packaged_entries_dispatch_cli_before_native_imports (x86.gui.test_mellow_gui.MellowGuiTests.test_both_packaged_entries_dispatch_cli_before_native_imports) ... ok
+test_conflicting_environment_still_blocks_repair_not_native_gate (x86.gui.test_mellow_gui.MellowGuiTests.test_conflicting_environment_still_blocks_repair_not_native_gate) ... ok
+test_environment_lock_conflict (x86.gui.test_mellow_gui.MellowGuiTests.test_environment_lock_conflict) ... ok
+test_frozen_nonroot_command_uses_cli_reentry (x86.gui.test_mellow_gui.MellowGuiTests.test_frozen_nonroot_command_uses_cli_reentry) ... ok
+test_http_settings_real_roundtrip_and_webview_facade (x86.gui.test_mellow_gui.MellowGuiTests.test_http_settings_real_roundtrip_and_webview_facade) ... ok
+test_invalid_payload_does_not_save (x86.gui.test_mellow_gui.MellowGuiTests.test_invalid_payload_does_not_save) ... ok
+test_native_child_environment (x86.gui.test_mellow_gui.MellowGuiTests.test_native_child_environment) ... ok
+test_native_nonroot_mellow_reports_correct_apply_and_unpatch (x86.gui.test_mellow_gui.MellowGuiTests.test_native_nonroot_mellow_reports_correct_apply_and_unpatch) ... ok
+test_root_efi_preparation_then_settings_save (x86.gui.test_mellow_gui.MellowGuiTests.test_root_efi_preparation_then_settings_save) ... ok
+test_runner_rejects_before_wx_import (x86.gui.test_mellow_gui.MellowGuiTests.test_runner_rejects_before_wx_import) ... ok
+test_sandbox_native_conflict_leaves_settings_bytes_unchanged (x86.gui.test_mellow_gui.MellowGuiTests.test_sandbox_native_conflict_leaves_settings_bytes_unchanged) ... ok
+test_sandbox_save_and_status (x86.gui.test_mellow_gui.MellowGuiTests.test_sandbox_save_and_status) ... ok
+test_valid_efi_preparation_and_source_unchanged (x86.gui.test_mellow_gui.MellowGuiTests.test_valid_efi_preparation_and_source_unchanged) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 2.744s
+
+OK (skipped=1)

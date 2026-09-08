@@ -1,0 +1,40 @@
+{
+  "schema": "nextcore.bp28-integration/1",
+  "implementation_commit": "41aa5d95fb28561212e67dcfe55008c6a57e6dad",
+  "fresh_recursive_clone_passed": true,
+  "tests": {
+    "workspace_passed": 472,
+    "workspace_ignored": 2,
+    "ignored_required_checks_run_separately": true,
+    "reference_passed": 77,
+    "native_pair_cases": 3072,
+    "native_pair_assertions": 14452,
+    "authored_x86_efi_cases": 28,
+    "independent_mmu_cases": 18,
+    "independent_pair_oracle_passed": true,
+    "python_run": 130,
+    "python_skipped": 1,
+    "gui_boundary_run": 25,
+    "gui_boundary_skipped": 1,
+    "vulkan_passed": 119,
+    "vulkan_software_test_ignored_here": 1
+  },
+  "changed_modules_merged_to_main": 5,
+  "merged_module_branches_cleaned": 5,
+  "original_diagnostic": {
+    "retired": 47,
+    "native_blocks": 10,
+    "complete_startup_contract": false
+  },
+  "hardware_receipt": "../../crates/nextcore-gpu/validation/bp28-portable-rx6800xt-20260909/receipt.json",
+  "unverified": [
+    "native MMU execution",
+    "normal macOS27 boot",
+    "stable usable macOS",
+    "guest Metal",
+    "NVIDIA physical GPU",
+    "Intel integrated physical GPU",
+    "physical noncoherent allocation"
+  ],
+  "parent_final_ci_and_network_clone": "Checked separately after this receipt commit; not asserted by the implementation-base clone."
+}

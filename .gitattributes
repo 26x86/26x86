@@ -30,3 +30,7 @@ nextcore/artifacts/arm-platform-profile-20260908/**/*.log -text -whitespace
 nextcore/artifacts/integration-bp27-20260908/**/*.log -text -whitespace
 
 docs/validation/windows-app-cleanup-20260908/** -text -whitespace
+
+# Immutable validation receipts retain exact source bytes.
+nextcore/artifacts/arm-pair-memory-20260909/** -text -whitespace
+nextcore/artifacts/integration-bp28-20260909/** -text -whitespace

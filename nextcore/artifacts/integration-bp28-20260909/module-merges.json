@@ -1,0 +1,142 @@
+[
+  {
+    "pr": {
+      "repo": "Nextcore-ISE",
+      "number": 2,
+      "url": "https://github.com/26x86/Nextcore-ISE/pull/2",
+      "sha": "07cd3e19f397556fa6d233c562fb245bfe528363",
+      "branch": "codex/arm64e-pair-memory"
+    },
+    "checks": [
+      {
+        "name": "verify",
+        "conclusion": "success",
+        "url": "https://github.com/26x86/Nextcore-ISE/actions/runs/34245886533/job/102127620579"
+      },
+      {
+        "name": "verify",
+        "conclusion": "success",
+        "url": "https://github.com/26x86/Nextcore-ISE/actions/runs/34245880819/job/102127600204"
+      }
+    ],
+    "merge": {
+      "sha": "1b36e3f90ea4006d7221add78385811621771205",
+      "merged": true,
+      "message": "Pull Request successfully merged"
+    }
+  },
+  {
+    "pr": {
+      "repo": "Nextcore-GPU",
+      "number": 2,
+      "url": "https://github.com/26x86/Nextcore-GPU/pull/2",
+      "sha": "eaab9fcfded3a8ee298453397790f13edace5694",
+      "branch": "codex/gpu-portable-devices"
+    },
+    "checks": [
+      {
+        "name": "verify",
+        "conclusion": "success",
+        "url": "https://github.com/26x86/Nextcore-GPU/actions/runs/34245267513/job/102125510050"
+      },
+      {
+        "name": "windows-vulkan-unit",
+        "conclusion": "success",
+        "url": "https://github.com/26x86/Nextcore-GPU/actions/runs/34245267513/job/102125509860"
+      },
+      {
+        "name": "windows-vulkan-unit",
+        "conclusion": "success",
+        "url": "https://github.com/26x86/Nextcore-GPU/actions/runs/34245260668/job/102125485598"
+      },
+      {
+        "name": "verify",
+        "conclusion": "success",
+        "url": "https://github.com/26x86/Nextcore-GPU/actions/runs/34245260668/job/102125485330"
+      }
+    ],
+    "merge": {
+      "sha": "ba906581b4b1307aa482340f63fd60383473ef48",
+      "merged": true,
+      "message": "Pull Request successfully merged"
+    }
+  },
+  {
+    "pr": {
+      "repo": "Nextcore-EFI",
+      "number": 2,
+      "url": "https://github.com/26x86/Nextcore-EFI/pull/2",
+      "sha": "f2ca77a23d09b6de3f5371861e6b8bec61577955",
+      "branch": "codex/arm64e-memory-gpu"
+    },
+    "checks": [
+      {
+        "name": "verify",
+        "conclusion": "success",
+        "url": "https://github.com/26x86/Nextcore-EFI/actions/runs/34246015654/job/102128061321"
+      },
+      {
+        "name": "verify",
+        "conclusion": "success",
+        "url": "https://github.com/26x86/Nextcore-EFI/actions/runs/34246009768/job/102128035996"
+      }
+    ],
+    "merge": {
+      "sha": "954d2a0ca8fec08db9a99438fb5b1db751caf766",
+      "merged": true,
+      "message": "Pull Request successfully merged"
+    }
+  },
+  {
+    "pr": {
+      "repo": "Nextcore-APLS",
+      "number": 2,
+      "url": "https://github.com/26x86/Nextcore-APLS/pull/2",
+      "sha": "9b6ccaa421f668fdb212ccd14969002f6196a18f",
+      "branch": "codex/arm64e-memory-gpu"
+    },
+    "checks": [
+      {
+        "name": "verify",
+        "conclusion": "success",
+        "url": "https://github.com/26x86/Nextcore-APLS/actions/runs/34245379658/job/102125893640"
+      },
+      {
+        "name": "verify",
+        "conclusion": "success",
+        "url": "https://github.com/26x86/Nextcore-APLS/actions/runs/34245373865/job/102125875130"
+      }
+    ],
+    "merge": {
+      "sha": "4f9de97ba12f9d5d74b6de05a9e74b0f51cd0b55",
+      "merged": true,
+      "message": "Pull Request successfully merged"
+    }
+  },
+  {
+    "pr": {
+      "repo": "Nextcore-Tool",
+      "number": 2,
+      "url": "https://github.com/26x86/Nextcore-Tool/pull/2",
+      "sha": "7282944f9b93fe9631fc11ba6eb8d8f75e973f62",
+      "branch": "codex/arm64e-memory-gpu"
+    },
+    "checks": [
+      {
+        "name": "verify",
+        "conclusion": "success",
+        "url": "https://github.com/26x86/Nextcore-Tool/actions/runs/34245388849/job/102125929439"
+      },
+      {
+        "name": "verify",
+        "conclusion": "success",
+        "url": "https://github.com/26x86/Nextcore-Tool/actions/runs/34245385723/job/102125915400"
+      }
+    ],
+    "merge": {
+      "sha": "ad57b47cb8b4a8f244039afdf38cb20ea6c55b92",
+      "merged": true,
+      "message": "Pull Request successfully merged"
+    }
+  }
+]

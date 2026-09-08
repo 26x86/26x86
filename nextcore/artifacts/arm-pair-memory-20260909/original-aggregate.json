@@ -1,0 +1,23 @@
+{
+  "schema": "nextcore.public-original-prefix-summary.v1",
+  "runtime_revision": "07cd3e19f397556fa6d233c562fb245bfe528363",
+  "efi_sha256": "58e347be2135386b86857e62831a0c95ae27c7f7627d56ed4ec20ade25b05fbf",
+  "instruction_budget": 64,
+  "retired": 47,
+  "compiled_native_blocks": 10,
+  "status": 8,
+  "next_generic_instruction_family": "integer unsigned-immediate 32-bit load",
+  "independent_source_match": true,
+  "input_bytes_preserved": true,
+  "source_and_binary_inputs_preserved": true,
+  "explicit_software_profile": "nextcore-irq-compat-v1",
+  "measured_apple_reset_state": false,
+  "handoff": "explicitly incomplete SPTM diagnostic convention",
+  "sptm_arguments_provided": false,
+  "sptm_services_provided": false,
+  "original_runtime_device_tree_provided": false,
+  "native_mmu_execution_supported": false,
+  "macos_boot_verified": false,
+  "metal_verified": false,
+  "corrected_runtime_same_boundary_confirmed": true
+}

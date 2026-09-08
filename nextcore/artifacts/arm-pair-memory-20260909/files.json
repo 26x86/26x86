@@ -1,0 +1,65 @@
+{
+  "schema": "nextcore.evidence-files/1",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 4854,
+      "sha256": "0574aac275c7acf9bde85b8123027830b76ef1bcd14444b8044075a9f9a61a6f"
+    },
+    {
+      "path": "arm64_pair_probe.S",
+      "bytes": 2098,
+      "sha256": "22fbe0fa54811b5f89f510e013d00f45a12932363b28e16ad3be2a14f09a6706"
+    },
+    {
+      "path": "authored-results.json",
+      "bytes": 10199,
+      "sha256": "20848f95320abd91fbcf95068cebc0fec5d0b159f432b79fb2c92be621d2525f"
+    },
+    {
+      "path": "contract.md",
+      "bytes": 1840,
+      "sha256": "0e5fbd05bc2229d38883a25aff83f316e4944fe522ada3bcf133262641add7de"
+    },
+    {
+      "path": "device-negative-control.json",
+      "bytes": 487,
+      "sha256": "36ad6e0a860b61fb65fd3316939c7b083521aaf376783549f8095554b06a2590"
+    },
+    {
+      "path": "native-runtime.json",
+      "bytes": 25276,
+      "sha256": "397a94da789df283e4b0f14fa677001583ed7babc9f3b3f5a4a4916521568bce"
+    },
+    {
+      "path": "next-boot-slice.md",
+      "bytes": 6255,
+      "sha256": "f7c57e4a6e9067ca4b7afe10b3dc71793ca2a16c0927f18634d8c171cb36e72d"
+    },
+    {
+      "path": "original-aggregate.json",
+      "bytes": 934,
+      "sha256": "bc58698591decfbf0aabf30c5b333356a107c14abdacb81946f7aa46d098738d"
+    },
+    {
+      "path": "pair-oracle.json",
+      "bytes": 1741,
+      "sha256": "2b07b2d0d634fa4a385a9b1270dd734c5aab0e6c49b40005da2981a959f6ad52"
+    },
+    {
+      "path": "provenance.json",
+      "bytes": 4739,
+      "sha256": "ca1185066d36cb95c2196369eedb90bdfc028c193559d071d9e8bcb520db20a8"
+    },
+    {
+      "path": "reproduce.py",
+      "bytes": 5215,
+      "sha256": "bf89061fceac2370a2fa4a13fd6b2cb6d6046e4dcf18cb4c2d6fe55ed321b7ed"
+    },
+    {
+      "path": "verify_pair_ovmf.py",
+      "bytes": 8752,
+      "sha256": "46535f72bd2c7976530efe34a0b72c9458412ba732e428b291749874c2589e78"
+    }
+  ]
+}
