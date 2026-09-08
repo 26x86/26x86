@@ -8,4 +8,6 @@ pub mod sync;
 pub mod render_pipeline;
 pub mod command_executor;
 pub mod compute;
+#[cfg(feature = "vulkan")]
+pub mod vulkan_compute;
 pub mod rasterizer;

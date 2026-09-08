@@ -53,6 +53,8 @@ fn test_unknown_fallback() {
 fn test_allocate_buffer() {
     let spec = GpuCapabilities::default_amd();
     let mut device = VirtualMetalDevice::new(spec);
+    assert!(device.is_software_accelerated());
+    assert!(!device.supports_metal());
     let buf = device.allocate_buffer(1024);
     assert_eq!(buf.size, 1024);
     assert_eq!(buf.host_ptr.len(), 1024);
@@ -61,6 +63,17 @@ fn test_allocate_buffer() {
     device.memory.write(buf.handle, 0, &data).unwrap();
     let read_back = device.memory.read(buf.handle, 0, 256).unwrap();
     assert_eq!(read_back, data);
+}
+
+#[test]
+fn buffer_range_overflow_is_rejected_without_mutation() {
+    let mut device = VirtualMetalDevice::new(GpuCapabilities::default_amd());
+    let buf = device.allocate_buffer(4);
+    device.memory.write(buf.handle, 0, &[1, 2, 3, 4]).unwrap();
+    assert!(device.memory.read(buf.handle, u64::MAX, 2).is_err());
+    assert!(device.memory.read(buf.handle, 2, u64::MAX).is_err());
+    assert!(device.memory.write(buf.handle, u64::MAX, &[0, 0]).is_err());
+    assert_eq!(device.memory.read(buf.handle, 0, 4).unwrap(), [1, 2, 3, 4]);
 }
 
 #[test]

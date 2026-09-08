@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use thiserror::Error;
 
 use crate::sync::{GpuSyncManager, FenceId};
@@ -13,6 +13,12 @@ pub enum ComputeError {
     InvalidDispatch([u32; 3]),
     #[error("storage buffer too small: need {needed}, got {available}")]
     StorageBufferTooSmall { needed: usize, available: usize },
+    #[error("no compute execution backend configured")]
+    BackendUnavailable,
+    #[error("compute fence must exist and be unsignaled")]
+    InvalidFence,
+    #[error("unsupported or invalid compute input: {0}")]
+    Unsupported(String),
     #[error("compute error: {0}")]
     Generic(String),
 }
@@ -69,6 +75,8 @@ pub struct ComputePipelineManager {
     pipelines: HashMap<u32, ComputePipeline>,
     storage_buffers: HashMap<u64, StorageBuffer>,
     next_buffer_handle: u64,
+    #[cfg(feature = "vulkan")]
+    vulkan: Option<crate::vulkan_compute::VulkanComputeBackend>,
 }
 
 impl ComputePipelineManager {
@@ -78,7 +86,22 @@ impl ComputePipelineManager {
             pipelines: HashMap::new(),
             storage_buffers: HashMap::new(),
             next_buffer_handle: 1,
+            #[cfg(feature = "vulkan")]
+            vulkan: None,
         }
+    }
+
+    /// Explicit host Vulkan execution. This does not attach a Metal/guest device.
+    #[cfg(feature = "vulkan")]
+    pub fn with_vulkan(config: crate::vulkan_compute::VulkanComputeConfig) -> Result<Self, ComputeError> {
+        let mut manager = Self::new();
+        manager.vulkan = Some(crate::vulkan_compute::VulkanComputeBackend::new(config)?);
+        Ok(manager)
+    }
+
+    #[cfg(feature = "vulkan")]
+    pub fn vulkan_device_info(&self) -> Option<&crate::vulkan_compute::VulkanDeviceInfo> {
+        self.vulkan.as_ref().map(|backend| backend.device_info())
     }
 
     pub fn create_pipeline(&mut self, desc: ComputePipelineDescriptor) -> u32 {
@@ -106,13 +129,14 @@ impl ComputePipelineManager {
 
     pub fn write_storage_buffer(&mut self, handle: u64, offset: usize, data: &[u8]) -> Result<(), ComputeError> {
         let buf = self.storage_buffers.get_mut(&handle).ok_or(ComputeError::BufferNotBound(0))?;
-        if offset + data.len() > buf.data.len() {
+        let end = offset.checked_add(data.len()).ok_or_else(|| ComputeError::Unsupported("buffer range overflow".into()))?;
+        if end > buf.data.len() {
             return Err(ComputeError::StorageBufferTooSmall {
-                needed: offset + data.len(),
+                needed: end,
                 available: buf.data.len(),
             });
         }
-        buf.data[offset..offset + data.len()].copy_from_slice(data);
+        buf.data[offset..end].copy_from_slice(data);
         Ok(())
     }
 
@@ -120,13 +144,14 @@ impl ComputePipelineManager {
         let buf = self.storage_buffers.get(&handle).ok_or_else(|| {
             ComputeError::Generic(format!("buffer {} not found", handle))
         })?;
-        if offset + len > buf.data.len() {
+        let end = offset.checked_add(len).ok_or_else(|| ComputeError::Unsupported("buffer range overflow".into()))?;
+        if end > buf.data.len() {
             return Err(ComputeError::StorageBufferTooSmall {
-                needed: offset + len,
+                needed: end,
                 available: buf.data.len(),
             });
         }
-        Ok(buf.data[offset..offset + len].to_vec())
+        Ok(buf.data[offset..end].to_vec())
     }
 
     pub fn dispatch(
@@ -143,28 +168,68 @@ impl ComputePipelineManager {
             return Err(ComputeError::InvalidDispatch([workgroups.x, workgroups.y, workgroups.z]));
         }
 
-        let ws = &pipeline.descriptor.workgroup_size;
-        let total_threads = workgroups.x as u64 * workgroups.y as u64 * workgroups.z as u64
-            * ws[0] as u64 * ws[1] as u64 * ws[2] as u64;
-
-        log::debug!(
-            "compute dispatch pipeline {} workgroups({},{},{}) threads({},{},{}) total={}",
-            pipeline_id,
-            workgroups.x, workgroups.y, workgroups.z,
-            ws[0], ws[1], ws[2],
-            total_threads
-        );
-
+        if sync.get_fence(fence_id).is_none_or(|fence| fence.is_signaled()) {
+            return Err(ComputeError::InvalidFence);
+        }
+        let dimensions = [workgroups.x, workgroups.y, workgroups.z];
+        validate_dispatch(&pipeline.descriptor, dimensions)?;
         for binding in &pipeline.descriptor.buffer_bindings {
             let buf = self.storage_buffers.get(&binding.buffer_id).ok_or(ComputeError::BufferNotBound(binding.binding))?;
-            log::debug!("  binding {}: buffer {} ({} bytes)", binding.binding, binding.buffer_id, buf.data.len());
+            let end = binding.offset.checked_add(binding.size).ok_or_else(|| ComputeError::Unsupported("binding range overflow".into()))?;
+            if end > buf.data.len() as u64 {
+                return Err(ComputeError::StorageBufferTooSmall { needed: usize::try_from(end).unwrap_or(usize::MAX), available: buf.data.len() });
+            }
         }
-
-        sync.signal_fence(fence_id, 1);
-        Ok(())
+        #[cfg(feature = "vulkan")]
+        {
+            let backend = self.vulkan.as_mut().ok_or(ComputeError::BackendUnavailable)?;
+            let descriptor = &pipeline.descriptor;
+            let views: Vec<_> = descriptor.buffer_bindings.iter().map(|binding| {
+                let start = binding.offset as usize;
+                let end = start + binding.size as usize;
+                (binding.binding, self.storage_buffers[&binding.buffer_id].data[start..end].to_vec())
+            }).collect();
+            let updated = backend.dispatch(descriptor, dimensions, &views)?;
+            if updated.len() != views.len() || updated.iter().zip(&views).any(|(data, (_, previous))| data.len() != previous.len()) {
+                return Err(ComputeError::Generic("backend readback sizes disagree".into()));
+            }
+            // Commit only after every GPU buffer has completed and been read back.
+            for (binding, data) in descriptor.buffer_bindings.iter().zip(updated) {
+                let start = binding.offset as usize;
+                self.storage_buffers.get_mut(&binding.buffer_id).unwrap().data[start..start + data.len()].copy_from_slice(&data);
+            }
+            sync.signal_fence(fence_id, 1);
+            Ok(())
+        }
+        #[cfg(not(feature = "vulkan"))]
+        Err(ComputeError::BackendUnavailable)
     }
 
     pub fn storage_buffer_count(&self) -> usize {
         self.storage_buffers.len()
     }
+}
+
+pub(crate) fn validate_dispatch(descriptor: &ComputePipelineDescriptor, groups: [u32; 3]) -> Result<(), ComputeError> {
+    let product = groups.into_iter().chain(descriptor.workgroup_size).try_fold(1u64, |total, dimension| {
+        if dimension == 0 { None } else { total.checked_mul(dimension as u64) }
+    });
+    if product.is_none_or(|total| total > 16 * 1024 * 1024) {
+        return Err(ComputeError::InvalidDispatch(groups));
+    }
+    if descriptor.buffer_bindings.is_empty() || descriptor.buffer_bindings.len() > 8 {
+        return Err(ComputeError::Unsupported("require 1..8 storage bindings".into()));
+    }
+    let (mut bindings, mut buffers, mut total_bytes) = (HashSet::new(), HashSet::new(), 0u64);
+    for binding in &descriptor.buffer_bindings {
+        if binding.binding >= 32 || !bindings.insert(binding.binding) || !buffers.insert(binding.buffer_id)
+            || binding.size == 0 || binding.size > 16 * 1024 * 1024 || binding.offset % 4 != 0 || binding.size % 4 != 0 {
+            return Err(ComputeError::Unsupported("invalid/duplicate/aliased storage binding".into()));
+        }
+        total_bytes += binding.size;
+    }
+    if total_bytes > 64 * 1024 * 1024 {
+        return Err(ComputeError::Unsupported("storage byte cap exceeded".into()));
+    }
+    Ok(())
 }

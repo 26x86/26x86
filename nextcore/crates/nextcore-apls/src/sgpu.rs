@@ -301,7 +301,8 @@ impl SgpuSession {
             metal_version: self.device.spec.metal_version,
             vram_bytes: self.device.spec.vram_size,
             max_threads_per_threadgroup: self.device.spec.max_threads,
-            has_compute_shaders: self.device.spec.has_compute_shaders,
+            // This session has no shader/binding registration or compute backend.
+            has_compute_shaders: false,
             software_accelerated: self.device.is_software_accelerated(),
         }
     }
@@ -536,10 +537,36 @@ mod tests {
     }
 
     #[test]
-    fn present_executes() {
+    fn present_without_backend_is_rejected() {
         let mut session = SgpuSession::new(software_caps());
         let res = session.create_resource(64).unwrap();
-        session.present(res.sgp_handle).unwrap();
+        assert!(matches!(session.present(res.sgp_handle), Err(SgpuError::Gpu(_))));
+    }
+
+    #[test]
+    fn unsupported_dispatch_has_no_success_frame_or_partial_copy() {
+        let mut session = SgpuSession::new(GpuCapabilities::default_amd());
+        assert!(!session.query_caps().has_compute_shaders);
+        assert!(!session.device.supports_metal());
+        let src = session.create_resource(4).unwrap();
+        let dst = session.create_resource(4).unwrap();
+        session.device.memory.write(src.gpu_handle, 0, &[1, 2, 3, 4]).unwrap();
+        for unsupported in [
+            SgpuCommand::ComputeDispatch { kernel_id: 7, grid: (1, 1, 1), block: (1, 1, 1) },
+            SgpuCommand::RenderClear { color: [1.0; 4] },
+            SgpuCommand::Present { buffer: dst.sgp_handle },
+        ] {
+            let payload = SgpuCommandList { cmds: vec![
+                SgpuCommand::CopyBuffer { src: src.sgp_handle, dst: dst.sgp_handle, size: 4 },
+                unsupported,
+            ] }.encode();
+            let mut header = VfMsgHeader::new(VF_FAMILY_SGPU, VF_SGPU_SUBMIT_COMMAND_LIST);
+            header.payload_bytes = payload.len() as u32;
+            header.message_bytes = VF_MSG_BYTES + header.payload_bytes;
+            let decoded = SgpuFrame::from_wire(&SgpuFrame { header, payload }.to_wire()).unwrap();
+            assert!(matches!(session.dispatch(&decoded), Err(SgpuError::Gpu(_))));
+            assert_eq!(session.device.memory.read(dst.gpu_handle, 0, 4).unwrap(), [0; 4]);
+        }
     }
 
     #[test]

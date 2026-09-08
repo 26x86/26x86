@@ -74,8 +74,9 @@ impl GpuMemoryManager {
 
     pub fn read(&self, handle: u64, offset: u64, len: u64) -> Result<Vec<u8>, GpuError> {
         let buf = self.buffers.get(&handle).ok_or(GpuError::BufferNotFound(handle))?;
-        let start = offset as usize;
-        let end = start + len as usize;
+        let start = usize::try_from(offset).map_err(|_| GpuError::InvalidHandle(handle))?;
+        let len = usize::try_from(len).map_err(|_| GpuError::InvalidHandle(handle))?;
+        let end = start.checked_add(len).ok_or(GpuError::InvalidHandle(handle))?;
         if end > buf.len() {
             return Err(GpuError::InvalidHandle(handle));
         }
@@ -84,8 +85,8 @@ impl GpuMemoryManager {
 
     pub fn write(&mut self, handle: u64, offset: u64, data: &[u8]) -> Result<(), GpuError> {
         let buf = self.buffers.get_mut(&handle).ok_or(GpuError::BufferNotFound(handle))?;
-        let start = offset as usize;
-        let end = start + data.len();
+        let start = usize::try_from(offset).map_err(|_| GpuError::InvalidHandle(handle))?;
+        let end = start.checked_add(data.len()).ok_or(GpuError::InvalidHandle(handle))?;
         if end > buf.len() {
             return Err(GpuError::InvalidHandle(handle));
         }
@@ -120,11 +121,9 @@ impl VirtualMetalDevice {
             GpuVendor::Unknown => "Generic",
         };
         let name = format!("Apple {} GPU", vendor_str);
-        let acceleration_mode = if !spec.has_compute_shaders || spec.vendor == GpuVendor::Unknown {
-            AccelerationMode::Software
-        } else {
-            AccelerationMode::HardwareWrapped
-        };
+        // This model owns host Vec buffers, not an executing device backend.
+        // Capability metadata cannot promote it to hardware acceleration.
+        let acceleration_mode = AccelerationMode::Software;
         Self {
             spec,
             name,
@@ -134,7 +133,8 @@ impl VirtualMetalDevice {
     }
 
     pub fn supports_metal(&self) -> bool {
-        self.spec.vendor != GpuVendor::Unknown && self.spec.vram_size > 0
+        // PCI capability metadata cannot establish an executing Metal backend.
+        false
     }
 
     pub fn device_name(&self) -> &str {
@@ -154,25 +154,27 @@ impl VirtualMetalDevice {
     }
 
     pub fn write_command_buffer(&mut self, cmdbuf: CommandBuffer) -> Result<(), GpuError> {
+        // Validate the entire list before any software copy. This model has no
+        // registered shader, render target, or presentation backend.
+        for cmd in &cmdbuf.cmds {
+            match *cmd {
+                GpuCommand::CopyBuffer { src, dst, size } => {
+                    if size > self.memory.get_buf(src)?.len() as u64
+                        || size > self.memory.get_buf(dst)?.len() as u64
+                    {
+                        return Err(GpuError::InvalidHandle(dst));
+                    }
+                }
+                _ => return Err(GpuError::UnsupportedCommand),
+            }
+        }
         for cmd in cmdbuf.cmds {
             match cmd {
                 GpuCommand::CopyBuffer { src, dst, size } => {
-                    let data = self.memory.read(src, 0, size)?.clone();
+                    let data = self.memory.read(src, 0, size)?;
                     self.memory.write(dst, 0, &data)?;
                 }
-                GpuCommand::ComputeKernel { kernel_id, grid, block } => {
-                    log::debug!(
-                        "compute kernel {} grid{:?} block{:?} (software fallback)",
-                        kernel_id, grid, block
-                    );
-                }
-                GpuCommand::RenderClear { color } => {
-                    log::debug!("render clear color {:?}", color);
-                }
-                GpuCommand::PresentSwapchain { buffer } => {
-                    let _ = self.memory.get_buf(buffer)?;
-                    log::debug!("present swapchain buffer {}", buffer);
-                }
+                _ => unreachable!("all commands were validated before execution"),
             }
         }
         Ok(())
