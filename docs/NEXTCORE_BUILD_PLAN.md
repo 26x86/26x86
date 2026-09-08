@@ -1810,3 +1810,10 @@ BP35 is delegated to the CPU agent in separate Core/EFI worktrees: exactly one
 explicit16384 diagnostic tier, unchanged legacy caps and selector rejection,
 authored actual-EFI acceptance before any original replay. Root owns the
 external CLI review, all integration pins and publication.
+
+
+BP33 canonical EFI CI exposed a real debug code-generation failure in sha2's
+x86 accelerated backend; cargo check and release-only builds had not exercised
+that compiler path. Root owns the corrective Core target-UEFI force-soft
+dependency, actual debug/release codegen CI, dependent EFI/Tool pins and fresh
+firmware validation. Existing successful/failed source identities stay separate.

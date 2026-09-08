@@ -152,11 +152,15 @@ and runtime-device-tree contracts described in
 
 ### BP33 owned guest staging
 
-Coref77c98f adds exclusive guest backing, bounded purpose reservations and
-source-bound DeviceTree commit. EFIe17e059 supplies the opt-in NXDT consumer,
-with actual nonidentity ARM loads/stores executed as x86 code. Tool52bfa93 selects
+Core147f4c4 retains exclusive guest backing, bounded purpose reservations and
+source-bound DeviceTree commit. EFI7e7a08b supplies the opt-in NXDT consumer,
+with actual nonidentity ARM loads/stores executed as x86 code. Tool4bb09da selects
 the same Core source. These remain separate Git repositories and immutable
 submodule pins; no Windows tester is added. Reproduction commands live in the
 EFI module's docs/ARM_DT_LEDGER_EFI_PROBE.md. The parent runs the eight-case
 firmware matrix and full capture rejection alongside existing stage1 checks.
 This authored connection does not establish the macOS27 target handoff or Metal.
+
+Core selects sha2 force-soft only for firmware targets after the actual debug
+NXAPFS build exposed an LLVM x86-backend failure. Debug and release code generation
+are explicit CI requirements; check-only compilation is insufficient.

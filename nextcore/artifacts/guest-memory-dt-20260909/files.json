@@ -235,6 +235,26 @@
       "path": "review/root-ledger.json",
       "bytes": 713,
       "sha256": "2a9085dd2ea632e7c60832a41548fa731aa0c49b3d74004ae2497d45e15259c0"
+    },
+    {
+      "path": "review/uefi-hash/ci-debug-failure.log",
+      "bytes": 3971,
+      "sha256": "4ad2c0e01e077f53de36ca593013dfce7e6983ebd3dc6d11305cbb0ae7af70b3"
+    },
+    {
+      "path": "review/uefi-hash/local-debug-failure.log",
+      "bytes": 2599,
+      "sha256": "ffabec88bb076b9a7b15ba8627c8cc84feadf3193c65e8a649e9050e904a53ea"
+    },
+    {
+      "path": "review/uefi-hash/review.json",
+      "bytes": 2725,
+      "sha256": "bbdb2513fc283acdfa5d29293dac5c31bd1be812c322efddbbd75684197b92de"
+    },
+    {
+      "path": "review/uefi-hash/standalone-core.json",
+      "bytes": 1314,
+      "sha256": "8a6d7d4569d61e8110ae9b9c47f00a2083fa3b01d39eb737bf9019e708e89525"
     }
   ]
 }

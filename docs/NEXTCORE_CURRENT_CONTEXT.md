@@ -7,8 +7,9 @@
 ## BP33 최신 개발 상태
 
 BP32는 상위 PR14/main1b86a2e로 최종 CI29개와 정식 재귀 클론 검사 후 병합했다.
-BP33은 Coref77c98f, EFIe17e059, Tool52bfa93를 함께 연결한다. Core PR4/main0e2bcca와
-Tool PR4/main14977ec는 병합됐고, EFI의 정식 독립 빌드와 상위 통합 검증을 진행한다.
+BP33 최종 연결은 Core147f4c4, EFI7e7a08b, Tool4bb09da다. Core PR4/main0e2bcca와
+Tool PR4/main14977ec는 병합됐고, Core PR5/main1c5f8a1이 실제 EFI 디버그 SHA-256
+LLVM 오류를 수정했다. 정식 EFI/Tool 수정 pin과 상위 통합 검증을 진행한다.
 7개 서브모듈/8개 소유 패키지 구조를 유지한다.
 
 Core는 실제 소유/배타 차용 RAM과64개 목적별 예약을 연결하고, owner/generation에
@@ -22,6 +23,9 @@ Core는 실제 소유/배타 차용 RAM과64개 목적별 예약을 연결하고
 별도 잘못된 mapping 바이너리가 실제 첫 DT load fault로 실패한다. 원래8-case 기록은
 보존하고 보고서 envelope/주소 범위 결함을 고친 reader는28개 변조를 거부한다.
 정식 빌드의 바이너리/결과는 역사적 outside-tree patch 결과와 별도로 기록한다.
+EFI 대상만 software SHA-256을 선택하며, 기존 debug NXAPFS gate를 유지하고 Core/상위
+CI에도 실제 debug codegen/link를 추가했다. 초기 재귀30a8e2e는 provider 우회 실행 후
+QEMU 종료 대기 시간 초과로 실패했으며 해당 실패 기록도 보존한다.
 공개 증거는 nextcore/artifacts/guest-memory-dt-20260909다.
 
 다음 BP34 ISE0d722886은 PR7/mainbcf1ca9로 별도 병합했다. one-way MMU enable과

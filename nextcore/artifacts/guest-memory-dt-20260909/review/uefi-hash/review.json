@@ -1,0 +1,37 @@
+{
+  "schema": "nextcore.bp33-uefi-sha2-independent-review.v1",
+  "passed": true,
+  "reviewed_commit": "147f4c4e4969074c9dd12c63bf17c6e8c674dabb",
+  "concrete_findings": [],
+  "changed_scope": [
+    "UEFI-only additive sha2 dependency feature force-soft",
+    "Two actual no-default UEFI library codegen CI commands, debug and release",
+    "Contract and metadata only; no runtime source change"
+  ],
+  "evidence": [
+    "Installed sha2 0.10.9 Cargo.toml declares force-soft as an empty supported feature; it does not enable std",
+    "sha256.rs and sha512.rs choose software modules before the x86 acceleration branch when force-soft is enabled",
+    "sha2 lib.rs is no_std; both common and UEFI-specific dependency declarations retain default-features=false",
+    "Core runtime_dt.rs is the only direct SHA2 user and uses existing Sha256::digest API; no hash format or binding code changes",
+    "Host target declaration is unchanged; standalone edition2021 and actual parent resolver2 preserve inactive target dependency separation",
+    "CI installs x86_64-unknown-uefi before both cargo build commands, so actual library codegen is checked rather than metadata alone"
+  ],
+  "source_sha256": {
+    "Cargo.toml": "444f612fdb91bb3cf2e4a9d8a9e511b4c6088258cec878eeb8abe65d53307ffc",
+    ".github/workflows/ci.yml": "74891ae58bb3cfa3e760388b4f15d9d7707981b88a5c1ce566159198da1c9f8d",
+    "docs/UEFI_HASH_BACKEND.md": "1acf728578f99b6b3b0a978d83bcbb1533a8006d3a02479dd91ec2801c79810f",
+    "src/runtime_dt.rs": "8bf58240af9ed18b58711a1c928ae99a4e7e9aebc68174fed459ec3165013f32"
+  },
+  "installed_primary_source_sha256": {
+    "/home/sharh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.9/Cargo.toml": "f5b86209df69360114aaee67a66c3fcd31d8c840b8f34b9ad383aacd63cd15da",
+    "/home/sharh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.9/src/lib.rs": "b519427535b1855bbe8c3d0517b2f3d04a607cf0cb4327cc716cd5d90da5dbf1",
+    "/home/sharh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.9/src/sha256.rs": "6ced9112d4ceb4eff20b56d93a063f72ecef4c6ec3b215f08696a853b09083c3",
+    "/home/sharh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.9/src/sha512.rs": "e088bde0980702a591f8d60dd1d41dc13f0a810e29e1e5a5d6344228b2de965d"
+  },
+  "failure_log_sha256": "ffabec88bb076b9a7b15ba8627c8cc84feadf3193c65e8a649e9050e904a53ea",
+  "parent_resolver_manifest_sha256": "892f5a72ef16623825c0efe17039e36e17fed01d59b1ae65777fab42054ac935",
+  "tests_repeated": false,
+  "review_limit": "Source/dependency-policy review only. Root owns fresh Core tests, canonical EFI debug NXAPFS link and actual NXDT digest execution acceptance.",
+  "source_mutated": false,
+  "worktree_clean": true
+}

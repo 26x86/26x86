@@ -1,13 +1,18 @@
 ## BP33 owned-memory integration checkpoint — 2026-09-09
 
-Coref77c98f and Tool52bfa93 are merged after standalone validation and final CI.
-EFIe17e059 connects actual firmware allocation, typed DT commit and nonidentity
-JIT consumption. The original authored8-case capture and separate compiled
-wrong-mapping failure remain unchanged. Independent reader review corrected full
-report-envelope and host-u64 omissions;28 malformed controls now reject.
-Evidence is in [guest-memory-dt-20260909](artifacts/guest-memory-dt-20260909/README.md).
-Canonical standalone and fresh recursive validation are separate subsequent
-receipts. Normal macOS boot, EFI GPU and guest Metal remain unverified.
+Final pins are Core147f4c4, EFI7e7a08b and Tool4bb09da. Core's UEFI-only software
+SHA-256 selection corrects the actual debug LLVM failure exposed by the unchanged
+NXAPFS all-features build. Core PR5 is merged; its fresh standalone tests and real
+debug/release firmware code generation pass. Corrected canonical EFI and parent
+validation keep their own source/binary identities.
+
+The original authored8-case DT capture and separate compiled wrong-mapping
+failure are unchanged. Reader review corrected report-envelope and host-u64
+omissions;28 malformed controls reject. Evidence is in
+[guest-memory-dt-20260909](artifacts/guest-memory-dt-20260909/README.md).
+The first recursive30a8e2e run stopped after a QEMU terminate/kill wait timeout
+in the direct-bypass harness; no complete-suite pass is attributed to it.
+Normal macOS boot, EFI GPU and guest Metal remain unverified.
 
 ## BP32 implementation checkpoint — 2026-09-09
 

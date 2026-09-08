@@ -180,6 +180,9 @@ jobs:
         run: |
           cargo test --locked -p nextcore-core --no-default-features
           cargo test --locked -p nextcore-core --doc
+      - name: Link actual debug firmware with all EFI features
+        working-directory: nextcore
+        run: cargo build --locked -p nextcore-efi --target x86_64-unknown-uefi --all-features --bin NXAPFS
       - name: Execute owned guest DeviceTree consumption
         run: |
           cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-dt-probe --bin NXDT

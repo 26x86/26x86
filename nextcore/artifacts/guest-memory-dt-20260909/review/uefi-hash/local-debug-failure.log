@@ -1,0 +1,32 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling version_check v0.9.5
+   Compiling typenum v1.20.1
+   Compiling thiserror v2.0.20
+   Compiling cfg-if v1.0.4
+   Compiling bitflags v2.13.1
+   Compiling log v0.4.34
+   Compiling bit_field v0.10.3
+   Compiling uguid v2.2.1
+   Compiling memchr v2.8.3
+   Compiling cpufeatures v0.2.17
+   Compiling nextcore-memory-service v0.1.0 (https://github.com/26x86/Nextcore-ISE.git?rev=720d7c61140e39da0f457192bd88138a52017e22#720d7c61)
+   Compiling uefi-raw v0.16.0
+   Compiling ucs2 v0.3.3
+   Compiling generic-array v0.14.7
+   Compiling roxmltree v0.21.1
+   Compiling syn v3.0.5
+   Compiling syn v2.0.119
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling nextcore-core v0.1.0 (https://github.com/26x86/Nextcore-Core.git?rev=f77c98f0b457ab488f37e5be10a608a364d996c7#f77c98f0)
+rustc-LLVM ERROR: Do not know how to split the result of this operator!
+
+error: could not compile `sha2` (lib)
+
+Caused by:
+  process didn't exit successfully: `/home/sharh/.rustup/toolchains/1.98.1-x86_64-unknown-linux-gnu/bin/rustc --crate-name sha2 --edition=2018 /home/sharh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.9/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("asm", "asm-aarch64", "compress", "default", "force-soft", "force-soft-compact", "loongarch64_asm", "oid", "sha2-asm", "std"))' -C metadata=7cd0ad885f917129 -C extra-filename=-5f95ae3c2065fe2e --out-dir /home/sharh/work/module-validation-bp33-efi-20260909/EFI/target/x86_64-unknown-uefi/debug/deps --target x86_64-unknown-uefi -L dependency=/home/sharh/work/module-validation-bp33-efi-20260909/EFI/target/x86_64-unknown-uefi/debug/deps -L dependency=/home/sharh/work/module-validation-bp33-efi-20260909/EFI/target/debug/deps --extern cfg_if=/home/sharh/work/module-validation-bp33-efi-20260909/EFI/target/x86_64-unknown-uefi/debug/deps/libcfg_if-d04b7247869471d2.rmeta --extern cpufeatures=/home/sharh/work/module-validation-bp33-efi-20260909/EFI/target/x86_64-unknown-uefi/debug/deps/libcpufeatures-348a9c1d30117502.rmeta --extern digest=/home/sharh/work/module-validation-bp33-efi-20260909/EFI/target/x86_64-unknown-uefi/debug/deps/libdigest-a2768b23b2de1ad5.rmeta --cap-lints allow` (exit status: 101)
+warning: build failed, waiting for other jobs to finish...

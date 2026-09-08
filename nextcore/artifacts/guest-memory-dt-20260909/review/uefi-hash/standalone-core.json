@@ -1,0 +1,71 @@
+{
+  "module": "Core",
+  "commit": "147f4c4e4969074c9dd12c63bf17c6e8c674dabb",
+  "passed": true,
+  "fresh_standalone_clone": true,
+  "inventory_files": 68,
+  "working_tree_clean": true,
+  "commands": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/work/bp33-core-uefi-sha2",
+        "/home/sharh/work/module-validation-bp33-sha2-20260909/Core"
+      ],
+      "exit_code": 0,
+      "seconds": 0.35
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 15.97
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 7.61
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--doc"
+      ],
+      "exit_code": 0,
+      "seconds": 0.59
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--no-default-features",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi"
+      ],
+      "exit_code": 0,
+      "seconds": 2.42
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--no-default-features",
+        "--target",
+        "x86_64-unknown-uefi"
+      ],
+      "exit_code": 0,
+      "seconds": 5.31
+    }
+  ]
+}
