@@ -1,5 +1,6 @@
 use nextcore_core::xnu_boot_args::{
-    encode_boot_args, BootArgsError, XnuBootArgsInput, BOOT_ARGS_SIZE,
+    encode_boot_args, encode_fileset_boot_args, BootArgsError, XnuBootArgsInput,
+    XnuFilesetBootArgsInput, BOOT_ARGS_SIZE,
 };
 
 fn input() -> XnuBootArgsInput<'static> {
@@ -222,4 +223,94 @@ fn errors_are_fixed_log_tokens() {
         BootArgsError::HandoffOutsideKernel.to_string(),
         "HANDOFF_OUTSIDE_KERNEL"
     );
+}
+
+fn fileset() -> XnuFilesetBootArgsInput<'static> {
+    XnuFilesetBootArgsInput {
+        common: input(),
+        collection_header_phys: 0x0020_0000,
+        collection_header_size: 512,
+        kernel_slide: 0x0360_0000,
+    }
+}
+
+#[test]
+fn fileset_extension_matches_independently_compiled_public_c_layout() {
+    // C offsetof receipt: artifacts/kc-bootargs-contract-20260908.md.
+    let value = fileset();
+    let mut expected = encode_boot_args(&value.common).unwrap();
+    let actual = encode_fileset_boot_args(&value).unwrap();
+    expected[0..2].copy_from_slice(&[1, 0]);
+    expected[1108..1112].copy_from_slice(&[0, 0, 0x60, 3]);
+    expected[1256..1264].copy_from_slice(&[0, 0, 0x20, 0, 0, 0, 0, 0]);
+    assert_eq!(actual, expected);
+    let standalone = encode_boot_args(&value.common).unwrap();
+    assert_eq!(&standalone[0..2], &[0, 0]);
+    assert_eq!(&standalone[1108..1112], &[0; 4]);
+    assert_eq!(&standalone[1256..1264], &[0; 8]);
+}
+
+#[test]
+fn fileset_rejects_virtual_null_unaligned_overflow_and_unowned_header_ranges() {
+    for (address, size) in [
+        (0, 512),
+        (0x0020_0001, 512),
+        (0xffff_ff80_0020_0000, 512),
+        (0xffff_fff8, 32),
+        (u64::MAX - 7, 32),
+        (0x0020_0000, 0),
+        (0x0020_0000, 31),
+        (0x0020_0000, u64::MAX),
+        (0x000f_fff8, 32),
+        (0x0032_0000 - 24, 32),
+    ] {
+        let mut value = fileset();
+        value.collection_header_phys = address;
+        value.collection_header_size = size;
+        assert_eq!(
+            encode_fileset_boot_args(&value),
+            Err(BootArgsError::InvalidCollectionHeader)
+        );
+    }
+}
+
+#[test]
+fn fileset_checks_full_header_extent_against_map_and_tree() {
+    for (address, size) in [
+        (0x0030_0000, 32),
+        (0x0030_0000 - 24, 32),
+        (0x0030_0000 + 88, 32),
+        (0x0031_0000, 32),
+        (0x002f_0000, 0x20000),
+    ] {
+        let mut value = fileset();
+        value.collection_header_phys = address;
+        value.collection_header_size = size;
+        assert_eq!(
+            encode_fileset_boot_args(&value),
+            Err(BootArgsError::OverlappingHandoff)
+        );
+    }
+    for address in [0x0030_0000 - 32, 0x0030_0000 + 96, 0x0032_0000 - 32] {
+        let mut value = fileset();
+        value.collection_header_phys = address;
+        value.collection_header_size = 32;
+        assert!(encode_fileset_boot_args(&value).is_ok());
+    }
+}
+
+#[test]
+fn fileset_keeps_common_validation_and_never_truncates_slide() {
+    let mut value = fileset();
+    value.common.memory_map_descriptor_version = 2;
+    assert_eq!(
+        encode_fileset_boot_args(&value),
+        Err(BootArgsError::InvalidMemoryMap)
+    );
+    for slide in [0, 0x200000, u32::MAX] {
+        let mut value = fileset();
+        value.kernel_slide = slide;
+        let bytes = encode_fileset_boot_args(&value).unwrap();
+        assert_eq!(&bytes[1108..1112], &slide.to_le_bytes());
+    }
 }
