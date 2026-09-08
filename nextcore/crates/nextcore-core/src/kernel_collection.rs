@@ -1,4 +1,4 @@
-//! Read-only x86_64 fileset metadata inspection, never an executable load plan.
+//! Read-only architecture-specific fileset inspection, never an executable plan.
 //!
 //! Public format/consumer provenance and scope:
 //! `nextcore/artifacts/kc-metadata-contract-20260908.md`.
@@ -54,6 +54,14 @@ pub enum EntryMetadata {
     UnixThread64 {
         instruction_pointer: u64,
     },
+    /// Raw public ARM_THREAD_STATE64 fields. No PAC stripping or CPU-state
+    /// installation is performed; these words retain their command provenance.
+    ArmThread64 {
+        instruction_pointer: u64,
+        stack_pointer: u64,
+        cpsr: u32,
+        flags: u32,
+    },
     Main {
         text_offset: u64,
         stack_size: u64,
@@ -95,6 +103,9 @@ pub struct ChainedFixupMetadata {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "std", derive(serde::Serialize))]
 pub struct ImageMetadata {
+    pub cpu_type: u32,
+    /// Raw on-disk subtype, including architecture-specific capability bits.
+    pub cpu_subtype: u32,
     pub header_file_offset: u64,
     pub header_address: u64,
     pub file_type: u32,
@@ -201,21 +212,41 @@ struct ParsedImage {
     members: Vec<MemberReference>,
 }
 
+#[derive(Clone, Copy)]
+enum Profile {
+    X86_64,
+    Arm64,
+}
+
 /// Inspect metadata of a thin generic x86_64 MH_FILESET and one member level.
 /// The supplied bytes are never changed. No member payload is extracted.
 pub fn inspect_kernel_collection(bytes: &[u8]) -> Result<KcMetadataInspection> {
+    inspect_profile(bytes, Profile::X86_64)
+}
+
+/// Inspect a thin ARM64/ARM64E fileset without executing or authenticating it.
+/// This is separate from the Intel entry/rebase profile. All headers must carry
+/// the same raw CPU subtype; no capability bit is stripped or emulated.
+pub fn inspect_arm64_kernel_collection(bytes: &[u8]) -> Result<KcMetadataInspection> {
+    inspect_profile(bytes, Profile::Arm64)
+}
+
+fn inspect_profile(bytes: &[u8], profile: Profile) -> Result<KcMetadataInspection> {
     if bytes.len() > MAX_INPUT_SIZE {
         return Err(E::InputTooLarge);
     }
     let mut budget = Budget::default();
-    let outer = parse_image(bytes, 0, true, &mut budget)?;
+    let outer = parse_image(bytes, 0, true, profile, &mut budget)?;
     validate_collection_entry(&outer.image)?;
     if outer.members.is_empty() {
         return Err(E::InvalidHeader);
     }
     let mut members = Vec::with_capacity(outer.members.len());
     for reference in &outer.members {
-        let child = parse_image(bytes, reference.offset, false, &mut budget)?.image;
+        let child = parse_image(bytes, reference.offset, false, profile, &mut budget)?.image;
+        if child.cpu_subtype != outer.image.cpu_subtype {
+            return Err(E::UnsupportedCpu);
+        }
         if child.header_address != reference.address {
             return Err(E::InvalidMemberMapping);
         }
@@ -308,12 +339,31 @@ fn require(requirements: &mut Vec<PreparationRequirement>, value: PreparationReq
     }
 }
 
-fn parse_image(bytes: &[u8], base: u64, outer: bool, budget: &mut Budget) -> Result<ParsedImage> {
+fn parse_image(
+    bytes: &[u8],
+    base: u64,
+    outer: bool,
+    profile: Profile,
+    budget: &mut Budget,
+) -> Result<ParsedImage> {
     let h = range(bytes, base, 32)?;
     if u32_at(h, 0)? != 0xfeed_facf {
         return Err(E::UnsupportedFormat);
     }
-    if u32_at(h, 4)? != 0x0100_0007 || u32_at(h, 8)? != 3 {
+    let cpu_type = u32_at(h, 4)?;
+    let cpu_subtype = u32_at(h, 8)?;
+    let valid_cpu = match profile {
+        Profile::X86_64 => cpu_type == 0x0100_0007 && cpu_subtype == 3,
+        Profile::Arm64 => {
+            cpu_type == 0x0100_000c
+                // Public dyld Architecture.cpp named metadata profiles. An
+                // ABI-version label is not evidence that its code can execute.
+                && matches!(cpu_subtype,
+                    0 | 1 | 2 | 0x8000_0002 | 0x8100_0002 |
+                    0xc000_0002 | 0xc100_0002 | 0xc200_0002)
+        }
+    };
+    if !valid_cpu {
         return Err(E::UnsupportedCpu);
     }
     let file_type = u32_at(h, 12)?;
@@ -389,16 +439,31 @@ fn parse_image(bytes: &[u8], base: u64, outer: bool, budget: &mut Budget) -> Res
                 });
             }
             5 => {
-                exact(cmd, 184)?;
-                if u32_at(cmd, 8)? != 4 || u32_at(cmd, 12)? != 42 {
-                    return Err(E::UnsupportedThreadState);
-                }
-                set_entry(
-                    &mut entry,
-                    EntryMetadata::UnixThread64 {
-                        instruction_pointer: u64_at(cmd, 144)?,
-                    },
-                )?;
+                // A single architecture-specific flavor/count/state triple is
+                // the supported subset. Other combinations are not guessed.
+                let value = match profile {
+                    Profile::X86_64 => {
+                        exact(cmd, 184)?;
+                        if u32_at(cmd, 8)? != 4 || u32_at(cmd, 12)? != 42 {
+                            return Err(E::UnsupportedThreadState);
+                        }
+                        EntryMetadata::UnixThread64 {
+                            instruction_pointer: u64_at(cmd, 144)?,
+                        }
+                    }
+                    Profile::Arm64 => {
+                        if cmd.len() != 288 || u32_at(cmd, 8)? != 6 || u32_at(cmd, 12)? != 68 {
+                            return Err(E::UnsupportedThreadState);
+                        }
+                        EntryMetadata::ArmThread64 {
+                            instruction_pointer: u64_at(cmd, 272)?,
+                            stack_pointer: u64_at(cmd, 264)?,
+                            cpsr: u32_at(cmd, 280)?,
+                            flags: u32_at(cmd, 284)?,
+                        }
+                    }
+                };
+                set_entry(&mut entry, value)?;
             }
             0x8000_0028 => {
                 exact(cmd, 24)?;
@@ -556,6 +621,8 @@ fn parse_image(bytes: &[u8], base: u64, outer: bool, budget: &mut Budget) -> Res
         .transpose()?;
     Ok(ParsedImage {
         image: ImageMetadata {
+            cpu_type,
+            cpu_subtype,
             header_file_offset: base,
             header_address,
             file_type,
@@ -804,7 +871,7 @@ fn parse_fixups(
 }
 
 fn validate_page_start(offset: u16, page_size: u16, backed_bytes: u64, format: u16) -> Result<()> {
-    let width = if format == 11 { 8 } else { 1 };
+    let width = if matches!(format, 8 | 11) { 8 } else { 1 };
     // KC chains group starts by page; an unaligned terminal word can straddle
     // it. Its full word still must fit the segment's file-backed memory.
     if offset >= page_size || u64::from(offset) + width > backed_bytes {
@@ -831,6 +898,16 @@ fn validate_collection_entry(image: &ImageMetadata) -> Result<()> {
             } => instruction_pointer
                 .checked_sub(s.address)
                 .is_some_and(|n| n < s.file.size),
+            EntryMetadata::ArmThread64 {
+                instruction_pointer,
+                ..
+            } => {
+                instruction_pointer % 4 == 0
+                    && instruction_pointer
+                        .checked_sub(s.address)
+                        .and_then(|n| n.checked_add(4))
+                        .is_some_and(|end| end <= s.file.size)
+            }
             EntryMetadata::Main { .. } => false,
         }
     }) {

@@ -1,4 +1,4 @@
-//! Bounded host-memory staging of one inspected x86_64 kernel collection.
+//! Bounded host-memory staging with explicit Intel and ARM64 profiles.
 //!
 //! Public format provenance and scope: `artifacts/native-kc-next-step-20260908.md`.
 //! Outer segments own copies and zero-fill; members are shared views. Relative
@@ -10,10 +10,12 @@ use alloc::vec::Vec;
 use core::fmt;
 
 use crate::kernel_collection::{
-    inspect_kernel_collection, EntryMetadata, KcMetadataError, KcMetadataInspection,
+    inspect_arm64_kernel_collection, inspect_kernel_collection, EntryMetadata, KcMetadataError,
+    KcMetadataInspection,
 };
 
 pub const STAGING_PAGE_SIZE: u64 = 4096;
+pub const ARM64_STAGING_PAGE_SIZE: u64 = 16 * 1024;
 /// Independent bound on the page-rounded memory span, including holes.
 pub const MAX_STAGING_SIZE: usize = 128 * 1024 * 1024;
 
@@ -92,6 +94,7 @@ pub struct KcStagingPlan<'a> {
     arena_size: usize,
     collection_header_offset: usize,
     outer_entry_offset: usize,
+    page_size: u64,
 }
 
 impl fmt::Debug for KcStagingPlan<'_> {
@@ -101,6 +104,7 @@ impl fmt::Debug for KcStagingPlan<'_> {
             .field("source_bytes", &self.source.len())
             .field("minimum_virtual_address", &self.minimum_virtual_address)
             .field("arena_size", &self.arena_size)
+            .field("page_size", &self.page_size)
             .field("collection_header_offset", &self.collection_header_offset)
             .field("outer_entry_offset", &self.outer_entry_offset)
             .field("outer_segments", &self.segments.len())
@@ -112,6 +116,22 @@ impl fmt::Debug for KcStagingPlan<'_> {
 impl<'a> KcStagingPlan<'a> {
     pub fn new(source: &'a [u8]) -> Result<Self> {
         let inspection = inspect_kernel_collection(source)?;
+        Self::from_inspection(source, inspection, STAGING_PAGE_SIZE)
+    }
+
+    /// Explicit ARM64/ARM64E metadata profile and 16-KiB arena-span rounding.
+    /// Vec backing is ordinary host memory, not a page-aligned guest allocation.
+    /// Chained fixups, PAC words, header addresses and instructions stay opaque.
+    pub fn new_arm64(source: &'a [u8]) -> Result<Self> {
+        let inspection = inspect_arm64_kernel_collection(source)?;
+        Self::from_inspection(source, inspection, ARM64_STAGING_PAGE_SIZE)
+    }
+
+    fn from_inspection(
+        source: &'a [u8],
+        inspection: KcMetadataInspection,
+        page_size: u64,
+    ) -> Result<Self> {
         let nonempty = inspection
             .collection
             .segments
@@ -131,11 +151,9 @@ impl<'a> KcStagingPlan<'a> {
         if first == u64::MAX || last <= first {
             return Err(E::EmptyImage);
         }
-        let minimum_virtual_address = first & !(STAGING_PAGE_SIZE - 1);
-        let rounded_end = last
-            .checked_add(STAGING_PAGE_SIZE - 1)
-            .ok_or(E::AddressOverflow)?
-            & !(STAGING_PAGE_SIZE - 1);
+        let minimum_virtual_address = first & !(page_size - 1);
+        let rounded_end =
+            last.checked_add(page_size - 1).ok_or(E::AddressOverflow)? & !(page_size - 1);
         let span = rounded_end
             .checked_sub(minimum_virtual_address)
             .ok_or(E::AddressOverflow)?;
@@ -185,6 +203,10 @@ impl<'a> KcStagingPlan<'a> {
         let entry = match &inspection.collection.entry {
             Some(EntryMetadata::UnixThread64 {
                 instruction_pointer,
+            })
+            | Some(EntryMetadata::ArmThread64 {
+                instruction_pointer,
+                ..
             }) => *instruction_pointer,
             _ => return Err(E::InvalidMapping),
         };
@@ -242,6 +264,7 @@ impl<'a> KcStagingPlan<'a> {
             arena_size,
             collection_header_offset,
             outer_entry_offset,
+            page_size,
         })
     }
 
@@ -262,6 +285,9 @@ impl<'a> KcStagingPlan<'a> {
     }
     pub fn outer_entry_offset(&self) -> usize {
         self.outer_entry_offset
+    }
+    pub fn page_size(&self) -> u64 {
+        self.page_size
     }
     pub fn preparation_ready(&self) -> bool {
         false

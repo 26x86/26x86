@@ -1077,6 +1077,28 @@ core module, tests, 필요 lib export와 공개 계약 결과이며 root가 문�
 통합한다. 코드 이후 최소 no_std build와 독립 layout 및 malformed-input 시험을
 수행하고 execution-ready/guest Metal 상태는 실제 실행 전 false로 유지한다.
 
+### BP22-D — ARM64 KC 메타데이터와 불변 host staging
+
+현재 KC 검사·staging API는 Intel 전용이다. 공개 Mach-O/ARM thread 구조를
+근거로 별도 ARM64 진입 API를 추가하고 기존 x86 기본 API와 rebase/EFI 경로의
+CPU gate는 보존한다. 각 header의 raw CPU type/subtype을 보존하여 ARM64E의
+capability를 ordinary ARM64로 지우지 않는다. ARM thread는 공개 flavor/count와
+명령 크기를 검증하는 명시 subset이며, PC는 4B 정렬과 executable file-backed
+outer segment 안의 완전한 4B 범위를 요구한다. member entry를 boot entry로
+대체하지 않는다. unknown 형식·불일치·중복·겹침·overflow는 거부한다.
+
+root가 `kernel_collection.rs`, `kc_staging.rs`, 별도 ARM fixture/host example을
+소유하고 ARM 계약 담당이 공개 자료와 실제 입력의 형식 일치 여부를 독립 검토한다.
+staging은 기존 128MiB 상한과 불변 source borrow를 유지하고 ARM profile의 16KiB
+단위 arena 범위를 계산한다. host Vec의 주소·정렬을 guest 물리 메모리로 간주하지
+않는다. outer copy/zero-fill/hole 및 모든 member view를 전량 readback하며 원본
+KC의 chain/PAC/header/명령 바이트를 적용하거나 수정하지 않는다.
+
+원본 27 입력은 실행 때만 공급하며 주소·원본 분석 결과는 `_isolated/`에 저장한다.
+공개 fixture에는 독립 작성한 형식만 사용한다. 실제 staging 완료는 allocation/
+mapping/boot_args 연결·인증·ARM64E 실행·guest Metal을 승인하지 않는다. 공개 XNU가
+수행하는 chained rebase와 header slide의 소유권은 BP22-C 결정을 유지한다.
+
 ## OPEN_QUESTION
 
 - BP9 연속 실행 결정: Design D2-A는 표준 EFI application 중간 경로를 허용했고,

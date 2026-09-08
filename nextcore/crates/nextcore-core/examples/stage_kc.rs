@@ -7,9 +7,16 @@ use std::{fs::File, io::Read, time::Instant};
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let mut args = std::env::args_os().skip(1);
-    let path = args.next().ok_or("usage: stage_kc <binary-file>")?;
+    let usage = "usage: stage_kc [--arm64] <binary-file>";
+    let first = args.next().ok_or(usage)?;
+    let arm64 = first == "--arm64";
+    let path = if arm64 {
+        args.next().ok_or(usage)?
+    } else {
+        first
+    };
     if args.next().is_some() {
-        return Err("usage: stage_kc <binary-file>".into());
+        return Err(usage.into());
     }
     let started = Instant::now();
     let file = File::open(path)?;
@@ -21,11 +28,19 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     source.try_reserve_exact(metadata.len() as usize)?;
     file.take(MAX_INPUT_SIZE as u64 + 1)
         .read_to_end(&mut source)?;
-    let staged = KcStagingPlan::new(&source)?.stage()?;
+    let plan = if arm64 {
+        KcStagingPlan::new_arm64(&source)?
+    } else {
+        KcStagingPlan::new(&source)?
+    };
+    let staged = plan.stage()?;
     let plan = staged.plan();
     let verified = staged.verification();
     let output = serde_json::json!({
         "kind": "kernel_collection_staging",
+        "cpu_type": plan.inspection().collection.cpu_type,
+        "cpu_subtype": plan.inspection().collection.cpu_subtype,
+        "staging_page_size": plan.page_size(),
         "structural_metadata_valid": true,
         "host_staging_verified": true,
         "physical_placement_verified": false,
