@@ -1,0 +1,18 @@
+{
+  "schema": "nextcore.mmu-configuration/1",
+  "passed": true,
+  "targeted_tests": 13,
+  "reference_runtime_tests_at_check": 65,
+  "fixes": [
+    "distinct TG0/TG1 encodings",
+    "EPD0 and EPD1 on TLB miss",
+    "correct canonical-address fault class",
+    "state preserved on rejected configuration",
+    "explicit unsupported TBI and mixed granules",
+    "partial initial-table index excludes upper canonical extension bits"
+  ],
+  "architectural_qemu_oracle": "qemu-granule-oracle-expanded.json",
+  "native_jit_mmu_enabled": false,
+  "architectural_negative_control": "qemu-granule-negative-control.json",
+  "partial_initial_table_mapping_cases": 24
+}

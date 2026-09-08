@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "file": "live-deployed.json",
+      "original_sha256": "31a3ab002655f1a885ce41692ef0221033de2cc0229b4bc642cc96ba4926823b",
+      "published_sha256": "78eb07a93591f5d33b87bfadc20957902c7605ad65f6676cea06b473636269f3",
+      "publication_is_filtered": true,
+      "omitted_entries": 1,
+      "original_execution_count": null,
+      "original_execution_count_unchanged": true,
+      "note": "Retired machine-profile entries omitted at user request in BP27-C. Original bytes are preserved outside the public repository; this file is not the unmodified execution evidence."
+    }
+  ]
+}

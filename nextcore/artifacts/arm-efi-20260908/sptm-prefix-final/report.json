@@ -1,0 +1,34 @@
+{
+  "schema": "nextcore.authored-sptm-prefix.v1",
+  "cases": [
+    {
+      "name": "positive",
+      "passed": true,
+      "receipt": "/tmp/nxc-sptm-prefix-suite-r2/positive/report.json"
+    },
+    {
+      "name": "budget",
+      "passed": true,
+      "receipt": "/tmp/nxc-sptm-prefix-suite-r2/budget/report.json"
+    },
+    {
+      "name": "feature-gate",
+      "passed": true,
+      "receipt": "/tmp/nxc-sptm-prefix-suite-r2/feature-gate/report.json"
+    }
+  ],
+  "input_sha256_before": {
+    "/home/sharh/src/26x86/nextcore/tools/arm64_sptm_prefix_probe.S": "9ff382ff307692d2928d959adba88bc39a47bf4bd655967d5342d0fc56236c6e",
+    "/tmp/nxc-jit-trace/x86_64-unknown-uefi/release/NXARMJIT.efi": "04f7228dd112c476a797e6bca52962002d9436c54bf6dc058291e2a6cca06215",
+    "/tmp/nxc-jit-default/x86_64-unknown-uefi/release/NXARMJIT.efi": "4aace6946c9a974077cb8e5ecb64c98ea19775b6c307c6b5e83cd452e3bea8d7"
+  },
+  "input_sha256_after": {
+    "/home/sharh/src/26x86/nextcore/tools/arm64_sptm_prefix_probe.S": "9ff382ff307692d2928d959adba88bc39a47bf4bd655967d5342d0fc56236c6e",
+    "/tmp/nxc-jit-trace/x86_64-unknown-uefi/release/NXARMJIT.efi": "04f7228dd112c476a797e6bca52962002d9436c54bf6dc058291e2a6cca06215",
+    "/tmp/nxc-jit-default/x86_64-unknown-uefi/release/NXARMJIT.efi": "4aace6946c9a974077cb8e5ecb64c98ea19775b6c307c6b5e83cd452e3bea8d7"
+  },
+  "passed": true,
+  "sptm_provided": false,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

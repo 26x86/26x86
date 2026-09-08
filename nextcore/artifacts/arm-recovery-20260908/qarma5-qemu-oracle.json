@@ -1,0 +1,67 @@
+{
+  "schema": "nextcore.qarma5-qemu-oracle/1",
+  "source": "authored PACGA assembly",
+  "qemu_version": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+  "qemu_sha256": "b511b60cc31479b71dfdd589e6c981ae37b20ef0e75adc5a57bb0d6737e9b30c",
+  "firmware_sha256": "633863bb254b25063205ac06ba7f57896a8c8a1648b3d8f3199039522fb361ac",
+  "vectors": [
+    {
+      "data": "0000000000000000",
+      "modifier": "0000000000000000",
+      "lo": "0000000000000000",
+      "hi": "0000000000000000",
+      "pacga": "76243b9500000000"
+    },
+    {
+      "data": "ffffffffffffffff",
+      "modifier": "ffffffffffffffff",
+      "lo": "ffffffffffffffff",
+      "hi": "ffffffffffffffff",
+      "pacga": "56b6776d00000000"
+    },
+    {
+      "data": "fb623599da6e8127",
+      "modifier": "477d469dec0b8762",
+      "lo": "ec2802d4e0a488e9",
+      "hi": "84be85ce9804e94b",
+      "pacga": "c003b93900000000"
+    },
+    {
+      "data": "0000000000000130",
+      "modifier": "0000000000009876",
+      "lo": "48ad369c24681357",
+      "hi": "b752c963db97eca8",
+      "pacga": "bf3684bf00000000"
+    },
+    {
+      "data": "0123456789abcdef",
+      "modifier": "fedcba9876543210",
+      "lo": "1111111111111111",
+      "hi": "8888888888888888",
+      "pacga": "0727701200000000"
+    },
+    {
+      "data": "8000000000000000",
+      "modifier": "0000000000000001",
+      "lo": "0000000000000002",
+      "hi": "0000000000000004",
+      "pacga": "b31a56a500000000"
+    },
+    {
+      "data": "0123456789abcdef",
+      "modifier": "1020304050607080",
+      "lo": "1122334455667788",
+      "hi": "8877665544332211",
+      "pacga": "7b4ef81100000000"
+    },
+    {
+      "data": "aaaaaaaaaaaaaaaa",
+      "modifier": "5555555555555555",
+      "lo": "0000000000000000",
+      "hi": "ffffffffffffffff",
+      "pacga": "580ee30500000000"
+    }
+  ],
+  "process_terminated": true,
+  "macos_boot_verified": false
+}

@@ -229,7 +229,7 @@ def cmd_patch(args: argparse.Namespace) -> int:
     from x86.patch.root import apply, preflight, unpatch
     operation = unpatch if args.unpatch else apply if args.apply else preflight
     result = operation(
-        args.profile,
+        None,
         args.payload_dir,
         mode=args.mode,
         deployment=args.mellow,
@@ -252,13 +252,6 @@ def cmd_mellow(args: argparse.Namespace) -> int:
     except (ValueError, OSError, KeyError) as exc:
         result = {"ok": False, "status": "mellow_rejected", "error": str(exc)}
 
-    _emit_json(result)
-    return 0 if result.get("ok") else 2
-
-
-def cmd_surface(args: argparse.Namespace) -> int:
-    from x86.surface import profile_info, validate_efi
-    result = validate_efi(args.efi) if args.efi else {"ok": True, "profile": profile_info()}
     _emit_json(result)
     return 0 if result.get("ok") else 2
 
@@ -395,10 +388,6 @@ def cmd_wizard(args: argparse.Namespace) -> int:
     if args.mode:
         from x86.execution import resolve_execution
         os.environ["X86_EXECUTION_MODE"] = resolve_execution(args.mode).mode.value
-    if args.profile:
-        os.environ["X86_TARGET_PROFILE"] = args.profile
-    if args.efi:
-        os.environ["X86_SURFACE_EFI"] = args.efi
 
     try:
         from x86.gui.launch import launch_wizard
@@ -1040,7 +1029,6 @@ def build_parser() -> argparse.ArgumentParser:
     mode.add_argument("--apply", action="store_true", help="설치된 macOS의 루트 패치 실행 (sudo 필요)")
     mode.add_argument("--preflight", action="store_true", help="읽기 전용 사전 검사 (기본)")
     mode.add_argument("--unpatch", action="store_true", help="APFS 패치 및 Mellow Data 파일 복원 (sudo 필요)")
-    patch.add_argument("--profile", choices=["surface-pro6-i5-tahoe"])
     patch.add_argument("--payload-dir", help="Universal-Binaries.dmg를 포함한 payloads 디렉터리")
     patch.add_argument("--mode", choices=["x86", "apple-silicon-sandbox"])
     patch.add_argument("--mellow", choices=["disabled", "efi", "root-patch"])
@@ -1063,10 +1051,6 @@ def build_parser() -> argparse.ArgumentParser:
             command.add_argument("--deployment", choices=["efi", "root-patch"], default="root-patch")
         command.set_defaults(handler=cmd_mellow)
 
-    surface = subparsers.add_parser("surface", help="Surface Pro 6 Tahoe EFI 읽기 전용 검사 (모든 OS)")
-    surface.add_argument("--efi", help="EFI 디렉터리 또는 이를 포함한 폴더")
-    surface.add_argument("--json", action="store_true")
-    surface.set_defaults(handler=cmd_surface)
 
     status = subparsers.add_parser("status", help="설정·패치·EFI 상태 요약")
     status.add_argument("--json", action="store_true", help="JSON 형식으로 결과 출력")
@@ -1074,8 +1058,6 @@ def build_parser() -> argparse.ArgumentParser:
 
     wizard = subparsers.add_parser("wizard", help="기본 GUI 마법사 실행")
     wizard.add_argument("--mode", choices=["x86", "apple-silicon-sandbox"])
-    wizard.add_argument("--profile", choices=["surface-pro6-i5-tahoe"])
-    wizard.add_argument("--efi", help="Surface EFI 검사 경로 미리 입력 (자동 기록 없음)")
     wizard.add_argument(
         "--advanced",
         action="store_true",

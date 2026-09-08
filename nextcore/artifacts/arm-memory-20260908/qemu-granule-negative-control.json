@@ -1,0 +1,9 @@
+{
+  "schema": "nextcore.mmu-oracle-negative/1",
+  "changed": "authored upper descriptor maps different PA",
+  "exit_code": 1,
+  "rejected": true,
+  "failure_marker_observed": true,
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/nxc-mmu-readonly-review/negative/probe_mmu_granules.py\", line 54, in <module>\n    result = probe()\n             ^^^^^^^\n  File \"/tmp/nxc-mmu-readonly-review/negative/probe_mmu_granules.py\", line 31, in probe\n    raise RuntimeError(json.dumps(records[-1]))\nRuntimeError: {\"command\": [\"qemu-system-aarch64\", \"-machine\", \"virt\", \"-cpu\", \"max\", \"-m\", \"128\", \"-nographic\", \"-monitor\", \"none\", \"-serial\", \"none\", \"-net\", \"none\", \"-semihosting-config\", \"enable=on,target=native\", \"-kernel\", \"/tmp/nextcore-mmu-oracle-soxb2vbh/probe.elf\"], \"exit_code\": 1, \"stdout\": \"\", \"stderr\": \"MMU_ORACLE: FAIL\\n\"}\n"
+}

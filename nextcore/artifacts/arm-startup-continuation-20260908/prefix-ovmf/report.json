@@ -1,0 +1,46 @@
+{
+  "schema": "nextcore.authored-sptm-prefix.v1",
+  "cases": [
+    {
+      "name": "positive",
+      "passed": true,
+      "receipt": "/tmp/nxc-bp26-prefix-suite/positive/report.json"
+    },
+    {
+      "name": "budget",
+      "passed": true,
+      "receipt": "/tmp/nxc-bp26-prefix-suite/budget/report.json"
+    },
+    {
+      "name": "feature-gate",
+      "passed": true,
+      "receipt": "/tmp/nxc-bp26-prefix-suite/feature-gate/report.json"
+    },
+    {
+      "name": "unresolved-template",
+      "passed": true,
+      "receipt": "/tmp/nxc-bp26-prefix-suite/unresolved-template/report.json"
+    },
+    {
+      "name": "thread-registers",
+      "passed": true,
+      "receipt": "/tmp/nxc-bp26-prefix-suite/thread-registers/report.json"
+    }
+  ],
+  "input_sha256_before": {
+    "/home/sharh/src/26x86/nextcore/tools/arm64_sptm_prefix_probe.S": "9ff382ff307692d2928d959adba88bc39a47bf4bd655967d5342d0fc56236c6e",
+    "/home/sharh/src/26x86/nextcore/tools/arm64_thread_pointer_probe.S": "5e3417574d743cf8cb55c149babde0934c89d230f8a978471d79380fd66c6056",
+    "/tmp/nxc-bp26-jit/x86_64-unknown-uefi/release/NXARMJIT.efi": "85d5b1f3b49106a3ba0cf1b983089bc384ffdf8ad11e7d82a6c010fcb6a0958c",
+    "/tmp/nxc-jit-default/x86_64-unknown-uefi/release/NXARMJIT.efi": "4aace6946c9a974077cb8e5ecb64c98ea19775b6c307c6b5e83cd452e3bea8d7"
+  },
+  "input_sha256_after": {
+    "/home/sharh/src/26x86/nextcore/tools/arm64_sptm_prefix_probe.S": "9ff382ff307692d2928d959adba88bc39a47bf4bd655967d5342d0fc56236c6e",
+    "/home/sharh/src/26x86/nextcore/tools/arm64_thread_pointer_probe.S": "5e3417574d743cf8cb55c149babde0934c89d230f8a978471d79380fd66c6056",
+    "/tmp/nxc-bp26-jit/x86_64-unknown-uefi/release/NXARMJIT.efi": "85d5b1f3b49106a3ba0cf1b983089bc384ffdf8ad11e7d82a6c010fcb6a0958c",
+    "/tmp/nxc-jit-default/x86_64-unknown-uefi/release/NXARMJIT.efi": "4aace6946c9a974077cb8e5ecb64c98ea19775b6c307c6b5e83cd452e3bea8d7"
+  },
+  "passed": true,
+  "sptm_provided": false,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

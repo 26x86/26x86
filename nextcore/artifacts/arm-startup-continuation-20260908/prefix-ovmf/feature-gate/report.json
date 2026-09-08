@@ -1,0 +1,61 @@
+{
+  "schema": "nextcore.x86-efi-arm-trace.v1",
+  "host_architecture": "x86_64",
+  "handoff_abi": "unprovisioned-sptm-prefix",
+  "sptm_args_provided": false,
+  "sptm_services_provided": false,
+  "platform_device_tree_provided": false,
+  "config": {
+    "Nextcore": {
+      "Kernel": {
+        "Profile": "x86-efi-arm64-trace",
+        "Path": "\\EFI\\NEXTCORE\\kernel.kc",
+        "Arguments": "-v",
+        "Trace": {
+          "HandoffAbi": "unprovisioned-sptm-prefix",
+          "PhysicalBase": 1073741824,
+          "VirtualBase": 18446741874686296064,
+          "MemorySize": 67108864,
+          "ActualMemorySize": 67108864,
+          "KernelPhysical": 1107296256,
+          "InstructionBudget": 8,
+          "DeviceTreePath": "\\EFI\\NEXTCORE\\diagnostic.dt"
+        }
+      }
+    }
+  },
+  "execution": null,
+  "markers": [
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: CONFIG_PARSED",
+    "NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152",
+    "NXARMJIT: STAGING_VERIFIED bytes=49152 copied=40960 zero_tail=8192",
+    "NXARMJIT: PROVIDERS_PENDING xnu_executed=false macos_boot_verified=false metal_verified=false",
+    "NXARMJIT: ERROR status=NOT_READY"
+  ],
+  "input_sha256_before": {
+    "/tmp/nxc-jit-default/x86_64-unknown-uefi/release/NXARMJIT.efi": "4aace6946c9a974077cb8e5ecb64c98ea19775b6c307c6b5e83cd452e3bea8d7",
+    "/tmp/nxc-bp26-prefix-suite/probe.kc": "12d69c4d795df75d8cd9d8cad9b4fea76b7219cbc5df89c0a1516d51a0df0b0c",
+    "/tmp/nxc-bp26-prefix-suite/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "input_sha256_after": {
+    "/tmp/nxc-jit-default/x86_64-unknown-uefi/release/NXARMJIT.efi": "4aace6946c9a974077cb8e5ecb64c98ea19775b6c307c6b5e83cd452e3bea8d7",
+    "/tmp/nxc-bp26-prefix-suite/probe.kc": "12d69c4d795df75d8cd9d8cad9b4fea76b7219cbc5df89c0a1516d51a0df0b0c",
+    "/tmp/nxc-bp26-prefix-suite/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "original_inputs_preserved": true,
+  "esp_copies_preserved": true,
+  "diagnostic_completed": false,
+  "native_execution_observed": false,
+  "elapsed_seconds": 5.149,
+  "failure": null,
+  "qemu_exit_code": 0,
+  "stopped_by_harness": true,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "module": "Core",
+    "crate": "nextcore-core",
+    "base": "6547be4bbf6b75cf706b89ade4d4a60d5441d223",
+    "url": "https://github.com/26x86/Nextcore-Core.git"
+  },
+  {
+    "module": "EFI",
+    "crate": "nextcore-efi",
+    "base": "64a2d4ce432c2f5ccd300728309556c898317436",
+    "url": "https://github.com/26x86/Nextcore-EFI.git"
+  },
+  {
+    "module": "Tool",
+    "crate": "nextcore-tool",
+    "base": "36e0fd50047182ee6b2abdca87249d8c1a084e73",
+    "url": "https://github.com/26x86/Nextcore-Tool.git"
+  },
+  {
+    "module": "ISE",
+    "crate": "nextcore-ise",
+    "base": "e4c318ff707ff57eaf128ffd66cc962a210ab8e1",
+    "url": "https://github.com/26x86/Nextcore-ISE.git"
+  },
+  {
+    "module": "GPU",
+    "crate": "nextcore-gpu",
+    "base": "8962199b5a7381850ef9aa9e72e98b45a8671d46",
+    "url": "https://github.com/26x86/Nextcore-GPU.git"
+  },
+  {
+    "module": "HAL",
+    "crate": "nextcore-hal",
+    "base": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+    "url": "https://github.com/26x86/Nextcore-HAL.git"
+  },
+  {
+    "module": "APLS",
+    "crate": "nextcore-apls",
+    "base": "f4d640e362fbcf160994d833b330e16506de9110",
+    "url": "https://github.com/26x86/Nextcore-APLS.git"
+  }
+]

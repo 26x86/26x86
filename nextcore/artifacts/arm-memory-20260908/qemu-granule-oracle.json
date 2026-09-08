@@ -1,0 +1,61 @@
+{
+  "schema": "nextcore.mmu-granule-oracle/1",
+  "passed": true,
+  "source_sha256": "9e6b9902a175fbb94b0ba27090756a123ea06ab5aaa7fa596221962d07339cdf",
+  "apple_assets_used": false,
+  "native_jit_mmu_verified": false,
+  "commands": [
+    {
+      "command": [
+        "clang",
+        "--target=aarch64-none-elf",
+        "-c",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/tools/mmu_granule_probe.S",
+        "-o",
+        "/tmp/nextcore-mmu-oracle-5s3uglrs/probe.o"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "ld.lld",
+        "-Ttext=0x40080000",
+        "-e",
+        "_start",
+        "/tmp/nextcore-mmu-oracle-5s3uglrs/probe.o",
+        "-o",
+        "/tmp/nextcore-mmu-oracle-5s3uglrs/probe.elf"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt",
+        "-cpu",
+        "max",
+        "-m",
+        "128",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "none",
+        "-net",
+        "none",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "/tmp/nextcore-mmu-oracle-5s3uglrs/probe.elf"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "MMU_ORACLE: 4K_TTBR1_PA_OK\nMMU_ORACLE: 16K_TTBR1_PA_OK\n"
+    }
+  ]
+}

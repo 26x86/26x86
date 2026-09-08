@@ -1,0 +1,91 @@
+{
+  "schema": "nextcore.mmu-granule-oracle/2",
+  "passed": true,
+  "source_sha256": "4ada14f9eb69cda0e1c366ceb7676860f847ce4f14a2e857eb4a5cb3e04d3964",
+  "executable_sha256": "5a42117ccc48290f51188ed60712dd74ce9cace9151b8a99a6c93e6719dcde51",
+  "qemu_version": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+  "observed_markers": [
+    "MMU_ORACLE: 4K_TTBR1_PA_OK",
+    "MMU_ORACLE: 4K_TTBR1_PARTIAL_PA_OK",
+    "MMU_ORACLE: 16K_TTBR1_PA_OK",
+    "MMU_ORACLE: 16K_TTBR1_PARTIAL_PA_OK"
+  ],
+  "cases": [
+    {
+      "granule_bytes": 4096,
+      "upper_va_bits": 39,
+      "initial_index_bits": 9
+    },
+    {
+      "granule_bytes": 4096,
+      "upper_va_bits": 38,
+      "initial_index_bits": 8
+    },
+    {
+      "granule_bytes": 16384,
+      "upper_va_bits": 36,
+      "initial_index_bits": 11
+    },
+    {
+      "granule_bytes": 16384,
+      "upper_va_bits": 35,
+      "initial_index_bits": 10
+    }
+  ],
+  "apple_assets_used": false,
+  "native_jit_mmu_verified": false,
+  "commands": [
+    {
+      "command": [
+        "clang",
+        "--target=aarch64-none-elf",
+        "-c",
+        "/home/sharh/work/integration-validation-bp26-final-20260908/26x86/nextcore/crates/nextcore-ise/tools/mmu_granule_probe.S",
+        "-o",
+        "/tmp/nextcore-mmu-oracle-km4u5hfm/probe.o"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "ld.lld",
+        "-Ttext=0x40080000",
+        "-e",
+        "_start",
+        "/tmp/nextcore-mmu-oracle-km4u5hfm/probe.o",
+        "-o",
+        "/tmp/nextcore-mmu-oracle-km4u5hfm/probe.elf"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt",
+        "-cpu",
+        "max",
+        "-m",
+        "128",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "none",
+        "-net",
+        "none",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "/tmp/nextcore-mmu-oracle-km4u5hfm/probe.elf"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "MMU_ORACLE: 4K_TTBR1_PA_OK\nMMU_ORACLE: 4K_TTBR1_PARTIAL_PA_OK\nMMU_ORACLE: 16K_TTBR1_PA_OK\nMMU_ORACLE: 16K_TTBR1_PARTIAL_PA_OK\n"
+    }
+  ]
+}

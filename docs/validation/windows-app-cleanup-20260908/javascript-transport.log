@@ -1,0 +1,12 @@
+✔ HTTP browser transport works without creating a fake pywebview object (3.6964ms)
+✔ HTTP readiness preserves native injection helpers before API creation (2.0687ms)
+✔ native API appearing during an HTTP probe retains priority and identity (1.1938ms)
+✔ Qt callback transport preserves native helpers and wins over HTTP fallback (1.4752ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 165.8928

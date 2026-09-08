@@ -1,0 +1,38 @@
+[
+  {
+    "repository": "26x86/Nextcore-Core",
+    "removed_branch": "codex/arm64e-boot-metal",
+    "preserved_commit": "6105cd7996ef2ea4db35d7d3a1e8822d0703aae9",
+    "reachable_from_main": true
+  },
+  {
+    "repository": "26x86/Nextcore-ISE",
+    "removed_branch": "codex/arm64e-boot-metal",
+    "preserved_commit": "a6f1c46c4f0e965dbc3d9426a737e7558bac33d7",
+    "reachable_from_main": true
+  },
+  {
+    "repository": "26x86/Nextcore-GPU",
+    "removed_branch": "codex/arm64e-boot-metal",
+    "preserved_commit": "34d617cca37d563d13ed0b0c966e2557921c6125",
+    "reachable_from_main": true
+  },
+  {
+    "repository": "26x86/Nextcore-APLS",
+    "removed_branch": "codex/arm64e-boot-metal",
+    "preserved_commit": "e6d09207374ff2f1b0f2df182b3287f159fbd329",
+    "reachable_from_main": true
+  },
+  {
+    "repository": "26x86/Nextcore-Tool",
+    "removed_branch": "codex/arm64e-boot-metal",
+    "preserved_commit": "c14971a9635db2d7ec499e9540c7a5fa4647a908",
+    "reachable_from_main": true
+  },
+  {
+    "repository": "26x86/Nextcore-EFI",
+    "removed_branch": "codex/arm64e-boot-metal",
+    "preserved_commit": "7f23ed3d24f8016338c30d84c5b3cbe0f82d3f19",
+    "reachable_from_main": true
+  }
+]

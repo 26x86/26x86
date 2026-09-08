@@ -1,0 +1,64 @@
+{
+  "module": "ISE",
+  "commit": "1d5ffb56799f70ce622e4813be66d0592cb5a292",
+  "passed": true,
+  "fresh_clone": true,
+  "root_workspace_patches": false,
+  "dependency_transport": "local committed objects via temporary Git URL mapping; remote publication not asserted",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise",
+        "/home/sharh/work/module-validation-20260908/ISE-1d5ffb5679"
+      ],
+      "exit_code": 0,
+      "seconds": 0.47
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--detach",
+        "1d5ffb56799f70ce622e4813be66d0592cb5a292"
+      ],
+      "exit_code": 0,
+      "seconds": 0.01
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 5.89
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "runtime/preos/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "seconds": 1.87
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_efi_native_pauth.py"
+      ],
+      "exit_code": 0,
+      "seconds": 8.0
+    }
+  ],
+  "nextcore_packages": [
+    {
+      "name": "nextcore-ise",
+      "source": null
+    }
+  ]
+}

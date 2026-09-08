@@ -1,0 +1,6 @@
+{
+  "schema": "nextcore.efi-native-pauth-proof/1",
+  "passed": false,
+  "error": "missing runtime source: /home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/arch.h",
+  "macos_boot_verified": false
+}

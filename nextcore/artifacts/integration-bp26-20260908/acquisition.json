@@ -1,0 +1,41 @@
+{
+  "schema": "nextcore.macos27-acquisition/1",
+  "verified_utc": "2026-09-08T13:40:15.152010+00:00",
+  "source_url": "https://updates.cdn-apple.com/2026SummerSeed/b3d7996f-4f91-4586-842a-345c550d7d47/UniversalMac_27.0_26A5425a_Restore.ipsw",
+  "version": "27.0",
+  "build": "26A5425a",
+  "device": "j274ap",
+  "archive_bytes": 22740609058,
+  "archive_sha256": "71a339de0fafd6ef75a5fdecd64def62ff642aab4e5d10b384e035b388bcd1c8",
+  "all_range_chunks_received": true,
+  "full_archive_sha256_verified": true,
+  "selected_inputs_match_archive": [
+    {
+      "role": "DeviceTree",
+      "member": "Firmware/all_flash/DeviceTree.j274ap.im4p",
+      "bytes": 38213,
+      "sha256": "8fa5c2ec27e7ef39153f91f6ec67e4bcefff1ce45da1e537de0dbd9f627d83df",
+      "zip_crc_verified": true,
+      "matches_previously_downloaded_input": true
+    },
+    {
+      "role": "KernelCache",
+      "member": "kernelcache.release.mac13g",
+      "bytes": 32600804,
+      "sha256": "5253a2b596830fd3803dcb8b3d4c9a47fbf163a8c116a3668a5639a9e3ba0bf1",
+      "zip_crc_verified": true,
+      "matches_previously_downloaded_input": true
+    },
+    {
+      "role": "iBoot",
+      "member": "Firmware/all_flash/iBoot.j274.RELEASE.im4p",
+      "bytes": 599959,
+      "sha256": "4797dcd2bdd774e9da9ac47d1ab4a42d4f451f8ba4201e24267031898fcbd6a7",
+      "zip_crc_verified": true,
+      "matches_previously_downloaded_input": true
+    }
+  ],
+  "raw_derivatives_unchanged": true,
+  "apple_payloads_published": false,
+  "macos_boot_verified": false
+}

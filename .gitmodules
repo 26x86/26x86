@@ -1,0 +1,27 @@
+[submodule "nextcore-core"]
+	path = nextcore/crates/nextcore-core
+	url = https://github.com/26x86/Nextcore-Core.git
+
+[submodule "nextcore-efi"]
+	path = nextcore/crates/nextcore-efi
+	url = https://github.com/26x86/Nextcore-EFI.git
+
+[submodule "nextcore-tool"]
+	path = nextcore/crates/nextcore-tool
+	url = https://github.com/26x86/Nextcore-Tool.git
+
+[submodule "nextcore-ise"]
+	path = nextcore/crates/nextcore-ise
+	url = https://github.com/26x86/Nextcore-ISE.git
+
+[submodule "nextcore-gpu"]
+	path = nextcore/crates/nextcore-gpu
+	url = https://github.com/26x86/Nextcore-GPU.git
+
+[submodule "nextcore-hal"]
+	path = nextcore/crates/nextcore-hal
+	url = https://github.com/26x86/Nextcore-HAL.git
+
+[submodule "nextcore-apls"]
+	path = nextcore/crates/nextcore-apls
+	url = https://github.com/26x86/Nextcore-APLS.git

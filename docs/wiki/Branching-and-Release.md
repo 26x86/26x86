@@ -11,11 +11,11 @@
 
 ## Why
 
-The seven modules are tracked Cargo workspace crates in this repository.
-Independent module repositories receive reviewed exports from an exact source
-commit. PRs keep source changes, release identities and validation reviewable.
-The optional submodule-conversion tooling has not been applied; do not describe
-ordinary tracked source files as gitlinks.
+The seven modules own their source in separate repositories. This repository
+tracks exact Git submodule commits and patches Cargo resolution to those local
+checkouts. Each module change is tested and published before a parent PR records
+its gitlink. PRs keep module source, dependency identities and integration checks
+reviewable. See [the module workflow](Nextcore-Modules.md).
 
 ## Branch model
 
@@ -78,9 +78,18 @@ The script enforces on `main`:
 
 ## Module release hygiene
 
-- Commit the intended workspace source and export only that commit's public
-  crate files. Exclude uncommitted work, private inputs, artifacts and targets.
-- Update existing module history with a normal commit and a fresh immutable
-  release tag. Never force-push or replace an existing tag.
-- Publish leaf dependencies before dependents, pin the new dependency tags,
-  and verify every release from a fresh clone using its declared build gate.
+- Commit and test changes in their owning module; do not copy crate sources into
+  the parent or reinitialize a published module history.
+- Publish leaf dependencies before dependents. Pin immutable commit IDs and
+  verify standalone builds without the parent workspace patches.
+- Merge the tested module PRs before merging the parent gitlink PR. A merge
+  commit preserves the exact tested module IDs in main's reachable history.
+- After merging, prove the feature commits are reachable from main, then remove
+  the completed branch. Keep unmerged work and active worktrees intact.
+- Never force-push, replace an existing release tag, or include original restore
+  assets. A module CI pass is distinct from a successful guest OS boot.
+
+The legacy protection helper's linear-history option must be reviewed before
+applying it to module repositories: rebasing or squashing produces different
+commit IDs. Do not delete the only reference to a dependency commit still used
+by an integration gitlink.

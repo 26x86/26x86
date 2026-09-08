@@ -90,10 +90,6 @@ def get_constants(*, start_unpack: bool = True, settings=None) -> constants.Cons
 
         defaults.GenerateDefaults(c.computer.real_model, True, c)
 
-        if os.environ.get("X86_TARGET_PROFILE") == "surface-pro6-i5-tahoe":
-            from x86.surface import configure_surface_constants
-            configure_surface_constants(c)
-
         if start_unpack and is_macos():
             c.unpack_thread = threading.Thread(
                 target=reroute_payloads.RoutePayloadDiskImage,

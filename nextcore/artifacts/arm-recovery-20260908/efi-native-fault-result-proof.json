@@ -1,0 +1,243 @@
+{
+  "schema": "nextcore.efi-native-pauth-proof/1",
+  "passed": true,
+  "host": {
+    "system": "Linux",
+    "machine": "x86_64"
+  },
+  "compiler_versions": {
+    "clang": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+    "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)"
+  },
+  "runtime_sources": {
+    "jit.c": "39a9ec78bcb6277993af603b424ec0d67b9bf4baf684209ee5c4925232d41770",
+    "jit.h": "43346edd31ca6e74345b9e15e00aee6d957d05dd540b1fb0c4a20c7d0eccbb79",
+    "arch.c": "fd303b55b2b151475a33cbc238bb2e455f61aa97612cf6010de1c14cb6846f43",
+    "boot_jit.c": "5b1d10a4778e21446038dbbb76852ec5beb21d5df3682c4344b56f986abf822e",
+    "boot_jit.h": "892f5c9ac85b03712c413eb1fae1799419f36b221dc1026207ada04265d96662",
+    "test_jit.c": "3d7ee8e6ef74c474eb9e53bae3b70a4552a87dcb4343e54a78c31b5c4156212a",
+    "test_boot_jit.c": "eb0d2c371567d6998e35592a550016b2e12ae6ab5e752cdbc4fe7be4eaf6258a",
+    "test_pauth_jit.c": "c076301752be3a6c627de552962b28963583828a7c03f2727943bd2cee00b8ef",
+    "test_flags_jit.c": "1279fe00a4356545de305a24ddbe7c63e94e49aaf10c11a5036b69988ef3391e",
+    "preos/src/pauth.rs": "f0c93ce49e3b8fa27bc28805d60fd6689edb41acd299bc914b192c329938604c"
+  },
+  "tests": {
+    "test_jit": {
+      "passed": true,
+      "assertions": 84,
+      "native_jit_executed": true,
+      "wx_enforced": true,
+      "executable_sha256": "2ea5892b991ee744b01957b418d1e5a378dd1ddc50c2a2094775055e5cdd3b0a"
+    },
+    "test_boot_jit": {
+      "passed": true,
+      "assertions": 34,
+      "native_jit_executed": true,
+      "nonzero_guest_ram_base": true,
+      "wx_enforced": true,
+      "executable_sha256": "ef8c56331d13647a953d98ebab64891c007274c5a2138b72f0dcba25c00f1f61"
+    },
+    "test_pauth_jit": {
+      "passed": true,
+      "assertions": 17,
+      "native_jit_executed": true,
+      "software_qarma5": true,
+      "wx_enforced": true,
+      "executable_sha256": "10369d09a085efc199cc57e7c62bc8031072d520a5f11dbcd79f7f7bffec4ab5"
+    },
+    "test_flags_jit": {
+      "passed": true,
+      "assertions": 827,
+      "native_jit_executed": true,
+      "nzcv_and_conditions": true,
+      "explicit_initial_registers": true,
+      "wx_enforced": true,
+      "executable_sha256": "97156b68e4154ad4a9e56f64a25e2613fc2dfe77f830a2e97c808a67c2a2574b"
+    }
+  },
+  "commands": [
+    {
+      "command": [
+        "/home/sharh/.cargo/bin/rustc",
+        "--edition=2021",
+        "--crate-type=staticlib",
+        "-C",
+        "panic=abort",
+        "-C",
+        "opt-level=2",
+        "/tmp/nextcore-native-pauth-mnidrdbh/pauth_provider.rs",
+        "-o",
+        "/tmp/nextcore-native-pauth-mnidrdbh/libpauth.a"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/test_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mnidrdbh/test_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mnidrdbh/test_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"assertions\":84,\"native_jit_executed\":true,\"wx_enforced\":true}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/boot_jit.c",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/test_boot_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mnidrdbh/test_boot_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mnidrdbh/test_boot_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"assertions\":34,\"native_jit_executed\":true,\"nonzero_guest_ram_base\":true,\"wx_enforced\":true}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/boot_jit.c",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/test_pauth_jit.c",
+        "/tmp/nextcore-native-pauth-mnidrdbh/libpauth.a",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mnidrdbh/test_pauth_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mnidrdbh/test_pauth_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"assertions\":17,\"native_jit_executed\":true,\"software_qarma5\":true,\"wx_enforced\":true}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/boot_jit.c",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/test_flags_jit.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/tmp/nextcore-native-pauth-mnidrdbh/test_flags_jit"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mnidrdbh/test_flags_jit"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"assertions\":827,\"native_jit_executed\":true,\"nzcv_and_conditions\":true,\"explicit_initial_registers\":true,\"wx_enforced\":true}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/.cargo/bin/rustc",
+        "--edition=2021",
+        "--test",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/preos/src/pauth.rs",
+        "-o",
+        "/tmp/nextcore-native-pauth-mnidrdbh/qarma5_tests"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "warning: associated function `new` is never used\n   --> /home/sharh/src/26x86/nextcore/crates/nextcore-ise/runtime/preos/src/pauth.rs:181:19\n    |\n180 | impl PauthContext {\n    | ----------------- associated function in this implementation\n181 |     pub(crate) fn new(x: [u64; 31], sp: u64, pc: u64, sctlr: u64, tcr: u64,\n    |                   ^^^\n    |\n    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: 1 warning emitted\n\n"
+    },
+    {
+      "command": [
+        "/tmp/nextcore-native-pauth-mnidrdbh/qarma5_tests"
+      ],
+      "returncode": 0,
+      "stdout": "\nrunning 4 tests\ntest tests::layer_inverses_and_involutory_matrix ... ok\ntest tests::qemu_executed_pacia_vector ... ok\ntest tests::qemu_executed_generic_mac_vectors ... ok\ntest tests::authentication_failure_and_unsupported_modes ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "Ubuntu clang version 18.1.3 (1ubuntu1)\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/.cargo/bin/rustc",
+        "--version"
+      ],
+      "returncode": 0,
+      "stdout": "rustc 1.98.1 (48a229cea 2026-09-01)\n",
+      "stderr": ""
+    }
+  ],
+  "macos_boot_verified": false,
+  "scope": "Native x86_64 C JIT, NZCV/branches, explicit registers, nonzero physical RAM, QARMA5 callback and W^X",
+  "limitations": [
+    "EL1 PAuth, 48-bit address ranges, TBI disabled",
+    "C JIT stops when the guest enables its MMU",
+    "PACGA and enhanced PAuth instruction features unadvertised"
+  ]
+}

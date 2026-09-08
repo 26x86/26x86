@@ -1,4 +1,4 @@
-name: Cross-platform preparation and Surface profile
+name: Cross-platform preparation
 on:
   push:
   pull_request:
@@ -17,6 +17,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
@@ -24,7 +26,7 @@ jobs:
       - name: Install native macOS probe bindings
         if: runner.os == 'macOS'
         run: python -m pip install pyobjc-core pyobjc-framework-Cocoa py_sip_xnu
-      - name: Validate profiles, Mellow payload, mode and transaction boundaries
+      - name: Validate platform, Mellow payload, mode and transaction boundaries
         run: python -m unittest discover -s tests -v
       - name: Observe actual runner execution policy without patching
         run: python -c "import json,platform; from x86.execution import resolve_execution; c=resolve_execution(settings={},environ={}); print(json.dumps(c.as_dict(),indent=2)); assert c.can_native_plan; assert c.can_native_apply == (platform.system() == 'Darwin')"
@@ -33,8 +35,8 @@ jobs:
       - name: Exercise preparation GUI bridge on Windows and Linux
         if: runner.os != 'macOS'
         run: python -m unittest x86.gui.test_bridge_smoke x86.gui.test_mellow_gui -v
-      - name: Read-only Surface CLI
-        run: python -m x86 surface --json
+      - name: Read-only application CLI (UTF-8 redirected output)
+        run: python -X utf8 -m x86 --help
 
   native-gui:
     strategy:
@@ -45,6 +47,8 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'

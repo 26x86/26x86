@@ -1,3 +1,4 @@
+# Filtered publication: retired machine-profile entries omitted at user request in BP27-C; original execution count and outcome retained. See publication-redactions.json.
 test_arm_and_rosetta_default_to_sandbox_and_block_all_native_paths (test_execution.ExecutionPolicyTests) ... ok
 test_auto_native_intel_and_preparation_hosts (test_execution.ExecutionPolicyTests) ... ok
 test_context_is_immutable_and_json_does_not_expose_mutable_internal_errors (test_execution.ExecutionPolicyTests) ... ok
@@ -149,15 +150,6 @@ test_restore_copy_failure_is_resumable_from_pending_receipt (test_mellow_transac
 test_symlink_inserted_after_install_blocks_rollback (test_mellow_transaction.MellowTransactionTests) ... ok
 test_symlinked_destination_parent_is_rejected_before_journal (test_mellow_transaction.MellowTransactionTests) ... ok
 test_unrecognized_bytes_are_not_deleted_even_at_mellow_destination (test_mellow_transaction.MellowTransactionTests) ... ok
-test_websites_cannot_launch_local_patch_or_read_efi (test_surface.BridgeBoundaryTests) ... ok
-test_enabled_path_cannot_escape_efi (test_surface.SurfaceTests) ... ok
-test_missing_optional_qt_parents_are_not_startup_errors (test_surface.SurfaceTests) ... ok
-test_non_mac_root_patch_never_loads_engine (test_surface.SurfaceTests) ... ok
-test_preflight_reports_nearby_kdk_and_blocks_unrelated_patches (test_surface.SurfaceTests) ... ok
-test_preparation_does_not_import_mac_frameworks_or_wx (test_surface.SurfaceTests) ... ok
-test_profile_requires_cpu_and_gpu_not_spoofed_smbios (test_surface.SurfaceTests) ... ok
-test_rollback_success_cannot_be_reported_as_patch_success (test_surface.SurfaceTests) ... ok
-test_validation_preserves_efi_and_detects_missing_binary (test_surface.SurfaceTests) ... ok
 
 ----------------------------------------------------------------------
 Ran 118 tests in 4.566s

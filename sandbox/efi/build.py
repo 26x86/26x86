@@ -11,7 +11,8 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parent
 BUILD = ROOT / "build"
-PREOS = ROOT / "preos"
+RUNTIME = ROOT.parents[1] / "nextcore" / "crates" / "nextcore-ise" / "runtime"
+PREOS = RUNTIME / "preos"
 EFI_RUST_TARGET = "x86_64-pc-windows-msvc"
 
 
@@ -210,7 +211,7 @@ def build_efi(staticlib):
         for source in sources:
             obj = BUILD / (name + "." + pathlib.Path(source).name + ".obj")
             run([
-                "clang", *flags, *(["-DVF_QEMU_TEST"] if test else []), "-c", str(ROOT / source),
+                "clang", *flags, *(["-DVF_QEMU_TEST"] if test else []), "-c", str(RUNTIME / source),
                 "-o", str(obj),
             ])
             objects.append(str(obj))
@@ -230,23 +231,23 @@ def build_native_tests(host_staticlib):
     # test: a bridge failure should not be reported as a translator regression.
     run([
         "clang", "-D_GNU_SOURCE", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-msse4.2",
-        "-mno-avx", str(ROOT / "jit.c"), str(ROOT / "arch.c"), str(ROOT / "test_jit.c"), "-o", str(BUILD / "test-jit"),
+        "-mno-avx", str(RUNTIME / "jit.c"), str(RUNTIME / "arch.c"), str(RUNTIME / "test_jit.c"), "-o", str(BUILD / "test-jit"),
     ])
     native = json_output([str(BUILD / "test-jit")])
     run([
         "clang", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-msse4.2", "-mno-avx",
-        str(ROOT / "jit.c"), str(ROOT / "arch.c"), str(ROOT / "preos_bridge.c"), str(ROOT / "preos_host_test.c"),
+        str(RUNTIME / "jit.c"), str(RUNTIME / "arch.c"), str(RUNTIME / "preos_bridge.c"), str(RUNTIME / "preos_host_test.c"),
         str(host_staticlib), "-o", str(BUILD / "test-preos"),
     ])
     ffi = json_output([str(BUILD / "test-preos")])
     run([
         "clang", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror",
-        str(ROOT / "abi_layout.c"), "-o", str(BUILD / "test-abi-layout"),
+        str(RUNTIME / "abi_layout.c"), "-o", str(BUILD / "test-abi-layout"),
     ])
     abi = json_output([str(BUILD / "test-abi-layout")])
     run([
         "clang", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror",
-        str(ROOT / "test_wx.c"), "-o", str(BUILD / "test-wx"),
+        str(RUNTIME / "test_wx.c"), "-o", str(BUILD / "test-wx"),
     ])
     wx = json_output([str(BUILD / "test-wx")])
     return native, ffi, abi, wx
@@ -262,8 +263,8 @@ def build_aic_test():
     """
     run([
         "clang", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror",
-        str(ROOT.parent / "devices" / "aic_v1.c"),
-        str(ROOT.parent / "devices" / "test_aic.c"),
+        str(RUNTIME.parent / "devices" / "aic_v1.c"),
+        str(RUNTIME.parent / "devices" / "test_aic.c"),
         "-o", str(BUILD / "test-aic"),
     ])
     result = captured([str(BUILD / "test-aic")])
@@ -316,9 +317,9 @@ def audit_linked_image(image, map_file):
 
 def source_hashes():
     paths = [
-        ROOT / "jit.c", ROOT / "jit.h", ROOT / "arch.c", ROOT / "main.c", ROOT / "uefi.h", ROOT / "handoff.h",
-        ROOT / "preos_abi.h", ROOT / "preos_bridge.h", ROOT / "preos_bridge.c", ROOT / "test_jit.c",
-        ROOT / "preos_host_test.c", ROOT / "abi_layout.c", ROOT / "test_wx.c", ROOT / "verify_ovmf.py", ROOT / "build.py",
+        RUNTIME / "jit.c", RUNTIME / "jit.h", RUNTIME / "arch.c", RUNTIME / "main.c", RUNTIME / "uefi.h", RUNTIME / "handoff.h",
+        RUNTIME / "preos_abi.h", RUNTIME / "preos_bridge.h", RUNTIME / "preos_bridge.c", RUNTIME / "test_jit.c",
+        RUNTIME / "preos_host_test.c", RUNTIME / "abi_layout.c", RUNTIME / "test_wx.c", ROOT / "verify_ovmf.py", ROOT / "build.py",
         ROOT / "verify_m1_machine_contract.py", ROOT / "m1-machine-contract.json",
         ROOT / "verify_vmapple_tcg_contract.py", ROOT / "vmapple-tcg-machine-contract.json",
         ROOT / "verify_vmapple_tcg_source_manifest.py", ROOT / "vmapple-tcg-source-port-manifest.json",
@@ -329,6 +330,10 @@ def source_hashes():
         PREOS / "src" / "mmu.rs",
         PREOS / "src" / "m1.rs",
         PREOS / "src" / "vmapple.rs",
+        PREOS / "src" / "pauth.rs",
+        RUNTIME / "boot_jit.c", RUNTIME / "boot_jit.h",
+        RUNTIME / "gop_scanout.c", RUNTIME / "gop_scanout.h",
+        RUNTIME / "jit_protection.c",
     ]
     patch_root = ROOT.parent.parent / "research" / "venfire" / "patches"
     series = patch_root / "series"
@@ -400,7 +405,7 @@ def main():
             "iboot-xnu-causal-evidence-contract",
         ],
         "native_unit": native,
-        "rust_unit": {"passed": True, "runner": "cargo test --manifest-path sandbox/efi/preos/Cargo.toml"},
+        "rust_unit": {"passed": True, "runner": "cargo test --manifest-path nextcore/crates/nextcore-ise/runtime/preos/Cargo.toml"},
         "static_abi_unit": abi_layout,
         "c_rust_abi_unit": ffi,
         "wx_attribute_unit": wx,
@@ -417,7 +422,7 @@ def main():
             "separate_rust_efi_images": 0,
             "separate_kernel_images": 0,
             "separate_os_boot_protocols": 0,
-            "rust_static_library": {"path": str(efi_staticlib.relative_to(ROOT)), "bytes": efi_staticlib.stat().st_size},
+            "rust_static_library": {"path": str(efi_staticlib.relative_to(ROOT.parents[1])), "bytes": efi_staticlib.stat().st_size},
             "fixed_guest_ram_bytes": 65536,
             "jit_code_buffer_bytes": 16384,
             "fixed_stack_requirement": "not measured",
@@ -489,7 +494,7 @@ def main():
         "opencore_handoff_version": 1,
         "source_sha256": source_hashes(),
         "device_source_sha256": {
-            path.name: sha256(path) for path in sorted((ROOT.parent / "devices").glob("aic_v1.*"))
+            path.name: sha256(path) for path in sorted((RUNTIME.parent / "devices").glob("aic_v1.*"))
         },
         "firmware_requirement": "EFI_MEMORY_ATTRIBUTE_PROTOCOL or EFI_CPU_ARCH_PROTOCOL with verified CR0.WP/EFER.NXE and RW/NX page permissions",
         "rust_target": EFI_RUST_TARGET,

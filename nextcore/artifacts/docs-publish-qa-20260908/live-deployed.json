@@ -96,11 +96,6 @@
       "bytes": 74218,
       "sha256": "34d66b7404866dd433c721c81da63310439d34289595dda32e8acdbcbe8eec62"
     },
-    "https://26x86.github.io/26x86/SURFACE_PRO6/": {
-      "status": 200,
-      "bytes": 51361,
-      "sha256": "d49bd003e03d122f8577bc1441bc9952f64d8172148bc61d0ff744e85eb4fd3c"
-    },
     "https://26x86.github.io/26x86/VSK/": {
       "status": 200,
       "bytes": 53104,
@@ -272,5 +267,6 @@
       "sha256": "915c87cbad053e7cc3fb9bc5fbf72fb99de9b8edd1f01340bcb733d8762b91a6"
     }
   },
-  "passed": true
+  "passed": true,
+  "publication_note": "Retired machine-profile entries omitted at user request in BP27-C; this is a filtered publication of the historical readback. Original execution outcomes are unchanged; see publication-redactions.json."
 }

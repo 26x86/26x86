@@ -1,0 +1,17 @@
+{
+  "schema": "nextcore.integration-extra-checks/1",
+  "source_integration_commit": "d43cc527",
+  "compiled_efi_bundle": {
+    "passed": true,
+    "bytes": 169472
+  },
+  "clippy_host": {
+    "passed": true,
+    "warnings_surfaced": true
+  },
+  "clippy_efi_all_features": {
+    "passed": true,
+    "warnings_surfaced": true
+  },
+  "workflow_yaml_files_parsed": 17
+}

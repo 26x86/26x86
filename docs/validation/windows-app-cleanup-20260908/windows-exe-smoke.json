@@ -1,0 +1,90 @@
+{
+  "ok": true,
+  "checks": {
+    "app_info": {
+      "ok": true,
+      "keys": [
+        "app_name",
+        "bundle_id",
+        "version",
+        "copyright",
+        "title",
+        "guide_link",
+        "logo_url",
+        "advanced_enabled",
+        "host_is_mac",
+        "macos_only_message",
+        "status_ready",
+        "execution",
+        "execution_error",
+        "mellow_deployment",
+        "mellow_payload",
+        "mellow_efi",
+        "native_metal_verified"
+      ]
+    },
+    "steps": {
+      "ok": true,
+      "keys": 5
+    },
+    "detect": {
+      "ok": true,
+      "keys": [
+        "ok",
+        "detect"
+      ]
+    },
+    "macos": {
+      "ok": true,
+      "keys": [
+        "choices",
+        "default_index",
+        "selected_kernel",
+        "current_marketing",
+        "recommended"
+      ]
+    },
+    "status": {
+      "ok": true,
+      "keys": [
+        "ok",
+        "settings",
+        "config_path",
+        "patch",
+        "build_completed",
+        "execution"
+      ]
+    },
+    "host_can_build": {
+      "ok": true,
+      "keys": [
+        "ok",
+        "can_build",
+        "build_completed",
+        "message"
+      ]
+    }
+  },
+  "web_index": "C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-source\\dist\\26x86\\_internal\\x86\\gui\\web\\index.html",
+  "index_is_file_uri": false,
+  "qt_chromium_available": false,
+  "pywebview_gui": "edgechromium",
+  "gui_backend_env": "auto",
+  "macos_default_cocoa": false,
+  "qt_opt_in_only": true,
+  "tauri_preferred": true,
+  "tauri": {
+    "ok": true,
+    "tauri_available": false,
+    "tauri_binary": null,
+    "tauri_project": "C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-source\\dist\\26x86\\_internal\\gui-tauri",
+    "candidates": [
+      "C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-source\\dist\\26x86\\_internal\\gui-tauri\\target\\release\\NextCore.exe",
+      "C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-source\\dist\\26x86\\_internal\\gui-tauri\\target\\release\\x86-gui.exe",
+      "C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-source\\dist\\26x86\\_internal\\gui-tauri\\target\\release\\app.exe",
+      "C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-source\\dist\\26x86\\_internal\\gui-tauri\\target\\debug\\NextCore.exe",
+      "C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-source\\dist\\26x86\\_internal\\gui-tauri\\target\\debug\\x86-gui.exe",
+      "C:\\Users\\sharh\\AppData\\Local\\26x86-devtools\\windows-app-source\\dist\\26x86\\_internal\\gui-tauri\\target\\debug\\app.exe"
+    ]
+  }
+}

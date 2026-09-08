@@ -26,9 +26,16 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy
-          targets: x86_64-unknown-uefi
+          targets: x86_64-unknown-uefi, aarch64-unknown-uefi
+      - name: Install native firmware build tools
+        run: sudo apt-get update && sudo apt-get install -y clang lld llvm
+      - name: Verify module checkout and local Cargo resolution
+        run: python3 Tools/verify_nextcore_submodules.py --cargo --require-clean
       - name: Workspace tests
         run: cargo test --workspace
+        working-directory: nextcore
+      - name: Compare SGPU grant decisions with the VSK C policy
+        run: NEXTCORE_VSK_POLICY_ROOT="$GITHUB_WORKSPACE/sandbox/vsk" cargo test -p nextcore-apls --test sgpu_grant -- --include-ignored
         working-directory: nextcore
       - name: Clippy (host crates, warnings surfaced)
         run: cargo clippy --workspace --exclude nextcore-efi --all-targets
@@ -36,3 +43,51 @@ jobs:
       - name: Clippy (firmware on its actual UEFI target)
         run: cargo clippy -p nextcore-efi --target x86_64-unknown-uefi --all-features
         working-directory: nextcore
+
+  x86-efi-arm-jit:
+    name: x86-efi-arm-jit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-uefi
+      - name: Install firmware test tools
+        run: sudo apt-get update && sudo apt-get install -y clang lld llvm qemu-system-x86 ovmf
+      - name: Link default and authored-probe EFI images
+        working-directory: nextcore
+        run: |
+          cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit --bin NXARMJIT
+          cp target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/NXARMJIT-default.efi"
+          cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-probe,arm-jit-trace --bin NXARMJIT
+          cp target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/NXARMJIT-probe.efi"
+      - name: Execute ARM64e JIT, PAC, GOP and rejection cases in x86 EFI
+        run: |
+          python3 nextcore/tools/verify_arm_jit_ovmf.py \
+            --efi-default "$RUNNER_TEMP/NXARMJIT-default.efi" \
+            --efi-probe "$RUNNER_TEMP/NXARMJIT-probe.efi" \
+            --output "$RUNNER_TEMP/nextcore-arm-jit-proof"
+          python3 nextcore/tools/verify_arm_sptm_prefix_ovmf.py \
+            --efi-trace "$RUNNER_TEMP/NXARMJIT-probe.efi" \
+            --efi-default "$RUNNER_TEMP/NXARMJIT-default.efi" \
+            --output "$RUNNER_TEMP/nextcore-sptm-prefix-proof"
+      - name: Execute platform profile and IRQ/FIQ vector cases in x86 EFI
+        run: |
+          python3 nextcore/tools/verify_arm_platform_irq_ovmf.py \
+            --efi "$RUNNER_TEMP/NXARMJIT-probe.efi" \
+            --output "$RUNNER_TEMP/nextcore-platform-irq-proof"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nextcore-x86-efi-arm-jit
+          path: |
+            ${{ runner.temp }}/NXARMJIT-*.efi
+            ${{ runner.temp }}/nextcore-arm-jit-proof/report.json
+            ${{ runner.temp }}/nextcore-arm-jit-proof/*/serial.log
+            ${{ runner.temp }}/nextcore-sptm-prefix-proof/report.json
+            ${{ runner.temp }}/nextcore-sptm-prefix-proof/*/serial.log
+            ${{ runner.temp }}/nextcore-platform-irq-proof/report.json
+            ${{ runner.temp }}/nextcore-platform-irq-proof/*/serial.log

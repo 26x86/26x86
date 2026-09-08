@@ -9,6 +9,7 @@ import sys
 import tempfile
 import unittest
 from unittest.mock import patch
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from x86.execution import HostFacts
@@ -217,15 +218,10 @@ runpy.run_path(entry,run_name='__main__')
         from x86.gui.http_bridge import start_bridge_http_server, wizard_base_url, API_METHODS
         from x86.gui.webview_app import WebviewApi
         self.assertIn("prepare_mellow_efi", API_METHODS)
-        self.assertIn("inspect_vmapple_storage", API_METHODS)
+        self.assertNotIn("inspect_vmapple_storage", API_METHODS)
         api = WebviewApi(self.bridge)
         self.assertFalse(api.prepare_mellow_efi(str(self.directory / "unused"))["ok"])
-        aux = self.directory / "aux.raw"
-        root = self.directory / "root.raw"
-        aux.write_bytes(b"\0" * (1024 * 1024))
-        root.write_bytes(b"\0" * (1024 * 1024))
-        storage = api.inspect_vmapple_storage({"aux": str(aux), "root": str(root)})
-        self.assertEqual(storage["provisioning_status"], "unprovisioned-zero")
+        self.assertFalse(hasattr(api, "inspect_vmapple_storage"))
         server, _ = start_bridge_http_server(self.bridge.web_root(), bridge=self.bridge)
         try:
             payload = {"method": "save_settings", "args": [{"execution_mode": "apple-silicon-sandbox", "mellow_deployment": "disabled"}]}
@@ -234,16 +230,16 @@ runpy.run_path(entry,run_name='__main__')
                 data = json.load(response)
             self.assertTrue(data["result"]["ok"], data)
             self.assertEqual(self.store.read("execution_mode"), "apple-silicon-sandbox")
-            storage_payload = {"method": "inspect_vmapple_storage", "args": [{"aux": str(aux), "root": str(root)}]}
+            storage_payload = {"method": "inspect_vmapple_storage", "args": [{}]}
             storage_req = Request(
                 wizard_base_url(server) + "/api/invoke",
                 data=json.dumps(storage_payload).encode(),
                 headers={"Content-Type": "application/json"},
             )
-            with urlopen(storage_req, timeout=10) as response:
-                storage_data = json.load(response)
-            self.assertTrue(storage_data["result"]["ok"], storage_data)
-            self.assertEqual(storage_data["result"]["provisioning_status"], "unprovisioned-zero")
+            with self.assertRaises(HTTPError) as caught:
+                urlopen(storage_req, timeout=10)
+            self.assertEqual(caught.exception.code, 404)
+            self.assertFalse(json.load(caught.exception)["ok"])
         finally:
             server.shutdown()
             server.server_close()

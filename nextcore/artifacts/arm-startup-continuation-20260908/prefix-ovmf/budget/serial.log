@@ -1,0 +1,14 @@
+[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01HBdsDxe: loading Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+BdsDxe: starting Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64
+NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64
+NXARMJIT: CONFIG_PARSED
+NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152
+NXARMJIT: TRACE_DT_CHECKED templates=0 platform_complete=false
+NXARMJIT: TRACE_STAGING_VERIFIED source_unchanged=true
+NXARMJIT: TRACE_HANDOFF_UNPROVISIONED abi=unprovisioned-sptm-prefix sptm_args=false sptm_services=false platform_device_tree=false
+NXARMJIT: TRACE_ENTER entry=0x42004400 x0=0 x1=0x4200c000 x2=0 x3=0 budget=1
+NXARMJIT: TRACE_RETURN status=5 retired=1 pc=0x42004404 blocks=1 instruction=0x0
+NXARMJIT: TRACE_REGISTERS x0=0x0 x1=0x4200c000 x2=0x0 x3=0x31
+NXARMJIT: TRACE_ONLY macos_boot_verified=false metal_verified=false
+NXARMJIT: ERROR status=ABORTED

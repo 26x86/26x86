@@ -1,0 +1,92 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling serde_core v1.0.229
+   Compiling memchr v2.8.3
+   Compiling serde v1.0.229
+   Compiling thiserror v2.0.20
+   Compiling zmij v1.0.23
+   Compiling powerfmt v0.2.0
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.2
+   Compiling deranged v0.5.8
+   Compiling num-conv v0.2.2
+   Compiling time-core v0.1.9
+   Compiling serde_json v1.0.151
+   Compiling log v0.4.34
+   Compiling plain v0.2.3
+   Compiling base64 v0.23.1
+   Compiling itoa v1.0.18
+   Compiling quick-xml v0.42.0
+   Compiling roxmltree v0.21.1
+   Compiling indexmap v2.14.2
+   Compiling time v0.3.55
+   Compiling syn v3.0.5
+   Compiling scroll_derive v0.13.2
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.20
+   Compiling scroll v0.13.0
+   Compiling goblin v0.10.7
+   Compiling plist v1.10.1
+   Compiling nextcore-core v0.1.0 (/home/sharh/src/26x86/nextcore/crates/nextcore-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.94s
+     Running tests/arm64_boot_config.rs (/home/sharh/work/bp27-efi/core-target/debug/deps/arm64_boot_config-ace74742f3056802)
+
+running 3 tests
+test arm_config_retains_bounds_and_path_rejection ... ok
+test arm_profiles_are_explicit_and_intel_gate_remains_separate ... ok
+test original_trace_requires_explicit_bounded_coordinates_and_dt ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/arm64_handoff.rs (/home/sharh/work/bp27-efi/core-target/debug/deps/arm64_handoff-594f56671d6eca3f)
+
+running 3 tests
+test invalid_linear_mapping_alignment_and_ram_coverage_are_rejected ... ok
+test physical_layout_stage_and_wire_coordinates_agree ... ok
+test modified_code_arguments_tree_padding_and_stack_are_detected ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/arm64_platform_config.rs (/home/sharh/work/bp27-efi/core-target/debug/deps/arm64_platform_config-b6c96c521a7e5545)
+
+running 5 tests
+test unknown_types_duplicates_and_unrecognized_options_are_not_silently_ignored ... ok
+test software_profile_has_explicit_defaults_and_its_own_diagnostic_bound ... ok
+test absent_profile_retains_old_bound_and_does_not_create_a_provider ... ok
+test vector_table_must_be_aligned_and_fully_inside_guest_ram ... ok
+test only_defined_override_fields_pstate_modes_and_boolean_levels_are_accepted ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/boot_config.rs (/home/sharh/work/bp27-efi/core-target/debug/deps/boot_config-bc8c14264e62f9eb)
+
+running 12 tests
+test disabled_fields_are_still_checked_and_error_tokens_cannot_inject_markers ... ok
+test duplicate_keys_and_mixed_text_are_rejected_in_the_entire_document ... ok
+test missing_or_disabled_selection_returns_none_and_arguments_default_empty ... ok
+test external_plist_doctype_works_without_resolving_or_accepting_entities ... ok
+test path_rejects_non_ucs2_characters_but_arguments_keep_utf16 ... ok
+test multiple_active_entries_are_ambiguous_and_entry_count_is_bounded ... ok
+test root_version_structure_and_known_types_are_required ... ok
+test selects_one_target_and_decodes_xml_text_without_changing_arguments ... ok
+test binary_non_utf8_and_all_truncated_document_prefixes_are_rejected ... ok
+test path_validation_rejects_escape_aliases_non_efi_and_control_characters ... ok
+test utf16_limits_count_surrogate_pairs_and_allow_exact_boundary ... ok
+test input_depth_and_node_limits_are_enforced_before_unbounded_work ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/firmware_dt.rs (/home/sharh/work/bp27-efi/core-target/debug/deps/firmware_dt-eb6c33c519c64dc7)
+
+running 7 tests
+test every_truncation_and_trailing_byte_is_rejected ... ok
+test names_and_recursion_depth_have_independent_limits ... ok
+test opaque_or_malformed_template_bodies_remain_unresolved ... ok
+test templates_and_literal_values_preserve_the_original_wire_bytes ... ok
+test unmodified_runtime_data_must_still_pass_the_existing_strict_validator ... ok
+test untrusted_counts_and_flagged_lengths_are_bounded_before_payload_access ... ok
+test aggregate_node_and_property_budgets_cover_wide_trees ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+

@@ -1,0 +1,243 @@
+{
+  "schema": "nextcore.x86-efi-arm-jit.v1",
+  "host_architecture": "x86_64",
+  "layer": "x86 EFI native ARM translation + guest boot_args + GOP readback",
+  "cases": [
+    {
+      "name": "production-gate",
+      "passed": true,
+      "expected": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_PARSED",
+        "NXARMJIT: KC_VALIDATED ",
+        "NXARMJIT: STAGING_VERIFIED ",
+        "NXARMJIT: PROVIDERS_PENDING",
+        "NXARMJIT: ERROR status=NOT_READY"
+      ],
+      "forbidden_observed": [],
+      "markers": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_PARSED",
+        "NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152",
+        "NXARMJIT: STAGING_VERIFIED bytes=49152 copied=40960 zero_tail=8192",
+        "NXARMJIT: PROVIDERS_PENDING xnu_executed=false macos_boot_verified=false metal_verified=false",
+        "NXARMJIT: ERROR status=NOT_READY"
+      ],
+      "qemu_pid": 29021,
+      "qemu_exit_code": 0,
+      "process_terminated": true,
+      "stopped_by_harness": true,
+      "elapsed_seconds": 4.723,
+      "serial_log": "/tmp/nxc-arm-jit-ovmf-r1-negative/production-gate/serial.log",
+      "fixture_sha256": "c76d1146778474e2efcce376a44b7befa36f52589d95df6e4e1b55323c37bb18",
+      "xnu_executed": false,
+      "macos_boot_verified": false,
+      "metal_verified": false
+    },
+    {
+      "name": "arm64e-production-staging",
+      "passed": true,
+      "expected": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_PARSED",
+        "NXARMJIT: KC_VALIDATED subtype=0x2",
+        "NXARMJIT: STAGING_VERIFIED ",
+        "NXARMJIT: PROVIDERS_PENDING",
+        "NXARMJIT: ERROR status=NOT_READY"
+      ],
+      "forbidden_observed": [],
+      "markers": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_PARSED",
+        "NXARMJIT: KC_VALIDATED subtype=0x2 arena=49152",
+        "NXARMJIT: STAGING_VERIFIED bytes=49152 copied=40960 zero_tail=8192",
+        "NXARMJIT: PROVIDERS_PENDING xnu_executed=false macos_boot_verified=false metal_verified=false",
+        "NXARMJIT: ERROR status=NOT_READY"
+      ],
+      "qemu_pid": 29027,
+      "qemu_exit_code": 0,
+      "process_terminated": true,
+      "stopped_by_harness": true,
+      "elapsed_seconds": 4.835,
+      "serial_log": "/tmp/nxc-arm-jit-ovmf-r1-negative/arm64e-production-staging/serial.log",
+      "fixture_sha256": "a52997b372f5938b778df95aa317916cf7d74e3111f3c09f1750288c9b184708",
+      "xnu_executed": false,
+      "macos_boot_verified": false,
+      "metal_verified": false
+    },
+    {
+      "name": "arm64e-probe-rejected",
+      "passed": true,
+      "expected": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_PARSED",
+        "NXARMJIT: KC_VALIDATED ",
+        "NXARMJIT: FIXTURE_REJECTED",
+        "NXARMJIT: ERROR status=UNSUPPORTED"
+      ],
+      "forbidden_observed": [],
+      "markers": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_PARSED",
+        "NXARMJIT: KC_VALIDATED subtype=0x2 arena=49152",
+        "NXARMJIT: FIXTURE_REJECTED",
+        "NXARMJIT: ERROR status=UNSUPPORTED"
+      ],
+      "qemu_pid": 29032,
+      "qemu_exit_code": 0,
+      "process_terminated": true,
+      "stopped_by_harness": true,
+      "elapsed_seconds": 4.954,
+      "serial_log": "/tmp/nxc-arm-jit-ovmf-r1-negative/arm64e-probe-rejected/serial.log",
+      "fixture_sha256": "a52997b372f5938b778df95aa317916cf7d74e3111f3c09f1750288c9b184708",
+      "xnu_executed": false,
+      "macos_boot_verified": false,
+      "metal_verified": false
+    },
+    {
+      "name": "unmarked-image",
+      "passed": true,
+      "expected": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_PARSED",
+        "NXARMJIT: KC_VALIDATED ",
+        "NXARMJIT: FIXTURE_REJECTED",
+        "NXARMJIT: ERROR status=UNSUPPORTED"
+      ],
+      "forbidden_observed": [],
+      "markers": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_PARSED",
+        "NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152",
+        "NXARMJIT: FIXTURE_REJECTED",
+        "NXARMJIT: ERROR status=UNSUPPORTED"
+      ],
+      "qemu_pid": 29037,
+      "qemu_exit_code": 0,
+      "process_terminated": true,
+      "stopped_by_harness": true,
+      "elapsed_seconds": 5.296,
+      "serial_log": "/tmp/nxc-arm-jit-ovmf-r1-negative/unmarked-image/serial.log",
+      "fixture_sha256": "3d6d5182378e44f4a5565770926de5155788abfd2d6707683bd7ad2cbaf25f9e",
+      "xnu_executed": false,
+      "macos_boot_verified": false,
+      "metal_verified": false
+    },
+    {
+      "name": "truncated-image",
+      "passed": true,
+      "expected": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_PARSED",
+        "NXARMJIT: KC_INVALID",
+        "NXARMJIT: ERROR status=LOAD_ERROR"
+      ],
+      "forbidden_observed": [],
+      "markers": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_PARSED",
+        "NXARMJIT: KC_INVALID reason=KC_STAGING_Metadata(Truncated)",
+        "NXARMJIT: ERROR status=LOAD_ERROR"
+      ],
+      "qemu_pid": 29337,
+      "qemu_exit_code": 0,
+      "process_terminated": true,
+      "stopped_by_harness": true,
+      "elapsed_seconds": 5.018,
+      "serial_log": "/tmp/nxc-arm-jit-ovmf-r1-negative/truncated-image/serial.log",
+      "fixture_sha256": "f58e3936784fdea019926064e5866096b99e61a7ba3dfd18e975f8a327799a41",
+      "xnu_executed": false,
+      "macos_boot_verified": false,
+      "metal_verified": false
+    },
+    {
+      "name": "intel-profile-rejected",
+      "passed": true,
+      "expected": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_INVALID reason=UNSUPPORTED_KERNEL_PROFILE",
+        "NXARMJIT: ERROR status=INVALID_PARAMETER"
+      ],
+      "forbidden_observed": [],
+      "markers": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_INVALID reason=UNSUPPORTED_KERNEL_PROFILE",
+        "NXARMJIT: ERROR status=INVALID_PARAMETER"
+      ],
+      "qemu_pid": 29490,
+      "qemu_exit_code": 0,
+      "process_terminated": true,
+      "stopped_by_harness": true,
+      "elapsed_seconds": 5.849,
+      "serial_log": "/tmp/nxc-arm-jit-ovmf-r1-negative/intel-profile-rejected/serial.log",
+      "fixture_sha256": "c76d1146778474e2efcce376a44b7befa36f52589d95df6e4e1b55323c37bb18",
+      "xnu_executed": false,
+      "macos_boot_verified": false,
+      "metal_verified": false
+    },
+    {
+      "name": "guest-data-corruption",
+      "passed": true,
+      "expected": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_PARSED",
+        "NXARMJIT: KC_VALIDATED ",
+        "NXARMJIT: STAGING_VERIFIED ",
+        "NXARMJIT: GUEST_ENTRY_READY ",
+        "NXARMJIT: JIT_ENTER host_boot_services=active",
+        "NXARMJIT: JIT_RETURN status=1 retired=25 ",
+        "NXARMJIT: ERROR status=COMPROMISED_DATA"
+      ],
+      "forbidden_observed": [],
+      "markers": [
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+        "NXARMJIT: CONFIG_PARSED",
+        "NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152",
+        "NXARMJIT: STAGING_VERIFIED guest_addresses_separate=true",
+        "NXARMJIT: GUEST_ENTRY_READY entry=0x42004400 x0=0x4200c000 ram_base=0x40000000",
+        "NXARMJIT: JIT_ENTER host_boot_services=active",
+        "NXARMJIT: JIT_RETURN status=1 retired=25 pc=0x42004464 blocks=1 fault=0xf9001cc7",
+        "NXARMJIT: ERROR status=COMPROMISED_DATA"
+      ],
+      "qemu_pid": 29675,
+      "qemu_exit_code": 0,
+      "process_terminated": true,
+      "stopped_by_harness": true,
+      "elapsed_seconds": 5.386,
+      "serial_log": "/tmp/nxc-arm-jit-ovmf-r1-negative/guest-data-corruption/serial.log",
+      "fixture_sha256": "af7f1c01df27b001dbde8c456b4e90edd1b01d45da19ab0048335a7581c28406",
+      "xnu_executed": false,
+      "macos_boot_verified": false,
+      "metal_verified": false
+    }
+  ],
+  "failure": null,
+  "input_sha256_before": {
+    "/tmp/nxc-jit-probe/x86_64-unknown-uefi/release/NXARMJIT.efi": "8879d56ade1518f5b9f65761dbe00be057cd3eaa91198ad5e2d67a5e25cf6de0",
+    "/tmp/nxc-jit-default/x86_64-unknown-uefi/release/NXARMJIT.efi": "7f429154b6d8875f21cd1c0a8dff3c0696ccd7f992e321a9a4aef5685f1cab08",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e",
+    "/home/sharh/src/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "29a14a20596e1f68bbb48c77f20ae8565c26f4802567ac83596ada05c4f352a2",
+    "/home/sharh/src/26x86/nextcore/tools/arm64_jit_probe.S": "58acc56b46774457f49223f465e5c5ac4cdebd4cd0943d6940e2f5a6f9263982"
+  },
+  "input_sha256_after": {
+    "/tmp/nxc-jit-probe/x86_64-unknown-uefi/release/NXARMJIT.efi": "8879d56ade1518f5b9f65761dbe00be057cd3eaa91198ad5e2d67a5e25cf6de0",
+    "/tmp/nxc-jit-default/x86_64-unknown-uefi/release/NXARMJIT.efi": "7f429154b6d8875f21cd1c0a8dff3c0696ccd7f992e321a9a4aef5685f1cab08",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e",
+    "/home/sharh/src/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "29a14a20596e1f68bbb48c77f20ae8565c26f4802567ac83596ada05c4f352a2",
+    "/home/sharh/src/26x86/nextcore/tools/arm64_jit_probe.S": "58acc56b46774457f49223f465e5c5ac4cdebd4cd0943d6940e2f5a6f9263982"
+  },
+  "original_inputs_preserved": true,
+  "passed": true,
+  "xnu_executed": false,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

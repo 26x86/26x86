@@ -1,0 +1,37 @@
+{
+  "schema": "nextcore.gpu-runtime.validation.v1",
+  "rustc": "1.98.1 (48a229cea 2026-09-01)",
+  "source_sha256": {
+    "VULKAN_COMPUTE.md": "bbe3b82d25ac0035cd15cd4fe0252546496b5f53e607a9d3f95545b9fa7d1fd4",
+    "src/command_executor.rs": "b64707b65269b193c3351b340ec6974f3692793e7e69e60492bed32a05628aca",
+    "src/compute.rs": "663e075d7d081e211e62e02121eb6d8e6de4c45f58b56b04b8342f1ee0f7548e",
+    "src/vulkan_compute.rs": "7bae88b23dfb8f07751e323fb5bc2620335415afeed633236373e328c064aab7",
+    "examples/vulkan_compute.rs": "6b4841fb7b7c0b24b28f14d23dcd42c83e47a114c201c1acb209189eebe033a8",
+    "tests/gpu_executor.rs": "3b31195df807de63d445e11b80e6e7a216d6077e905e4f8751a2141d5816271c",
+    "tests/gpu_executor_compute.rs": "6598d74d133268f8a13db43468dc9e358b501cababcaf2ff8d79526a876b44b6"
+  },
+  "tests": {
+    "no_default_features_passed": 99,
+    "vulkan_feature_tests_passed": 102,
+    "vulkan_feature_tests_ignored": 1,
+    "explicit_software_vulkan_integration_passed": true,
+    "software_vulkan_dispatches": 5,
+    "independent_readback_values_verified": 1280,
+    "successful_native_pipeline_compilations": 3,
+    "same_code_reuse_and_changed_code_replacement": true,
+    "production_cpu_device_rejection": true,
+    "hardware_example_cargo_check_passed": true
+  },
+  "environment": {
+    "cargo_http_multiplexing": false,
+    "software_device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "vendor_id": "0x10005",
+    "device_id": "0x0000",
+    "driver": "Mesa 25.2.8",
+    "icd": "/usr/share/vulkan/icd.d/lvp_icd.json"
+  },
+  "hardware_gpu_verified": false,
+  "guest_metal_verified": false,
+  "macos_boot_verified": false,
+  "product_target": "x86 EFI host, ARM64E macOS guest; Vulkan is a development reference only"
+}

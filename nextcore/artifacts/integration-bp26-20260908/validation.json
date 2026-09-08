@@ -1,0 +1,47 @@
+{
+  "schema": "nextcore.bp26-validation/1",
+  "passed": true,
+  "source_integration_commit": "e1f64b3f4a4aa9f0530c031f5d3a6173ff0765ba",
+  "module_commits": {
+    "Core": "757d8e668141ebc15a265f13383448bc609defb9",
+    "EFI": "7a42084f92c7eadcd11ece0f2d06962c73450598",
+    "Tool": "5804b6618a78371fcdde04f1481c6ae81d80d8ae",
+    "ISE": "1d5ffb56799f70ce622e4813be66d0592cb5a292",
+    "GPU": "34d617cca37d563d13ed0b0c966e2557921c6125",
+    "HAL": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+    "APLS": "b885ab2f5dfe1d0c450bba148fa94b8a1e7e79c9"
+  },
+  "workspace_tests_passed": 461,
+  "workspace_tests_failed": 0,
+  "workspace_tests_ignored_in_default_run": 1,
+  "compiled_efi_optional_test_passed": true,
+  "reference_runtime_tests_passed": 65,
+  "mmu_tests_passed": 13,
+  "partial_table_mapping_cases": 24,
+  "independent_arm_mmu_oracle_cases": 4,
+  "authored_x86_efi_cases_passed": 14,
+  "python_tests_run": 132,
+  "python_tests_skipped": 1,
+  "efi_binaries": {
+    "default": {
+      "bytes": 169472,
+      "sha256": "f07953b4539504dc01131739020c05a0fabc6dee12f7d307032b1353026554fc"
+    },
+    "probe": {
+      "bytes": 235008,
+      "sha256": "643f341e56aedf519fff52b4e48e870459c2197d7c214447132f7dd595e4aa44"
+    }
+  },
+  "original_macos27_prefix_retired": 7,
+  "original_macos27_native_blocks": 3,
+  "original_trace_receipt": "../arm-startup-continuation-20260908/results.md",
+  "host_rx6800xt_gpu_dispatches": 8,
+  "independently_recomputed_gpu_values": 1024,
+  "native_jit_mmu_enabled": false,
+  "macos_boot_verified": false,
+  "guest_metal_verified": false,
+  "efi_gpu_command_backend_verified": false,
+  "remote_publication_verified": false,
+  "full_macos27_archive_sha256_verified": true,
+  "acquisition_receipt": "acquisition.json"
+}

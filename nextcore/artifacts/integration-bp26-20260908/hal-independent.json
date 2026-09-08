@@ -1,0 +1,46 @@
+{
+  "module": "HAL",
+  "commit": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+  "passed": true,
+  "fresh_clone": true,
+  "root_workspace_patches": false,
+  "dependency_transport": "local committed objects via temporary Git URL mapping; remote publication not asserted",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-hal",
+        "/home/sharh/work/module-validation-20260908/HAL-9c1cd8dfff"
+      ],
+      "exit_code": 0,
+      "seconds": 0.34
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--detach",
+        "9c1cd8dfff33478e32668c5cd181dd094ec2881b"
+      ],
+      "exit_code": 0,
+      "seconds": 0.02
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 17.94
+    }
+  ],
+  "nextcore_packages": [
+    {
+      "name": "nextcore-hal",
+      "source": null
+    }
+  ]
+}

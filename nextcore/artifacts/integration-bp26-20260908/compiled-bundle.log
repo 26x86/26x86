@@ -1,0 +1,9 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.56s
+     Running tests/bundle_cli.rs (nextcore/target/debug/deps/bundle_cli-f7f4696925513b08)
+
+running 1 test
+compiled EFI copied and read back unchanged: 169472 bytes from /home/sharh/work/integration-validation-bp26-final-20260908/NXARMJIT-default.efi
+test compiled_efi_is_copied_without_changes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.55s
+

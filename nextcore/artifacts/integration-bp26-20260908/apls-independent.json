@@ -1,0 +1,50 @@
+{
+  "module": "APLS",
+  "commit": "b885ab2f5dfe1d0c450bba148fa94b8a1e7e79c9",
+  "passed": true,
+  "fresh_clone": true,
+  "root_workspace_patches": false,
+  "dependency_transport": "local committed objects via temporary Git URL mapping; remote publication not asserted",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/src/26x86/nextcore/crates/nextcore-apls",
+        "/home/sharh/work/module-validation-20260908/APLS-b885ab2f5d"
+      ],
+      "exit_code": 0,
+      "seconds": 0.22
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--detach",
+        "b885ab2f5dfe1d0c450bba148fa94b8a1e7e79c9"
+      ],
+      "exit_code": 0,
+      "seconds": 0.01
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 13.1
+    }
+  ],
+  "nextcore_packages": [
+    {
+      "name": "nextcore-apls",
+      "source": null
+    },
+    {
+      "name": "nextcore-gpu",
+      "source": "git+https://github.com/26x86/Nextcore-GPU.git?rev=34d617cca37d563d13ed0b0c966e2557921c6125#34d617cca37d563d13ed0b0c966e2557921c6125"
+    }
+  ]
+}

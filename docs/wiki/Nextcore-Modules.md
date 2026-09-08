@@ -1,63 +1,99 @@
 # NextCore module repositories
 
-NextCore has seven tracked Cargo workspace crates and seven independent release
-repositories in the `26x86` organization. The workspace is the source of reviewed
-exports. These directories are regular tracked source, not Git submodules.
+NextCore uses seven Git submodules. Each module owns its source and history;
+the integration repository records exact commits and the workspace build.
 
-## Module map
-
-| Workspace crate | Repository | Responsibility |
+| Submodule | Repository | Responsibility |
 | --- | --- | --- |
-| `nextcore-core` | [NextCore Core](https://github.com/26x86/Nextcore-Core) | Configuration, picker view, public formats and kernel preparation |
-| `nextcore-efi` | [NextCore EFI](https://github.com/26x86/Nextcore-EFI) | Firmware picker, providers and controlled handoff probes |
-| `nextcore-tool` | [NextCore Tool](https://github.com/26x86/Nextcore-Tool) | Command-line orchestration |
-| `nextcore-ise` | [NextCore ISE](https://github.com/26x86/Nextcore-ISE) | Instruction emulation and CPU feature policy |
-| `nextcore-gpu` | [NextCore GPU](https://github.com/26x86/Nextcore-GPU) | GPU contracts, software rendering and optional Vulkan compute |
-| `nextcore-hal` | [NextCore HAL](https://github.com/26x86/Nextcore-HAL) | ACPI, PCI, SMBIOS and device-tree translation |
-| `nextcore-apls` | [NextCore APLS](https://github.com/26x86/Nextcore-APLS) | ARM VMApple recovery runner and guest ABI |
+| nextcore-core | [Core](https://github.com/26x86/Nextcore-Core) | Public formats, boot configuration, kernel placement |
+| nextcore-efi | [EFI](https://github.com/26x86/Nextcore-EFI) | Firmware picker and architecture-specific handoff |
+| nextcore-tool | [Tool](https://github.com/26x86/Nextcore-Tool) | Command-line orchestration |
+| nextcore-ise | [ISE](https://github.com/26x86/Nextcore-ISE) | ARM64e-to-x86 JIT, PAC, freestanding runtime and instruction policy |
+| nextcore-gpu | [GPU](https://github.com/26x86/Nextcore-GPU) | GPU command dispatch, rendering and Vulkan compute |
+| nextcore-hal | [HAL](https://github.com/26x86/Nextcore-HAL) | Platform table and device translation |
+| nextcore-apls | [APLS](https://github.com/26x86/Nextcore-APLS) | ARM recovery execution and guest ABI |
 
-Repository URLs preserve their existing spelling. Product branding is NextCore.
-
-## Develop in the workspace
+## Clone and build
 
 ```bash
-git clone https://github.com/26x86/26x86.git
-cd 26x86/nextcore
-cargo test --workspace
+git clone --recurse-submodules https://github.com/26x86/26x86.git
+cd 26x86
+# Also run after switching integration branches or pulling new gitlinks:
+git submodule sync --recursive
+git submodule update --init --recursive
+python3 Tools/verify_nextcore_submodules.py
+cargo test --manifest-path nextcore/Cargo.toml --workspace
+python3 Tools/verify_nextcore_submodules.py --cargo --require-clean
 ```
 
-The workspace manifests use local path dependencies. Commit changes to the
-relevant files under `nextcore/crates/` and include their validation in a PR.
-No submodule update or gitlink operation is needed for this layout.
+Run these commands inside WSL2 on Windows. Keep build directories on its Linux
+filesystem. The product build needs Rust's `x86_64-unknown-uefi` target, Clang
+LLD and LLVM tools (`llvm-ar`, `llvm-objcopy`). On Ubuntu install
+`clang lld llvm qemu-system-x86 ovmf`. The native ARM diagnostic additionally uses `aarch64-unknown-uefi`;
+it is not the product execution path. QEMU/OVMF runs the development firmware
+checks on an x86 machine.
 
-## Independent releases
+```bash
+rustup target add x86_64-unknown-uefi
+cargo build --manifest-path nextcore/Cargo.toml -p nextcore-efi --release \
+  --target x86_64-unknown-uefi --features arm-jit --bin NXARMJIT
+python3 nextcore/tools/verify_arm_jit_ovmf.py --help
+```
 
-An export records its exact source commit in `repository.json` and its public
-file hashes in `repository-files.json`. Cross-crate dependencies are rewritten
-to immutable release tags. Core, GPU, HAL and ISE are leaves; APLS follows GPU,
-EFI follows Core, and Tool follows Core and APLS.
+`NXARMJIT.efi` contains the ARM64e JIT and PAC provider. Default execution stages
+validated inputs and reports missing providers. The `arm-jit-probe` build opts
+into authored execution fixtures; it does not enable original macOS boot.
 
-For an existing repository, prepare a fresh clone of its current `main`, copy
-only the selected commit's public crate files, update the release metadata and
-dependency tags, then create a normal descendant commit and a previously unused
-tag. Validate and publish leaves before dependents. Verify the remote identities
-and repeat each gate from a separate fresh clone:
+## Develop and integrate
 
-- Ordinary modules: `cargo test --all-targets`.
-- Core: also check `--no-default-features`.
-- GPU's optional backend: also check the `vulkan` feature.
-- EFI: install `x86_64-unknown-uefi` and run
-  `cargo check --target x86_64-unknown-uefi`.
+Create a development branch inside the module before editing. Commit module
+changes there, test them, publish the module branch and merge its verified PR
+into main before merging the new gitlink in the parent. Parent commits contain module SHA updates, integration
+tools and documentation; they do not contain copied crate sources.
 
-The original exporter initializes new repository histories and fixed v0.1.0
-tags. It is for first exports; it must not overwrite existing module history or
-tags during incremental updates. Optional submodule-conversion tooling describes
-a possible future layout and has not been applied to this workspace.
+```bash
+git -C nextcore/crates/nextcore-core switch -c codex/my-change
+# Edit, validate, and commit inside that module.
+git -C nextcore/crates/nextcore-core push -u origin codex/my-change
+git add nextcore/crates/nextcore-core
+python3 Tools/verify_nextcore_submodules.py --cargo --require-clean
+# Commit the integration change, then publish its branch.
+git push --recurse-submodules=check origin HEAD
+```
 
-## Evidence boundary
+A gitlink is the source of truth. Do not use `git submodule update --remote` in
+reproducible builds. It substitutes branch tips for the reviewed commits.
 
-Only public crate source belongs in module exports. `_isolated/`, runtime
-artifacts, target directories, firmware and operating-system images are excluded.
-Passing a module gate proves its tested layer. It does not establish original
-kernel execution, a complete native HAL or guest Metal acceleration. See
-[current validation](https://github.com/26x86/26x86/blob/main/nextcore/VALIDATION.md).
+Standalone module manifests pin remote dependencies to immutable commits.
+The parent Cargo workspace has explicit patches for every module URL, so tests
+and firmware builds use the seven local checkouts without duplicate remote
+NextCore packages. Update a dependent module's remote revision when its required
+API changes; standalone builds must pass without the parent workspace patches.
+
+## Validation and publication
+
+CI initializes submodules recursively, checks gitlink ownership and Cargo
+resolution, runs workspace tests, and checks firmware targets. Validate a new
+integration commit from a fresh recursive clone before delivery.
+
+The former exporter is retained for separate source exports, not for module
+publication. Do not reinitialize published module histories or recreate existing
+release tags. The publication helper checks submodule cleanliness and remote
+reachability before allowing the parent branch push.
+
+Only public source belongs in modules. Original restore inputs and runtime
+material remain under the parent's ignored `_isolated/` directory. Synthetic
+firmware and host GPU tests establish their own layers; original XNU, userspace
+and guest Metal each require actual execution evidence.
+
+## Execution and graphics scope
+
+The target is ARM64e macOS 27 code running on an x86_64 machine entered through
+EFI. The macOS-focused JIT/HAL is the product runtime; an outer QEMU/OVMF x86
+machine supplies reproducible development firmware. WSL is the build host.
+
+AMD, NVIDIA and Intel integrated GPUs are implementation targets. Current host
+Vulkan readback evidence comes from an AMD RX6800XT. Neither vendor enumeration
+nor that host result establishes NVIDIA/Intel hardware execution, an EFI GPU
+driver or guest Metal support. Original-prefix diagnostics are also separate
+from a usable macOS boot. Keep these outcomes explicit in milestone receipts.

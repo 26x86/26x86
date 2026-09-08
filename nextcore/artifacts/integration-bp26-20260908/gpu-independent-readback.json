@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "receipt_sha256": "375eb6cb1ef4ae3fc83cd236f8f0f6f278bdf032bb6c278c0d5cd10f48b71ca6",
+  "values_recomputed": 1024,
+  "formula_single_dispatch": "3*x+7 modulo 2^32",
+  "formula_two_dispatches": "9*x+28 modulo 2^32",
+  "guest_metal_verified": false,
+  "efi_gpu_command_backend_verified": false
+}
