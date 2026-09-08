@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "layer": "NextCore EFI -> original APFS Jumpstart driver",
+  "efi_sha256": "234af48bdf5e2fee3cdf48b6a1bd0ea8e51ab557c1742f941f8796852388a0ac",
+  "source_hashes": {
+    "nextcore/crates/nextcore-efi/src/apfs_driver.rs": "d9a270d8345e12bf3703fe9c03d1a7aeebc7b9c47c0c050fbfd46fbcd88fe894",
+    "nextcore/crates/nextcore-efi/src/apfs_probe.rs": "7bf66134725679ce8bbc7f9f58794596cb95219ea7d9a93828484820b8384b2d",
+    "nextcore/crates/nextcore-core/src/apfs_jumpstart.rs": "43219b559cc84deba19d8d9ce9a9a6725017cef274e07fa1a5a6bc8eb63b9649"
+  },
+  "base_sha256": "04eb2a25e33988f02d08730bbe6a1f1b0bffe5e784546184f495dd30958e6aa5",
+  "runs": [
+    {
+      "mode": "inspect",
+      "passed": true,
+      "driver_bytes": 745080,
+      "block_size": 4096,
+      "extent_count": 1,
+      "full_repeated_readback": true,
+      "original_inputs_unchanged": true,
+      "esp_files_unchanged": true,
+      "qemu_natural_returncode": 0,
+      "supervisor_natural_returncode": 0,
+      "process_cleanup_complete": true,
+      "supervisor_seconds": 2.3839,
+      "total_seconds": 64.2548,
+      "original_driver_started": false,
+      "driver_start_succeeded": false,
+      "controller_connection_succeeded": false,
+      "parent_return_observed": false,
+      "isolated_receipt": "_isolated/nextcore/apfs-native-20260908/inspect-result.json",
+      "isolated_receipt_sha256": "8bae3b67c64ffd1068871f7f6f61d1170315e2d56bd51c8b16d32ada14979d6c"
+    },
+    {
+      "mode": "start",
+      "passed": true,
+      "driver_bytes": 745080,
+      "block_size": 4096,
+      "extent_count": 1,
+      "full_repeated_readback": true,
+      "original_inputs_unchanged": true,
+      "esp_files_unchanged": true,
+      "qemu_natural_returncode": 0,
+      "supervisor_natural_returncode": 0,
+      "process_cleanup_complete": true,
+      "supervisor_seconds": 4.1393,
+      "total_seconds": 60.6816,
+      "original_driver_started": true,
+      "driver_start_succeeded": true,
+      "controller_connection_succeeded": true,
+      "parent_return_observed": true,
+      "isolated_receipt": "_isolated/nextcore/apfs-native-20260908/start-result.json",
+      "isolated_receipt_sha256": "67360a27f4af1e9a5e46731f3cf5ab514448a6c495a693245f90600b6a357c67"
+    }
+  ],
+  "driver_bytes_copied_to_public_tree": false,
+  "filesystem_open_verified": false,
+  "installed_os_boot_verified": false,
+  "metal_verified": false
+}

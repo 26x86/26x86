@@ -1125,6 +1125,36 @@ Windows의 대소문자 비구분/인접 clone 때문에 로컬 검증이 이를
 제한한다. 기존 v0.1.1은 보존하고 Tool v0.1.2로 수정하며, 다음 검증은 Linux의
 단일 독립 clone에서 수행한다. 동등 fixture hash와 원격 exact-head CI를 확인한다.
 
+### BP24 — 설치 APFS의 공개 EFI Jumpstart 경로
+
+현재 최종 BP21은 원본 Tahoe Recovery/Terminal까지 검증됐고, 전체 설치의 다음
+부팅은 외부 reference가 APFS의 macOS Installer 항목을 읽는 단계다. native EFI도
+설치 매체가 가진 filesystem driver를 읽도록 공개 APFS EFI Jumpstart 절차를
+독립 구현한다. APFS 전체 filesystem을 복제하거나 원본 driver를 공개 포함하지 않는다.
+
+Build Plan 하위 core parser/합성 시험은 HAL 담당에게 명시 위임했다. 공개 APFS
+reference의 block-zero NXSB, checksum, signed physical address, JSDR version과
+bounded extent를 검증하고 partition-relative ReadAt로 exact driver bytes만 추출한다.
+구조 offset은 독립 C layout과 교차 확인하며 상세 출처/미지원 Fusion 조건은
+`nextcore/artifacts/apfs-jumpstart-20260908/contract.md`에서 박제한다.
+
+root는 별도 feature `apfs-jumpstart`의 NXAPFS EFI application과 adapter를 소유한다.
+GPT APFS type의 논리 partition 하나를 요구하고 PartitionInfo/BlockIO의 크기와
+media ID를 확인한다. DiskIo는 읽기만 수행하며 모든 프로토콜 borrow를 driver
+실행 전에 해제한다. 기본 모드는 추출/전량 재읽기 대조다. 명시 load option
+`--start-driver`에서만 firmware LoadImage/StartImage를 호출하고 boot-services driver
+종류를 검사한다. firmware의 인증 실패·경고를 성공으로 바꾸지 않으며 반환된
+실패 image handle을 정리한다. 성공한 resident driver는 source buffer를 빌리지 않고
+선택한 controller에만 명시 ConnectController를 호출한다. firmware StartImage
+자체는 새로 생성·변경된 handle에 자동 연결을 수행할 수 있으므로 전체 실행의
+영향을 해당 controller 하나로 한정했다고 주장하지 않는다.
+
+기존 production BOOTX64/picker와 타 partition은 변경하지 않는다. 먼저 독립 작성
+GPT/APFS fixture 및 자체 EFI driver로 실제 OVMF 읽기·실행·거부·정리를 검증한다.
+원본 APFS는 installer 담당이 종료 후 지정한 immutable snapshot의 별도 COW에서만
+검증한다. 원본 byte·private 로그는 격리하고 host 전후 hash와 firmware/guest 결과를
+각각 기록한다. 추출 성공을 mount·설치 OS·guest Metal 성공으로 승격하지 않는다.
+
 ## OPEN_QUESTION
 
 - BP9 연속 실행 결정: Design D2-A는 표준 EFI application 중간 경로를 허용했고,

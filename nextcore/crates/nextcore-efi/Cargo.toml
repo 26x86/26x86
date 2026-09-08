@@ -16,6 +16,7 @@ hal-tables = []
 kc-staging = []
 console-control = ["dep:uefi-raw"]
 console-probe = ["console-control"]
+apfs-jumpstart = []
 
 [[bin]]
 name = "NXKERNEL"
@@ -56,3 +57,10 @@ path = "src/console_probe.rs"
 test = false
 bench = false
 required-features = ["console-probe"]
+
+[[bin]]
+name = "NXAPFS"
+path = "src/apfs_probe.rs"
+test = false
+bench = false
+required-features = ["apfs-jumpstart"]

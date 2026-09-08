@@ -1,0 +1,103 @@
+{
+  "passed": true,
+  "date": "2026-09-08",
+  "layer": "APFS parser and opaque file extraction",
+  "source_sha256": {
+    "crates\\nextcore-core\\src\\apfs_jumpstart.rs": "43219b559cc84deba19d8d9ce9a9a6725017cef274e07fa1a5a6bc8eb63b9649",
+    "crates\\nextcore-core\\tests\\apfs_jumpstart.rs": "95e06552c59eb8d53da98283a4384f2eb876dc3334c63b0a634d8351266b0bac"
+  },
+  "copied_source_unchanged": true,
+  "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+  "checks": [
+    {
+      "argv": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2021",
+        "C:\\Users\\Admin\\Documents\\ChatGPT\\26x86darwin\\nextcore\\crates\\nextcore-core\\src\\apfs_jumpstart.rs",
+        "C:\\Users\\Admin\\Documents\\ChatGPT\\26x86darwin\\nextcore\\crates\\nextcore-core\\tests\\apfs_jumpstart.rs"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\ChatGPT\\26x86darwin\\nextcore",
+      "exit_code": 0,
+      "log": "check-1.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "nextcore-core",
+        "--no-default-features",
+        "--test",
+        "apfs_jumpstart"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\ChatGPT\\26x86darwin\\nextcore",
+      "exit_code": 0,
+      "log": "check-2.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "-p",
+        "nextcore-core",
+        "--no-default-features",
+        "--lib",
+        "--target",
+        "x86_64-unknown-uefi"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\ChatGPT\\26x86darwin\\nextcore",
+      "exit_code": 0,
+      "log": "check-3.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-apfs-owned-check-ibnzaz29\\Cargo.toml",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "C:\\Users\\Admin\\Documents\\ChatGPT\\26x86darwin\\nextcore",
+      "exit_code": 0,
+      "log": "check-4.log"
+    }
+  ],
+  "strict_lint_scope": "Exact owned module and tests in dependency-free no_std crate; no lint exceptions",
+  "whole_core_unmodified_lints": {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "nextcore-core",
+      "--no-default-features",
+      "--test",
+      "apfs_jumpstart",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 1,
+    "count": 19,
+    "files": [
+      "boot_picker.rs",
+      "macho_image.rs",
+      "xnu_boot_args.rs",
+      "xnu_arm64_boot_args.rs"
+    ],
+    "lints": [
+      "implicit_saturating_sub",
+      "manual_is_multiple_of"
+    ],
+    "scoped_retry_excluding_only_these_lints_exit_code": 0
+  },
+  "fixture_tests": 23,
+  "actual_apfs_media_read": false,
+  "pe_validated": false,
+  "efi_driver_executed": false,
+  "metal_verified": false
+}

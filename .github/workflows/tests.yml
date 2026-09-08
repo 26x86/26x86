@@ -34,5 +34,5 @@ jobs:
         run: cargo clippy --workspace --exclude nextcore-efi --all-targets
         working-directory: nextcore
       - name: Clippy (firmware on its actual UEFI target)
-        run: cargo clippy -p nextcore-efi --target x86_64-unknown-uefi
+        run: cargo clippy -p nextcore-efi --target x86_64-unknown-uefi --all-features
         working-directory: nextcore

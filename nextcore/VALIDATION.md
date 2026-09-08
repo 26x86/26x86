@@ -63,8 +63,12 @@ native 경로의 restore-datapartition panic은 VM RAM 조건을 수정해 통�
 
 PR #5의 head `ee04ddad4d7cbba8033df1d48082a513b931e43d`에서 모든 원격 검사가
 통과한 뒤 main `06262cb970ef482415493e9f5f9a32c05476dc9c`로 squash merge했다.
-Pages run `34197153249`의 build/deploy도 성공했다. 실제 배포 페이지 링크 검사는
-별도 후속 작업으로 유지한다.
+Pages run `34197153249`의 build/deploy도 성공했다. 실제 배포 페이지 검사에서
+홈 버튼 3개와 제외된 wiki Home 링크의 404를 확인해 수정했다. PR #6은 전체
+CI 통과 후 main `1cf2b989ecbb36773fc33b8b96ae91b7e2d33cca`로 반영했고 Pages
+run `34199199279`도 성공했다. 실제 배포의 4개 진입 페이지 title/버튼 URL과
+47개 내부 페이지·asset의 HTTP 200을 확인했다.
+[배포 readback](artifacts/docs-publish-qa-20260908/live-deployed.json)을 보존했다.
 
 독립 module 6개는 v0.1.1, Tool은 v0.1.2로 게시했고 최신 7개 모두 원격 main/tag
 일치, 게시 전후 fresh-clone gate, exact-head GitHub CI를 확인했다. 최초 Tool
