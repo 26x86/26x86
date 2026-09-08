@@ -1,0 +1,63 @@
+{
+  "schema": "nextcore.mmu-physical-oracle/1",
+  "passed": true,
+  "cases": 14,
+  "source_sha256": "3e1af639bc8811c8aa326117e303c96423957874c9de701b5b59a2ef3bd6abff",
+  "elf_sha256": "5fe3bcee4921cbb58e3c59d8c5102697daec2b5449e28d68b8c53e593501510c",
+  "commands": [
+    {
+      "command": [
+        "clang",
+        "--target=aarch64-none-elf",
+        "-c",
+        "/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/crates/nextcore-ise/tools/mmu_physical_probe.S",
+        "-o",
+        "/tmp/nextcore-mmu-pa-rozxfhwb/probe.o"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "ld.lld",
+        "-Ttext=0x40080000",
+        "-e",
+        "_start",
+        "/tmp/nextcore-mmu-pa-rozxfhwb/probe.o",
+        "-o",
+        "/tmp/nextcore-mmu-pa-rozxfhwb/probe.elf"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt",
+        "-cpu",
+        "max",
+        "-m",
+        "128",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "none",
+        "-net",
+        "none",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "/tmp/nextcore-mmu-pa-rozxfhwb/probe.elf"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "MMU_PA_ORACLE: 4K_LEAF32_FAULT\nMMU_PA_ORACLE: 4K_LEAF36_OK\nMMU_PA_ORACLE: 4K_TABLE32_FAULT\nMMU_PA_ORACLE: 4K_ROOT32_FAULT\nMMU_PA_ORACLE: 16K_LEAF32_FAULT\nMMU_PA_ORACLE: 16K_LEAF36_OK\nMMU_PA_ORACLE: 16K_TABLE32_FAULT\nMMU_PA_ORACLE: 16K_ROOT32_FAULT\nMMU_PA_ORACLE: 4K_PAGE32_FAULT\nMMU_PA_ORACLE: 4K_PAGE36_OK\nMMU_PA_ORACLE: 16K_PAGE32_FAULT\nMMU_PA_ORACLE: 16K_PAGE36_OK\nMMU_PA_ORACLE: 16K_L1_LOW32_TRANSLATION\nMMU_PA_ORACLE: 16K_L1_HIGH32_TRANSLATION\n"
+    }
+  ],
+  "apple_assets_used": false,
+  "native_jit_mmu_verified": false
+}

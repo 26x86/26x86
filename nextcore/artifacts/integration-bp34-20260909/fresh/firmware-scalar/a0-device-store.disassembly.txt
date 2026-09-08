@@ -1,0 +1,19 @@
+
+/home/sharh/work/integration-validation-bp34-20260909/firmware-scalar/a0-device-store.o:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000000000 <probe_start>:
+       0: d2800a63     	mov	x3, #0x53               // =83
+       4: 910003e9     	mov	x9, sp
+       8: d28eeee0     	mov	x0, #0x7777             // =30583
+       c: f2f55540     	movk	x0, #0xaaaa, lsl #48
+      10: d2911101     	mov	x1, #0x8888             // =34952
+      14: f2f77761     	movk	x1, #0xbbbb, lsl #48
+      18: 910003e2     	mov	x2, sp
+      1c: d518101f     	msr	SCTLR_EL1, xzr
+      20: 910007e2     	add	x2, sp, #0x1
+
+0000000000000024 <probe_fault>:
+      24: 79000040     	strh	w0, [x2]
+      28: d4400000     	hlt	#0

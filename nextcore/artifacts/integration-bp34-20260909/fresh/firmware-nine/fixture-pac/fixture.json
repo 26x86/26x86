@@ -1,0 +1,35 @@
+{
+  "schema": "nextcore.arm-jit-fixture.v1",
+  "image": "/home/sharh/work/integration-validation-bp34-20260909/firmware-nine/fixture-pac/probe.kc",
+  "image_sha256": "4a3b76c1920a6d624d30014702814296b8156ba8af301e545657a9c2770f4374",
+  "source_sha256": "58acc56b46774457f49223f465e5c5ac4cdebd4cd0943d6940e2f5a6f9263982",
+  "code_sha256": "c56fa6c00c5053e05ba414db051364ba4b74962eb23785d1e1b817b102f8f222",
+  "code_bytes": 216,
+  "commands": [
+    [
+      "clang",
+      "--target=aarch64-none-elf",
+      "-march=armv8.3-a",
+      "-DNEXTCORE_PAC",
+      "-c",
+      "/home/sharh/work/integration-validation-bp34-20260909/26x86/nextcore/tools/arm64_jit_probe.S",
+      "-o",
+      "/home/sharh/work/integration-validation-bp34-20260909/firmware-nine/fixture-pac/probe.o"
+    ],
+    [
+      "ld.lld",
+      "-Ttext",
+      "0x42004400",
+      "-e",
+      "_start",
+      "--oformat=binary",
+      "/home/sharh/work/integration-validation-bp34-20260909/firmware-nine/fixture-pac/probe.o",
+      "-o",
+      "/home/sharh/work/integration-validation-bp34-20260909/firmware-nine/fixture-pac/probe.bin"
+    ]
+  ],
+  "expected_retired": 45,
+  "pac": true,
+  "apple_assets_used": false,
+  "xnu_executed": false
+}

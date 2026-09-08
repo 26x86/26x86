@@ -1,0 +1,283 @@
+{
+  "total_count": 2,
+  "check_runs": [
+    {
+      "id": 102228685108,
+      "name": "verify",
+      "node_id": "CR_kwDOURNKnc8AAAAXzU3xNA",
+      "head_sha": "ed9ba25598a52fdf1ba55badfee0d953afdbc20e",
+      "external_id": "10d6aeb8-bbd0-54ee-b241-4f4e1bb29db5",
+      "url": "https://api.github.com/repos/26x86/Nextcore-EFI/check-runs/102228685108",
+      "html_url": "https://github.com/26x86/Nextcore-EFI/actions/runs/34275896451/job/102228685108",
+      "details_url": "https://github.com/26x86/Nextcore-EFI/actions/runs/34275896451/job/102228685108",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-09-08T20:37:34Z",
+      "completed_at": "2026-09-08T20:39:07Z",
+      "output": {
+        "title": null,
+        "summary": null,
+        "text": null,
+        "annotations_count": 1,
+        "annotations_url": "https://api.github.com/repos/26x86/Nextcore-EFI/check-runs/102228685108/annotations"
+      },
+      "check_suite": {
+        "id": 92853721539
+      },
+      "app": {
+        "id": 15368,
+        "client_id": "Iv1.05c79e9ad1f6bdfa",
+        "slug": "github-actions",
+        "node_id": "MDM6QXBwMTUzNjg=",
+        "owner": {
+          "login": "github",
+          "id": 9919,
+          "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
+          "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/github",
+          "html_url": "https://github.com/github",
+          "followers_url": "https://api.github.com/users/github/followers",
+          "following_url": "https://api.github.com/users/github/following{/other_user}",
+          "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/github/subscriptions",
+          "organizations_url": "https://api.github.com/users/github/orgs",
+          "repos_url": "https://api.github.com/users/github/repos",
+          "events_url": "https://api.github.com/users/github/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/github/received_events",
+          "type": "Organization",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "name": "GitHub Actions",
+        "description": "Automate your workflow from idea to production",
+        "external_url": "https://help.github.com/en/actions",
+        "html_url": "https://github.com/apps/github-actions",
+        "created_at": "2018-07-30T09:30:17Z",
+        "updated_at": "2026-06-18T16:17:48Z",
+        "permissions": {
+          "actions": "write",
+          "administration": "read",
+          "artifact_metadata": "write",
+          "attestations": "write",
+          "checks": "write",
+          "code_quality": "write",
+          "contents": "write",
+          "copilot_requests": "write",
+          "deployments": "write",
+          "discussions": "write",
+          "drives": "write",
+          "issues": "write",
+          "merge_queues": "write",
+          "metadata": "read",
+          "models": "read",
+          "packages": "write",
+          "pages": "write",
+          "pull_requests": "write",
+          "repository_hooks": "write",
+          "repository_projects": "write",
+          "security_events": "write",
+          "statuses": "write",
+          "vulnerability_alerts": "read"
+        },
+        "events": [
+          "branch_protection_rule",
+          "check_run",
+          "check_suite",
+          "create",
+          "delete",
+          "deployment",
+          "deployment_status",
+          "discussion",
+          "discussion_comment",
+          "fork",
+          "gollum",
+          "issues",
+          "issue_comment",
+          "label",
+          "merge_group",
+          "milestone",
+          "page_build",
+          "public",
+          "pull_request",
+          "pull_request_review",
+          "pull_request_review_comment",
+          "push",
+          "registry_package",
+          "release",
+          "repository",
+          "repository_dispatch",
+          "status",
+          "watch",
+          "workflow_dispatch",
+          "workflow_run"
+        ]
+      },
+      "pull_requests": [
+        {
+          "url": "https://api.github.com/repos/26x86/Nextcore-EFI/pulls/8",
+          "id": 4478368292,
+          "number": 8,
+          "head": {
+            "ref": "codex/arm64e-dynamic-efi-probe",
+            "sha": "ed9ba25598a52fdf1ba55badfee0d953afdbc20e",
+            "repo": {
+              "id": 1360218781,
+              "url": "https://api.github.com/repos/26x86/Nextcore-EFI",
+              "name": "Nextcore-EFI"
+            }
+          },
+          "base": {
+            "ref": "main",
+            "sha": "53329bfee3ec818d59331da2c63c0676c49ff4ad",
+            "repo": {
+              "id": 1360218781,
+              "url": "https://api.github.com/repos/26x86/Nextcore-EFI",
+              "name": "Nextcore-EFI"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 102228670241,
+      "name": "verify",
+      "node_id": "CR_kwDOURNKnc8AAAAXzU23IQ",
+      "head_sha": "ed9ba25598a52fdf1ba55badfee0d953afdbc20e",
+      "external_id": "d12f09a4-59f6-577d-8e12-be2c86f7c437",
+      "url": "https://api.github.com/repos/26x86/Nextcore-EFI/check-runs/102228670241",
+      "html_url": "https://github.com/26x86/Nextcore-EFI/actions/runs/34275891982/job/102228670241",
+      "details_url": "https://github.com/26x86/Nextcore-EFI/actions/runs/34275891982/job/102228670241",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-09-08T20:37:30Z",
+      "completed_at": "2026-09-08T20:38:47Z",
+      "output": {
+        "title": null,
+        "summary": null,
+        "text": null,
+        "annotations_count": 1,
+        "annotations_url": "https://api.github.com/repos/26x86/Nextcore-EFI/check-runs/102228670241/annotations"
+      },
+      "check_suite": {
+        "id": 92853708995
+      },
+      "app": {
+        "id": 15368,
+        "client_id": "Iv1.05c79e9ad1f6bdfa",
+        "slug": "github-actions",
+        "node_id": "MDM6QXBwMTUzNjg=",
+        "owner": {
+          "login": "github",
+          "id": 9919,
+          "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
+          "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/github",
+          "html_url": "https://github.com/github",
+          "followers_url": "https://api.github.com/users/github/followers",
+          "following_url": "https://api.github.com/users/github/following{/other_user}",
+          "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/github/subscriptions",
+          "organizations_url": "https://api.github.com/users/github/orgs",
+          "repos_url": "https://api.github.com/users/github/repos",
+          "events_url": "https://api.github.com/users/github/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/github/received_events",
+          "type": "Organization",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "name": "GitHub Actions",
+        "description": "Automate your workflow from idea to production",
+        "external_url": "https://help.github.com/en/actions",
+        "html_url": "https://github.com/apps/github-actions",
+        "created_at": "2018-07-30T09:30:17Z",
+        "updated_at": "2026-06-18T16:17:48Z",
+        "permissions": {
+          "actions": "write",
+          "administration": "read",
+          "artifact_metadata": "write",
+          "attestations": "write",
+          "checks": "write",
+          "code_quality": "write",
+          "contents": "write",
+          "copilot_requests": "write",
+          "deployments": "write",
+          "discussions": "write",
+          "drives": "write",
+          "issues": "write",
+          "merge_queues": "write",
+          "metadata": "read",
+          "models": "read",
+          "packages": "write",
+          "pages": "write",
+          "pull_requests": "write",
+          "repository_hooks": "write",
+          "repository_projects": "write",
+          "security_events": "write",
+          "statuses": "write",
+          "vulnerability_alerts": "read"
+        },
+        "events": [
+          "branch_protection_rule",
+          "check_run",
+          "check_suite",
+          "create",
+          "delete",
+          "deployment",
+          "deployment_status",
+          "discussion",
+          "discussion_comment",
+          "fork",
+          "gollum",
+          "issues",
+          "issue_comment",
+          "label",
+          "merge_group",
+          "milestone",
+          "page_build",
+          "public",
+          "pull_request",
+          "pull_request_review",
+          "pull_request_review_comment",
+          "push",
+          "registry_package",
+          "release",
+          "repository",
+          "repository_dispatch",
+          "status",
+          "watch",
+          "workflow_dispatch",
+          "workflow_run"
+        ]
+      },
+      "pull_requests": [
+        {
+          "url": "https://api.github.com/repos/26x86/Nextcore-EFI/pulls/8",
+          "id": 4478368292,
+          "number": 8,
+          "head": {
+            "ref": "codex/arm64e-dynamic-efi-probe",
+            "sha": "ed9ba25598a52fdf1ba55badfee0d953afdbc20e",
+            "repo": {
+              "id": 1360218781,
+              "url": "https://api.github.com/repos/26x86/Nextcore-EFI",
+              "name": "Nextcore-EFI"
+            }
+          },
+          "base": {
+            "ref": "main",
+            "sha": "53329bfee3ec818d59331da2c63c0676c49ff4ad",
+            "repo": {
+              "id": 1360218781,
+              "url": "https://api.github.com/repos/26x86/Nextcore-EFI",
+              "name": "Nextcore-EFI"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

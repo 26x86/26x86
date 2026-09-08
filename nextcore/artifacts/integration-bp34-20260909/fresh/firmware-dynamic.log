@@ -1,0 +1,1 @@
+{"passed": true, "cases": 6, "report": "/home/sharh/work/integration-validation-bp34-20260909/firmware-dynamic/report.json", "validation": {"passed": true, "cases": 6, "data_events": 58, "control_events": 40, "serial_sha256": "b893b12820aad741bf8b84a3488088954d2651c5271585271d94b59b90b20e91"}}

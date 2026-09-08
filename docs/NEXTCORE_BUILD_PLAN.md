@@ -1848,3 +1848,13 @@ Root adds native/EFI/reader gates and verifies fresh recursive and canonical
 network checkouts before authorized PR/main merge and completed-branch cleanup.
 BP35 deeper original diagnostics and BP36 UBFM/Undefined-IL corrections retain
 separate source identities and are not included in these BP34 runtime pins.
+
+
+BP34 validation closure: Fresh recursive750bda20 passes53commands: workspace502/Python149/GUI25, reference98/service44, actualEFI200 plus6separateCLI, strict DT28/dynamic30 controls, native capturedArm6 and13comparator regressions. Existing Clippy warnings remain. Full receipts are in artifacts/integration-bp34-20260909.
+
+BP36 current-gate adaptation is delegated to CPU in a separate external tool
+directory: preserve historical pair/scalar/dynamic adapters and their freezes,
+require corrected unknown-reason IL only at typed unsupported boundaries, bind
+the new runtime71 explicitly, and rerun captured native6 without changing real
+Arm abort observations. Root owns active parent CI/driver selection and the
+current EFI omission-reader expectation. No historical result is rewritten.

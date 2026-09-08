@@ -1,0 +1,18 @@
+test_all_six_frozen_cases (__main__.ComparisonTests.test_all_six_frozen_cases) ... ok
+test_changed_backing_expectation_rejected (__main__.ComparisonTests.test_changed_backing_expectation_rejected) ... ok
+test_changed_expected_esr (__main__.ComparisonTests.test_changed_expected_esr) ... ok
+test_changed_hvc_fetch_rejected (__main__.ComparisonTests.test_changed_hvc_fetch_rejected) ... ok
+test_changed_loaded_witness_rejected (__main__.ComparisonTests.test_changed_loaded_witness_rejected) ... ok
+test_changed_pc_rejected (__main__.ComparisonTests.test_changed_pc_rejected) ... ok
+test_duplicate_native_record_rejected (__main__.ComparisonTests.test_duplicate_native_record_rejected) ... ok
+test_false_success_or_system_trap_rejected (__main__.ComparisonTests.test_false_success_or_system_trap_rejected) ... ok
+test_missing_compiled_blocks_rejected (__main__.ComparisonTests.test_missing_compiled_blocks_rejected) ... ok
+test_missing_real_callback_rejected (__main__.ComparisonTests.test_missing_real_callback_rejected) ... ok
+test_native_unsupported_bookkeeping_rejected (__main__.ComparisonTests.test_native_unsupported_bookkeeping_rejected) ... ok
+test_success_cannot_retire_hvc (__main__.ComparisonTests.test_success_cannot_retire_hvc) ... ok
+test_unexpected_native_record_rejected (__main__.ComparisonTests.test_unexpected_native_record_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.011s
+
+OK

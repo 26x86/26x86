@@ -15,7 +15,9 @@ fetch/load/store하며 정확한 fault도 확인한다. 실제58 fetch/data 및4
 전체 RAM과 불변 테이블,30개 reader 변조 거부를 별도로 검증했다.
 독립 Arm6개와 native C/Rust 비교도 통과했다. 성공2개의 원래 HVC는 변경하지 않고
 unsupported boundary로 분리한다. 하드웨어 TLB refill이나 HVC dispatch를 주장하지 않는다.
-정식 서브모듈 standalone 빌드는 통과했고 새 상위 재귀 검증과 최종 CI를 진행한다.
+정식 standalone과 새 상위750bda20 재귀53명령 검증이 통과했다. workspace502/Python149/GUI25,
+참조98/service44, 실제EFI200 및 별도CLI6, native Arm6비교와13변조 검사를 확인했다.
+전체 기록은 nextcore/artifacts/integration-bp34-20260909이며 최종 정식 재귀 클론/CI 후 병합한다.
 
 별도 BP35의16384-budget 원본 진단은5311명령에서 UBFM/LSL 지원 경계에 도달했다.
 좌표/바이트는 비공개이며 BP36 UBFM과 Undefined ESR의 IL 수정은 독립 검증 중이다.

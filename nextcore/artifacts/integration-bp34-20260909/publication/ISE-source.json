@@ -1,0 +1,6 @@
+{
+  "commit": "0d722886753268ec366f068823c37ea10132fb43",
+  "worktree": "/home/sharh/work/bp34-ise-dynamic-control",
+  "implementation_freeze": "/home/sharh/work/bp34-implementation-freeze.json",
+  "root_review": "Reviewed C dynamic protocol/entry and Rust dynamic owner; no concrete defect found; independent captured6 cases and semantic negatives retained."
+}

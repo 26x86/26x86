@@ -1,0 +1,27 @@
+
+/home/sharh/work/integration-validation-bp34-20260909/firmware-scalar/word-signed.o:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000000000 <probe_start>:
+       0: d2800a63     	mov	x3, #0x53               // =83
+       4: 910003e9     	mov	x9, sp
+       8: d10083ff     	sub	sp, sp, #0x20
+       c: 528000a4     	mov	w4, #0x5                // =5
+      10: 72b00004     	movk	w4, #0x8000, lsl #16
+      14: b9000fe4     	str	w4, [sp, #0xc]
+      18: d2ffffe0     	mov	x0, #-0x1000000000000   // =-281474976710656
+      1c: b9400fe0     	ldr	w0, [sp, #0xc]
+      20: b9800fe1     	ldrsw	x1, [sp, #0xc]
+      24: 91000122     	add	x2, x9, #0x0
+      28: 910083ff     	add	sp, sp, #0x20
+      2c: 910003ea     	mov	x10, sp
+      30: eb09015f     	cmp	x10, x9
+      34: 54000041     	b.ne	0x3c <probe_bad>
+
+0000000000000038 <probe_success>:
+      38: d4400000     	hlt	#0
+
+000000000000003c <probe_bad>:
+      3c: d28175a3     	mov	x3, #0xbad              // =2989
+      40: d4400000     	hlt	#0

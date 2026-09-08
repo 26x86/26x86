@@ -1,0 +1,20 @@
+
+/home/sharh/work/module-validation-bp34-efi-20260909/conditional-firmware/ccmp-x-reg.o:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000000000 <_start>:
+       0: d2800000     	mov	x0, #0x0                // =0
+       4: f2a00000     	movk	x0, #0x0, lsl #16
+       8: f2c00000     	movk	x0, #0x0, lsl #32
+       c: f2f00000     	movk	x0, #0x8000, lsl #48
+      10: d2800021     	mov	x1, #0x1                // =1
+      14: f2a00001     	movk	x1, #0x0, lsl #16
+      18: f2c00001     	movk	x1, #0x0, lsl #32
+      1c: f2e00001     	movk	x1, #0x0, lsl #48
+      20: 910003e2     	mov	x2, sp
+      24: d2998623     	mov	x3, #0xcc31             // =52273
+      28: fa41e00f     	ccmp	x0, x1, #0xf, al
+
+000000000000002c <probe_success>:
+      2c: d4400000     	hlt	#0

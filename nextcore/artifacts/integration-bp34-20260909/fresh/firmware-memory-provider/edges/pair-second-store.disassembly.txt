@@ -1,0 +1,15 @@
+
+/home/sharh/work/integration-validation-bp34-20260909/firmware-memory-provider/edges/pair-second-store.o:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000000000000 <probe_start>:
+       0: d2800aa0     	mov	x0, #0x55               // =85
+       4: d2800cc1     	mov	x1, #0x66               // =102
+       8: d2800e03     	mov	x3, #0x70               // =112
+       c: d2a88002     	mov	x2, #0x44000000         // =1140850688
+      10: d1002042     	sub	x2, x2, #0x8
+
+0000000000000014 <probe_fault>:
+      14: a8810440     	stp	x0, x1, [x2], #0x10
+      18: d4400000     	hlt	#0
