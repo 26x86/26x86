@@ -1,3 +1,13 @@
+## BP35 explicit deep-diagnostic integration — 2026-09-09
+
+Merged Corebab7/EFI03a/Tool8ea retain ISE0d and all legacy/default caps.
+Canonical standalone EFI, five actual deep/legacy/rejection/clamp firmware
+controls,28 CLI rejections and one x1 reader negative pass. The initial wrong
+non-trace control selection remains a failed receipt; the corrected tiered-only
+control passes without changing production or predicate sources. Parent targeted
+fresh recursive checks and final CI follow. The historical original diagnostic
+stops at5311 retired instructions; it does not establish normal macOS boot.
+
 ## BP34 dynamic-MMU integration checkpoint — 2026-09-09
 
 ISE0d722886 and EFIed9ba255 are merged module heads. Standalone canonical builds

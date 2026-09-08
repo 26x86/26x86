@@ -212,3 +212,30 @@ jobs:
             ${{ runner.temp }}/nextcore-dynamic-proof/*.log
             ${{ runner.temp }}/nextcore-dynamic-reader.json
             ${{ runner.temp }}/dynamic-arm-comparison/receipt.json
+
+  x86-efi-deep-trace:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-uefi
+      - name: Install authored firmware tools
+        run: sudo apt-get update && sudo apt-get install -y clang lld llvm qemu-system-x86 ovmf
+      - name: Build explicitly selected deep diagnostics
+        run: cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-deep-trace --bin NXARMJIT
+      - name: Execute deep budget and reject malformed selections
+        run: |
+          python3 nextcore/tools/verify_deep_budget_ovmf.py --tools nextcore/tools --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --default-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --clamped-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --core-source nextcore/crates/nextcore-core --efi-source nextcore/crates/nextcore-efi --recheck-provenance --output "$RUNNER_TEMP/deep-trace"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nextcore-deep-trace
+          path: |
+            ${{ runner.temp }}/deep-trace/report.json
+            ${{ runner.temp }}/deep-trace/*.log
+            ${{ runner.temp }}/deep-trace/deep16384/*.json
+            ${{ runner.temp }}/deep-trace/deep16384/*.log

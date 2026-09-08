@@ -4,6 +4,22 @@
 과장하지 않고 이어갈 수 있게 하는 정본 요약이다. 상세 설계는
 `docs/NEXTCORE_BUILD_PLAN.md`, 검증 결과는 `nextcore/VALIDATION.md`를 따른다.
 
+## BP35 최신 개발 상태
+
+Core PR6/mainc08d10b, EFI PR9/main76964c0, Tool PR6/main391adb7를 병합했다.
+상위는 Corebab7/EFI03a/Tool8ea를 연결하고 ISE0d를 유지한다. 별도 deep feature와
+정확한 deep-16384 selector만 긴 진단을 허용하며 기존 기본값·예산은 유지한다.
+정식 standalone EFI와 실제 deep5개, CLI 거부28개 및 x1변조 거부가 통과했다.
+초기 control에서 non-trace 빌드를 지정해 기대한 TRACE_CONFIG_INVALID 대신
+PROVIDERS_PENDING에 멈췄다. 그 실패를 보존하고 올바른 tiered-only control로
+소스·판정식 변경 없이 재검증했다. 새 상위 재귀 검사와 최종 CI를 진행한다.
+
+역사적 원본 macOS27 진단은 한 번 실행해5311명령,5312fetch,783data 이후
+UBFM/LSL 미지원 경계에 도달했다. 원본 좌표·바이트는 공개하지 않는다. 이 결과는
+정상 부팅이 아니며 SPTM 서비스·실제 플랫폼 DT·데스크톱·guest Metal은 미완료다.
+후속 BP36 UBFM과 Undefined IL 수정은 별도 ISE PR8/main251fbd5에 병합됐고,
+이 BP35 통합에는 포함하지 않는다. 관련 EFI 연결과 current adapters를 검증 중이다.
+
 ## BP34 최신 개발 상태
 
 BP33은 상위 PR15/main9ef0e262로 최종 CI29개와 정식 재귀 클론 검사 후 병합했고

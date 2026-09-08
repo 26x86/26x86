@@ -181,3 +181,16 @@ This developer fixture runs from x86 EFI, using the generated-x86 ARM JIT and
 canonical Rust memory owner. It is not a Windows application feature. See the
 arm-dynamic-oracle, arm-dynamic-comparison and arm-dynamic-efi artifact bundles
 for independent boundaries and reproduction. Normal macOS boot remains pending.
+
+
+## Explicit deep diagnostics
+
+`arm-jit-deep-trace` adds a separately selected16384-instruction developer
+diagnostic. Use `nextcore/tools/trace_deep_arm_jit_ovmf.py --tools nextcore/tools
+--help` for its CLI. It requires explicit incomplete-prefix authorization and
+the named IRQ compatibility profile; it does not provide normal SPTM services.
+Legacy/default budgets remain unchanged. `verify_deep_budget_ovmf.py` checks
+authored arithmetic and strict selector rejection. Its `--recheck-provenance`
+mode executes only the deep case plus CLI and x1 controls; it does not exercise
+the default/clamped inputs despite retaining those required provenance arguments.
+The full five-case mode requires actual separate tiered-only and clamped binaries.
