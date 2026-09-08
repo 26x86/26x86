@@ -1,0 +1,46 @@
+{
+  "schema": "nextcore.authored-sptm-prefix.v1",
+  "cases": [
+    {
+      "name": "positive",
+      "passed": true,
+      "receipt": "/home/sharh/work/integration-validation-bp28-final-20260909/firmware-prefix/positive/report.json"
+    },
+    {
+      "name": "budget",
+      "passed": true,
+      "receipt": "/home/sharh/work/integration-validation-bp28-final-20260909/firmware-prefix/budget/report.json"
+    },
+    {
+      "name": "feature-gate",
+      "passed": true,
+      "receipt": "/home/sharh/work/integration-validation-bp28-final-20260909/firmware-prefix/feature-gate/report.json"
+    },
+    {
+      "name": "unresolved-template",
+      "passed": true,
+      "receipt": "/home/sharh/work/integration-validation-bp28-final-20260909/firmware-prefix/unresolved-template/report.json"
+    },
+    {
+      "name": "thread-registers",
+      "passed": true,
+      "receipt": "/home/sharh/work/integration-validation-bp28-final-20260909/firmware-prefix/thread-registers/report.json"
+    }
+  ],
+  "input_sha256_before": {
+    "/home/sharh/work/integration-validation-bp28-final-20260909/26x86/nextcore/tools/arm64_sptm_prefix_probe.S": "9ff382ff307692d2928d959adba88bc39a47bf4bd655967d5342d0fc56236c6e",
+    "/home/sharh/work/integration-validation-bp28-final-20260909/26x86/nextcore/tools/arm64_thread_pointer_probe.S": "5e3417574d743cf8cb55c149babde0934c89d230f8a978471d79380fd66c6056",
+    "/home/sharh/work/integration-validation-bp28-final-20260909/NXARMJIT-probe.efi": "bb8c0730564ac8ec5151f8eca4c5ed6482180e118bfea41299408870d66c9938",
+    "/home/sharh/work/integration-validation-bp28-final-20260909/NXARMJIT-default.efi": "51b73a9fc633e9fff1aa74ca2a34ca70e5fdf55825633e29f5cf2191ae143cb8"
+  },
+  "input_sha256_after": {
+    "/home/sharh/work/integration-validation-bp28-final-20260909/26x86/nextcore/tools/arm64_sptm_prefix_probe.S": "9ff382ff307692d2928d959adba88bc39a47bf4bd655967d5342d0fc56236c6e",
+    "/home/sharh/work/integration-validation-bp28-final-20260909/26x86/nextcore/tools/arm64_thread_pointer_probe.S": "5e3417574d743cf8cb55c149babde0934c89d230f8a978471d79380fd66c6056",
+    "/home/sharh/work/integration-validation-bp28-final-20260909/NXARMJIT-probe.efi": "bb8c0730564ac8ec5151f8eca4c5ed6482180e118bfea41299408870d66c9938",
+    "/home/sharh/work/integration-validation-bp28-final-20260909/NXARMJIT-default.efi": "51b73a9fc633e9fff1aa74ca2a34ca70e5fdf55825633e29f5cf2191ae143cb8"
+  },
+  "passed": true,
+  "sptm_provided": false,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

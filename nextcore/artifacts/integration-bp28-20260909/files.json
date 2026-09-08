@@ -1,0 +1,110 @@
+{
+  "schema": "nextcore.evidence-files/1",
+  "files": [
+    {
+      "path": "clippy-efi.log",
+      "bytes": 29570,
+      "sha256": "a91de7347eac15d2a4f1f2df7a9c6d42b2b6dac5f0e9a99242b63244037324aa"
+    },
+    {
+      "path": "clippy-host.log",
+      "bytes": 35761,
+      "sha256": "c035970e951364b2bca5f077899268315d08f78a5d0f5558acd3c6c0c7ff5b5d"
+    },
+    {
+      "path": "compiled-bundle.log",
+      "bytes": 470,
+      "sha256": "1bcb845a2d20af2b1b07233c96746f5644dc6546930219f0d602db6474e635f5"
+    },
+    {
+      "path": "firmware-jit.json",
+      "bytes": 14548,
+      "sha256": "c07d51381cb07e165e81a8b5c42fc66eebfe9e07b7714d38cf872b3fa38ba809"
+    },
+    {
+      "path": "firmware-pair.json",
+      "bytes": 6556,
+      "sha256": "7f115cd6afe15137c7af07de5efdcb5bb920f7e698b2a203f77af5fc88805367"
+    },
+    {
+      "path": "firmware-platform.json",
+      "bytes": 6919,
+      "sha256": "efbdf818219e085a2aff01a096cdc76392ba60e13e2a1674204dae4fd8c25828"
+    },
+    {
+      "path": "firmware-prefix.json",
+      "bytes": 2513,
+      "sha256": "f0ba915e49c6db77973ea52686338683eae3caee4ef05f671c63065791d80b26"
+    },
+    {
+      "path": "fresh-integration.json",
+      "bytes": 7726,
+      "sha256": "594a091d8c4600bdaec42e706ce7abfec6d3391bc284e464776c019fde92dda9"
+    },
+    {
+      "path": "gui-boundaries.log",
+      "bytes": 3520,
+      "sha256": "46c1ce6e7a0e8bb1e28b6aa1e3175e8b96619dc81fd3ae3ce8d7b4b9fe554cc0"
+    },
+    {
+      "path": "mmu-granules.json",
+      "bytes": 2303,
+      "sha256": "c5a1f5ec8255182cfc9a3df74d676ccd1daff4e808c4518592437b03606114d5"
+    },
+    {
+      "path": "mmu-physical.json",
+      "bytes": 1950,
+      "sha256": "a7cc4db69277fc632492038310be4502f4e80c122ad3fd0e9377973a5b2dcbbc"
+    },
+    {
+      "path": "module-branch-cleanup.json",
+      "bytes": 1369,
+      "sha256": "4ae90ee4761962649e7ad7310f0c9cffc5c85a57b9d3da545b70fce53e770023"
+    },
+    {
+      "path": "module-merges.json",
+      "bytes": 4172,
+      "sha256": "1dc43f5ebb626090547b6317871d0cf228cb994fa6da0409768787888f355540"
+    },
+    {
+      "path": "pair-oracle.json",
+      "bytes": 1810,
+      "sha256": "962e8a10d0722a8f02c71d935f4aae0da12814b99f8ffada3f0bc58c83deec8e"
+    },
+    {
+      "path": "python.log",
+      "bytes": 30991,
+      "sha256": "dab46b9bee8f529623b92564966009cbf600069be3eca01662debdbd2eaa1681"
+    },
+    {
+      "path": "results.md",
+      "bytes": 1794,
+      "sha256": "58d27a6d319b7c4e0b4d4410be8d9e89f90089c447b32eb5ceb4f2b2065ca33c"
+    },
+    {
+      "path": "standalone-modules.json",
+      "bytes": 8016,
+      "sha256": "ab2ce60d4e4286b28d2a573207427b97a96878e030d0f8575e66ef9be65febad"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 1328,
+      "sha256": "37ff3a6960f289e689299d0368db9222c8d5e8628aa5fc7908beab17092e28fa"
+    },
+    {
+      "path": "vsk-policy.log",
+      "bytes": 1035,
+      "sha256": "74ed099c1744733820ebd8f8796928aacd841ea59e61e7a3a8d4bfd815de2a20"
+    },
+    {
+      "path": "vulkan.log",
+      "bytes": 9020,
+      "sha256": "56eead932ea210a1b1b8325cfda7b27532c4714f808ba66334e62cb471335659"
+    },
+    {
+      "path": "workspace.log",
+      "bytes": 43328,
+      "sha256": "02e0fb6d7d3a9cffcc717ca54be579fe6a18d9742956ec5170fc08370fdea267"
+    }
+  ]
+}

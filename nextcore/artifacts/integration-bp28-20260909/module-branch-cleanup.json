@@ -1,0 +1,42 @@
+[
+  {
+    "repo": "Nextcore-GPU",
+    "branch": "codex/gpu-portable-devices",
+    "source_commit": "eaab9fcfded3a8ee298453397790f13edace5694",
+    "main_commit": "ba906581b4b1307aa482340f63fd60383473ef48",
+    "ancestor_proven": true,
+    "remote_and_local_deleted": true
+  },
+  {
+    "repo": "Nextcore-APLS",
+    "branch": "codex/arm64e-memory-gpu",
+    "source_commit": "9b6ccaa421f668fdb212ccd14969002f6196a18f",
+    "main_commit": "4f9de97ba12f9d5d74b6de05a9e74b0f51cd0b55",
+    "ancestor_proven": true,
+    "remote_and_local_deleted": true
+  },
+  {
+    "repo": "Nextcore-Tool",
+    "branch": "codex/arm64e-memory-gpu",
+    "source_commit": "7282944f9b93fe9631fc11ba6eb8d8f75e973f62",
+    "main_commit": "ad57b47cb8b4a8f244039afdf38cb20ea6c55b92",
+    "ancestor_proven": true,
+    "remote_and_local_deleted": true
+  },
+  {
+    "repo": "Nextcore-ISE",
+    "branch": "codex/arm64e-pair-memory",
+    "source_commit": "07cd3e19f397556fa6d233c562fb245bfe528363",
+    "main_commit": "1b36e3f90ea4006d7221add78385811621771205",
+    "ancestor_proven": true,
+    "remote_and_local_deleted": true
+  },
+  {
+    "repo": "Nextcore-EFI",
+    "branch": "codex/arm64e-memory-gpu",
+    "source_commit": "f2ca77a23d09b6de3f5371861e6b8bec61577955",
+    "main_commit": "954d2a0ca8fec08db9a99438fb5b1db751caf766",
+    "ancestor_proven": true,
+    "remote_and_local_deleted": true
+  }
+]

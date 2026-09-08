@@ -1536,3 +1536,12 @@ negative control prove the correction. QEMU omits this A=0 check and SP alignmen
 those limits are explicit rather than treating oracle success as full coverage.
 EFI observation covers status/ESR/registers/SP/retirement; host C/Rust probes
 also inspect FAR and unchanged memory, which the EFI v2 result does not expose.
+
+
+BP28 integration outcome: five changed modules merged PR #2 to their own main,
+with immutable tested heads retained in parent gitlinks. Fresh recursive source
+41aa5d95 passed472 workspace tests,77 reference tests,28 authored x86 EFI cases,
+18 independent MMU cases, pair/native ABI checks,119 Vulkan tests, Python/GUI
+boundaries, compiled-EFI packaging and Clippy. Corrected original diagnostic
+remains47 retired/10 native blocks. Exact records live in
+`nextcore/artifacts/integration-bp28-20260909`; OS/Metal acceptance remains open.
