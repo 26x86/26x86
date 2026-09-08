@@ -1,0 +1,23 @@
+{
+  "module": "Nextcore-EFI",
+  "phase": "pre",
+  "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "inventory_files_verified": 19,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 27.0,
+      "stdout": "0.stdout",
+      "stderr": "0.stderr"
+    }
+  ],
+  "passed": true,
+  "guest_execution_claimed": false
+}

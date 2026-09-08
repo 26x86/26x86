@@ -5,17 +5,19 @@ hide:
 
 # NextCore
 
-<div class="hero">
+<div class="hero" markdown="1">
   <h1>NextCore — Intel &amp; Apple Silicon boot engineering</h1>
   <p class="hero-sub">
     A clean-room EFI bootloader with a graphical picker. Our targets are native
     HAL support for macOS 26 Tahoe and experimental AMD64 ↔ Apple Silicon HAL
     with Metal acceleration for macOS 27 Golden Gate.
   </p>
-  <div class="hero-actions">
-    <a class="md-button md-button--primary" href="wiki/README.md">Start here</a>
-    <a class="md-button" href="wiki/Getting-Started.md">Getting started</a>
-    <a class="md-button" href="wiki/Supported-Models.md">Supported models</a>
+  <div class="hero-actions" markdown="1">
+
+  [Start here](wiki/README.md){ .md-button .md-button--primary }
+  [Getting started](wiki/Getting-Started.md){ .md-button }
+  [Supported models](wiki/Supported-Models.md){ .md-button }
+
   </div>
 </div>
 

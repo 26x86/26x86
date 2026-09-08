@@ -26,12 +26,12 @@ AMD64↔Apple Silicon HAL 및 필수 Metal 가속**, **macOS 26 Tahoe의
 | local virtualization | WSL KVM 모듈 적재 후 API 12·query-kvm·실제 OVMF Shell 실행, developer 전용 device ACL | 이 결과만으로 macOS boot 판정 |
 | x86 UEFI → host HAL | BP19 실제 OVMF RSDP+7 SDT+5 PCI header 수집/파싱, exit 67와 원본 hash 유지 | XNU platform provider, AML 실행, 게스트 장치 게시, 물리 하드웨어 |
 | Tahoe 외부 reference | 원본 XNU/launchd/WindowServer와 읽을 수 있는 복구 GUI; Terminal에서 실제 Metal probe 실행 | 전체 OS 설치, Metal device/compute 성공 |
-| Tahoe native EFI | ConsoleControl → 원본 booter → 실제 XNU, 8GiB·SMC·USB 입력 조건에서 읽을 수 있는 언어 선택/복구 메뉴와 실제 조작 | 자체 KC loader 진입, 전체 native HAL/Metal |
+| Tahoe native EFI | 최종 BP21 피커 → ConsoleControl → 원본 booter → 실제 XNU/Recovery/Terminal, 키보드 명령으로 26.6.2/25G83 확인 | 자체 KC loader 진입, 전체 설치 OS/native HAL/Metal |
 | native KC 준비 | 67,584,000-byte 실제 EFI pages 배치/readback/해제, 65,260 classic host 적용·전체 readback, 401,606 chains/header 보존, rev1 boot_args codec, core 142 tests | EFI relocation 연결, entry/slide/provider 계약, native XNU 실행 |
 | ARM recovery | DFU, iBEC endpoint/prompt, 5 restore role, `bootx` ACK 관측 | XNU, userspace, Metal, macOS boot |
 | ARM firmware | `bootx` 뒤 4-byte MMIO decode failure를 same-event trace로 확인 | 장치 register/access contract 또는 안전한 장치 모델 |
 | ARM KC 준비 | 별도 1152B boot_args codec/C layout, 실제 ARM64E KC 81,002,496B 불변 staging·216 headers/1,096 views readback | 물리 배치/CPU/PAC/DT 연결, 실제 27 XNU 진입 |
-| firmware 피커 | NextCore GOP 디자인, 방향키·선택된 child 실행·Esc·text fallback 실제 OVMF 검증 | 자동 OS volume discovery |
+| firmware 피커 | NextCore GOP 디자인, 방향키·선택된 child 실행·Esc·text fallback, 최종 EFI에서 원본 Tahoe Recovery/Terminal까지 연결 | 자동 OS volume discovery |
 | graphics | Intel host GPU 512값/fence; 두 guest probe 빌드, 실제 Tahoe Recovery 실행은 no-metal-device/exit1 | guest Metal device와 GPU command completion/readback |
 
 현재 Windows host와 `zuzunza`, `koreaidc2`는 x86_64다. native Apple Silicon
@@ -100,20 +100,22 @@ macOS host가 없으므로 Virtualization.framework 기반 ARM guest boot는 이
 
 ## 모듈 배포 상태
 
-Nextcore는 다음 public GitHub repositories로 배포됐고 각각 `main`과
-`26x86-Nextcore-<Module>-v0.1.0` tag를 갖는다:
+NextCore의 다음 public repositories를 기존 이력 위에서 갱신했다. Core/GPU/HAL/
+ISE/APLS/EFI의 최신 tag는 `26x86-Nextcore-<Module>-v0.1.1`, Tool은
+`26x86-Nextcore-Tool-v0.1.2`이며 각 원격 main과 해당 tag commit이 일치한다:
 
 - `26x86/Nextcore-Core`, `Nextcore-GPU`, `Nextcore-HAL`, `Nextcore-ISE`
 - `26x86/Nextcore-APLS`, `Nextcore-EFI`, `Nextcore-Tool`
 
-`Tools/export_nextcore_repositories.py`가 fresh export, fixed dependency tag,
-`repository.json`, sha256 inventory와 CI를 만든다. clone verification에서 Core
-test, Tool test (8 passed, 1 externally supplied EFI fixture ignored), EFI UEFI
-check는 통과했다. APLS standalone build는 `vf_policy.rs`의 workspace 외부
-`include_bytes!` 경계 때문에 실패했으나, 2026-09-07에 crate 소유 테스트 fixture로
-교체했다. 현재 `cargo test -p nextcore-apls`는 48개 테스트가 통과한다. 이는
-APLS 계약/소프트웨어 테스트 통과이며 실제 macOS/XNU/Metal 또는 물리 화면 출력의
-증거는 아니다.
+이번 source는 고정 commit `dcc9001`이며 Tool fixture 수정은 `0450657`이다.
+7개 최신 snapshot 모두 게시 전후 fresh-clone gate 및 exact-head GitHub CI가
+통과했다. 최초 Tool v0.1.1의 sibling fixture 결함은 Windows 인접 clone이 놓쳤고
+Linux CI가 발견했다. 실패 tag를 보존하고 v0.1.2를 Linux 단독 clone에서 검증했다.
+기존 exporter의 작업 중 변경은 사용하지 않았으며 source Git object와 fixed
+dependency tag, canonical blob inventory로 배포했다. 조직 profile은 `4e446a4`로
+NextCore 브랜딩·목표·7개 release link를 반영하고 원격 readback을 확인했다.
+[전체 release 증거](../nextcore/artifacts/module-release-v011-20260908/README.md)는
+소프트웨어/배포 검사이며 guest Metal 실행을 뜻하지 않는다.
 
 ## 최소 재개 절차
 

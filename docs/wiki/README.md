@@ -11,13 +11,13 @@ macOS release, then use the application and troubleshooting references.
 | New to NextCore | [Getting started](Getting-Started.md) |
 | What is OpenCore in this project? | [OpenCore](OpenCore.md) |
 | Which Macs are covered? | [Supported models](Supported-Models.md) |
-| Frequently asked questions | [Home](Home.md) |
+| Frequently asked questions | [Troubleshooting](Troubleshooting.md) |
 
 ## How to install
 
 | Topic | Document |
 | --- | --- |
-| Prepare an installer and backup | [Home](Home.md) |
+| Prepare an installer and backup | [Getting started](Getting-Started.md) |
 | Build and install the EFI | [OpenCore](OpenCore.md) |
 | Boot OpenCore and macOS | [Installation notes](Installation-Notes.md) |
 | Configure device-specific options | [Configuration](Configuration.md) |

@@ -1,0 +1,10 @@
+{
+  "module": "Nextcore-GPU",
+  "phase": "post",
+  "passed": false,
+  "tests_started": false,
+  "failure": "Working-file byte inventory mismatch on .gitattributes after Windows native CRLF checkout",
+  "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "next_action": "Verify canonical committed Git blob inventory plus clean normalized worktree, then test actual fresh clone",
+  "remote_source_corruption_observed": false
+}

@@ -1,0 +1,376 @@
+{
+  "schema": 1,
+  "layer": "module snapshot release and organization documentation",
+  "modules": [
+    {
+      "repository": "26x86/Nextcore-Core",
+      "tag": "26x86-Nextcore-Core-v0.1.1",
+      "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+      "previous_head": "4b8b3801b5bcd2e7ed519cc64feada7d76aa2082",
+      "head": "66eb69888a9cb8bc56d05f9b2a0bbfab5abfd54b",
+      "main_and_tag_match": true,
+      "parent_matches_previous_head": true,
+      "pre_gate_passed": true,
+      "inventory_index_verified": true,
+      "force_push": false,
+      "atomic_push": true,
+      "post_publish_gate": {
+        "module": "Nextcore-Core",
+        "phase": "post",
+        "attempt": 2,
+        "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+        "inventory_files_verified": 49,
+        "inventory_basis": "committed Git blobs and clean worktree",
+        "commands": [
+          {
+            "argv": [
+              "cargo",
+              "test",
+              "--all-targets"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 47.985,
+            "stdout": "0.stdout",
+            "stderr": "0.stderr"
+          },
+          {
+            "argv": [
+              "cargo",
+              "check",
+              "--no-default-features"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 2.968,
+            "stdout": "1.stdout",
+            "stderr": "1.stderr"
+          }
+        ],
+        "passed": true,
+        "guest_execution_claimed": false
+      },
+      "github_ci": {
+        "conclusion": "success",
+        "databaseId": 34195932526,
+        "headSha": "66eb69888a9cb8bc56d05f9b2a0bbfab5abfd54b",
+        "status": "completed",
+        "url": "https://github.com/26x86/Nextcore-Core/actions/runs/34195932526"
+      }
+    },
+    {
+      "repository": "26x86/Nextcore-GPU",
+      "tag": "26x86-Nextcore-GPU-v0.1.1",
+      "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+      "previous_head": "29701f17ea98b64bbabd05d75a7e09a25f64f246",
+      "head": "8962199b5a7381850ef9aa9e72e98b45a8671d46",
+      "main_and_tag_match": true,
+      "parent_matches_previous_head": true,
+      "pre_gate_passed": true,
+      "inventory_index_verified": true,
+      "force_push": false,
+      "atomic_push": true,
+      "post_publish_gate": {
+        "module": "Nextcore-GPU",
+        "phase": "post",
+        "attempt": 2,
+        "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+        "inventory_files_verified": 35,
+        "inventory_basis": "committed Git blobs and clean worktree",
+        "commands": [
+          {
+            "argv": [
+              "cargo",
+              "test",
+              "--all-targets"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 34.734,
+            "stdout": "0.stdout",
+            "stderr": "0.stderr"
+          },
+          {
+            "argv": [
+              "cargo",
+              "test",
+              "--all-targets",
+              "--features",
+              "vulkan"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 31.422,
+            "stdout": "1.stdout",
+            "stderr": "1.stderr"
+          }
+        ],
+        "passed": true,
+        "guest_execution_claimed": false
+      },
+      "github_ci": {
+        "conclusion": "success",
+        "databaseId": 34195968754,
+        "headSha": "8962199b5a7381850ef9aa9e72e98b45a8671d46",
+        "status": "completed",
+        "url": "https://github.com/26x86/Nextcore-GPU/actions/runs/34195968754"
+      }
+    },
+    {
+      "repository": "26x86/Nextcore-HAL",
+      "tag": "26x86-Nextcore-HAL-v0.1.1",
+      "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+      "previous_head": "e00dcb4a731505de8e15d89900f3298eb05feca8",
+      "head": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+      "main_and_tag_match": true,
+      "parent_matches_previous_head": true,
+      "pre_gate_passed": true,
+      "inventory_index_verified": true,
+      "force_push": false,
+      "atomic_push": true,
+      "post_publish_gate": {
+        "module": "Nextcore-HAL",
+        "phase": "post",
+        "attempt": 2,
+        "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+        "inventory_files_verified": 17,
+        "inventory_basis": "committed Git blobs and clean worktree",
+        "commands": [
+          {
+            "argv": [
+              "cargo",
+              "test",
+              "--all-targets"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 33.734,
+            "stdout": "0.stdout",
+            "stderr": "0.stderr"
+          }
+        ],
+        "passed": true,
+        "guest_execution_claimed": false
+      },
+      "github_ci": {
+        "conclusion": "success",
+        "databaseId": 34196005275,
+        "headSha": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+        "status": "completed",
+        "url": "https://github.com/26x86/Nextcore-HAL/actions/runs/34196005275"
+      }
+    },
+    {
+      "repository": "26x86/Nextcore-ISE",
+      "tag": "26x86-Nextcore-ISE-v0.1.1",
+      "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+      "previous_head": "073b8ced31d43c419ed2d9ea78d9ab8d8b372180",
+      "head": "e4c318ff707ff57eaf128ffd66cc962a210ab8e1",
+      "main_and_tag_match": true,
+      "parent_matches_previous_head": true,
+      "pre_gate_passed": true,
+      "inventory_index_verified": true,
+      "force_push": false,
+      "atomic_push": true,
+      "post_publish_gate": {
+        "module": "Nextcore-ISE",
+        "phase": "post",
+        "attempt": 2,
+        "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+        "inventory_files_verified": 11,
+        "inventory_basis": "committed Git blobs and clean worktree",
+        "commands": [
+          {
+            "argv": [
+              "cargo",
+              "test",
+              "--all-targets"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 25.078,
+            "stdout": "0.stdout",
+            "stderr": "0.stderr"
+          }
+        ],
+        "passed": true,
+        "guest_execution_claimed": false
+      },
+      "github_ci": {
+        "conclusion": "success",
+        "databaseId": 34196016446,
+        "headSha": "e4c318ff707ff57eaf128ffd66cc962a210ab8e1",
+        "status": "completed",
+        "url": "https://github.com/26x86/Nextcore-ISE/actions/runs/34196016446"
+      }
+    },
+    {
+      "repository": "26x86/Nextcore-APLS",
+      "tag": "26x86-Nextcore-APLS-v0.1.1",
+      "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+      "previous_head": "76a0b8c32f9fa5f4408cf8dc678bdea78905113b",
+      "head": "f4d640e362fbcf160994d833b330e16506de9110",
+      "main_and_tag_match": true,
+      "parent_matches_previous_head": true,
+      "pre_gate_passed": true,
+      "inventory_index_verified": true,
+      "force_push": false,
+      "atomic_push": true,
+      "post_publish_gate": {
+        "module": "Nextcore-APLS",
+        "phase": "post",
+        "attempt": 1,
+        "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+        "inventory_files_verified": 16,
+        "inventory_basis": "committed Git blobs and clean worktree",
+        "commands": [
+          {
+            "argv": [
+              "cargo",
+              "test",
+              "--all-targets"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 23.5,
+            "stdout": "0.stdout",
+            "stderr": "0.stderr"
+          }
+        ],
+        "passed": true,
+        "guest_execution_claimed": false
+      },
+      "github_ci": {
+        "conclusion": "success",
+        "databaseId": 34196180700,
+        "headSha": "f4d640e362fbcf160994d833b330e16506de9110",
+        "status": "completed",
+        "url": "https://github.com/26x86/Nextcore-APLS/actions/runs/34196180700"
+      }
+    },
+    {
+      "repository": "26x86/Nextcore-EFI",
+      "tag": "26x86-Nextcore-EFI-v0.1.1",
+      "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+      "previous_head": "4cec82e25fbfc1eeebd475adb25e2da308c2378c",
+      "head": "c00f6fe6d6618f574ed193547837d675e6ca2da3",
+      "main_and_tag_match": true,
+      "parent_matches_previous_head": true,
+      "pre_gate_passed": true,
+      "inventory_index_verified": true,
+      "force_push": false,
+      "atomic_push": true,
+      "post_publish_gate": {
+        "module": "Nextcore-EFI",
+        "phase": "post",
+        "attempt": 1,
+        "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+        "inventory_files_verified": 19,
+        "inventory_basis": "committed Git blobs and clean worktree",
+        "commands": [
+          {
+            "argv": [
+              "cargo",
+              "check",
+              "--target",
+              "x86_64-unknown-uefi",
+              "--all-features"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 19.828,
+            "stdout": "0.stdout",
+            "stderr": "0.stderr"
+          }
+        ],
+        "passed": true,
+        "guest_execution_claimed": false
+      },
+      "github_ci": {
+        "conclusion": "success",
+        "databaseId": 34196192640,
+        "headSha": "c00f6fe6d6618f574ed193547837d675e6ca2da3",
+        "status": "completed",
+        "url": "https://github.com/26x86/Nextcore-EFI/actions/runs/34196192640"
+      }
+    },
+    {
+      "repository": "26x86/Nextcore-Tool",
+      "source_commit": "045065700cbd037eaaa974faf957ba15cb628370",
+      "previous_head": "f1d26043f3f8c8f4bb663ef9f9b203dbf42c8c2d",
+      "head": "c53645672d940290ed383b348e751c0a6e4e36c6",
+      "tag": "26x86-Nextcore-Tool-v0.1.2",
+      "main_and_tag_match": true,
+      "atomic_push": true,
+      "force_push": false,
+      "pre_linux_single_clone_passed": true,
+      "post_publish_gate": {
+        "phase": "post",
+        "attempt": 1,
+        "source_commit": "045065700cbd037eaaa974faf957ba15cb628370",
+        "expected_head": "c53645672d940290ed383b348e751c0a6e4e36c6",
+        "single_repo_parent": "/tmp/nextcore-tool-v012-post-20260908",
+        "passed": true,
+        "commands": [
+          {
+            "argv": [
+              "git",
+              "clone",
+              "--no-local",
+              "https://github.com/26x86/Nextcore-Tool.git",
+              "/tmp/nextcore-tool-v012-post-20260908/module"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 0.9
+          },
+          {
+            "argv": [
+              "git",
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 0.008
+          },
+          {
+            "argv": [
+              "cargo",
+              "test",
+              "--all-targets"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 14.744
+          }
+        ],
+        "guest_execution_claimed": false,
+        "lock_sha256": "2a8cbe5f4ee3e317606a366c7df009d2664e62106149b2cadd663d4ca38162d4"
+      },
+      "github_ci": {
+        "conclusion": "success",
+        "databaseId": 34197149715,
+        "headSha": "c53645672d940290ed383b348e751c0a6e4e36c6",
+        "status": "completed",
+        "url": "https://github.com/26x86/Nextcore-Tool/actions/runs/34197149715"
+      }
+    }
+  ],
+  "profile": {
+    "repository": "26x86/.github",
+    "previous_head": "7c1a1007d659b6db9e0fc8533a0da32d1adf169d",
+    "head": "4e446a4b7debc714ff2ec7ac6ead069bb2860618",
+    "remote_head_matches": true,
+    "api_readback_verified": true,
+    "changed_file": "profile/README.md",
+    "peer_review": "hal_harness: source/evidence boundaries and links accepted; product logo corrected",
+    "source_snapshot": "dcc90013109eac694ccbf997b1e44a7018480f78",
+    "tool_fix_source": "045065700cbd037eaaa974faf957ba15cb628370"
+  },
+  "all_latest_modules_clone_gates_passed": true,
+  "all_latest_modules_exact_head_ci_passed": true,
+  "existing_history_and_tags_preserved": true,
+  "force_push_used": false,
+  "shared_source_or_index_modified_by_release_agent": false,
+  "superseded_failed_release": {
+    "repository": "26x86/Nextcore-Tool",
+    "tag": "26x86-Nextcore-Tool-v0.1.1",
+    "head": "f1d26043f3f8c8f4bb663ef9f9b203dbf42c8c2d",
+    "ci_url": "https://github.com/26x86/Nextcore-Tool/actions/runs/34196324452",
+    "reason": "Test fixture escaped crate to sibling Core folder; Windows sibling clones masked failure",
+    "preserved": true
+  },
+  "private_paths_exported": false,
+  "module_tests_claim_guest_execution": false,
+  "guest_metal_verified_by_release": false
+}

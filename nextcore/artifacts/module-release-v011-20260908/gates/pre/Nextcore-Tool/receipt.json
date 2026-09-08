@@ -1,0 +1,23 @@
+{
+  "module": "Nextcore-Tool",
+  "phase": "pre",
+  "attempt": 1,
+  "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "inventory_files_verified": 11,
+  "inventory_basis": "prepared bytes",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 51.937,
+      "stdout": "0.stdout",
+      "stderr": "0.stderr"
+    }
+  ],
+  "passed": true,
+  "guest_execution_claimed": false
+}

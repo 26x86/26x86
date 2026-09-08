@@ -1,0 +1,12 @@
+[
+  {
+    "profile": "Tool v0.1.2 Linux pre-r2",
+    "exit_code": 0,
+    "output": "     Removed 894 files, 453.2MiB total"
+  },
+  {
+    "profile": "Tool v0.1.2 Linux post",
+    "exit_code": 0,
+    "output": "     Removed 894 files, 453.2MiB total"
+  }
+]

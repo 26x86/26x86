@@ -1,0 +1,370 @@
+{
+  "repository": "26x86/Nextcore-GPU",
+  "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-GPU",
+  "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "previous_head": "29701f17ea98b64bbabd05d75a7e09a25f64f246",
+  "tag": "26x86-Nextcore-GPU-v0.1.1",
+  "source_files": [
+    {
+      "path": "Cargo.toml",
+      "source_path": "nextcore/crates/nextcore-gpu/Cargo.toml",
+      "bytes": 391,
+      "sha256": "6be8b077072d65ae277d551c38ec54b65c2db64b0fe3c4930570166198efea3b"
+    },
+    {
+      "path": "VULKAN_COMPUTE.md",
+      "source_path": "nextcore/crates/nextcore-gpu/VULKAN_COMPUTE.md",
+      "bytes": 4232,
+      "sha256": "1fa7294a355f18f0675abf9aceff0f17e33294447d848341dc3075914fcfe2ba"
+    },
+    {
+      "path": "examples/vulkan_compute.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/examples/vulkan_compute.rs",
+      "bytes": 6470,
+      "sha256": "e8a1bb4315f7eb68d85ba0dfbae2cb56606ea0ed9f20302c1c70fabbe9e3a06b"
+    },
+    {
+      "path": "src/adapters/amd.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/adapters/amd.rs",
+      "bytes": 1679,
+      "sha256": "0e085bbc44d9f51611670faaeb6bdd5cfdf3edcadafbd762ad37117a753e8ae4"
+    },
+    {
+      "path": "src/adapters/intel.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/adapters/intel.rs",
+      "bytes": 1690,
+      "sha256": "998a99655f12ccff9e4185e90cfce48835178a573174556dcd52a22ec5f48baa"
+    },
+    {
+      "path": "src/adapters/mod.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/adapters/mod.rs",
+      "bytes": 570,
+      "sha256": "3d51a1f6457a3f7605f1801862ea52e909e56502f1e1706418f13fe5b5a8c0a9"
+    },
+    {
+      "path": "src/adapters/nvidia.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/adapters/nvidia.rs",
+      "bytes": 1699,
+      "sha256": "035240dec781798c3a893ead6466556a3cea30eadaac5254a6a158afa8cefa79"
+    },
+    {
+      "path": "src/canonical_spec.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/canonical_spec.rs",
+      "bytes": 2573,
+      "sha256": "17f733f2ceaa5bd46b8bbebff2d8f625356efd709f1b5371da3b73a706ee2a42"
+    },
+    {
+      "path": "src/command_executor.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/command_executor.rs",
+      "bytes": 19407,
+      "sha256": "75473f55d01205e1e17af3bfef033d1b928daea31cfcf55eed3d933517fdde9d"
+    },
+    {
+      "path": "src/compute.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/compute.rs",
+      "bytes": 8841,
+      "sha256": "5d1ca8497888bde04731abe04eca810bfec44ae1a3f960436ed7f7d288577423"
+    },
+    {
+      "path": "src/framebuffer.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/framebuffer.rs",
+      "bytes": 9834,
+      "sha256": "6d3b9da8fbe80e1142e5f09b928fc14ec52f8a76c350a0b5c706765e5a346bf2"
+    },
+    {
+      "path": "src/lib.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/lib.rs",
+      "bytes": 277,
+      "sha256": "3bbc2a0f2f968f473995f5ddffe4da40ddd6d7f2b9e9e395406f3519839495a1"
+    },
+    {
+      "path": "src/rasterizer.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/rasterizer.rs",
+      "bytes": 11570,
+      "sha256": "c66d209b4626c2a68e93afd420d0a275394bed8e332118ff3ba32230d98f73a1"
+    },
+    {
+      "path": "src/render_pipeline.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/render_pipeline.rs",
+      "bytes": 7317,
+      "sha256": "50a20112907528c1003a6d28889283facb5605bb1a980d6b08750e02faa7abb4"
+    },
+    {
+      "path": "src/sync.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/sync.rs",
+      "bytes": 6713,
+      "sha256": "2ff4c32027e5bab4a6d20bfd3367d4a7d546a1e64c194cc2b5af01f775720810"
+    },
+    {
+      "path": "src/texture.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/texture.rs",
+      "bytes": 8430,
+      "sha256": "e39f3339bb9acd2e12ada48a4e898bec0698648bd42e9c2e2b0a856a97f4de0d"
+    },
+    {
+      "path": "src/translator.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/translator.rs",
+      "bytes": 2151,
+      "sha256": "6a3a76bbabcc78da251dfaefcac8d71f666928c190d2e40f0d672d8e512507a4"
+    },
+    {
+      "path": "src/virtual_device.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/virtual_device.rs",
+      "bytes": 5714,
+      "sha256": "c9aa64d55a752672598e7c67e66692167a39236f41bddcd8d53d0f0fe26ead18"
+    },
+    {
+      "path": "src/vulkan_compute.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/src/vulkan_compute.rs",
+      "bytes": 36416,
+      "sha256": "1e9d19e1ab1b0dfe461bc0fb407e64a442c24c7e61c1b913ad0e0f3bac64b139"
+    },
+    {
+      "path": "tests/fixtures/storage_transform.comp",
+      "source_path": "nextcore/crates/nextcore-gpu/tests/fixtures/storage_transform.comp",
+      "bytes": 381,
+      "sha256": "6c65b3d938f82cf69c4eb9809fd735e51016dec51188c778345f35f94bebf3bd"
+    },
+    {
+      "path": "tests/fixtures/storage_transform.spv",
+      "source_path": "nextcore/crates/nextcore-gpu/tests/fixtures/storage_transform.spv",
+      "bytes": 1068,
+      "sha256": "12f8af8025b5d81f51bbe32d5a09911772b7990e46ef59c844b4dd82e27268ba"
+    },
+    {
+      "path": "tests/gpu_compute.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/tests/gpu_compute.rs",
+      "bytes": 5689,
+      "sha256": "1625d4314750b003cf043bdd2e2021549c7724b44f4ffa299ecc9313caf4f7bc"
+    },
+    {
+      "path": "tests/gpu_executor.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/tests/gpu_executor.rs",
+      "bytes": 6533,
+      "sha256": "e47c933ebc18197b8b9ba3e0baa747da455e69314c5627d53a4ff2393cb4a177"
+    },
+    {
+      "path": "tests/gpu_framebuffer.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/tests/gpu_framebuffer.rs",
+      "bytes": 3521,
+      "sha256": "286b34e1a9630467d3f28656136fc5e38207ffcae363bdec2b1ee37f9b356344"
+    },
+    {
+      "path": "tests/gpu_pipeline.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/tests/gpu_pipeline.rs",
+      "bytes": 4647,
+      "sha256": "37bf7922503db4a20e9e5e46f970430f54eea47b5dcbd2602f0a2e6917494c47"
+    },
+    {
+      "path": "tests/gpu_raster.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/tests/gpu_raster.rs",
+      "bytes": 4336,
+      "sha256": "97a90586b561f2ea65516ab7e3edb60b0f0aafb8d5bf22c67acc807bf38ef05a"
+    },
+    {
+      "path": "tests/gpu_render_path.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/tests/gpu_render_path.rs",
+      "bytes": 6790,
+      "sha256": "30bd5065653660cb65c4f7d10bc19a728e00c89742a4a7b2be9c968de20bb1c7"
+    },
+    {
+      "path": "tests/gpu_sync.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/tests/gpu_sync.rs",
+      "bytes": 3108,
+      "sha256": "de573f17ac839db7e7b19852eae0b3a2dfe49fab8c01751bed9c6f871e2041a3"
+    },
+    {
+      "path": "tests/gpu_texture.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/tests/gpu_texture.rs",
+      "bytes": 4443,
+      "sha256": "ff875e2243897e5db2cecb9d11735623708e4009b5ab5a704c9e83097a03e540"
+    },
+    {
+      "path": "tests/gpu_virtual.rs",
+      "source_path": "nextcore/crates/nextcore-gpu/tests/gpu_virtual.rs",
+      "bytes": 4334,
+      "sha256": "602a3aac41c6d71b7fc692fcc633261ed7f9bb2f73449a9de74c73bb0c6cefb5"
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 28,
+      "sha256": "4b0f1fc438f30f25abe421b7542e9f3803b8b5c15ca3695614222e2bc547a9fe"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 326,
+      "sha256": "4143cd825195f7a38a7f4326d8fc37ee5be5cf3c6cdbbca4d2102ebc09c6edc4"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 20,
+      "sha256": "9cc2c8cc102e0b2a0a177c8f594abc9b9776300a04473c24b45d52c1007a4119"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 391,
+      "sha256": "6be8b077072d65ae277d551c38ec54b65c2db64b0fe3c4930570166198efea3b"
+    },
+    {
+      "path": "LICENSE.txt",
+      "bytes": 1851,
+      "sha256": "77c458ccb6116400cf960f8951630bc3b8b34731b56ffbd736b95c2b78449104"
+    },
+    {
+      "path": "README.md",
+      "bytes": 476,
+      "sha256": "c7e52262876d32f71a70ff5b55f48fd4c37c1842728745472588349e1da43011"
+    },
+    {
+      "path": "VULKAN_COMPUTE.md",
+      "bytes": 4232,
+      "sha256": "1fa7294a355f18f0675abf9aceff0f17e33294447d848341dc3075914fcfe2ba"
+    },
+    {
+      "path": "examples/vulkan_compute.rs",
+      "bytes": 6470,
+      "sha256": "e8a1bb4315f7eb68d85ba0dfbae2cb56606ea0ed9f20302c1c70fabbe9e3a06b"
+    },
+    {
+      "path": "src/adapters/amd.rs",
+      "bytes": 1679,
+      "sha256": "0e085bbc44d9f51611670faaeb6bdd5cfdf3edcadafbd762ad37117a753e8ae4"
+    },
+    {
+      "path": "src/adapters/intel.rs",
+      "bytes": 1690,
+      "sha256": "998a99655f12ccff9e4185e90cfce48835178a573174556dcd52a22ec5f48baa"
+    },
+    {
+      "path": "src/adapters/mod.rs",
+      "bytes": 570,
+      "sha256": "3d51a1f6457a3f7605f1801862ea52e909e56502f1e1706418f13fe5b5a8c0a9"
+    },
+    {
+      "path": "src/adapters/nvidia.rs",
+      "bytes": 1699,
+      "sha256": "035240dec781798c3a893ead6466556a3cea30eadaac5254a6a158afa8cefa79"
+    },
+    {
+      "path": "src/canonical_spec.rs",
+      "bytes": 2573,
+      "sha256": "17f733f2ceaa5bd46b8bbebff2d8f625356efd709f1b5371da3b73a706ee2a42"
+    },
+    {
+      "path": "src/command_executor.rs",
+      "bytes": 19407,
+      "sha256": "75473f55d01205e1e17af3bfef033d1b928daea31cfcf55eed3d933517fdde9d"
+    },
+    {
+      "path": "src/compute.rs",
+      "bytes": 8841,
+      "sha256": "5d1ca8497888bde04731abe04eca810bfec44ae1a3f960436ed7f7d288577423"
+    },
+    {
+      "path": "src/framebuffer.rs",
+      "bytes": 9834,
+      "sha256": "6d3b9da8fbe80e1142e5f09b928fc14ec52f8a76c350a0b5c706765e5a346bf2"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 277,
+      "sha256": "3bbc2a0f2f968f473995f5ddffe4da40ddd6d7f2b9e9e395406f3519839495a1"
+    },
+    {
+      "path": "src/rasterizer.rs",
+      "bytes": 11570,
+      "sha256": "c66d209b4626c2a68e93afd420d0a275394bed8e332118ff3ba32230d98f73a1"
+    },
+    {
+      "path": "src/render_pipeline.rs",
+      "bytes": 7317,
+      "sha256": "50a20112907528c1003a6d28889283facb5605bb1a980d6b08750e02faa7abb4"
+    },
+    {
+      "path": "src/sync.rs",
+      "bytes": 6713,
+      "sha256": "2ff4c32027e5bab4a6d20bfd3367d4a7d546a1e64c194cc2b5af01f775720810"
+    },
+    {
+      "path": "src/texture.rs",
+      "bytes": 8430,
+      "sha256": "e39f3339bb9acd2e12ada48a4e898bec0698648bd42e9c2e2b0a856a97f4de0d"
+    },
+    {
+      "path": "src/translator.rs",
+      "bytes": 2151,
+      "sha256": "6a3a76bbabcc78da251dfaefcac8d71f666928c190d2e40f0d672d8e512507a4"
+    },
+    {
+      "path": "src/virtual_device.rs",
+      "bytes": 5714,
+      "sha256": "c9aa64d55a752672598e7c67e66692167a39236f41bddcd8d53d0f0fe26ead18"
+    },
+    {
+      "path": "src/vulkan_compute.rs",
+      "bytes": 36416,
+      "sha256": "1e9d19e1ab1b0dfe461bc0fb407e64a442c24c7e61c1b913ad0e0f3bac64b139"
+    },
+    {
+      "path": "tests/fixtures/storage_transform.comp",
+      "bytes": 381,
+      "sha256": "6c65b3d938f82cf69c4eb9809fd735e51016dec51188c778345f35f94bebf3bd"
+    },
+    {
+      "path": "tests/fixtures/storage_transform.spv",
+      "bytes": 1068,
+      "sha256": "12f8af8025b5d81f51bbe32d5a09911772b7990e46ef59c844b4dd82e27268ba"
+    },
+    {
+      "path": "tests/gpu_compute.rs",
+      "bytes": 5689,
+      "sha256": "1625d4314750b003cf043bdd2e2021549c7724b44f4ffa299ecc9313caf4f7bc"
+    },
+    {
+      "path": "tests/gpu_executor.rs",
+      "bytes": 6533,
+      "sha256": "e47c933ebc18197b8b9ba3e0baa747da455e69314c5627d53a4ff2393cb4a177"
+    },
+    {
+      "path": "tests/gpu_framebuffer.rs",
+      "bytes": 3521,
+      "sha256": "286b34e1a9630467d3f28656136fc5e38207ffcae363bdec2b1ee37f9b356344"
+    },
+    {
+      "path": "tests/gpu_pipeline.rs",
+      "bytes": 4647,
+      "sha256": "37bf7922503db4a20e9e5e46f970430f54eea47b5dcbd2602f0a2e6917494c47"
+    },
+    {
+      "path": "tests/gpu_raster.rs",
+      "bytes": 4336,
+      "sha256": "97a90586b561f2ea65516ab7e3edb60b0f0aafb8d5bf22c67acc807bf38ef05a"
+    },
+    {
+      "path": "tests/gpu_render_path.rs",
+      "bytes": 6790,
+      "sha256": "30bd5065653660cb65c4f7d10bc19a728e00c89742a4a7b2be9c968de20bb1c7"
+    },
+    {
+      "path": "tests/gpu_sync.rs",
+      "bytes": 3108,
+      "sha256": "de573f17ac839db7e7b19852eae0b3a2dfe49fab8c01751bed9c6f871e2041a3"
+    },
+    {
+      "path": "tests/gpu_texture.rs",
+      "bytes": 4443,
+      "sha256": "ff875e2243897e5db2cecb9d11735623708e4009b5ab5a704c9e83097a03e540"
+    },
+    {
+      "path": "tests/gpu_virtual.rs",
+      "bytes": 4334,
+      "sha256": "602a3aac41c6d71b7fc692fcc633261ed7f9bb2f73449a9de74c73bb0c6cefb5"
+    }
+  ],
+  "transformed_source_files": [],
+  "forbidden_paths_present": false,
+  "existing_history_preserved": true,
+  "package_version_preserved": true
+}

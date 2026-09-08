@@ -1,0 +1,31 @@
+
+running 26 tests
+test decoder::tests::test_decode_nop ... ok
+test decoder::tests::test_decode_popcnt ... ok
+test decoder::tests::test_decode_unsupported ... ok
+test decoder::tests::test_decode_vex ... ok
+test decoder::tests::test_decode_xor ... ok
+test cpu_features::tests::test_detect_runs ... ok
+test cpu_features::tests::test_missing_features ... ok
+test decoder::tests::test_decode_add_imm8 ... ok
+test emulator::tests::test_add_reg ... ok
+test decoder::tests::test_decode_shl ... ok
+test emulator::tests::test_and_imm ... ok
+test emulator::tests::test_add_imm ... ok
+test emulator::tests::test_cmp_flags ... ok
+test emulator::tests::test_mov ... ok
+test emulator::tests::test_vaddps_simple ... ok
+test emulator::tests::test_vzeroupper ... ok
+test emulator::tests::test_xor_reg ... ok
+test trap::tests::test_handle_gp_fault ... ok
+test trap::tests::test_handle_non_vex_passthrough ... ok
+test trap::tests::test_handle_vex_invalid_opcode ... ok
+test decoder::tests::test_decode_add_reg_mem ... ok
+test decoder::tests::test_decode_mov ... ok
+test decoder::tests::test_decode_movdqa ... ok
+test emulator::tests::test_popcnt_gpr ... ok
+test emulator::tests::test_shl_imm ... ok
+test emulator::tests::test_sub_mem_unsupported ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+

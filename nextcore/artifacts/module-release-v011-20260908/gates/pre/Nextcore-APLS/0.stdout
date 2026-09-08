@@ -1,0 +1,59 @@
+
+running 49 tests
+test guest::tests::iso_boot_disk_rejected ... ok
+test mode::tests::probe_reports_arch_and_mode ... ok
+test guest::tests::launch_plan_roundtrip ... ok
+test guest::tests::launch_plan_decode_rejects_truncation ... ok
+test mode::tests::detect_is_environment_consistent ... ok
+test guest::tests::spec_validation ... ok
+test runner::tests::booleans_and_successful_process_do_not_prove_boot ... ok
+test runner::tests::invalid_request_creates_no_receipts ... ok
+test runner::tests::preflight_failure_and_missing_report_remain_failures ... ok
+test runner::tests::command_keeps_paths_as_single_arguments_and_requires_acknowledgement ... ok
+test runner::tests::evidence_verdict_requires_order_exit_and_backend_specific_runtime ... ok
+test guest::tests::xstate_domain_floor ... ok
+test guest::tests::unsupported_backend_fails_closed ... ok
+test runner::tests::recovery_bootx_and_zero_worker_exit_preserve_progress_but_not_boot ... ok
+test runner::tests::recovery_correlates_relative_request_with_canonical_linux_output ... ok
+test runner::tests::recovery_counts_completed_distinct_roles_and_preserves_post_bootx_panic ... ok
+test runner::tests::recovery_invocation_uses_only_supervisor_flags_and_preserves_path_arguments ... ok
+test runner::tests::recovery_wsl_uses_explicit_linux_supervisor_without_shell ... ok
+test runner::tests::wsl_is_explicit_exec_transport_without_a_shell ... ok
+test runner::tests::wrong_target_and_input_mutation_deny_even_populated_evidence ... ok
+test sgpu::tests::caps_roundtrip ... ok
+test sgpu::tests::command_roundtrip_all_variants ... ok
+test sgpu::tests::dispatch_query_caps_through_vf_frame ... ok
+test sgpu::tests::copy_buffer_executes_on_software_backend ... ok
+test runner::tests::recovery_transport_loss_and_missing_cleanup_never_confirm_linux_exit ... ok
+test sgpu::tests::dispatch_create_and_copy_via_wire_roundtrip ... ok
+test runner::tests::recovery_requires_a_unique_observed_qemu_identity_in_the_worker_session ... ok
+test sgpu::tests::unknown_opcode_rejected ... ok
+test sgpu::tests::present_without_backend_is_rejected ... ok
+test runner::tests::recovery_rejects_mismatched_envelope_and_raw_launch_identity ... ok
+test sgpu::tests::unknown_resource_rejected ... ok
+test vf_abi::tests::decode_rejects_wrong_size ... ok
+test sgpu::tests::unsupported_dispatch_has_no_success_frame_or_partial_copy ... ok
+test vf_abi::tests::encode_uses_little_endian ... ok
+test vf_abi::tests::layout_matches_vf_abi_header_offsets ... ok
+test runner::tests::recovery_request_rejects_bad_paths_and_inconsistent_budgets_before_io ... ok
+test vf_abi::tests::payload_bounds_checked ... ok
+test vf_abi::tests::roundtrip ... ok
+test vf_abi::tests::validate_shape_rejects_bad_family ... ok
+test vf_abi::tests::validate_shape_rejects_bad_magic ... ok
+test runner::tests::recovery_strict_future_evidence_requires_causality_integrity_and_clean_completion ... ok
+test vf_policy::tests::grant_range_check ... ok
+test vf_policy::tests::unsupported_platform_policy_rejected ... ok
+test vf_policy::tests::unknown_key_is_rejected ... ok
+test vf_policy::tests::bounded_key_set ... ok
+test vf_policy::tests::weakens_security_is_rejected ... ok
+test vf_policy::tests::golden_gate_template_parses_and_denies ... ok
+test vf_policy::tests::required_features_gate ... ok
+test vf_policy::tests::unregistered_guest_profile_rejected ... ok
+
+test result: ok. 49 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

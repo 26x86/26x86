@@ -1,0 +1,106 @@
+{
+  "repository": "26x86/Nextcore-ISE",
+  "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-ISE",
+  "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "previous_head": "073b8ced31d43c419ed2d9ea78d9ab8d8b372180",
+  "tag": "26x86-Nextcore-ISE-v0.1.1",
+  "source_files": [
+    {
+      "path": "Cargo.toml",
+      "source_path": "nextcore/crates/nextcore-ise/Cargo.toml",
+      "bytes": 182,
+      "sha256": "8e8da05240b454840d6f330dae3c6ec6fc6415db1cdf24ebc5c7c8395e64a6b4"
+    },
+    {
+      "path": "src/cpu_features.rs",
+      "source_path": "nextcore/crates/nextcore-ise/src/cpu_features.rs",
+      "bytes": 5109,
+      "sha256": "c4517ec467939ed6397b2bf8ebd4203c8a6987aa67f98bffbc30591a80e68558"
+    },
+    {
+      "path": "src/decoder.rs",
+      "source_path": "nextcore/crates/nextcore-ise/src/decoder.rs",
+      "bytes": 22210,
+      "sha256": "2cc0ce6db0b7be116166d57738eae9b0b5292bef4b2ca593365c7170f82538c9"
+    },
+    {
+      "path": "src/emulator.rs",
+      "source_path": "nextcore/crates/nextcore-ise/src/emulator.rs",
+      "bytes": 15219,
+      "sha256": "6fca3656d2c2cb3a5ba16ed9192087da1a4b5b086b6d6b3fe6581164e8a36fcf"
+    },
+    {
+      "path": "src/lib.rs",
+      "source_path": "nextcore/crates/nextcore-ise/src/lib.rs",
+      "bytes": 71,
+      "sha256": "145f9b74ed68d8914466b7d3f549ecc6bf78b794ae48e26a13c6290a719c7386"
+    },
+    {
+      "path": "src/trap.rs",
+      "source_path": "nextcore/crates/nextcore-ise/src/trap.rs",
+      "bytes": 2571,
+      "sha256": "d6d278cfb7005e041b0fbaf130e7a4e6983797c65c496ee6e5dabd4af543212a"
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 28,
+      "sha256": "4b0f1fc438f30f25abe421b7542e9f3803b8b5c15ca3695614222e2bc547a9fe"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 270,
+      "sha256": "0fe50d6d23050bebbe5a2df001dea4e8993ca4cb0f41a0dc58263c9071b51282"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 20,
+      "sha256": "9cc2c8cc102e0b2a0a177c8f594abc9b9776300a04473c24b45d52c1007a4119"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 182,
+      "sha256": "8e8da05240b454840d6f330dae3c6ec6fc6415db1cdf24ebc5c7c8395e64a6b4"
+    },
+    {
+      "path": "LICENSE.txt",
+      "bytes": 1851,
+      "sha256": "77c458ccb6116400cf960f8951630bc3b8b34731b56ffbd736b95c2b78449104"
+    },
+    {
+      "path": "README.md",
+      "bytes": 466,
+      "sha256": "c4e1e0638161694da4d01c6db7499cefa67dd43687b5515fe1c797ba6327a446"
+    },
+    {
+      "path": "src/cpu_features.rs",
+      "bytes": 5109,
+      "sha256": "c4517ec467939ed6397b2bf8ebd4203c8a6987aa67f98bffbc30591a80e68558"
+    },
+    {
+      "path": "src/decoder.rs",
+      "bytes": 22210,
+      "sha256": "2cc0ce6db0b7be116166d57738eae9b0b5292bef4b2ca593365c7170f82538c9"
+    },
+    {
+      "path": "src/emulator.rs",
+      "bytes": 15219,
+      "sha256": "6fca3656d2c2cb3a5ba16ed9192087da1a4b5b086b6d6b3fe6581164e8a36fcf"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 71,
+      "sha256": "145f9b74ed68d8914466b7d3f549ecc6bf78b794ae48e26a13c6290a719c7386"
+    },
+    {
+      "path": "src/trap.rs",
+      "bytes": 2571,
+      "sha256": "d6d278cfb7005e041b0fbaf130e7a4e6983797c65c496ee6e5dabd4af543212a"
+    }
+  ],
+  "transformed_source_files": [],
+  "forbidden_paths_present": false,
+  "existing_history_preserved": true,
+  "package_version_preserved": true
+}

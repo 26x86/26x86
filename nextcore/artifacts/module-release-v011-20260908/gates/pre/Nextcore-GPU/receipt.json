@@ -1,0 +1,34 @@
+{
+  "module": "Nextcore-GPU",
+  "phase": "pre",
+  "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "inventory_files_verified": 35,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 23.735,
+      "stdout": "0.stdout",
+      "stderr": "0.stderr"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--all-targets",
+        "--features",
+        "vulkan"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 19.5,
+      "stdout": "1.stdout",
+      "stderr": "1.stderr"
+    }
+  ],
+  "passed": true,
+  "guest_execution_claimed": false
+}

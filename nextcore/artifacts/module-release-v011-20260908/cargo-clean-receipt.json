@@ -1,0 +1,86 @@
+[
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-Core\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-Core\\target",
+    "exit_code": 0,
+    "output": "     Removed 1599 files, 902.7MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-Core\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-Core\\target",
+    "exit_code": 0,
+    "output": "     Removed 1599 files, 902.9MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-GPU\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-GPU\\target",
+    "exit_code": 0,
+    "output": "     Removed 1420 files, 648.3MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-GPU\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-GPU\\target",
+    "exit_code": 0,
+    "output": "     Removed 1420 files, 648.4MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-HAL\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-HAL\\target",
+    "exit_code": 0,
+    "output": "     Removed 623 files, 199.6MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-HAL\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-HAL\\target",
+    "exit_code": 0,
+    "output": "     Removed 623 files, 199.7MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-ISE\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-ISE\\target",
+    "exit_code": 0,
+    "output": "     Removed 179 files, 60.6MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-ISE\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-ISE\\target",
+    "exit_code": 0,
+    "output": "     Removed 179 files, 60.6MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-APLS\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-APLS\\target",
+    "exit_code": 0,
+    "output": "     Removed 776 files, 257.4MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-APLS\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-APLS\\target",
+    "exit_code": 0,
+    "output": "     Removed 776 files, 257.4MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-EFI\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-EFI\\target",
+    "exit_code": 0,
+    "output": "     Removed 77 files, 84.7MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-EFI\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-EFI\\target",
+    "exit_code": 0,
+    "output": "     Removed 77 files, 84.7MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-Tool\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-Tool\\target",
+    "exit_code": 0,
+    "output": "     Removed 923 files, 480.2MiB total"
+  },
+  {
+    "manifest": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-Tool\\Cargo.toml",
+    "target": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\verification\\Nextcore-Tool\\target",
+    "exit_code": 0,
+    "output": "     Removed 923 files, 480.2MiB total"
+  }
+]

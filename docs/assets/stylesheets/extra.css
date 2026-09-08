@@ -23,6 +23,11 @@
   margin-bottom: 1.2rem;
 }
 
+/* Markdown adds a paragraph; keep its links as the existing flex items. */
+.hero-actions > p {
+  display: contents;
+}
+
 .md-nav__title {
   font-weight: 700;
 }

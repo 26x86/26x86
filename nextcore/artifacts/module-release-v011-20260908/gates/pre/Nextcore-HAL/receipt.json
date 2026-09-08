@@ -1,0 +1,21 @@
+{
+  "module": "Nextcore-HAL",
+  "phase": "pre",
+  "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "inventory_files_verified": 17,
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 23.875,
+      "stdout": "0.stdout",
+      "stderr": "0.stderr"
+    }
+  ],
+  "passed": true,
+  "guest_execution_claimed": false
+}

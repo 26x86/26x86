@@ -1,0 +1,109 @@
+[
+  {
+    "module": "Core",
+    "commands": [
+      {
+        "command": "cargo test --all-targets",
+        "test_count_available": true,
+        "passed": 180,
+        "failed": 0,
+        "ignored": 0,
+        "exit_code": 0
+      },
+      {
+        "command": "cargo check --no-default-features",
+        "test_count_available": false,
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "module": "GPU",
+    "commands": [
+      {
+        "command": "cargo test --all-targets",
+        "test_count_available": true,
+        "passed": 94,
+        "failed": 0,
+        "ignored": 0,
+        "exit_code": 0
+      },
+      {
+        "command": "cargo test --all-targets --features vulkan",
+        "test_count_available": true,
+        "passed": 97,
+        "failed": 0,
+        "ignored": 0,
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "module": "HAL",
+    "commands": [
+      {
+        "command": "cargo test --all-targets",
+        "test_count_available": true,
+        "passed": 32,
+        "failed": 0,
+        "ignored": 0,
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "module": "ISE",
+    "commands": [
+      {
+        "command": "cargo test --all-targets",
+        "test_count_available": true,
+        "passed": 26,
+        "failed": 0,
+        "ignored": 0,
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "module": "APLS",
+    "commands": [
+      {
+        "command": "cargo test --all-targets",
+        "test_count_available": true,
+        "passed": 49,
+        "failed": 0,
+        "ignored": 0,
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "module": "EFI",
+    "commands": [
+      {
+        "command": "cargo check --target x86_64-unknown-uefi --all-features",
+        "test_count_available": false,
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "module": "Tool",
+    "commands": [
+      {
+        "command": "cargo test --all-targets",
+        "test_count_available": true,
+        "passed": 17,
+        "failed": 0,
+        "ignored": 1,
+        "exit_code": 0
+      }
+    ]
+  }
+]

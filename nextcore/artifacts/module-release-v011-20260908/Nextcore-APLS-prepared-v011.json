@@ -1,0 +1,163 @@
+{
+  "repository": "26x86/Nextcore-APLS",
+  "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-v011-20260908-153614\\Nextcore-APLS",
+  "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+  "previous_head": "76a0b8c32f9fa5f4408cf8dc678bdea78905113b",
+  "tag": "26x86-Nextcore-APLS-v0.1.1",
+  "source_files": [
+    {
+      "path": "Cargo.toml",
+      "source_path": "nextcore/crates/nextcore-apls/Cargo.toml",
+      "bytes": 315,
+      "sha256": "8b12ecd39e94d9816205a6ee877fae25bdf3d87b743adea0541cdf325af529e1"
+    },
+    {
+      "path": "IMPLEMENTATION.md",
+      "source_path": "nextcore/crates/nextcore-apls/IMPLEMENTATION.md",
+      "bytes": 6069,
+      "sha256": "6ee87162106a60e16f78d2287a6ab663f8785303b08c6fde08f90b94c02d2ecd"
+    },
+    {
+      "path": "examples/run_host.rs",
+      "source_path": "nextcore/crates/nextcore-apls/examples/run_host.rs",
+      "bytes": 914,
+      "sha256": "cb821b3ff001ae627e85f4e62800842330923c7e746d2ead51f2ebcd0db78e98"
+    },
+    {
+      "path": "src/guest.rs",
+      "source_path": "nextcore/crates/nextcore-apls/src/guest.rs",
+      "bytes": 13397,
+      "sha256": "d42f2766d7c6c7679d87a97dcd58bea112da01cc523bfeaeb28c689181a6a16a"
+    },
+    {
+      "path": "src/lib.rs",
+      "source_path": "nextcore/crates/nextcore-apls/src/lib.rs",
+      "bytes": 419,
+      "sha256": "6a7435597d3e55166795632a8d4514136da8695f840c946492f8c58465f38ad2"
+    },
+    {
+      "path": "src/mode.rs",
+      "source_path": "nextcore/crates/nextcore-apls/src/mode.rs",
+      "bytes": 2314,
+      "sha256": "0fa264c23e3835987d52e469c10515173afcb72df83b805aeb5e38dfa845b0e8"
+    },
+    {
+      "path": "src/runner.rs",
+      "source_path": "nextcore/crates/nextcore-apls/src/runner.rs",
+      "bytes": 59834,
+      "sha256": "7149a7d1c05292fb8d0914d894aaf3e8b81536962d806fea1524b0d9b08348d7"
+    },
+    {
+      "path": "src/sgpu.rs",
+      "source_path": "nextcore/crates/nextcore-apls/src/sgpu.rs",
+      "bytes": 22575,
+      "sha256": "46b9a649ae8f8c292f1440941ffcc44e603b6baf3b3fdfa854d52fb25783cd11"
+    },
+    {
+      "path": "src/vf_abi.rs",
+      "source_path": "nextcore/crates/nextcore-apls/src/vf_abi.rs",
+      "bytes": 10042,
+      "sha256": "6367ae2610aeabf4e18f60e9b97d39363571a51bccd701e41525310f13de91ff"
+    },
+    {
+      "path": "src/vf_policy.rs",
+      "source_path": "nextcore/crates/nextcore-apls/src/vf_policy.rs",
+      "bytes": 13970,
+      "sha256": "1f638f8ba9d8283d060402ccde1005a87a0c882cf7a0f8cb42197b90b3d56b1f"
+    },
+    {
+      "path": "tests/data/golden-gate.template.plist",
+      "source_path": "nextcore/crates/nextcore-apls/tests/data/golden-gate.template.plist",
+      "bytes": 1397,
+      "sha256": "b22d75eef97728728894e074072b8ce0ed0730e968ce16d8af732ee35f3df438"
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 28,
+      "sha256": "4b0f1fc438f30f25abe421b7542e9f3803b8b5c15ca3695614222e2bc547a9fe"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 271,
+      "sha256": "c38deae71e24d724b4e1da4455cdddd9629062f7940bdaf6311d50f67b01c443"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 20,
+      "sha256": "9cc2c8cc102e0b2a0a177c8f594abc9b9776300a04473c24b45d52c1007a4119"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 375,
+      "sha256": "477fd2e587d1ba90850cd58f086064a8ef0c2cc80c03b299d3aeb70b906d2738"
+    },
+    {
+      "path": "IMPLEMENTATION.md",
+      "bytes": 6069,
+      "sha256": "6ee87162106a60e16f78d2287a6ab663f8785303b08c6fde08f90b94c02d2ecd"
+    },
+    {
+      "path": "LICENSE.txt",
+      "bytes": 1851,
+      "sha256": "77c458ccb6116400cf960f8951630bc3b8b34731b56ffbd736b95c2b78449104"
+    },
+    {
+      "path": "README.md",
+      "bytes": 580,
+      "sha256": "e6fb048029a5ff2ddb2bd41473334192d2adb6df4945b8c141a7707f4258f6db"
+    },
+    {
+      "path": "examples/run_host.rs",
+      "bytes": 914,
+      "sha256": "cb821b3ff001ae627e85f4e62800842330923c7e746d2ead51f2ebcd0db78e98"
+    },
+    {
+      "path": "src/guest.rs",
+      "bytes": 13397,
+      "sha256": "d42f2766d7c6c7679d87a97dcd58bea112da01cc523bfeaeb28c689181a6a16a"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 419,
+      "sha256": "6a7435597d3e55166795632a8d4514136da8695f840c946492f8c58465f38ad2"
+    },
+    {
+      "path": "src/mode.rs",
+      "bytes": 2314,
+      "sha256": "0fa264c23e3835987d52e469c10515173afcb72df83b805aeb5e38dfa845b0e8"
+    },
+    {
+      "path": "src/runner.rs",
+      "bytes": 59834,
+      "sha256": "7149a7d1c05292fb8d0914d894aaf3e8b81536962d806fea1524b0d9b08348d7"
+    },
+    {
+      "path": "src/sgpu.rs",
+      "bytes": 22575,
+      "sha256": "46b9a649ae8f8c292f1440941ffcc44e603b6baf3b3fdfa854d52fb25783cd11"
+    },
+    {
+      "path": "src/vf_abi.rs",
+      "bytes": 10042,
+      "sha256": "6367ae2610aeabf4e18f60e9b97d39363571a51bccd701e41525310f13de91ff"
+    },
+    {
+      "path": "src/vf_policy.rs",
+      "bytes": 13970,
+      "sha256": "1f638f8ba9d8283d060402ccde1005a87a0c882cf7a0f8cb42197b90b3d56b1f"
+    },
+    {
+      "path": "tests/data/golden-gate.template.plist",
+      "bytes": 1397,
+      "sha256": "b22d75eef97728728894e074072b8ce0ed0730e968ce16d8af732ee35f3df438"
+    }
+  ],
+  "transformed_source_files": [
+    "Cargo.toml"
+  ],
+  "forbidden_paths_present": false,
+  "existing_history_preserved": true,
+  "package_version_preserved": true
+}
