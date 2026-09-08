@@ -16,19 +16,23 @@ AMD64↔Apple Silicon HAL 및 필수 Metal 가속**, **macOS 26 Tahoe의
 
 추가 사용자 결정: 제품 브랜딩은 **NextCore**, 실제 EFI 피커 필수, x86 작업은
 서브에이전트가 지속하고 검증된 진척마다 로컬 commit한다. root가 공유 index를
-조정하며 push는 승인되지 않았다. Design/Prompts는 picker 담당에게 위임됐다.
+조정한다. 이어 사용자는 검증된 진척의 push와 원격·조직 저장소 최신화도
+명시 승인했다. 본체는 PR/CI를 거쳐 반영하고 모듈은 기존 history/tag를 보존해
+새 버전으로 동기화한다. Design/Prompts는 picker 담당에게 위임됐다.
 
 | 계층 | 확인된 것 | 아직 아닌 것 |
 | --- | --- | --- |
 | x86 UEFI 자체 handoff | authored OVMF probe에서 allocation, copy/zero/readback, flat DT, 32-bit transition 통과 | 자체 KC loader의 실제 x86_64 XNU 진입 |
 | local virtualization | WSL KVM 모듈 적재 후 API 12·query-kvm·실제 OVMF Shell 실행, developer 전용 device ACL | 이 결과만으로 macOS boot 판정 |
 | x86 UEFI → host HAL | BP19 실제 OVMF RSDP+7 SDT+5 PCI header 수집/파싱, exit 67와 원본 hash 유지 | XNU platform provider, AML 실행, 게스트 장치 게시, 물리 하드웨어 |
-| Tahoe 외부 reference | CMCI 레지스터/인터럽트 실측 후 원본 XNU consumer와 idle PC 일치; launchd·recoveryosd·WindowServer 실행 | 검정 화면 해소, native Nextcore HAL, macOS 전체 부팅 |
-| Tahoe native EFI | production ConsoleControl → 원본 booter → 실제 XNU/launchd PID 1, PC 256B가 원본 KC와 유일하게 일치; authored 17 checks와 두 child 반환 통과 | restore-datapartition exit(1) userspace panic 해결, 전체 native HAL/GUI/Metal |
+| Tahoe 외부 reference | 원본 XNU/launchd/WindowServer와 읽을 수 있는 복구 GUI; Terminal에서 실제 Metal probe 실행 | 전체 OS 설치, Metal device/compute 성공 |
+| Tahoe native EFI | ConsoleControl → 원본 booter → 실제 XNU, 8GiB·SMC·USB 입력 조건에서 읽을 수 있는 언어 선택/복구 메뉴와 실제 조작 | 자체 KC loader 진입, 전체 native HAL/Metal |
 | native KC 준비 | 67,584,000-byte 실제 EFI pages 배치/readback/해제, 65,260 classic host 적용·전체 readback, 401,606 chains/header 보존, rev1 boot_args codec, core 142 tests | EFI relocation 연결, entry/slide/provider 계약, native XNU 실행 |
 | ARM recovery | DFU, iBEC endpoint/prompt, 5 restore role, `bootx` ACK 관측 | XNU, userspace, Metal, macOS boot |
 | ARM firmware | `bootx` 뒤 4-byte MMIO decode failure를 same-event trace로 확인 | 장치 register/access contract 또는 안전한 장치 모델 |
-| graphics | 공개 NextCore compute API로 Intel GPU의 512값 readback·실제 fence·오류 거부; x86_64/ARM64 guest Metal probe 빌드 | guest driver/Metal 실행, native macOS graphics acceptance |
+| ARM KC 준비 | 별도 1152B boot_args codec/C layout, 실제 ARM64E KC 81,002,496B 불변 staging·216 headers/1,096 views readback | 물리 배치/CPU/PAC/DT 연결, 실제 27 XNU 진입 |
+| firmware 피커 | NextCore GOP 디자인, 방향키·선택된 child 실행·Esc·text fallback 실제 OVMF 검증 | 자동 OS volume discovery |
+| graphics | Intel host GPU 512값/fence; 두 guest probe 빌드, 실제 Tahoe Recovery 실행은 no-metal-device/exit1 | guest Metal device와 GPU command completion/readback |
 
 현재 Windows host와 `zuzunza`, `koreaidc2`는 x86_64다. native Apple Silicon
 macOS host가 없으므로 Virtualization.framework 기반 ARM guest boot는 이 환경에서
@@ -58,8 +62,10 @@ macOS host가 없으므로 Virtualization.framework 기반 ARM guest boot는 이
 1. 실제 x86_64 Tahoe 26.6.2 BootKC가 이제 native NextCore production
    ConsoleControl → 원본 booter 경로에서도 실행됐다. 관측 PC의 256B가
    원본 executable segment와 유일하게 일치하고 linked VA + 실제 slide가 PC와
-   같다. launchd PID 1까지 도달했으며 다음 실패는 restore-datapartition exit(1)
-   userspace panic이다. corrected fresh 관측은 22.0017초 자연 종료/원본 hash 유지/
+   같다. 초기 restore-datapartition exit(1)은 2GiB VM에서 2.5GiB tmpfs를
+   요구한 메모리 조건이었다. 8GiB 단일 변경으로 통과했고, 표준 SMC와 검증된 USB
+   keyboard/tablet를 차례로 추가해 정상 언어 선택 및 Recovery 메뉴를 실제 조작했다.
+   초기 corrected fresh 관측은 22.0017초 자연 종료/원본 hash 유지/
    cleanup 정상이다. 외부 OpenCore와 diagnostic provider/table hook은 이 경로에
    없다. Shell/HFS helper와 원본 Apple booter는 남아 있으므로 자체 KC loader
    완료와 구분한다. DataHub/SMBIOS 전체 구현을 초기 실패 원인으로 단정하지 않는다.
@@ -73,11 +79,15 @@ macOS host가 없으므로 Virtualization.framework 기반 ARM guest boot는 이
    변경으로 launchd PID 1과 복구 서비스 실행에 도달했다. CMCI 부재 뒤 발생한
    MCEReporter page fault는 실제 KVM capability/CTL2/CMCI interrupt 검증을 거친
    선택적 QEMU 구현으로 통과했다. 원본 XNU consumer도 CMCI=true를 읽었고
-   recoveryosd PID 65/WindowServer PID 81이 실행됐다. 298초 관측의 화면은 검정이다.
+   recoveryosd PID 65/WindowServer PID 81이 실행됐다. 초기 298초 화면은 검정이었으나
+   표준 QEMU SMC만 추가한 대조 실행에서 194.7초에 읽을 수 있는 복구 GUI를 확인했다.
    외부 Reims+CMCI 11.1 빌드와 guest MSR probe가 통과했다. Reims PCI 장치는
    존재하나 원본 recovery에 AppleParavirtGPU/IOGPUFamily가 없어 driver attach와
    Metal은 확인되지 않았다. 공식 전체 Tahoe installer를 검증해 full OS 경로를
-   진행한다. AHCI Port 2 abort는 원본 복구 디스크가 아닌 자동 생성된
+   진행한다. 전체 공식 18,384,624,402B installer는 XAR 서명·Apple PKI chain·모든
+   entry/chunk checksum 검증을 통과했다. 실제 Recovery Terminal에서 guest Metal
+   probe는 no-metal-device/exit1을 반환했고 전체 NDJSON/실행 파일 readback을 보존했다.
+   AHCI Port 2 abort는 원본 복구 디스크가 아닌 자동 생성된
    빈 CD-ROM에 대응한다는 QMP 실측이 있다.
    WSL 재시작 후 device가 없으면 설치 모듈의 적재 여부를 먼저 확인한다.
 4. graphics는 public ABI와 실제 GPU submit/readback으로 진행한다. 과거의
@@ -85,7 +95,8 @@ macOS host가 없으므로 Virtualization.framework 기반 ARM guest boot는 이
    portable Mesa dzn을 빌드해 Intel 8086:7D41 실제 GPU를 선택하고 공개
    `ComputePipelineManager`의 두 입력 세트 512값 readback을 확인했다.
    기본 backend와 미연결 VirtualMetalDevice/SGPU의 compute·render·present는
-   실행 없이 완료하지 않는다. guest API/driver 연결과 Metal은 아직 미검증이다.
+   실행 없이 완료하지 않는다. guest Metal loader/FFI 실행은 확인했으나 device가
+   없어 compute는 수행되지 않았다. 전체 OS의 driver 연결과 Metal이 다음 대상이다.
 
 ## 모듈 배포 상태
 

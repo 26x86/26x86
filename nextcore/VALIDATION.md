@@ -7,10 +7,44 @@
 
 첨부 세션의 우선순위인 APLS 실행과 QEMU/OVMF 검증을 병렬로 이어서 실제
 프로세스/펌웨어까지 연결했다. 외부 reference와 native NextCore production EFI
-provider 경로 모두 실제 Tahoe XNU 및 초기 userspace 실행을 확인했다. native
-경로는 restore-datapartition userspace panic으로 중단된다. 자체 KC loader 진입,
+provider 경로 모두 실제 Tahoe XNU, userspace와 읽을 수 있는 Recovery GUI를 확인했다.
+native 경로의 restore-datapartition panic은 VM RAM 조건을 수정해 통과했다. 자체 KC loader 진입,
 전체 native HAL, macOS 전체 부팅과 Metal은 아직 완료되지 않았다.
-`docs/NEXTCORE_BUILD_PLAN.md`의 각 BP가 실행 계약이며 최신 결과는 아래 BP20이다.
+`docs/NEXTCORE_BUILD_PLAN.md`의 각 BP가 실행 계약이며 최신 진척은 아래 BP21/BP22다.
+
+## BP21/BP22 최신 통합 — 2026-09-08
+
+- **EFI 피커·브랜딩**: GOP dark/mint tile, 동일 volume의 명시 EFI 항목,
+  방향키/Tab/Home/End·Enter·Esc 및 text fallback을 구현했다. 실제 OVMF에서
+  두 번째 child와 UTF16 load options, 취소, 기존 auto boot, GOP 없는 fallback을
+  검증했다. core 153개 및 독립 crate 복사 153개, Python policy 28개 통과.
+  최종 EFI SHA256 `8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96`.
+  공개 이미지 `resources/branding/nextcore-picker.png`는 실제 OVMF 화면이다.
+  제품 표기는 NextCore로 통일했고 외부 부품의 실제 이름/출처/라이선스는 보존했다.
+- **Tahoe native 복구 GUI**: 이전 2GiB VM이 2.5GiB tmpfs 요청을 충족하지 못한
+  로그를 근거로 RAM만 8GiB로 올려 launchd/WindowServer까지 진행했다. SMC 추가 뒤
+  no-USB 화면은 210초에도 입력 pairing 안내였고 텍스트는 정상이다. USB keyboard/
+  tablet만 추가한 fresh COW에서는 언어 선택→Recovery 메뉴와 실제 입력이 통과했다.
+  이는 기존 BP20-J EFI를 사용한 조건 대조이며 새 BP21 EFI 직접 macOS 검증과
+  섞지 않는다. 원본·COW·QMP 수명 증거는 `_isolated/nextcore/native-userspace-recovery-20260908/`.
+- **실제 guest Metal 실행**: 외부 reference의 Tahoe 26.6.2/25G83 Recovery Terminal에서
+  13,136B x86 probe가 start→no-metal-device를 기록하고 exit1로 종료했다. guest가
+  실행 파일을 새 파일로 복사했고 host 전체 SHA256이
+  `eae69343a05e096eb2299b6c92e3a15a15b20123d9b23eac346e56cd6e50791b`와 일치했다.
+  전체 NDJSON/exit/version/파일 readback은 격리에 있다. Metal device·compute·readback
+  성공은 false다. 공식 full installer 검증 후 전체 OS/driver 경로를 진행 중이다.
+- **BP22-C ARM64 boot_args**: 공개 XNU의 별도 1152B LE wire, checked PA/KVA·DRAM·DT·
+  NUL/overlap 검사와 15개 tests를 구현했다. 실제 C LP64 sizeof/offsetof와 Darwin ARM64
+  compile, no_std 통과. [공개 계약](artifacts/arm64-boot-args-contract-20260908/README.md).
+- **BP22-D ARM64/ARM64E KC**: 명시 CPU/subtype·단일 ARM thread subset·4B entry 범위를
+  검사하고 Intel 기본 API를 유지한다. 16KiB span의 host staging은 outer 소유 byte와
+  모든 member view를 전량 대조하며 chain/PAC를 적용하지 않는다. 실제 27 원본
+  81,002,496B/7 outer segments/216 headers/1,096 views, 중복 view 비교 총
+  3,463,261,621B가 6.594초에 통과했다. 원본과 실행 도구 hash 전후가 같다.
+  원본 주소·metadata는 격리에 보존한다. host 배치는 guest 물리 배치나 진입이 아니다.
+
+사용자는 검증된 진척의 로컬 commit과 push·원격/조직 최신화를 승인했다.
+본체는 PR/CI, 독립 모듈은 기존 history와 release tag를 보존하는 방식으로 반영한다.
 
 재개 시 존재하던 7-crate workspace와 dirty 변경을 보존했다. 초기 실행 당시의
 로컬 제외 정책과 달리 현재 Nextcore 소스는 Git 추적 대상이며 `nextcore/target/`과
