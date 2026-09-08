@@ -53,7 +53,7 @@ cargo build --locked --release --manifest-path nextcore/Cargo.toml \
   --features arm-jit-probe,arm-jit-trace
 cp "$OUT/target/x86_64-unknown-uefi/release/NXARMJIT.efi" \
   "$OUT/bin/NXARMJIT-default.efi"
-python3 nextcore/artifacts/arm-tiered-diagnostic-20260909/verify_tiered_budget_ovmf.py \
+python3 nextcore/artifacts/arm-tiered-trace-20260909/verify_tiered_budget_ovmf.py \
   --tools nextcore/tools --efi "$OUT/bin/NXARMJIT-tiered.efi" \
   --default-efi "$OUT/bin/NXARMJIT-default.efi" --output "$OUT/authored"
 ```
@@ -81,3 +81,7 @@ reset. The diagnostic still lacks complete SPTM arguments/services and a
 resolved original runtime device tree; it does not establish native MMU
 integration, normal macOS boot or Metal acceleration. A larger instruction
 budget does not supply any of those prerequisites.
+
+Publication correction: the reproduction command now names the actual parent
+artifact directory. Only this README and its file-index digest changed; the
+historical source, provenance and execution receipts are unchanged.

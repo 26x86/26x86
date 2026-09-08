@@ -1,0 +1,71 @@
+{
+  "schema": "nextcore.efi-provider-observations.v1",
+  "passed": false,
+  "cases": [
+    {
+      "kind": "scalar",
+      "name": "byte-signed",
+      "passed": false,
+      "checks": {
+        "diagnostic_completed": true,
+        "inputs_preserved": true,
+        "provider_build_marker": false,
+        "provider_result_present": false,
+        "one_native_entry_per_executed_instruction": false,
+        "provider_abi": false,
+        "provider_provider_status": false,
+        "provider_fetch_requests": false,
+        "provider_data_requests": false,
+        "provider_completed_data_operations": false,
+        "provider_last_address": false,
+        "provider_guest_far": false
+      },
+      "expected": {
+        "abi": 1,
+        "provider_status": 0,
+        "fetch_requests": 18,
+        "data_requests": 6,
+        "completed_data_operations": 6,
+        "last_address": 1107313732,
+        "guest_far": 0
+      },
+      "observed": {},
+      "execution": {
+        "status": 1,
+        "retired": 18,
+        "pc": 1107313736,
+        "compiled_blocks": 3,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 129,
+          "x1": 18446744073709551489,
+          "x2": 4294967169,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "serial_sha256": "9334ab7c83d2db0bd792e2fe330855614a137571beda1eed1a936a7048d7344e",
+      "report_sha256": "deddae68c9aab6e296f14b40e3a36229a018265e18d139f64b9055f4dd22be7d"
+    }
+  ],
+  "legacy_fixture_verifiers_passed": true,
+  "actual_win64_c_rust_callback_observed": false,
+  "sp_alignment_far_asserted": false,
+  "guest_ram_after_fault_observed": false,
+  "physical_machine_efi_verified": false,
+  "mmu_enabled_verified": false,
+  "macos_boot_verified": false,
+  "guest_metal_verified": false
+}

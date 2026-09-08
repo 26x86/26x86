@@ -5,6 +5,11 @@
 
 ## BP30 — 실제 EFI 메모리 서비스와 서브모듈 연결
 
+[새 재귀 통합 검증](artifacts/integration-bp30-20260909/README.md)은 구현 commit
+`ea0a62e8`에서476개 workspace,149개 Python,25개 GUI,91개 참조,158개 ARM 오류 대조와
+실제 x86 EFI65개/별도 CLI 거부6개를 통과했다. native/provider/ABI, Vulkan119개,
+no_std 빌드, 펌웨어 패키징과 Clippy도 통과했다. 최종 증거 커밋은 별도 원격 검증한다.
+
 별도 no_std 서비스는 ISE 모듈의 정식 Git 소스로 유지한다. native C 진입은 guest RAM
 포인터를 받지 않고, 모든 fetch/scalar/pair 접근을 Rust 콜백으로 전달한다. 요청/응답/결과는
 80/80/192-byte ABI이며, 쌍 전체 범위를 검사한 뒤에만 메모리를 수정한다. 지원하지 않는

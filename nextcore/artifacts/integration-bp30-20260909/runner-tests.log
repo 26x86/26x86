@@ -1,0 +1,9 @@
+test_captured_actual_direct_bypass_is_accepted (__main__.BypassReceiptTests.test_captured_actual_direct_bypass_is_accepted) ... ok
+test_exit_one_with_corrupt_receipt_is_rejected (__main__.BypassReceiptTests.test_exit_one_with_corrupt_receipt_is_rejected) ... ok
+test_exit_one_without_receipt_is_rejected (__main__.BypassReceiptTests.test_exit_one_without_receipt_is_rejected) ... ok
+test_other_failures_cannot_substitute_for_provider_rejection (__main__.BypassReceiptTests.test_other_failures_cannot_substitute_for_provider_rejection) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.046s
+
+OK

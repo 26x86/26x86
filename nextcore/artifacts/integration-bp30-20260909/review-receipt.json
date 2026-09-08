@@ -1,0 +1,103 @@
+{
+  "schema": "nextcore.bp30-final-independent-review.v1",
+  "parent_reviewed_revision": "ea0a62e8e75efd517702873535dc1dfb0ffc6b42",
+  "source_and_artifact_files_hashed": 150,
+  "historical_bundle_file_count": 134,
+  "all_baseline_bundle_hashes_match": true,
+  "fast_regression_tests_passed": 19,
+  "fast_checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tests/test_arm_memory_provider_runner.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "bypass-tests.log"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tests/test_nextcore_package_policy.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "package-policy-tests.log"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "Tools/verify_nextcore_submodules.py",
+        "--require-clean"
+      ],
+      "exit_code": 0,
+      "log": "module-verifier.log"
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "documentation_reproduction",
+      "path": "nextcore/artifacts/arm-tiered-trace-20260909/README.md",
+      "baseline_line": 56,
+      "description": "Published reproduction command referenced nonexistent arm-tiered-diagnostic directory. Actual artifact is arm-tiered-trace.",
+      "root_correction_observed": true,
+      "status": "resolved in root pending documentation changes"
+    }
+  ],
+  "root_changes_observed_during_review": [
+    {
+      "path": "nextcore/artifacts/arm-tiered-trace-20260909/README.md",
+      "before_sha256": "a909681a1558f09ca3131de284bfd0578adc3ce335be1779ea22ae9602d9e5ce",
+      "after_sha256": "9990ed536b2f81601f7dac7a29bb49c5860cc710c3b024c62b45dc90bd641b69"
+    },
+    {
+      "path": "nextcore/artifacts/arm-tiered-trace-20260909/files.json",
+      "before_sha256": "d2ddd8f4f9a3c269780cadb1417e78b3c1b6eb286628e9e7c963161516b8af56",
+      "after_sha256": "41a21569f75a1d64e1139ad86ce990272be12af340f6d1fea1d28dbfe5411e58"
+    }
+  ],
+  "new_runtime_verifier_unresolved_findings": [],
+  "new_original_asset_or_private_coordinate_leaks_found": false,
+  "new_binary_assets_found": false,
+  "private_asset_inputs_opened": false,
+  "ovmf_repeated": false,
+  "normal_entry_public_claims_checked": [
+    {
+      "claim": "SPTM startup arguments and initial RX scope",
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/osfmk/arm64/sptm/start_sptm.s#L32"
+    },
+    {
+      "claim": "SPTM/PPL build-selected startup",
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/osfmk/conf/files.arm64#L14"
+    },
+    {
+      "claim": "Mutually exclusive build options",
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/config/MASTER#L295"
+    },
+    {
+      "claim": "Old boot-argument profile command line",
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/pexpert/pexpert/arm64/boot.h#L16"
+    },
+    {
+      "claim": "Later public header external ABI dependency",
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/pexpert/pexpert/arm64/boot.h#L24"
+    },
+    {
+      "claim": "Runtime DT full property length",
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/pexpert/gen/device_tree.c#L64"
+    },
+    {
+      "claim": "Dated SoC table and limits",
+      "url": "https://support.apple.com/guide/security/apple-soc-security-sec87716a080/web"
+    }
+  ],
+  "limitations": [
+    "Reviewed source/receipt consistency and public references only; did not independently read original IPSW or verify private provenance assertions.",
+    "No additional firmware, physical hardware, macOS boot, native M=1 or guest Metal validation was performed.",
+    "Root fresh recursive integration and final exact-head publication validation remain separate."
+  ]
+}

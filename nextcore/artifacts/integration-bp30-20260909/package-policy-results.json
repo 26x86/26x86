@@ -1,0 +1,29 @@
+{
+  "schema": "nextcore.package-policy-proof.v1",
+  "passed": true,
+  "policy_tests": 15,
+  "actual_cargo_duplicate_negative_control": true,
+  "temp_git_refresher_conflict_preserves_metadata": true,
+  "resolution": [
+    {
+      "platform": "x86_64-unknown-linux-gnu",
+      "workspace_members": 7,
+      "owned_packages": 8,
+      "memory_service_local_and_selected": true
+    },
+    {
+      "platform": "x86_64-unknown-uefi",
+      "workspace_members": 7,
+      "owned_packages": 8,
+      "memory_service_local_and_selected": true
+    }
+  ],
+  "source_sha256": {
+    "Tools/nextcore_package_policy.py": "69c11b69d0ac160a30f2028e0616e44771c0445afe5d8c8af2eb6cfd00d7682c",
+    "Tools/verify_nextcore_submodules.py": "249e22f9d137a4b350b1367243f3c1d2319977a31a70121ba0e47f9f0fd98740",
+    "Tools/refresh_nextcore_module_metadata.py": "ed0f556117313ae2257a69c587ac8130234d7fc7e9e3824dc779ccfd6be6ab64",
+    "tests/test_nextcore_package_policy.py": "a61051815469e08ba8934bf08b8994b57fd2815301355feb1b79306e65690410"
+  },
+  "real_module_metadata_modified_by_tests": false,
+  "gitlinks_or_pins_modified_by_agent": false
+}

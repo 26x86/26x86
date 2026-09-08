@@ -1669,3 +1669,11 @@ supports the current selected inputs, while exact target boot_args/SPTM layout,
 live state and runtime-DT providers remain unresolved. No native M=1 or OS/Metal
 success is asserted. BP31 conditional compares are independently implemented in
 a separate frozen ISE worktree and are not part of this BP30 integration.
+
+
+BP30 integration closure: implementation ea0a62e8 passes a clean fresh recursive
+clone with476 workspace/149 Python/25 GUI/91 reference tests,158 captured Arm
+fault comparisons,65 actual x86 EFI cases and6 separate CLI rejections. Native
+provider/no_std/ABI, legacy scalar/pair/PAC/MMU/Vulkan and firmware packaging
+remain passing. Full receipts are in artifacts/integration-bp30-20260909. Final
+evidence/documentation receives its own canonical recursive checkout and CI.

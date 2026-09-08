@@ -6,6 +6,11 @@
 
 ## BP30 최신 개발 상태
 
+상위 PR #12의 구현 commit ea0a62e8에서 새 재귀 클론 검증이 통과했다: workspace476,
+Python149, GUI25, 실제 x86 EFI65, 별도 CLI 거부6, 참조91 및 ARM 오류 대조158개.
+검증 기록은 `nextcore/artifacts/integration-bp30-20260909`에 보존한다. 최종 증거/문서
+커밋은 별도의 정식 GitHub 재귀 클론과 최종 CI를 거쳐 병합한다.
+
 BP29는 상위 PR #11/main7db1a709로 병합했고 최종 CI27개 및 공개 재귀 클론이 통과했다.
 BP30은 ISE의 no_std Rust 메모리 서비스를 실제 x86 EFI에 연결한다. Core40833dc,
 ISE41e8997, EFI2414067, Tool926c777의 변경 PR도 각각 main에 병합했다. 상위 통합에서는

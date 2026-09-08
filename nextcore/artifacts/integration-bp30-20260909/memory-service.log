@@ -1,0 +1,19 @@
+   Compiling nextcore-memory-service v0.1.0 (/home/sharh/work/integration-validation-bp30-final-20260909/26x86/nextcore/crates/nextcore-ise/runtime/memory-service)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.62s
+     Running unittests src/lib.rs (nextcore/crates/nextcore-ise/runtime/memory-service/target/debug/deps/nextcore_memory_service-960e97a302a5bbff)
+
+running 5 tests
+test tests::all_widths_and_counts_preflight_and_transfer_raw_elements ... ok
+test tests::device_alignment_and_pc_alignment_have_exact_syndromes ... ok
+test tests::malformed_requests_are_rejected_without_effects ... ok
+test tests::rejected_pair_never_partially_writes_the_first_element ... ok
+test tests::unsupported_modes_and_backing_do_not_invent_guest_faults ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests nextcore_memory_service
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

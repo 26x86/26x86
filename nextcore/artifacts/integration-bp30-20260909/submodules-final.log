@@ -1,0 +1,88 @@
+{
+  "schema": "nextcore-submodules/2",
+  "modules": [
+    {
+      "crate": "nextcore-core",
+      "path": "nextcore/crates/nextcore-core",
+      "url": "https://github.com/26x86/Nextcore-Core.git",
+      "commit": "40833dc29d8bcd2976d0a13c2f120533d02500c4",
+      "packages": [
+        "nextcore-core"
+      ]
+    },
+    {
+      "crate": "nextcore-efi",
+      "path": "nextcore/crates/nextcore-efi",
+      "url": "https://github.com/26x86/Nextcore-EFI.git",
+      "commit": "24140677e8fb806f701d1cdc8cdea10fd161445f",
+      "packages": [
+        "nextcore-efi"
+      ]
+    },
+    {
+      "crate": "nextcore-tool",
+      "path": "nextcore/crates/nextcore-tool",
+      "url": "https://github.com/26x86/Nextcore-Tool.git",
+      "commit": "926c77721d4bc9c9f2650189aa96ddbd0e9f0a2a",
+      "packages": [
+        "nextcore-tool"
+      ]
+    },
+    {
+      "crate": "nextcore-ise",
+      "path": "nextcore/crates/nextcore-ise",
+      "url": "https://github.com/26x86/Nextcore-ISE.git",
+      "commit": "41e8997c4b8d6f029ed3a3fbec0669374046ab6f",
+      "packages": [
+        "nextcore-ise",
+        "nextcore-memory-service"
+      ]
+    },
+    {
+      "crate": "nextcore-gpu",
+      "path": "nextcore/crates/nextcore-gpu",
+      "url": "https://github.com/26x86/Nextcore-GPU.git",
+      "commit": "eaab9fcfded3a8ee298453397790f13edace5694",
+      "packages": [
+        "nextcore-gpu"
+      ]
+    },
+    {
+      "crate": "nextcore-hal",
+      "path": "nextcore/crates/nextcore-hal",
+      "url": "https://github.com/26x86/Nextcore-HAL.git",
+      "commit": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+      "packages": [
+        "nextcore-hal"
+      ]
+    },
+    {
+      "crate": "nextcore-apls",
+      "path": "nextcore/crates/nextcore-apls",
+      "url": "https://github.com/26x86/Nextcore-APLS.git",
+      "commit": "9b6ccaa421f668fdb212ccd14969002f6196a18f",
+      "packages": [
+        "nextcore-apls"
+      ]
+    }
+  ],
+  "auxiliary_packages": [
+    "nextcore-memory-service"
+  ],
+  "cargo_local_resolution_checked": true,
+  "cargo_resolutions": [
+    {
+      "platform": "x86_64-unknown-linux-gnu",
+      "workspace_members": 7,
+      "owned_packages": 8,
+      "memory_service_local_and_selected": true
+    },
+    {
+      "platform": "x86_64-unknown-uefi",
+      "workspace_members": 7,
+      "owned_packages": 8,
+      "memory_service_local_and_selected": true
+    }
+  ],
+  "clean_required": true
+}
