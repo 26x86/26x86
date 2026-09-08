@@ -1,0 +1,276 @@
+{
+  "main": "1cf2b989ecbb36773fc33b8b96ae91b7e2d33cca",
+  "pages_run": 34199199279,
+  "pages": {
+    "": {
+      "status": 200,
+      "bytes": 44182,
+      "sha256": "f016ab538bc05a60a6a020e58e988e809de56fb36b2650aefc3452b4d7d8cc2d",
+      "title": "NextCore",
+      "buttons": [
+        "wiki/",
+        "wiki/Getting-Started/",
+        "wiki/Supported-Models/"
+      ]
+    },
+    "wiki/": {
+      "status": 200,
+      "bytes": 44005,
+      "sha256": "f68562e05a38e536deed23304fd1ce2a5910a964f89571346e7a421d496b5eca",
+      "title": "NextCore documentation - NextCore",
+      "buttons": []
+    },
+    "wiki/Getting-Started/": {
+      "status": 200,
+      "bytes": 40918,
+      "sha256": "b39158ae23f44d68438c34ecf26099eae0352bc580777875030536be83441600",
+      "title": "Getting started - NextCore",
+      "buttons": []
+    },
+    "wiki/Supported-Models/": {
+      "status": 200,
+      "bytes": 41032,
+      "sha256": "310755708fe034683255498cd1cb5ac12426e21cf7e13c65f78627f31351df3a",
+      "title": "Supported hardware - NextCore",
+      "buttons": []
+    }
+  },
+  "references": {
+    "https://26x86.github.io/26x86/": {
+      "status": 200,
+      "bytes": 44182,
+      "sha256": "f016ab538bc05a60a6a020e58e988e809de56fb36b2650aefc3452b4d7d8cc2d"
+    },
+    "https://26x86.github.io/26x86/APPLE_SILICON_SANDBOX/": {
+      "status": 200,
+      "bytes": 73187,
+      "sha256": "6d0b68efcc8a99d0116d9e8a0f9d36a127db43d3b4ece014fe70291273ae9fd3"
+    },
+    "https://26x86.github.io/26x86/BOOT_PICKER_RECOVERY/": {
+      "status": 200,
+      "bytes": 53215,
+      "sha256": "d325d0c3ae11f4d37344e92e2746141e260ac4159e9121210009911f8f5a52b9"
+    },
+    "https://26x86.github.io/26x86/BOOT_RUNTIME_VERIFICATION/": {
+      "status": 200,
+      "bytes": 53329,
+      "sha256": "68f6d13172ea7317876861071e3f48ca0f7f201675d95671617070f2e58938c7"
+    },
+    "https://26x86.github.io/26x86/EFI-OPTIMIZE-THIS-MAC/": {
+      "status": 200,
+      "bytes": 56565,
+      "sha256": "b1c94e09b07c8d4c23e981ef8aff32a76112eded69285256c345678a4244b7e7"
+    },
+    "https://26x86.github.io/26x86/MELLOW_INTEGRATION/": {
+      "status": 200,
+      "bytes": 54847,
+      "sha256": "c509b0cc332d5e558261aab0e2742f2fce140ed828a18ef65374edad01e432ad"
+    },
+    "https://26x86.github.io/26x86/NEXTCORE_BUILD_PLAN/": {
+      "status": 200,
+      "bytes": 163951,
+      "sha256": "c8d0268f53c11c80fa29a9abfb2e00090dfc3f389599e9036cf638649ab05e5d"
+    },
+    "https://26x86.github.io/26x86/NEXTCORE_DESIGN/": {
+      "status": 200,
+      "bytes": 105497,
+      "sha256": "fa841f7e43950229ecb972fc2e38aa55ecd759372968ae6e89601ca54b14ca55"
+    },
+    "https://26x86.github.io/26x86/PUBLIC_VS_PRIVATE_BOUNDARY/": {
+      "status": 200,
+      "bytes": 85295,
+      "sha256": "451cddb1902f4acbd319df75e540f2e3548330474a6ac471b12208f1c8cc9196"
+    },
+    "https://26x86.github.io/26x86/QEMU_GOLDEN_GATE_GUI/": {
+      "status": 200,
+      "bytes": 78492,
+      "sha256": "d87e1cd4491015c47d3fed15d8749f6a71a0aa41d2d4628f04b85d2a3132d178"
+    },
+    "https://26x86.github.io/26x86/REPOSITORY_LAYOUT/": {
+      "status": 200,
+      "bytes": 45020,
+      "sha256": "03fe932d3231e248d1b29b1bb8bb1dc093c8d708ca5a1c66f9e922f912620571"
+    },
+    "https://26x86.github.io/26x86/SETUP/": {
+      "status": 200,
+      "bytes": 74218,
+      "sha256": "34d66b7404866dd433c721c81da63310439d34289595dda32e8acdbcbe8eec62"
+    },
+    "https://26x86.github.io/26x86/SURFACE_PRO6/": {
+      "status": 200,
+      "bytes": 51361,
+      "sha256": "d49bd003e03d122f8577bc1441bc9952f64d8172148bc61d0ff744e85eb4fd3c"
+    },
+    "https://26x86.github.io/26x86/VSK/": {
+      "status": 200,
+      "bytes": 53104,
+      "sha256": "5f6c0963425f0ac1a58b66e86727be0b5f09f510b7447c5952cdb478ea63a414"
+    },
+    "https://26x86.github.io/26x86/assets/images/favicon.png": {
+      "status": 200,
+      "bytes": 1870,
+      "sha256": "023854c43fc4b25b795ee4951c8019e3de0593ffeb6f918b5d1f2a9b47a57cfe"
+    },
+    "https://26x86.github.io/26x86/assets/images/nextcore-picker.png": {
+      "status": 200,
+      "bytes": 8400,
+      "sha256": "bfb6f81963502f973d2615d8860ce4210c9411cc7e40306d74800eaada6f6ce3"
+    },
+    "https://26x86.github.io/26x86/assets/javascripts/bundle.d7400e89.min.js": {
+      "status": 200,
+      "bytes": 114286,
+      "sha256": "f288ab99e197c406766aea4581ba6e902d7d0e28c013bdd3cd3fab6cc77fb7c8"
+    },
+    "https://26x86.github.io/26x86/assets/stylesheets/extra.css": {
+      "status": 200,
+      "bytes": 721,
+      "sha256": "dfc8b0b4b0f839774fac5cbde813d1e1eb5e3c72da80d418046c43e0ea2e3bcb"
+    },
+    "https://26x86.github.io/26x86/assets/stylesheets/main.ec1eaa64.min.css": {
+      "status": 200,
+      "bytes": 139846,
+      "sha256": "ec1eaa640ab3790ea234d5a09da26015eb070222da8185a1e532d99cb022d68d"
+    },
+    "https://26x86.github.io/26x86/assets/stylesheets/palette.ab4e12ef.min.css": {
+      "status": 200,
+      "bytes": 12641,
+      "sha256": "ab4e12ef511f9c36de818455892c5c57cc3f98a8c86c36fa609601a88a720da2"
+    },
+    "https://26x86.github.io/26x86/profiles/MacPro5-Vega64-Tahoe/": {
+      "status": 200,
+      "bytes": 45022,
+      "sha256": "1e5b8785fae1b677eed0576843d6c7a5ca4ef206c45cb7c1ee3c1bb73b9dc9a5"
+    },
+    "https://26x86.github.io/26x86/wiki/": {
+      "status": 200,
+      "bytes": 44005,
+      "sha256": "f68562e05a38e536deed23304fd1ce2a5910a964f89571346e7a421d496b5eca"
+    },
+    "https://26x86.github.io/26x86/wiki/Application/": {
+      "status": 200,
+      "bytes": 41215,
+      "sha256": "97363b758854b38e2ec4e93c5f648a765e67882b303c4890620ad992d1cd35dd"
+    },
+    "https://26x86.github.io/26x86/wiki/Architecture/": {
+      "status": 200,
+      "bytes": 41282,
+      "sha256": "78b7b694501a48937145b922a5b8e062f120b22271927faca9fe09ec10bd7d39"
+    },
+    "https://26x86.github.io/26x86/wiki/Branching-and-Release/": {
+      "status": 200,
+      "bytes": 48799,
+      "sha256": "af682aa31e59c4e0e247698489af57e21450f3360c354ba5550a4a58c85bae9c"
+    },
+    "https://26x86.github.io/26x86/wiki/Build-and-Development/": {
+      "status": 200,
+      "bytes": 42289,
+      "sha256": "3c9818322d35b7acf27866e054ebe43aab5be876188ca97c8e0e039b9a7e4285"
+    },
+    "https://26x86.github.io/26x86/wiki/Configuration/": {
+      "status": 200,
+      "bytes": 47132,
+      "sha256": "c286dfb10227e9fd5a38183f8884b70275ed8e42f932a0dc3399516df1d99e03"
+    },
+    "https://26x86.github.io/26x86/wiki/Developer/": {
+      "status": 200,
+      "bytes": 45910,
+      "sha256": "8ab6d6a8e383bfb5d823bc0f62266a715ae71732e0e40375a6624189957e7e1c"
+    },
+    "https://26x86.github.io/26x86/wiki/Disclaimer/": {
+      "status": 200,
+      "bytes": 42566,
+      "sha256": "5fc8d2766e6eaba8403b721809a209724c9cc1c9584637565ce556a89aa7e17c"
+    },
+    "https://26x86.github.io/26x86/wiki/GPU-Limitations/": {
+      "status": 200,
+      "bytes": 46000,
+      "sha256": "640014ad62e65a2fd2c1b236134319aff526d79ff9039a57d3d8e5cb5de99969"
+    },
+    "https://26x86.github.io/26x86/wiki/Getting-Started/": {
+      "status": 200,
+      "bytes": 40918,
+      "sha256": "b39158ae23f44d68438c34ecf26099eae0352bc580777875030536be83441600"
+    },
+    "https://26x86.github.io/26x86/wiki/Installation-Notes/": {
+      "status": 200,
+      "bytes": 44978,
+      "sha256": "a351c0a8d66f54a3bbcb02bb42977f78ecbf7cfd75d37b4b5006551841d763b2"
+    },
+    "https://26x86.github.io/26x86/wiki/Known-Issues/": {
+      "status": 200,
+      "bytes": 45431,
+      "sha256": "f297e17c08b2d21e43cf683d99a869154447134285f4bb9d1ff3b068de4c5d63"
+    },
+    "https://26x86.github.io/26x86/wiki/Mac-Pro-Tahoe-Yellow-Screen/": {
+      "status": 200,
+      "bytes": 49888,
+      "sha256": "34e584f3cfaa01dc3703e89943b963a74ce6f4bd2fa4ee14e2e50f6ce6392dca"
+    },
+    "https://26x86.github.io/26x86/wiki/Migration/": {
+      "status": 200,
+      "bytes": 43920,
+      "sha256": "20a55e9c2d2c27b41362fa55b78b33caf6e60805d4582e658b126cb51c52c090"
+    },
+    "https://26x86.github.io/26x86/wiki/Nextcore-Modules/": {
+      "status": 200,
+      "bytes": 46196,
+      "sha256": "616e103a03a1d6a57d285e342709ba0493ce754e68d9b55171dc404331d2a329"
+    },
+    "https://26x86.github.io/26x86/wiki/OpenCore/": {
+      "status": 200,
+      "bytes": 42444,
+      "sha256": "3980f7fbb2d6abca0b28aef1d0978df19a0c77cccd89364af8441574ec4a1b8c"
+    },
+    "https://26x86.github.io/26x86/wiki/Orphan-Files-Archive/": {
+      "status": 200,
+      "bytes": 43021,
+      "sha256": "318a7beffa68647914e147fa44a7ed950286344e7de62be0dd04e59dcb0cf79b"
+    },
+    "https://26x86.github.io/26x86/wiki/Pre-AVX-Mac-Pro/": {
+      "status": 200,
+      "bytes": 50992,
+      "sha256": "644bacbc991ccd9df8ea6dfba9f6e487467f644a3561ed6be7a61e290182a950"
+    },
+    "https://26x86.github.io/26x86/wiki/Privacy-and-Disclosure/": {
+      "status": 200,
+      "bytes": 39592,
+      "sha256": "f5c5db9a21ba8a3e87ccc6bcadea425fe5e40a16850f652b6b9679b82f97d1cf"
+    },
+    "https://26x86.github.io/26x86/wiki/Safari-PreAVX-Fix/": {
+      "status": 200,
+      "bytes": 44562,
+      "sha256": "718fc9cd571cbfd4d66b5b56aaa3eef2609032e3c45a3f00a587c0451c6b1049"
+    },
+    "https://26x86.github.io/26x86/wiki/Supported-Models/": {
+      "status": 200,
+      "bytes": 41032,
+      "sha256": "310755708fe034683255498cd1cb5ac12426e21cf7e13c65f78627f31351df3a"
+    },
+    "https://26x86.github.io/26x86/wiki/T2-Mac-Notes/": {
+      "status": 200,
+      "bytes": 43695,
+      "sha256": "a1c80f3f1ce69c525bf8b4520963aa5761d44d26c81f92793ee2460595309d95"
+    },
+    "https://26x86.github.io/26x86/wiki/Troubleshooting/": {
+      "status": 200,
+      "bytes": 39828,
+      "sha256": "1d42ac47d83645473630bce79590184acaed437da889c867ddbfa41b03961582"
+    },
+    "https://26x86.github.io/26x86/wiki/Upstream-Repositories/": {
+      "status": 200,
+      "bytes": 68232,
+      "sha256": "aad32762ed1bc5864323e8e91d7f02d6739e7e1559deb5ebba33cecf028cadf4"
+    },
+    "https://26x86.github.io/26x86/wiki/Warnings/": {
+      "status": 200,
+      "bytes": 48757,
+      "sha256": "c0f5036e82d8e0cb1ab520570e9977f468d25a193ebad4e4b46ad3a8a1e73af0"
+    },
+    "https://26x86.github.io/26x86/wiki/macOS-Support/": {
+      "status": 200,
+      "bytes": 40861,
+      "sha256": "915c87cbad053e7cc3fb9bc5fbf72fb99de9b8edd1f01340bcb733d8762b91a6"
+    }
+  },
+  "passed": true
+}
