@@ -1,0 +1,16 @@
+{
+  "schema": "nextcore.root-ledger-review.v1",
+  "source_checkpoint": "/home/sharh/work/bp33-core-allocation-ledger/src/guest_memory.rs",
+  "sha256": "24f9c2a13e9d2f7d2d758152de8e43199d7e587cc8d70ea54f99babfb1944569",
+  "scope": [
+    "first-fit progression and full capacity overlap",
+    "opaque owner/serial and nonwrapping generation",
+    "checked slice range before writes",
+    "DT owner/generation/destination binding",
+    "HRTB execution loan lifetime and nontransactional closure errors"
+  ],
+  "concrete_defects_found": [],
+  "runtime_execution_claim": false,
+  "agent_final_freeze_pending": true,
+  "remaining_acceptance": "Agent full regression/UEFI tests and authored actual EFI consumer later"
+}

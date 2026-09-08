@@ -1781,3 +1781,32 @@ and higher-ranked execution loan. Arbitrary provider semantics and callback
 rollback are not inferred. Root source review found no concrete range/token/
 lifetime defect; full tests/final freeze and actual authored EFI consumption
 remain independent of this BP32 closure.
+
+
+## BP33 — owned guest staging and actual DeviceTree consumption
+
+Core305 introduced a source-bound runtime DT transformer; Coref77c98f adds
+exclusive owned/borrowed backing,64 purpose reservations and opaque owner/
+generation binding. The frozen implementation passes standalone default/no-std
+tests, lifetime rejection and UEFI code generation. Root owns Core/EFI/Tool
+pin updates, inventories, recursive validation and authorized PR/main publication.
+The Tool Core dependency must advance with the same integrated Core revision;
+there is no new Windows UI feature.
+
+The EFI agent is delegated a separate opt-in NXDT consumer from BP32f3f7938:
+actual ArmPages ownership, ledger-derived code/DT/stack/output placements, typed
+DT commit and generated-x86 ARM loads/stores through the canonical M=1 service.
+Its authored source property carries observed guest aperture values, not an
+invented target ABI. Wrong-DT mapping and stale preparation are checked at their
+actual different boundaries. Separate table backing stays disjoint and immutable
+while the service is borrowed. Core/EFI source freezes and independent proof
+remain separate from final canonical source integration.
+
+
+BP34 actual dynamic EFI consumption is delegated to the EFI agent in a new
+worktree from the immutable BP33 source: separate opt-in caller, one-way MMU
+activation, post-ISB nonidentity accesses/faults and compiled omission negative.
+BP35 is delegated to the CPU agent in separate Core/EFI worktrees: exactly one
+explicit16384 diagnostic tier, unchanged legacy caps and selector rejection,
+authored actual-EFI acceptance before any original replay. Root owns the
+external CLI review, all integration pins and publication.

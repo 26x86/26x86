@@ -4,6 +4,31 @@
 과장하지 않고 이어갈 수 있게 하는 정본 요약이다. 상세 설계는
 `docs/NEXTCORE_BUILD_PLAN.md`, 검증 결과는 `nextcore/VALIDATION.md`를 따른다.
 
+## BP33 최신 개발 상태
+
+BP32는 상위 PR14/main1b86a2e로 최종 CI29개와 정식 재귀 클론 검사 후 병합했다.
+BP33은 Coref77c98f, EFIe17e059, Tool52bfa93를 함께 연결한다. Core PR4/main0e2bcca와
+Tool PR4/main14977ec는 병합됐고, EFI의 정식 독립 빌드와 상위 통합 검증을 진행한다.
+7개 서브모듈/8개 소유 패키지 구조를 유지한다.
+
+Core는 실제 소유/배타 차용 RAM과64개 목적별 예약을 연결하고, owner/generation에
+묶인 DeviceTree patch만 커밋한다. 변환기는 공개 authored provider 값을 명시적으로
+받으며 임의 식을 실행하거나 target ABI를 만들지 않는다. 독립 Core257개와 no-default232개,
+수명 compile-fail 및 UEFI 코드 생성이 통과했다.
+
+새 opt-in NXDT는 실제 EFI RAM/table/JIT 할당과 ledger에서 얻은 배치를 사용한다.
+4K/16K·상/하위 VA의 authored8개에서 직렬화된 DT를 실제 generated-x86 ARM load/store로
+소비한다. stale patch는 JIT 전에 거부하고 전체 RAM/immutable table을 확인한다.
+별도 잘못된 mapping 바이너리가 실제 첫 DT load fault로 실패한다. 원래8-case 기록은
+보존하고 보고서 envelope/주소 범위 결함을 고친 reader는28개 변조를 거부한다.
+정식 빌드의 바이너리/결과는 역사적 outside-tree patch 결과와 별도로 기록한다.
+공개 증거는 nextcore/artifacts/guest-memory-dt-20260909다.
+
+다음 BP34 ISE0d722886은 PR7/mainbcf1ca9로 별도 병합했다. one-way MMU enable과
+독립 Arm capture6개 비교는 통과했지만 이번 BP33은 기존 ISE720을 유지한다.
+실제 dynamic EFI caller와 명시적16384 원본 진단은 별도 작업이다. 정상 macOS27
+handoff/데스크톱, SPTM 서비스, EFI GPU와 guest Metal은 아직 미완료다.
+
 ## BP32 최신 개발 상태
 
 BP31은 PR #13/main0509118로 최종 CI28개 및 정식 재귀 클론 검사 후 병합했다.

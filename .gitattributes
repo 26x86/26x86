@@ -59,3 +59,6 @@ nextcore/artifacts/arm-stage1-oracle-20260909/** -text -whitespace
 nextcore/artifacts/arm-stage1-service-comparison-20260909/** -text -whitespace
 
 nextcore/artifacts/integration-bp32-20260909/** -text -whitespace
+
+nextcore/artifacts/guest-memory-dt-20260909/** -text -whitespace
+nextcore/artifacts/integration-bp33-20260909/** -text -whitespace

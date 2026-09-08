@@ -1,0 +1,93 @@
+{
+  "schema": "nextcore.authored-owned-dt-efi.v1",
+  "passed": false,
+  "host_architecture": "x86_64",
+  "cases": [
+    {
+      "name": "roundtrip",
+      "granule": "4096",
+      "upper": "false",
+      "status": "17",
+      "provider": "0",
+      "retired": "1",
+      "blocks": "2",
+      "fetch": "2",
+      "data": "1",
+      "completed": "0",
+      "esr": "0x96000007",
+      "far": "0x20002000",
+      "reply": "1",
+      "fsc": "7",
+      "pc": "0x20001004",
+      "x2": "0x13579bdf",
+      "stale": "true",
+      "ram": "false",
+      "tables": "true",
+      "ram_pa": "0x10000000",
+      "ram_bytes": "65536",
+      "code_pa": "0x10001000",
+      "dt_pa": "0x10002000",
+      "stack_pa": "0x10003000",
+      "output_pa": "0x10004000",
+      "entry": "0x20001000",
+      "dt_va": "0x20002000",
+      "output_va": "0x20004000",
+      "sp": "0x20004000",
+      "ram_host": "0xe3d0000",
+      "table_host": "0xe388000",
+      "jit_host": "0xe374000",
+      "pass": "false"
+    }
+  ],
+  "data": [
+    {
+      "name": "roundtrip",
+      "granule": "4096",
+      "upper": "false",
+      "source": "02000000000000006e616d65000000000000000000000000000000000000000000000000000000000100000000000000617574686f7265642d6170657274757265000000000000000000000000000000190000806f70617175652f6f627365727665642d657874656e74282900000000",
+      "wire": "02000000000000006e616d65000000000000000000000000000000000000000000000000000000000100000000000000617574686f7265642d61706572747572650000000000000000000000000000001000000000000010000000000000010000000000",
+      "output": "a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+      "value_offset": "84",
+      "ram_sha": "e1e144ce2ee0e0d8d3ace1d6074ca19da70a68026d6f628fd58ecedf35085d5e",
+      "tables_before_sha": "ba14d7466f7e9e811f7fd1d29ff00e0bace2577dcb8e943d094f32ca62b1a70f",
+      "tables_after_sha": "ba14d7466f7e9e811f7fd1d29ff00e0bace2577dcb8e943d094f32ca62b1a70f"
+    }
+  ],
+  "host_validations": [
+    {
+      "passed": false,
+      "error": "status: actual 17 != expected 1"
+    }
+  ],
+  "markers": [
+    "NXDT: ENTRY host=x86_64 authored=true profile=nextcore-stage1-fixed-nc-v1",
+    "NXDT: ENTRY host=x86_64 authored=true profile=nextcore-stage1-fixed-nc-v1",
+    "NXDT: DATA name=roundtrip granule=4096 upper=false source=02000000000000006e616d65000000000000000000000000000000000000000000000000000000000100000000000000617574686f7265642d6170657274757265000000000000000000000000000000190000806f70617175652f6f627365727665642d657874656e74282900000000 wire=02000000000000006e616d65000000000000000000000000000000000000000000000000000000000100000000000000617574686f7265642d61706572747572650000000000000000000000000000001000000000000010000000000000010000000000 output=a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5 value_offset=84 ram_sha=e1e144ce2ee0e0d8d3ace1d6074ca19da70a68026d6f628fd58ecedf35085d5e tables_before_sha=ba14d7466f7e9e811f7fd1d29ff00e0bace2577dcb8e943d094f32ca62b1a70f tables_after_sha=ba14d7466f7e9e811f7fd1d29ff00e0bace2577dcb8e943d094f32ca62b1a70f",
+    "NXDT: CASE name=roundtrip granule=4096 upper=false status=17 provider=0 retired=1 blocks=2 fetch=2 data=1 completed=0 esr=0x96000007 far=0x20002000 reply=1 fsc=7 pc=0x20001004 x2=0x13579bdf stale=true ram=false tables=true ram_pa=0x10000000 ram_bytes=65536 code_pa=0x10001000 dt_pa=0x10002000 stack_pa=0x10003000 output_pa=0x10004000 entry=0x20001000 dt_va=0x20002000 output_va=0x20004000 sp=0x20004000 ram_host=0xe3d0000 table_host=0xe388000 jit_host=0xe374000 pass=false",
+    "NXDT: FAIL case=0 status=COMPROMISED_DATA"
+  ],
+  "parse_errors": [],
+  "adjacent_transport_duplicate_lines": 1,
+  "input_paths": {
+    "efi_probe": "/home/sharh/work/bp33-dt-efi-proof/negative-wrong-dt/target/x86_64-unknown-uefi/release/NXDT.efi",
+    "ovmf_code": "/usr/share/OVMF/OVMF_CODE_4M.fd",
+    "ovmf_vars": "/usr/share/OVMF/OVMF_VARS_4M.fd",
+    "runner": "/home/sharh/work/bp33-efi-ledger-dt/tools/verify_dt_ledger_ovmf.py"
+  },
+  "input_sha256_before": {
+    "efi_probe": "cd4d9cd9273f6c6e32ac2e456bad8e17d48952ecc98989d8c6d0fc23f6758b92",
+    "ovmf_code": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "ovmf_vars": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e",
+    "runner": "23d0919738640f59e3ec11a5a170d13c12efdfd3d51900452ab4ef0393c085bc"
+  },
+  "input_sha256_after": {
+    "efi_probe": "cd4d9cd9273f6c6e32ac2e456bad8e17d48952ecc98989d8c6d0fc23f6758b92",
+    "ovmf_code": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "ovmf_vars": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e",
+    "runner": "23d0919738640f59e3ec11a5a170d13c12efdfd3d51900452ab4ef0393c085bc"
+  },
+  "elapsed_seconds": 4.687,
+  "qemu_exit_code": 0,
+  "normal_boot_verified": false,
+  "original_inputs_used": false
+}

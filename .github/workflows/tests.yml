@@ -175,6 +175,16 @@ jobs:
           python3 nextcore/crates/nextcore-efi/tools/verify_stage1_ovmf.py \
             --efi-probe nextcore/target/x86_64-unknown-uefi/release/NXMMU.efi \
             --output "$RUNNER_TEMP/nextcore-stage1-proof"
+      - name: Check owned backing and lifetime gates
+        working-directory: nextcore
+        run: |
+          cargo test --locked -p nextcore-core --no-default-features
+          cargo test --locked -p nextcore-core --doc
+      - name: Execute owned guest DeviceTree consumption
+        run: |
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-dt-probe --bin NXDT
+          python3 nextcore/crates/nextcore-efi/tools/verify_dt_ledger_ovmf.py --efi-probe nextcore/target/x86_64-unknown-uefi/release/NXDT.efi --output "$RUNNER_TEMP/nextcore-dt-proof"
+          python3 nextcore/crates/nextcore-efi/tools/check_dt_ledger_capture.py --report "$RUNNER_TEMP/nextcore-dt-proof/report.json" --output "$RUNNER_TEMP/nextcore-dt-reader.json"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -183,3 +193,6 @@ jobs:
             ${{ runner.temp }}/native-stage1.json
             ${{ runner.temp }}/nextcore-stage1-proof/*.json
             ${{ runner.temp }}/nextcore-stage1-proof/*.log
+            ${{ runner.temp }}/nextcore-dt-proof/*.json
+            ${{ runner.temp }}/nextcore-dt-proof/*.log
+            ${{ runner.temp }}/nextcore-dt-reader.json

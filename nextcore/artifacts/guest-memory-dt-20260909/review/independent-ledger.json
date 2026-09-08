@@ -1,0 +1,43 @@
+{
+  "schema": "nextcore.bp33-ledger-independent-review.v1",
+  "reviewed_commit": "f77c98f0b457ab488f37e5be10a608a364d996c7",
+  "scope": "Read-only source and existing test review; no new execution or production edits",
+  "source_sha256": {
+    "src/guest_memory.rs": "24f9c2a13e9d2f7d2d758152de8e43199d7e587cc8d70ea54f99babfb1944569",
+    "src/runtime_dt.rs": "8bf58240af9ed18b58711a1c928ae99a4e7e9aebc68174fed459ec3165013f32",
+    "src/lib.rs": "cec1a15f0f36e9feb58b0324edac6d58675eafd98584939ed22a7f586cd725e5",
+    "tests/guest_memory.rs": "e594e14028ec1fed09cbd273b65b79f59f2ff800dc79dacac0ad6f56b9d4dbf7",
+    "tests/kc_staging.rs": "4e8b7ba648fae78a856df0a8e844a363337bb6b8f9f193c087b568f19f87013c",
+    "docs/GUEST_ALLOCATION_LEDGER.md": "8bc33b983b4dec56fbd78d706821ea3d4d1fb5ae86bdaee72a5ce849ed9f1b83",
+    ".github/workflows/ci.yml": "b6680a22af1d8b26aebd9dd5f4d0dbdeb5c812fe892d14ab6bb26f495f694309"
+  },
+  "findings": [],
+  "verdict": "No concrete correctness defect found in the reviewed ownership, identity, generation, ranges, typed DT commit or scoped-loan boundaries.",
+  "reviewed_invariants": {
+    "ownership": "Private Box/exclusive mutable-slice backing is consumed; aperture length derives from observed slice; no safe resize/rebase/raw-pointer constructor.",
+    "token_liveness": "Nonzero monotonic process-local owner IDs and reservation serials; foreign/released/reused tokens checked before byte access. Generation exhaustion occurs before effects.",
+    "allocation": "Power-of-two guest alignment, checked bounds and live capacity intersection. First-fit moves beyond overlapping extents without skipping any feasible earlier placement; existing byte-scan2000-step oracle independently checks policy.",
+    "copy_atomicity": "Range/usize conversion and next generation preflight precede the single copy. Readonly input cannot safely alias the exclusive backing; returned errors leave bytes and generation unchanged.",
+    "dt_commit": "Existing immutable MaterializedTree source binding is preserved unchanged. Bind/commit both validate current stamp, owner, live destination, purpose, alignment and complete fit; commit consumes prepared output without caller-redirection coordinates.",
+    "execution_loan": "HRTB FnOnce return type is independent of temporary loan lifetime; generation advances before callback. Existing compile-fail cases cover owner lifetime, escaping RAM and escaping borrowed service. Writes on callback error intentionally persist and are separately documented/tested.",
+    "snapshot": "Borrowed live records prohibit concurrent mutation; detached stamps become stale after every ledger mutation/execution loan."
+  },
+  "existing_test_coverage_reviewed": {
+    "public_ledger_test_groups": 10,
+    "independent_byte_occupancy_steps": 2000,
+    "private_exhaustion_tests": 3,
+    "compile_fail_doctests": 3,
+    "immutable_kc_staging_integration_tests": 1,
+    "stale_commit_causes": 6
+  },
+  "test_execution_performed_by_reviewer": false,
+  "prior_test_totals_not_relabelled": true,
+  "limits": [
+    "No actual EFI consumer execution in this review or this ledger slice.",
+    "Guest-address alignment does not claim host allocation page alignment.",
+    "Purpose tags and current snapshot stamps do not prove semantic provenance of arbitrary provider-value bytes; target schemas and ABI remain caller-owned.",
+    "Scoped execution can modify all RAM and does not roll back on an error; reservations are staging records, not runtime access permissions.",
+    "Process-local identity requires the documented 64-bit atomic targets and is not a serialized/cross-process capability."
+  ],
+  "worktree_status_after": ""
+}

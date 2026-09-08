@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "capture_validation": {
+    "passed": false,
+    "error": "case/data fields differ from raw serial"
+  }
+}

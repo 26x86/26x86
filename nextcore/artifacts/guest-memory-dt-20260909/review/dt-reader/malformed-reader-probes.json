@@ -1,0 +1,105 @@
+{
+  "input_capture": "/home/sharh/work/bp33-dt-efi-proof/ovmf-final/report.json",
+  "input_sha256": "35b9868d4da8ead673693b236f2c9b520d6438432eaa3198c625e319383d599e",
+  "probes": [
+    {
+      "mutation": "original",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp33-efi-ledger-dt/tools/check_dt_ledger_capture.py",
+        "--report",
+        "/home/sharh/work/bp33-dt-independent-review/original.json",
+        "--output",
+        "/home/sharh/work/bp33-dt-independent-review/original.result.json"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\": true, \"negative_cases\": 8}\n",
+      "stderr": ""
+    },
+    {
+      "mutation": "failed_envelope",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp33-efi-ledger-dt/tools/check_dt_ledger_capture.py",
+        "--report",
+        "/home/sharh/work/bp33-dt-independent-review/failed_envelope.json",
+        "--output",
+        "/home/sharh/work/bp33-dt-independent-review/failed_envelope.result.json"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\": true, \"negative_cases\": 8}\n",
+      "stderr": ""
+    },
+    {
+      "mutation": "eight_duplicate_case",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp33-efi-ledger-dt/tools/check_dt_ledger_capture.py",
+        "--report",
+        "/home/sharh/work/bp33-dt-independent-review/eight_duplicate_case.json",
+        "--output",
+        "/home/sharh/work/bp33-dt-independent-review/eight_duplicate_case.result.json"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\": true, \"negative_cases\": 8}\n",
+      "stderr": ""
+    },
+    {
+      "mutation": "missing_envelope",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp33-efi-ledger-dt/tools/check_dt_ledger_capture.py",
+        "--report",
+        "/home/sharh/work/bp33-dt-independent-review/missing_envelope.json",
+        "--output",
+        "/home/sharh/work/bp33-dt-independent-review/missing_envelope.result.json"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\": true, \"negative_cases\": 8}\n",
+      "stderr": ""
+    },
+    {
+      "mutation": "host_address_outside_u64",
+      "changed_ram_host": "18446744073709551616",
+      "result": {
+        "passed": true,
+        "expected_numeric": {
+          "granule": 4096,
+          "status": 1,
+          "provider": 0,
+          "retired": 16,
+          "blocks": 16,
+          "fetch": 16,
+          "data": 13,
+          "completed": 13,
+          "esr": 0,
+          "far": 0,
+          "reply": 0,
+          "fsc": 0,
+          "pc": 536875072,
+          "x2": 43981,
+          "ram_pa": 268435456,
+          "ram_bytes": 65536,
+          "code_pa": 268439552,
+          "dt_pa": 268443648,
+          "stack_pa": 268447744,
+          "output_pa": 268451840,
+          "entry": 536875008,
+          "dt_va": 536879104,
+          "output_va": 536887296,
+          "sp": 536887296
+        },
+        "decoded_value": [
+          268435456,
+          65536
+        ],
+        "full_ram_sha256": "0dc4e973d94cdfbb63fc0748bc6842a007542a23222c1ffcdd2822b25c6feed4",
+        "output_bytes": 28
+      }
+    }
+  ]
+}

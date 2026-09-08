@@ -1,0 +1,10 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+   Doc-tests nextcore_core
+
+running 3 tests
+test src/guest_memory.rs - guest_memory::GuestMemory<'a>::from_borrowed (line 215) - compile fail ... ok
+test src/guest_memory.rs - guest_memory::GuestMemory<'a>::with_guest_memory (line 475) - compile fail ... ok
+test src/guest_memory.rs - guest_memory::GuestMemory<'a>::with_guest_memory (line 482) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+

@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "capture_validation": {
+    "passed": false,
+    "error": "missing/extra report fields"
+  }
+}

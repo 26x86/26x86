@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "commands": [
+    {
+      "name": "actual",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp33-efi-ledger-dt/tools/check_dt_ledger_capture.py",
+        "--report",
+        "/home/sharh/work/bp33-dt-efi-proof/ovmf-final/report.json",
+        "--serial",
+        "/home/sharh/work/bp33-dt-efi-proof/ovmf-final/serial.log",
+        "--output",
+        "/home/sharh/work/bp33-dt-independent-review/actual.corrected.json"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0,
+      "stdout": "{\"passed\": true, \"negative_cases\": 28}\n",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "failed_envelope",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp33-efi-ledger-dt/tools/check_dt_ledger_capture.py",
+        "--report",
+        "/home/sharh/work/bp33-dt-independent-review/failed_envelope.json",
+        "--serial",
+        "/home/sharh/work/bp33-dt-efi-proof/ovmf-final/serial.log",
+        "--output",
+        "/home/sharh/work/bp33-dt-independent-review/failed_envelope.corrected.json"
+      ],
+      "returncode": 1,
+      "expected_returncode": 1,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "eight_duplicate_case",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp33-efi-ledger-dt/tools/check_dt_ledger_capture.py",
+        "--report",
+        "/home/sharh/work/bp33-dt-independent-review/eight_duplicate_case.json",
+        "--serial",
+        "/home/sharh/work/bp33-dt-efi-proof/ovmf-final/serial.log",
+        "--output",
+        "/home/sharh/work/bp33-dt-independent-review/eight_duplicate_case.corrected.json"
+      ],
+      "returncode": 1,
+      "expected_returncode": 1,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    },
+    {
+      "name": "missing_envelope",
+      "argv": [
+        "python3",
+        "-B",
+        "/home/sharh/work/bp33-efi-ledger-dt/tools/check_dt_ledger_capture.py",
+        "--report",
+        "/home/sharh/work/bp33-dt-independent-review/missing_envelope.json",
+        "--serial",
+        "/home/sharh/work/bp33-dt-efi-proof/ovmf-final/serial.log",
+        "--output",
+        "/home/sharh/work/bp33-dt-independent-review/missing_envelope.corrected.json"
+      ],
+      "returncode": 1,
+      "expected_returncode": 1,
+      "stdout": "",
+      "stderr": "",
+      "passed": true
+    }
+  ]
+}
