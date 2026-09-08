@@ -1,0 +1,149 @@
+{
+  "passed": true,
+  "layer": "authored UEFI APFS Jumpstart discovery and driver lifecycle",
+  "runtime": "/tmp/nextcore-apfs-ovmf-r3-20260908",
+  "tests": {
+    "passed": 9,
+    "failed": 0,
+    "command": "python3 -m unittest discover -s nextcore/tools -p test_verify_apfs_jumpstart.py -v"
+  },
+  "cases": [
+    {
+      "case": "inspect",
+      "passed": true,
+      "expected_status": "SUCCESS",
+      "qemu_seconds": 2.8673,
+      "total_seconds": 3.5226,
+      "natural_returncode": 0,
+      "cleanup_complete": true,
+      "originals_unchanged": true,
+      "complete_guest_disk_unchanged": true,
+      "esp_readback": {
+        "BOOTX64": "8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96",
+        "NXAPFS": "234af48bdf5e2fee3cdf48b6a1bd0ea8e51ab557c1742f941f8796852388a0ac",
+        "config": "1220c9c49cbdd28132c2356d8820a36c4c68b96f961f804c3a78a1722b6c4be6"
+      },
+      "report_sha256": "f196d6f85a96367e471b469c9dc2165509fa72d03ce79da57faf6409d59d0ce2",
+      "serial_sha256": "95fe638812dbf475c1c6d6bf300196a13303e722d7db84043b2ffc03e205727b"
+    },
+    {
+      "case": "start-driver",
+      "passed": true,
+      "expected_status": "NOT_FOUND",
+      "qemu_seconds": 2.5422,
+      "total_seconds": 3.1318,
+      "natural_returncode": 0,
+      "cleanup_complete": true,
+      "originals_unchanged": true,
+      "complete_guest_disk_unchanged": true,
+      "esp_readback": {
+        "BOOTX64": "8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96",
+        "NXAPFS": "234af48bdf5e2fee3cdf48b6a1bd0ea8e51ab557c1742f941f8796852388a0ac",
+        "config": "2d01397c334e653d5df5d5467d277584b76acaa2ae116071c87dac71798654ed"
+      },
+      "report_sha256": "ae2cf4db2958d664850cb127ff1d0fac16da152891af62ae916c26633a4fa652",
+      "serial_sha256": "97199db7db4d0681b0b87feb03fdfcc5dc67961902f5103333dceacd40fc6ff4"
+    },
+    {
+      "case": "app-reject",
+      "passed": true,
+      "expected_status": "UNSUPPORTED",
+      "qemu_seconds": 2.6018,
+      "total_seconds": 3.18,
+      "natural_returncode": 0,
+      "cleanup_complete": true,
+      "originals_unchanged": true,
+      "complete_guest_disk_unchanged": true,
+      "esp_readback": {
+        "BOOTX64": "8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96",
+        "NXAPFS": "234af48bdf5e2fee3cdf48b6a1bd0ea8e51ab557c1742f941f8796852388a0ac",
+        "config": "2d01397c334e653d5df5d5467d277584b76acaa2ae116071c87dac71798654ed"
+      },
+      "report_sha256": "e3e5f6b57aaf70a375936a13fbe0dc2c73f1ecbaa983a5e5d39bdd66a1300a11",
+      "serial_sha256": "25dc71f71fece260250b260364724f68a7b193995a53455140325ce44be4308a"
+    },
+    {
+      "case": "nx-checksum",
+      "passed": true,
+      "expected_status": "VOLUME_CORRUPTED",
+      "qemu_seconds": 2.4607,
+      "total_seconds": 3.0284,
+      "natural_returncode": 0,
+      "cleanup_complete": true,
+      "originals_unchanged": true,
+      "complete_guest_disk_unchanged": true,
+      "esp_readback": {
+        "BOOTX64": "8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96",
+        "NXAPFS": "234af48bdf5e2fee3cdf48b6a1bd0ea8e51ab557c1742f941f8796852388a0ac",
+        "config": "1220c9c49cbdd28132c2356d8820a36c4c68b96f961f804c3a78a1722b6c4be6"
+      },
+      "report_sha256": "09c6e0649d0a781330a06f73d17374735d58e42808601a00571e8f9e752d202c",
+      "serial_sha256": "ddbc3eb89dbc7ee9e92970a08708b3b4cb4fdf3befdf24769093abdcf00b32e5"
+    },
+    {
+      "case": "jsdr-checksum",
+      "passed": true,
+      "expected_status": "VOLUME_CORRUPTED",
+      "qemu_seconds": 2.4213,
+      "total_seconds": 2.9953,
+      "natural_returncode": 0,
+      "cleanup_complete": true,
+      "originals_unchanged": true,
+      "complete_guest_disk_unchanged": true,
+      "esp_readback": {
+        "BOOTX64": "8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96",
+        "NXAPFS": "234af48bdf5e2fee3cdf48b6a1bd0ea8e51ab557c1742f941f8796852388a0ac",
+        "config": "1220c9c49cbdd28132c2356d8820a36c4c68b96f961f804c3a78a1722b6c4be6"
+      },
+      "report_sha256": "c929d2b33658771b813f7031f2dddea71ede749e3e5af5c967ca28d1f8a39899",
+      "serial_sha256": "24acc3a35a56951471219ec13376a1201e5bb896939c67a0f754dc17fcf0a807"
+    },
+    {
+      "case": "multiple",
+      "passed": true,
+      "expected_status": "NO_MAPPING",
+      "qemu_seconds": 2.6633,
+      "total_seconds": 3.2342,
+      "natural_returncode": 0,
+      "cleanup_complete": true,
+      "originals_unchanged": true,
+      "complete_guest_disk_unchanged": true,
+      "esp_readback": {
+        "BOOTX64": "8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96",
+        "NXAPFS": "234af48bdf5e2fee3cdf48b6a1bd0ea8e51ab557c1742f941f8796852388a0ac",
+        "config": "1220c9c49cbdd28132c2356d8820a36c4c68b96f961f804c3a78a1722b6c4be6"
+      },
+      "report_sha256": "f092e7fba56d0c36125781465b49b750d4213a972b07681048cba02be1b4534e",
+      "serial_sha256": "7019875e73d34d2bcc769f2a367c801002354807cdd0415246d9a704d2fcdb60"
+    }
+  ],
+  "source_sha256": {
+    "nextcore/tools/verify_apfs_jumpstart.py": "9817c607a001a382f92b44a29b176d5ed79f9464f2bcb8ecbecf047931edc590",
+    "nextcore/tools/test_verify_apfs_jumpstart.py": "c6647dd9871a3a8e4549cb6f63e8391b0218f7475976dc721f161b5ab49f0001",
+    "nextcore/crates/nextcore-efi/src/apfs_probe.rs": "7bf66134725679ce8bbc7f9f58794596cb95219ea7d9a93828484820b8384b2d",
+    "nextcore/crates/nextcore-efi/src/apfs_driver.rs": "d9a270d8345e12bf3703fe9c03d1a7aeebc7b9c47c0c050fbfd46fbcd88fe894",
+    "nextcore/crates/nextcore-core/src/apfs_jumpstart.rs": "43219b559cc84deba19d8d9ce9a9a6725017cef274e07fa1a5a6bc8eb63b9649"
+  },
+  "macos_booted": false,
+  "apfs_mounted": false,
+  "hardware_tested": false,
+  "guest_metal_verified": false,
+  "actual_apple_input_used": false,
+  "efi_sha256": {
+    "child": "e2b3f8d2a9295039ece76a6bd8f67150a8ed5f7b35117ede5af718334f8ade2e",
+    "config": "1220c9c49cbdd28132c2356d8820a36c4c68b96f961f804c3a78a1722b6c4be6",
+    "efi": "8d29af2199999967145cd23145401c342294288366d17b6fcebc6bf02df00e96",
+    "esp": "3fa9a66d70d73f9176782dfd4183cb3d9b5b875c82e80e3b295aa66876117942",
+    "fixture": "10800f36c4518233279f80d8edd3076fb4a1a675d7ec0353513e4c832b34129d",
+    "harness": "9817c607a001a382f92b44a29b176d5ed79f9464f2bcb8ecbecf047931edc590",
+    "mcopy": "4c8364b843223f44f008fa48f97ce48cce615799ac3d254069cff777d9110e0b",
+    "mkfs": "46e35f0cfe7ad5e63080dee3ed9a7e775950b1aca27246478b894704fef0065c",
+    "mmd": "4c8364b843223f44f008fa48f97ce48cce615799ac3d254069cff777d9110e0b",
+    "ovmf_code": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "ovmf_vars": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e",
+    "probe": "234af48bdf5e2fee3cdf48b6a1bd0ea8e51ab557c1742f941f8796852388a0ac",
+    "process_helper": "c6e8abac1bf9a2574d15a1b138d615c8adb41f1b1ac5302ca4296700fd17553b",
+    "qemu": "8a35ccba41582fc6c38b9df85fc9e35fa1d42f414d2d7d8090ee9b2f5e7c0854",
+    "qemu_img": "634320b91165669917123e8e79cce1c4d00cee0a4aa4d662d7c0a8186479b3fb"
+  }
+}

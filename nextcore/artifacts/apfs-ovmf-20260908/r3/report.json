@@ -1,0 +1,58 @@
+{
+  "argv": [
+    "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/tools/verify_apfs_jumpstart.py",
+    "--efi",
+    "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/picker-bp21-20260908/build/BOOTX64.efi",
+    "--probe",
+    "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-firmware-20260908/r3/NXAPFS.efi",
+    "--child",
+    "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/picker-bp21-20260908/build/NXTEST.efi",
+    "--output",
+    "/tmp/nextcore-apfs-ovmf-r3-20260908"
+  ],
+  "cases": [
+    {
+      "case": "inspect",
+      "passed": true,
+      "report": "inspect/report.json"
+    },
+    {
+      "case": "start-driver",
+      "passed": true,
+      "report": "start-driver/report.json"
+    },
+    {
+      "case": "app-reject",
+      "passed": true,
+      "report": "app-reject/report.json"
+    },
+    {
+      "case": "nx-checksum",
+      "passed": true,
+      "report": "nx-checksum/report.json"
+    },
+    {
+      "case": "jsdr-checksum",
+      "passed": true,
+      "report": "jsdr-checksum/report.json"
+    },
+    {
+      "case": "multiple",
+      "passed": true,
+      "report": "multiple/report.json"
+    }
+  ],
+  "driver_copy": {
+    "changes": [
+      {
+        "after": 11,
+        "before": 10,
+        "offset": 212
+      }
+    ],
+    "copy_sha256": "fdba1f426f7cbbaf0cdb08b0117d4ce5a7471e0ebbd7e5df02611735fef6a024",
+    "original_sha256": "e2b3f8d2a9295039ece76a6bd8f67150a8ed5f7b35117ede5af718334f8ade2e"
+  },
+  "fixture_provenance": "independently authored only",
+  "passed": true
+}

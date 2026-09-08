@@ -1,0 +1,3 @@
+nextcore/tools/verify_apfs_jumpstart.py
+nextcore/tools/test_verify_apfs_jumpstart.py
+nextcore/artifacts/apfs-ovmf-20260908/

@@ -1145,7 +1145,9 @@ media ID를 확인한다. DiskIo는 읽기만 수행하며 모든 프로토콜 b
 `--start-driver`에서만 firmware LoadImage/StartImage를 호출하고 boot-services driver
 종류를 검사한다. firmware의 인증 실패·경고를 성공으로 바꾸지 않으며 반환된
 실패 image handle을 정리한다. 성공한 resident driver는 source buffer를 빌리지 않고
-선택한 controller에만 연결한다. 전체 controller reconnect는 하지 않는다.
+선택한 controller에만 명시 ConnectController를 호출한다. firmware StartImage
+자체는 새로 생성·변경된 handle에 자동 연결을 수행할 수 있으므로 전체 실행의
+영향을 해당 controller 하나로 한정했다고 주장하지 않는다.
 
 기존 production BOOTX64/picker와 타 partition은 변경하지 않는다. 먼저 독립 작성
 GPT/APFS fixture 및 자체 EFI driver로 실제 OVMF 읽기·실행·거부·정리를 검증한다.

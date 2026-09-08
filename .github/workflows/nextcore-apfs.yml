@@ -1,0 +1,52 @@
+name: NextCore APFS firmware
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apfs-firmware:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-uefi
+      - name: Install authored firmware test tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-system-x86 qemu-utils ovmf dosfstools mtools
+      - name: Check APFS extraction and evidence rejection
+        run: |
+          cargo test --manifest-path nextcore/Cargo.toml -p nextcore-core --no-default-features --test apfs_jumpstart
+          python3 -m unittest discover -s nextcore/tools -p test_verify_apfs_jumpstart.py -v
+      - name: Build actual EFI applications
+        run: >-
+          cargo build --manifest-path nextcore/Cargo.toml -p nextcore-efi
+          --bin BOOTX64 --bin NXAPFS --bin NXTEST
+          --features apfs-jumpstart,test-child,console-control
+          --target x86_64-unknown-uefi
+      - name: Run authored APFS and driver lifecycle in OVMF
+        run: |
+          python3 nextcore/tools/verify_apfs_jumpstart.py \
+            --efi nextcore/target/x86_64-unknown-uefi/debug/BOOTX64.efi \
+            --probe nextcore/target/x86_64-unknown-uefi/debug/NXAPFS.efi \
+            --child nextcore/target/x86_64-unknown-uefi/debug/NXTEST.efi \
+            --output "$RUNNER_TEMP/nextcore-apfs-ovmf"
+      - name: Upload authored firmware receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextcore-apfs-ovmf
+          path: |
+            ${{ runner.temp }}/nextcore-apfs-ovmf/report.json
+            ${{ runner.temp }}/nextcore-apfs-ovmf/*/report.json
+            ${{ runner.temp }}/nextcore-apfs-ovmf/*/command.json
+            ${{ runner.temp }}/nextcore-apfs-ovmf/*/serial.log
+            ${{ runner.temp }}/nextcore-apfs-ovmf/*/qemu.stderr
