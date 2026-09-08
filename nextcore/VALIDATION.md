@@ -59,6 +59,29 @@ native 경로의 restore-datapartition panic은 VM RAM 조건을 수정해 통�
 로컬 제외 정책과 달리 현재 Nextcore 소스는 Git 추적 대상이며 `nextcore/target/`과
 `nextcore/artifacts/`는 제외된다. BP19에서는 추적 정책을 변경하지 않았다.
 
+## BP24 APFS Jumpstart 실행 (2026-09-08)
+
+공개 APFS 형식의 bounded read-only parser를 추가했다. 23개 합성 경계·손상 입력
+검사, 독립 C의 24 offsets/4 checksum vectors, UEFI no_std 및 소유 코드의 strict
+검사가 통과했다. 명시 NXAPFS helper는 기본 추출/전량 재읽기와 `--start-driver`를
+분리하며 기존 BOOTX64/picker 동작을 유지한다.
+
+실제 OVMF 6개 경우에서 기본 모드, 자체 resident driver, application 거부,
+NXSB/JSDR checksum 오류와 중복 APFS를 검증했다. 전체 guest-visible disk와 ESP
+readback, QMP 자연 exit0 및 process cleanup이 모두 통과했다. 증거 변조를 거부하는
+Python 9개 검사도 통과했다. [합성 runtime receipt](artifacts/apfs-ovmf-20260908/result.json).
+
+완료된 첫 설치 snapshot을 각각 새 COW로 열어 원본 APFS driver **745,080B**를
+전량 추출·재읽기했다. 다음 실행에서는 실제 driver StartImage와 ConnectController가
+SUCCESS를 반환했고 NextCore parent도 console lease를 해제하고 SUCCESS로 돌아왔다.
+전체 60.6816초(실행 supervisor 4.1393초), 원본 9개 hash와 ESP 파일 유지,
+QMP exit0/잔여 process0을 확인했다. [원본 실행 결과](artifacts/apfs-firmware-20260908/original-apfs-result.json).
+드라이버 원본 byte는 공개에 넣지 않았으며 root 열기·설치 OS·Metal은 별도 단계다.
+
+PR #7의 exact head `8f21c876757dc571c4e09b36a779e6239dec15a1`에서 전체 원격 CI와
+신규 `apfs-firmware` run `34200621847`이 통과했다. 이 CI는 EFI를 다시 빌드하고
+6개 합성 OVMF를 실제 실행한다. main `65d1e85`로 merge했고 관련 module 배포를 진행한다.
+
 ## BP23 원격 동기화 (2026-09-08)
 
 PR #5의 head `ee04ddad4d7cbba8033df1d48082a513b931e43d`에서 모든 원격 검사가
