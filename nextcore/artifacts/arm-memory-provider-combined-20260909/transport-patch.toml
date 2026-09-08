@@ -1,0 +1,2 @@
+[patch."https://github.com/26x86/Nextcore-ISE.git"]
+nextcore-memory-service={path="/home/sharh/work/bp30-efi-combined-validation/service-transport"}

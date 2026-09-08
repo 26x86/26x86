@@ -1,0 +1,291 @@
+{
+  "head": "926c77721d4bc9c9f2650189aa96ddbd0e9f0a2a",
+  "checks": {
+    "total_count": 2,
+    "check_runs": [
+      {
+        "id": 102158173705,
+        "name": "verify",
+        "node_id": "CR_kwDOURNLL88AAAAXyRoGCQ",
+        "head_sha": "926c77721d4bc9c9f2650189aa96ddbd0e9f0a2a",
+        "external_id": "27706061-bf98-52c8-8df3-e86c0688f2a3",
+        "url": "https://api.github.com/repos/26x86/Nextcore-Tool/check-runs/102158173705",
+        "html_url": "https://github.com/26x86/Nextcore-Tool/actions/runs/34254924961/job/102158173705",
+        "details_url": "https://github.com/26x86/Nextcore-Tool/actions/runs/34254924961/job/102158173705",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-09-08T17:04:50Z",
+        "completed_at": "2026-09-08T17:05:21Z",
+        "output": {
+          "title": null,
+          "summary": null,
+          "text": null,
+          "annotations_count": 1,
+          "annotations_url": "https://api.github.com/repos/26x86/Nextcore-Tool/check-runs/102158173705/annotations"
+        },
+        "check_suite": {
+          "id": 92794268114
+        },
+        "app": {
+          "id": 15368,
+          "client_id": "Iv1.05c79e9ad1f6bdfa",
+          "slug": "github-actions",
+          "node_id": "MDM6QXBwMTUzNjg=",
+          "owner": {
+            "login": "github",
+            "id": 9919,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
+            "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/github",
+            "html_url": "https://github.com/github",
+            "followers_url": "https://api.github.com/users/github/followers",
+            "following_url": "https://api.github.com/users/github/following{/other_user}",
+            "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/github/subscriptions",
+            "organizations_url": "https://api.github.com/users/github/orgs",
+            "repos_url": "https://api.github.com/users/github/repos",
+            "events_url": "https://api.github.com/users/github/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/github/received_events",
+            "type": "Organization",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "name": "GitHub Actions",
+          "description": "Automate your workflow from idea to production",
+          "external_url": "https://help.github.com/en/actions",
+          "html_url": "https://github.com/apps/github-actions",
+          "created_at": "2018-07-30T09:30:17Z",
+          "updated_at": "2026-06-18T16:17:48Z",
+          "permissions": {
+            "actions": "write",
+            "administration": "read",
+            "artifact_metadata": "write",
+            "attestations": "write",
+            "checks": "write",
+            "code_quality": "write",
+            "contents": "write",
+            "copilot_requests": "write",
+            "deployments": "write",
+            "discussions": "write",
+            "drives": "write",
+            "issues": "write",
+            "merge_queues": "write",
+            "metadata": "read",
+            "models": "read",
+            "packages": "write",
+            "pages": "write",
+            "pull_requests": "write",
+            "repository_hooks": "write",
+            "repository_projects": "write",
+            "security_events": "write",
+            "statuses": "write",
+            "vulnerability_alerts": "read"
+          },
+          "events": [
+            "branch_protection_rule",
+            "check_run",
+            "check_suite",
+            "create",
+            "delete",
+            "deployment",
+            "deployment_status",
+            "discussion",
+            "discussion_comment",
+            "fork",
+            "gollum",
+            "issues",
+            "issue_comment",
+            "label",
+            "merge_group",
+            "milestone",
+            "page_build",
+            "public",
+            "pull_request",
+            "pull_request_review",
+            "pull_request_review_comment",
+            "push",
+            "registry_package",
+            "release",
+            "repository",
+            "repository_dispatch",
+            "status",
+            "watch",
+            "workflow_dispatch",
+            "workflow_run"
+          ]
+        },
+        "pull_requests": [
+          {
+            "url": "https://api.github.com/repos/26x86/Nextcore-Tool/pulls/3",
+            "id": 4476696367,
+            "number": 3,
+            "head": {
+              "ref": "codex/native-memory-integration",
+              "sha": "926c77721d4bc9c9f2650189aa96ddbd0e9f0a2a",
+              "repo": {
+                "id": 1360218927,
+                "url": "https://api.github.com/repos/26x86/Nextcore-Tool",
+                "name": "Nextcore-Tool"
+              }
+            },
+            "base": {
+              "ref": "main",
+              "sha": "ad57b47cb8b4a8f244039afdf38cb20ea6c55b92",
+              "repo": {
+                "id": 1360218927,
+                "url": "https://api.github.com/repos/26x86/Nextcore-Tool",
+                "name": "Nextcore-Tool"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 102158162459,
+        "name": "verify",
+        "node_id": "CR_kwDOURNLL88AAAAXyRnaGw",
+        "head_sha": "926c77721d4bc9c9f2650189aa96ddbd0e9f0a2a",
+        "external_id": "abaa3f47-1d10-5754-acc5-a10f264a48bd",
+        "url": "https://api.github.com/repos/26x86/Nextcore-Tool/check-runs/102158162459",
+        "html_url": "https://github.com/26x86/Nextcore-Tool/actions/runs/34254921718/job/102158162459",
+        "details_url": "https://github.com/26x86/Nextcore-Tool/actions/runs/34254921718/job/102158162459",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-09-08T17:04:49Z",
+        "completed_at": "2026-09-08T17:05:16Z",
+        "output": {
+          "title": null,
+          "summary": null,
+          "text": null,
+          "annotations_count": 1,
+          "annotations_url": "https://api.github.com/repos/26x86/Nextcore-Tool/check-runs/102158162459/annotations"
+        },
+        "check_suite": {
+          "id": 92794259151
+        },
+        "app": {
+          "id": 15368,
+          "client_id": "Iv1.05c79e9ad1f6bdfa",
+          "slug": "github-actions",
+          "node_id": "MDM6QXBwMTUzNjg=",
+          "owner": {
+            "login": "github",
+            "id": 9919,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjk5MTk=",
+            "avatar_url": "https://avatars.githubusercontent.com/u/9919?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/github",
+            "html_url": "https://github.com/github",
+            "followers_url": "https://api.github.com/users/github/followers",
+            "following_url": "https://api.github.com/users/github/following{/other_user}",
+            "gists_url": "https://api.github.com/users/github/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/github/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/github/subscriptions",
+            "organizations_url": "https://api.github.com/users/github/orgs",
+            "repos_url": "https://api.github.com/users/github/repos",
+            "events_url": "https://api.github.com/users/github/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/github/received_events",
+            "type": "Organization",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "name": "GitHub Actions",
+          "description": "Automate your workflow from idea to production",
+          "external_url": "https://help.github.com/en/actions",
+          "html_url": "https://github.com/apps/github-actions",
+          "created_at": "2018-07-30T09:30:17Z",
+          "updated_at": "2026-06-18T16:17:48Z",
+          "permissions": {
+            "actions": "write",
+            "administration": "read",
+            "artifact_metadata": "write",
+            "attestations": "write",
+            "checks": "write",
+            "code_quality": "write",
+            "contents": "write",
+            "copilot_requests": "write",
+            "deployments": "write",
+            "discussions": "write",
+            "drives": "write",
+            "issues": "write",
+            "merge_queues": "write",
+            "metadata": "read",
+            "models": "read",
+            "packages": "write",
+            "pages": "write",
+            "pull_requests": "write",
+            "repository_hooks": "write",
+            "repository_projects": "write",
+            "security_events": "write",
+            "statuses": "write",
+            "vulnerability_alerts": "read"
+          },
+          "events": [
+            "branch_protection_rule",
+            "check_run",
+            "check_suite",
+            "create",
+            "delete",
+            "deployment",
+            "deployment_status",
+            "discussion",
+            "discussion_comment",
+            "fork",
+            "gollum",
+            "issues",
+            "issue_comment",
+            "label",
+            "merge_group",
+            "milestone",
+            "page_build",
+            "public",
+            "pull_request",
+            "pull_request_review",
+            "pull_request_review_comment",
+            "push",
+            "registry_package",
+            "release",
+            "repository",
+            "repository_dispatch",
+            "status",
+            "watch",
+            "workflow_dispatch",
+            "workflow_run"
+          ]
+        },
+        "pull_requests": [
+          {
+            "url": "https://api.github.com/repos/26x86/Nextcore-Tool/pulls/3",
+            "id": 4476696367,
+            "number": 3,
+            "head": {
+              "ref": "codex/native-memory-integration",
+              "sha": "926c77721d4bc9c9f2650189aa96ddbd0e9f0a2a",
+              "repo": {
+                "id": 1360218927,
+                "url": "https://api.github.com/repos/26x86/Nextcore-Tool",
+                "name": "Nextcore-Tool"
+              }
+            },
+            "base": {
+              "ref": "main",
+              "sha": "ad57b47cb8b4a8f244039afdf38cb20ea6c55b92",
+              "repo": {
+                "id": 1360218927,
+                "url": "https://api.github.com/repos/26x86/Nextcore-Tool",
+                "name": "Nextcore-Tool"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "merge": {
+    "sha": "08db39cc9601e0d32fdf0e29ff0b6f8229ba6b16",
+    "merged": true,
+    "message": "Pull Request successfully merged"
+  }
+}

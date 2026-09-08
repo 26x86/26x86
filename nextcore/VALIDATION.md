@@ -3,6 +3,33 @@
 2026-09-07 작업의 통합 설명과 artifact index는
 `artifacts/NEXTCORE_SESSION_REPORT_20260907.md`에 있다.
 
+## BP30 — 실제 EFI 메모리 서비스와 서브모듈 연결
+
+[새 재귀 통합 검증](artifacts/integration-bp30-20260909/README.md)은 구현 commit
+`ea0a62e8`에서476개 workspace,149개 Python,25개 GUI,91개 참조,158개 ARM 오류 대조와
+실제 x86 EFI65개/별도 CLI 거부6개를 통과했다. native/provider/ABI, Vulkan119개,
+no_std 빌드, 펌웨어 패키징과 Clippy도 통과했다. 최종 증거 커밋은 별도 원격 검증한다.
+
+별도 no_std 서비스는 ISE 모듈의 정식 Git 소스로 유지한다. native C 진입은 guest RAM
+포인터를 받지 않고, 모든 fetch/scalar/pair 접근을 Rust 콜백으로 전달한다. 요청/응답/결과는
+80/80/192-byte ABI이며, 쌍 전체 범위를 검사한 뒤에만 메모리를 수정한다. 지원하지 않는
+backing과 callback 오류를 실제 guest abort로 꾸미지 않는다. 기존 직접 실행 경로와
+native SCTLR.M 차단은 유지한다.
+
+- [초기 실제 EFI provider 검증](artifacts/arm-memory-provider-20260909/README.md):
+  23개 일반·경계 사례, 실제 callback 오류1개와 direct 우회 음성 대조군.
+- [합쳐진 EFI의 독립 canonical 빌드와 재실행](artifacts/arm-memory-provider-combined-20260909/README.md):
+  빈 Cargo Git cache, 부모 patch 없이 정식 원격 의존성/보조 패키지를 해석하고5개 빌드
+  및 같은 실제 실행 경계를 검증했다. 별도 변형 오류 바이너리를 정상 빌드와 구분한다.
+- [명시적 진단 예산](artifacts/arm-tiered-trace-20260909/README.md): 기본64/8 API를
+  유지하고 opt-in만256/1024/4096을 허용한다. 원본은98명령/14blocks 뒤 CCMP에서 멈췄다.
+  이 원본 실행은 역사적 scalar/tiered 바이너리로 분리돼 있다.
+
+상위 runner는 기존 직접 경로39개와 별도로 provider23개, 실제 tiered2개 및 직접 우회1개,
+CLI 거부6개를 재현한다. 임의 child exit1만으로 음성 대조를 성공 처리하지 않으며 실제
+실패 receipt와 입력 hash를 검사한다. 최종 상위 commit의 새 재귀 검증 기록은 별도로 남긴다.
+정상 macOS 부팅, native MMU, 사용 가능한 데스크톱과 guest Metal은 아직 미완료다.
+
 ## BP29 최신 검증 — x86 EFI의 ARM64e scalar 메모리
 
 BP28 상위 PR #10과 변경된 5개 모듈 PR #2는 모두 main에 병합됐다.

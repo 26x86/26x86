@@ -1,0 +1,17 @@
+{
+  "command": [
+    "cargo",
+    "metadata",
+    "--format-version",
+    "1",
+    "--all-features",
+    "--filter-platform",
+    "x86_64-unknown-uefi"
+  ],
+  "cwd": "/home/sharh/work/bp30-efi-combined-validation/efi",
+  "cargo_home": "/home/sharh/work/bp30-efi-combined-validation/cargo-home",
+  "git_cache_initially_absent": true,
+  "registry_cache_reused": true,
+  "runtime_override_unset": true,
+  "returncode": 0
+}

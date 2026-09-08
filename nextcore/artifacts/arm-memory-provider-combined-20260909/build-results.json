@@ -1,0 +1,234 @@
+{
+  "schema": "nextcore.combined-efi-standalone-build.v1",
+  "passed": true,
+  "source_commit": "24140677e8fb806f701d1cdc8cdea10fd161445f",
+  "parent_workspace_used": false,
+  "path_patches_used": false,
+  "runtime_override_used": false,
+  "records": [
+    {
+      "name": "default",
+      "command": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi"
+      ],
+      "returncode": 0,
+      "binaries": {
+        "BOOTX64": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/default/BOOTX64.efi",
+          "sha256": "0dd606892395306531dc93588fa06f6d9ccf2767bfea57b9c4081d3aae5da778"
+        },
+        "NXKERNEL": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/default/NXKERNEL.efi",
+          "sha256": "445203c79796c4ed7809164bf91a103cd96bdf04126b40b68c1cb8dd7ed00e30"
+        }
+      }
+    },
+    {
+      "name": "direct",
+      "command": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--bin",
+        "NXARMJIT",
+        "--features",
+        "arm-jit-trace,arm-jit-probe"
+      ],
+      "returncode": 0,
+      "binaries": {
+        "NXARMJIT": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/direct/NXARMJIT.efi",
+          "sha256": "63beaa787edc5e07e6bfc9e182afcf486c249ef197221d854fbe6befd39d0c55"
+        }
+      }
+    },
+    {
+      "name": "provider",
+      "command": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--bin",
+        "NXARMJIT",
+        "--features",
+        "arm-jit-memory-provider"
+      ],
+      "returncode": 0,
+      "binaries": {
+        "NXARMJIT": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/provider/NXARMJIT.efi",
+          "sha256": "01be90e6f4f70efd2eb31345242411fbc55488ef56c3cb817dd81513545d6c13"
+        }
+      }
+    },
+    {
+      "name": "combined",
+      "command": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--bin",
+        "NXARMJIT",
+        "--features",
+        "arm-jit-memory-provider,arm-jit-tiered-trace"
+      ],
+      "returncode": 0,
+      "binaries": {
+        "NXARMJIT": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/combined/NXARMJIT.efi",
+          "sha256": "4c4371e0e69e0e4d0374dd69ddf9d63b26ddfa01656c6aea25ff78b49c474c12"
+        }
+      }
+    },
+    {
+      "name": "all-features",
+      "command": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features"
+      ],
+      "returncode": 0,
+      "binaries": {
+        "NXCONSOLE": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/all-features/NXCONSOLE.efi",
+          "sha256": "75b9295810bed66c383b8bc70a290621a7677553e34f649e3cbe93f81f39fd25"
+        },
+        "BOOTX64": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/all-features/BOOTX64.efi",
+          "sha256": "70420110ce4cb2d748328896a99ec6af9d11b28735151bf43986c52670473250"
+        },
+        "NXKC": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/all-features/NXKC.efi",
+          "sha256": "3e201a9220f94f60def78aef6c4c9dd999a3633afe1f364bf4cd518349cb27a4"
+        },
+        "NXHAL": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/all-features/NXHAL.efi",
+          "sha256": "49e1cdd8935014bc3e653e25aae4523c7800ce860230bb6d71f7d14bafbab336"
+        },
+        "BOOTAA64": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/all-features/BOOTAA64.efi",
+          "sha256": "1241bd9e932939f7a3f5692510b77ee927f2ef5e511699e20a65215dea62b6c6"
+        },
+        "NXKERNEL": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/all-features/NXKERNEL.efi",
+          "sha256": "e88881e908765350803d32a273f0c4a45fb30704b0816987e8330c4cbcdab18d"
+        },
+        "NXAPFS": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/all-features/NXAPFS.efi",
+          "sha256": "0efb4672060e2d0561eb7aa5894474c7aa85f24cf578176e063e01e95e9d1d76"
+        },
+        "NXFSFIX": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/all-features/NXFSFIX.efi",
+          "sha256": "0376fe6ffb924dc37a76405f9b051c821e61d1f87be4d9a2582e082a2ceb204f"
+        },
+        "NXTEST": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/all-features/NXTEST.efi",
+          "sha256": "506858425d619d7a6b36a01bbf1a625e74cfe5f0e2b8504f210cb7cdc736e2e3"
+        },
+        "NXARMJIT": {
+          "path": "/home/sharh/work/bp30-efi-combined-validation/binaries/all-features/NXARMJIT.efi",
+          "sha256": "d075444c2e9d8c8f834634e93704594bde215c3e06122d6e1c9e08dc91def2a0"
+        }
+      }
+    }
+  ],
+  "source_sha256_before": {
+    ".gitattributes": "4b0f1fc438f30f25abe421b7542e9f3803b8b5c15ca3695614222e2bc547a9fe",
+    ".github/workflows/ci.yml": "ad5a424cae4509b6a2dcb1770a57f7c919c31cc914d43ba0dd650105aebee70c",
+    ".gitignore": "9cc2c8cc102e0b2a0a177c8f594abc9b9776300a04473c24b45d52c1007a4119",
+    "Cargo.toml": "8f42392e6ecc95ff8e88b5dc76b20b5d07462790912fcbd2e7ac589d8e8c502e",
+    "LICENSE.txt": "77c458ccb6116400cf960f8951630bc3b8b34731b56ffbd736b95c2b78449104",
+    "README.md": "c67921bef8bc0e2c1f8863d0044a717e5311e627d8f8ca2d00a5389b7969ea9e",
+    "build.rs": "fb89edae73118b294baf0e10e9cef025d33fbb9615a6e90a1397a1b77d4d5d05",
+    "docs/EFI_MEMORY_PROVIDER_V1.md": "236a310904533691abdcef29db8e173a1770197a7ff4cd7d57d17faee132da3b",
+    "docs/TIERED_ARM_TRACE.md": "d8d788115eaf4a2d43102a46dd65b763069492fe69d4bfbad357ebeae07c8e3f",
+    "repository-files.json": "a3efbeabcbb64bf2be00c55040fa80dfcfb9e4df772ef0cf14fa34184a0d2a07",
+    "repository.json": "2c97e9a54581844f771b61d01b345a300ccc572ef3be91cf8e18d5ce8532ecc6",
+    "src/apfs_driver.rs": "d1e9876243d7c4548087369f021f6231a8303cf05e447b6cc7bdf34fa9de5dbf",
+    "src/apfs_filesystems.rs": "a85aa453cf6315fc7846e07cdb49e275652ea23f4b72da80d0145d96cb19367c",
+    "src/apfs_fixture.rs": "f36d414af689cd92aae29efb4ec773df6214f041dc6db06e4c8d911afb3c607b",
+    "src/apfs_observation.rs": "962a521d5b184669c3afadb4ecfa8a1ba41a8cd4986a992a0fd28c5067033819",
+    "src/apfs_probe.rs": "5d3622c9066c2a69551f5a472c92cf9292425d83039b306f8992627a2fe9bf26",
+    "src/apfs_target.rs": "ed5564557e6daa87157a77db420431e4cc7efcd54ea61e399ec3601587453a74",
+    "src/arm64.rs": "1c78298e797705ee182f2843e6eb7f8902d199327c8343349192396750d87c62",
+    "src/arm_jit.rs": "a78cb5be834863e4a8278be038bbd888bd0d118f3162ca336f5a6fcbe7ced7ea",
+    "src/arm_pages.rs": "049b9d32b2129434d955b216e49d9785aed16aa439601f46f8811070b8ec1624",
+    "src/arm_transition.S": "a444e899aef7562f48df5f88d299cde7b5ca0833f1f8430bae03b3da84803cc3",
+    "src/arm_transition.rs": "d3a62dbda4c2119751d6af8e115fc25d563ea3beee0ce39fe69f43652d3d30a8",
+    "src/console_control.rs": "cc3ac8f80d7e7f176525806746b7b849895e06aada19ae1a665be83aeb56b8ec",
+    "src/console_probe.rs": "9f7047866f1c83d7d7d37a725310c3071fa091d7aeaab3eea11929bcaa2779ad",
+    "src/exit_data.rs": "c22615140bacd656507b2a42de6aedb0fe1cc0efd9430b5552ea9f2f6808012f",
+    "src/firmware_io.rs": "75068605c2e793cab95a9350296c17c6f93e838bbadd8ec27b5ec7d5c4552a56",
+    "src/hal_tables.rs": "305705ec2f9cbd67ad58037cc451dfc41035c2c3e2ae4f8f50e3cfe7679ca8dd",
+    "src/kc.rs": "3aea2b267483ded121577274f1a3968e9a8d5de99059feeac5022ea50d36a2c1",
+    "src/kernel.rs": "5dcffef9c9e3032e17d272e52f9ef644ecafa1d350c0d73a17e46d4c755116ae",
+    "src/linux_handoff.rs": "e3ab8c4989063853424df7159a26cbea2aca046f7b43f943c8e2afe65100e300",
+    "src/loaded_kernel.rs": "afa455b9303d4cab777cdfcd6487e65cd2e7ce6b0b25b6c3d9f4a2a40d5809b9",
+    "src/loaded_kernel_collection.rs": "ed2b2581f47ddda5e4d2cfd16fdac74801d387d52dd552c8febd3bbbe1ecbe95",
+    "src/main.rs": "07b60d8fb531efb414ac5a9deb05f5e5293e6085bc0732001e74631730ec27ab",
+    "src/picker.rs": "21559058b91cf123f5261256ec37270afecf447343d50a398d6ebd573e95f49b",
+    "src/test_child.rs": "5d1823b7ce420052742694b1a0195c90be70160741927b3e2e8ccfceb6713ae1",
+    "src/transition32.rs": "42d2204ce5a7b30d29a2db3b5899a0d016ee7640017fceddf2a9229feaef46c0"
+  },
+  "source_sha256_after": {
+    ".gitattributes": "4b0f1fc438f30f25abe421b7542e9f3803b8b5c15ca3695614222e2bc547a9fe",
+    ".github/workflows/ci.yml": "ad5a424cae4509b6a2dcb1770a57f7c919c31cc914d43ba0dd650105aebee70c",
+    ".gitignore": "9cc2c8cc102e0b2a0a177c8f594abc9b9776300a04473c24b45d52c1007a4119",
+    "Cargo.toml": "8f42392e6ecc95ff8e88b5dc76b20b5d07462790912fcbd2e7ac589d8e8c502e",
+    "LICENSE.txt": "77c458ccb6116400cf960f8951630bc3b8b34731b56ffbd736b95c2b78449104",
+    "README.md": "c67921bef8bc0e2c1f8863d0044a717e5311e627d8f8ca2d00a5389b7969ea9e",
+    "build.rs": "fb89edae73118b294baf0e10e9cef025d33fbb9615a6e90a1397a1b77d4d5d05",
+    "docs/EFI_MEMORY_PROVIDER_V1.md": "236a310904533691abdcef29db8e173a1770197a7ff4cd7d57d17faee132da3b",
+    "docs/TIERED_ARM_TRACE.md": "d8d788115eaf4a2d43102a46dd65b763069492fe69d4bfbad357ebeae07c8e3f",
+    "repository-files.json": "a3efbeabcbb64bf2be00c55040fa80dfcfb9e4df772ef0cf14fa34184a0d2a07",
+    "repository.json": "2c97e9a54581844f771b61d01b345a300ccc572ef3be91cf8e18d5ce8532ecc6",
+    "src/apfs_driver.rs": "d1e9876243d7c4548087369f021f6231a8303cf05e447b6cc7bdf34fa9de5dbf",
+    "src/apfs_filesystems.rs": "a85aa453cf6315fc7846e07cdb49e275652ea23f4b72da80d0145d96cb19367c",
+    "src/apfs_fixture.rs": "f36d414af689cd92aae29efb4ec773df6214f041dc6db06e4c8d911afb3c607b",
+    "src/apfs_observation.rs": "962a521d5b184669c3afadb4ecfa8a1ba41a8cd4986a992a0fd28c5067033819",
+    "src/apfs_probe.rs": "5d3622c9066c2a69551f5a472c92cf9292425d83039b306f8992627a2fe9bf26",
+    "src/apfs_target.rs": "ed5564557e6daa87157a77db420431e4cc7efcd54ea61e399ec3601587453a74",
+    "src/arm64.rs": "1c78298e797705ee182f2843e6eb7f8902d199327c8343349192396750d87c62",
+    "src/arm_jit.rs": "a78cb5be834863e4a8278be038bbd888bd0d118f3162ca336f5a6fcbe7ced7ea",
+    "src/arm_pages.rs": "049b9d32b2129434d955b216e49d9785aed16aa439601f46f8811070b8ec1624",
+    "src/arm_transition.S": "a444e899aef7562f48df5f88d299cde7b5ca0833f1f8430bae03b3da84803cc3",
+    "src/arm_transition.rs": "d3a62dbda4c2119751d6af8e115fc25d563ea3beee0ce39fe69f43652d3d30a8",
+    "src/console_control.rs": "cc3ac8f80d7e7f176525806746b7b849895e06aada19ae1a665be83aeb56b8ec",
+    "src/console_probe.rs": "9f7047866f1c83d7d7d37a725310c3071fa091d7aeaab3eea11929bcaa2779ad",
+    "src/exit_data.rs": "c22615140bacd656507b2a42de6aedb0fe1cc0efd9430b5552ea9f2f6808012f",
+    "src/firmware_io.rs": "75068605c2e793cab95a9350296c17c6f93e838bbadd8ec27b5ec7d5c4552a56",
+    "src/hal_tables.rs": "305705ec2f9cbd67ad58037cc451dfc41035c2c3e2ae4f8f50e3cfe7679ca8dd",
+    "src/kc.rs": "3aea2b267483ded121577274f1a3968e9a8d5de99059feeac5022ea50d36a2c1",
+    "src/kernel.rs": "5dcffef9c9e3032e17d272e52f9ef644ecafa1d350c0d73a17e46d4c755116ae",
+    "src/linux_handoff.rs": "e3ab8c4989063853424df7159a26cbea2aca046f7b43f943c8e2afe65100e300",
+    "src/loaded_kernel.rs": "afa455b9303d4cab777cdfcd6487e65cd2e7ce6b0b25b6c3d9f4a2a40d5809b9",
+    "src/loaded_kernel_collection.rs": "ed2b2581f47ddda5e4d2cfd16fdac74801d387d52dd552c8febd3bbbe1ecbe95",
+    "src/main.rs": "07b60d8fb531efb414ac5a9deb05f5e5293e6085bc0732001e74631730ec27ab",
+    "src/picker.rs": "21559058b91cf123f5261256ec37270afecf447343d50a398d6ebd573e95f49b",
+    "src/test_child.rs": "5d1823b7ce420052742694b1a0195c90be70160741927b3e2e8ccfceb6713ae1",
+    "src/transition32.rs": "42d2204ce5a7b30d29a2db3b5899a0d016ee7640017fceddf2a9229feaef46c0"
+  }
+}

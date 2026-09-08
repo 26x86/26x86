@@ -1,0 +1,47 @@
+{
+  "schema": "nextcore.efi-memory-provider-provenance.v1",
+  "efi_source_base_commit": "6feba80a9ceea22811b6bf08f98010501654375e",
+  "efi_source_state": "authored provider-only source patch before separate tiered integration",
+  "efi_provider_source_sha256": {
+    "Cargo.toml": "70032774633023277017ad5ddf57032b81d32399dd2fd355efe60abd07b96e6d",
+    "build.rs": "fb89edae73118b294baf0e10e9cef025d33fbb9615a6e90a1397a1b77d4d5d05",
+    "src/arm_jit.rs": "228550b6f630e27a80a393a29bdec4bc1387ce012230cb81dad7cbb197d9a744"
+  },
+  "historical_patch": "efi-provider.patch",
+  "historical_patch_reproduces_frozen_sources": true,
+  "ise_revision": "41e8997c4b8d6f029ed3a3fbec0669374046ab6f",
+  "core_revision": "6105cd7996ef2ea4db35d7d3a1e8822d0703aae9",
+  "binaries": {
+    "provider": {
+      "path": "/home/sharh/work/bp30-efi-memory-validation/rebuild-script/target-provider/x86_64-unknown-uefi/release/NXARMJIT.efi",
+      "sha256": "b2a3429a599e3f45ca754e47ce52ffb693e8f4061f61af4dfa30ee6d08169ad4"
+    },
+    "direct": {
+      "path": "/home/sharh/work/bp30-efi-memory-validation/rebuild-script/target-direct/x86_64-unknown-uefi/release/NXARMJIT.efi",
+      "sha256": "175b622985d0c039ae998dfc7e5e574303ba1a1581815a43d507e106c1844284"
+    },
+    "transport": {
+      "path": "/home/sharh/work/bp30-efi-memory-validation/rebuild-script/target-transport/x86_64-unknown-uefi/release/NXARMJIT.efi",
+      "sha256": "535ce5a3a85a3b9df8ce5c015983176a5299e465f20b288d6f5ba992790377c1"
+    }
+  },
+  "tool_versions": {
+    "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+    "cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)",
+    "clang": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+    "llvm-ar": "Ubuntu LLVM version 18.1.3",
+    "llvm-objcopy": "llvm-objcopy, compatible with GNU objcopy",
+    "qemu-system-x86_64": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+    "python3": "Python 3.12.3"
+  },
+  "earlier_development_binary_sha256": "9f3d7a3efc21e20c26844e716dabb64005930cf1bb6802005efb1b6ae2ff0b40",
+  "final_replay_uses_fresh_build": true,
+  "source_modified_by_build_or_replay": false,
+  "boot_services_active": true,
+  "actual_x86_ovmf_execution": true,
+  "physical_machine_efi_verified": false,
+  "mmu_enabled_verified": false,
+  "guest_ram_after_fault_observed": false,
+  "macos_boot_verified": false,
+  "guest_metal_verified": false
+}

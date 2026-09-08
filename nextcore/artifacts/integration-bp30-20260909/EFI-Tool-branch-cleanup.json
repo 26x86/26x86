@@ -1,0 +1,16 @@
+[
+  {
+    "module": "EFI",
+    "head": "24140677e8fb806f701d1cdc8cdea10fd161445f",
+    "merged_main": "603033ad1c7109767a0d706c3a08c55d2fda7169",
+    "deleted_owned_branch": "codex/efi-memory-provider",
+    "clean_detached_worktree": "/home/sharh/work/bp30-efi-memory"
+  },
+  {
+    "module": "Tool",
+    "head": "926c77721d4bc9c9f2650189aa96ddbd0e9f0a2a",
+    "merged_main": "08db39cc9601e0d32fdf0e29ff0b6f8229ba6b16",
+    "deleted_owned_branch": "codex/native-memory-integration",
+    "clean_detached_worktree": "/home/sharh/work/bp30-tool"
+  }
+]

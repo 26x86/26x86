@@ -1,0 +1,35 @@
+{
+  "schema": "nextcore.tiered-source.v1",
+  "runtime_revision": "8b09f8764f13838baf71c1676575cb829bcd7902",
+  "module_sources": {
+    "core": {
+      "base_revision": "6105cd7996ef2ea4db35d7d3a1e8822d0703aae9",
+      "source_sha256": {
+        "Cargo.toml": "b2393acefdc9c6878b1212d7b8114c417a0170dfe372ce42c6b9cdf398eb0580",
+        "src/boot_config.rs": "be0e13ec360759c4605f16d34b53c904fb700246da3e7e08382b606069cc81c0",
+        "tests/arm64_platform_config.rs": "a6d5e6f56a801a639abdc71fe4e8698a38d904e382f0a6db2a5bd757d4de97bb"
+      },
+      "patch_sha256": "7d1eea5811d1f3134974af1858b764cf41e69bec6cbd04e5ad324dbb34e39e86"
+    },
+    "efi": {
+      "base_revision": "f2ca77a23d09b6de3f5371861e6b8bec61577955",
+      "source_sha256": {
+        "Cargo.toml": "3d5fe6272286366ac31ceb5f249e7c805d6bf9a449985ff0d87076dde9850fed",
+        "src/arm_jit.rs": "ee18572da2ffc21c6217c510f8b866e00a69311ee6c5cc45f30c6e06cc3c129c",
+        "build.rs": "788ca007f1b438c7907944b26395e9d75e0f237ce54191a0fda2d2e923fcc771"
+      },
+      "patch_sha256": "3272488a0a161b34e0a2bc77e91c6e7de65c9b99d9d0b1cbad3879bcb2f56f21"
+    }
+  },
+  "binaries": {
+    "NXARMJIT-tiered.efi": "2330a2f62d65ca8f812d583f484a177b36798717c10995b17b5bbd6917dc512a",
+    "NXARMJIT-default.efi": "4b84b09ede15b84334b81ca93574d426050a37bc6fca74ae2eab2c9f15e4d5be"
+  },
+  "source_state": "Base revisions plus delegated uncommitted diagnostic changes; final publication pins assigned by integrator.",
+  "core_tests": {
+    "arm64_platform_config": 9,
+    "arm64_boot_config": 3,
+    "boot_config": 12,
+    "passed": true
+  }
+}

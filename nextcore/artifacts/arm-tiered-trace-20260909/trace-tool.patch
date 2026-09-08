@@ -1,0 +1,42 @@
+--- a/nextcore/tools/trace_arm_jit_ovmf.py
++++ b/nextcore/tools/trace_arm_jit_ovmf.py
+@@ -31,6 +31,8 @@
+     for name in ("physical-base", "virtual-base", "memory-size", "kernel-physical"):
+         parser.add_argument(f"--{name}", type=lambda value: int(value, 0), required=True)
+     parser.add_argument("--instruction-budget", type=int, default=8)
++    parser.add_argument("--tiered-diagnostic", action="store_true",
++                        help="explicitly require the opt-in tiered EFI build; allows256/1024/4096")
+     parser.add_argument("--platform-profile", choices=["nextcore-irq-compat-v1"])
+     for name in ("initial-override", "initial-pstate", "vector-base", "irq-level", "fiq-level"):
+         parser.add_argument(f"--{name}", type=lambda value: int(value, 0))
+@@ -42,8 +44,12 @@
+     parser.add_argument("--ovmf-vars", type=Path, default=Path("/usr/share/OVMF/OVMF_VARS_4M.fd"))
+     args = parser.parse_args()
+     maximum_budget = 64 if args.platform_profile else 8
++    if args.tiered_diagnostic and args.platform_profile:
++        maximum_budget = 4096
+     if not 1 <= args.instruction_budget <= maximum_budget:
+         parser.error(f"selected diagnostic budget must be 1..{maximum_budget}")
++    if args.instruction_budget > 64 and args.instruction_budget not in (256, 1024, 4096):
++        parser.error("extended diagnostic budget must be256,1024 or4096")
+     platform_fields = {"InitialOverride": "initial_override", "InitialPstate": "initial_pstate",
+                        "VectorBase": "vector_base", "IrqLevel": "irq_level", "FiqLevel": "fiq_level"}
+     platform_options = {key: getattr(args, field) for key, field in platform_fields.items() if getattr(args, field) is not None}
+@@ -163,12 +169,17 @@
+     if args.platform_profile:
+         completed = completed and bool(execution and execution["platform"] and execution["platform"]["profile"] == 1
+                                        and execution["exception"] is not None)
++    tiered_marker = "NXARMJIT: TRACE_TIERED_DIAGNOSTIC maximum=4096" in actual
++    if args.tiered_diagnostic:
++        completed = completed and tiered_marker
+     receipt = {
+         "schema": "nextcore.x86-efi-arm-trace.v1", "host_architecture": platform.machine(),
+         "handoff_abi": "unprovisioned-sptm-prefix", "sptm_args_provided": False,
+         "platform_profile": args.platform_profile, "profile_reset_origin": "software_defined" if args.platform_profile else "unprovided",
+         "sptm_services_provided": False, "platform_device_tree_provided": False,
+         "config": config, "execution": execution,
++        "tiered_diagnostic_requested": args.tiered_diagnostic,
++        "tiered_diagnostic_build_observed": tiered_marker,
+         "markers": [line for line in actual if line.startswith("NXARMJIT:")],
+         "input_sha256_before": before, "input_sha256_after": after,
+         "original_inputs_preserved": before == after, "esp_copies_preserved": copies_unchanged,

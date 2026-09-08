@@ -1,0 +1,16 @@
+[
+  {
+    "module": "Core",
+    "tested_head": "40833dc29d8bcd2976d0a13c2f120533d02500c4",
+    "main": "0294453d8fa1c28ccb445a8d9643a4949ac4eabf",
+    "deleted_branch": "codex/tiered-trace-budget",
+    "ancestry_verified": true
+  },
+  {
+    "module": "ISE",
+    "tested_head": "41e8997c4b8d6f029ed3a3fbec0669374046ab6f",
+    "main": "f7b8509295fbd10f524653e8690af0d3520e50d2",
+    "deleted_branch": "codex/native-memory-provider",
+    "ancestry_verified": true
+  }
+]

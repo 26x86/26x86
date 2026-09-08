@@ -1,0 +1,9 @@
+{
+  "schema": "nextcore.authored-callback-transport-failure.v1",
+  "original_relative_source": "runtime/memory-service/src/lib.rs",
+  "original_sha256": "e2a00f7ed51e353c645234325ce3cbd86a9b2082f0887a656f2ba61b621c0726",
+  "mutated_sha256": "f4ab604a626caf9f7438c4c8f7e4bb4dc74e81822729c33136b71984782a232f",
+  "mutation": "Add an early return -7 for operation != FETCH after pointer/alignment checks and before any data transfer. Production source unchanged.",
+  "injection_script": "build_variants.py",
+  "guest_fault_injected": false
+}

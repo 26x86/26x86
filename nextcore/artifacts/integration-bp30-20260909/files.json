@@ -1,0 +1,485 @@
+{
+  "schema": "nextcore.public-evidence/1",
+  "files": [
+    {
+      "path": "Core-ISE-branch-cleanup.json",
+      "bytes": 467,
+      "sha256": "0f58a91e95b8c98f6e0c800fc3914b12f2d0ef88adab2d67b8463fa6ae6f33da"
+    },
+    {
+      "path": "Core-merge.json",
+      "bytes": 10904,
+      "sha256": "65009d7bf7037579bc63ab2060bdd284fe48f6996e230716f94e8a29bf935d0a"
+    },
+    {
+      "path": "EFI-Tool-branch-cleanup.json",
+      "bytes": 548,
+      "sha256": "496f0f66ac3e94d21edf8661a5a0e4fa9e5944caa509da964d4967ec7255511c"
+    },
+    {
+      "path": "EFI-merge.json",
+      "bytes": 10886,
+      "sha256": "cdf71e48d40d343bd554bc2ea3412a648d886124f2d96590a44772fdef55f4d3"
+    },
+    {
+      "path": "ISE-merge.json",
+      "bytes": 10892,
+      "sha256": "1147b26b10e9a268fa95bb8a31ccad7d3eab121d19fbcdc26569ced393be28e1"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2082,
+      "sha256": "6f562dab2ae4272b1ee4a182792111986f537d9b97def812558e223274436ee1"
+    },
+    {
+      "path": "Tool-merge.json",
+      "bytes": 10916,
+      "sha256": "1c0514dfab409c37f61d4f847def92ecdfbea3459393549357dc604c7a928735"
+    },
+    {
+      "path": "architectural-reference.log",
+      "bytes": 7356,
+      "sha256": "61a0ed11e4f45a18e74071d38f30c1ed4f5ba267a5d98534d0551f2d7629af85"
+    },
+    {
+      "path": "cli-utf8.log",
+      "bytes": 1289,
+      "sha256": "a66e6d16e999f9e4de52fa52683f4827de2f09bc9c27fa4d521c25d9a85a9e98"
+    },
+    {
+      "path": "clippy-efi.log",
+      "bytes": 29735,
+      "sha256": "595d0591bf711e36dd4f3950002301d9d3781e5663861f78c3958aa0fc9188e7"
+    },
+    {
+      "path": "clippy-host.log",
+      "bytes": 35855,
+      "sha256": "b6522a9ae95b27d2791ac4ec84c586337fd241d862177c53d6225569c9743f58"
+    },
+    {
+      "path": "compiled-bundle.log",
+      "bytes": 470,
+      "sha256": "1e4c4e56a46955512a3815f1e230ec12986f3cad404af4ef2d0b6ea60c268948"
+    },
+    {
+      "path": "exact-mmu-comparison/report.json",
+      "bytes": 129200,
+      "sha256": "5412eed4194ba7be2ff735c58b3f44991f756757db0c0055de9db9898e41c98d"
+    },
+    {
+      "path": "firmware-memory-provider/bypass/report.json",
+      "bytes": 4530,
+      "sha256": "deddae68c9aab6e296f14b40e3a36229a018265e18d139f64b9055f4dd22be7d"
+    },
+    {
+      "path": "firmware-memory-provider/bypass/serial.log",
+      "bytes": 1398,
+      "sha256": "9334ab7c83d2db0bd792e2fe330855614a137571beda1eed1a936a7048d7344e"
+    },
+    {
+      "path": "firmware-memory-provider/bypass-negative.json",
+      "bytes": 2042,
+      "sha256": "aee3e8e1a4105264c57a90a0e12021cad8f6a0e58f53c25e97390623481912dd"
+    },
+    {
+      "path": "firmware-memory-provider/edges/missing-fetch/report.json",
+      "bytes": 4709,
+      "sha256": "2bcb065890e172edf6fa2df23a24209b376555999ea903cba7712f75f8b7b809"
+    },
+    {
+      "path": "firmware-memory-provider/edges/missing-fetch/serial.log",
+      "bytes": 1584,
+      "sha256": "6bc4ef2230799c1953ce85a9419c5cacf98de9d53b540e54ff764ce995ae2abd"
+    },
+    {
+      "path": "firmware-memory-provider/edges/missing-load/report.json",
+      "bytes": 4707,
+      "sha256": "aa1e7de7e2b92a832eef1b103fa843540003130619d65fdc1d70d1888ff4c6a0"
+    },
+    {
+      "path": "firmware-memory-provider/edges/missing-load/serial.log",
+      "bytes": 1584,
+      "sha256": "5fad501f7804d8116cb1ef30358776effb25839709e5043ee11a84f95fccf732"
+    },
+    {
+      "path": "firmware-memory-provider/edges/missing-store/report.json",
+      "bytes": 4709,
+      "sha256": "5dd0fd27308b2498d66078a4913cb034a62fb550318297c576e9e3996aa654e9"
+    },
+    {
+      "path": "firmware-memory-provider/edges/missing-store/serial.log",
+      "bytes": 1584,
+      "sha256": "5fad501f7804d8116cb1ef30358776effb25839709e5043ee11a84f95fccf732"
+    },
+    {
+      "path": "firmware-memory-provider/edges/pair-second-load/report.json",
+      "bytes": 4715,
+      "sha256": "1958c9fe3690b73f98671049358a219c999f0f21174266cdcb949e656dc98202"
+    },
+    {
+      "path": "firmware-memory-provider/edges/pair-second-load/serial.log",
+      "bytes": 1584,
+      "sha256": "4e1b83900197ca8c1877318562ce934be451d4f75970b8a4bd4735450b7b7f8e"
+    },
+    {
+      "path": "firmware-memory-provider/edges/pair-second-store/report.json",
+      "bytes": 4717,
+      "sha256": "4f147d56e86636b03a40e738a8e4e37a9e5348c1456709002c8edb81aa0fb6b8"
+    },
+    {
+      "path": "firmware-memory-provider/edges/pair-second-store/serial.log",
+      "bytes": 1584,
+      "sha256": "4e1b83900197ca8c1877318562ce934be451d4f75970b8a4bd4735450b7b7f8e"
+    },
+    {
+      "path": "firmware-memory-provider/edges/pc-alignment/report.json",
+      "bytes": 4752,
+      "sha256": "bb727c28160746413cbca11f1c1a03ab453f2dbdf9f14bb646e6ed30353d5606"
+    },
+    {
+      "path": "firmware-memory-provider/edges/pc-alignment/serial.log",
+      "bytes": 1608,
+      "sha256": "c2fa197e6552e4192ce99f59baeaa2630f1780024b56c2205857edf584d95f91"
+    },
+    {
+      "path": "firmware-memory-provider/edges/report.json",
+      "bytes": 26001,
+      "sha256": "85ddeea37f1134ff691a059d616422f4918d0f088f688a12805fe9518ab459a1"
+    },
+    {
+      "path": "firmware-memory-provider/observations.json",
+      "bytes": 31903,
+      "sha256": "16c2e59d50bae44135658f44cb8d5b9fca6e788d0559a6220ef6ac64c91ec7e2"
+    },
+    {
+      "path": "firmware-memory-provider/pair/a0-device-load-fault/report.json",
+      "bytes": 4844,
+      "sha256": "5f2e560c3afdf7eb226c749af1775b960261ea3bd8191caa1059244604739f3b"
+    },
+    {
+      "path": "firmware-memory-provider/pair/a0-device-load-fault/serial.log",
+      "bytes": 1645,
+      "sha256": "90123b2bcc029355e625721d63302b8839b28c580b07bcb1ec3f3044a984db0f"
+    },
+    {
+      "path": "firmware-memory-provider/pair/a0-device-store-fault/report.json",
+      "bytes": 4847,
+      "sha256": "6e1c270e55fbfe87eb06e2fb42971b5c22994f83a9dc67e84782980239b41a59"
+    },
+    {
+      "path": "firmware-memory-provider/pair/a0-device-store-fault/serial.log",
+      "bytes": 1645,
+      "sha256": "95d34c7f735b73828bd3e568c7d1f985d5bf512491c1fa4ef5ced3661cbf1f26"
+    },
+    {
+      "path": "firmware-memory-provider/pair/invalid-writeback-pair/report.json",
+      "bytes": 4776,
+      "sha256": "2b801c66d3026de56b4230afff4c59c0ad68f4c5699bc6d1d6b75225e35cf3b1"
+    },
+    {
+      "path": "firmware-memory-provider/pair/invalid-writeback-pair/serial.log",
+      "bytes": 1608,
+      "sha256": "552ffbe168c191f8a2e37e19b850cd2e8d9da16c303aa3cb8c11efad48bfd7d8"
+    },
+    {
+      "path": "firmware-memory-provider/pair/pair-readback/report.json",
+      "bytes": 4784,
+      "sha256": "0e79cb43bf6a380a52c63531983e987ffc78bb6b1be5ca08f10c727bba997c2e"
+    },
+    {
+      "path": "firmware-memory-provider/pair/pair-readback/serial.log",
+      "bytes": 1622,
+      "sha256": "0e3c6f0aea30727ded1135d0d9097fe1217d2c2e8ff9d4f64c0596b79c31fb08"
+    },
+    {
+      "path": "firmware-memory-provider/pair/report.json",
+      "bytes": 6676,
+      "sha256": "88c881663a393d669efece84f29782fdb846513ab2a069d80b74279a8d8b9d7b"
+    },
+    {
+      "path": "firmware-memory-provider/pair/sp-load-fault/report.json",
+      "bytes": 4774,
+      "sha256": "f05d1a7bda79ea0e113032af4213d9271106355cf853fe09e7a7b526d624fa9d"
+    },
+    {
+      "path": "firmware-memory-provider/pair/sp-load-fault/serial.log",
+      "bytes": 1619,
+      "sha256": "2e1b47320aacc6810b4c18f419c7994eb66a09f9511ca8cceba2a05bda8b8cd3"
+    },
+    {
+      "path": "firmware-memory-provider/pair/sp-store-fault/report.json",
+      "bytes": 4776,
+      "sha256": "908106403759293aaff6ecf9b1490b4876a8e202d02d087b6ca16b9be09d2819"
+    },
+    {
+      "path": "firmware-memory-provider/pair/sp-store-fault/serial.log",
+      "bytes": 1619,
+      "sha256": "5230bf7201585eb3b6cf328b6721a916aa0d3b59d45898213e82207944e68955"
+    },
+    {
+      "path": "firmware-memory-provider/report.json",
+      "bytes": 12566,
+      "sha256": "08363597439bdaccd4588c14134c36e50468048cba94923151200c528200e9b6"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/a0-device-load/report.json",
+      "bytes": 4840,
+      "sha256": "61428c5762a99b776d31a6e810c98b3728abf67558a038f705c4a496289f57f2"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/a0-device-load/serial.log",
+      "bytes": 1645,
+      "sha256": "46368fa5ff38a527cbcf5a04321f52a877b2b558418f41809e74efb09d10eb47"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/a0-device-store/report.json",
+      "bytes": 4843,
+      "sha256": "204a6458fee6bc6a0566f679a5069586e1e0be304e76da24d276359ed73d08a8"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/a0-device-store/serial.log",
+      "bytes": 1645,
+      "sha256": "df3f955be12b791097a7fe4e7d3ace7ff1db01f974d49dda4354fcb3a36bc718"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/byte-signed/report.json",
+      "bytes": 4757,
+      "sha256": "24072b230619786a3eaade9c9fc947c322de645ef9ecdedc7e040959c38f2163"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/byte-signed/serial.log",
+      "bytes": 1606,
+      "sha256": "fbcfa89c6c0f777d7f77e499ca79f405104d4de5d0775d851a392d54197ab6a0"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/half-signed/report.json",
+      "bytes": 4761,
+      "sha256": "d575b8c17d3c44f6383ee7c86644addf368831d92d48dcc892362b313db0d470"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/half-signed/serial.log",
+      "bytes": 1608,
+      "sha256": "7d1b4d38345608893450554f4a76fa82e5f64b19d141771558afac51026e21b2"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/prefetch-rejected/report.json",
+      "bytes": 4819,
+      "sha256": "b650a1263aa4f3e07109dfd973084b7145bcb14907ed467dfac9f9fd98509d20"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/prefetch-rejected/serial.log",
+      "bytes": 1628,
+      "sha256": "59d11eb87d03ca4831f9ee9fcc2ee57bc3523809341f2d5c776fc034305d3e52"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/quad-zr/report.json",
+      "bytes": 4744,
+      "sha256": "63188322cdfab9ed1269ecd1e9bde23cff29c0abb9da647b8ba32d99c24dfd96"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/quad-zr/serial.log",
+      "bytes": 1605,
+      "sha256": "25110b0de4f749d1f2f259855201e204bdb4244816d5e6e82a0ceb5cd598c7bc"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/report.json",
+      "bytes": 19226,
+      "sha256": "19954d58d43e9a6dbfabbf15661152bc1e7fd0cc0e17814e472258d1f3901f7d"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/reserved-rejected/report.json",
+      "bytes": 4819,
+      "sha256": "42b7b1515dd30ecf2dd0a31950079eaa0598aaa6b2268ff5ad2b2bf06b50f330"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/reserved-rejected/serial.log",
+      "bytes": 1628,
+      "sha256": "3b87373cb65a3cdbcad78d8945d85fa99e8ee378e49c0a3a97d6466106c22f14"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/simd-rejected/report.json",
+      "bytes": 4810,
+      "sha256": "a148d0fdb28aea4ebe92c14b66aa557fd212a522af37685418328960f88271bc"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/simd-rejected/serial.log",
+      "bytes": 1628,
+      "sha256": "fbfe0b1b528dbb135d4dffc126eca90c631c0f485ee8bb8e4d06a84842b01b01"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/sp-load/report.json",
+      "bytes": 4828,
+      "sha256": "72c3529be6c5e901c2991bbab4c9420093f6729a24792762462736630fb1f091"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/sp-load/serial.log",
+      "bytes": 1646,
+      "sha256": "46f1f6cff050c706e9474857f295672419ca16ae51c04d528b2108fd7a390cf0"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/sp-store/report.json",
+      "bytes": 4831,
+      "sha256": "2c128f8a7dec3f884555e5aef69dc8e7d9495701858f1b1eec3555cefbf4ec24"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/sp-store/serial.log",
+      "bytes": 1646,
+      "sha256": "3a813aac83bf47ecd7d989ef1398536dd9f80251f2ec1dac9cbe2b93f30d970e"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/word-signed/report.json",
+      "bytes": 4770,
+      "sha256": "b10c92ae5fcead76c70f036ee9ccdd81f68859531376491838113bc7e327c135"
+    },
+    {
+      "path": "firmware-memory-provider/scalar/word-signed/serial.log",
+      "bytes": 1612,
+      "sha256": "205c7c177ba65850d16bb108539a6feb03db4115999b0db006f2549b48b6c863"
+    },
+    {
+      "path": "firmware-memory-provider/tiers/default-firmware256/report.json",
+      "bytes": 3194,
+      "sha256": "373b0b0e02ccecf74a800f4f18c55c9bff2b9d92fd40cee03649792f22b3bfaa"
+    },
+    {
+      "path": "firmware-memory-provider/tiers/default-firmware256/serial.log",
+      "bytes": 584,
+      "sha256": "b8879dd4caf275e1cf848ba587ecebf5bc104e9cf4eeec45c3de96947a42ae12"
+    },
+    {
+      "path": "firmware-memory-provider/tiers/report.json",
+      "bytes": 1910,
+      "sha256": "92628ef60e748065251401dcbd6f965256018cd5d940fecf3949944275e1ab56"
+    },
+    {
+      "path": "firmware-memory-provider/tiers/tiered256/report.json",
+      "bytes": 4748,
+      "sha256": "1fb5e46abd1d146700560701ae92aa75a7ac2aedc8bbb43c29a77940e7a2a2f5"
+    },
+    {
+      "path": "firmware-memory-provider/tiers/tiered256/serial.log",
+      "bytes": 1638,
+      "sha256": "df9cec0b547fd43c870c81ae29830d9c03e15dce172a6ddae4d8370cf349adee"
+    },
+    {
+      "path": "firmware-nine/report.json",
+      "bytes": 14546,
+      "sha256": "14a411eca61bad0b99d4f883e6842080f30f0fe5ec48c3ee354e1988426609ed"
+    },
+    {
+      "path": "firmware-pair/report.json",
+      "bytes": 6556,
+      "sha256": "01016fc5070f912ad6394911ae2ce90ca170eb8bd7466ced8c7a986c8aa620ae"
+    },
+    {
+      "path": "firmware-platform/report.json",
+      "bytes": 6919,
+      "sha256": "1d1bf4c9500ed0dbdcccb34386a31639a297a5b87d50a2869ee821cd84232c75"
+    },
+    {
+      "path": "firmware-prefix/report.json",
+      "bytes": 2513,
+      "sha256": "fe03899483dc86cc31bf7177e6f804197fdf095c71f417997d0eb08c0262befc"
+    },
+    {
+      "path": "firmware-scalar/report.json",
+      "bytes": 19028,
+      "sha256": "289d2d6df9e1879b55472c9f09fde77c475d6abe6cf61137f587df8fcc5579fe"
+    },
+    {
+      "path": "gui-boundaries.log",
+      "bytes": 3520,
+      "sha256": "b5761825cf9adf194b65c6c7fa11e61390d641ab418206825e71c68731b16185"
+    },
+    {
+      "path": "memory-service-uefi.log",
+      "bytes": 236,
+      "sha256": "b4b67a049f7dc3a1e8574f25f29141ecd362bb75a375c557c4d73db532a827e7"
+    },
+    {
+      "path": "memory-service.log",
+      "bytes": 1015,
+      "sha256": "1ec73e302808ee4c0875b8eed2ecf271d8a7dc7ea269855344c78e25d8f5548e"
+    },
+    {
+      "path": "native-pac.json",
+      "bytes": 30762,
+      "sha256": "4167056b18685562b7bd039ba72d9f54e30ddb9564e00bc73b6cfb22693f0316"
+    },
+    {
+      "path": "native-provider.json",
+      "bytes": 11350,
+      "sha256": "d77e5f96a055364810230052415c28851405bb85c5fa90e99099ccb115c4028d"
+    },
+    {
+      "path": "package-cargo-resolution.json",
+      "bytes": 2400,
+      "sha256": "9981c27bfef75b0bf44f3cd1007693ca8a8176ef3aba48265ea2619a674f11f3"
+    },
+    {
+      "path": "package-policy-results.json",
+      "bytes": 1117,
+      "sha256": "fbf96050d4af9fbbb2c38194c42fc36d1698b100f8b3253a09e544d6ab32f467"
+    },
+    {
+      "path": "pair-oracle.json",
+      "bytes": 1810,
+      "sha256": "1656f23c801fcd1c55de5b08fc085fe6cb958f6000dc40a5fad4aed149046bae"
+    },
+    {
+      "path": "pc-alignment.json",
+      "bytes": 3254,
+      "sha256": "d1d8e03a308f90883f50dcb058c485823f320c99a10b094f8526ff5f13584d01"
+    },
+    {
+      "path": "python.log",
+      "bytes": 34148,
+      "sha256": "f5026ce114aa392d082dcbe19ad660888081b716f4ada1922a5d94bdd198a5de"
+    },
+    {
+      "path": "report.json",
+      "bytes": 13031,
+      "sha256": "6a1097526c1365c20f2a6f9c9823a1e94381058287e24dff494b32fcf6843252"
+    },
+    {
+      "path": "review-receipt.json",
+      "bytes": 3983,
+      "sha256": "b26a4b1604a16d91d8d29121130de5b8e24913f5b0b02dfab98abf7955310f7f"
+    },
+    {
+      "path": "review.md",
+      "bytes": 2086,
+      "sha256": "c9e7bcbb40c8b06b465a4ffb4246af526ff0c3dbb68dbe00477edf54c469e00b"
+    },
+    {
+      "path": "runner-tests.log",
+      "bytes": 640,
+      "sha256": "2bc3ef70d1edf240b71822558492c32e8aed2888d675f66c2b7528440af82c3f"
+    },
+    {
+      "path": "scalar-oracle.json",
+      "bytes": 3065,
+      "sha256": "fc60dcf8c84e9c52576d0879efa637c2b548436085ee2f0e97eef915c3f99a1b"
+    },
+    {
+      "path": "submodules-final.log",
+      "bytes": 2400,
+      "sha256": "9981c27bfef75b0bf44f3cd1007693ca8a8176ef3aba48265ea2619a674f11f3"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 1090,
+      "sha256": "e97bdcbb6f26f2c2e7e3ab9295b905b607f9c0f8d9b37832dc3dff2ad59f8e46"
+    },
+    {
+      "path": "vulkan.log",
+      "bytes": 9020,
+      "sha256": "65a1d0bf7c1a52fbc78c8c4c02c79c97e15a9eddd2d55d02f5562677caa5999e"
+    },
+    {
+      "path": "workspace.log",
+      "bytes": 43641,
+      "sha256": "f22a0dc9ea21552db7346116b88d366bc5fcb9b0adc853622b4aba5ac7a195d7"
+    }
+  ]
+}

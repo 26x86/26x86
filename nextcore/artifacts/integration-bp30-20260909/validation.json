@@ -1,0 +1,25 @@
+{
+  "schema": "nextcore.bp30-integration/1",
+  "passed": true,
+  "source_commit": "ea0a62e8e75efd517702873535dc1dfb0ffc6b42",
+  "workspace_tests": 476,
+  "python_tests": 149,
+  "gui_tests": 25,
+  "architectural_reference_tests": 91,
+  "actual_x86_firmware_cases": 65,
+  "additional_cli_rejections": 6,
+  "memory_provider_firmware_cases": 26,
+  "exact_arm_fault_comparisons": 158,
+  "prior_mmu_oracle_cases": 18,
+  "vulkan_tests": 119,
+  "binaries_sha256": {
+    "NXARMJIT-default.efi": "e1d70ecff81e8eed9b7d139bb924ae890c6f322b3a7d86ca770f662ad55757d8",
+    "NXARMJIT-provider.efi": "c5b4317529f3af0c83b8c147f6a993affe16bcb1671910fa19ba5e0fe6fef850",
+    "NXARMJIT-tiered.efi": "28b399e6513b5c4d4605fea352444e609ddcd21495e3a150f412217e2bfa0958",
+    "NXARMJIT-probe.efi": "a7252254a96eb199402578de1b4d27ec375fdf066d7a79933e1c9d2115532eb6"
+  },
+  "native_mmu_verified": false,
+  "macos_boot_verified": false,
+  "guest_metal_verified": false,
+  "source_transport": "Fresh committed local recursive clone with temporary Git URL mappings; final publication network clone verified separately"
+}

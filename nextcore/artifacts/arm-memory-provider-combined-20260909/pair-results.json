@@ -1,0 +1,163 @@
+{
+  "schema": "nextcore.efi-pair-memory.v1",
+  "cases": [
+    {
+      "name": "pair-readback",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "halt": true,
+        "complete_authored_path": true,
+        "value_readback": true,
+        "stack_restored": true,
+        "no_fault_word": true
+      },
+      "status": 1,
+      "retired": 48,
+      "compiled_blocks": 48,
+      "receipt": "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/pair/pair-readback/report.json"
+    },
+    {
+      "name": "sp-store-fault",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "sp_alignment_status": true,
+        "sp_alignment_syndrome": true,
+        "no_fault_retirement": true,
+        "precise_fault_pc": true,
+        "precise_fault_word": true,
+        "registers_unchanged": true,
+        "no_writeback": true
+      },
+      "status": 19,
+      "retired": 7,
+      "compiled_blocks": 8,
+      "receipt": "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/pair/sp-store-fault/report.json"
+    },
+    {
+      "name": "sp-load-fault",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "sp_alignment_status": true,
+        "sp_alignment_syndrome": true,
+        "no_fault_retirement": true,
+        "precise_fault_pc": true,
+        "precise_fault_word": true,
+        "registers_unchanged": true,
+        "no_writeback": true
+      },
+      "status": 19,
+      "retired": 7,
+      "compiled_blocks": 8,
+      "receipt": "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/pair/sp-load-fault/report.json"
+    },
+    {
+      "name": "invalid-writeback-pair",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "undefined_status": true,
+        "undefined_syndrome": true,
+        "no_fault_retirement": true,
+        "precise_fault_pc": true,
+        "precise_fault_word": true,
+        "registers_unchanged": true,
+        "no_writeback": true
+      },
+      "status": 8,
+      "retired": 4,
+      "compiled_blocks": 5,
+      "receipt": "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/pair/invalid-writeback-pair/report.json"
+    },
+    {
+      "name": "a0-device-store-fault",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "device_alignment_status": true,
+        "device_alignment_syndrome": true,
+        "no_fault_retirement": true,
+        "precise_fault_pc": true,
+        "precise_fault_word": true,
+        "full_destinations_preserved": true,
+        "no_base_writeback": true,
+        "stack_unchanged": true
+      },
+      "status": 12,
+      "retired": 9,
+      "compiled_blocks": 10,
+      "receipt": "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/pair/a0-device-store-fault/report.json"
+    },
+    {
+      "name": "a0-device-load-fault",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "device_alignment_status": true,
+        "device_alignment_syndrome": true,
+        "no_fault_retirement": true,
+        "precise_fault_pc": true,
+        "precise_fault_word": true,
+        "full_destinations_preserved": true,
+        "no_base_writeback": true,
+        "stack_unchanged": true
+      },
+      "status": 12,
+      "retired": 9,
+      "compiled_blocks": 10,
+      "receipt": "/home/sharh/work/bp30-efi-combined-validation/provider-ovmf/pair/a0-device-load-fault/report.json"
+    }
+  ],
+  "input_sha256_before": {
+    "/home/sharh/work/bp30-efi-combined-validation/binaries/combined/NXARMJIT.efi": "4c4371e0e69e0e4d0374dd69ddf9d63b26ddfa01656c6aea25ff78b49c474c12",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/arm64_pair_probe.S": "22fbe0fa54811b5f89f510e013d00f45a12932363b28e16ad3be2a14f09a6706",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/verify_pair_ovmf.py": "46535f72bd2c7976530efe34a0b72c9458412ba732e428b291749874c2589e78",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/tools/trace_arm_jit_ovmf.py": "e0c7b2666c8997058ca5ee2b7560da8eac5ccef24adfdc887b47e092f541bb49",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/tools/build_arm64_handoff_probe.py": "57ac29fc0558f79152978e6f7660d8ddcb8b0d98a69cc571b13349dc032cf3ee"
+  },
+  "input_sha256_after": {
+    "/home/sharh/work/bp30-efi-combined-validation/binaries/combined/NXARMJIT.efi": "4c4371e0e69e0e4d0374dd69ddf9d63b26ddfa01656c6aea25ff78b49c474c12",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/arm64_pair_probe.S": "22fbe0fa54811b5f89f510e013d00f45a12932363b28e16ad3be2a14f09a6706",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/provider/verify_pair_ovmf.py": "46535f72bd2c7976530efe34a0b72c9458412ba732e428b291749874c2589e78",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/tools/trace_arm_jit_ovmf.py": "e0c7b2666c8997058ca5ee2b7560da8eac5ccef24adfdc887b47e092f541bb49",
+    "/home/sharh/work/bp30-efi-combined-validation/helpers/tools/build_arm64_handoff_probe.py": "57ac29fc0558f79152978e6f7660d8ddcb8b0d98a69cc571b13349dc032cf3ee"
+  },
+  "passed": true,
+  "far_observed": false,
+  "guest_ram_after_fault_observed": false,
+  "sptm_provided": false,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

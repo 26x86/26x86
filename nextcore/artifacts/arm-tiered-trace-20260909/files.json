@@ -1,0 +1,13 @@
+{
+  "tiered_budget_probe.S": "b7a8fe2ccb96b5102c902b53d34e4445f24f90d2df5cadb1211108a74ea51ec3",
+  "provenance.json": "2c8787424115bd7f6026e3aad3ab3576ed75807cad7c575e9465f30aeb31a141",
+  "contract.md": "d7a3b82428c3030dba6e53717bcd320df6fcb5066dff51356d3e85eb7afcfeee",
+  "authored-results.json": "905f37c8d26b490ea01757a07026fa27ba962210c8d1501be1d1a8029b17ce38",
+  "trace_arm_jit_ovmf.py": "2831b9208673839fa445c6f6e6a888fad5d7a31d97fe3f7314d546244c73915e",
+  "trace-tool.patch": "7b669c2a62f1c855705206049d9810600e3270c1ba77e12089e66d951080a7ed",
+  "verify_tiered_budget_ovmf.py": "a731834e84af22841612ceaf7ca0197228d93d6b3c8647e955b421ad4773ca17",
+  "efi-source.patch": "3272488a0a161b34e0a2bc77e91c6e7de65c9b99d9d0b1cbad3879bcb2f56f21",
+  "original-aggregate.json": "a26d6adb8558cd7f4d2af364f00b7b2d4513e3957a0033545bb8dc3c1cc98037",
+  "core-source.patch": "7d1eea5811d1f3134974af1858b764cf41e69bec6cbd04e5ad324dbb34e39e86",
+  "README.md": "9990ed536b2f81601f7dac7a29bb49c5860cc710c3b024c62b45dc90bd641b69"
+}

@@ -9,6 +9,8 @@ from pathlib import Path
 import subprocess
 import tomllib
 
+from nextcore_package_policy import PRIMARY_PACKAGES, module_manifests
+
 
 def git(root: Path, *args: str) -> bytes:
     return subprocess.check_output(["git", "-C", str(root), *args])
@@ -20,13 +22,13 @@ def refresh(root: Path) -> None:
     metadata_path = root / "repository.json"
     old = json.loads(metadata_path.read_text())
     provenance = old.get("release_provenance", old)
-    dependencies = {}
-    for section in ("dependencies", "build-dependencies", "dev-dependencies"):
-        for name, specification in manifest.get(section, {}).items():
-            if name.startswith("nextcore-") and isinstance(specification, dict):
-                if "path" in specification or not specification.get("git") or not specification.get("rev"):
-                    raise ValueError(f"{name}: independent modules require git URL and immutable rev")
-                dependencies[specification["git"].removesuffix(".git")] = specification["rev"]
+    primary = manifest["package"]["name"]
+    if primary not in PRIMARY_PACKAGES:
+        raise ValueError("repository metadata belongs to one of the seven primary module packages")
+    if old["name"] != f"Nextcore-{PRIMARY_PACKAGES[primary].module}":
+        raise ValueError("repository metadata name differs from the package owner")
+    paths = sorted(set(git(root, "ls-files", "-z", "--cached", "--others", "--exclude-standard").decode().split("\0")) - {"", "repository-files.json"})
+    dependencies = module_manifests(root, primary, paths).dependency_revisions
     metadata = {
         "schema": "26x86.repository/2", "name": old["name"],
         "owner": "26x86", "public": True, "role": "nextcore-module",
@@ -40,8 +42,7 @@ def refresh(root: Path) -> None:
         },
         "release_provenance": provenance,
     }
-    metadata_path.write_text(json.dumps(metadata, indent=2) + "\n")
-    paths = sorted(set(git(root, "ls-files", "-z", "--cached", "--others", "--exclude-standard").decode().split("\0")) - {"", "repository-files.json"})
+    metadata_bytes = (json.dumps(metadata, indent=2) + "\n").encode()
     files = []
     for relative in paths:
         path = root / relative
@@ -51,8 +52,10 @@ def refresh(root: Path) -> None:
             continue
         if not path.is_file() or path.is_symlink():
             raise ValueError(f"inventory requires ordinary files: {relative}")
-        data = path.read_bytes()
+        data = metadata_bytes if relative == "repository.json" else path.read_bytes()
         files.append({"path": relative, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
+    # Complete validation before either metadata file is changed.
+    metadata_path.write_bytes(metadata_bytes)
     (root / "repository-files.json").write_text(json.dumps({"schema": "26x86.repository-files/1", "files": files}, indent=2) + "\n")
     print(f"{metadata['name']}: inventoried {len(files)} public files")
 
