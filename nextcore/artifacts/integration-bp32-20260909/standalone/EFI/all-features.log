@@ -1,0 +1,42 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling thiserror v2.0.20
+   Compiling bitflags v2.13.1
+   Compiling log v0.4.34
+    Checking uguid v2.2.1
+    Checking bit_field v0.10.3
+    Checking memchr v2.8.3
+    Checking cfg-if v1.0.4
+    Checking nextcore-memory-service v0.1.0 (https://github.com/26x86/Nextcore-ISE.git?rev=720d7c61140e39da0f457192bd88138a52017e22#720d7c61)
+    Checking ucs2 v0.3.3
+    Checking uefi-raw v0.16.0
+    Checking roxmltree v0.21.1
+    Checking nextcore-core v0.1.0 (https://github.com/26x86/Nextcore-Core.git?rev=40833dc29d8bcd2976d0a13c2f120533d02500c4#40833dc2)
+   Compiling syn v3.0.5
+   Compiling syn v2.0.119
+   Compiling uefi-macros v0.19.0
+   Compiling thiserror-impl v2.0.20
+   Compiling ptr_meta_derive v0.3.2
+    Checking ptr_meta v0.3.2
+    Checking uefi v0.40.0
+   Compiling nextcore-ise v0.1.0 (https://github.com/26x86/Nextcore-ISE.git?rev=720d7c61140e39da0f457192bd88138a52017e22#720d7c61)
+   Compiling nextcore-efi v0.1.0 (/home/sharh/work/module-validation-bp32-efi-final-20260909/EFI)
+warning: associated items `allocate`, `base`, and `bytes` are never used
+  --> src/arm_pages.rs:17:12
+   |
+16 | impl ArmPages {
+   | ------------- associated items in this implementation
+17 |     pub fn allocate(bytes: usize, fixed: Option<u64>) -> Result<Self, Status> {
+   |            ^^^^^^^^
+...
+74 |     pub fn base(&self) -> u64 {
+   |            ^^^^
+...
+77 |     pub fn bytes(&self) -> usize {
+   |            ^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `nextcore-efi` (bin "BOOTAA64") generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 10.50s

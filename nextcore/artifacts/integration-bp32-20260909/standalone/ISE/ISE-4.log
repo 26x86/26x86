@@ -1,0 +1,66 @@
+{
+  "schema": "nextcore.pair-memory-oracle/1",
+  "passed": true,
+  "source_sha256": "d095535afde71a2e1127a4cd5fdbff6d6b9405cefd043db23ee7d827d7932b97",
+  "elf_sha256": "f24bc75c60cf8171f39af46b0336bd85004c296b788c4a8ae141395983e82269",
+  "commands": [
+    {
+      "command": [
+        "clang",
+        "--target=aarch64-none-elf",
+        "-c",
+        "/home/sharh/work/module-validation-bp32-published-20260909/ISE/tools/pair_memory_probe.S",
+        "-o",
+        "/tmp/nextcore-pair-1_je9kgm/probe.o"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "ld.lld",
+        "-Ttext=0x40080000",
+        "-e",
+        "_start",
+        "/tmp/nextcore-pair-1_je9kgm/probe.o",
+        "-o",
+        "/tmp/nextcore-pair-1_je9kgm/probe.elf"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt",
+        "-cpu",
+        "max",
+        "-m",
+        "128",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "none",
+        "-net",
+        "none",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "/tmp/nextcore-pair-1_je9kgm/probe.elf"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "PAIR_ORACLE: PASS widths,modes,sp,zr,alignment\n"
+    }
+  ],
+  "apple_assets_used": false,
+  "sp_alignment_oracle_verified": false,
+  "mmu_off_device_alignment_oracle_verified": false,
+  "device_alignment_limitation": "Oracle alignment case enables SCTLR.A; the A=0 Device rule is separately specification-tested",
+  "sp_alignment_limitation": "QEMU gen_check_sp_alignment omits SA/SA0 checks",
+  "macos_boot_verified": false
+}

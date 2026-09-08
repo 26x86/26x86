@@ -1,0 +1,187 @@
+{
+  "module": "ISE",
+  "commit": "720d7c61140e39da0f457192bd88138a52017e22",
+  "passed": true,
+  "fresh_standalone_clone": true,
+  "commands": [
+    {
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/work/bp32-ise-native-mmu",
+        "/home/sharh/work/module-validation-bp32-published-20260909/ISE"
+      ],
+      "exit_code": 0,
+      "seconds": 13.68
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 18.01
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "runtime/preos/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "seconds": 4.95
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_efi_native_pauth.py",
+        "--output",
+        "/home/sharh/work/module-validation-bp32-published-20260909/ise-native.json"
+      ],
+      "exit_code": 0,
+      "seconds": 20.36
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_pair_memory.py",
+        "--output",
+        "/home/sharh/work/module-validation-bp32-published-20260909/ise-pair.json"
+      ],
+      "exit_code": 0,
+      "seconds": 4.5
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_scalar_memory.py",
+        "--output",
+        "/home/sharh/work/module-validation-bp32-published-20260909/ise-scalar.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.38
+    },
+    {
+      "command": [
+        "python3",
+        "tools/mmu_fault_levels/probe_fault_levels.py",
+        "--output",
+        "/home/sharh/work/module-validation-bp32-published-20260909/mmu-at"
+      ],
+      "exit_code": 0,
+      "seconds": 0.59
+    },
+    {
+      "command": [
+        "python3",
+        "tools/mmu_fault_levels/probe_abort_levels.py",
+        "--output",
+        "/home/sharh/work/module-validation-bp32-published-20260909/mmu-abort"
+      ],
+      "exit_code": 0,
+      "seconds": 0.58
+    },
+    {
+      "command": [
+        "python3",
+        "tools/mmu_fault_levels/compare_current_walker.py",
+        "--runtime-checkout",
+        "/home/sharh/work/module-validation-bp32-published-20260909/ISE",
+        "--at-report",
+        "/home/sharh/work/module-validation-bp32-published-20260909/mmu-at/report.json",
+        "--abort-report",
+        "/home/sharh/work/module-validation-bp32-published-20260909/mmu-abort/report.json",
+        "--output",
+        "/home/sharh/work/module-validation-bp32-published-20260909/mmu-comparison"
+      ],
+      "exit_code": 0,
+      "seconds": 0.76
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_efi_memory_provider.py",
+        "--work-dir",
+        "/home/sharh/work/module-validation-bp32-published-20260909/native-memory",
+        "--output",
+        "/home/sharh/work/module-validation-bp32-published-20260909/native-memory.json"
+      ],
+      "exit_code": 0,
+      "seconds": 7.87
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_pc_alignment.py",
+        "--work-dir",
+        "/home/sharh/work/module-validation-bp32-published-20260909/pc-alignment",
+        "--output",
+        "/home/sharh/work/module-validation-bp32-published-20260909/pc-alignment.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.42
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "runtime/memory-service/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "seconds": 2.31
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--manifest-path",
+        "runtime/memory-service/Cargo.toml",
+        "--target",
+        "x86_64-unknown-uefi"
+      ],
+      "exit_code": 0,
+      "seconds": 0.25
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_conditional_compare.py",
+        "--work-dir",
+        "/home/sharh/work/module-validation-bp32-published-20260909/conditional-compare",
+        "--output",
+        "/home/sharh/work/module-validation-bp32-published-20260909/conditional-compare.json"
+      ],
+      "exit_code": 0,
+      "seconds": 4.17
+    },
+    {
+      "command": [
+        "python3",
+        "tools/probe_efi_stage1_provider.py",
+        "--work-dir",
+        "/home/sharh/work/module-validation-bp32-published-20260909/native-stage1",
+        "--output",
+        "/home/sharh/work/module-validation-bp32-published-20260909/native-stage1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 17.75
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--manifest-path",
+        "runtime/memory-service/Cargo.toml",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi"
+      ],
+      "exit_code": 0,
+      "seconds": 0.51
+    }
+  ]
+}

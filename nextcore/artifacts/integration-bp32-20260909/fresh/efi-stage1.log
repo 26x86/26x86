@@ -1,0 +1,38 @@
+warning: unused variable: `rex_b`
+   --> crates/nextcore-ise/src/decoder.rs:126:13
+    |
+126 |         let rex_b = (rex & 0x01) != 0;
+    |             ^^^^^ help: if this is intentional, prefix it with an underscore: `_rex_b`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `rex_r`
+   --> crates/nextcore-ise/src/decoder.rs:127:13
+    |
+127 |         let rex_r = (rex & 0x04) != 0;
+    |             ^^^^^ help: if this is intentional, prefix it with an underscore: `_rex_r`
+
+warning: value assigned to `v` is never read
+   --> crates/nextcore-ise/src/decoder.rs:245:29
+    |
+245 |                 let mut v = 0u64;
+    |                             ^^^^ this value is reassigned later and never used
+...
+248 |                     v = data[ip] as u64 & 0x3F;
+    |                     -------------------------- `v` is overwritten here before the previous value is read
+    |
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+   --> crates/nextcore-ise/src/decoder.rs:461:17
+    |
+461 |             let mut bs = (sib & 7) as u32;
+    |                 ----^^
+    |                 |
+    |                 help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `nextcore-ise` (lib) generated 4 warnings (run `cargo fix --lib -p nextcore-ise` to apply 3 suggestions)
+   Compiling nextcore-efi v0.1.0 (/home/sharh/work/integration-validation-bp32-final-20260909/26x86/nextcore/crates/nextcore-efi)
+    Finished `release` profile [optimized] target(s) in 3.95s

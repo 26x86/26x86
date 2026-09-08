@@ -8,9 +8,13 @@
 
 BP31은 PR #13/main0509118로 최종 CI28개 및 정식 재귀 클론 검사 후 병합했다.
 BP32 ISE720d7c6는 PR #6/main91721d0으로 병합했고, 실제 native M=1 fetch/scalar/pair를
-Rust의 동일 canonical walker로 실행한다. EFI8d53dd2는 ISE의 두 의존성을 같은 커밋으로
+Rust의 동일 canonical walker로 실행한다. EFI는 PR #6/main646bc5f로 병합했다. 최종 pinf3f7938은 독립 검증한8d53dd2에서
+재현 문서/메타데이터만 정정했다. ISE의 두 의존성을 같은 커밋으로
 고정하고 명시적 NXMMU 진단 feature를 제공한다.7개 모듈과 기존8개 패키지 소유 구조는 유지한다.
-상위 통합 검증과 EFI 최종 공개 검증은 이 구현 커밋에서 별도로 수행한다.
+새 상위 재귀 baseline df60198b는 workspace476/Python149/GUI25/참조98, 실제 EFI186개
+및 별도 CLI 거부6개와 native/ARM/Vulkan/패키징 검사를 통과했다. 최종 문서 pin의
+소스 동일성·인벤토리도 검증했다. 최종 상위 커밋은 정식 재귀 클론과 CI 후 병합한다.
+공개 전체 기록은 nextcore/artifacts/integration-bp32-20260909다.
 
 고정 Normal-NC/A=1 프로필에서 테이블과 제어 상태는 변경하지 않는다. 기존 v1/M=0 경로를
 보존하고 새80/160/128/320-byte ABI에서 번역된 VA와 실제 RAM 주소를 구분한다.

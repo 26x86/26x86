@@ -1763,3 +1763,21 @@ from305e66a. Its design must bind observed exclusive backing, guest aperture,
 nonoverlapping purpose reservations and owner/generation to DT patch commit.
 No original provider values or target ABI are guessed. Root reviews the design
 before implementation; Core/EFI/Tool integration remains a separate milestone.
+
+
+BP32 validation closure: ISE PR6/main91721d0 and EFI PR6/main646bc5f are merged
+after final CI. The completed branches were removed after ancestry checks.
+Fresh recursive df60198b passes476workspace/149Python/25GUI/98reference,186actual
+x86EFI plus6CLI and native/provider/Arm/Vulkan/package checks. The final EFI
+pinf3f7938 changes only reproduction docs/metadata from tested8d53dd2; root
+verifies this distinction and the final inventory. Actual stage1 and conditional
+provider predicates run on the integrated binary. The separate fresh service
+replay preserves captured-state limitations. Final evidence publication receives
+canonical recursive checkout and final-head CI before parent PR merge.
+
+BP33 ledger design is approved for both owned Box and exclusive borrowed-slice
+backing,64 bounded reservations, opaque identity/generation, typed DT binding
+and higher-ranked execution loan. Arbitrary provider semantics and callback
+rollback are not inferred. Root source review found no concrete range/token/
+lifetime defect; full tests/final freeze and actual authored EFI consumption
+remain independent of this BP32 closure.

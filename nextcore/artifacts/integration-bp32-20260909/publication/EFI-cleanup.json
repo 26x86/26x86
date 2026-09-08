@@ -1,0 +1,9 @@
+{
+  "merged_pr": 6,
+  "tested_runtime_head": "8d53dd2227cb4472e0b86813517fd1d70d166efa",
+  "final_documentation_head": "f3f7938fba5a90aea9849edd1ef932a6bf60084e",
+  "main": "646bc5fc2546d23674ab69f030b515855bbd1ca8",
+  "ancestry_verified": true,
+  "branch_removed": "codex/arm64e-stage1-efi-probe",
+  "source_worktree_detached_clean": true
+}

@@ -1,0 +1,465 @@
+   Compiling venfire-preos v0.1.0 (/home/sharh/work/integration-validation-bp32-final-20260909/26x86/nextcore/crates/nextcore-ise/runtime/preos)
+    Finished `release` profile [optimized] target(s) in 1.73s
+   Compiling venfire-preos v0.1.0 (/home/sharh/work/integration-validation-bp32-final-20260909/26x86/nextcore/crates/nextcore-ise/runtime/preos)
+    Finished `release` profile [optimized] target(s) in 2.42s
+{
+  "schema": 2,
+  "artifact": "BOOTX64.EFI",
+  "kind": "efi-integrated-rust-preos-a64-reference-core-jit",
+  "sha256": "d89a961197034d62ad37bcb204633727837bce035b58339735fc3a0a78dc5d68",
+  "bytes": 93696,
+  "minimum_cpu": [
+    "x86_64",
+    "sse4.1",
+    "sse4.2"
+  ],
+  "avx_required": false,
+  "capabilities": [
+    "rust-no_std-staticlib",
+    "c-owned-uefi-lifecycle",
+    "c-owned-jit-wx",
+    "bounded-a64-diagnostic-guest",
+    "m1-diagnostic-policy-seed",
+    "phase2-vfmachine",
+    "fixed-ram-region-registry",
+    "static-mmio-registry",
+    "mmio-access-width-and-alignment-gate",
+    "machine-reset-hook",
+    "machine-result-budget-gate",
+    "unsupported-cpu-system-feature-gate",
+    "aarch64-guest-state-explicit",
+    "aarch64-exception-decision-commit",
+    "aarch64-pending-exception-record",
+    "aarch64-fault-class-preservation",
+    "aarch64-privileged-state-reference",
+    "aarch64-system-register-bank-reference",
+    "aarch64-mmu-4k-16k-ttbr0-ttbr1-reference",
+    "aarch64-asid-tlb-reference",
+    "aarch64-generic-timer-reference",
+    "aarch64-smp-exclusive-instructions",
+    "aarch64-pauth-explicit-boundary",
+    "aarch64-reference-interpreter-gate",
+    "aarch64-guest-bus-mmio-dispatch",
+    "m1-only-t8103-machine-graph-contract",
+    "m1-aic-timer-routing-contract",
+    "m1-dart-bounded-dma-translation",
+    "m1-caller-owned-storage-backend",
+    "m1-recovery-envelope-boundary",
+    "m1-framebuffer-display-mmio-contract",
+    "m1-firmware-handoff-boundary",
+    "vmapple-tcg-contract-and-source-pin",
+    "vmapple-fixed-device-graph-unit",
+    "vmapple-source-port-manifest-contract",
+    "vmapple-graph-same-call-reset-gate",
+    "m1-graph-same-call-runtime-gate",
+    "iboot-xnu-causal-evidence-contract"
+  ],
+  "native_unit": {
+    "passed": true,
+    "assertions": 84,
+    "native_jit_executed": true,
+    "wx_enforced": true
+  },
+  "rust_unit": {
+    "passed": true,
+    "runner": "cargo test --manifest-path nextcore/crates/nextcore-ise/runtime/preos/Cargo.toml"
+  },
+  "static_abi_unit": {
+    "passed": true,
+    "values": {
+      "context_size": 152,
+      "context_align": 8,
+      "context_budget_offset": 16,
+      "context_guest_offset": 24,
+      "context_ram_offset": 40,
+      "context_handle_offset": 56,
+      "context_trace_offset": 64,
+      "context_expected_x1_offset": 80,
+      "context_reserved_offset": 128,
+      "request_size": 88,
+      "request_align": 8,
+      "request_handle_offset": 56,
+      "jit_result_size": 88,
+      "jit_result_align": 8,
+      "preos_result_size": 88,
+      "preos_result_align": 8,
+      "preos_result_x1_offset": 48
+    },
+    "evidence": "C abi_layout.c receipt exactly matched Rust #[repr(C)] unit-test receipt",
+    "deployment_executable_count": 0
+  },
+  "c_rust_abi_unit": {
+    "passed": true,
+    "assertions": 76,
+    "c_rust_abi_executed": true,
+    "normal_halt": true,
+    "exception_reason_preservation": true,
+    "budget_exhaustion": true,
+    "architectural_reference_core": true,
+    "m1_graph_runtime_activation": true
+  },
+  "wx_attribute_unit": {
+    "passed": true,
+    "wx_attribute_predicate": true
+  },
+  "aic_unit": {
+    "passed": true,
+    "stdout": "PASS AIC v1 wired IRQ: auto-mask, level reassert, affinity, priority, software IRQ, bounds",
+    "scope": "standalone AIC v1 model; no M1 device-tree or physical hardware claim"
+  },
+  "linked_image_audit": {
+    "passed": true,
+    "forbidden_symbols": [
+      "rust_eh_personality",
+      "_Unwind_",
+      "__rust_alloc",
+      "__rdl_"
+    ],
+    "found": [],
+    "allowed_abort_handler": "rust_begin_unwind",
+    "scope": "linked EFI image and lld-link map; archive-only unused objects are excluded"
+  },
+  "instrumented_image_audit": {
+    "passed": true,
+    "forbidden_symbols": [
+      "rust_eh_personality",
+      "_Unwind_",
+      "__rust_alloc",
+      "__rdl_"
+    ],
+    "found": [],
+    "allowed_abort_handler": "rust_begin_unwind",
+    "scope": "linked EFI image and lld-link map; archive-only unused objects are excluded"
+  },
+  "measurements": {
+    "phase0_c_only_efi": {
+      "name": "BOOTX64.EFI",
+      "bytes": 14336,
+      "sha256": "dd6729e38f4d25870085caabaed547d9a419371d7f77714ed6550dab4ff4bce8"
+    },
+    "rust_linked_efi": {
+      "bytes": 93696,
+      "sha256": "d89a961197034d62ad37bcb204633727837bce035b58339735fc3a0a78dc5d68"
+    },
+    "increase_bytes": 79360,
+    "production_image": {
+      "baseline_efi_bytes": 14336,
+      "linked_efi_bytes": 93696,
+      "growth_bytes": 79360,
+      "linker_sections": {
+        ".text": {
+          "bytes": 85363,
+          "segment": "0001",
+          "class": "CODE"
+        },
+        ".text$unlikely": {
+          "bytes": 34,
+          "segment": "0001",
+          "class": "CODE"
+        },
+        ".rdata": {
+          "bytes": 4612,
+          "segment": "0002",
+          "class": "DATA"
+        },
+        ".xdata": {
+          "bytes": 420,
+          "segment": "0002",
+          "class": "DATA"
+        },
+        ".data": {
+          "bytes": 64,
+          "segment": "0003",
+          "class": "DATA"
+        },
+        ".bss": {
+          "bytes": 4496,
+          "segment": "0003",
+          "class": "DATA"
+        },
+        ".pdata": {
+          "bytes": 300,
+          "segment": "0004",
+          "class": "DATA"
+        }
+      },
+      "section_total_bytes": 95289,
+      "measurement_source": "lld-link map section table plus filesystem stat"
+    },
+    "instrumented_image": {
+      "baseline_efi_bytes": "unknown",
+      "linked_efi_bytes": 93696,
+      "growth_bytes": "unknown",
+      "linker_sections": {
+        ".text": {
+          "bytes": 85203,
+          "segment": "0001",
+          "class": "CODE"
+        },
+        ".text$unlikely": {
+          "bytes": 34,
+          "segment": "0001",
+          "class": "CODE"
+        },
+        ".rdata": {
+          "bytes": 4468,
+          "segment": "0002",
+          "class": "DATA"
+        },
+        ".xdata": {
+          "bytes": 420,
+          "segment": "0002",
+          "class": "DATA"
+        },
+        ".data": {
+          "bytes": 64,
+          "segment": "0003",
+          "class": "DATA"
+        },
+        ".bss": {
+          "bytes": 4496,
+          "segment": "0003",
+          "class": "DATA"
+        },
+        ".pdata": {
+          "bytes": 300,
+          "segment": "0004",
+          "class": "DATA"
+        }
+      },
+      "section_total_bytes": 94985,
+      "measurement_source": "lld-link map section table plus filesystem stat"
+    },
+    "separate_companion_executables": 0,
+    "separate_rust_efi_images": 0,
+    "separate_kernel_images": 0,
+    "separate_os_boot_protocols": 0,
+    "rust_static_library": {
+      "path": "sandbox/efi/build/cargo-efi/x86_64-pc-windows-msvc/release/venfire_preos.lib",
+      "bytes": 3147050
+    },
+    "fixed_guest_ram_bytes": 65536,
+    "jit_code_buffer_bytes": 16384,
+    "fixed_stack_requirement": "not measured",
+    "rust_runtime_dynamic_allocation": {
+      "count": 0,
+      "bytes": 0,
+      "evidence": "no_std crate with no alloc dependency/global allocator plus linked-image allocator-symbol audit",
+      "runtime_measured": false
+    },
+    "boot_services_allocations": {
+      "count": "not measured during build",
+      "bytes": "not measured during build",
+      "runtime_evidence": "verify_ovmf.py parses VF: EFI_ALLOCATIONS markers"
+    },
+    "host_os_dependency": 0,
+    "external_qemu_process_dependency": 0
+  },
+  "machine_seed": {
+    "profile": "VF_MACHINE_PROFILE_M1_DIAGNOSTIC",
+    "ram_regions": 1,
+    "mmio_regions": 0,
+    "ram_registry_capacity": 4,
+    "mmio_registry_capacity": 8,
+    "reset_hook": "called before MACHINE_READY; topology and explicit guest-state banks reset",
+    "devices": "none (explicit; synthetic diagnostic MMIO covered by Rust unit test)",
+    "guest_physical_address_space": "fixed 0x00000000..0x0000ffff RAM; overlap and overflow checked",
+    "native_machine_layer": "phase-2 descriptor core plus synchronized M1-only T8103 contract graph and portable VMApple graph; physical M1 register compatibility not claimed",
+    "m1_graph": {
+      "implemented": true,
+      "soc": "T8103 / Apple M1 baseline",
+      "cpu_count": 8,
+      "components": [
+        "AIC",
+        "generic timer",
+        "DART/DMA",
+        "storage",
+        "recovery",
+        "display",
+        "firmware handoff"
+      ],
+      "runtime_activation": "same preOS call wires contract-backed interrupt sources to CPU0; the Rust reference core can dispatch guest accesses through the graph-local M1 bus and mirror timer state after committed instructions",
+      "physical_register_map_verified": false,
+      "apple_signature_chain_verified": false
+    },
+    "vmapple_graph": {
+      "initialized_in_preos_call": true,
+      "reset_hook": "same synchronous reset as VfMachine",
+      "guest_visible_descriptor": "bounded VMApple TCG/reference subset",
+      "physical_m1_compatibility": false
+    },
+    "physical_m1_compatibility": false
+  },
+  "cpu_system_capabilities": {
+    "base_aarch64_subset": "runtime-tested",
+    "exception_model": "bounded Rust reference core with explicit EL/PSTATE banks, vector entry, and C-JIT status/exception commit; no full handler continuation",
+    "privileged_state": "reference-tested current-EL/PSTATE privilege boundary and exception-bank state; full privileged instruction set not implemented",
+    "system_registers": "reference-tested 34-register EL1/CNT/EL2/EL3 bank with CurrentEL, ID_AA64, physical/virtual timer, EL checks, and MRS/MSR execution",
+    "mmu": "reference-tested 4 KiB/16 KiB TTBR0/TTBR1 walk with dynamic start levels, page/block descriptors, AF, AP, PXN, UXN, and fault classes",
+    "tlb": "reference-tested fixed 16-entry ASID/page-size-tagged TLB with invalidation on TTBR/TCR/granule changes",
+    "atomics": "reference-tested LDXR/LDAXR/STXR/STLXR plus CLREX with physical-address reservations; single-CPU execution",
+    "smp": "reference-tested affinity/online-mask/IRQ routing state; preOS execution remains single-CPU",
+    "timer_counter": "reference-tested 24 MHz physical and virtual counter/timer state with pending interrupt boundary; no C-JIT timer source",
+    "pauth": "explicit unsupported boundary; no pointer-authentication execution",
+    "m1_machine_graph": "runtime-tested fixed T8103 graph primitives plus graph-local guest MMIO dispatch; Apple physical MMIO map and signed firmware acceptance remain unverified",
+    "m1_dma": "runtime-tested bounded DART-style IOVA to caller-owned guest RAM copies",
+    "m1_display": "runtime-tested caller-owned XRGB8888 framebuffer and display MMIO contract; no Metal backend",
+    "m1_recovery": "runtime-tested CRC/sequence envelope; opaque payload is not Apple signature verification",
+    "m1_handoff": "runtime-tested aligned in-RAM entry/device-tree metadata; signature_verified remains false"
+  },
+  "m1_machine_contract": {
+    "blocked_components": 11,
+    "component_count": 11,
+    "passed": true,
+    "runtime_tested_components": 0,
+    "schema": "venfire-m1-machine-contract/1",
+    "target_machine_profile": "M1-only"
+  },
+  "vmapple_tcg_machine_contract": {
+    "schema": "venfire-vmapple-tcg-machine-contract/1",
+    "qemu_commit": "ff1d2d19d7e24893e2012d879f8e73077e17b9bd",
+    "patch_series": {
+      "path": "/home/sharh/work/integration-validation-bp32-final-20260909/26x86/research/venfire/patches/series",
+      "patches": [
+        {
+          "path": "research/venfire/patches/0001-vmapple-explicit-tcg-research.patch",
+          "sha256": "da55f660a551e66e6e5ae9affd8410f72b17cf0b633d09db2816700b7d131897"
+        },
+        {
+          "path": "research/venfire/patches/0002-vmapple-block-barrier.patch",
+          "sha256": "58e8a2a42656647f7e3f8393e1b032fc260b99760ce37576c00b7af0938473cc"
+        },
+        {
+          "path": "research/venfire/patches/0003-vmapple-recovery-usb.patch",
+          "sha256": "29faaa21e284e82fb3e7848574730627c9c7d55f60a5a2e8bdb3310bad4acd0c"
+        },
+        {
+          "path": "research/venfire/patches/0004-vmapple-bdif-cow-write.patch",
+          "sha256": "1d4639c0e845ad0d5a8d9f542c6ed104897f5a69eba95998373770e691a3e541"
+        },
+        {
+          "path": "research/venfire/patches/0005-vmapple-iboot-firmware-window.patch",
+          "sha256": "7334b10eafd1e95750fa4d2feb2982217c7aa08e5a680b40485ea00bf1ec7e15"
+        },
+        {
+          "path": "research/venfire/patches/0006-vmapple-tcg-enable-el2.patch",
+          "sha256": "a95f86295af68bc56aa4132479f63b24b1b5bc1753da7cf221b8907dbb67f252"
+        },
+        {
+          "path": "research/venfire/patches/0007-vmapple-j274-impdef-and-highram.patch",
+          "sha256": "1026e06129ae54e26935c58834f2ef70ddd4c47db1ae4ef4ca47562ad20bee98"
+        },
+        {
+          "path": "research/venfire/patches/0008-vmapple-stage2-el1-pauth-reset.patch",
+          "sha256": "c4cbe374387ed3f7d563429bb365741617e20c15b465e9b87abbfe84a896c998"
+        },
+        {
+          "path": "research/venfire/patches/0009-vmapple-recovery-usb-hold-and-optional-rpc-unavailable.patch",
+          "sha256": "03c77e3899349d1e6e63ee0e8442038ee220c2c1f64b124f8c81372478c762ed"
+        }
+      ]
+    },
+    "component_count": 8,
+    "component_states": {
+      "runtime-tested": 6,
+      "blocked": 1,
+      "awaiting-caller-input": 1
+    },
+    "guest_input_modification": false,
+    "hardware_or_virtualization_framework_required": false,
+    "valid": true
+  },
+  "vmapple_tcg_source_manifest": {
+    "schema_version": 1,
+    "target_machine_profile": "VMApple-TCG-GoldenGate",
+    "component_count": 8,
+    "component_states": {
+      "runtime-tested": 6,
+      "blocked": 2
+    },
+    "valid": true
+  },
+  "iboot_xnu_handoff_contract": {
+    "schema": "26x86.iboot-xnu-handoff/1",
+    "machine_type": "iBoot(AArch64)",
+    "guest_os": "macOS",
+    "target_majors": [
+      26,
+      27
+    ],
+    "direct_stage_count": 3,
+    "recovery_stage_count": 5,
+    "safety": {
+      "allows_synthetic_success": false,
+      "allows_input_mutation": false,
+      "allows_transport_as_signature_acceptance": false,
+      "allows_iBoot_panic_as_xnu": false
+    },
+    "valid": true
+  },
+  "macos_boot_verified": false,
+  "iboot_supported": false,
+  "aic_supported": false,
+  "opencore_handoff_version": 1,
+  "source_sha256": {
+    "nextcore/crates/nextcore-ise/runtime/jit.c": "6be2be04cd7f4f8ee091dcbd0218bb5f149924c153084244de6a164fd201a804",
+    "nextcore/crates/nextcore-ise/runtime/jit.h": "82ec08a23294a0d02dc95de0b98cc3c6b0d29f2de0656cbdcc4801f7c3161ce9",
+    "nextcore/crates/nextcore-ise/runtime/arch.c": "99b5cf138ed60b7a98a6d94036567aa3538d5d05f880ce7bcb742c375eb2fbf9",
+    "nextcore/crates/nextcore-ise/runtime/main.c": "e60b0a038268582c5612858fbcbdb5cd6d47d42740b43fcb386333a369421ede",
+    "nextcore/crates/nextcore-ise/runtime/uefi.h": "ad65b75ad72ddca190093a8df01ec2e89622fadaaee0b1e149a704e80106e32b",
+    "nextcore/crates/nextcore-ise/runtime/handoff.h": "82d91868045b55e5d79b931d9a29acb10d11d02f0f164d7578012515919b68a2",
+    "nextcore/crates/nextcore-ise/runtime/preos_abi.h": "f355c3ab92457c569c3a4833b91ec8ad51ccdef6d0e8142d3ba236db5f37d5dc",
+    "nextcore/crates/nextcore-ise/runtime/preos_bridge.h": "97a63e5667b5dadaa1cf9ee6f1ae66e4595cfd8c86c21281043529e79392a112",
+    "nextcore/crates/nextcore-ise/runtime/preos_bridge.c": "7f03662ef58fd4969c4d34c006a3ba69454c81b64f3753a6612caaf95f0c050c",
+    "nextcore/crates/nextcore-ise/runtime/test_jit.c": "dffedb72d4d3706d0dfd4b975be279db3f140a7d821eff16b7a2172fabe7c726",
+    "nextcore/crates/nextcore-ise/runtime/preos_host_test.c": "53e3c0ef55887f1a0458fb75ba90c1a013d4abfc3148c8cb3dbe20692ba05afa",
+    "nextcore/crates/nextcore-ise/runtime/abi_layout.c": "03b71dd9958a85655a50c30387c83d542ae51c808b1913f6a349b531d69f7617",
+    "nextcore/crates/nextcore-ise/runtime/test_wx.c": "afa4209e70d3c566493865b49c315295503ed0787f0e64dfb1338e713b23c6e4",
+    "verify_ovmf.py": "c23fec25cab167a989587f2d807361bd80a0a7426bc82b5d0a1592298709ff73",
+    "build.py": "8d41fd9ff4cd5c0e5b1de1532998d00ba12642cc3e260ad41cd9e04b1265899d",
+    "verify_m1_machine_contract.py": "dc82b37114168e1d47ee417a591dc82b04fd17c725373150ce96e07d913623d1",
+    "m1-machine-contract.json": "2ff622967cd8cb7b8a007a67edf4ad6c90b35dde9130ed7900f78f00105288af",
+    "verify_vmapple_tcg_contract.py": "50e51a5b9412dd1c40e15d69d43424cdb964461e4abbc3db7cb7d218dcc43cdc",
+    "vmapple-tcg-machine-contract.json": "7baa6f19aa0270c2a3791ea4efb78b268eb6e00fea5c0b6570d4690a7db871e2",
+    "verify_vmapple_tcg_source_manifest.py": "13e7ce97d2a3ebea771c58629ccd0c25ce86442e69c7ae7bdddd0293f5ee86cf",
+    "vmapple-tcg-source-port-manifest.json": "fd912427e10fb4feae8dd89eb150e229addd56db77792e1380e9e8ae17b9e707",
+    "iboot-xnu-handoff-contract.json": "82fa16d61ca25f9c3927383f0f79b9f7c47806cf1e1366c44b079324ff3a41ad",
+    "verify_iboot_xnu_handoff.py": "bbf73f48aca172542345325ae3ed0251abe3075f207a9f681045177d02a37812",
+    "nextcore/crates/nextcore-ise/runtime/preos/Cargo.toml": "37636ea1746d9cb5ff56d6f2ba02ba1d009a8ca2b686e8684cc601cc86cb5fe9",
+    "nextcore/crates/nextcore-ise/runtime/preos/Cargo.lock": "e0b8566b2229be151981d2c2b0f4419cc5eb49285ae88c73594a78aed5993231",
+    "nextcore/crates/nextcore-ise/runtime/preos/src/lib.rs": "2a60d25587bdb48e3ef725628129cafcdc989493d1e61efc02ea2d889b15f04b",
+    "nextcore/crates/nextcore-ise/runtime/preos/src/machine.rs": "57c0ead54a9757281acc3abc00412355326e4aa9407692f085b76bfed5245592",
+    "nextcore/crates/nextcore-ise/runtime/preos/src/arch.rs": "d184faf2c6135fd92796f3b7596c2059c03c2d798589b5d4cea3437a692e7506",
+    "nextcore/crates/nextcore-ise/runtime/preos/src/mmu.rs": "c17c6d3332ee88697eb412e867befbb1c2b87263c50b027b7b68d6c1e0502955",
+    "nextcore/crates/nextcore-ise/runtime/preos/src/m1.rs": "cada02dd5bc459683ebebf3e28d0436933dba8097ba274ed0404a95010cd19f9",
+    "nextcore/crates/nextcore-ise/runtime/preos/src/vmapple.rs": "bb4967dcd409c1679eb4acafe5d0bfe51a47a57768c86f45deb9b5abbc308c98",
+    "nextcore/crates/nextcore-ise/runtime/preos/src/pauth.rs": "f0c93ce49e3b8fa27bc28805d60fd6689edb41acd299bc914b192c329938604c",
+    "nextcore/crates/nextcore-ise/runtime/boot_jit.c": "4885d29d7f6d7954a816b00d55600acf47992cf8ada469175b2d6130af62c8de",
+    "nextcore/crates/nextcore-ise/runtime/boot_jit.h": "def7ee05c4051107257407f3f4eed6ab6551ba04b61f7178e051f4e95126af81",
+    "nextcore/crates/nextcore-ise/runtime/gop_scanout.c": "85e9a454846614e8a17420d628f806f93e6925a4c39a5b1b648e6b691895a912",
+    "nextcore/crates/nextcore-ise/runtime/gop_scanout.h": "5025bcf913b70baf13888792091efd67b4bf42f2fa34c5b4bb52163cfacde5b6",
+    "nextcore/crates/nextcore-ise/runtime/jit_protection.c": "aaaae4ed9d644e91d4da26e745c336ce767dfdd60e8e1a9a2a9287c0ed60ddc7",
+    "research/venfire/patches/series": "70a6d26fed63078d97f7f0f267546c78f0158b12421c9e015b048c817b2a3093",
+    "research/venfire/patches/0001-vmapple-explicit-tcg-research.patch": "da55f660a551e66e6e5ae9affd8410f72b17cf0b633d09db2816700b7d131897",
+    "research/venfire/patches/0002-vmapple-block-barrier.patch": "58e8a2a42656647f7e3f8393e1b032fc260b99760ce37576c00b7af0938473cc",
+    "research/venfire/patches/0003-vmapple-recovery-usb.patch": "29faaa21e284e82fb3e7848574730627c9c7d55f60a5a2e8bdb3310bad4acd0c",
+    "research/venfire/patches/0004-vmapple-bdif-cow-write.patch": "1d4639c0e845ad0d5a8d9f542c6ed104897f5a69eba95998373770e691a3e541",
+    "research/venfire/patches/0005-vmapple-iboot-firmware-window.patch": "7334b10eafd1e95750fa4d2feb2982217c7aa08e5a680b40485ea00bf1ec7e15",
+    "research/venfire/patches/0006-vmapple-tcg-enable-el2.patch": "a95f86295af68bc56aa4132479f63b24b1b5bc1753da7cf221b8907dbb67f252",
+    "research/venfire/patches/0007-vmapple-j274-impdef-and-highram.patch": "1026e06129ae54e26935c58834f2ef70ddd4c47db1ae4ef4ca47562ad20bee98",
+    "research/venfire/patches/0008-vmapple-stage2-el1-pauth-reset.patch": "c4cbe374387ed3f7d563429bb365741617e20c15b465e9b87abbfe84a896c998",
+    "research/venfire/patches/0009-vmapple-recovery-usb-hold-and-optional-rpc-unavailable.patch": "03c77e3899349d1e6e63ee0e8442038ee220c2c1f64b124f8c81372478c762ed"
+  },
+  "device_source_sha256": {
+    "aic_v1.c": "77e58f8acbc3a2906b0d64b9c9942ed48679f0cc7145fb01585c265705a5c8e7",
+    "aic_v1.h": "6fd62d5a06c398aeddbb6a5e2825331168dd6fa623aa0bb1bd5411ed2ee111d7"
+  },
+  "firmware_requirement": "EFI_MEMORY_ATTRIBUTE_PROTOCOL or EFI_CPU_ARCH_PROTOCOL with verified CR0.WP/EFER.NXE and RW/NX page permissions",
+  "rust_target": "x86_64-pc-windows-msvc",
+  "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+  "compiler": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+  "instrumented_artifact": {
+    "sha256": "47fbd64e8b7fbdb44f4d95219d8271a6da62d5a98f464710b840b93dec0845a9",
+    "bytes": 93696
+  }
+}

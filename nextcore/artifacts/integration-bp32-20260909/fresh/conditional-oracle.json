@@ -1,0 +1,205 @@
+{
+  "schema": "nextcore.conditional-compare-oracle/1",
+  "passed": true,
+  "cases": 3668,
+  "conditions": 16,
+  "incoming_nzcv": 16,
+  "immediate_values": 32,
+  "fallback_values": 16,
+  "source_sha256": "03b42da7c4786a4d083708bbaedac1d3f22c0f44328df7d7e68e0a00e6f1ade6",
+  "negative_controls_detected": [
+    "nv_never",
+    "wrong_flags"
+  ],
+  "invalid_assembly_rejected": [
+    {
+      "instruction": "ccmp sp,x1,#0,al",
+      "returncode": 1,
+      "stderr": "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/invalid.S:1:6: error: invalid operand for instruction\nccmp sp,x1,#0,al\n     ^\n"
+    },
+    {
+      "instruction": "ccmn x0,sp,#0,al",
+      "returncode": 1,
+      "stderr": "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/invalid.S:1:9: error: immediate must be an integer in range [0, 31].\nccmn x0,sp,#0,al\n        ^\n"
+    },
+    {
+      "instruction": "ccmp w0,#32,#0,al",
+      "returncode": 1,
+      "stderr": "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/invalid.S:1:9: error: immediate must be an integer in range [0, 31].\nccmp w0,#32,#0,al\n        ^\n"
+    },
+    {
+      "instruction": "ccmn x0,#1,#16,al",
+      "returncode": 1,
+      "stderr": "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/invalid.S:1:12: error: immediate must be an integer in range [0, 15].\nccmn x0,#1,#16,al\n           ^\n"
+    }
+  ],
+  "records": [
+    {
+      "case": "correct",
+      "command": [
+        "clang",
+        "--target=aarch64-none-elf",
+        "-c",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/correct.S",
+        "-o",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/correct.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "correct",
+      "command": [
+        "ld.lld",
+        "-Ttext=0x40080000",
+        "-e",
+        "_start",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/correct.o",
+        "-o",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/correct.elf"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "correct",
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt",
+        "-cpu",
+        "max",
+        "-m",
+        "128",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "none",
+        "-net",
+        "none",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/correct.elf"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "CONDITIONAL_COMPARE_ORACLE: PASS 3668 cases\n"
+    },
+    {
+      "case": "nv_never",
+      "command": [
+        "clang",
+        "--target=aarch64-none-elf",
+        "-c",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/nv_never.S",
+        "-o",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/nv_never.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "nv_never",
+      "command": [
+        "ld.lld",
+        "-Ttext=0x40080000",
+        "-e",
+        "_start",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/nv_never.o",
+        "-o",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/nv_never.elf"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "nv_never",
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt",
+        "-cpu",
+        "max",
+        "-m",
+        "128",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "none",
+        "-net",
+        "none",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/nv_never.elf"
+      ],
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "CONDITIONAL_COMPARE_ORACLE: FAIL\n"
+    },
+    {
+      "case": "wrong_flags",
+      "command": [
+        "clang",
+        "--target=aarch64-none-elf",
+        "-c",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/wrong_flags.S",
+        "-o",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/wrong_flags.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "wrong_flags",
+      "command": [
+        "ld.lld",
+        "-Ttext=0x40080000",
+        "-e",
+        "_start",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/wrong_flags.o",
+        "-o",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/wrong_flags.elf"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "wrong_flags",
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt",
+        "-cpu",
+        "max",
+        "-m",
+        "128",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "none",
+        "-net",
+        "none",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "/home/sharh/work/integration-validation-bp32-final-20260909/conditional-oracle/wrong_flags.elf"
+      ],
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "CONDITIONAL_COMPARE_ORACLE: FAIL\n"
+    }
+  ],
+  "apple_assets_used": false,
+  "macos_boot_verified": false
+}
