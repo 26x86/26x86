@@ -4,6 +4,7 @@
 extern crate alloc;
 
 mod exit_data;
+mod picker;
 #[cfg(feature = "console-control")]
 mod console_control;
 
@@ -13,7 +14,7 @@ use alloc::{
     vec,
     vec::Vec,
 };
-use nextcore_core::boot_config::{parse_boot_target, BootTarget};
+use nextcore_core::boot_config::{parse_boot_menu, BootTarget};
 use uefi::boot::LoadImageSource;
 use uefi::mem::memory_map::MemoryType;
 use uefi::prelude::*;
@@ -37,17 +38,30 @@ static ALLOCATOR: uefi::allocator::Allocator = uefi::allocator::Allocator;
 fn efi_main() -> Status {
     uefi::helpers::init().expect("failed to initialize UEFI services");
 
-    report("Nextcore");
+    report("NextCore");
     report("NEXTCORE: EFI_ENTRY");
     match read_config() {
         Ok(bytes) => {
             report(&format!("NEXTCORE: CONFIG_READ bytes={}", bytes.len()));
-            match parse_boot_target(&bytes) {
-                Ok(Some(target)) => {
+            match parse_boot_menu(&bytes) {
+                Ok(menu) if !menu.entries.is_empty() => {
                     report("NEXTCORE: CONFIG_PARSED");
+                    let index = if menu.show_picker {
+                        match picker::choose(&menu.entries, report) {
+                            Ok(Some(index)) => index,
+                            Ok(None) => return Status::ABORTED,
+                            Err(status) => {
+                                report(&format!("NEXTCORE: PICKER_ERROR status={status:?}"));
+                                return status;
+                            }
+                        }
+                    } else { 0 };
+                    let target = menu.entries[index].target.clone();
+                    drop(menu);
                     chainload(target)
                 }
-                Ok(None) => {
+                Ok(_) => {
+                    report("No enabled boot entries");
                     report("NEXTCORE: NO_BOOT_TARGET");
                     Status::NOT_FOUND
                 }

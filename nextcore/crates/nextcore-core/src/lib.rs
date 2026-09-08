@@ -5,6 +5,7 @@ extern crate alloc;
 #[cfg(feature = "std")]
 pub mod acpi;
 pub mod boot_config;
+pub mod boot_picker;
 #[cfg(feature = "std")]
 pub mod config;
 #[cfg(feature = "std")]
