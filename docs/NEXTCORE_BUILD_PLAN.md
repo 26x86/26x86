@@ -1312,3 +1312,42 @@ Reference: https://github.com/apple-oss-distributions/xnu/blob/main/osfmk/arm64/
 Wanted: establish and test the selected startup ABI, virtual-address translation,
 MMU and SPTM interface before advancing to sustained XNU initialization. Synthetic
 success and partial original instruction execution remain distinct milestones.
+
+
+## BP26 — continue original startup and runtime integration
+
+Current: the original macOS 27 prefix retires four instructions in x86 EFI,
+then stops at a standard thread-pointer system register. Submodules are locally
+committed and independently linked; remote publication remains a separate pending
+action. Continued implementation does not depend on publication.
+
+Decision and delegation: the CPU agent owns ISE thread/context system registers,
+architectural state and their native/reference ABI consistency, with public ISA
+semantics and independently authored tests. The EFI/Core agent owns reproducible
+original-prefix tracing and explicit boot prerequisites; it may add a separate
+bounded firmware DeviceTree-template parser, preserving the strict runtime parser
+and unresolved template state. Unknown platform values must remain explicit.
+The GPU agent owns the GPU module's guest-command submission boundary: inspect
+and extend existing bounded queues/adapters rather than duplicate them, connect
+supported compute commands to the validated backend, and reject unsupported
+operations explicitly. Root owns translation/memory integration review, submodule
+revision propagation, metadata, provisioning and final regression validation.
+
+Wanted: replace the observed standard-register boundary, observe the next actual
+original instruction boundary, and improve independently testable memory and GPU
+interfaces without claiming SPTM services, runtime device-tree resolution, XNU
+boot or macOS Metal completion prematurely. Original code and private coordinates
+remain under `_isolated/`; only public interface implementations and independently
+authored fixtures enter module commits. No source copies return to the parent.
+
+
+BP26-A decisions: root owns `ISE/runtime/preos/src/mmu.rs` to correct distinct
+TG0/TG1 architectural granule encodings, validate disabled translation-table walks,
+and retain deterministic failures for unsupported regimes. CPU source changes
+outside that file remain delegated. Arm's Cortex-A73 TRM TCR_EL1 table and Arm's
+Memory Management guide specify distinct TG1 and TG0 encodings; synthetic table
+walks will establish lower/upper 4 KiB and 16 KiB behavior and rejection cases.
+GPU agent is explicitly delegated the existing APLS SGPU codec move into GPU,
+with APLS re-exporting the same public types. This is ownership consolidation of
+the existing wire format, with bounded counts/lengths and compute submission
+through the existing executor, not introduction of a parallel command protocol.
