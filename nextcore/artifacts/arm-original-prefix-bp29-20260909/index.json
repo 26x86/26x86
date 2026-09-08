@@ -1,0 +1,9 @@
+{
+  "schema": "nextcore.public-original-prefix.v1",
+  "files": {
+    "results.json": "bef861a8c4511c3c09fd958798e0a3a126d39e28ee67ee33b100a6c550e3a6cf",
+    "build-reference.json": "96cfa3466d1af36b735dce5fb1ba2b018b7229dd57e8406e96977132e2b44406",
+    "contract.md": "2b05ec79f15339d1e6e413e417252c28dad8ce0fb9e108bc0b6da8525cdb26b3"
+  },
+  "contains_original_bytes_or_coordinates": false
+}

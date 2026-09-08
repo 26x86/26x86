@@ -84,6 +84,9 @@ jobs:
           python3 nextcore/artifacts/arm-pair-memory-20260909/verify_pair_ovmf.py \
             --tools nextcore/tools --efi "$RUNNER_TEMP/NXARMJIT-probe.efi" \
             --output "$RUNNER_TEMP/nextcore-pair-memory-proof"
+          python3 nextcore/artifacts/arm-scalar-memory-20260909/verify_scalar_ovmf.py \
+            --tools nextcore/tools --efi "$RUNNER_TEMP/NXARMJIT-probe.efi" \
+            --output "$RUNNER_TEMP/nextcore-scalar-memory-proof"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -96,5 +99,7 @@ jobs:
             ${{ runner.temp }}/nextcore-sptm-prefix-proof/*/serial.log
             ${{ runner.temp }}/nextcore-platform-irq-proof/report.json
             ${{ runner.temp }}/nextcore-platform-irq-proof/*/serial.log
+            ${{ runner.temp }}/nextcore-scalar-memory-proof/report.json
+            ${{ runner.temp }}/nextcore-scalar-memory-proof/*/serial.log
             ${{ runner.temp }}/nextcore-pair-memory-proof/report.json
             ${{ runner.temp }}/nextcore-pair-memory-proof/*/serial.log

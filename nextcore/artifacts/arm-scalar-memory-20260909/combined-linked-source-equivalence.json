@@ -1,0 +1,70 @@
+{
+  "schema": "nextcore.efi-runtime-linked-source-equivalence.v1",
+  "scalar_revision": "8b09f8764f13838baf71c1676575cb829bcd7902",
+  "combined_revision": "33fea9fdea844bc7c2d3228b8888600270210562",
+  "all_identical": true,
+  "files": {
+    "runtime/jit.c": {
+      "scalar_sha256": "2cb75b4deb7efdc43bd3993432cd3a95e75ce493ee2540f61d3de4d3434afd68",
+      "combined_sha256": "2cb75b4deb7efdc43bd3993432cd3a95e75ce493ee2540f61d3de4d3434afd68",
+      "identical": true
+    },
+    "runtime/arch.c": {
+      "scalar_sha256": "99b5cf138ed60b7a98a6d94036567aa3538d5d05f880ce7bcb742c375eb2fbf9",
+      "combined_sha256": "99b5cf138ed60b7a98a6d94036567aa3538d5d05f880ce7bcb742c375eb2fbf9",
+      "identical": true
+    },
+    "runtime/boot_jit.c": {
+      "scalar_sha256": "3be7b556c06f9dff5796cb2773ca4f6086bbb5eb70fb6554d2ba3e612dbae337",
+      "combined_sha256": "3be7b556c06f9dff5796cb2773ca4f6086bbb5eb70fb6554d2ba3e612dbae337",
+      "identical": true
+    },
+    "runtime/jit_protection.c": {
+      "scalar_sha256": "aaaae4ed9d644e91d4da26e745c336ce767dfdd60e8e1a9a2a9287c0ed60ddc7",
+      "combined_sha256": "aaaae4ed9d644e91d4da26e745c336ce767dfdd60e8e1a9a2a9287c0ed60ddc7",
+      "identical": true
+    },
+    "runtime/gop_scanout.c": {
+      "scalar_sha256": "85e9a454846614e8a17420d628f806f93e6925a4c39a5b1b648e6b691895a912",
+      "combined_sha256": "85e9a454846614e8a17420d628f806f93e6925a4c39a5b1b648e6b691895a912",
+      "identical": true
+    },
+    "runtime/jit.h": {
+      "scalar_sha256": "9327da6d548a5bcd41cad940fc0ba56cd569f0eb62b0736b45ba8243c4cf81cd",
+      "combined_sha256": "9327da6d548a5bcd41cad940fc0ba56cd569f0eb62b0736b45ba8243c4cf81cd",
+      "identical": true
+    },
+    "runtime/boot_jit.h": {
+      "scalar_sha256": "5f70ed26073af250f4e508f545df7dbfee7e96e32afe9396fddf40f90abbd46b",
+      "combined_sha256": "5f70ed26073af250f4e508f545df7dbfee7e96e32afe9396fddf40f90abbd46b",
+      "identical": true
+    },
+    "runtime/platform_abi.h": {
+      "scalar_sha256": "e0c19055be84de172df89495c822a18deae24d04315e4350cc42cba07fc90eba",
+      "combined_sha256": "e0c19055be84de172df89495c822a18deae24d04315e4350cc42cba07fc90eba",
+      "identical": true
+    },
+    "runtime/uefi.h": {
+      "scalar_sha256": "ad65b75ad72ddca190093a8df01ec2e89622fadaaee0b1e149a704e80106e32b",
+      "combined_sha256": "ad65b75ad72ddca190093a8df01ec2e89622fadaaee0b1e149a704e80106e32b",
+      "identical": true
+    },
+    "runtime/gop_scanout.h": {
+      "scalar_sha256": "5025bcf913b70baf13888792091efd67b4bf42f2fa34c5b4bb52163cfacde5b6",
+      "combined_sha256": "5025bcf913b70baf13888792091efd67b4bf42f2fa34c5b4bb52163cfacde5b6",
+      "identical": true
+    },
+    "runtime/preos/src/pauth.rs": {
+      "scalar_sha256": "f0c93ce49e3b8fa27bc28805d60fd6689edb41acd299bc914b192c329938604c",
+      "combined_sha256": "f0c93ce49e3b8fa27bc28805d60fd6689edb41acd299bc914b192c329938604c",
+      "identical": true
+    },
+    "runtime/preos/src/platform.rs": {
+      "scalar_sha256": "8034a1b63c14ef6dc420f2a61adbcce21cc6d990dc777962cc7fe063c8205769",
+      "combined_sha256": "8034a1b63c14ef6dc420f2a61adbcce21cc6d990dc777962cc7fe063c8205769",
+      "identical": true
+    }
+  },
+  "combined_binary_rebuilt_here": false,
+  "actual_efi_execution_revision": "8b09f8764f13838baf71c1676575cb829bcd7902"
+}
