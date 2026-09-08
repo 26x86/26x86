@@ -3,12 +3,52 @@ import contextlib
 import io
 import json
 import subprocess
+import struct
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
 import build_metal_probe as builder
+
+
+class TargetProfileValidation(unittest.TestCase):
+    @staticmethod
+    def image(cpu=0x0100000C, major=27):
+        commands = struct.pack("<6I", 0x32, 24, 1, major << 16, major << 16, 0)
+        commands += struct.pack("<4I", 0x1D, 16, 72, 8)
+        return struct.pack("<8I", 0xFEEDFACF, cpu, 0, 2, 2, 40, 0x200000, 0) + commands + b"SIGNTEST"
+
+    def test_wrong_architecture_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "executable profile"):
+            builder.inspect_profile(self.image(cpu=0x01000007), builder.PROFILES["golden-gate-arm64"])
+
+    def test_arm64e_and_unknown_capabilities_are_rejected(self):
+        for subtype in (2, 0x80000000):
+            with self.subTest(subtype=subtype):
+                data = bytearray(self.image())
+                struct.pack_into("<I", data, 8, subtype)
+                with self.assertRaisesRegex(ValueError, "executable profile"):
+                    builder.inspect_profile(data, builder.PROFILES["golden-gate-arm64"])
+
+    def test_wrong_os_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "build-version profile"):
+            builder.inspect_profile(self.image(major=26), builder.PROFILES["golden-gate-arm64"])
+
+    def test_truncated_load_command_table_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "load-command table"):
+            builder.inspect_profile(self.image()[:55], builder.PROFILES["golden-gate-arm64"])
+
+    def test_signature_overlapping_commands_is_rejected(self):
+        data = bytearray(self.image())
+        struct.pack_into("<I", data, 64, 32)
+        with self.assertRaisesRegex(ValueError, "code-signature range"):
+            builder.inspect_profile(data, builder.PROFILES["golden-gate-arm64"])
+
+    def test_valid_target_preserves_observed_metadata(self):
+        signature, version = builder.inspect_profile(self.image(), builder.PROFILES["golden-gate-arm64"])
+        self.assertEqual(signature, {"file_offset": 72, "bytes": 8})
+        self.assertEqual(version, {"platform": 1, "minimum_os": 27 << 16, "sdk": 27 << 16})
 
 
 class BuildReceiptFailures(unittest.TestCase):

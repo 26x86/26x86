@@ -1,11 +1,11 @@
-/* Standalone macOS x86_64 public-API probe. See metal_compute_probe.md.
+/* Standalone macOS x86_64/arm64 public-API probe. See metal_compute_probe.md.
  * SDK-independent FFI declarations; no driver, firmware, or private API.
  */
 #include <stddef.h>
 #include <stdint.h>
 
-#if !defined(__x86_64__)
-#error This probe has only the documented macOS x86_64 ABI profile.
+#if (!defined(__x86_64__) && !defined(__aarch64__)) || defined(__arm64e__)
+#error This probe supports the macOS x86_64 and arm64 ABI profiles only.
 #endif
 
 extern int printf(const char *, ...);
@@ -20,7 +20,7 @@ typedef void *Selector;
 typedef unsigned long UInteger;
 typedef struct { UInteger width, height, depth; } GridSize;
 _Static_assert(sizeof(UInteger) == 8 && sizeof(GridSize) == 24,
-               "macOS x86_64 Metal argument layout");
+               "macOS LP64 Metal argument layout");
 
 static void *message;
 static Selector (*selector)(const char *);
