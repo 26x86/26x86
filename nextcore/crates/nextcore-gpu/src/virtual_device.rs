@@ -50,6 +50,12 @@ pub struct GpuMemoryManager {
     buffers: HashMap<u64, Vec<u8>>,
 }
 
+impl Default for GpuMemoryManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl GpuMemoryManager {
     pub fn new() -> Self {
         Self {
@@ -114,9 +120,7 @@ impl VirtualMetalDevice {
             GpuVendor::Unknown => "Generic",
         };
         let name = format!("Apple {} GPU", vendor_str);
-        let acceleration_mode = if !spec.has_compute_shaders {
-            AccelerationMode::Software
-        } else if spec.vendor == GpuVendor::Unknown {
+        let acceleration_mode = if !spec.has_compute_shaders || spec.vendor == GpuVendor::Unknown {
             AccelerationMode::Software
         } else {
             AccelerationMode::HardwareWrapped

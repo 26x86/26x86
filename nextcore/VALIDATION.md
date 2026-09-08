@@ -313,6 +313,49 @@ python3 tools/verify_kernel_ovmf.py \
 `apls run` 종료 코드 0은 검증된 macOS 부팅, 2는 미검증 관측 또는 CLI 인자
 오류, 1은 adapter/setup 오류다. worker 종료 코드와 QEMU 종료 코드는 별개다.
 
+## GPU 추상화 계층 확장 (2026-09-07)
+
+Design D10의 host 그래픽 레이어를 "host 데이터 모델/명령 의미론 검증" 범위 안에서
+확장했다. 실제 Metal/GPU 실행은 아니며 이번 변경으로 `macos_boot_verified`는
+계속 `false`다.
+
+새 모듈 (전부 `nextcore-gpu/src/`):
+
+- `framebuffer.rs` — LinearFramebuffer(BGRA8/RGBA8/BGRX8, stride, dirty
+  tracking, clear/set/get/fill_rect/blit)와 DoubleBuffer. UEFI GOP 선형
+  프레임버퍼 패턴 대응.
+- `texture.rs` — TextureManager(텍스처 생성/업로드/다운로드/삭제, 포맷
+  RGBA8/BGRA8/RGBA16F/RGBA32F/Depth, 2D bilinear/nearest sampling,
+  SamplerDescriptor, clamp/repeat/mirror 주소 모드).
+- `sync.rs` — GpuSyncManager(fence/세마포어/이벤트, signal/wait/timeout/reset).
+  GPU async 경계용 프리미티브.
+- `render_pipeline.rs` — RenderPipeline/Descriptor, VertexInputState,
+  Depth/Stencil/Blend/Rasterizer state, Viewport/Scissor. 공개 GPU pipeline
+  state 모델.
+- `command_executor.rs` — RecordedCommandBuffer와 GpuCommand(draw/indexed/
+  instanced, bound 상태, render pass clear, texture copy, viewport).
+  execute()가 framebuffer clear와 draw call 기록을 수행한다. `execute_with_rasterizer`
+  는 slot 0의 vertex/index buffer에서 `SOFTWARE_RENDER_VERTEX_STRIDE`(52바이트:
+  position+color+tex_coord+normal) 인터리브 정점을 해석해 SoftwareRasterizer로
+  실제 삼각형 래스터화까지 수행하고, render pass 시작 시 depth buffer를
+  프레임버퍼 크기로 재할당·초기화한다. `decode_software_vertex`는 공개 API다.
+- `compute.rs` — ComputePipelineManager(storage buffer, dispatch, fence
+  signal). software compute 디스패치의 host 모델.
+- `rasterizer.rs` — SoftwareRasterizer(NDC→screen, barycentric, depth
+  buffer, line rasterization)와 Vertex/Vec2/Vec3/Vec4/Color 및 blend 함수.
+
+검증: `nextcore-gpu`는 기존 10건 + 신규 81건 = **91 passed**. clippy 0건.
+전체 workspace `cargo test`도 통과. 신규 테스트 파일은 `tests/gpu_framebuffer.rs`,
+`gpu_texture.rs`, `gpu_sync.rs`, `gpu_pipeline.rs`, `gpu_raster.rs`,
+`gpu_executor.rs`, `gpu_compute.rs`, `gpu_render_path.rs`. 통합 경로
+`gpu_render_path.rs`는 clear→Draw/DrawIndexed→SoftwareRasterizer 래스터화→
+DoubleBuffer swap→front 표시까지 한 흐름으로 검증한다.
+
+다음 blocker: D10"게스트 연결 방식과 공개 driver/API 범위". 현재 로그/핸들 확인과
+호스트 렌더 모델은 host 단위 테스트로만 검증됐다. 실제 graphics driver/Metal
+runtime acceptance는 XNU/userspace 부팅 뒤의 별도 관측이다. 이번 확장은
+"호스트 모델의 명령 의미론"이며 GPU 가속 완료로 표시하지 않는다.
+
 ## 남은 구현과 다음 근거
 
 - **ARM firmware→XNU**: BP14는 정상 복원과 root 읽기, bootx ACK 뒤의

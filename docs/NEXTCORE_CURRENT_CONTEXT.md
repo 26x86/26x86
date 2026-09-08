@@ -57,11 +57,11 @@ Nextcore는 다음 public GitHub repositories로 배포됐고 각각 `main`과
 `Tools/export_nextcore_repositories.py`가 fresh export, fixed dependency tag,
 `repository.json`, sha256 inventory와 CI를 만든다. clone verification에서 Core
 test, Tool test (8 passed, 1 externally supplied EFI fixture ignored), EFI UEFI
-check는 통과했다. APLS standalone build는 `vf_policy.rs`가 루트
-`sandbox/vsk/config/golden-gate.template.plist`를 `include_bytes!`로 참조해
-실패했다. 이는 모듈 경계 결함이며, template를 public module-owned input으로
-이관하거나 explicit runtime input으로 바꾸기 전에는 APLS를 독립 통과로 기록하지
-않는다.
+check는 통과했다. APLS standalone build는 `vf_policy.rs`의 workspace 외부
+`include_bytes!` 경계 때문에 실패했으나, 2026-09-07에 crate 소유 테스트 fixture로
+교체했다. 현재 `cargo test -p nextcore-apls`는 48개 테스트가 통과한다. 이는
+APLS 계약/소프트웨어 테스트 통과이며 실제 macOS/XNU/Metal 또는 물리 화면 출력의
+증거는 아니다.
 
 ## 최소 재개 절차
 
