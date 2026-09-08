@@ -1119,6 +1119,12 @@ root가 이 CI/guard와 문서 배포 정합을 소유하고 cross-platform/Wind
 NextCore와 최신 증거에 맞추고 외부 구현의 실제 출처는 유지한다. 조직 profile은
 module publish 담당에게 위임하며 root는 본체 README·wiki·PR을 통합한다.
 
+독립 module 원격 CI는 Tool 테스트가 sibling Core의 fixture를 읽는 결함을 발견했다.
+Windows의 대소문자 비구분/인접 clone 때문에 로컬 검증이 이를 놓쳤다. 독립 작성한
+동일 fixture를 Tool 테스트 소유 경로로 복사하고 상대 include를 해당 crate 내부로
+제한한다. 기존 v0.1.1은 보존하고 Tool v0.1.2로 수정하며, 다음 검증은 Linux의
+단일 독립 clone에서 수행한다. 동등 fixture hash와 원격 exact-head CI를 확인한다.
+
 ## OPEN_QUESTION
 
 - BP9 연속 실행 결정: Design D2-A는 표준 EFI application 중간 경로를 허용했고,
