@@ -18,7 +18,9 @@ BP29 ISE는 정수 scalar 13종과 상세 MMU 실패 API를 구현했다. 기존
 11개 자체 작성 입력으로 정수 13종, Device/SP 정렬과 unsupported 처리를 검증한다.
 고의로 부호 확장을 잘못 실행한 입력도 실제 EFI 결과에서 거부했다. 이 EFI는
 원래 고정 scalar 커밋8b09f876으로 빌드했고, 통합 ISE33fea9f의 연결 소스12개가
-동일하다는 대조를 별도로 보존한다. 통합 커밋의 EFI는 새 빌드·재실행으로 확인한다.
+동일하다는 대조를 별도로 보존한다. 통합 커밋d45b107d의 EFI도 새 빌드·재실행으로39개 authored 검사를 통과했다.
+[전체 통합 결과](artifacts/integration-bp29-20260909/README.md)는472개 workspace
+테스트,91개 참조 테스트,158개 실제 ARM 입력 대조와 각 실행 명령을 보존한다.
 원본 macOS27 진입 진단은 47명령에서64명령/12native blocks로 진행했고,
 설정된 진단 예산 때문에 정지했다. 이 지점이 미지원 명령이라는 주장은 하지 않는다.
 [원본 aggregate 결과](artifacts/arm-original-prefix-bp29-20260909/results.json)에는

@@ -1595,3 +1595,13 @@ bounded tiers256/1024/4096, with a build marker and host opt-in. First prove an
 authored256-instruction case, then advance original diagnostics only when the
 previous run stops precisely at its budget. Public output remains aggregate-only.
 Root owns final dependency pins, metadata, integration tools and PR/main publication.
+
+
+BP29 integration closure: fresh recursive d45b107d passes472 workspace tests,
+91 reference tests,39 authored x86 EFI cases,158 captured ARM comparisons,
+the prior18 MMU oracle cases, native scalar/PAC/IRQ/pair/ABI execution, Python/GUI,
+Vulkan, firmware packaging and Clippy. Both changed module PR #3s are merged
+and their completed branches are removed after ancestry checks. Raw receipts
+and the initial CI artifact-finalization403 are preserved in
+nextcore/artifacts/integration-bp29-20260909. The final evidence-only commit
+receives its own canonical recursive clone/hash checks and final-head CI.

@@ -38,3 +38,4 @@ nextcore/artifacts/integration-bp28-20260909/** -text -whitespace
 # Authored scalar firmware evidence retains original receipt bytes.
 nextcore/artifacts/arm-scalar-memory-20260909/** -text -whitespace
 nextcore/artifacts/arm-original-prefix-bp29-20260909/** -text -whitespace
+nextcore/artifacts/integration-bp29-20260909/** -text -whitespace

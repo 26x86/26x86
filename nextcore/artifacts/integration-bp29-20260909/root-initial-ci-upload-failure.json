@@ -1,0 +1,187 @@
+{
+  "schema": "nextcore.ci-infrastructure-failure.v1",
+  "implementation_commit": "d45b107deb384278ee9efaaa471a66d1a6d3008b",
+  "job": {
+    "id": 102146641664,
+    "run_id": 34251454952,
+    "workflow_name": "Cross-platform preparation",
+    "head_branch": "codex/arm64e-scalar-mmu",
+    "run_url": "https://api.github.com/repos/26x86/26x86/actions/runs/34251454952",
+    "run_attempt": 1,
+    "node_id": "CR_kwDOUNSJiM8AAAAXyGoPAA",
+    "head_sha": "d45b107deb384278ee9efaaa471a66d1a6d3008b",
+    "url": "https://api.github.com/repos/26x86/26x86/actions/jobs/102146641664",
+    "html_url": "https://github.com/26x86/26x86/actions/runs/34251454952/job/102146641664",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-09-08T16:30:21Z",
+    "started_at": "2026-09-08T16:30:50Z",
+    "completed_at": "2026-09-08T16:31:38Z",
+    "name": "native-gui (ubuntu-latest)",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1,
+        "started_at": "2026-09-08T16:30:51Z",
+        "completed_at": "2026-09-08T16:30:52Z"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2,
+        "started_at": "2026-09-08T16:30:52Z",
+        "completed_at": "2026-09-08T16:31:10Z"
+      },
+      {
+        "name": "Run actions/setup-python@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3,
+        "started_at": "2026-09-08T16:31:10Z",
+        "completed_at": "2026-09-08T16:31:10Z"
+      },
+      {
+        "name": "Run python -m pip install requests packaging markdown2 pywebview",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4,
+        "started_at": "2026-09-08T16:31:10Z",
+        "completed_at": "2026-09-08T16:31:15Z"
+      },
+      {
+        "name": "Run actions/setup-node@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5,
+        "started_at": "2026-09-08T16:31:15Z",
+        "completed_at": "2026-09-08T16:31:15Z"
+      },
+      {
+        "name": "Verify GUI transport ownership",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6,
+        "started_at": "2026-09-08T16:31:15Z",
+        "completed_at": "2026-09-08T16:31:15Z"
+      },
+      {
+        "name": "Install native macOS runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 7,
+        "started_at": "2026-09-08T16:31:15Z",
+        "completed_at": "2026-09-08T16:31:15Z"
+      },
+      {
+        "name": "Install Linux Qt runtime",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8,
+        "started_at": "2026-09-08T16:31:15Z",
+        "completed_at": "2026-09-08T16:31:31Z"
+      },
+      {
+        "name": "Verify Linux Qt platform dependencies",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 9,
+        "started_at": "2026-09-08T16:31:31Z",
+        "completed_at": "2026-09-08T16:31:31Z"
+      },
+      {
+        "name": "Exercise the Linux GUI",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 10,
+        "started_at": "2026-09-08T16:31:31Z",
+        "completed_at": "2026-09-08T16:31:34Z"
+      },
+      {
+        "name": "Exercise the macOS GUI",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 11,
+        "started_at": "2026-09-08T16:31:34Z",
+        "completed_at": "2026-09-08T16:31:34Z"
+      },
+      {
+        "name": "Run actions/upload-artifact@v4",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 12,
+        "started_at": "2026-09-08T16:31:34Z",
+        "completed_at": "2026-09-08T16:31:35Z"
+      },
+      {
+        "name": "Post Run actions/setup-node@v4",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 22,
+        "started_at": "2026-09-08T16:31:35Z",
+        "completed_at": "2026-09-08T16:31:35Z"
+      },
+      {
+        "name": "Post Run actions/setup-python@v5",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 23,
+        "started_at": "2026-09-08T16:31:35Z",
+        "completed_at": "2026-09-08T16:31:35Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 24,
+        "started_at": "2026-09-08T16:31:35Z",
+        "completed_at": "2026-09-08T16:31:35Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 25,
+        "started_at": "2026-09-08T16:31:35Z",
+        "completed_at": "2026-09-08T16:31:35Z"
+      }
+    ],
+    "check_run_url": "https://api.github.com/repos/26x86/26x86/check-runs/102146641664",
+    "labels": [
+      "ubuntu-latest"
+    ],
+    "runner_id": 1000000793,
+    "runner_name": "GitHub Actions 1000000793",
+    "runner_group_id": 0,
+    "runner_group_name": "GitHub Actions"
+  },
+  "annotations": [
+    {
+      "path": ".github",
+      "blob_href": "https://github.com/26x86/26x86/blob/d45b107deb384278ee9efaaa471a66d1a6d3008b/.github",
+      "start_line": 2,
+      "start_column": null,
+      "end_line": 2,
+      "end_column": null,
+      "annotation_level": "warning",
+      "title": "",
+      "message": "Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/",
+      "raw_details": ""
+    },
+    {
+      "path": ".github",
+      "blob_href": "https://github.com/26x86/26x86/blob/d45b107deb384278ee9efaaa471a66d1a6d3008b/.github",
+      "start_line": 29,
+      "start_column": null,
+      "end_line": 29,
+      "end_column": null,
+      "annotation_level": "failure",
+      "title": "",
+      "message": "Failed to FinalizeArtifact: Received non-retryable error: Failed request: (403) Forbidden: Error from intermediary with HTTP status code 403 \"Forbidden\"",
+      "raw_details": ""
+    }
+  ],
+  "source_change_required": false
+}
