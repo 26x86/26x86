@@ -28,7 +28,8 @@ python3 Tools/verify_nextcore_submodules.py --cargo --require-clean
 
 Run these commands inside WSL2 on Windows. Keep build directories on its Linux
 filesystem. The product build needs Rust's `x86_64-unknown-uefi` target, Clang
-and LLD. The native ARM diagnostic additionally uses `aarch64-unknown-uefi`;
+LLD and LLVM tools (`llvm-ar`, `llvm-objcopy`). On Ubuntu install
+`clang lld llvm qemu-system-x86 ovmf`. The native ARM diagnostic additionally uses `aarch64-unknown-uefi`;
 it is not the product execution path. QEMU/OVMF runs the development firmware
 checks on an x86 machine.
 
@@ -46,8 +47,8 @@ into authored execution fixtures; it does not enable original macOS boot.
 ## Develop and integrate
 
 Create a development branch inside the module before editing. Commit module
-changes there, test them, and publish the module branch before recording its new
-gitlink in the parent. Parent commits contain module SHA updates, integration
+changes there, test them, publish the module branch and merge its verified PR
+into main before merging the new gitlink in the parent. Parent commits contain module SHA updates, integration
 tools and documentation; they do not contain copied crate sources.
 
 ```bash
@@ -84,3 +85,15 @@ Only public source belongs in modules. Original restore inputs and runtime
 material remain under the parent's ignored `_isolated/` directory. Synthetic
 firmware and host GPU tests establish their own layers; original XNU, userspace
 and guest Metal each require actual execution evidence.
+
+## Execution and graphics scope
+
+The target is ARM64e macOS 27 code running on an x86_64 machine entered through
+EFI. The macOS-focused JIT/HAL is the product runtime; an outer QEMU/OVMF x86
+machine supplies reproducible development firmware. WSL is the build host.
+
+AMD, NVIDIA and Intel integrated GPUs are implementation targets. Current host
+Vulkan readback evidence comes from an AMD RX6800XT. Neither vendor enumeration
+nor that host result establishes NVIDIA/Intel hardware execution, an EFI GPU
+driver or guest Metal support. Original-prefix diagnostics are also separate
+from a usable macOS boot. Keep these outcomes explicit in milestone receipts.

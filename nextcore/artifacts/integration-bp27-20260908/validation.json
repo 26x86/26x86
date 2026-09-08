@@ -1,0 +1,56 @@
+{
+  "schema": "nextcore.integration-bp27/1",
+  "passed": true,
+  "tested_implementation_commit": "369f1bf4de3be6c97f104d8a8100de339d858ee3",
+  "workspace": {
+    "passed": 472,
+    "ignored_default": 2,
+    "compiled_efi_ignored_test_ran": true,
+    "grant_oracle_ignored_test_ran": true
+  },
+  "python_discovery": {
+    "total": 130,
+    "passed": 129,
+    "skipped": 1
+  },
+  "gui_followup": {
+    "total": 32,
+    "passed": 31,
+    "skipped": 1,
+    "scope": "Updated test expectations for removed HTTP/WebView endpoints; product sources unchanged."
+  },
+  "reference_tests": 73,
+  "authored_x86_efi_cases": 22,
+  "independent_mmu_cases": {
+    "granules": 4,
+    "physical_width_and_descriptors": 14
+  },
+  "efi_binaries": [
+    {
+      "kind": "default",
+      "bytes": 169472,
+      "sha256": "d64d010eac0661f221e470d1c81b4bf278bd1429cc857ea2623ff988b3d47a2f",
+      "retained_build_path": "/home/sharh/work/integration-validation-bp27-final-20260908/NXARMJIT-default.efi"
+    },
+    {
+      "kind": "probe",
+      "bytes": 242176,
+      "sha256": "37997fbee26e486acec3e7f40aaa73b53ecd029d44bc1a4cce7662368783a59e",
+      "retained_build_path": "/home/sharh/work/integration-validation-bp27-final-20260908/NXARMJIT-probe.efi"
+    }
+  ],
+  "clean_recursive_clone": true,
+  "module_prs_merged": 6,
+  "module_branches_removed": 6,
+  "original_diagnostic": {
+    "retired": 26,
+    "native_blocks": 10,
+    "software_platform_profile": true,
+    "complete_startup_prerequisites": false
+  },
+  "macos_boot_verified": false,
+  "stable_guest_verified": false,
+  "guest_metal_verified": false,
+  "nvidia_hardware_verified": false,
+  "intel_gpu_hardware_verified": false
+}

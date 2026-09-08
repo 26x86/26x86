@@ -1,0 +1,257 @@
+{
+  "schema": "nextcore.fresh-integration/1",
+  "passed": true,
+  "integration_commit": "369f1bf4de3be6c97f104d8a8100de339d858ee3",
+  "clone_transport": "local committed repositories with temporary Git URL mappings; remote publication not asserted",
+  "recursive_modules": true,
+  "working_tree_clean": true,
+  "commands": [
+    {
+      "name": "submodules",
+      "command": [
+        "python3",
+        "Tools/verify_nextcore_submodules.py",
+        "--cargo",
+        "--require-clean"
+      ],
+      "exit_code": 0,
+      "seconds": 3.769
+    },
+    {
+      "name": "native-pac",
+      "command": [
+        "python3",
+        "nextcore/tools/probe_efi_native_pauth.py",
+        "--output",
+        "/home/sharh/work/integration-validation-bp27-final-20260908/native-pac.json"
+      ],
+      "exit_code": 0,
+      "seconds": 20.486
+    },
+    {
+      "name": "workspace",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "--workspace"
+      ],
+      "exit_code": 0,
+      "seconds": 36.113
+    },
+    {
+      "name": "python",
+      "command": [
+        "/home/sharh/.venvs/nextcore/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 41.954
+    },
+    {
+      "name": "efi-default",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "--release",
+        "-p",
+        "nextcore-efi",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--bin",
+        "NXARMJIT",
+        "--features",
+        "arm-jit"
+      ],
+      "exit_code": 0,
+      "seconds": 10.933
+    },
+    {
+      "name": "efi-probe",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "--release",
+        "-p",
+        "nextcore-efi",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--bin",
+        "NXARMJIT",
+        "--features",
+        "arm-jit-probe,arm-jit-trace"
+      ],
+      "exit_code": 0,
+      "seconds": 2.499
+    },
+    {
+      "name": "firmware-nine",
+      "command": [
+        "python3",
+        "nextcore/tools/verify_arm_jit_ovmf.py",
+        "--efi-default",
+        "/home/sharh/work/integration-validation-bp27-final-20260908/NXARMJIT-default.efi",
+        "--efi-probe",
+        "/home/sharh/work/integration-validation-bp27-final-20260908/NXARMJIT-probe.efi",
+        "--output",
+        "/home/sharh/work/integration-validation-bp27-final-20260908/firmware-nine"
+      ],
+      "exit_code": 0,
+      "seconds": 47.419
+    },
+    {
+      "name": "firmware-prefix",
+      "command": [
+        "python3",
+        "nextcore/tools/verify_arm_sptm_prefix_ovmf.py",
+        "--efi-default",
+        "/home/sharh/work/integration-validation-bp27-final-20260908/NXARMJIT-default.efi",
+        "--efi-trace",
+        "/home/sharh/work/integration-validation-bp27-final-20260908/NXARMJIT-probe.efi",
+        "--output",
+        "/home/sharh/work/integration-validation-bp27-final-20260908/firmware-prefix"
+      ],
+      "exit_code": 0,
+      "seconds": 23.263
+    },
+    {
+      "name": "firmware-platform",
+      "command": [
+        "python3",
+        "nextcore/tools/verify_arm_platform_irq_ovmf.py",
+        "--efi",
+        "/home/sharh/work/integration-validation-bp27-final-20260908/NXARMJIT-probe.efi",
+        "--output",
+        "/home/sharh/work/integration-validation-bp27-final-20260908/firmware-platform"
+      ],
+      "exit_code": 0,
+      "seconds": 38.388
+    },
+    {
+      "name": "mmu-physical",
+      "command": [
+        "python3",
+        "nextcore/crates/nextcore-ise/tools/probe_mmu_physical.py",
+        "--output",
+        "/home/sharh/work/integration-validation-bp27-final-20260908/mmu-physical.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.223
+    },
+    {
+      "name": "vsk-policy",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "-p",
+        "nextcore-apls",
+        "--test",
+        "sgpu_grant",
+        "--",
+        "--include-ignored"
+      ],
+      "exit_code": 0,
+      "seconds": 8.761
+    },
+    {
+      "name": "mmu-oracle",
+      "command": [
+        "python3",
+        "nextcore/crates/nextcore-ise/tools/probe_mmu_granules.py",
+        "--output",
+        "/home/sharh/work/integration-validation-bp27-final-20260908/mmu-oracle.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.238
+    },
+    {
+      "name": "legacy-efi",
+      "command": [
+        "python3",
+        "sandbox/efi/build.py"
+      ],
+      "exit_code": 0,
+      "seconds": 12.038
+    },
+    {
+      "name": "compiled-bundle",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "-p",
+        "nextcore-tool",
+        "--test",
+        "bundle_cli",
+        "compiled_efi_is_copied_without_changes",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "seconds": 0.531
+    },
+    {
+      "name": "clippy-host",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "--workspace",
+        "--exclude",
+        "nextcore-efi",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 7.516
+    },
+    {
+      "name": "clippy-efi",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "-p",
+        "nextcore-efi",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 7.237
+    },
+    {
+      "name": "submodules-final",
+      "command": [
+        "python3",
+        "Tools/verify_nextcore_submodules.py",
+        "--cargo",
+        "--require-clean"
+      ],
+      "exit_code": 0,
+      "seconds": 0.349
+    }
+  ]
+}

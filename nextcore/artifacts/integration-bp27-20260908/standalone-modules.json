@@ -1,0 +1,328 @@
+[
+  {
+    "module": "Core",
+    "commit": "6105cd7996ef2ea4db35d7d3a1e8822d0703aae9",
+    "passed": true,
+    "fresh_clone": true,
+    "root_workspace_patches": false,
+    "dependency_transport": "local committed objects via temporary Git URL mapping; remote publication not asserted",
+    "commands": [
+      {
+        "command": [
+          "git",
+          "clone",
+          "--no-local",
+          "/home/sharh/src/26x86/nextcore/crates/nextcore-core",
+          "/home/sharh/work/module-validation-bp27-20260908/Core-6105cd7996"
+        ],
+        "exit_code": 0,
+        "seconds": 3.57
+      },
+      {
+        "command": [
+          "git",
+          "checkout",
+          "--detach",
+          "6105cd7996ef2ea4db35d7d3a1e8822d0703aae9"
+        ],
+        "exit_code": 0,
+        "seconds": 0.01
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--all-targets"
+        ],
+        "exit_code": 0,
+        "seconds": 43.68
+      },
+      {
+        "command": [
+          "cargo",
+          "check",
+          "--no-default-features"
+        ],
+        "exit_code": 0,
+        "seconds": 1.97
+      }
+    ],
+    "nextcore_packages": [
+      {
+        "name": "nextcore-core",
+        "source": null
+      }
+    ]
+  },
+  {
+    "module": "ISE",
+    "commit": "a6f1c46c4f0e965dbc3d9426a737e7558bac33d7",
+    "passed": true,
+    "fresh_clone": true,
+    "root_workspace_patches": false,
+    "dependency_transport": "local committed objects via temporary Git URL mapping; remote publication not asserted",
+    "commands": [
+      {
+        "command": [
+          "git",
+          "clone",
+          "--no-local",
+          "/home/sharh/src/26x86/nextcore/crates/nextcore-ise",
+          "/home/sharh/work/module-validation-bp27-20260908/ISE-a6f1c46c4f"
+        ],
+        "exit_code": 0,
+        "seconds": 0.63
+      },
+      {
+        "command": [
+          "git",
+          "checkout",
+          "--detach",
+          "a6f1c46c4f0e965dbc3d9426a737e7558bac33d7"
+        ],
+        "exit_code": 0,
+        "seconds": 0.01
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--all-targets"
+        ],
+        "exit_code": 0,
+        "seconds": 5.46
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "runtime/preos/Cargo.toml"
+        ],
+        "exit_code": 0,
+        "seconds": 2.07
+      },
+      {
+        "command": [
+          "python3",
+          "tools/probe_efi_native_pauth.py"
+        ],
+        "exit_code": 0,
+        "seconds": 19.47
+      }
+    ],
+    "nextcore_packages": [
+      {
+        "name": "nextcore-ise",
+        "source": null
+      }
+    ]
+  },
+  {
+    "module": "APLS",
+    "commit": "e6d09207374ff2f1b0f2df182b3287f159fbd329",
+    "passed": true,
+    "fresh_clone": true,
+    "root_workspace_patches": false,
+    "dependency_transport": "local committed objects via temporary Git URL mapping; remote publication not asserted",
+    "commands": [
+      {
+        "command": [
+          "git",
+          "clone",
+          "--no-local",
+          "/home/sharh/src/26x86/nextcore/crates/nextcore-apls",
+          "/home/sharh/work/module-validation-bp27-20260908/APLS-e6d0920737"
+        ],
+        "exit_code": 0,
+        "seconds": 4.36
+      },
+      {
+        "command": [
+          "git",
+          "checkout",
+          "--detach",
+          "e6d09207374ff2f1b0f2df182b3287f159fbd329"
+        ],
+        "exit_code": 0,
+        "seconds": 0.01
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--all-targets"
+        ],
+        "exit_code": 0,
+        "seconds": 41.57
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--all-targets",
+          "--features",
+          "vulkan",
+          "--",
+          "--include-ignored"
+        ],
+        "exit_code": 0,
+        "seconds": 24.31
+      }
+    ],
+    "nextcore_packages": [
+      {
+        "name": "nextcore-apls",
+        "source": null
+      },
+      {
+        "name": "nextcore-gpu",
+        "source": "git+https://github.com/26x86/Nextcore-GPU.git?rev=34d617cca37d563d13ed0b0c966e2557921c6125#34d617cca37d563d13ed0b0c966e2557921c6125"
+      }
+    ]
+  },
+  {
+    "module": "EFI",
+    "commit": "7f23ed3d24f8016338c30d84c5b3cbe0f82d3f19",
+    "passed": true,
+    "fresh_clone": true,
+    "root_workspace_patches": false,
+    "dependency_transport": "local committed objects via temporary Git URL mapping; remote publication not asserted",
+    "commands": [
+      {
+        "command": [
+          "git",
+          "clone",
+          "--no-local",
+          "/home/sharh/src/26x86/nextcore/crates/nextcore-efi",
+          "/home/sharh/work/module-validation-bp27-20260908/EFI-7f23ed3d24"
+        ],
+        "exit_code": 0,
+        "seconds": 0.8
+      },
+      {
+        "command": [
+          "git",
+          "checkout",
+          "--detach",
+          "7f23ed3d24f8016338c30d84c5b3cbe0f82d3f19"
+        ],
+        "exit_code": 0,
+        "seconds": 0.01
+      },
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--release",
+          "--target",
+          "x86_64-unknown-uefi",
+          "--features",
+          "arm-jit",
+          "--bin",
+          "NXARMJIT"
+        ],
+        "exit_code": 0,
+        "seconds": 24.19
+      },
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--release",
+          "--target",
+          "x86_64-unknown-uefi",
+          "--features",
+          "arm-jit-probe",
+          "--bin",
+          "NXARMJIT"
+        ],
+        "exit_code": 0,
+        "seconds": 2.25
+      },
+      {
+        "command": [
+          "cargo",
+          "check",
+          "--target",
+          "x86_64-unknown-uefi",
+          "--all-features"
+        ],
+        "exit_code": 0,
+        "seconds": 7.64
+      }
+    ],
+    "nextcore_packages": [
+      {
+        "name": "nextcore-core",
+        "source": "git+https://github.com/26x86/Nextcore-Core.git?rev=6105cd7996ef2ea4db35d7d3a1e8822d0703aae9#6105cd7996ef2ea4db35d7d3a1e8822d0703aae9"
+      },
+      {
+        "name": "nextcore-efi",
+        "source": null
+      },
+      {
+        "name": "nextcore-ise",
+        "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=a6f1c46c4f0e965dbc3d9426a737e7558bac33d7#a6f1c46c4f0e965dbc3d9426a737e7558bac33d7"
+      }
+    ]
+  },
+  {
+    "module": "Tool",
+    "commit": "c14971a9635db2d7ec499e9540c7a5fa4647a908",
+    "passed": true,
+    "fresh_clone": true,
+    "root_workspace_patches": false,
+    "dependency_transport": "local committed objects via temporary Git URL mapping; remote publication not asserted",
+    "commands": [
+      {
+        "command": [
+          "git",
+          "clone",
+          "--no-local",
+          "/home/sharh/src/26x86/nextcore/crates/nextcore-tool",
+          "/home/sharh/work/module-validation-bp27-20260908/Tool-c14971a963"
+        ],
+        "exit_code": 0,
+        "seconds": 8.8
+      },
+      {
+        "command": [
+          "git",
+          "checkout",
+          "--detach",
+          "c14971a9635db2d7ec499e9540c7a5fa4647a908"
+        ],
+        "exit_code": 0,
+        "seconds": 0.01
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--all-targets"
+        ],
+        "exit_code": 0,
+        "seconds": 16.59
+      }
+    ],
+    "nextcore_packages": [
+      {
+        "name": "nextcore-apls",
+        "source": "git+https://github.com/26x86/Nextcore-APLS.git?rev=e6d09207374ff2f1b0f2df182b3287f159fbd329#e6d09207374ff2f1b0f2df182b3287f159fbd329"
+      },
+      {
+        "name": "nextcore-core",
+        "source": "git+https://github.com/26x86/Nextcore-Core.git?rev=6105cd7996ef2ea4db35d7d3a1e8822d0703aae9#6105cd7996ef2ea4db35d7d3a1e8822d0703aae9"
+      },
+      {
+        "name": "nextcore-gpu",
+        "source": "git+https://github.com/26x86/Nextcore-GPU.git?rev=34d617cca37d563d13ed0b0c966e2557921c6125#34d617cca37d563d13ed0b0c966e2557921c6125"
+      },
+      {
+        "name": "nextcore-tool",
+        "source": null
+      }
+    ]
+  }
+]

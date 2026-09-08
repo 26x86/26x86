@@ -1,0 +1,62 @@
+[
+  {
+    "repository": "26x86/Nextcore-Core",
+    "number": 1,
+    "expected_head": "6105cd7996ef2ea4db35d7d3a1e8822d0703aae9",
+    "merge": {
+      "sha": "6d6247918675d2aec38472da94647d00b860ebd1",
+      "merged": true,
+      "message": "Pull Request successfully merged"
+    }
+  },
+  {
+    "repository": "26x86/Nextcore-ISE",
+    "number": 1,
+    "expected_head": "a6f1c46c4f0e965dbc3d9426a737e7558bac33d7",
+    "merge": {
+      "sha": "21cb2949792bd48f16477f3b21be4e4c422ed322",
+      "merged": true,
+      "message": "Pull Request successfully merged"
+    }
+  },
+  {
+    "repository": "26x86/Nextcore-GPU",
+    "number": 1,
+    "expected_head": "34d617cca37d563d13ed0b0c966e2557921c6125",
+    "merge": {
+      "sha": "0f1ce959a2be59d684d15f0f287cff49e06c305f",
+      "merged": true,
+      "message": "Pull Request successfully merged"
+    }
+  },
+  {
+    "repository": "26x86/Nextcore-APLS",
+    "number": 1,
+    "expected_head": "e6d09207374ff2f1b0f2df182b3287f159fbd329",
+    "merge": {
+      "sha": "28b273a2aeafd0017cb3c67a1adbe55abf4ac8f3",
+      "merged": true,
+      "message": "Pull Request successfully merged"
+    }
+  },
+  {
+    "repository": "26x86/Nextcore-Tool",
+    "number": 1,
+    "expected_head": "c14971a9635db2d7ec499e9540c7a5fa4647a908",
+    "merge": {
+      "sha": "292ebd1d9edb19b68e1da473ba3cb52f15caa7b1",
+      "merged": true,
+      "message": "Pull Request successfully merged"
+    }
+  },
+  {
+    "repository": "26x86/Nextcore-EFI",
+    "number": 1,
+    "expected_head": "7f23ed3d24f8016338c30d84c5b3cbe0f82d3f19",
+    "merge": {
+      "sha": "a8c0343df060a7eeff4ebc84bfd613aa4b706299",
+      "merged": true,
+      "message": "Pull Request successfully merged"
+    }
+  }
+]
