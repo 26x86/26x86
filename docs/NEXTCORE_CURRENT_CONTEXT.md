@@ -4,6 +4,22 @@
 과장하지 않고 이어갈 수 있게 하는 정본 요약이다. 상세 설계는
 `docs/NEXTCORE_BUILD_PLAN.md`, 검증 결과는 `nextcore/VALIDATION.md`를 따른다.
 
+## BP31 최신 개발 상태
+
+BP30 상위 PR #12/main3912da33은 최종 CI28개와 최종 GitHub 재귀 클론/해시 검사를
+통과해 병합했다. 완료된 상위/모듈 브랜치는 정리했고7개 서브모듈 구조를 유지한다.
+BP31 ISE0aabf085와 EFI7495633은 각각 PR #5로 main 병합됐다. CCMP/CCMN을32/64-bit
+register/imm5 전체와 AL/NV 조건까지 generated x86으로 실행한다. 독립 ISE 클론에서
+native34264개/137070assertions, 참조93개, Arm3668개와 오류 대조군이 통과했다.
+빈 Cargo cache의 독립 EFI 클론도 정식 Git 의존성으로 빌드하고 실제 combined EFI13개
+조건부 비교 사례를 통과했다. 상위 통합은 그 exact heads를 별도로 검증한다.
+
+역사적 원본 진단은256/1024/4096 예산을 순서대로 소진했고 마지막은4096명령/
+1205native blocks다. checkpoint는 메타데이터 순회 진행과 일치하지만 정상 handoff나
+부팅 완료를 뜻하지 않는다. 공개 증거는 `nextcore/artifacts/arm-conditional-compare-20260909`.
+BP32 native M=1 및 runtime DT prototype은 별도 진행 중이며 이 통합 소스에는 없다.
+정상 macOS27 부팅, 사용 가능한 데스크톱, EFI GPU와 guest Metal은 여전히 미완료다.
+
 ## BP30 최신 개발 상태
 
 상위 PR #12의 구현 commit ea0a62e8에서 새 재귀 클론 검증이 통과했다: workspace476,

@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "native_negative_control_detected": true,
+  "mutation": "treat condition15 as never in generated CCMP predicate",
+  "source_preserved": true,
+  "canonical_jit_sha256": "a4de6dec41823bfbfc85c683ad37627760cec57277352a03b7113e9714d60d67"
+}

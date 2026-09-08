@@ -1677,3 +1677,25 @@ fault comparisons,65 actual x86 EFI cases and6 separate CLI rejections. Native
 provider/no_std/ABI, legacy scalar/pair/PAC/MMU/Vulkan and firmware packaging
 remain passing. Full receipts are in artifacts/integration-bp30-20260909. Final
 evidence/documentation receives its own canonical recursive checkout and CI.
+
+
+## BP31 — conditional comparisons in the x86 EFI JIT
+
+ISE0aabf085 adds CCMP/CCMN register/imm5 in32/64-bit forms as generated x86
+flags operations, preserving other PSTATE bits/registers/SP and the M=0 memory
+service. ISE PR5 and EFI PR5 are merged; EFI7495633 pins the same ISE revision
+for both dependencies. Root owns parent gitlinks, current-source authored EFI
+runner, CI, historical evidence and fresh recursive integration/publication.
+Historical13 EFI cases and original256/1024/4096 budget diagnostics retain their
+original source/binary provenance. The current combined standalone EFI separately
+passes13 cases with canonical Git dependencies. A reusable parent runner records
+current source hashes rather than asserting that all future runtime revisions
+must equal the historical freeze. Independent native/Arm negative controls remain
+in the ISE proof and historical bundle; no full OS/Metal claim follows.
+
+BP32 is delegated separately: CPU owns the canonical shared walker, strict
+immutable stage1 profile and v2 C/Rust memory execution; GPU agent owns independent
+actual Arm fault-priority comparisons; EFI agent owns an opt-in authored NXMMU
+probe and its allocation/callback lifetime. The runtime-DT transformer prototype
+is frozen outside production pending a real allocation/reservation view. Neither
+that prototype nor the M=1 work changes this BP31 integration input.

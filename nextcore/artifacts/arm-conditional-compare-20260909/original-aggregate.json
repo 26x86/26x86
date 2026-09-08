@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "tiers": [
+    {
+      "budget": 256,
+      "status": 5,
+      "retired": 256,
+      "native_blocks": 72,
+      "inputs_preserved": true,
+      "elapsed_seconds": 28.071
+    },
+    {
+      "budget": 1024,
+      "status": 5,
+      "retired": 1024,
+      "native_blocks": 327,
+      "inputs_preserved": true,
+      "elapsed_seconds": 29.759
+    },
+    {
+      "budget": 4096,
+      "status": 5,
+      "retired": 4096,
+      "native_blocks": 1205,
+      "inputs_preserved": true,
+      "elapsed_seconds": 33.471
+    }
+  ],
+  "binary_sha256": "dcad3f6f9b557b1791644595cf818ecba54a4e68372de8c8aa7539721ba7162c",
+  "frozen_sources_preserved": true,
+  "sptm_args_provided": false,
+  "sptm_services_provided": false,
+  "macos_boot_verified": false,
+  "metal_verified": false,
+  "independent_budget_provenance_verified": true,
+  "core_efi_sources_preserved": true,
+  "unsupported_instruction_observed": false,
+  "maximum_approved_tier_reached": true
+}

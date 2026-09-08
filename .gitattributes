@@ -47,3 +47,5 @@ nextcore/artifacts/arm-memory-provider-20260909/** -text -whitespace
 nextcore/artifacts/arm-memory-provider-combined-20260909/** -text -whitespace
 
 nextcore/artifacts/integration-bp30-20260909/** -text -whitespace
+
+nextcore/artifacts/arm-conditional-compare-20260909/** -text -whitespace

@@ -1,0 +1,497 @@
+diff --git a/runtime/jit.c b/runtime/jit.c
+index 92ffa95..b6e5bf6 100644
+--- a/runtime/jit.c
++++ b/runtime/jit.c
+@@ -63,6 +63,28 @@ static void fix_to(vf_code *c,size_t p,size_t target) {
+     if(p+4<=c->capacity)for(int i=0;i<4;i++)c->bytes[p+i]=(uint8_t)(rel>>(8*i));
+ }
+ static void fix(vf_code *c,size_t p) { fix_to(c,p,c->used); }
++/* Branch to the caller's false path using committed guest NZCV. Zero means
++ * AL/NV: both predicates always hold in A64 ConditionHolds. */
++static size_t condition_false(vf_code *c,unsigned condition) {
++    if(condition>=14)return 0;
++    b(c,0x8b);b(c,0x81);u32(c,offsetof(vf_cpu,pstate));
++    b(c,0xc1);b(c,0xe8);b(c,28);
++    unsigned group=condition>>1,fall_cc=0x84;
++    if(group<4) {
++        const unsigned masks[4]={4,2,8,1};
++        b(c,0x83);b(c,0xe0);b(c,masks[group]);
++    } else if(group==4) {
++        b(c,0x83);b(c,0xe0);b(c,6);
++        b(c,0x83);b(c,0xf8);b(c,2);fall_cc=0x85;
++    } else {
++        b(c,0x41);b(c,0x89);b(c,0xc1);
++        b(c,0x41);b(c,0xc1);b(c,0xe9);b(c,3);
++        b(c,0x44);b(c,0x31);b(c,0xc8);
++        b(c,0x83);b(c,0xe0);b(c,group==5?1:5);fall_cc=0x85;
++    }
++    if(condition&1)fall_cc^=1;
++    return jcc(c,fall_cc);
++}
+ static uint32_t word(const uint8_t *p) { return (uint32_t)p[0]|(uint32_t)p[1]<<8|(uint32_t)p[2]<<16|(uint32_t)p[3]<<24; }
+ static int64_t sext(uint32_t x,unsigned bits) { return (int64_t)(int32_t)(x<<(32-bits))>>(32-bits); }
+ static int logical_mask(uint32_t w,uint64_t *mask) {
+@@ -209,6 +231,20 @@ static int translate_impl(vf_code *c,const vf_cpu *cpu,const uint8_t *guest,
+         if(provider && memory_family(w)) {
+             field32(c,offsetof(vf_cpu,instruction),w);
+             finish(c,pc,n,VF_MEMORY_DISPATCH);break;
++        } else if((w&0x3fe00410)==0x3a400000) {
++            /* CCMP/CCMN, register or imm5. R31 is ZR, never SP. */
++            size_t fallback=condition_false(c,(w>>12)&15);
++            if(w&(1u<<11))imm(c,(w>>16)&31);else load(c,(w>>16)&31,0,wide);
++            b(c,0x49);b(c,0x89);b(c,0xc1);
++            load(c,rn,0,wide);b(c,wide?0x4c:0x44);b(c,((w>>30)&1)?0x29:0x01);b(c,0xc8);
++            save_arithmetic_flags(c,(w>>30)&1);
++            if(fallback) {
++                b(c,0xe9);size_t done=c->used;u32(c,0);fix(c,fallback);
++                imm(c,(uint64_t)(w&15)<<28);
++                b(c,0x49);b(c,0xb9);u64(c,~UINT64_C(0xf0000000));
++                b(c,0x4c);b(c,0x21);b(c,0x89);u32(c,offsetof(vf_cpu,pstate));
++                b(c,0x48);b(c,0x09);b(c,0x81);u32(c,offsetof(vf_cpu,pstate));fix(c,done);
++            }
+         } else if((w&0x1f800000)==0x12000000) {
+             uint64_t mask;unsigned op=(w>>29)&3;
+             if(!logical_mask(w,&mask)) {
+@@ -408,25 +444,7 @@ static int translate_impl(vf_code *c,const vf_cpu *cpu,const uint8_t *guest,
+             unsigned condition=w&15;
+             uint64_t target=pc+(uint64_t)(sext((w>>5)&0x7ffff,19)*4);
+             if(condition>=14) { finish(c,target,n+1,VF_NEXT);break; }
+-            /* Compute each Arm predicate from committed NZCV, so intervening
+-             * instructions and host block boundaries cannot change it. */
+-            b(c,0x8b);b(c,0x81);u32(c,offsetof(vf_cpu,pstate));
+-            b(c,0xc1);b(c,0xe8);b(c,28);
+-            unsigned group=condition>>1,fall_cc=0x84;
+-            if(group<4) {
+-                const unsigned masks[4]={4,2,8,1};
+-                b(c,0x83);b(c,0xe0);b(c,masks[group]);
+-            } else if(group==4) {
+-                b(c,0x83);b(c,0xe0);b(c,6);
+-                b(c,0x83);b(c,0xf8);b(c,2);fall_cc=0x85;
+-            } else {
+-                b(c,0x41);b(c,0x89);b(c,0xc1);
+-                b(c,0x41);b(c,0xc1);b(c,0xe9);b(c,3);
+-                b(c,0x44);b(c,0x31);b(c,0xc8);
+-                b(c,0x83);b(c,0xe0);b(c,group==5?1:5);fall_cc=0x85;
+-            }
+-            if(condition&1)fall_cc^=1;
+-            size_t fall=jcc(c,fall_cc);
++            size_t fall=condition_false(c,condition);
+             finish(c,target,n+1,VF_NEXT);
+             fix(c,fall);finish(c,pc+4,n+1,VF_NEXT);break;
+         } else if((w&0x7e000000)==0x34000000) {
+diff --git a/runtime/preos/src/arch.rs b/runtime/preos/src/arch.rs
+index a8a7380..7eb41d6 100644
+--- a/runtime/preos/src/arch.rs
++++ b/runtime/preos/src/arch.rs
+@@ -1329,6 +1329,13 @@ impl GuestCpuState {
+         }
+     }
+ 
++    fn condition_holds(&self, condition: u32) -> bool {
++        let n=self.pstate&PSTATE_N!=0;let z=self.pstate&PSTATE_Z!=0;
++        let c=self.pstate&PSTATE_C!=0;let v=self.pstate&PSTATE_V!=0;
++        let base=match condition>>1 {0=>z,1=>c,2=>n,3=>v,4=>c&&!z,5=>n==v,6=>n==v&&!z,_=>true};
++        if condition&1!=0 && condition!=15 {!base} else {base}
++    }
++
+     fn execute_one<B: GuestBus>(&mut self, bus: &mut B) -> StepResult {
+         let pc = self.pc;
+         let word = match self.fetch32(bus) {
+@@ -1651,6 +1658,17 @@ impl GuestCpuState {
+             return StepResult::Continue;
+         }
+ 
++        if word&0x3fe00410==0x3a400000 {
++            if self.condition_holds((word>>12)&15) {
++                let right=if word&(1<<11)!=0 {u64::from((word>>16)&31)}
++                    else {self.read_reg((word>>16)&31,false)};
++                let (value,carry,overflow)=add_sub(self.read_reg(rn,false),right,word&(1<<30)!=0,wide);
++                self.set_nzcv(value,wide,carry,overflow);
++            } else {
++                self.pstate=(self.pstate&!0xf0000000)|((word&15)<<28);
++            }
++            self.pc=pc.wrapping_add(4);return StepResult::Continue;
++        }
+         if word&0x1f800000==0x12000000 {
+             let Some(mask)=logical_immediate(word) else {
+                 self.raise(GuestException {kind:ExceptionKind::UndefinedInstruction,
+@@ -2413,6 +2431,51 @@ mod tests {
+         assert_eq!(cpu.x[3],0x42);assert_eq!(cpu.sp,0x9870);
+     }
+ 
++    #[test]
++    fn conditional_comparison_matches_independent_truth_table_and_bounded_math() {
++        fn run(width:u32,sub:bool,immediate:bool,cond:u32,old:u32,fallback:u32,a:u64,b:u64,rn:u32,rm:u32) {
++            let n=old&8!=0;let z=old&4!=0;let c=old&2!=0;let v=old&1!=0;
++            let truth=[z,!z,c,!c,n,!n,v,!v,c&&!z,!c||z,n==v,n!=v,!z&&n==v,z||n!=v,true,true];
++            let mask=if width==64 {u64::MAX}else{u32::MAX as u64};let sign=1u64<<(width-1);
++            let left=if rn==31{0}else{a&mask};let right=(if immediate{b}else if rm==31{0}else{b})&mask;
++            let value=(if sub{left.wrapping_sub(right)}else{left.wrapping_add(right)})&mask;
++            let carry=if sub{left>=right}else{u128::from(left)+u128::from(right)>u128::from(mask)};
++            let signed=|x:u64|i128::from(x)-if x&sign!=0{1i128<<width}else{0};
++            let total=if sub{signed(left)-signed(right)}else{signed(left)+signed(right)};
++            let overflow=total < -(sign as i128)||total>=sign as i128;
++            let expected=if truth[cond as usize]{(u32::from(value&sign!=0)<<3)|(u32::from(value==0)<<2)|(u32::from(carry)<<1)|u32::from(overflow)}else{fallback};
++            let word=0x3a400000|(u32::from(width==64)<<31)|(u32::from(sub)<<30)|(u32::from(immediate)<<11)|
++                (cond<<12)|fallback|(rn<<5)|((if immediate{b as u32}else{rm})<<16);
++            let mut cpu=GuestCpuState::reset(0);for index in 0..31{cpu.x[index]=0xfedc000000000000+index as u64;}
++            cpu.x[0]=a;cpu.x[1]=b;cpu.sp=0x98765430;cpu.pstate=0x3c5|(old<<28);let registers=cpu.x;
++            assert_eq!(cpu.execute_one(&mut RamBus::new(&mut word.to_le_bytes())),StepResult::Continue);
++            assert_eq!(cpu.pstate,0x3c5|(expected<<28));assert_eq!(cpu.pc,4);assert_eq!(cpu.x,registers);assert_eq!(cpu.sp,0x98765430);
++        }
++        let edges=[0,1,31,0x7fffffff,0x80000000,0xffffffff,0x7fffffffffffffff,0x8000000000000000,u64::MAX];
++        for width in [32u32,64]{for sub in [false,true]{for immediate in [false,true]{
++            for cond in 0..16{for old in 0..16{for fallback in 0..16{
++                let at=((cond+old+fallback)%9)as usize;
++                run(width,sub,immediate,cond,old,fallback,edges[at],if immediate{u64::from((old+fallback)%32)}else{edges[(at+3)%9]},0,1);
++            }}}
++        }
++            for imm in 0..32{for a in edges{run(width,sub,true,15,15,0,a,imm,0,1);}}
++            for a in edges{for b in edges{run(width,sub,false,14,15,0,a,b,0,1);}}
++            for rn in [0,31]{for rm in [1,31]{run(width,sub,false,15,0,15,u64::MAX,u64::MAX,rn,rm);}}
++            run(width,sub,true,15,0,15,u64::MAX,31,31,1);
++        }}
++    }
++
++    #[test]
++    fn conditional_comparison_invalid_fixed_fields_leave_flags_and_registers_intact() {
++        for bit in [29,10,4] {
++            let word=0xfa41000fu32^(1<<bit);let mut cpu=GuestCpuState::reset(0);
++            cpu.x[0]=11;cpu.x[1]=12;cpu.sp=0x9870;cpu.pstate=0xb00003c5;
++            assert_eq!(cpu.execute_one(&mut RamBus::new(&mut word.to_le_bytes())),StepResult::Exception(ExceptionKind::UndefinedInstruction));
++            assert_eq!((cpu.x[0],cpu.x[1],cpu.sp,cpu.pc,cpu.pstate),(11,12,0x9870,0,0xb00003c5));
++            assert_eq!(cpu.sys.esr_el1,0);
++        }
++    }
++
+     #[test]
+     fn shifted_arithmetic_matches_unsigned_wide_math_at_every_shift_count() {
+         let pairs=[(0,1),(u64::MAX,u64::MAX),(0x7fffffff7fffffff,1),
+diff --git a/runtime/test_memory_provider.rs b/runtime/test_memory_provider.rs
+index 1726df2..4d24d45 100644
+--- a/runtime/test_memory_provider.rs
++++ b/runtime/test_memory_provider.rs
+@@ -87,6 +87,17 @@ fn native_alu_and_memory_commit_through_actual_rust_callbacks() {
+     assert_eq!(requests.iter().map(|q|q.operation).collect::<Vec<_>>(),[FETCH,FETCH,STORE,FETCH,LOAD,FETCH,FETCH]);
+ }
+ #[test]
++fn conditional_comparison_stays_native_between_provider_fetches() {
++    // First compare gives Z=1,C=1; the false NE replaces NZCV with 0xf.
++    // NV then executes unconditionally and produces Z=1,C=1 again.
++    let words=[0xfa41e000,0x3a41100f,0xfa5ff800,HLT];
++    let mut ram=payload(&words,256);let before=ram.clone();
++    let (r,_)=run(&mut ram,[31,31,0x33,0x44],BASE+256,8,0);
++    assert_eq!((r.execution.base.status,r.execution.base.retired,r.execution.base.compiled_blocks,r.fetch_requests,r.data_requests),(1,4,4,4,0));
++    assert_eq!((r.execution.pstate>>28,r.execution.base.x0,r.execution.base.x1,r.execution.base.x2,r.execution.base.x3),(6,31,31,0x33,0x44));
++    assert_eq!(ram,before);
++}
++#[test]
+ fn all_thirteen_scalar_forms_use_provider_with_signed_and_zero_register_semantics() {
+     for size in 0..4 {for opc in 0..4 {if opc>=2 && (size==3 || (size==2&&opc==3)){continue;}
+         for sp in [false,true] {for zero in [false,true] {
+diff --git a/tools/probe_efi_native_pauth.py b/tools/probe_efi_native_pauth.py
+index 4f6dd5d..27d9776 100644
+--- a/tools/probe_efi_native_pauth.py
++++ b/tools/probe_efi_native_pauth.py
+@@ -32,6 +32,7 @@ def probe(runtime: Path, clang: str, rustc: str) -> dict:
+         "test_irq_jit.c", "platform_abi.h", "platform_layout.c", "preos/src/platform.rs",
+         "test_logical_jit.c",
+         "test_shift_jit.c",
++        "test_conditional_jit.c",
+         "test_pair_jit.c",
+         "test_scalar_jit.c",
+         "abi_layout.c", "preos_abi.h", "preos/src/pauth.rs",
+@@ -70,6 +71,7 @@ def probe(runtime: Path, clang: str, rustc: str) -> dict:
+             ("test_irq_jit", True, False),
+             ("test_logical_jit", False, False),
+             ("test_shift_jit", False, False),
++            ("test_conditional_jit", False, False),
+             ("test_pair_jit", True, False),
+             ("test_scalar_jit", True, False),
+         ):
+diff --git a/docs/CONDITIONAL_COMPARE.md b/docs/CONDITIONAL_COMPARE.md
+new file mode 100644
+index 0000000..5061fb9
+--- /dev/null
++++ b/docs/CONDITIONAL_COMPARE.md
+@@ -0,0 +1,100 @@
++# A64 conditional comparison: native and reference contract
++
++## Scope and primary definitions
++
++The native and reference decoders now support the standard CCMP/CCMN family:
++register and immediate forms, in both 32-bit and 64-bit widths, as generated
++x86 arithmetic with a reference interpreter implementation. This is a generic
++ISA extension. No original operating-system instruction or operand is used in
++the implementation or tests.
++
++The operation and encoding definitions are Arm's A64 ISA pages for CCMP and
++CCMN, register and immediate:
++[Arm A64 ISA, 2025-06](https://documentation-service.arm.com/static/685eb35c3cb5b729562ba389).
++The exact condition predicate is `ConditionHolds` in the shared pseudocode,
++printed page3383:
++[Arm A64 ISA and shared functions](https://documentation-service.arm.com/static/6023d61995978b529036da45).
++These public definitions specify subtraction for CCMP, addition for CCMN,
++32/64-bit source views, an unsigned five-bit immediate, a four-bit fallback
++NZCV, and flags-only results. Conditions14 and15 are both always true; NV is
++not a never-execute condition in this A64 predicate. Register31 reads zero,
++including both register operands; SP is not a source in this instruction.
++
++## Decoder and commit contract
++
++The family has fixed bits selected by `(word & 0x3fe00410)==0x3a400000`.
++Bit31 chooses width; bit30 chooses subtraction; bit11 selects immediate rather
++than register. Bits20:16 hold the register or unsigned immediate, bits15:12
++the condition, bits9:5 the first register and bits3:0 fallback NZCV. Bit29(S)
++must be1, bits10(o2) and4(o3) must be0; the mask enforces those fixed fields.
++Other surrounding instruction families must retain their existing decoding.
++
++Evaluate the condition using the incoming PSTATE NZCV. If true, compute flags
++from width-limited A+B (CCMN) or A-B (CCMP). N is the result sign, Z is zero,
++C is unsigned carry for addition and absence of borrow for subtraction, and
++V is signed overflow. The incoming C flag is never an arithmetic carry input.
++If false, replace all four NZCV bits with the encoded fallback. Other PSTATE
++bits, all source/general registers and SP remain unchanged. A successful
++instruction advances PC by4 and retires once. There is no memory access,
++callback, architectural exception or destination register for this family.
++
++The native implementation reuses existing condition tests and x86 flag packing
++where practical. It must leave comparison and replacement in the generated
++block, rather than introducing a Rust arithmetic callback. The M=0 provider
++path uses the same translator. Existing MMU gates, record layouts, W^X,
++interrupt boundaries and retirement rules remain unchanged. Unsupported
++fixed-bit encodings remain undefined and cannot partially alter NZCV.
++
++## Validation contract
++
++An authored assembly oracle uses LLVM's assembler mnemonics and executes on an
++independent AArch64 CPU model. Its expected results are computed separately in
++Python with bounded integer arithmetic. It covers every condition against all
++16 incoming NZCV values, both arithmetic operations/operand forms/widths,
++carry/overflow/zero boundaries, every immediate0..31 and fallback0..15,
++zero-register sources and upper-half contamination of W sources. Source
++registers and SP are checked after execution. The assembler must reject SP
++syntax. Negative controls deliberately misinterpret NV and corrupt expected
++NZCV; each must fail, with canonical source hashes preserved.
++
++Native and Rust reference tests cover those semantics plus invalid encodings,
++complete PSTATE/register preservation, actual generated-block counts and
++provider integration. Runtime source lives only in a new worktree based on
++the parent's immutable BP30+MMU commit. No memory-provider, MMU or external ABI
++changes belong to this extension.
++
++## Reproduction and results
++
++```sh
++python3 tools/probe_conditional_compare.py --work-dir /path/to/arm-oracle --output /path/to/arm-oracle.json
++python3 tools/probe_efi_native_pauth.py --output /path/to/native.json
++python3 tools/probe_efi_memory_provider.py --work-dir /path/to/provider --output /path/to/provider.json
++```
++
++The independent Arm oracle passes3,668 cases. The same generated fixture
++fails when its expected semantics incorrectly make NV false, and fails when
++an expected NZCV bit is corrupted. LLVM rejects the four deliberate SP,
++out-of-range immediate and out-of-range fallback syntax cases. This oracle
++uses no runtime decoder or original operating-system bytes.
++
++The native C matrix passes34,264 cases with137,070 assertions. It includes
++all condition/incoming/fallback flag combinations across eight variants,
++every immediate, arithmetic boundaries and zero-register operands. The
++corresponding Rust matrix and invalid-encoding tests pass, and the complete
++canonical Rust reference suite passes93 tests. Native tests verify upper
++PSTATE bits and every source register remain unchanged. A multi-instruction
++native block chains true/false/NV comparisons into a conditional branch and
++checks the committed PC, flags, retirement and block count.
++
++The M=0 provider proof passes12 tests including an actual generated CCMP/CCMN
++chain between Rust instruction-fetch callbacks; it issues no data callbacks
++for these instructions. The service's five tests and its provider-bypass
++negative control also pass unchanged. All11 legacy/native proof programs
++pass, including the complete existing B.cond predicate regression after its
++emitter was factored into the shared condition helper.
++
++A separate external copy of the native emitter deliberately made condition15
++false. `test_conditional_jit.c` rejected it through the exact PSTATE assertion.
++The canonical source hash remained unchanged. Actual EFI integration and the
++next private operating-system diagnostic are subsequent checks, not implied
++by these host-native results. No data-independent-timing guarantee is added.
+diff --git a/runtime/test_conditional_jit.c b/runtime/test_conditional_jit.c
+new file mode 100644
+index 0000000..c14ce1f
+--- /dev/null
++++ b/runtime/test_conditional_jit.c
+@@ -0,0 +1,73 @@
++/* SPDX-License-Identifier: BSD-4-Clause; authored arithmetic/condition oracle. */
++#include "jit.h"
++#include <sys/mman.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++static unsigned checks,cases;
++#define CHECK(x) do {checks++;if(!(x)){fprintf(stderr,"line%d: %s\n",__LINE__,#x);exit(1);}}while(0)
++static int perms(void*p,size_t n,int x,void*o){(void)o;return mprotect(p,n,PROT_READ|(x?PROT_EXEC:PROT_WRITE));}
++static unsigned predicate(unsigned condition,unsigned flags){
++    unsigned n=(flags>>3)&1,z=(flags>>2)&1,c=(flags>>1)&1,v=flags&1;
++    const unsigned table[]={z,!z,c,!c,n,!n,v,!v,c&&!z,!c||z,n==v,n!=v,!z&&n==v,z||n!=v,1,1};
++    return table[condition];
++}
++static unsigned expected_flags(uint64_t a,uint64_t b,unsigned width,unsigned sub){
++    uint64_t mask=width==64?UINT64_MAX:UINT32_MAX,sign=UINT64_C(1)<<(width-1);a&=mask;b&=mask;
++    uint64_t value=(sub?a-b:a+b)&mask;
++    unsigned carry=sub?a>=b:((__uint128_t)a+b)>mask;
++    __int128 signed_a=(__int128)a-((a&sign)?((__int128)1<<width):0);
++    __int128 signed_b=(__int128)b-((b&sign)?((__int128)1<<width):0);
++    __int128 signed_result=sub?signed_a-signed_b:signed_a+signed_b;
++    unsigned overflow=signed_result<-(__int128)sign || signed_result>=(__int128)sign;
++    return ((value&sign)?8:0)|(value==0?4:0)|(carry<<1)|overflow;
++}
++static uint32_t instruction(unsigned width,unsigned sub,unsigned immediate,unsigned cond,unsigned fallback,unsigned rn,unsigned rm){
++    return UINT32_C(0x3a400000)|((width==64?1u:0u)<<31)|(sub<<30)|(immediate<<11)|(cond<<12)|fallback|(rn<<5)|(rm<<16);
++}
++static void one(vf_code*code,unsigned width,unsigned sub,unsigned immediate,unsigned cond,unsigned old,unsigned fallback,uint64_t a,uint64_t b,unsigned rn,unsigned rm){
++    vf_cpu cpu;vf_cpu_reset(&cpu,VF_EL1);cpu.guest_ram_base=UINT64_C(0x40000000);cpu.pc=cpu.guest_ram_base;
++    for(unsigned r=0;r<32;r++)cpu.x[r]=UINT64_C(0xfedc000000000000)+r;
++    cpu.x[0]=a;cpu.x[1]=b;cpu.sp=UINT64_C(0x98765430);cpu.pstate=UINT64_C(0xabcdef00000003c5)|((uint64_t)old<<28);
++    uint64_t registers[32];memcpy(registers,cpu.x,sizeof(registers));
++    uint32_t word=instruction(width,sub,immediate,cond,fallback,rn,immediate?(unsigned)b:rm);
++    uint64_t left=rn==31?0:a,right=immediate?b:rm==31?0:b;
++    unsigned expected=predicate(cond,old)?expected_flags(left,right,width,sub):fallback;
++    uint8_t ram[8]={0};
++    CHECK(vf_run(&cpu,(const uint8_t*)&word,4,ram,sizeof(ram),code,1,perms,0)==VF_BUDGET);
++    CHECK(cpu.retired==1 && cpu.compiled_blocks==1 && cpu.pc==UINT64_C(0x40000004));
++    CHECK(cpu.pstate==(UINT64_C(0xabcdef00000003c5)|((uint64_t)expected<<28)));
++    CHECK(cpu.sp==UINT64_C(0x98765430) && !memcmp(registers,cpu.x,sizeof(registers)));cases++;
++}
++int main(void){
++    vf_code code={mmap(0,4096,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0),4096,0};CHECK(code.bytes!=MAP_FAILED);
++    const uint64_t edges[]={0,1,31,UINT64_C(0x7fffffff),UINT64_C(0x80000000),UINT64_C(0xffffffff),
++        UINT64_C(0x7fffffffffffffff),UINT64_C(0x8000000000000000),UINT64_MAX};
++    for(unsigned width=32;width<=64;width+=32)for(unsigned sub=0;sub<2;sub++)for(unsigned immediate=0;immediate<2;immediate++)
++    for(unsigned cond=0;cond<16;cond++)for(unsigned old=0;old<16;old++)for(unsigned fallback=0;fallback<16;fallback++){
++        unsigned i=(old+fallback+cond)%9;
++        one(&code,width,sub,immediate,cond,old,fallback,edges[i],immediate?(old+fallback)%32:edges[(i+3)%9],0,1);
++    }
++    for(unsigned width=32;width<=64;width+=32)for(unsigned sub=0;sub<2;sub++){
++        for(unsigned imm=0;imm<32;imm++)for(unsigned a=0;a<9;a++)one(&code,width,sub,1,15,15,0,edges[a],imm,0,1);
++        for(unsigned a=0;a<9;a++)for(unsigned b=0;b<9;b++)one(&code,width,sub,0,14,15,0,edges[a],edges[b],0,1);
++        for(unsigned rn=0;rn<2;rn++)for(unsigned rm=0;rm<2;rm++)one(&code,width,sub,0,15,0,15,UINT64_MAX,UINT64_MAX,rn?31:0,rm?31:1);
++        one(&code,width,sub,1,15,0,15,UINT64_MAX,31,31,1);
++    }
++    {
++        uint32_t program[]={0xfa41e000,0x3a41100f,0xfa5ff800,0x54000040,0,0xd4400000};
++        vf_cpu cpu;vf_cpu_reset(&cpu,VF_EL1);cpu.x[0]=31;cpu.x[1]=31;cpu.sp=0x9870;
++        uint8_t ram[8]={0};CHECK(vf_run(&cpu,(const uint8_t*)program,sizeof(program),ram,8,&code,8,perms,0)==VF_HALT);
++        CHECK(cpu.retired==5 && cpu.compiled_blocks==2 && cpu.pc==24 && cpu.pstate>>28==6);
++        CHECK(cpu.x[0]==31 && cpu.x[1]==31 && cpu.sp==0x9870);
++    }
++    for(unsigned bit=0;bit<3;bit++){
++        const unsigned positions[]={29,10,4};uint32_t word=instruction(64,1,0,0,15,0,1)^(1u<<positions[bit]);
++        vf_cpu cpu;vf_cpu_reset(&cpu,VF_EL1);cpu.x[0]=11;cpu.x[1]=12;cpu.sp=0x9870;cpu.pstate=UINT64_C(0xb00003c5);
++        uint8_t ram[8]={0};CHECK(vf_run(&cpu,(const uint8_t*)&word,4,ram,8,&code,1,perms,0)==VF_UNDEFINED_INSTRUCTION);
++        CHECK(cpu.retired==0 && cpu.pc==0 && cpu.x[0]==11 && cpu.x[1]==12 && cpu.sp==0x9870 && cpu.pstate==UINT64_C(0xb00003c5));
++        CHECK(cpu.esr_el[VF_EL1]==0);
++    }
++    CHECK(munmap(code.bytes,4096)==0);
++    printf("{\"passed\":true,\"native_jit_executed\":true,\"assertions\":%u,\"conditional_cases\":%u}\n",checks,cases);
++}
+diff --git a/tools/probe_conditional_compare.py b/tools/probe_conditional_compare.py
+new file mode 100644
+index 0000000..63f1be2
+--- /dev/null
++++ b/tools/probe_conditional_compare.py
+@@ -0,0 +1,95 @@
++#!/usr/bin/env python3
++"""Authored A64 conditional-compare oracle and deliberately incorrect controls."""
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++
++CONDITIONS="eq ne cs cc mi pl vs vc hi ls ge lt gt le al nv".split()
++
++def holds(cond,nzcv):
++    n,z,c,v=[bool(nzcv&(1<<bit)) for bit in [3,2,1,0]]
++    # An independent full truth table; runtime condition code is not imported.
++    return [z,not z,c,not c,n,not n,v,not v,c and not z,not c or z,
++            n==v,n!=v,not z and n==v,z or n!=v,True,True][cond]
++
++def arithmetic(a,b,width,subtract):
++    mask=(1<<width)-1;sign=1<<(width-1);a&=mask;b&=mask
++    unbounded=a-b if subtract else a+b;value=unbounded&mask
++    carry=a>=b if subtract else unbounded>mask
++    signed=lambda x:x-(1<<width) if x&sign else x
++    signed_result=signed(a)-signed(b) if subtract else signed(a)+signed(b)
++    overflow=not (-sign<=signed_result<sign)
++    return (int(bool(value&sign))<<3)|(int(value==0)<<2)|(int(carry)<<1)|int(overflow)
++
++def cases():
++    result=[]
++    edge=[0,1,31,0x7fffffff,0x80000000,0xffffffff,0x7fffffffffffffff,0x8000000000000000,0xffffffffffffffff]
++    for width in [32,64]:
++      for subtract in [False,True]:
++       for immediate in [False,True]:
++        for condition in range(16):
++         for flags in range(16):
++          a=edge[(condition+flags)%len(edge)];b=(condition+flags)%32 if immediate else edge[(condition*3+flags+1)%len(edge)]
++          wanted=arithmetic(a,b,width,subtract)
++          result.append((width,subtract,immediate,a,b,condition,flags,wanted^15,False,False))
++        for fallback in range(16):
++          result.append((width,subtract,immediate,0x98765432,3,1,4,fallback,False,False))
++       for imm in range(32):
++        for a in edge:
++          result.append((width,subtract,True,a,imm,14,0,15,False,False))
++       for a in edge:
++        for b in edge:
++          result.append((width,subtract,False,a,b,15,0,15,False,False))
++       for rn,rm in [(True,False),(False,True),(True,True)]:
++        result.append((width,subtract,False,0xfedcba9876543210,0x123456789abcdef0,14,0,15,rn,rm))
++       result.append((width,subtract,True,0xffffffffffffffff,31,14,0,15,True,False))
++    return result
++
++def constant(reg,value):
++    return [f"movz {reg}, #{value&65535}"]+[f"movk {reg}, #{value>>shift&65535}, lsl #{shift}" for shift in [16,32,48]]
++
++def program(items,control):
++    lines=[".section .text", ".global _start","_start:","adr x22, stack_top","mov sp,x22","mov x19,#0"]
++    for index,(width,sub,imm,a,b,cond,old,fallback,zrn,zrm) in enumerate(items):
++        av=0 if zrn else a;bv=b if imm or not zrm else 0
++        execute=holds(cond,old) and not(control=="nv_never" and cond==15)
++        expected=arithmetic(av,bv,width,sub) if execute else fallback
++        if control=="wrong_flags" and index==0:expected^=1
++        reg="x" if width==64 else "w";rn=reg+"zr" if zrn else reg+"0"
++        operand=f"#{b}" if imm else reg+"zr" if zrm else reg+"1"
++        lines+=constant("x0",a)+constant("x1",b)+["mov x20,x0","mov x21,x1",f"mov x9, #{old<<28}","msr nzcv,x9",
++            f"{'ccmp' if sub else 'ccmn'} {rn}, {operand}, #{fallback}, {CONDITIONS[cond]}","mrs x10,nzcv",
++            f"mov x11, #{expected<<28}","cmp x10,x11","b.ne fail","cmp x0,x20","b.ne fail","cmp x1,x21","b.ne fail",
++            "mov x9,sp","cmp x9,x22","b.ne fail","add x19,x19,#1"]
++    lines += ["adr x1,success","mov x0,#4","hlt #0xf000","mov x9,#0","b exit","fail:","adr x1,failure","mov x0,#4","hlt #0xf000","mov x9,#1",
++        "exit:","adr x1,exit_block","str x9,[x1,#8]","mov x0,#0x20","hlt #0xf000","b .",
++        f'success: .asciz "CONDITIONAL_COMPARE_ORACLE: PASS {len(items)} cases\\n"',
++        'failure: .asciz "CONDITIONAL_COMPARE_ORACLE: FAIL\\n"',".balign 8","exit_block: .quad 0x20026,0",".balign 16",".zero 4096","stack_top:"]
++    return "\n".join(lines)+"\n"
++
++def main():
++    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument("--work-dir",type=Path,required=True);parser.add_argument("--output",type=Path,required=True)
++    args=parser.parse_args();work=args.work_dir.resolve();work.mkdir(parents=True,exist_ok=True);records=[];items=cases()
++    source=Path(__file__).resolve();before=hashlib.sha256(source.read_bytes()).hexdigest()
++    for control in ["correct","nv_never","wrong_flags"]:
++        assembly=work/(control+".S");obj=work/(control+".o");elf=work/(control+".elf");assembly.write_text(program(items,control))
++        commands=[["clang","--target=aarch64-none-elf","-c",str(assembly),"-o",str(obj)],["ld.lld","-Ttext=0x40080000","-e","_start",str(obj),"-o",str(elf)],
++            ["qemu-system-aarch64","-machine","virt","-cpu","max","-m","128","-nographic","-monitor","none","-serial","none","-net","none","-semihosting-config","enable=on,target=native","-kernel",str(elf)]]
++        for index,command in enumerate(commands):
++            r=subprocess.run(command,capture_output=True,text=True,timeout=45);record={"case":control,"command":command,"returncode":r.returncode,"stdout":r.stdout,"stderr":r.stderr};records.append(record)
++            expected=1 if index==2 and control!="correct" else 0
++            assert r.returncode==expected,record
++        assert ("PASS" if control=="correct" else "FAIL") in records[-1]["stderr"]+records[-1]["stdout"]
++    rejected=[]
++    for instruction in ["ccmp sp,x1,#0,al","ccmn x0,sp,#0,al","ccmp w0,#32,#0,al","ccmn x0,#1,#16,al"]:
++        assembly=work/"invalid.S";assembly.write_text(instruction+"\n");command=["clang","--target=aarch64-none-elf","-c",str(assembly),"-o",str(work/"invalid.o")]
++        r=subprocess.run(command,capture_output=True,text=True,timeout=20);assert r.returncode!=0
++        rejected.append({"instruction":instruction,"returncode":r.returncode,"stderr":r.stderr})
++    assert before==hashlib.sha256(source.read_bytes()).hexdigest()
++    result={"schema":"nextcore.conditional-compare-oracle/1","passed":True,"cases":len(items),"conditions":16,"incoming_nzcv":16,"immediate_values":32,"fallback_values":16,"source_sha256":before,
++        "negative_controls_detected":["nv_never","wrong_flags"],"invalid_assembly_rejected":rejected,"records":records,"apple_assets_used":False,"macos_boot_verified":False}
++    args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(json.dumps(result,indent=2)+"\n")
++    print(json.dumps({"passed":True,"cases":len(items),"receipt":str(args.output)}))
++if __name__=="__main__":main()

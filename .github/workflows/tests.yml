@@ -134,6 +134,12 @@ jobs:
             --direct-efi "$RUNNER_TEMP/NXARMJIT-direct.efi" \
             --tiered-efi "$RUNNER_TEMP/NXARMJIT-tiered.efi" \
             --output "$RUNNER_TEMP/nextcore-memory-proof"
+      - name: Execute conditional comparison flags through the memory service
+        run: |
+          python3 nextcore/tools/verify_arm_conditional_compare_ovmf.py \
+            --efi "$RUNNER_TEMP/NXARMJIT-tiered.efi" \
+            --ise nextcore/crates/nextcore-ise \
+            --output "$RUNNER_TEMP/nextcore-conditional-proof"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -142,3 +148,5 @@ jobs:
             ${{ runner.temp }}/NXARMJIT-*.efi
             ${{ runner.temp }}/nextcore-memory-proof/**/*.json
             ${{ runner.temp }}/nextcore-memory-proof/**/*.log
+            ${{ runner.temp }}/nextcore-conditional-proof/**/*.json
+            ${{ runner.temp }}/nextcore-conditional-proof/**/*.log

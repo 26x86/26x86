@@ -1,0 +1,36 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index fb85395..761fab4 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -22,6 +22,7 @@ arm-kernel-probe = ["arm-boot"]
+ arm-jit = []
+ arm-jit-probe = ["arm-jit"]
+ arm-jit-trace = ["arm-jit"]
++arm-jit-tiered-trace = ["arm-jit-trace", "arm-jit-probe"]
+ 
+ [[bin]]
+ name = "NXARMJIT"
+diff --git a/src/arm_jit.rs b/src/arm_jit.rs
+index 24914e2..9319089 100644
+--- a/src/arm_jit.rs
++++ b/src/arm_jit.rs
+@@ -421,11 +421,17 @@ fn run_probe(source: &[u8], arguments: &str, pac: bool) -> Result<(), Status> {
+ #[cfg(all(target_arch = "x86_64", feature = "arm-jit-trace"))]
+ fn run_trace(source: &[u8], arguments: &str, config: &[u8]) -> Result<(), Status> {
+     use nextcore_core::{
+-        boot_config::parse_arm64_trace_configuration,
+         xnu_arm64_boot_args::Arm64BootVideo,
+         xnu_arm64_handoff::{Arm64HandoffPlan, Arm64PlacementInput},
+     };
+-    let trace = parse_arm64_trace_configuration(config).map_err(|error| {
++    #[cfg(not(feature = "arm-jit-tiered-trace"))]
++    let parsed = nextcore_core::boot_config::parse_arm64_trace_configuration(config);
++    #[cfg(feature = "arm-jit-tiered-trace")]
++    let parsed = {
++        report("NXARMJIT: TRACE_TIERED_DIAGNOSTIC maximum=4096");
++        nextcore_core::boot_config::parse_arm64_trace_configuration_with_limit(config, 4096)
++    };
++    let trace = parsed.map_err(|error| {
+         report(&format!("NXARMJIT: TRACE_CONFIG_INVALID reason={error}"));
+         Status::INVALID_PARAMETER
+     })?;
