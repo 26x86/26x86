@@ -301,6 +301,7 @@ version = "0.1.0"
 dependencies = [
  "nextcore-core",
  "uefi",
+ "uefi-raw",
 ]
 
 [[package]]

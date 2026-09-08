@@ -3,6 +3,10 @@
 
 extern crate alloc;
 
+mod exit_data;
+#[cfg(feature = "console-control")]
+mod console_control;
+
 use alloc::{
     format,
     string::{String, ToString},
@@ -97,8 +101,19 @@ fn chainload(target: BootTarget) -> Status {
                 report(&format!("NEXTCORE: IMAGE_OPTIONS_ERROR status={status:?}"));
                 return status;
             }
+            #[cfg(feature = "console-control")]
+            let console = match console_control::Lease::acquire(report) {
+                Ok(lease) => lease,
+                Err(status) => {
+                    let _ = boot::unload_image(child);
+                    report(&format!("NEXTCORE: CONSOLE_ERROR status={status:?}"));
+                    return status;
+                }
+            };
             report("NEXTCORE: IMAGE_START");
-            let status = boot::start_image(child).map_or_else(|e| e.status(), |_| Status::SUCCESS);
+            let status = exit_data::start_image(child, report);
+            #[cfg(feature = "console-control")]
+            console.release();
             // Application return/Exit unloads it. StartImage can also fail
             // before entry, leaving a loaded image that needs cleanup.
             match boot::open_protocol_exclusive::<LoadedImage>(child) {
