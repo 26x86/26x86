@@ -41,3 +41,8 @@ PR regression follow-up: the separate GUI smoke suites still expected removed
 application endpoints. Update their real HTTP GET/POST checks to require404,
 verify the WebView facade no longer exports the removed operation, and retain
 the existing settings roundtrip. No application endpoint is reintroduced.
+
+The Windows CI CLI smoke explicitly selects Python UTF-8 mode because Actions
+redirects stdout and the runner's default legacy encoding cannot represent the
+Korean help text. The CLI still runs without performing preparation or writes.
+The native Windows JSON receipt retains its original CRLF bytes in Git.

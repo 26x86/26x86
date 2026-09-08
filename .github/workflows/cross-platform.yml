@@ -35,8 +35,8 @@ jobs:
       - name: Exercise preparation GUI bridge on Windows and Linux
         if: runner.os != 'macOS'
         run: python -m unittest x86.gui.test_bridge_smoke x86.gui.test_mellow_gui -v
-      - name: Read-only application CLI
-        run: python -m x86 --help
+      - name: Read-only application CLI (UTF-8 redirected output)
+        run: python -X utf8 -m x86 --help
 
   native-gui:
     strategy:
