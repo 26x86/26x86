@@ -1171,6 +1171,20 @@ DevicePath를 무제한 참조 변환하지 않는다. 파일 쓰기·하위 파
 이 단계의 동작에 없다. 실제 이름·경로는 격리하고 공개 결과에는 관찰 개수·상태와
 원본 hash 유지·종료 증거만 기록한다. 파일시스템 관찰은 설치 OS/Metal 판정과 구분한다.
 
+### BP24-C — 명시 APFS volume의 피커 target 실행
+
+BP24-B는 원본 APFS 볼륨 4개의 root 접근을 실제 확인했다. 다음은 설정 entry의
+optional `ApfsVolume` label을 엄격히 검증하고 선택한 APFS 후손 볼륨의 명시
+EFI Path를 firmware LoadImage/기존 application lifecycle에 연결하는 단계다.
+기존 필드가 없는 entry는 동일 volume 동작을 유지하며 지원 feature가 없는
+build에서는 APFS entry를 UNSUPPORTED로 거부한다. 정확한 label 하나만 허용하고
+임의의 첫 volume 선택이나 fallback을 하지 않는다.
+
+먼저 작성한 `nextcore/artifacts/apfs-target-20260908/contract.md`가 상세 계약이다.
+Core parser/tests는 root, EFI adapter/main 연결·합성 firmware 회귀는 x86 담당에게
+명시 위임한다. 원본 실행은 installer 담당이 종료/불변을 확인한 snapshot의 새 COW만
+사용한다. 원본 booter 경로는 격리 설정 입력이며 공개 구현에 hard-code하지 않는다.
+
 ## OPEN_QUESTION
 
 - BP9 연속 실행 결정: Design D2-A는 표준 EFI application 중간 경로를 허용했고,

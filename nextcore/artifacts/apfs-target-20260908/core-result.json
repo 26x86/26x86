@@ -1,0 +1,19 @@
+{
+  "layer": "Core XML configuration",
+  "passed": true,
+  "source_sha256": "b8bd2493a1c80af6be9d34f4628b0f8656b1fd84b607ebe9968ee6c0a33b67af",
+  "tests_sha256": "796d0d1c6caa115085057cdb031d9e3340c55d963606de3f1decc8e2bdac95dd",
+  "tests": {
+    "existing_boot_menu": 7,
+    "existing_boot_config": 12,
+    "new_apfs": 9,
+    "total": 28,
+    "failed": 0
+  },
+  "no_std_uefi_check": true,
+  "independent_peer_tests": 5,
+  "tests_log_sha256": "0bd9db181224c6160725819ffafe735cb6733a51320438aaeba3605414c990b2",
+  "no_std_log_sha256": "a35a5b39212517b64024b375742f0de50d79f1aa114e642401562ccdde09b31f",
+  "efi_runtime_verified_by_this_receipt": false,
+  "metal_verified": false
+}

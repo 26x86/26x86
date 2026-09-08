@@ -1,0 +1,22 @@
+{
+  "layer": "Core XML configuration parser peer review",
+  "source_sha256": "b8bd2493a1c80af6be9d34f4628b0f8656b1fd84b607ebe9968ee6c0a33b67af",
+  "current_source_sha256": "b8bd2493a1c80af6be9d34f4628b0f8656b1fd84b607ebe9968ee6c0a33b67af",
+  "source_unchanged": true,
+  "command": "cargo test --offline --manifest-path <review-dir>/Cargo.toml",
+  "exit_code": 0,
+  "independent_tests_passed": 5,
+  "confirmed_defects": [],
+  "recommended_regressions": [
+    "Unicode edge whitespace",
+    "XML numeric controls and separators",
+    "disabled selector does not leak to enabled target"
+  ],
+  "notes": [
+    "Both APIs share the same new validator",
+    "Labels are exact decoded strings and UTF-16 lengths are counted correctly",
+    "No shared source or Git index mutation",
+    "EFI must preserve supplementary characters when decoding FileSystemInfo UTF-16"
+  ],
+  "test_source": "src/lib.rs"
+}
