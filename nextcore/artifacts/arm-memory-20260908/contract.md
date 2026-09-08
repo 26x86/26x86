@@ -26,3 +26,16 @@ AT S1E1R and compares the physical address reported by PAR_EL1 for each granule.
 It runs in QEMU's architectural CPU model only, without any Apple payload. Both
 4 KiB TG1=10 and 16 KiB TG1=01 cases passed. This corroborates the configuration
 and expected addresses; it does not verify native-JIT translated memory accesses.
+
+
+BP26-B review reproduced a shortened initial-table index bug: canonical
+extension bits selected entries outside the configured upper VA range. The
+walker now removes bits above VA[63-TxSZ] before indexing. One regression covers
+24 mappings across both ends of both canonical ranges, all supported starting
+levels, and both granules; it failed on the old code and passes after the fix.
+The total reference suite is now 65 tests, including 13 MMU tests. The expanded
+independent oracle preserves the earlier cases and adds 4 KiB T1SZ=26 and
+16 KiB T1SZ=29. All four produce the expected PAR_EL1 address. A temporary
+negative control changes the output descriptor PA and exits with FAIL/status1.
+The EFI agent owned the oracle expansion; root owned the walker and Rust test.
+These checks continue to exclude native JIT MMU enablement and XNU startup.

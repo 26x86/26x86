@@ -1351,3 +1351,16 @@ GPU agent is explicitly delegated the existing APLS SGPU codec move into GPU,
 with APLS re-exporting the same public types. This is ownership consolidation of
 the existing wire format, with bounded counts/lengths and compute submission
 through the existing executor, not introduction of a parallel command protocol.
+
+
+BP26-B review follow-up: independent review reproduced a supported upper-VA
+translation fault when the initial table index has fewer than 9/11 bits.
+Root owns masking that first index to the configured VA width and lower/upper
+boundary regression coverage. The EFI agent is delegated only the ISE Arm CPU
+oracle tools to add reduced-width 4 KiB/16 KiB cases; complete-width cases stay.
+Root retains all metadata/pin ownership. The GPU agent is delegated APLS SGPU
+error conversion compatibility, exact declared frame length checks and bounded
+resource-creation ingress. Existing wire bytes stay compatible; malformed frame
+acceptance and allocator panics become explicit errors. Regression fixtures must
+cover valid existing traffic and rejected boundary inputs. GPU backend policy
+and original-input startup prerequisites remain outside this follow-up.
