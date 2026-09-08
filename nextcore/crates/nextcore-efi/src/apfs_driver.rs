@@ -113,6 +113,28 @@ pub enum Mode {
 
 pub fn inspect(mode: Mode, report: fn(&str)) -> Result<(), Status> {
     let handle = candidate()?;
+    let driver = read_and_report(handle, report)?;
+    if mode == Mode::Extract {
+        report("NXAPFS: INSPECT_ONLY driver_started=false");
+        return Ok(());
+    }
+    start_driver(handle, &driver.bytes, report)?;
+    if mode == Mode::Filesystems {
+        crate::apfs_filesystems::inspect(handle, report)?;
+    }
+    Ok(())
+}
+
+// Also consumed by BOOTX64; NXAPFS uses inspect() instead.
+#[allow(dead_code)]
+pub fn connect_for_target(report: fn(&str)) -> Result<Handle, Status> {
+    let handle = candidate()?;
+    let driver = read_and_report(handle, report)?;
+    start_driver(handle, &driver.bytes, report)?;
+    Ok(handle)
+}
+
+fn read_and_report(handle: Handle, report: fn(&str)) -> Result<JumpstartDriver, Status> {
     let mut reason = None;
     let driver = read_driver(handle, &mut reason);
     // The helper has released all GET_PROTOCOL guards before calling arbitrary
@@ -127,15 +149,7 @@ pub fn inspect(mode: Mode, report: fn(&str)) -> Result<(), Status> {
         driver.block_size,
         driver.extents.len()
     ));
-    if mode == Mode::Extract {
-        report("NXAPFS: INSPECT_ONLY driver_started=false");
-        return Ok(());
-    }
-    start_driver(handle, &driver.bytes, report)?;
-    if mode == Mode::Filesystems {
-        crate::apfs_filesystems::inspect(handle, report)?;
-    }
-    Ok(())
+    Ok(driver)
 }
 
 fn read_driver(handle: Handle, reason: &mut Option<String>) -> Result<JumpstartDriver, Status> {

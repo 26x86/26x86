@@ -3,8 +3,21 @@
 
 extern crate alloc;
 
+mod linux_handoff;
 mod exit_data;
 mod picker;
+// Shared adapters also expose diagnostic NXAPFS entry points unused by BOOTX64.
+#[cfg(feature = "apfs-jumpstart")]
+#[allow(dead_code)]
+mod apfs_driver;
+#[cfg(feature = "apfs-jumpstart")]
+#[allow(dead_code)]
+mod apfs_filesystems;
+#[cfg(feature = "apfs-jumpstart")]
+#[allow(dead_code)]
+mod apfs_observation;
+#[cfg(feature = "apfs-jumpstart")]
+mod apfs_target;
 #[cfg(feature = "console-control")]
 mod console_control;
 
@@ -171,6 +184,15 @@ fn chainload(target: BootTarget) -> Status {
 }
 
 fn load_target(target: &BootTarget) -> core::result::Result<Handle, Status> {
+    if target.apfs_volume.is_some() {
+        #[cfg(feature = "apfs-jumpstart")]
+        { return apfs_target::load(target, report); }
+        #[cfg(not(feature = "apfs-jumpstart"))]
+        {
+            report("NEXTCORE: APFS_TARGET_UNSUPPORTED feature=disabled");
+            return Err(Status::UNSUPPORTED);
+        }
+    }
     let current = boot::open_protocol_exclusive::<LoadedImage>(boot::image_handle())
         .map_err(|e| e.status())?;
     let device = current.device().ok_or(Status::NOT_FOUND)?;

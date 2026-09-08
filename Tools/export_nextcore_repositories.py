@@ -159,9 +159,14 @@ def export(output: Path) -> list[dict[str, str]]:
 
 
 def main() -> int:
+    global VERSION
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--version", default=VERSION,
+                        help="module release version used for the initial tag "
+                             "and for rewritten cross-module dependency tags")
     args = parser.parse_args()
+    VERSION = args.version
     print(json.dumps({"repositories": export(args.output.absolute())}, indent=2))
     return 0
 

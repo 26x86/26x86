@@ -94,7 +94,7 @@ impl Drop for Protocol {
     }
 }
 
-fn device_path(handle: Handle) -> Result<Vec<u8>, Status> {
+pub fn device_path(handle: Handle) -> Result<Vec<u8>, Status> {
     let mut lease = Protocol::open(handle, PATH_GUID)?;
     let result = (|| {
         let base = lease.interface.cast::<u8>();
@@ -210,7 +210,12 @@ impl Volume {
     }
 }
 
-fn observe_volume(handle: Handle, volume: &mut Volume, budget: &mut Budget) -> Result<(), Status> {
+fn observe_volume(
+    handle: Handle,
+    volume: &mut Volume,
+    budget: &mut Budget,
+    enumerate: bool,
+) -> Result<(), Status> {
     let mut lease = Protocol::open(handle, SimpleFileSystemProtocol::GUID)?;
     let result = (|| {
         let interface = lease.interface.cast::<SimpleFileSystemProtocol>();
@@ -230,6 +235,9 @@ fn observe_volume(handle: Handle, volume: &mut Volume, budget: &mut Budget) -> R
             let mut buffer = Buffer([0; checked::MAX_RECORD]);
             let bytes = root.response(Some(FileSystemInfo::ID), &mut buffer, budget)?;
             volume.info = Some(checked::volume_info(bytes).map_err(invalid)?);
+            if !enumerate {
+                return Ok(());
+            }
             let bytes = root.response(Some(FileInfo::ID), &mut buffer, budget)?;
             checked::entry(bytes, true).map_err(invalid)?;
             volume.root_verified = true;
@@ -276,6 +284,21 @@ fn collect(
     budget: &mut Budget,
     examined: &mut usize,
 ) -> Result<(), Status> {
+    let candidates = candidates(controller, examined)?;
+    volumes
+        .try_reserve_exact(candidates.len())
+        .map_err(|_| Status::OUT_OF_RESOURCES)?;
+    for (handle, path) in candidates {
+        let mut volume = Volume::new(path);
+        let result = observe_volume(handle, &mut volume, budget, true);
+        volume.status = result.as_ref().err().copied().unwrap_or(Status::SUCCESS);
+        volumes.push(volume);
+        result?;
+    }
+    Ok(())
+}
+
+fn candidates(controller: Handle, examined: &mut usize) -> Result<Vec<(Handle, Vec<u8>)>, Status> {
     let parent = device_path(controller)?;
     let handles = boot::find_handles::<SimpleFileSystem>().map_err(|e| e.status())?;
     if handles.len() > MAX_HANDLES {
@@ -306,17 +329,58 @@ fn collect(
     if candidates.is_empty() {
         return Err(Status::NOT_FOUND);
     }
-    volumes
-        .try_reserve_exact(candidates.len())
-        .map_err(|_| Status::OUT_OF_RESOURCES)?;
-    for (handle, path) in candidates {
-        let mut volume = Volume::new(path);
-        let result = observe_volume(handle, &mut volume, budget);
-        volume.status = result.as_ref().err().copied().unwrap_or(Status::SUCCESS);
-        volumes.push(volume);
-        result?;
+    Ok(candidates)
+}
+
+// Selected-entry BOOTX64 API; standalone NXAPFS retains its observation mode.
+#[allow(dead_code)]
+pub fn select_volume(controller: Handle, label: &str, report: fn(&str)) -> Result<Vec<u8>, Status> {
+    let wanted: Vec<u16> = label.encode_utf16().collect();
+    if wanted.is_empty() || wanted.len() > checked::MAX_NAME {
+        return Err(Status::INVALID_PARAMETER);
     }
-    Ok(())
+    let mut examined = 0;
+    let mut observed = Vec::new();
+    let mut budget = Budget::default();
+    let result = (|| {
+        let candidates = candidates(controller, &mut examined)?;
+        observed
+            .try_reserve_exact(candidates.len())
+            .map_err(|_| Status::OUT_OF_RESOURCES)?;
+        let mut selected = None;
+        let mut matches = 0;
+        for (handle, path) in candidates {
+            let mut volume = Volume::new(path);
+            let result = observe_volume(handle, &mut volume, &mut budget, false);
+            volume.status = result.as_ref().err().copied().unwrap_or(Status::SUCCESS);
+            let matched = volume
+                .info
+                .as_ref()
+                .is_some_and(|info| info.label_utf16 == wanted);
+            if result.is_ok() && matched {
+                matches += 1;
+                if selected.is_none() {
+                    selected = Some(volume.path.clone());
+                }
+            }
+            observed.push((volume, matched));
+            result?;
+        }
+        match matches {
+            0 => Err(Status::NOT_FOUND),
+            1 => selected.ok_or(Status::NOT_FOUND),
+            _ => Err(Status::NO_MAPPING),
+        }
+    })();
+    // collect/observe_volume have released every lease before any callback.
+    for (index, (volume, matched)) in observed.iter().enumerate() {
+        report(&format!("NEXTCORE: APFS_LABEL index={index} matched={matched} open={} close={:?} protocol_close={:?} status={:?}",
+            volume.opened, volume.close_status, volume.protocol_close_status, volume.status));
+    }
+    report(&format!("NEXTCORE: APFS_SELECT examined={examined} candidates={} matches={} metadata_bytes={} status={:?}",
+        observed.len(), observed.iter().filter(|(_, matched)| *matched).count(), budget.bytes,
+        result.as_ref().err().copied().unwrap_or(Status::SUCCESS)));
+    result
 }
 
 pub fn inspect(controller: Handle, report: fn(&str)) -> Result<(), Status> {

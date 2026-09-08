@@ -94,6 +94,11 @@ SUCCESS다. supervisor 2.8096초, 전후 검증 포함 56.3239초, QMP 자연 ex
 binary·격리 receipt hash를 기록했다. 원본 파일명/volume ID/경로·로그는 격리한다.
 이는 APFS 파일시스템 접근 성공이며 APFS에서 booter 실행·설치 OS/Metal 성공은 아니다.
 
+PR #8의 exact head `c6ac2c6ea34e24dfebb419de00af2638e58554a2`에서 전체 CI와
+`apfs-firmware` run `34202928667`이 통과한 뒤 main `416926c`로 merge했다.
+이 원격 firmware 검사는 7개 실제 authored OVMF와 순수 parser/C layout을 실행했다.
+다음 BP24-C는 설정의 명시 `ApfsVolume`을 실제 picker load 경로와 연결하는 작업이다.
+
 ## BP23 원격 동기화 (2026-09-08)
 
 후속 APFS module release는 고정 main `65d1e85`에서 Core/EFI v0.1.2와 Tool

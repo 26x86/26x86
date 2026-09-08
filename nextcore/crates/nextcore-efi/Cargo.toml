@@ -64,3 +64,10 @@ path = "src/apfs_probe.rs"
 test = false
 bench = false
 required-features = ["apfs-jumpstart"]
+
+[[bin]]
+name = "NXFSFIX"
+path = "src/apfs_fixture.rs"
+test = false
+bench = false
+required-features = ["apfs-jumpstart", "test-child"]

@@ -48,13 +48,23 @@ if [[ ! -f "$ROOT/Tools/export_nextcore_repositories.py" ]]; then
   exit 1
 fi
 
-if ! gh auth status >/dev/null 2>&1; then
-  echo "ERROR: gh is not authenticated" >&2
+GH=""
+for cand in gh gh.exe; do
+  if command -v "$cand" >/dev/null 2>&1; then GH="$cand"; break; fi
+done
+if [[ -z "$GH" ]] && [[ -x "/c/Program Files/GitHub CLI/gh.exe" ]]; then
+  export PATH="$PATH:/c/Program Files/GitHub CLI"
+  GH="gh"
+fi
+if [[ -z "$GH" ]] || ! "$GH" auth status >/dev/null 2>&1; then
+  echo "ERROR: gh CLI is not available or not authenticated" >&2
   exit 1
 fi
 
+if command -v python3 >/dev/null 2>&1; then PY=python3; else PY=python; fi
+
 echo "== Exporting module repositories =="
-python3 "$ROOT/Tools/export_nextcore_repositories.py" --output "$OUTPUT"
+"$PY" "$ROOT/Tools/export_nextcore_repositories.py" --output "$OUTPUT"
 
 mapfile -t REPOS < <(find "$OUTPUT" -maxdepth 1 -mindepth 1 -type d | sort)
 

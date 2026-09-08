@@ -214,7 +214,7 @@ def command(cmd, out, label, deadline, receipts):
             and not result["stopped_by_harness"], f"command failed: {label}")
 
 
-def qmp_finish(path, serial, terminal, deadline, stop, receipt):
+def qmp_finish(path, serial, terminal, deadline, stop, receipt, picker=False):
     try:
         while not path.exists():
             require(time.monotonic() < deadline and not stop.is_set(), "QMP socket did not appear")
@@ -228,8 +228,11 @@ def qmp_finish(path, serial, terminal, deadline, stop, receipt):
                 require(0 < len(raw) <= 65536, "QMP EOF/oversize")
                 return json.loads(raw)
             require("QMP" in message(), "QMP greeting missing")
-            def execute(name):
-                stream.write(json.dumps({"execute": name, "id": name}).encode() + b"\n")
+            def execute(name, arguments=None):
+                request = {"execute": name, "id": name}
+                if arguments is not None:
+                    request["arguments"] = arguments
+                stream.write(json.dumps(request).encode() + b"\n")
                 while time.monotonic() < deadline:
                     item = message()
                     receipt.setdefault("responses", []).append(item)
@@ -240,8 +243,12 @@ def qmp_finish(path, serial, terminal, deadline, stop, receipt):
             execute("qmp_capabilities")
             while time.monotonic() < deadline and not stop.is_set():
                 raw = bounded.read_bounded(serial, MAX_SERIAL) if serial.exists() else b""
+                if picker and not receipt.get("picker_enter") and b"NEXTCORE: PICKER_READY renderer=GOP selected=0\r\n" in raw:
+                    execute("screendump", {"filename": str(serial.parent / "picker.ppm")})
+                    execute("send-key", {"keys": [{"type": "qcode", "data": "ret"}]})
+                    receipt["picker_enter"] = True
                 complete = any(line.startswith(terminal) and re.fullmatch(
-                    rb"NEXTCORE: IMAGE_RETURN status=[A-Z_]+\r?", line)
+                    rb"NEXTCORE: IMAGE_(?:RETURN|LOAD_ERROR) status=[A-Z_]+\r?", line)
                     for line in raw.split(b"\n")[:-1])
                 if complete:
                     execute("quit")
@@ -253,7 +260,7 @@ def qmp_finish(path, serial, terminal, deadline, stop, receipt):
         receipt["error"] = f"{type(error).__name__}: {error}"
 
 
-def run_case(args, case, inputs, application, driver, output):
+def run_case(args, case, inputs, application, driver, output, custom=None):
     output.mkdir()
     start = time.monotonic()
     # Preparation has its own short budget; guest execution/cleanup is <=30 s.
@@ -263,21 +270,25 @@ def run_case(args, case, inputs, application, driver, output):
     paths = dict(inputs)
     before = {}
     try:
-        payload = application if case == "app-reject" else driver
+        payload = custom["payload"] if custom else application if case == "app-reject" else driver
         fixture = output / "authored-gpt-apfs.raw"
         esp = output / "esp.img"
         with esp.open("wb") as stream:
             stream.truncate(32 * 1024 * 1024)
-        command([args.mkfs, "-F", "16", esp], output, "mkfs", deadline, report["commands"])
+        mkfs_args = ["-n", custom["volume_label"]] if custom else []
+        command([args.mkfs, "-F", "16"] + mkfs_args + [esp], output, "mkfs", deadline, report["commands"])
         command([args.mmd, "-i", esp, "::/EFI", "::/EFI/BOOT", "::/EFI/OC"], output, "mmd", deadline, report["commands"])
         config = output / "config.plist"
-        config.write_bytes(plistlib.dumps({"Misc": {"Boot": {"ShowPicker": False}, "Entries": [
+        config.write_bytes(plistlib.dumps(custom["config"] if custom else {"Misc": {"Boot": {"ShowPicker": False}, "Entries": [
             {"Enabled": True, "Name": "NextCore APFS probe", "Path": "\\EFI\\OC\\NXAPFS.efi",
              "Arguments": "--inspect-filesystems" if case == "filesystems-no-binding" else
                           "--start-driver" if case in ("start-driver", "app-reject") else ""}]}}))
         expected_files = {"BOOTX64": (inputs["efi"], "::/EFI/BOOT/BOOTX64.efi"),
                           "NXAPFS": (inputs["probe"], "::/EFI/OC/NXAPFS.efi"),
                           "config": (config, "::/EFI/OC/config.plist")}
+        if custom:
+            expected_files.pop("NXAPFS")
+            expected_files.update(custom["files"])
         for name, (source, target) in expected_files.items():
             command([args.mcopy, "-i", esp, source, target], output, f"copy-{name}", deadline, report["commands"])
         paths["esp"] = esp
@@ -310,10 +321,10 @@ def run_case(args, case, inputs, application, driver, output):
         report["command"] = cmd
         bounded.atomic_json(output / "command.json", cmd)
         guest_deadline = time.monotonic() + args.timeout
-        _, status = expected_markers(case, len(payload))
         stop = threading.Event()
         worker = threading.Thread(target=qmp_finish, args=(qmp, serial,
-            b"NEXTCORE: IMAGE_RETURN status=", guest_deadline - 3, stop, report["qmp"]))
+            b"NEXTCORE: IMAGE_" if custom else b"NEXTCORE: IMAGE_RETURN status=",
+            guest_deadline - 3, stop, report["qmp"], bool(custom and custom.get("picker"))))
         worker.start()
         try:
             report["execution"] = bounded.run_bounded(cmd, output / "qemu.stdout", output / "qemu.stderr", guest_deadline)
@@ -322,7 +333,10 @@ def run_case(args, case, inputs, application, driver, output):
             worker.join(1.2)
             require(not worker.is_alive(), "QMP worker cleanup incomplete")
         validate_execution(report["execution"], report["qmp"])
-        report["serial_validation"] = validate_serial(bounded.read_bounded(serial, MAX_SERIAL), case, len(payload))
+        validator = custom["validator"] if custom else validate_serial
+        report["serial_validation"] = validator(bounded.read_bounded(serial, MAX_SERIAL), case, len(payload))
+        if custom and custom.get("picker"):
+            require(report["qmp"].get("picker_enter") is True, "picker Enter not sent")
         readback_deadline = time.monotonic() + 10
         # Read the actual guest-visible ESP, including any COW writes.
         guest_disk = output / "guest-disk.raw"
@@ -349,7 +363,7 @@ def run_case(args, case, inputs, application, driver, output):
         report["passed"] = report["passed"] and report["originals_unchanged"]
         report["output_hashes"] = {}
         receipt_deadline = time.monotonic() + 5
-        for name in ("serial.log", "qemu.stdout", "qemu.stderr", "vars.fd", "disk.qcow2"):
+        for name in ("serial.log", "qemu.stdout", "qemu.stderr", "vars.fd", "disk.qcow2", "picker.ppm"):
             path = output / name
             try:
                 if path.exists():

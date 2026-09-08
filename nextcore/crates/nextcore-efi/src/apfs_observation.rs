@@ -55,6 +55,48 @@ pub fn descendant(parent: &[u8], child: &[u8]) -> Result<bool, Invalid> {
     Ok(child.len() > parent.len() && child.starts_with(parent))
 }
 
+/// Append one canonical MEDIA_FILEPATH node to an already bounded volume path.
+#[allow(dead_code)]
+pub fn image_path(volume: &[u8], path: &str) -> Result<Vec<u8>, Invalid> {
+    let body = path_body(volume)?;
+    if !path.starts_with('\\')
+        || path.encode_utf16().count() > 1024
+        || path
+            .chars()
+            .any(|c| c.is_control() || c as u32 > 0xffff || c == '/')
+        || path
+            .split('\\')
+            .skip(1)
+            .any(|part| part.is_empty() || matches!(part, "." | ".."))
+    {
+        return Err(Invalid::Path);
+    }
+    let units: Vec<u16> = path.encode_utf16().chain(core::iter::once(0)).collect();
+    let length = units
+        .len()
+        .checked_mul(2)
+        .and_then(|v| v.checked_add(4))
+        .ok_or(Invalid::Size)?;
+    let total = body
+        .len()
+        .checked_add(length)
+        .and_then(|v| v.checked_add(4))
+        .ok_or(Invalid::Size)?;
+    if length > u16::MAX as usize || total > 8192 {
+        return Err(Invalid::Size);
+    }
+    let mut bytes = Vec::new();
+    bytes.try_reserve_exact(total).map_err(|_| Invalid::Limit)?;
+    bytes.extend_from_slice(body);
+    bytes.extend_from_slice(&[4, 4]);
+    bytes.extend_from_slice(&(length as u16).to_le_bytes());
+    for unit in units {
+        bytes.extend_from_slice(&unit.to_le_bytes());
+    }
+    bytes.extend_from_slice(&[0x7f, 0xff, 4, 0]);
+    Ok(bytes)
+}
+
 fn le64(bytes: &[u8], offset: usize) -> u64 {
     u64::from_le_bytes(bytes[offset..offset + 8].try_into().unwrap())
 }
@@ -71,7 +113,7 @@ fn sized(bytes: &[u8], name_offset: usize) -> Result<&[u8], Invalid> {
 }
 
 /// An injective printable-ASCII representation of a bounded UTF-16 string.
-fn name(bytes: &[u8], component: bool) -> Result<String, Invalid> {
+fn name_units(bytes: &[u8], component: bool) -> Result<Vec<u16>, Invalid> {
     let mut units = Vec::new();
     let mut ended = false;
     for pair in bytes.chunks_exact(2) {
@@ -93,6 +135,11 @@ fn name(bytes: &[u8], component: bool) -> Result<String, Invalid> {
     {
         return Err(Invalid::Name);
     }
+    Ok(units)
+}
+
+fn name(bytes: &[u8], component: bool) -> Result<String, Invalid> {
+    let units = name_units(bytes, component)?;
     let mut escaped = String::new();
     for unit in units {
         match unit {
@@ -139,6 +186,7 @@ pub fn entry(bytes: &[u8], root: bool) -> Result<Entry, Invalid> {
 #[derive(Debug)]
 pub struct VolumeInfo {
     pub label: String,
+    pub label_utf16: Vec<u16>,
     pub read_only: bool,
     pub size: u64,
     pub free_space: u64,
@@ -155,6 +203,7 @@ pub fn volume_info(bytes: &[u8]) -> Result<VolumeInfo, Invalid> {
     }
     Ok(VolumeInfo {
         label: name(&bytes[36..], false)?,
+        label_utf16: name_units(&bytes[36..], false)?,
         read_only: bytes[8] != 0,
         size,
         free_space,
@@ -316,5 +365,39 @@ mod tests {
         budget.entries = 0;
         assert!(budget.record(MAX_ENTRIES).is_err());
         assert!(budget.record(MAX_ENTRIES - 1).is_ok());
+    }
+
+    #[test]
+    fn image_path_is_one_bounded_file_node() {
+        let bytes = image_path(&path(2), "\\EFI\\next.efi").unwrap();
+        assert_eq!(&bytes[..8], &path(2)[..8]);
+        assert_eq!(&bytes[8..10], &[4, 4]);
+        let length = u16::from_le_bytes([bytes[10], bytes[11]]) as usize;
+        assert_eq!(8 + length + 4, bytes.len());
+        assert_eq!(&bytes[bytes.len() - 6..], &[0, 0, 0x7f, 0xff, 4, 0]);
+        for bad in [
+            "relative.efi",
+            "\\..\\file",
+            "\\a\\",
+            "\\a/next",
+            "\\a\n.efi",
+        ] {
+            assert!(image_path(&path(2), bad).is_err());
+        }
+        assert!(image_path(&path(2), &alloc::format!("\\{}", "a".repeat(1024))).is_err());
+    }
+
+    #[test]
+    fn label_keeps_original_utf16_separate_from_log_escape() {
+        let mut bytes = vec![0; 40];
+        bytes[0] = 40;
+        bytes[16] = 100;
+        bytes[32] = 1;
+        bytes[36..38].copy_from_slice(&0x00e9_u16.to_le_bytes());
+        let info = volume_info(&bytes).unwrap();
+        assert_eq!(info.label, "\\u00e9");
+        assert_eq!(info.label_utf16, vec![0xe9]);
+        assert_ne!(info.label_utf16, vec![0x65, 0x301]);
+        assert_ne!(info.label_utf16, vec![0xc9]);
     }
 }
