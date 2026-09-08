@@ -1155,6 +1155,22 @@ GPT/APFS fixture 및 자체 EFI driver로 실제 OVMF 읽기·실행·거부·�
 검증한다. 원본 byte·private 로그는 격리하고 host 전후 hash와 firmware/guest 결과를
 각각 기록한다. 추출 성공을 mount·설치 OS·guest Metal 성공으로 승격하지 않는다.
 
+### BP24-B — 드라이버가 게시한 APFS 파일시스템 관찰
+
+원본 driver의 StartImage/ConnectController 성공 다음 단계는 실제 OpenVolume과
+root directory Read다. 해당 adapter와 순수 metadata parser, 회귀 하네스는 x86
+담당에게 명시 위임했으며 먼저 작성한
+`nextcore/artifacts/apfs-filesystems-20260908/contract.md`가 입력·제한·판정 계약이다.
+root는 코드 검토와 종료된 첫 설치 snapshot의 독립 COW 실행을 담당한다.
+
+새 명시 옵션 `--inspect-filesystems`는 기존 driver 실행 후 선택 APFS partition의
+정확한 device-path node 후손만 연다. 256 handles/32 volumes, root 한 단계,
+volume당 128/global 512 records, 응답당 4096B/global 1MiB를 제한하고 EOF를 별도
+Read로 확인한다. raw protocol lease와 반환 크기 기반 파싱으로 가변 길이 metadata와
+DevicePath를 무제한 참조 변환하지 않는다. 파일 쓰기·하위 파일 열기·booter 실행은
+이 단계의 동작에 없다. 실제 이름·경로는 격리하고 공개 결과에는 관찰 개수·상태와
+원본 hash 유지·종료 증거만 기록한다. 파일시스템 관찰은 설치 OS/Metal 판정과 구분한다.
+
 ## OPEN_QUESTION
 
 - BP9 연속 실행 결정: Design D2-A는 표준 EFI application 중간 경로를 허용했고,

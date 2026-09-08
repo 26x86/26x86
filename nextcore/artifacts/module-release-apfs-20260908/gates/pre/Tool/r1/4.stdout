@@ -1,0 +1,33 @@
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 9 tests
+test apls::tests::successful_worker_exit_is_not_a_successful_boot_exit ... ok
+test apls::tests::local_tcg_options_reach_shared_runner_without_path_splitting ... ok
+test apls::tests::wsl_requires_distribution_and_preserves_linux_paths ... ok
+test apls::tests::native_selection_is_explicit_and_cannot_use_tcg_or_wsl_options ... ok
+test apls::tests::recovery_wsl_keeps_linux_paths_and_host_receipts_separate ... ok
+test apls::tests::explicit_recovery_options_map_to_supervisor_and_default_rpc_off ... ok
+test apls::tests::recovery_validation_keeps_post_and_total_budgets_distinct ... ok
+test apls::tests::incomplete_or_invalid_requests_are_rejected_without_launching ... ok
+test apls::tests::recovery_requires_all_inputs_and_rejects_raw_backend_options ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 9 tests
+test compiled_efi_is_copied_without_changes ... ignored, requires NEXTCORE_TEST_EFI pointing to an independently compiled x86_64 UEFI image
+test every_truncated_prefix_is_rejected_without_panicking ... ok
+test hard_link_destination_cannot_truncate_input ... ok
+test config_destination_preflight_prevents_partial_efi_write ... ok
+test explicit_efi_is_required_and_existing_read_only_commands_work ... ok
+test invalid_or_missing_inputs_do_not_create_output ... ok
+test existing_outputs_and_self_copy_preserve_originals ... ok
+test build_and_install_copy_validated_inputs_exactly ... ok
+test malformed_pe_inputs_fail_before_output_creation ... ok
+
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.06s
+

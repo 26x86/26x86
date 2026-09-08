@@ -1,0 +1,358 @@
+{
+  "observed_utc": "2026-09-08T07:38:22.627742+00:00",
+  "read_only": true,
+  "remote_mutations": [],
+  "final_source_commit": null,
+  "modules": [
+    {
+      "repository": "26x86/Nextcore-Core",
+      "head": "66eb69888a9cb8bc56d05f9b2a0bbfab5abfd54b",
+      "refs": {
+        "refs/heads/main": "66eb69888a9cb8bc56d05f9b2a0bbfab5abfd54b",
+        "refs/tags/26x86-Nextcore-Core-v0.1.0": "4b8b3801b5bcd2e7ed519cc64feada7d76aa2082",
+        "refs/tags/26x86-Nextcore-Core-v0.1.1": "66eb69888a9cb8bc56d05f9b2a0bbfab5abfd54b"
+      },
+      "current_release_tag": "26x86-Nextcore-Core-v0.1.1",
+      "current_tag_matches_main": true,
+      "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+      "package_version": "0.1.0",
+      "dependencies": {},
+      "features": {
+        "default": [
+          "std",
+          "macho"
+        ],
+        "std": [
+          "dep:plist",
+          "dep:serde",
+          "dep:thiserror",
+          "dep:log"
+        ],
+        "macho": [
+          "std",
+          "dep:goblin"
+        ]
+      },
+      "bins": [],
+      "proposed_tag_if_released": "26x86-Nextcore-Core-v0.1.2",
+      "proposed_tag_unused": true,
+      "files": {
+        "Cargo.toml": {
+          "git_blob": "c3da789d270a2aa297dd6fc8364bcef1c4a945bc",
+          "sha256": "b2393acefdc9c6878b1212d7b8114c417a0170dfe372ce42c6b9cdf398eb0580",
+          "text": "[package]\nname = \"nextcore-core\"\nversion = \"0.1.0\"\nedition = \"2021\"\npublish = false\n\n[features]\ndefault = [\"std\", \"macho\"]\nstd = [\"dep:plist\", \"dep:serde\", \"dep:thiserror\", \"dep:log\"]\nmacho = [\"std\", \"dep:goblin\"]\n\n[dependencies]\nplist = { version = \"1.10\", optional = true }\nserde = { version = \"1\", features = [\"derive\"], optional = true }\ngoblin = { version = \"0.10\", default-features = false, features = [\"mach64\", \"alloc\"], optional = true }\nthiserror = { version = \"2\", default-features = false, optional = true }\nlog = { version = \"0.4\", optional = true }\nroxmltree = { version = \"=0.21.1\", default-features = false }\n\n[dev-dependencies]\nserde_json = \"1\"\n\n[[example]]\nname = \"inspect_kc\"\nrequired-features = [\"std\"]\n\n[[example]]\nname = \"stage_kc\"\nrequired-features = [\"std\"]\n\n[[example]]\nname = \"audit_kc\"\nrequired-features = [\"std\"]\n\n[[example]]\nname = \"rebase_kc\"\nrequired-features = [\"std\"]\n\n[[test]]\nname = \"acpi_parse\"\nrequired-features = [\"std\"]\n[[test]]\nname = \"config_parse\"\nrequired-features = [\"std\"]\n[[test]]\nname = \"config_roundtrip\"\nrequired-features = [\"std\"]\n[[test]]\nname = \"device_props\"\nrequired-features = [\"std\"]\n[[test]]\nname = \"handoff_roundtrip\"\nrequired-features = [\"std\"]\n[[test]]\nname = \"kext_scan\"\nrequired-features = [\"std\"]\n[[test]]\nname = \"mach_o_load\"\nrequired-features = [\"macho\"]\n"
+        },
+        "repository.json": {
+          "git_blob": "3d947b84a51f6fda85957fbf8fd056e5d8ac2572",
+          "sha256": "8d79b60e8a7a9aa839e563abf94495ec51acf51f4432404681fdf289e7e1775e",
+          "text": "{\n  \"schema\": \"26x86.repository/1\",\n  \"name\": \"Nextcore-Core\",\n  \"owner\": \"26x86\",\n  \"public\": true,\n  \"role\": \"nextcore-module\",\n  \"crate\": \"nextcore-core\",\n  \"description\": \"core boot configuration and public format codecs\",\n  \"source_path\": \"nextcore/crates/nextcore-core\",\n  \"source_commit\": \"dcc90013109eac694ccbf997b1e44a7018480f78\",\n  \"depends_on\": [],\n  \"initial_tag\": \"26x86-Nextcore-Core-v0.1.0\",\n  \"generated_utc\": \"2026-09-08T06:40:08.267939+00:00\",\n  \"release_tag\": \"26x86-Nextcore-Core-v0.1.1\",\n  \"previous_head\": \"4b8b3801b5bcd2e7ed519cc64feada7d76aa2082\",\n  \"dependency_tags\": {},\n  \"export_method\": \"immutable git objects applied to existing main; manifest dependency rewrite only\"\n}\n"
+        },
+        ".github/workflows/ci.yml": {
+          "git_blob": "81eba9396f11fe6aa791166d451213fc17737828",
+          "sha256": "4bb046649716bc97130177637500bb472a7c6ee3c1878b05b8ced5dbc1ac66b8",
+          "text": "name: NextCore Core CI\non:\n  push:\n  pull_request:\n  workflow_dispatch:\npermissions:\n  contents: read\njobs:\n  verify:\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v4\n      - uses: dtolnay/rust-toolchain@stable\n      - run: cargo test --all-targets\n      - run: cargo check --no-default-features\n"
+        }
+      }
+    },
+    {
+      "repository": "26x86/Nextcore-GPU",
+      "head": "8962199b5a7381850ef9aa9e72e98b45a8671d46",
+      "refs": {
+        "refs/heads/main": "8962199b5a7381850ef9aa9e72e98b45a8671d46",
+        "refs/tags/26x86-Nextcore-GPU-v0.1.0": "29701f17ea98b64bbabd05d75a7e09a25f64f246",
+        "refs/tags/26x86-Nextcore-GPU-v0.1.1": "8962199b5a7381850ef9aa9e72e98b45a8671d46"
+      },
+      "current_release_tag": "26x86-Nextcore-GPU-v0.1.1",
+      "current_tag_matches_main": true,
+      "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+      "package_version": "0.1.0",
+      "dependencies": {},
+      "features": {
+        "default": [],
+        "vulkan": [
+          "dep:ash"
+        ]
+      },
+      "bins": [],
+      "proposed_tag_if_released": "26x86-Nextcore-GPU-v0.1.2",
+      "proposed_tag_unused": true,
+      "files": {
+        "Cargo.toml": {
+          "git_blob": "1268f16503258592e3a6077364b9a738aa1ba3f7",
+          "sha256": "6be8b077072d65ae277d551c38ec54b65c2db64b0fe3c4930570166198efea3b",
+          "text": "[package]\nname = \"nextcore-gpu\"\nversion = \"0.1.0\"\nedition = \"2021\"\npublish = false\n\n[dependencies]\nlog = \"0.4\"\nthiserror = { version = \"2\", default-features = false }\nserde = { version = \"1\", features = [\"derive\"] }\nserde_json = \"1\"\nash = { version = \"0.38\", optional = true }\n\n[features]\ndefault = []\nvulkan = [\"dep:ash\"]\n\n[[example]]\nname = \"vulkan_compute\"\nrequired-features = [\"vulkan\"]\n"
+        },
+        "repository.json": {
+          "git_blob": "31601ff704a707f9757d5ff9d884e6f056e23e85",
+          "sha256": "9f028316a2f514e9074386ccbbcd368c2a486e28f4fae85eee1757b8bdf43468",
+          "text": "{\n  \"schema\": \"26x86.repository/1\",\n  \"name\": \"Nextcore-GPU\",\n  \"owner\": \"26x86\",\n  \"public\": true,\n  \"role\": \"nextcore-module\",\n  \"crate\": \"nextcore-gpu\",\n  \"description\": \"graphics API contracts and an optional host Vulkan backend\",\n  \"source_path\": \"nextcore/crates/nextcore-gpu\",\n  \"source_commit\": \"dcc90013109eac694ccbf997b1e44a7018480f78\",\n  \"depends_on\": [],\n  \"initial_tag\": \"26x86-Nextcore-GPU-v0.1.0\",\n  \"generated_utc\": \"2026-09-08T06:40:11.341759+00:00\",\n  \"release_tag\": \"26x86-Nextcore-GPU-v0.1.1\",\n  \"previous_head\": \"29701f17ea98b64bbabd05d75a7e09a25f64f246\",\n  \"dependency_tags\": {},\n  \"export_method\": \"immutable git objects applied to existing main; manifest dependency rewrite only\"\n}\n"
+        },
+        ".github/workflows/ci.yml": {
+          "git_blob": "b379bb53f5263b51637120b73c2bbee6c6c4562b",
+          "sha256": "4143cd825195f7a38a7f4326d8fc37ee5be5cf3c6cdbbca4d2102ebc09c6edc4",
+          "text": "name: NextCore GPU CI\non:\n  push:\n  pull_request:\n  workflow_dispatch:\npermissions:\n  contents: read\njobs:\n  verify:\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v4\n      - uses: dtolnay/rust-toolchain@stable\n      - run: cargo test --all-targets\n      - run: cargo test --all-targets --features vulkan\n"
+        }
+      }
+    },
+    {
+      "repository": "26x86/Nextcore-HAL",
+      "head": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+      "refs": {
+        "refs/heads/main": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+        "refs/tags/26x86-Nextcore-HAL-v0.1.0": "e00dcb4a731505de8e15d89900f3298eb05feca8",
+        "refs/tags/26x86-Nextcore-HAL-v0.1.1": "9c1cd8dfff33478e32668c5cd181dd094ec2881b"
+      },
+      "current_release_tag": "26x86-Nextcore-HAL-v0.1.1",
+      "current_tag_matches_main": true,
+      "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+      "package_version": "0.1.0",
+      "dependencies": {},
+      "features": {},
+      "bins": [],
+      "proposed_tag_if_released": "26x86-Nextcore-HAL-v0.1.2",
+      "proposed_tag_unused": true,
+      "files": {
+        "Cargo.toml": {
+          "git_blob": "3380b126d38dc1aaa0a412aa850759a95349a35f",
+          "sha256": "c967959335833080189b63fec78fd243f7116f638880dec10f3d18d7d3266a1c",
+          "text": "[package]\nname = \"nextcore-hal\"\nversion = \"0.1.0\"\nedition = \"2021\"\npublish = false\n\n[dependencies]\nlog = \"0.4\"\nthiserror = { version = \"2\", default-features = false }\nserde = { version = \"1\", features = [\"derive\"] }\nplist = \"1.10\"\n\n[dev-dependencies]\nserde_json = \"1\"\n"
+        },
+        "repository.json": {
+          "git_blob": "34ebd1cd6e53d3867c1eb03384eb842fe5f58b23",
+          "sha256": "89a01eea0c2fc237000ee15434b9edb666ce667e37c43a3a9e46016971f863bb",
+          "text": "{\n  \"schema\": \"26x86.repository/1\",\n  \"name\": \"Nextcore-HAL\",\n  \"owner\": \"26x86\",\n  \"public\": true,\n  \"role\": \"nextcore-module\",\n  \"crate\": \"nextcore-hal\",\n  \"description\": \"public ACPI, PCI, SMBIOS and device-tree metadata\",\n  \"source_path\": \"nextcore/crates/nextcore-hal\",\n  \"source_commit\": \"dcc90013109eac694ccbf997b1e44a7018480f78\",\n  \"depends_on\": [],\n  \"initial_tag\": \"26x86-Nextcore-HAL-v0.1.0\",\n  \"generated_utc\": \"2026-09-08T06:40:13.288109+00:00\",\n  \"release_tag\": \"26x86-Nextcore-HAL-v0.1.1\",\n  \"previous_head\": \"e00dcb4a731505de8e15d89900f3298eb05feca8\",\n  \"dependency_tags\": {},\n  \"export_method\": \"immutable git objects applied to existing main; manifest dependency rewrite only\"\n}\n"
+        },
+        ".github/workflows/ci.yml": {
+          "git_blob": "e44cd2c728a8dce41fe33c8e5e8a21c648cad034",
+          "sha256": "28b595997d658442d084b66690bfede681131796aaa772c67a27b6df4c8ec3ed",
+          "text": "name: NextCore HAL CI\non:\n  push:\n  pull_request:\n  workflow_dispatch:\npermissions:\n  contents: read\njobs:\n  verify:\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v4\n      - uses: dtolnay/rust-toolchain@stable\n      - run: cargo test --all-targets\n"
+        }
+      }
+    },
+    {
+      "repository": "26x86/Nextcore-ISE",
+      "head": "e4c318ff707ff57eaf128ffd66cc962a210ab8e1",
+      "refs": {
+        "refs/heads/main": "e4c318ff707ff57eaf128ffd66cc962a210ab8e1",
+        "refs/tags/26x86-Nextcore-ISE-v0.1.0": "073b8ced31d43c419ed2d9ea78d9ab8d8b372180",
+        "refs/tags/26x86-Nextcore-ISE-v0.1.1": "e4c318ff707ff57eaf128ffd66cc962a210ab8e1"
+      },
+      "current_release_tag": "26x86-Nextcore-ISE-v0.1.1",
+      "current_tag_matches_main": true,
+      "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+      "package_version": "0.1.0",
+      "dependencies": {},
+      "features": {},
+      "bins": [],
+      "proposed_tag_if_released": "26x86-Nextcore-ISE-v0.1.2",
+      "proposed_tag_unused": true,
+      "files": {
+        "Cargo.toml": {
+          "git_blob": "a0790b50b808e0ed38e23e99215fb0438ac48a6d",
+          "sha256": "8e8da05240b454840d6f330dae3c6ec6fc6415db1cdf24ebc5c7c8395e64a6b4",
+          "text": "[package]\nname = \"nextcore-ise\"\nversion = \"0.1.0\"\nedition = \"2021\"\npublish = false\n\n[dependencies]\nlog = \"0.4\"\nthiserror = { version = \"2\", default-features = false }\nbitflags = \"2\"\n"
+        },
+        "repository.json": {
+          "git_blob": "abf83e8bbce816012c2338707adcdfc92c05480a",
+          "sha256": "1808783ab7381e21451d89daa66847404664f38a4fae27874339668600348dc4",
+          "text": "{\n  \"schema\": \"26x86.repository/1\",\n  \"name\": \"Nextcore-ISE\",\n  \"owner\": \"26x86\",\n  \"public\": true,\n  \"role\": \"nextcore-module\",\n  \"crate\": \"nextcore-ise\",\n  \"description\": \"instruction-set emulation and CPU feature policy\",\n  \"source_path\": \"nextcore/crates/nextcore-ise\",\n  \"source_commit\": \"dcc90013109eac694ccbf997b1e44a7018480f78\",\n  \"depends_on\": [],\n  \"initial_tag\": \"26x86-Nextcore-ISE-v0.1.0\",\n  \"generated_utc\": \"2026-09-08T06:40:15.007407+00:00\",\n  \"release_tag\": \"26x86-Nextcore-ISE-v0.1.1\",\n  \"previous_head\": \"073b8ced31d43c419ed2d9ea78d9ab8d8b372180\",\n  \"dependency_tags\": {},\n  \"export_method\": \"immutable git objects applied to existing main; manifest dependency rewrite only\"\n}\n"
+        },
+        ".github/workflows/ci.yml": {
+          "git_blob": "f0fde190a19fb2017bdaf367ddec08c715e3c6cf",
+          "sha256": "0fe50d6d23050bebbe5a2df001dea4e8993ca4cb0f41a0dc58263c9071b51282",
+          "text": "name: NextCore ISE CI\non:\n  push:\n  pull_request:\n  workflow_dispatch:\npermissions:\n  contents: read\njobs:\n  verify:\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v4\n      - uses: dtolnay/rust-toolchain@stable\n      - run: cargo test --all-targets\n"
+        }
+      }
+    },
+    {
+      "repository": "26x86/Nextcore-APLS",
+      "head": "f4d640e362fbcf160994d833b330e16506de9110",
+      "refs": {
+        "refs/heads/main": "f4d640e362fbcf160994d833b330e16506de9110",
+        "refs/tags/26x86-Nextcore-APLS-v0.1.0": "76a0b8c32f9fa5f4408cf8dc678bdea78905113b",
+        "refs/tags/26x86-Nextcore-APLS-v0.1.1": "f4d640e362fbcf160994d833b330e16506de9110"
+      },
+      "current_release_tag": "26x86-Nextcore-APLS-v0.1.1",
+      "current_tag_matches_main": true,
+      "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+      "package_version": "0.1.0",
+      "dependencies": {
+        "nextcore-gpu": {
+          "section": "dependencies",
+          "git": "https://github.com/26x86/Nextcore-GPU.git",
+          "tag": "26x86-Nextcore-GPU-v0.1.1"
+        }
+      },
+      "features": {},
+      "bins": [],
+      "proposed_tag_if_released": "26x86-Nextcore-APLS-v0.1.2",
+      "proposed_tag_unused": true,
+      "files": {
+        "Cargo.toml": {
+          "git_blob": "26934aafaad223a5f60b29e39213a5dccc720bad",
+          "sha256": "477fd2e587d1ba90850cd58f086064a8ef0c2cc80c03b299d3aeb70b906d2738",
+          "text": "[package]\nname = \"nextcore-apls\"\nversion = \"0.1.0\"\nedition = \"2021\"\npublish = false\n\n[dependencies]\nnextcore-gpu = { git = \"https://github.com/26x86/Nextcore-GPU.git\", tag = \"26x86-Nextcore-GPU-v0.1.1\" }\nplist = \"1.10\"\nserde = { version = \"1\", features = [\"derive\"] }\nserde_json = \"1\"\nsha2 = \"0.10\"\nthiserror = { version = \"2\", default-features = false }\n\n[dev-dependencies]\n"
+        },
+        "repository.json": {
+          "git_blob": "89eb831541859eb3bafc4407172c74c39a003127",
+          "sha256": "02275bc878b12c92da3869b31de8ceabf6843fbd8371f761640b737cb1ccae85",
+          "text": "{\n  \"schema\": \"26x86.repository/1\",\n  \"name\": \"Nextcore-APLS\",\n  \"owner\": \"26x86\",\n  \"public\": true,\n  \"role\": \"nextcore-module\",\n  \"crate\": \"nextcore-apls\",\n  \"description\": \"AArch64 recovery orchestration and public guest interfaces\",\n  \"source_path\": \"nextcore/crates/nextcore-apls\",\n  \"source_commit\": \"dcc90013109eac694ccbf997b1e44a7018480f78\",\n  \"depends_on\": [\n    \"26x86/Nextcore-GPU\"\n  ],\n  \"initial_tag\": \"26x86-Nextcore-APLS-v0.1.0\",\n  \"generated_utc\": \"2026-09-08T06:40:16.873714+00:00\",\n  \"release_tag\": \"26x86-Nextcore-APLS-v0.1.1\",\n  \"previous_head\": \"76a0b8c32f9fa5f4408cf8dc678bdea78905113b\",\n  \"dependency_tags\": {\n    \"26x86/Nextcore-GPU\": \"26x86-Nextcore-GPU-v0.1.1\"\n  },\n  \"export_method\": \"immutable git objects applied to existing main; manifest dependency rewrite only\"\n}\n"
+        },
+        ".github/workflows/ci.yml": {
+          "git_blob": "60e92d3e12db7cb484314f3e0889d11c99ef8bd4",
+          "sha256": "c38deae71e24d724b4e1da4455cdddd9629062f7940bdaf6311d50f67b01c443",
+          "text": "name: NextCore APLS CI\non:\n  push:\n  pull_request:\n  workflow_dispatch:\npermissions:\n  contents: read\njobs:\n  verify:\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v4\n      - uses: dtolnay/rust-toolchain@stable\n      - run: cargo test --all-targets\n"
+        }
+      }
+    },
+    {
+      "repository": "26x86/Nextcore-EFI",
+      "head": "c00f6fe6d6618f574ed193547837d675e6ca2da3",
+      "refs": {
+        "refs/heads/main": "c00f6fe6d6618f574ed193547837d675e6ca2da3",
+        "refs/tags/26x86-Nextcore-EFI-v0.1.0": "4cec82e25fbfc1eeebd475adb25e2da308c2378c",
+        "refs/tags/26x86-Nextcore-EFI-v0.1.1": "c00f6fe6d6618f574ed193547837d675e6ca2da3"
+      },
+      "current_release_tag": "26x86-Nextcore-EFI-v0.1.1",
+      "current_tag_matches_main": true,
+      "source_commit": "dcc90013109eac694ccbf997b1e44a7018480f78",
+      "package_version": "0.1.0",
+      "dependencies": {
+        "nextcore-core": {
+          "section": "dependencies",
+          "git": "https://github.com/26x86/Nextcore-Core.git",
+          "tag": "26x86-Nextcore-Core-v0.1.1",
+          "default-features": false
+        }
+      },
+      "features": {
+        "test-child": [],
+        "kernel-probe": [],
+        "hal-tables": [],
+        "kc-staging": [],
+        "console-control": [
+          "dep:uefi-raw"
+        ],
+        "console-probe": [
+          "console-control"
+        ]
+      },
+      "bins": [
+        {
+          "name": "NXKERNEL",
+          "path": "src/kernel.rs",
+          "test": false,
+          "bench": false
+        },
+        {
+          "name": "BOOTX64",
+          "path": "src/main.rs",
+          "test": false,
+          "bench": false
+        },
+        {
+          "name": "NXTEST",
+          "path": "src/test_child.rs",
+          "test": false,
+          "bench": false,
+          "required-features": [
+            "test-child"
+          ]
+        },
+        {
+          "name": "NXHAL",
+          "path": "src/hal_tables.rs",
+          "test": false,
+          "bench": false,
+          "required-features": [
+            "hal-tables"
+          ]
+        },
+        {
+          "name": "NXKC",
+          "path": "src/kc.rs",
+          "test": false,
+          "bench": false,
+          "required-features": [
+            "kc-staging"
+          ]
+        },
+        {
+          "name": "NXCONSOLE",
+          "path": "src/console_probe.rs",
+          "test": false,
+          "bench": false,
+          "required-features": [
+            "console-probe"
+          ]
+        }
+      ],
+      "proposed_tag_if_released": "26x86-Nextcore-EFI-v0.1.2",
+      "proposed_tag_unused": true,
+      "files": {
+        "Cargo.toml": {
+          "git_blob": "8749850e49a71dc2b20e5a6acefa6215bbf0fef8",
+          "sha256": "ce0890258183e5417541a322de3762deb5be36437e2041e4288913bc2fa8fbc2",
+          "text": "[package]\nname = \"nextcore-efi\"\nversion = \"0.1.0\"\nedition = \"2021\"\npublish = false\n\n[dependencies]\nuefi = { version = \"0.40\", features = [\"alloc\", \"panic_handler\"] }\nnextcore-core = { git = \"https://github.com/26x86/Nextcore-Core.git\", tag = \"26x86-Nextcore-Core-v0.1.1\", default-features = false }\nuefi-raw = { version = \"0.16\", optional = true }\n\n[features]\ntest-child = []\nkernel-probe = []\nhal-tables = []\nkc-staging = []\nconsole-control = [\"dep:uefi-raw\"]\nconsole-probe = [\"console-control\"]\n\n[[bin]]\nname = \"NXKERNEL\"\npath = \"src/kernel.rs\"\ntest = false\nbench = false\n\n[[bin]]\nname = \"BOOTX64\"\npath = \"src/main.rs\"\ntest = false\nbench = false\n\n[[bin]]\nname = \"NXTEST\"\npath = \"src/test_child.rs\"\ntest = false\nbench = false\nrequired-features = [\"test-child\"]\n\n[[bin]]\nname = \"NXHAL\"\npath = \"src/hal_tables.rs\"\ntest = false\nbench = false\nrequired-features = [\"hal-tables\"]\n\n[[bin]]\nname = \"NXKC\"\npath = \"src/kc.rs\"\ntest = false\nbench = false\nrequired-features = [\"kc-staging\"]\n\n[[bin]]\nname = \"NXCONSOLE\"\npath = \"src/console_probe.rs\"\ntest = false\nbench = false\nrequired-features = [\"console-probe\"]\n"
+        },
+        "repository.json": {
+          "git_blob": "9ad43e2e7e3a8e225aea98110b10b76736fcbf90",
+          "sha256": "d2e4b298609a1f741bfb876da3853bc24ce30a9a06cff708eeadd149c169310d",
+          "text": "{\n  \"schema\": \"26x86.repository/1\",\n  \"name\": \"Nextcore-EFI\",\n  \"owner\": \"26x86\",\n  \"public\": true,\n  \"role\": \"nextcore-module\",\n  \"crate\": \"nextcore-efi\",\n  \"description\": \"UEFI boot selection, platform services and bounded kernel preparation\",\n  \"source_path\": \"nextcore/crates/nextcore-efi\",\n  \"source_commit\": \"dcc90013109eac694ccbf997b1e44a7018480f78\",\n  \"depends_on\": [\n    \"26x86/Nextcore-Core\"\n  ],\n  \"initial_tag\": \"26x86-Nextcore-EFI-v0.1.0\",\n  \"generated_utc\": \"2026-09-08T06:40:19.143997+00:00\",\n  \"release_tag\": \"26x86-Nextcore-EFI-v0.1.1\",\n  \"previous_head\": \"4cec82e25fbfc1eeebd475adb25e2da308c2378c\",\n  \"dependency_tags\": {\n    \"26x86/Nextcore-Core\": \"26x86-Nextcore-Core-v0.1.1\"\n  },\n  \"export_method\": \"immutable git objects applied to existing main; manifest dependency rewrite only\"\n}\n"
+        },
+        ".github/workflows/ci.yml": {
+          "git_blob": "255a6c0e3a9be4619e5f90bac56a964c2ef3affd",
+          "sha256": "62e7b3d79003ae029a75fbb9bb79e1d80c3850213b4bb6cca7e0eef65c17b227",
+          "text": "name: NextCore EFI CI\non:\n  push:\n  pull_request:\n  workflow_dispatch:\npermissions:\n  contents: read\njobs:\n  verify:\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v4\n      - uses: dtolnay/rust-toolchain@stable\n      - run: rustup target add x86_64-unknown-uefi\n      - run: cargo check --target x86_64-unknown-uefi --all-features\n"
+        }
+      }
+    },
+    {
+      "repository": "26x86/Nextcore-Tool",
+      "head": "c53645672d940290ed383b348e751c0a6e4e36c6",
+      "refs": {
+        "refs/heads/main": "c53645672d940290ed383b348e751c0a6e4e36c6",
+        "refs/tags/26x86-Nextcore-Tool-v0.1.0": "37e374749a06690b14ac93dd94eed7df8b366c31",
+        "refs/tags/26x86-Nextcore-Tool-v0.1.1": "f1d26043f3f8c8f4bb663ef9f9b203dbf42c8c2d",
+        "refs/tags/26x86-Nextcore-Tool-v0.1.2": "c53645672d940290ed383b348e751c0a6e4e36c6"
+      },
+      "current_release_tag": "26x86-Nextcore-Tool-v0.1.2",
+      "current_tag_matches_main": true,
+      "source_commit": "045065700cbd037eaaa974faf957ba15cb628370",
+      "package_version": "0.1.0",
+      "dependencies": {
+        "nextcore-core": {
+          "section": "dependencies",
+          "git": "https://github.com/26x86/Nextcore-Core.git",
+          "tag": "26x86-Nextcore-Core-v0.1.1"
+        },
+        "nextcore-apls": {
+          "section": "dependencies",
+          "git": "https://github.com/26x86/Nextcore-APLS.git",
+          "tag": "26x86-Nextcore-APLS-v0.1.1"
+        }
+      },
+      "features": {},
+      "bins": [],
+      "proposed_tag_if_released": "26x86-Nextcore-Tool-v0.1.3",
+      "proposed_tag_unused": true,
+      "files": {
+        "Cargo.toml": {
+          "git_blob": "5c967448778898477f0c18a7a1c51bd7a55ff077",
+          "sha256": "55622a33d122bfb55258eaaa6d7bf1e6625ea919c0b7794f2e10d45a91248a06",
+          "text": "[package]\nname = \"nextcore-tool\"\nversion = \"0.1.0\"\nedition = \"2021\"\npublish = false\n\n[dependencies]\nclap = { version = \"4\", features = [\"derive\"] }\nanyhow = \"1\"\nserde = { version = \"1\", features = [\"derive\"] }\nserde_json = \"1\"\nplist = \"1.10\"\nnextcore-core = { git = \"https://github.com/26x86/Nextcore-Core.git\", tag = \"26x86-Nextcore-Core-v0.1.1\" }\nnextcore-apls = { git = \"https://github.com/26x86/Nextcore-APLS.git\", tag = \"26x86-Nextcore-APLS-v0.1.1\" }\n"
+        },
+        "repository.json": {
+          "git_blob": "1bbb657e69f53f5f42594577107783317381e2bf",
+          "sha256": "1735bcab28d7cef1910c6bcd2cbfd8f7ebcd7c207d6a93fcde1338b4ff46bf1d",
+          "text": "{\n  \"schema\": \"26x86.repository/1\",\n  \"name\": \"Nextcore-Tool\",\n  \"owner\": \"26x86\",\n  \"public\": true,\n  \"role\": \"nextcore-module\",\n  \"crate\": \"nextcore-tool\",\n  \"description\": \"command-line preparation and orchestration\",\n  \"source_path\": \"nextcore/crates/nextcore-tool\",\n  \"source_commit\": \"045065700cbd037eaaa974faf957ba15cb628370\",\n  \"depends_on\": [\n    \"26x86/Nextcore-Core\",\n    \"26x86/Nextcore-APLS\"\n  ],\n  \"initial_tag\": \"26x86-Nextcore-Tool-v0.1.0\",\n  \"generated_utc\": \"2026-09-08T06:40:20.968218+00:00\",\n  \"release_tag\": \"26x86-Nextcore-Tool-v0.1.2\",\n  \"previous_head\": \"f1d26043f3f8c8f4bb663ef9f9b203dbf42c8c2d\",\n  \"dependency_tags\": {\n    \"26x86/Nextcore-Core\": \"26x86-Nextcore-Core-v0.1.1\",\n    \"26x86/Nextcore-APLS\": \"26x86-Nextcore-APLS-v0.1.1\"\n  },\n  \"export_method\": \"immutable git objects applied to existing main; manifest dependency rewrite only\",\n  \"release_note\": \"Make the authored CLI test fixture crate-local for standalone Linux clones\"\n}\n"
+        },
+        ".github/workflows/ci.yml": {
+          "git_blob": "e2cc30cf1ff660adc7072d84e5a211f2bbf2e6dd",
+          "sha256": "597eacc2180a274a4119f43015e4ceaa1d86d5c878006a9e612988bdaf23f7f5",
+          "text": "name: NextCore Tool CI\non:\n  push:\n  pull_request:\n  workflow_dispatch:\npermissions:\n  contents: read\njobs:\n  verify:\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v4\n      - uses: dtolnay/rust-toolchain@stable\n      - run: cargo test --all-targets\n"
+        }
+      }
+    }
+  ]
+}

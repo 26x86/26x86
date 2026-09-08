@@ -1,0 +1,20 @@
+{
+  "module": "Tool",
+  "repository": "26x86/Nextcore-Tool",
+  "source_commit": "65d1e85db2dfcd4e1c07656bb0bfc315d36fac83",
+  "head": "36e0fd50047182ee6b2abdca87249d8c1a084e73",
+  "previous_head": "c53645672d940290ed383b348e751c0a6e4e36c6",
+  "tag": "26x86-Nextcore-Tool-v0.1.3",
+  "pre_linux_gate_passed": true,
+  "atomic_push": true,
+  "force_push": false,
+  "old_tags_preserved": true,
+  "main_and_tag_match": true,
+  "refs_after": {
+    "refs/heads/main": "36e0fd50047182ee6b2abdca87249d8c1a084e73",
+    "refs/tags/26x86-Nextcore-Tool-v0.1.0": "37e374749a06690b14ac93dd94eed7df8b366c31",
+    "refs/tags/26x86-Nextcore-Tool-v0.1.1": "f1d26043f3f8c8f4bb663ef9f9b203dbf42c8c2d",
+    "refs/tags/26x86-Nextcore-Tool-v0.1.2": "c53645672d940290ed383b348e751c0a6e4e36c6",
+    "refs/tags/26x86-Nextcore-Tool-v0.1.3": "36e0fd50047182ee6b2abdca87249d8c1a084e73"
+  }
+}

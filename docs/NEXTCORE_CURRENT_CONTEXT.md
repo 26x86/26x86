@@ -27,6 +27,7 @@ AMD64↔Apple Silicon HAL 및 필수 Metal 가속**, **macOS 26 Tahoe의
 | x86 UEFI → host HAL | BP19 실제 OVMF RSDP+7 SDT+5 PCI header 수집/파싱, exit 67와 원본 hash 유지 | XNU platform provider, AML 실행, 게스트 장치 게시, 물리 하드웨어 |
 | Tahoe 외부 reference | 원본 XNU/launchd/WindowServer와 읽을 수 있는 복구 GUI; Terminal에서 실제 Metal probe 실행 | 전체 OS 설치, Metal device/compute 성공 |
 | Tahoe native EFI | 최종 BP21 피커 → ConsoleControl → 원본 booter → 실제 XNU/Recovery/Terminal, 키보드 명령으로 26.6.2/25G83 확인 | 자체 KC loader 진입, 전체 설치 OS/native HAL/Metal |
+| native APFS driver | 공개 Jumpstart parser, 원본 745,080B 전량 재읽기·EFI 실행·controller 연결, 실제 후손 볼륨 4개의 root GetInfo/Read/EOF/Close SUCCESS | APFS booter 실행, 설치 OS로 연결 |
 | native KC 준비 | 67,584,000-byte 실제 EFI pages 배치/readback/해제, 65,260 classic host 적용·전체 readback, 401,606 chains/header 보존, rev1 boot_args codec, core 142 tests | EFI relocation 연결, entry/slide/provider 계약, native XNU 실행 |
 | ARM recovery | DFU, iBEC endpoint/prompt, 5 restore role, `bootx` ACK 관측 | XNU, userspace, Metal, macOS boot |
 | ARM firmware | `bootx` 뒤 4-byte MMIO decode failure를 same-event trace로 확인 | 장치 register/access contract 또는 안전한 장치 모델 |
@@ -87,6 +88,11 @@ macOS host가 없으므로 Virtualization.framework 기반 ARM guest boot는 이
    진행한다. 전체 공식 18,384,624,402B installer는 XAR 서명·Apple PKI chain·모든
    entry/chunk checksum 검증을 통과했다. 실제 Recovery Terminal에서 guest Metal
    probe는 no-metal-device/exit1을 반환했고 전체 NDJSON/실행 파일 readback을 보존했다.
+   전체 installer는 첫 설치와 APFS installer의 적용 단계를 마치고 각각 정상
+   재부팅했다. 별도 native EFI COW에서 원본 APFS Jumpstart driver를 실제 실행하고
+   controller 연결까지 확인했으며, 완료된 첫 설치 backing의 hash는 유지됐다.
+   별도 COW의 실제 APFS 후손 볼륨 4개에서 root 열기/GetInfo/Read/EOF/Close도
+   통과했다. 현재 APFS booter 연결과 전체 설치 OS의 후속 부팅/guest Metal을 진행한다.
    AHCI Port 2 abort는 원본 복구 디스크가 아닌 자동 생성된
    빈 CD-ROM에 대응한다는 QMP 실측이 있다.
    WSL 재시작 후 device가 없으면 설치 모듈의 적재 여부를 먼저 확인한다.
@@ -101,21 +107,24 @@ macOS host가 없으므로 Virtualization.framework 기반 ARM guest boot는 이
 ## 모듈 배포 상태
 
 NextCore의 다음 public repositories를 기존 이력 위에서 갱신했다. Core/GPU/HAL/
-ISE/APLS/EFI의 최신 tag는 `26x86-Nextcore-<Module>-v0.1.1`, Tool은
-`26x86-Nextcore-Tool-v0.1.2`이며 각 원격 main과 해당 tag commit이 일치한다:
+ISE/APLS/EFI/Tool 중 Core·EFI의 최신 tag는 v0.1.2, Tool은 v0.1.3,
+GPU/HAL/ISE/APLS는 v0.1.1이다. 각 원격 main과 해당 tag commit이 일치한다:
 
 - `26x86/Nextcore-Core`, `Nextcore-GPU`, `Nextcore-HAL`, `Nextcore-ISE`
 - `26x86/Nextcore-APLS`, `Nextcore-EFI`, `Nextcore-Tool`
 
-이번 source는 고정 commit `dcc9001`이며 Tool fixture 수정은 `0450657`이다.
-7개 최신 snapshot 모두 게시 전후 fresh-clone gate 및 exact-head GitHub CI가
-통과했다. 최초 Tool v0.1.1의 sibling fixture 결함은 Windows 인접 clone이 놓쳤고
-Linux CI가 발견했다. 실패 tag를 보존하고 v0.1.2를 Linux 단독 clone에서 검증했다.
-기존 exporter의 작업 중 변경은 사용하지 않았으며 source Git object와 fixed
-dependency tag, canonical blob inventory로 배포했다. 조직 profile은 `4e446a4`로
-NextCore 브랜딩·목표·7개 release link를 반영하고 원격 readback을 확인했다.
-[전체 release 증거](../nextcore/artifacts/module-release-v011-20260908/README.md)는
-소프트웨어/배포 검사이며 guest Metal 실행을 뜻하지 않는다.
+APFS release source는 고정 main `65d1e85`다. Core `6547be4`, EFI `64a2d4c`,
+Tool `36e0fd5`는 각각 Linux의 단일 repository만 있는 별도 parent에서 게시 전후
+검증을 통과했다. Core 203 tests/no-default APFS 23/no_std, EFI all-feature UEFI
+check와 NXAPFS 실제 link, Tool 17 passed/1 ignored 및 모든 exact-head CI가 통과했다.
+나머지 4개 crate subtree는 이전 source와 동일해 기존 tag를 유지했다. 최종 7개
+원격 ref와 모든 이전 tag 보존을 다시 확인했다. 최초 Tool v0.1.1 실패도 보존한다.
+기존 exporter의 작업 중 변경은 사용하지 않았으며 source Git object와 고정
+dependency tag만 배포 입력이다. 조직 profile `440e6a9`는 해당 release와 APFS
+driver 실행 경계를 반영했고 원격 byte readback이 일치했다.
+[최신 release 증거](../nextcore/artifacts/module-release-apfs-20260908/README.md)는
+소프트웨어/배포 검사이며 guest Metal 실행을 뜻하지 않는다. 이후 BP24-B 파일시스템
+관찰 기능은 이 고정 source release에 포함되지 않았다.
 
 ## 최소 재개 절차
 

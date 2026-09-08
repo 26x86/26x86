@@ -1,0 +1,51 @@
+{
+  "source_commit": "65d1e85db2dfcd4e1c07656bb0bfc315d36fac83",
+  "base": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-apfs-20260908-a9t5f8l2",
+  "modules": [
+    {
+      "module": "Core",
+      "head": "6547be4bbf6b75cf706b89ade4d4a60d5441d223",
+      "tag": "26x86-Nextcore-Core-v0.1.2",
+      "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-apfs-20260908-a9t5f8l2\\Nextcore-Core"
+    },
+    {
+      "module": "EFI",
+      "head": "64a2d4ce432c2f5ccd300728309556c898317436",
+      "tag": "26x86-Nextcore-EFI-v0.1.2",
+      "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-apfs-20260908-a9t5f8l2\\Nextcore-EFI"
+    },
+    {
+      "module": "Tool",
+      "head": "36e0fd50047182ee6b2abdca87249d8c1a084e73",
+      "tag": "26x86-Nextcore-Tool-v0.1.3",
+      "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-apfs-20260908-a9t5f8l2\\Nextcore-Tool"
+    }
+  ],
+  "retained_unchanged": [
+    {
+      "module": "GPU",
+      "source_tree": "8652767064c67a5f87097d6db67c92d002cf899a",
+      "head": "8962199b5a7381850ef9aa9e72e98b45a8671d46",
+      "tag": "26x86-Nextcore-GPU-v0.1.1"
+    },
+    {
+      "module": "HAL",
+      "source_tree": "1493c2c3ba3b874b8724e688924a64b013e936fd",
+      "head": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+      "tag": "26x86-Nextcore-HAL-v0.1.1"
+    },
+    {
+      "module": "ISE",
+      "source_tree": "88d3fb20ab8219d36e8f63c11608435e8c31ec41",
+      "head": "e4c318ff707ff57eaf128ffd66cc962a210ab8e1",
+      "tag": "26x86-Nextcore-ISE-v0.1.1"
+    },
+    {
+      "module": "APLS",
+      "source_tree": "195cb1c9cf942e9768b7fa658bbf83d4675e10e9",
+      "head": "f4d640e362fbcf160994d833b330e16506de9110",
+      "tag": "26x86-Nextcore-APLS-v0.1.1"
+    }
+  ],
+  "remote_mutations": []
+}

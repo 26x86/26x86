@@ -1,0 +1,330 @@
+{
+  "authored_only": true,
+  "cases": [
+    {
+      "case": "inspect",
+      "cleanup_complete": true,
+      "guest_disk_unchanged": true,
+      "natural_returncode": 0,
+      "originals_unchanged": true,
+      "passed": true,
+      "qemu_seconds": 2.9261,
+      "report_sha256": "13f564a82458cdfbae38fe76827358eb233f6ae40d093c9e429dfd74d483085e"
+    },
+    {
+      "case": "start-driver",
+      "cleanup_complete": true,
+      "guest_disk_unchanged": true,
+      "natural_returncode": 0,
+      "originals_unchanged": true,
+      "passed": true,
+      "qemu_seconds": 2.4235,
+      "report_sha256": "2f4eaef8acc6de84536e61f5734e15551cddfab39d752ff6411fdd5a22a763c6"
+    },
+    {
+      "case": "app-reject",
+      "cleanup_complete": true,
+      "guest_disk_unchanged": true,
+      "natural_returncode": 0,
+      "originals_unchanged": true,
+      "passed": true,
+      "qemu_seconds": 2.4239,
+      "report_sha256": "b293beb7acc112f7982b263e22320f18a46e0881c35f83862ac5c648b430fca7"
+    },
+    {
+      "case": "nx-checksum",
+      "cleanup_complete": true,
+      "guest_disk_unchanged": true,
+      "natural_returncode": 0,
+      "originals_unchanged": true,
+      "passed": true,
+      "qemu_seconds": 2.808,
+      "report_sha256": "12bba524515eb44fc7bb949cb67ab2ce515e12924d1e11d823dc4510e31dcb85"
+    },
+    {
+      "case": "jsdr-checksum",
+      "cleanup_complete": true,
+      "guest_disk_unchanged": true,
+      "natural_returncode": 0,
+      "originals_unchanged": true,
+      "passed": true,
+      "qemu_seconds": 3.091,
+      "report_sha256": "64cc456a6959fc4bda567f86495794e0227c4f938c2753167f1fc24c684cc208"
+    },
+    {
+      "case": "multiple",
+      "cleanup_complete": true,
+      "guest_disk_unchanged": true,
+      "natural_returncode": 0,
+      "originals_unchanged": true,
+      "passed": true,
+      "qemu_seconds": 4.385,
+      "report_sha256": "1a2b08baf18a61240578db0200becbe006b17483c93eb280374ffc2ab6825330"
+    },
+    {
+      "case": "filesystems-no-binding",
+      "cleanup_complete": true,
+      "guest_disk_unchanged": true,
+      "natural_returncode": 0,
+      "originals_unchanged": true,
+      "passed": true,
+      "qemu_seconds": 4.365,
+      "report_sha256": "487a349c98aa094b86d48143955034f4db95c1ac49332de0fbeeffb8c18e8623"
+    }
+  ],
+  "commands": [
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "rustc",
+        "--version",
+        "--verbose"
+      ],
+      "elapsed_seconds": 0.0288,
+      "natural_returncode": 0,
+      "pid": 152,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/rust-version.stderr",
+      "stdout_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/rust-version.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "rustc",
+        "--test",
+        "--edition",
+        "2021",
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/crates/nextcore-efi/src/apfs_observation.rs",
+        "-o",
+        "/tmp/nextcore-apfs-observation-tests-20260908"
+      ],
+      "elapsed_seconds": 0.4313,
+      "natural_returncode": 0,
+      "pid": 162,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/parser-compile.stderr",
+      "stdout_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/parser-compile.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "/tmp/nextcore-apfs-observation-tests-20260908"
+      ],
+      "elapsed_seconds": 0.0292,
+      "natural_returncode": 0,
+      "pid": 195,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/parser-tests.stderr",
+      "stdout_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/parser-tests.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/tools",
+        "-p",
+        "test_verify_apfs_jumpstart.py",
+        "-v"
+      ],
+      "elapsed_seconds": 0.3112,
+      "natural_returncode": 0,
+      "pid": 203,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/python-tests.stderr",
+      "stdout_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/python-tests.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/layout.c",
+        "-o",
+        "/tmp/nextcore-apfs-fs-layout-20260908"
+      ],
+      "elapsed_seconds": 0.1113,
+      "natural_returncode": 0,
+      "pid": 204,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/layout-compile.stderr",
+      "stdout_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/layout-compile.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "/tmp/nextcore-apfs-fs-layout-20260908"
+      ],
+      "elapsed_seconds": 0.0287,
+      "natural_returncode": 0,
+      "pid": 209,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/layout.stderr",
+      "stdout_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/layout.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "cargo",
+        "build",
+        "--manifest-path",
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/Cargo.toml",
+        "-p",
+        "nextcore-efi",
+        "--bin",
+        "NXAPFS",
+        "--features",
+        "apfs-jumpstart",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--release",
+        "--locked"
+      ],
+      "elapsed_seconds": 0.9167,
+      "natural_returncode": 0,
+      "pid": 210,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/build.stderr",
+      "stdout_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/build.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    },
+    {
+      "adopted_children": [],
+      "adopted_children_remaining": [],
+      "cleanup_complete": true,
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/Cargo.toml",
+        "-p",
+        "nextcore-efi",
+        "--bin",
+        "NXAPFS",
+        "--features",
+        "apfs-jumpstart",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--release",
+        "--locked",
+        "--no-deps",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "elapsed_seconds": 0.5738,
+      "natural_returncode": 0,
+      "pid": 264,
+      "process_group_remaining": false,
+      "returncode": 0,
+      "stderr_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/clippy.stderr",
+      "stdout_path": "/mnt/c/Users/Admin/Documents/ChatGPT/26x86darwin/nextcore/artifacts/apfs-filesystems-20260908/clippy.stdout",
+      "stopped_by_harness": false,
+      "timed_out": false
+    }
+  ],
+  "efi_sha256": "1e63c89b5426a2a9d589ee3ffcc93db4c0f8d79a8a1c828d01fea4e5ce5ec725",
+  "filesystem_positive_tested_by_this_harness": false,
+  "hardware_tested": false,
+  "installed_os_boot_verified": false,
+  "metal_verified": false,
+  "passed": true,
+  "rebuild_comparison": {
+    "all_other_bytes_identical": true,
+    "allowed_nonexecution_metadata_regions": {
+      "codeview_guid": [
+        55472,
+        16
+      ],
+      "coff_timestamp": [
+        128,
+        4
+      ],
+      "debug_timestamp": [
+        55444,
+        4
+      ]
+    },
+    "archive_preserved": true,
+    "different_byte_offsets": [
+      128,
+      129,
+      55444,
+      55445,
+      55472,
+      55473,
+      55474,
+      55475,
+      55476,
+      55477,
+      55478,
+      55479
+    ],
+    "rebuilt_sha256": "a36d68466c4b32e390281bd990f7b64b16b3fcf8e1e1d7c52dd6ad587169a78f",
+    "text_sha256": "c7ab7608e7f759373b187fa3ff4c4c15dd9f649cdf5bca449cb60d1197e5b9cd",
+    "whole_binary_identical": false
+  },
+  "sources_after": {
+    "nextcore/crates/nextcore-efi/Cargo.toml": "2780016cb6ef3e4ed37eb72d3059957da6fe34c592ff17efb33cfe743b9c630c",
+    "nextcore/crates/nextcore-efi/src/apfs_driver.rs": "14f854a380f470ed7c018edcb2075c7b62d184197211b9eb93191d1af5fe4d94",
+    "nextcore/crates/nextcore-efi/src/apfs_filesystems.rs": "031a30ad9999dd907391e7df2a2469192488fa167686020d8b4508ae270a6012",
+    "nextcore/crates/nextcore-efi/src/apfs_observation.rs": "6365a81f9e7dc42b14c7d064d3b4083014e0ad9143e2408e1d53bd257f56f7cc",
+    "nextcore/crates/nextcore-efi/src/apfs_probe.rs": "5d3622c9066c2a69551f5a472c92cf9292425d83039b306f8992627a2fe9bf26",
+    "nextcore/tools/test_verify_apfs_jumpstart.py": "814e958533fc877810f0d483b83412ecd27051ffa545d4e458fddb6cb2e32dc9",
+    "nextcore/tools/verify_apfs_jumpstart.py": "57bb6e29697ce8c820354e4ac70ac7d66b1f795d0b90b71c00e579d5ec3294fe"
+  },
+  "sources_before": {
+    "nextcore/crates/nextcore-efi/Cargo.toml": "2780016cb6ef3e4ed37eb72d3059957da6fe34c592ff17efb33cfe743b9c630c",
+    "nextcore/crates/nextcore-efi/src/apfs_driver.rs": "14f854a380f470ed7c018edcb2075c7b62d184197211b9eb93191d1af5fe4d94",
+    "nextcore/crates/nextcore-efi/src/apfs_filesystems.rs": "031a30ad9999dd907391e7df2a2469192488fa167686020d8b4508ae270a6012",
+    "nextcore/crates/nextcore-efi/src/apfs_observation.rs": "6365a81f9e7dc42b14c7d064d3b4083014e0ad9143e2408e1d53bd257f56f7cc",
+    "nextcore/crates/nextcore-efi/src/apfs_probe.rs": "5d3622c9066c2a69551f5a472c92cf9292425d83039b306f8992627a2fe9bf26",
+    "nextcore/tools/test_verify_apfs_jumpstart.py": "814e958533fc877810f0d483b83412ecd27051ffa545d4e458fddb6cb2e32dc9",
+    "nextcore/tools/verify_apfs_jumpstart.py": "57bb6e29697ce8c820354e4ac70ac7d66b1f795d0b90b71c00e579d5ec3294fe"
+  },
+  "tests": {
+    "failed": 0,
+    "python_gate_passed": 9,
+    "rust_parser_passed": 7
+  }
+}

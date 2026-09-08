@@ -1,0 +1,7 @@
+   Compiling memchr v2.8.3
+   Compiling serde_core v1.0.229
+   Compiling roxmltree v0.21.1
+   Compiling nextcore-core v0.1.0 (/tmp/nextcore-apfs-release-core-post-9lvdpusr/module)
+   Compiling serde_json v1.0.151
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.86s
+     Running tests/apfs_jumpstart.rs (target/debug/deps/apfs_jumpstart-8c77ac4fd556ef3d)

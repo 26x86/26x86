@@ -25,6 +25,10 @@ jobs:
       - name: Check APFS extraction and evidence rejection
         run: |
           cargo test --manifest-path nextcore/Cargo.toml -p nextcore-core --no-default-features --test apfs_jumpstart
+          rustc --edition=2021 --test nextcore/crates/nextcore-efi/src/apfs_observation.rs -o "$RUNNER_TEMP/apfs-observation-tests"
+          "$RUNNER_TEMP/apfs-observation-tests"
+          cc -std=c11 -Wall -Wextra -Werror nextcore/artifacts/apfs-filesystems-20260908/layout.c -o "$RUNNER_TEMP/apfs-observation-layout"
+          "$RUNNER_TEMP/apfs-observation-layout"
           python3 -m unittest discover -s nextcore/tools -p test_verify_apfs_jumpstart.py -v
       - name: Build actual EFI applications
         run: >-

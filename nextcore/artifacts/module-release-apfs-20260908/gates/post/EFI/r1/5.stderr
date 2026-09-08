@@ -1,0 +1,14 @@
+   Compiling bit_field v0.10.3
+   Compiling bitflags v2.13.1
+   Compiling uguid v2.2.1
+   Compiling memchr v2.8.3
+   Compiling uefi-raw v0.16.0
+   Compiling roxmltree v0.21.1
+   Compiling ucs2 v0.3.3
+   Compiling ptr_meta v0.3.2
+   Compiling log v0.4.34
+   Compiling cfg-if v1.0.4
+   Compiling nextcore-core v0.1.0 (https://github.com/26x86/Nextcore-Core.git?tag=26x86-Nextcore-Core-v0.1.2#6547be4b)
+   Compiling uefi v0.40.0
+   Compiling nextcore-efi v0.1.0 (/tmp/nextcore-apfs-release-efi-post-ttvunwlg/module)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 8.51s

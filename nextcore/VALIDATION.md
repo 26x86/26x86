@@ -59,7 +59,51 @@ native 경로의 restore-datapartition panic은 VM RAM 조건을 수정해 통�
 로컬 제외 정책과 달리 현재 Nextcore 소스는 Git 추적 대상이며 `nextcore/target/`과
 `nextcore/artifacts/`는 제외된다. BP19에서는 추적 정책을 변경하지 않았다.
 
+## BP24 APFS Jumpstart 실행 (2026-09-08)
+
+공개 APFS 형식의 bounded read-only parser를 추가했다. 23개 합성 경계·손상 입력
+검사, 독립 C의 24 offsets/4 checksum vectors, UEFI no_std 및 소유 코드의 strict
+검사가 통과했다. 명시 NXAPFS helper는 기본 추출/전량 재읽기와 `--start-driver`를
+분리하며 기존 BOOTX64/picker 동작을 유지한다.
+
+실제 OVMF 6개 경우에서 기본 모드, 자체 resident driver, application 거부,
+NXSB/JSDR checksum 오류와 중복 APFS를 검증했다. 전체 guest-visible disk와 ESP
+readback, QMP 자연 exit0 및 process cleanup이 모두 통과했다. 증거 변조를 거부하는
+Python 9개 검사도 통과했다. [합성 runtime receipt](artifacts/apfs-ovmf-20260908/result.json).
+
+완료된 첫 설치 snapshot을 각각 새 COW로 열어 원본 APFS driver **745,080B**를
+전량 추출·재읽기했다. 다음 실행에서는 실제 driver StartImage와 ConnectController가
+SUCCESS를 반환했고 NextCore parent도 console lease를 해제하고 SUCCESS로 돌아왔다.
+전체 60.6816초(실행 supervisor 4.1393초), 원본 9개 hash와 ESP 파일 유지,
+QMP exit0/잔여 process0을 확인했다. [원본 실행 결과](artifacts/apfs-firmware-20260908/original-apfs-result.json).
+드라이버 원본 byte는 공개에 넣지 않았으며 root 열기·설치 OS·Metal은 별도 단계다.
+
+PR #7의 exact head `8f21c876757dc571c4e09b36a779e6239dec15a1`에서 전체 원격 CI와
+신규 `apfs-firmware` run `34200621847`이 통과했다. 이 CI는 EFI를 다시 빌드하고
+6개 합성 OVMF를 실제 실행한다. main `65d1e85`로 merge했고 관련 module 배포를 진행한다.
+
+### BP24-B 실제 APFS root 관찰
+
+명시 `--inspect-filesystems`의 NXAPFS r1 `1e63c89b…ec725`를 완료된 첫 설치 snapshot의
+별도 COW에서 실행했다. SFS 6개 중 선택한 APFS partition의 정확한 node 후손 4개를
+열어 root GetInfo와 전체 root Read/EOF를 확인했다. 4 records/8 Read 호출,
+metadata 응답 17,240B이며 모든 root Close·protocol Close·parent cleanup/return이
+SUCCESS다. supervisor 2.8096초, 전후 검증 포함 56.3239초, QMP 자연 exit0와
+잔여 process0, 입력 9개 SHA256와 ESP 파일 유지가 통과했다.
+[공개 집계 결과](artifacts/apfs-filesystems-20260908/original-result.json)에 정확한
+binary·격리 receipt hash를 기록했다. 원본 파일명/volume ID/경로·로그는 격리한다.
+이는 APFS 파일시스템 접근 성공이며 APFS에서 booter 실행·설치 OS/Metal 성공은 아니다.
+
 ## BP23 원격 동기화 (2026-09-08)
+
+후속 APFS module release는 고정 main `65d1e85`에서 Core/EFI v0.1.2와 Tool
+v0.1.3을 게시했다. 독립 Linux single-parent clone의 전후 gate와 exact-head
+main/tag CI 모두 통과했고 기존 tag를 보존했다. Core 203 tests/APFS 23/no_std,
+EFI all-feature check/NXAPFS 실제 link, Tool 17 passed/1 ignored다. 변경 없는
+GPU/HAL/ISE/APLS는 v0.1.1을 유지한다. 조직 profile `440e6a9`의 원격 byte readback과
+7개 repository 최종 ref audit도 통과했다.
+[후속 release receipt](artifacts/module-release-apfs-20260908/release-receipt.json)를
+보존한다. 해당 고정 release에는 이후 BP24-B 파일시스템 관찰 변경이 들어 있지 않다.
 
 PR #5의 head `ee04ddad4d7cbba8033df1d48082a513b931e43d`에서 모든 원격 검사가
 통과한 뒤 main `06262cb970ef482415493e9f5f9a32c05476dc9c`로 squash merge했다.

@@ -23,7 +23,7 @@ BLOCK = 4096
 PARTITION_BYTES = 1024 * 1024
 MAX_FILE = 64 * 1024 * 1024
 MAX_SERIAL = 2 * 1024 * 1024
-CASES = ("inspect", "start-driver", "app-reject", "nx-checksum", "jsdr-checksum", "multiple")
+CASES = ("inspect", "start-driver", "app-reject", "nx-checksum", "jsdr-checksum", "multiple", "filesystems-no-binding")
 APFS_GUID = uuid.UUID("7c3457ef-0000-11aa-aa11-00306543ecac")
 
 
@@ -135,13 +135,13 @@ def gpt_disk(partition, count=1, esp=None):
 def expected_markers(case, size):
     status = {"inspect": "SUCCESS", "start-driver": "NOT_FOUND", "app-reject": "UNSUPPORTED",
               "nx-checksum": "VOLUME_CORRUPTED", "jsdr-checksum": "VOLUME_CORRUPTED",
-              "multiple": "NO_MAPPING"}[case]
+              "multiple": "NO_MAPPING", "filesystems-no-binding": "NOT_FOUND"}[case]
     markers = ["NXAPFS: EFI_ENTRY"]
-    if case in ("inspect", "start-driver", "app-reject"):
+    if case in ("inspect", "start-driver", "app-reject", "filesystems-no-binding"):
         markers.append(f"NXAPFS: EXTRACT_OK bytes={size} block_size=4096 extents=2 readback=true")
     if case == "inspect":
         markers.append("NXAPFS: INSPECT_ONLY driver_started=false")
-    elif case == "start-driver":
+    elif case in ("start-driver", "filesystems-no-binding"):
         markers += ["NXAPFS: DRIVER_START", "NXTEST: EFI_ENTRY", "NXTEST: OPTIONS_EMPTY",
                     "NXAPFS: DRIVER_RETURN status=SUCCESS", "NXAPFS: DRIVER_RESIDENT",
                     "NXAPFS: CONNECT status=NOT_FOUND"]
@@ -171,7 +171,7 @@ def validate_serial(raw, case, size):
             "child markers outside parent call")
     require(not any("NEXTCORE: IMAGE_CLEANUP_ERROR" in line for line in lines), "parent cleanup failure")
     return {"markers": actual, "parent_markers": parent, "expected_status": status,
-            "driver_entered": case == "start-driver", "filesystem_connected": False}
+            "driver_entered": case in ("start-driver", "filesystems-no-binding"), "filesystem_connected": False}
 
 
 def validate_execution(receipt, qmp):
@@ -273,7 +273,8 @@ def run_case(args, case, inputs, application, driver, output):
         config = output / "config.plist"
         config.write_bytes(plistlib.dumps({"Misc": {"Boot": {"ShowPicker": False}, "Entries": [
             {"Enabled": True, "Name": "NextCore APFS probe", "Path": "\\EFI\\OC\\NXAPFS.efi",
-             "Arguments": "--start-driver" if case in ("start-driver", "app-reject") else ""}]}}))
+             "Arguments": "--inspect-filesystems" if case == "filesystems-no-binding" else
+                          "--start-driver" if case in ("start-driver", "app-reject") else ""}]}}))
         expected_files = {"BOOTX64": (inputs["efi"], "::/EFI/BOOT/BOOTX64.efi"),
                           "NXAPFS": (inputs["probe"], "::/EFI/OC/NXAPFS.efi"),
                           "config": (config, "::/EFI/OC/config.plist")}

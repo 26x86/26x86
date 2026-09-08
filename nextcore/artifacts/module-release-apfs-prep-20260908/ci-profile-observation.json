@@ -1,0 +1,152 @@
+{
+  "observed_utc": "2026-09-08T07:40:48.583057+00:00",
+  "read_only": true,
+  "remote_mutations": [],
+  "ci": [
+    {
+      "repository": "26x86/Nextcore-Core",
+      "expected_head": "66eb69888a9cb8bc56d05f9b2a0bbfab5abfd54b",
+      "runs": [
+        {
+          "id": 34195932526,
+          "head_sha": "66eb69888a9cb8bc56d05f9b2a0bbfab5abfd54b",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-Core/actions/runs/34195932526"
+        },
+        {
+          "id": 34195932588,
+          "head_sha": "66eb69888a9cb8bc56d05f9b2a0bbfab5abfd54b",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-Core/actions/runs/34195932588"
+        }
+      ]
+    },
+    {
+      "repository": "26x86/Nextcore-GPU",
+      "expected_head": "8962199b5a7381850ef9aa9e72e98b45a8671d46",
+      "runs": [
+        {
+          "id": 34195969105,
+          "head_sha": "8962199b5a7381850ef9aa9e72e98b45a8671d46",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-GPU/actions/runs/34195969105"
+        },
+        {
+          "id": 34195968754,
+          "head_sha": "8962199b5a7381850ef9aa9e72e98b45a8671d46",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-GPU/actions/runs/34195968754"
+        }
+      ]
+    },
+    {
+      "repository": "26x86/Nextcore-HAL",
+      "expected_head": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+      "runs": [
+        {
+          "id": 34196005275,
+          "head_sha": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-HAL/actions/runs/34196005275"
+        },
+        {
+          "id": 34196005093,
+          "head_sha": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-HAL/actions/runs/34196005093"
+        }
+      ]
+    },
+    {
+      "repository": "26x86/Nextcore-ISE",
+      "expected_head": "e4c318ff707ff57eaf128ffd66cc962a210ab8e1",
+      "runs": [
+        {
+          "id": 34196016446,
+          "head_sha": "e4c318ff707ff57eaf128ffd66cc962a210ab8e1",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-ISE/actions/runs/34196016446"
+        },
+        {
+          "id": 34196016391,
+          "head_sha": "e4c318ff707ff57eaf128ffd66cc962a210ab8e1",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-ISE/actions/runs/34196016391"
+        }
+      ]
+    },
+    {
+      "repository": "26x86/Nextcore-APLS",
+      "expected_head": "f4d640e362fbcf160994d833b330e16506de9110",
+      "runs": [
+        {
+          "id": 34196181128,
+          "head_sha": "f4d640e362fbcf160994d833b330e16506de9110",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-APLS/actions/runs/34196181128"
+        },
+        {
+          "id": 34196180700,
+          "head_sha": "f4d640e362fbcf160994d833b330e16506de9110",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-APLS/actions/runs/34196180700"
+        }
+      ]
+    },
+    {
+      "repository": "26x86/Nextcore-EFI",
+      "expected_head": "c00f6fe6d6618f574ed193547837d675e6ca2da3",
+      "runs": [
+        {
+          "id": 34196192362,
+          "head_sha": "c00f6fe6d6618f574ed193547837d675e6ca2da3",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-EFI/actions/runs/34196192362"
+        },
+        {
+          "id": 34196192640,
+          "head_sha": "c00f6fe6d6618f574ed193547837d675e6ca2da3",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-EFI/actions/runs/34196192640"
+        }
+      ]
+    },
+    {
+      "repository": "26x86/Nextcore-Tool",
+      "expected_head": "c53645672d940290ed383b348e751c0a6e4e36c6",
+      "runs": [
+        {
+          "id": 34197149845,
+          "head_sha": "c53645672d940290ed383b348e751c0a6e4e36c6",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-Tool/actions/runs/34197149845"
+        },
+        {
+          "id": 34197149715,
+          "head_sha": "c53645672d940290ed383b348e751c0a6e4e36c6",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/26x86/Nextcore-Tool/actions/runs/34197149715"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "head": "4e446a4b7debc714ff2ec7ac6ead069bb2860618",
+    "blob": "53cf16dc08fd3f90ec2801c13f27a7abf54a2011",
+    "text": "<div align=\"center\">\n  <a href=\"https://github.com/26x86/26x86\"><img src=\"https://raw.githubusercontent.com/26x86/26x86/main/resources/branding/nextcore-logo-256.png\" alt=\"NextCore\" width=\"120\" /></a>\n  <h1>NextCore \u00b7 26x86</h1>\n  <p><strong>Public EFI boot engineering, from firmware to graphics.</strong></p>\n  <p>macOS 26 Tahoe native HAL \u00b7 macOS 27 Golden Gate AMD64 \u2194 Apple Silicon HAL \u00b7 Metal</p>\n  <p><a href=\"https://github.com/26x86/26x86\">Project</a> \u00b7 <a href=\"https://github.com/26x86/26x86/blob/main/docs/NEXTCORE_CURRENT_CONTEXT.md\">Current progress</a> \u00b7 <a href=\"https://github.com/orgs/26x86/repositories\">Repositories</a> \u00b7 <a href=\"https://github.com/26x86/26x86/actions\">CI</a></p>\n</div>\n\nNextCore is a clean-room EFI boot stack developed within 26x86. We are building\nnative platform support for Tahoe and the AMD64 \u2194 Apple Silicon path for Golden\nGate, including guest Metal. These are active engineering goals; the complete\nplatform and graphics stack is not yet verified.\n\n## What runs today\n\nThe [2026-09-08 source snapshot](https://github.com/26x86/26x86/tree/dcc90013109eac694ccbf997b1e44a7018480f78)\nrecords each result at the layer actually exercised.\n\n| Layer | Observed result | Remaining work |\n| --- | --- | --- |\n| NextCore EFI | GOP/text picker, keyboard selection and child launch in OVMF | Automatic OS volume discovery |\n| Tahoe recovery | NextCore \u2192 original booter \u2192 XNU and userspace; readable, interactive Recovery menus in local QEMU/KVM | Independent KC-loader entry and complete native HAL |\n| Golden Gate ARM64E | Public boot-argument codec and immutable KC host staging with full view readback | Physical placement, CPU/PAC/DT integration and original XNU entry |\n| Graphics | Intel host Vulkan submission/readback; guest Metal probes built and a Tahoe Recovery probe executed | Guest probe reported no Metal device; **metal_verified=false** |\n\nHost tests and emulator results do not establish physical-Mac support. Full\ninstallation, the complete Golden Gate boot path and guest Metal remain open.\nSee the pinned [context](https://github.com/26x86/26x86/blob/dcc90013109eac694ccbf997b1e44a7018480f78/docs/NEXTCORE_CURRENT_CONTEXT.md)\nand [validation record](https://github.com/26x86/26x86/blob/dcc90013109eac694ccbf997b1e44a7018480f78/nextcore/VALIDATION.md)\nfor the exact execution conditions and boundaries.\nThe [current development record](https://github.com/26x86/26x86/blob/main/docs/NEXTCORE_CURRENT_CONTEXT.md)\ntracks later work; each released module retains its own immutable source-commit reference.\n\n## Seven independently versioned modules\n\nThe `v0.1.1` snapshots use the source commit above. Tool `v0.1.2` includes a\n[crate-local test-fixture correction](https://github.com/26x86/26x86/commit/045065700cbd037eaaa974faf957ba15cb628370).\nCross-module dependencies use fixed tags; inventories record the exported public\nfiles. Package versions remain those of each source snapshot.\n\n| Module | Responsibility | Fixed snapshot |\n| --- | --- | --- |\n| [Core](https://github.com/26x86/Nextcore-Core) | Configuration, public image/DT formats and architecture-specific preparation | [v0.1.1](https://github.com/26x86/Nextcore-Core/tree/26x86-Nextcore-Core-v0.1.1) |\n| [EFI](https://github.com/26x86/Nextcore-EFI) | Firmware picker, platform services and bounded handoff | [v0.1.1](https://github.com/26x86/Nextcore-EFI/tree/26x86-Nextcore-EFI-v0.1.1) |\n| [Tool](https://github.com/26x86/Nextcore-Tool) | CLI preparation and orchestration | [v0.1.2](https://github.com/26x86/Nextcore-Tool/tree/26x86-Nextcore-Tool-v0.1.2) |\n| [HAL](https://github.com/26x86/Nextcore-HAL) | Public platform-table metadata | [v0.1.1](https://github.com/26x86/Nextcore-HAL/tree/26x86-Nextcore-HAL-v0.1.1) |\n| [ISE](https://github.com/26x86/Nextcore-ISE) | Instruction and CPU feature policy | [v0.1.1](https://github.com/26x86/Nextcore-ISE/tree/26x86-Nextcore-ISE-v0.1.1) |\n| [GPU](https://github.com/26x86/Nextcore-GPU) | Graphics contracts and optional host Vulkan backend | [v0.1.1](https://github.com/26x86/Nextcore-GPU/tree/26x86-Nextcore-GPU-v0.1.1) |\n| [APLS](https://github.com/26x86/Nextcore-APLS) | ARM recovery orchestration and public guest interfaces | [v0.1.1](https://github.com/26x86/Nextcore-APLS/tree/26x86-Nextcore-APLS-v0.1.1) |\n\n## Related projects and upstream integration\n\n[26x86](https://github.com/26x86/26x86) also provides guided setup, OpenCore\nintegration, EFI preparation and diagnostics. [VenFire](https://github.com/26x86/VenFire)\nand [VenFire-QEMU](https://github.com/26x86/VenFire-QEMU) hold the separate\nemulation research track. Upstream integration and support packages remain in\n[OpenCorePkg](https://github.com/26x86/OpenCorePkg),\n[MetallibSupportPkg](https://github.com/26x86/MetallibSupportPkg) and\n[PatcherSupportPkg](https://github.com/26x86/PatcherSupportPkg).\n\nPublic repositories contain independently authored source and public interfaces,\nnot Apple firmware, guest disks, extracted blobs or private research material.\r\n"
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "module": "Tool",
+  "repository": "26x86/Nextcore-Tool",
+  "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-apfs-20260908-a9t5f8l2\\Nextcore-Tool",
+  "source_commit": "65d1e85db2dfcd4e1c07656bb0bfc315d36fac83",
+  "head": "36e0fd50047182ee6b2abdca87249d8c1a084e73",
+  "previous_head": "c53645672d940290ed383b348e751c0a6e4e36c6",
+  "tag": "26x86-Nextcore-Tool-v0.1.3",
+  "dependencies": {
+    "26x86/Nextcore-Core": "26x86-Nextcore-Core-v0.1.2",
+    "26x86/Nextcore-APLS": "26x86-Nextcore-APLS-v0.1.1"
+  },
+  "commands": [
+    [
+      "cargo",
+      "test",
+      "--all-targets"
+    ]
+  ],
+  "source_files": [
+    {
+      "path": "Cargo.toml",
+      "source_path": "nextcore/crates/nextcore-tool/Cargo.toml",
+      "mode": "100644",
+      "git_blob": "5493399e71540dcfc7ab07d774aa42f07a7b7ae8",
+      "bytes": 334,
+      "sha256": "38c95e9f5b782e38e9a65c759129c72ea66f22be01ea0a6f671a61c0d16a063f"
+    },
+    {
+      "path": "src/apls.rs",
+      "source_path": "nextcore/crates/nextcore-tool/src/apls.rs",
+      "mode": "100644",
+      "git_blob": "66ccdb19340d60080a794ef9cf076a10bb003145",
+      "bytes": 26268,
+      "sha256": "a33439d666b64d1036bf26d10732731fa1cf580c2dccac0bf1dd5fb378429362"
+    },
+    {
+      "path": "src/efi.rs",
+      "source_path": "nextcore/crates/nextcore-tool/src/efi.rs",
+      "mode": "100644",
+      "git_blob": "2669966dfce74a6307aa112dfd13feaa1cfa7d92",
+      "bytes": 6622,
+      "sha256": "012fcdd1860267fc771ad701784ce493e6f2323fe544ec5519c80b20ae9350f4"
+    },
+    {
+      "path": "src/lib.rs",
+      "source_path": "nextcore/crates/nextcore-tool/src/lib.rs",
+      "mode": "100644",
+      "git_blob": "3a4b263a2fe5469f9aafe5a750419e0b0ee80cd8",
+      "bytes": 3078,
+      "sha256": "8a584b9f6edc6fca29ea517627f769f7d9a29fc5e62458262b0c2c0ff68f4263"
+    },
+    {
+      "path": "src/main.rs",
+      "source_path": "nextcore/crates/nextcore-tool/src/main.rs",
+      "mode": "100644",
+      "git_blob": "67dd5caf777554b67a383e7462cf7455485bfa98",
+      "bytes": 4525,
+      "sha256": "eb96082cc4623395ca93e50c42a3c1e6674bc16b8eac4e24befb64201dcb28ad"
+    },
+    {
+      "path": "tests/bundle_cli.rs",
+      "source_path": "nextcore/crates/nextcore-tool/tests/bundle_cli.rs",
+      "mode": "100644",
+      "git_blob": "8fbbe8e12578bb29b0bdb3479f8643d7dc1fdc93",
+      "bytes": 10925,
+      "sha256": "882ff603344f6eb8b6ea499540955382bece9efec4eb39e0811aca9f78ccb0d9"
+    },
+    {
+      "path": "tests/data/sample.plist",
+      "source_path": "nextcore/crates/nextcore-tool/tests/data/sample.plist",
+      "mode": "100644",
+      "git_blob": "8ef1f4c08360ee24fc4c7f0028e8548c0a3fce30",
+      "bytes": 1786,
+      "sha256": "b5b840c3cd72295b40c057a26be3932fc60886bb3628b9eed1456359f103bf09"
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 28,
+      "sha256": "4b0f1fc438f30f25abe421b7542e9f3803b8b5c15ca3695614222e2bc547a9fe"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 271,
+      "sha256": "597eacc2180a274a4119f43015e4ceaa1d86d5c878006a9e612988bdaf23f7f5"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 20,
+      "sha256": "9cc2c8cc102e0b2a0a177c8f594abc9b9776300a04473c24b45d52c1007a4119"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 456,
+      "sha256": "8444e433fe322cd4352858d416f5707e61fc4e88bd608e9bdc7c713c7cd70d5b"
+    },
+    {
+      "path": "LICENSE.txt",
+      "bytes": 1851,
+      "sha256": "77c458ccb6116400cf960f8951630bc3b8b34731b56ffbd736b95c2b78449104"
+    },
+    {
+      "path": "README.md",
+      "bytes": 805,
+      "sha256": "48c82bec07be8bba6f025a68fd419438a634a1b149aba755e444ded20c7b368e"
+    },
+    {
+      "path": "src/apls.rs",
+      "bytes": 26268,
+      "sha256": "a33439d666b64d1036bf26d10732731fa1cf580c2dccac0bf1dd5fb378429362"
+    },
+    {
+      "path": "src/efi.rs",
+      "bytes": 6622,
+      "sha256": "012fcdd1860267fc771ad701784ce493e6f2323fe544ec5519c80b20ae9350f4"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 3078,
+      "sha256": "8a584b9f6edc6fca29ea517627f769f7d9a29fc5e62458262b0c2c0ff68f4263"
+    },
+    {
+      "path": "src/main.rs",
+      "bytes": 4525,
+      "sha256": "eb96082cc4623395ca93e50c42a3c1e6674bc16b8eac4e24befb64201dcb28ad"
+    },
+    {
+      "path": "tests/bundle_cli.rs",
+      "bytes": 10925,
+      "sha256": "882ff603344f6eb8b6ea499540955382bece9efec4eb39e0811aca9f78ccb0d9"
+    },
+    {
+      "path": "tests/data/sample.plist",
+      "bytes": 1786,
+      "sha256": "b5b840c3cd72295b40c057a26be3932fc60886bb3628b9eed1456359f103bf09"
+    }
+  ],
+  "old_refs": {
+    "refs/heads/main": "c53645672d940290ed383b348e751c0a6e4e36c6",
+    "refs/tags/26x86-Nextcore-Tool-v0.1.0": "37e374749a06690b14ac93dd94eed7df8b366c31",
+    "refs/tags/26x86-Nextcore-Tool-v0.1.1": "f1d26043f3f8c8f4bb663ef9f9b203dbf42c8c2d",
+    "refs/tags/26x86-Nextcore-Tool-v0.1.2": "c53645672d940290ed383b348e751c0a6e4e36c6"
+  },
+  "transformed_source_files": [
+    "Cargo.toml"
+  ],
+  "package_version_preserved": true,
+  "pushed": false
+}

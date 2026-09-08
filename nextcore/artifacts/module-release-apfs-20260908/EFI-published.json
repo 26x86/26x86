@@ -1,0 +1,19 @@
+{
+  "module": "EFI",
+  "repository": "26x86/Nextcore-EFI",
+  "source_commit": "65d1e85db2dfcd4e1c07656bb0bfc315d36fac83",
+  "head": "64a2d4ce432c2f5ccd300728309556c898317436",
+  "previous_head": "c00f6fe6d6618f574ed193547837d675e6ca2da3",
+  "tag": "26x86-Nextcore-EFI-v0.1.2",
+  "pre_linux_gate_passed": true,
+  "atomic_push": true,
+  "force_push": false,
+  "old_tags_preserved": true,
+  "main_and_tag_match": true,
+  "refs_after": {
+    "refs/heads/main": "64a2d4ce432c2f5ccd300728309556c898317436",
+    "refs/tags/26x86-Nextcore-EFI-v0.1.0": "4cec82e25fbfc1eeebd475adb25e2da308c2378c",
+    "refs/tags/26x86-Nextcore-EFI-v0.1.1": "c00f6fe6d6618f574ed193547837d675e6ca2da3",
+    "refs/tags/26x86-Nextcore-EFI-v0.1.2": "64a2d4ce432c2f5ccd300728309556c898317436"
+  }
+}

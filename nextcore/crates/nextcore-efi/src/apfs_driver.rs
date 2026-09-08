@@ -104,7 +104,14 @@ fn media_geometry(block: &BlockIO) -> Result<(u32, u32, u64), Status> {
     Ok((media.media_id(), size, length))
 }
 
-pub fn inspect(start: bool, report: fn(&str)) -> Result<(), Status> {
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum Mode {
+    Extract,
+    Start,
+    Filesystems,
+}
+
+pub fn inspect(mode: Mode, report: fn(&str)) -> Result<(), Status> {
     let handle = candidate()?;
     let mut reason = None;
     let driver = read_driver(handle, &mut reason);
@@ -120,11 +127,15 @@ pub fn inspect(start: bool, report: fn(&str)) -> Result<(), Status> {
         driver.block_size,
         driver.extents.len()
     ));
-    if !start {
+    if mode == Mode::Extract {
         report("NXAPFS: INSPECT_ONLY driver_started=false");
         return Ok(());
     }
-    start_driver(handle, &driver.bytes, report)
+    start_driver(handle, &driver.bytes, report)?;
+    if mode == Mode::Filesystems {
+        crate::apfs_filesystems::inspect(handle, report)?;
+    }
+    Ok(())
 }
 
 fn read_driver(handle: Handle, reason: &mut Option<String>) -> Result<JumpstartDriver, Status> {

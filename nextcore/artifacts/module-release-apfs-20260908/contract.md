@@ -1,0 +1,13 @@
+# APFS module release — approved immutable source
+
+Root approved source `65d1e85db2dfcd4e1c07656bb0bfc315d36fac83` on 2026-09-08 after PR 7 merged. This release exports only tracked public crate bytes from that commit. Subsequent workspace filesystem-discovery work is excluded. No shared index or working-tree source is used.
+
+Release map: Core v0.1.2, EFI v0.1.2 and Tool v0.1.3. Keep GPU/HAL/ISE/APLS at their existing v0.1.1 tags. Core is published and verified before EFI/Tool gates resolve its new tag. Tool keeps the APLS v0.1.1 dependency and the v0.1.2 crate-local fixture fix. All previous tags, including the failed Tool v0.1.1, are immutable. Cargo package versions are preserved from source.
+
+Prepare regular public Git blobs in fresh existing-history clones, record source/inventory hashes, and create a local direct-child commit without a tag. Verify the prepared commit through a new native Linux clone whose parent contains only that one repository. Core runs all-target tests, APFS tests with default features disabled and a no_std UEFI check. EFI runs the all-feature UEFI check and an explicit NXAPFS link build, with PE architecture/subsystem recorded. Tool runs all-target tests. Retain the same commands in each changed repository's CI.
+
+Only a passing prepared commit may receive its unused release tag and an atomic main+tag push. Recheck the old remote head and every old tag before mutation. Then clone the remote release to another independent Linux parent, repeat the gates, verify exact-head Actions success and preserve command/lockfile/source/HEAD/binary hashes. Builds and downloaded compiler caches stay outside exports. The already-installed Linux Rust toolchain received its user-owned UEFI target component for these approved gates; no system packages or settings were changed.
+
+After all three releases pass, update the organization profile from a fresh clone while preserving existing history, branding, upstream attribution and the four retained module versions. Public evidence distinguishes APFS extraction, original-driver StartImage/ConnectController, filesystem discovery, installed OS boot and guest Metal. Root's current runtime evidence is original APFS driver extraction of 745080 bytes and successful firmware start/connect with source integrity and cleanup; it is not guest Metal or full installed-OS success.
+
+Scope and reuse follow the nextcore-module-publish skill through the explicitly approved incremental workflow. The old orphan/fixed-tag exporter is not used. Pre-release read-only observations and helper review remain in `module-release-apfs-prep-20260908`.

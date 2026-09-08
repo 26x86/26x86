@@ -1,0 +1,70 @@
+    Updating crates.io index
+    Updating git repository `https://github.com/26x86/Nextcore-APLS.git`
+    Updating git repository `https://github.com/26x86/Nextcore-Core.git`
+    Updating git repository `https://github.com/26x86/Nextcore-GPU.git`
+    Blocking waiting for file lock on package cache
+     Locking 62 packages to latest compatible versions
+      Adding generic-array v0.14.7 (available: v0.14.9)
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling version_check v0.9.5
+   Compiling serde_core v1.0.229
+   Compiling generic-array v0.14.7
+   Compiling syn v3.0.5
+   Compiling memchr v2.8.3
+   Compiling typenum v1.20.1
+   Compiling serde v1.0.229
+   Compiling serde_derive v1.0.229
+   Compiling zmij v1.0.23
+   Compiling thiserror v2.0.20
+   Compiling thiserror-impl v2.0.20
+   Compiling utf8parse v0.2.2
+   Compiling powerfmt v0.2.0
+   Compiling deranged v0.5.8
+   Compiling num-conv v0.2.2
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.2
+   Compiling log v0.4.34
+   Compiling serde_json v1.0.151
+   Compiling time-core v0.1.9
+   Compiling time v0.3.55
+   Compiling indexmap v2.14.2
+   Compiling anstyle-parse v1.0.0
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling scroll_derive v0.13.2
+   Compiling quick-xml v0.42.0
+   Compiling itoa v1.0.18
+   Compiling anstyle-query v1.1.5
+   Compiling anstyle v1.0.14
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling base64 v0.23.1
+   Compiling colorchoice v1.0.5
+   Compiling plist v1.10.1
+   Compiling anstream v1.0.0
+   Compiling scroll v0.13.0
+   Compiling digest v0.10.7
+   Compiling anyhow v1.0.104
+   Compiling heck v0.5.0
+   Compiling plain v0.2.3
+   Compiling strsim v0.11.1
+   Compiling cpufeatures v0.2.17
+   Compiling clap_lex v1.1.0
+   Compiling cfg-if v1.0.4
+   Compiling sha2 v0.10.9
+   Compiling clap_builder v4.6.6
+   Compiling clap_derive v4.6.4
+   Compiling goblin v0.10.7
+   Compiling nextcore-gpu v0.1.0 (https://github.com/26x86/Nextcore-GPU.git?tag=26x86-Nextcore-GPU-v0.1.1#8962199b)
+   Compiling roxmltree v0.21.1
+   Compiling nextcore-core v0.1.0 (https://github.com/26x86/Nextcore-Core.git?tag=26x86-Nextcore-Core-v0.1.2#6547be4b)
+   Compiling nextcore-apls v0.1.0 (https://github.com/26x86/Nextcore-APLS.git?tag=26x86-Nextcore-APLS-v0.1.1#f4d640e3)
+   Compiling clap v4.6.6
+   Compiling nextcore-tool v0.1.0 (/tmp/nextcore-apfs-release-tool-pre-1paxobns/module)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 27.55s
+     Running unittests src/lib.rs (target/debug/deps/nextcore_tool-4b4e1ef46aba9344)
+     Running unittests src/main.rs (target/debug/deps/nextcore_tool-3c4b83f433a84f62)
+     Running tests/bundle_cli.rs (target/debug/deps/bundle_cli-bbb3ab718c9a8c9a)

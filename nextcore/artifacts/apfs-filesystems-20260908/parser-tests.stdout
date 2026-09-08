@@ -1,0 +1,12 @@
+
+running 7 tests
+test tests::bounded_record_size_and_terminator ... ok
+test tests::budget_cannot_wrap_or_read_past_limits ... ok
+test tests::invalid_path_boundaries ... ok
+test tests::names_cannot_inject_markers_or_paths ... ok
+test tests::root_and_attributes_checked ... ok
+test tests::strict_descendant_and_sibling ... ok
+test tests::volume_bounds_and_escaped_label ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

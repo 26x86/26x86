@@ -1,0 +1,277 @@
+{
+  "module": "EFI",
+  "repository": "26x86/Nextcore-EFI",
+  "path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\nextcore-modules-apfs-20260908-a9t5f8l2\\Nextcore-EFI",
+  "source_commit": "65d1e85db2dfcd4e1c07656bb0bfc315d36fac83",
+  "head": "64a2d4ce432c2f5ccd300728309556c898317436",
+  "previous_head": "c00f6fe6d6618f574ed193547837d675e6ca2da3",
+  "tag": "26x86-Nextcore-EFI-v0.1.2",
+  "dependencies": {
+    "26x86/Nextcore-Core": "26x86-Nextcore-Core-v0.1.2"
+  },
+  "commands": [
+    [
+      "cargo",
+      "check",
+      "--target",
+      "x86_64-unknown-uefi",
+      "--all-features"
+    ],
+    [
+      "cargo",
+      "build",
+      "--target",
+      "x86_64-unknown-uefi",
+      "--all-features",
+      "--bin",
+      "NXAPFS"
+    ]
+  ],
+  "source_files": [
+    {
+      "path": "Cargo.toml",
+      "source_path": "nextcore/crates/nextcore-efi/Cargo.toml",
+      "mode": "100644",
+      "git_blob": "c2ea52536839edf5c5b6b345f0e89bdbdfe4842d",
+      "bytes": 1179,
+      "sha256": "7317e7a82350da7c1ab368345c0f77d6242d4a21f0c5e8163f079536e4d4eab7"
+    },
+    {
+      "path": "src/apfs_driver.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/apfs_driver.rs",
+      "mode": "100644",
+      "git_blob": "415cbb0aed8c13985bc5cb7ad016b23e4b873271",
+      "bytes": 9338,
+      "sha256": "d9a270d8345e12bf3703fe9c03d1a7aeebc7b9c47c0c050fbfd46fbcd88fe894"
+    },
+    {
+      "path": "src/apfs_probe.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/apfs_probe.rs",
+      "mode": "100644",
+      "git_blob": "ed7cfc4d2e50f85a2c69de1e5f819dcc8a7d4220",
+      "bytes": 1699,
+      "sha256": "7bf66134725679ce8bbc7f9f58794596cb95219ea7d9a93828484820b8384b2d"
+    },
+    {
+      "path": "src/console_control.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/console_control.rs",
+      "mode": "100644",
+      "git_blob": "17e313845f0a44468c6589c3436ef0a5cffbba6c",
+      "bytes": 11301,
+      "sha256": "cc3ac8f80d7e7f176525806746b7b849895e06aada19ae1a665be83aeb56b8ec"
+    },
+    {
+      "path": "src/console_probe.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/console_probe.rs",
+      "mode": "100644",
+      "git_blob": "0e2dee5716f46ba3588ea8a9e24554309d8025ab",
+      "bytes": 6437,
+      "sha256": "9f7047866f1c83d7d7d37a725310c3071fa091d7aeaab3eea11929bcaa2779ad"
+    },
+    {
+      "path": "src/exit_data.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/exit_data.rs",
+      "mode": "100644",
+      "git_blob": "28573e8c3946e41976884a01d7231b0ba8e6f175",
+      "bytes": 4071,
+      "sha256": "c22615140bacd656507b2a42de6aedb0fe1cc0efd9430b5552ea9f2f6808012f"
+    },
+    {
+      "path": "src/firmware_io.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/firmware_io.rs",
+      "mode": "100644",
+      "git_blob": "90bcb5342a84b76136c759ea6e9f565a80f5759e",
+      "bytes": 1505,
+      "sha256": "75068605c2e793cab95a9350296c17c6f93e838bbadd8ec27b5ec7d5c4552a56"
+    },
+    {
+      "path": "src/hal_tables.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/hal_tables.rs",
+      "mode": "100644",
+      "git_blob": "37def0b8d19bf41a694da18217673b55a939d65c",
+      "bytes": 12808,
+      "sha256": "305705ec2f9cbd67ad58037cc451dfc41035c2c3e2ae4f8f50e3cfe7679ca8dd"
+    },
+    {
+      "path": "src/kc.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/kc.rs",
+      "mode": "100644",
+      "git_blob": "9f242dc42d77ce43275d6cf4b3f78886c32595b4",
+      "bytes": 3637,
+      "sha256": "3aea2b267483ded121577274f1a3968e9a8d5de99059feeac5022ea50d36a2c1"
+    },
+    {
+      "path": "src/kernel.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/kernel.rs",
+      "mode": "100644",
+      "git_blob": "2b76691bd41983e45d45b29149578ed62bb2e50d",
+      "bytes": 9583,
+      "sha256": "5dcffef9c9e3032e17d272e52f9ef644ecafa1d350c0d73a17e46d4c755116ae"
+    },
+    {
+      "path": "src/loaded_kernel.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/loaded_kernel.rs",
+      "mode": "100644",
+      "git_blob": "c6ebc7ba5f48afb6562f4e94f5bc439ac7f22ec6",
+      "bytes": 10349,
+      "sha256": "afa455b9303d4cab777cdfcd6487e65cd2e7ce6b0b25b6c3d9f4a2a40d5809b9"
+    },
+    {
+      "path": "src/loaded_kernel_collection.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/loaded_kernel_collection.rs",
+      "mode": "100644",
+      "git_blob": "f82e21a2a1e3359203bc36d5efc33e3bfa9fa2b4",
+      "bytes": 10830,
+      "sha256": "ed2b2581f47ddda5e4d2cfd16fdac74801d387d52dd552c8febd3bbbe1ecbe95"
+    },
+    {
+      "path": "src/main.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/main.rs",
+      "mode": "100644",
+      "git_blob": "8e4f3e831f7bc1376bbc0cd37e1c417c16e27555",
+      "bytes": 10103,
+      "sha256": "2a1198e1023b57a630fd3b87700f79c761bbdc020de5bee093b7f0942713a6e5"
+    },
+    {
+      "path": "src/picker.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/picker.rs",
+      "mode": "100644",
+      "git_blob": "f4f8d05697c7357616fa3f519cf3df96cd851b9f",
+      "bytes": 8357,
+      "sha256": "21559058b91cf123f5261256ec37270afecf447343d50a398d6ebd573e95f49b"
+    },
+    {
+      "path": "src/test_child.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/test_child.rs",
+      "mode": "100644",
+      "git_blob": "52cd5d6d75f5ed7057b6eaf54b2723fe0d465b3b",
+      "bytes": 4192,
+      "sha256": "5d1823b7ce420052742694b1a0195c90be70160741927b3e2e8ccfceb6713ae1"
+    },
+    {
+      "path": "src/transition32.rs",
+      "source_path": "nextcore/crates/nextcore-efi/src/transition32.rs",
+      "mode": "100644",
+      "git_blob": "8b73222cc3004e464f90492e690c668f17406cec",
+      "bytes": 3397,
+      "sha256": "42d2204ce5a7b30d29a2db3b5899a0d016ee7640017fceddf2a9229feaef46c0"
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 28,
+      "sha256": "4b0f1fc438f30f25abe421b7542e9f3803b8b5c15ca3695614222e2bc547a9fe"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 434,
+      "sha256": "676f9633e7df8b9e6453c55f289a78fc262019634e10ef94264cbbeea53bdb92"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 20,
+      "sha256": "9cc2c8cc102e0b2a0a177c8f594abc9b9776300a04473c24b45d52c1007a4119"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 1240,
+      "sha256": "6110a37302562adcd37fe00fb34629dcb37aea91de207885af647c003617d6d3"
+    },
+    {
+      "path": "LICENSE.txt",
+      "bytes": 1851,
+      "sha256": "77c458ccb6116400cf960f8951630bc3b8b34731b56ffbd736b95c2b78449104"
+    },
+    {
+      "path": "README.md",
+      "bytes": 718,
+      "sha256": "6f87bd8d81e4b6d0a4e800d3d9eac30d4380c1d41d14bfd320f9aaba18a89f15"
+    },
+    {
+      "path": "src/apfs_driver.rs",
+      "bytes": 9338,
+      "sha256": "d9a270d8345e12bf3703fe9c03d1a7aeebc7b9c47c0c050fbfd46fbcd88fe894"
+    },
+    {
+      "path": "src/apfs_probe.rs",
+      "bytes": 1699,
+      "sha256": "7bf66134725679ce8bbc7f9f58794596cb95219ea7d9a93828484820b8384b2d"
+    },
+    {
+      "path": "src/console_control.rs",
+      "bytes": 11301,
+      "sha256": "cc3ac8f80d7e7f176525806746b7b849895e06aada19ae1a665be83aeb56b8ec"
+    },
+    {
+      "path": "src/console_probe.rs",
+      "bytes": 6437,
+      "sha256": "9f7047866f1c83d7d7d37a725310c3071fa091d7aeaab3eea11929bcaa2779ad"
+    },
+    {
+      "path": "src/exit_data.rs",
+      "bytes": 4071,
+      "sha256": "c22615140bacd656507b2a42de6aedb0fe1cc0efd9430b5552ea9f2f6808012f"
+    },
+    {
+      "path": "src/firmware_io.rs",
+      "bytes": 1505,
+      "sha256": "75068605c2e793cab95a9350296c17c6f93e838bbadd8ec27b5ec7d5c4552a56"
+    },
+    {
+      "path": "src/hal_tables.rs",
+      "bytes": 12808,
+      "sha256": "305705ec2f9cbd67ad58037cc451dfc41035c2c3e2ae4f8f50e3cfe7679ca8dd"
+    },
+    {
+      "path": "src/kc.rs",
+      "bytes": 3637,
+      "sha256": "3aea2b267483ded121577274f1a3968e9a8d5de99059feeac5022ea50d36a2c1"
+    },
+    {
+      "path": "src/kernel.rs",
+      "bytes": 9583,
+      "sha256": "5dcffef9c9e3032e17d272e52f9ef644ecafa1d350c0d73a17e46d4c755116ae"
+    },
+    {
+      "path": "src/loaded_kernel.rs",
+      "bytes": 10349,
+      "sha256": "afa455b9303d4cab777cdfcd6487e65cd2e7ce6b0b25b6c3d9f4a2a40d5809b9"
+    },
+    {
+      "path": "src/loaded_kernel_collection.rs",
+      "bytes": 10830,
+      "sha256": "ed2b2581f47ddda5e4d2cfd16fdac74801d387d52dd552c8febd3bbbe1ecbe95"
+    },
+    {
+      "path": "src/main.rs",
+      "bytes": 10103,
+      "sha256": "2a1198e1023b57a630fd3b87700f79c761bbdc020de5bee093b7f0942713a6e5"
+    },
+    {
+      "path": "src/picker.rs",
+      "bytes": 8357,
+      "sha256": "21559058b91cf123f5261256ec37270afecf447343d50a398d6ebd573e95f49b"
+    },
+    {
+      "path": "src/test_child.rs",
+      "bytes": 4192,
+      "sha256": "5d1823b7ce420052742694b1a0195c90be70160741927b3e2e8ccfceb6713ae1"
+    },
+    {
+      "path": "src/transition32.rs",
+      "bytes": 3397,
+      "sha256": "42d2204ce5a7b30d29a2db3b5899a0d016ee7640017fceddf2a9229feaef46c0"
+    }
+  ],
+  "old_refs": {
+    "refs/heads/main": "c00f6fe6d6618f574ed193547837d675e6ca2da3",
+    "refs/tags/26x86-Nextcore-EFI-v0.1.0": "4cec82e25fbfc1eeebd475adb25e2da308c2378c",
+    "refs/tags/26x86-Nextcore-EFI-v0.1.1": "c00f6fe6d6618f574ed193547837d675e6ca2da3"
+  },
+  "transformed_source_files": [
+    "Cargo.toml"
+  ],
+  "package_version_preserved": true,
+  "pushed": false
+}
