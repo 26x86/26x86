@@ -1,0 +1,472 @@
+test_contract_only_run_is_successful_but_macos_stays_blocked (test_boot_runtime.BootRuntimeHarnessTests.test_contract_only_run_is_successful_but_macos_stays_blocked) ... ok
+test_external_input_contract_is_explicit_when_assets_are_missing (test_boot_runtime.BootRuntimeHarnessTests.test_external_input_contract_is_explicit_when_assets_are_missing) ... ok
+test_require_macos_does_not_get_promoted_by_missing_input (test_boot_runtime.BootRuntimeHarnessTests.test_require_macos_does_not_get_promoted_by_missing_input) ... ok
+test_footprint_marks_unknown_baseline_without_inventing_growth (test_efi_measurements.EfiMeasurementTests.test_footprint_marks_unknown_baseline_without_inventing_growth) ... ok
+test_lld_map_sections_are_measured_in_hex (test_efi_measurements.EfiMeasurementTests.test_lld_map_sections_are_measured_in_hex) ... ok
+test_arm_and_rosetta_default_to_sandbox_and_block_all_native_paths (test_execution.ExecutionPolicyTests.test_arm_and_rosetta_default_to_sandbox_and_block_all_native_paths) ... ok
+test_auto_native_intel_and_preparation_hosts (test_execution.ExecutionPolicyTests.test_auto_native_intel_and_preparation_hosts) ... ok
+test_context_is_immutable_and_json_does_not_expose_mutable_internal_errors (test_execution.ExecutionPolicyTests.test_context_is_immutable_and_json_does_not_expose_mutable_internal_errors) ... ok
+test_default_calls_real_host_detector_once (test_execution.ExecutionPolicyTests.test_default_calls_real_host_detector_once) ... ok
+test_enum_request_and_mapping_facts (test_execution.ExecutionPolicyTests.test_enum_request_and_mapping_facts) ... ok
+test_environment_lock_rejects_both_conflicting_directions (test_execution.ExecutionPolicyTests.test_environment_lock_rejects_both_conflicting_directions) ... ok
+test_explicit_request_does_not_read_unused_setting_value (test_execution.ExecutionPolicyTests.test_explicit_request_does_not_read_unused_setting_value) ... ok
+test_explicit_sandbox_restricts_native_intel_too (test_execution.ExecutionPolicyTests.test_explicit_sandbox_restricts_native_intel_too) ... ok
+test_invalid_environment_is_not_ignored_by_explicit_request (test_execution.ExecutionPolicyTests.test_invalid_environment_is_not_ignored_by_explicit_request) ... ok
+test_invalid_fact_types_and_unknown_fact_keys_are_rejected (test_execution.ExecutionPolicyTests.test_invalid_fact_types_and_unknown_fact_keys_are_rejected) ... ok
+test_invalid_selected_modes_fail_closed (test_execution.ExecutionPolicyTests.test_invalid_selected_modes_fail_closed) ... ok
+test_matching_explicit_and_environment_mode_is_allowed_but_locked (test_execution.ExecutionPolicyTests.test_matching_explicit_and_environment_mode_is_allowed_but_locked) ... ok
+test_no_implicit_settings_io_and_explicit_empty_environ_is_respected (test_execution.ExecutionPolicyTests.test_no_implicit_settings_io_and_explicit_empty_environ_is_respected) ... ok
+test_precedence (test_execution.ExecutionPolicyTests.test_precedence) ... ok
+test_stored_and_environment_x86_do_not_bypass_arm_detection (test_execution.ExecutionPolicyTests.test_stored_and_environment_x86_do_not_bypass_arm_detection) ... ok
+test_unknown_darwin_facts_never_permit_native_operations (test_execution.ExecutionPolicyTests.test_unknown_darwin_facts_never_permit_native_operations) ... ok
+test_arm_process_never_becomes_native_after_probe_failures (test_execution.HostDetectionTests.test_arm_process_never_becomes_native_after_probe_failures) ... ok
+test_exact_arm64_oid_absence_accepts_verified_nontranslated_x86 (test_execution.HostDetectionTests.test_exact_arm64_oid_absence_accepts_verified_nontranslated_x86) ... ok
+test_exact_translation_enoent_is_nontranslated_with_note (test_execution.HostDetectionTests.test_exact_translation_enoent_is_nontranslated_with_note) ... ok
+test_generic_or_ambiguous_arm64_errors_remain_denied (test_execution.HostDetectionTests.test_generic_or_ambiguous_arm64_errors_remain_denied) ... ok
+test_missing_arm64_oid_cannot_hide_translated_process (test_execution.HostDetectionTests.test_missing_arm64_oid_cannot_hide_translated_process) ... ok
+test_missing_arm64_oid_does_not_relax_machine_check (test_execution.HostDetectionTests.test_missing_arm64_oid_does_not_relax_machine_check) ... ok
+test_missing_arm64_oid_requires_successful_translation_evidence (test_execution.HostDetectionTests.test_missing_arm64_oid_requires_successful_translation_evidence) ... ok
+test_native_intel_probes (test_execution.HostDetectionTests.test_native_intel_probes) ... ok
+test_non_darwin_does_not_run_sysctl (test_execution.HostDetectionTests.test_non_darwin_does_not_run_sysctl) ... ok
+test_other_sysctl_failures_never_become_native (test_execution.HostDetectionTests.test_other_sysctl_failures_never_become_native) ... ok
+test_positive_arm64_evidence_wins_over_nontranslated_sysctl_helper (test_execution.HostDetectionTests.test_positive_arm64_evidence_wins_over_nontranslated_sysctl_helper) ... ok
+test_rosetta_is_detected_despite_x86_process_machine (test_execution.HostDetectionTests.test_rosetta_is_detected_despite_x86_process_machine) ... ok
+test_desktop_transports_omit_research_launchers (test_gui_boundaries.BridgeBoundaryTests.test_desktop_transports_omit_research_launchers) ... ok
+test_websites_cannot_launch_local_patch_or_read_efi (test_gui_boundaries.BridgeBoundaryTests.test_websites_cannot_launch_local_patch_or_read_efi) ... ok
+test_missing_optional_qt_parents_are_not_startup_errors (test_gui_boundaries.GuiPlatformTests.test_missing_optional_qt_parents_are_not_startup_errors) ... ok
+test_non_mac_root_patch_never_loads_engine (test_gui_boundaries.GuiPlatformTests.test_non_mac_root_patch_never_loads_engine) ... ok
+test_preparation_does_not_import_mac_frameworks_or_wx (test_gui_boundaries.GuiPlatformTests.test_preparation_does_not_import_mac_frameworks_or_wx) ... ok
+test_retired_profile_is_rejected_before_any_native_probe (test_gui_boundaries.GuiPlatformTests.test_retired_profile_is_rejected_before_any_native_probe) ... ok
+test_rollback_success_cannot_be_reported_as_patch_success (test_gui_boundaries.GuiPlatformTests.test_rollback_success_cannot_be_reported_as_patch_success) ... ok
+test_cli_sandbox_no_native_imports (test_mellow_integration.IntegrationTests.test_cli_sandbox_no_native_imports) ... ok
+test_conflicting_environment_cannot_be_overridden (test_mellow_integration.IntegrationTests.test_conflicting_environment_cannot_be_overridden) ... ok
+test_copy_readback_dependency_order_no_source_changes (test_mellow_integration.IntegrationTests.test_copy_readback_dependency_order_no_source_changes) ... ok
+test_duplicate_dependency_rejected (test_mellow_integration.IntegrationTests.test_duplicate_dependency_rejected) ... ok
+test_duplicate_disk_lilu_is_rejected (test_mellow_integration.IntegrationTests.test_duplicate_disk_lilu_is_rejected) ... ok
+test_efi_only_lilu_is_not_a_kernel_collection_link_input (test_mellow_integration.IntegrationTests.test_efi_only_lilu_is_not_a_kernel_collection_link_input) ... ok
+test_existing_or_nested_output_refused (test_mellow_integration.IntegrationTests.test_existing_or_nested_output_refused) ... ok
+test_lilu_version_arch_range_binary (test_mellow_integration.IntegrationTests.test_lilu_version_arch_range_binary) ... ok
+test_live_gate_rejects_windows_without_importing_native_modules (test_mellow_integration.IntegrationTests.test_live_gate_rejects_windows_without_importing_native_modules) ... ok
+test_missing_lilu (test_mellow_integration.IntegrationTests.test_missing_lilu) ... ok
+test_nearby_kdk_cannot_approve_mellow (test_mellow_integration.IntegrationTests.test_nearby_kdk_cannot_approve_mellow) ... ok
+test_path_escape_rejected (test_mellow_integration.IntegrationTests.test_path_escape_rejected) ... ok
+test_root_efi_preparation_disables_dependency_injection (test_mellow_integration.IntegrationTests.test_root_efi_preparation_disables_dependency_injection) ... ok
+test_root_plan_uses_data_driver_path_and_never_claims_metal (test_mellow_integration.IntegrationTests.test_root_plan_uses_data_driver_path_and_never_claims_metal) ... ok
+test_sandbox_rejects_before_payload_read (test_mellow_integration.IntegrationTests.test_sandbox_rejects_before_payload_read) ... ok
+test_copy_error_reaches_outer_rollback (test_mellow_integration.OrchestratorTests.test_copy_error_reaches_outer_rollback) ... ERROR:root:We have a problem to execute patches and rebuild the Kernel Cache.
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 537, in _patch_root_vol
+  File "/home/sharh/work/integration-validation-bp29-final-20260909/26x86/tests/test_mellow_integration.py", line 264, in <lambda>
+    _execute_patchset=lambda p: (_ for _ in ()).throw(IOError("copy failed")))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sharh/work/integration-validation-bp29-final-20260909/26x86/tests/test_mellow_integration.py", line 264, in <genexpr>
+    _execute_patchset=lambda p: (_ for _ in ()).throw(IOError("copy failed")))
+OSError: copy failed
+ok
+test_failed_patch_metadata_is_not_success (test_mellow_integration.OrchestratorTests.test_failed_patch_metadata_is_not_success) ... ERROR:root:- Failed to write patchset: Failed to generate root patch metadata
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 521, in _write_patchset
+RuntimeError: Failed to generate root patch metadata
+ok
+test_failed_rsync_rejects_even_with_preexisting_libkern (test_mellow_integration.OrchestratorTests.test_failed_rsync_rejects_even_with_preexisting_libkern) ... ok
+test_false_kernel_rebuild_never_reports_success (test_mellow_integration.OrchestratorTests.test_false_kernel_rebuild_never_reports_success) ... ERROR:root:We have a problem to execute patches and rebuild the Kernel Cache.
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 549, in _patch_root_vol
+RuntimeError: Kernel collection or APFS snapshot rebuild failed
+ok
+test_kdk_merge_error_is_not_swallowed (test_mellow_integration.OrchestratorTests.test_kdk_merge_error_is_not_swallowed) ... ERROR:root:Merging KDK with root volume failed
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 254, in _merge_kdk_with_root
+  File "/home/sharh/work/integration-validation-bp29-final-20260909/26x86/tests/test_mellow_integration.py", line 229, in <lambda>
+    merger = lambda *a: SimpleNamespace(merge=lambda *a: (_ for _ in ()).throw(IOError("KDK copy failed")))
+                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sharh/work/integration-validation-bp29-final-20260909/26x86/tests/test_mellow_integration.py", line 229, in <genexpr>
+    merger = lambda *a: SimpleNamespace(merge=lambda *a: (_ for _ in ()).throw(IOError("KDK copy failed")))
+OSError: KDK copy failed
+ERROR:root:Merging KDK with root volume failed
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 258, in _merge_kdk_with_root
+RuntimeError: Mellow requires the exact-build KDK to be successfully merged
+ok
+test_readback_failure_prevents_cache_and_snapshot (test_mellow_integration.OrchestratorTests.test_readback_failure_prevents_cache_and_snapshot) ... ERROR:root:We have a problem to execute patches and rebuild the Kernel Cache.
+ERROR:root:Stack Trace:
+Traceback (most recent call last):
+  File "actual_engine_method", line 540, in _patch_root_vol
+  File "/home/sharh/work/integration-validation-bp29-final-20260909/26x86/tests/test_mellow_integration.py", line 282, in <lambda>
+    _mellow_transaction=SimpleNamespace(installed=lambda: (_ for _ in ()).throw(ValueError("hash"))),
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sharh/work/integration-validation-bp29-final-20260909/26x86/tests/test_mellow_integration.py", line 282, in <genexpr>
+    _mellow_transaction=SimpleNamespace(installed=lambda: (_ for _ in ()).throw(ValueError("hash"))),
+ValueError: hash
+ok
+test_sandbox_constructor_rejects_before_native_snapshot_probe (test_mellow_integration.OrchestratorTests.test_sandbox_constructor_rejects_before_native_snapshot_probe) ... ok
+test_unpatch_retains_journal_until_cache_succeeds (test_mellow_integration.OrchestratorTests.test_unpatch_retains_journal_until_cache_succeeds) ... ok
+test_acceleration_false_only (test_mellow_payload.PayloadTests.test_acceleration_false_only) ... ok
+test_archive_is_not_payload (test_mellow_payload.PayloadTests.test_archive_is_not_payload) ... ok
+test_component_traversal (test_mellow_payload.PayloadTests.test_component_traversal) ... ok
+test_destination_allowlist (test_mellow_payload.PayloadTests.test_destination_allowlist) ... ok
+test_duplicate_category (test_mellow_payload.PayloadTests.test_duplicate_category) ... ok
+test_duplicate_json_key (test_mellow_payload.PayloadTests.test_duplicate_json_key) ... ok
+test_extra_file (test_mellow_payload.PayloadTests.test_extra_file) ... ok
+test_extra_kext_plugin_even_with_updated_inventory (test_mellow_payload.PayloadTests.test_extra_kext_plugin_even_with_updated_inventory) ... ok
+test_file_hash (test_mellow_payload.PayloadTests.test_file_hash) ... ok
+test_fresh_validation_at_patch_creation (test_mellow_payload.PayloadTests.test_fresh_validation_at_patch_creation) ... ok
+test_invalid_json_shape (test_mellow_payload.PayloadTests.test_invalid_json_shape) ... ok
+test_inventory_traversal (test_mellow_payload.PayloadTests.test_inventory_traversal) ... ok
+test_macho_invalid_command_even_with_updated_inventory (test_mellow_payload.PayloadTests.test_macho_invalid_command_even_with_updated_inventory) ... ok
+test_macho_wrong_cpu_even_with_updated_inventory (test_mellow_payload.PayloadTests.test_macho_wrong_cpu_even_with_updated_inventory) ... ok
+test_macho_wrong_type_even_with_updated_inventory (test_mellow_payload.PayloadTests.test_macho_wrong_type_even_with_updated_inventory) ... ok
+test_metadata (test_mellow_payload.PayloadTests.test_metadata) ... ok
+test_missing_file (test_mellow_payload.PayloadTests.test_missing_file) ... ok
+test_missing_runtime_and_user_driver (test_mellow_payload.PayloadTests.test_missing_runtime_and_user_driver) ... ok
+test_real_bundle_and_engine_dictionary (test_mellow_payload.PayloadTests.test_real_bundle_and_engine_dictionary) ... ok
+test_required_diagnostic_gate (test_mellow_payload.PayloadTests.test_required_diagnostic_gate) ... ok
+test_revalidate_and_patch_cannot_bypass_sandbox (test_mellow_payload.PayloadTests.test_revalidate_and_patch_cannot_bypass_sandbox) ... ok
+test_sandbox_is_denied_before_io (test_mellow_payload.PayloadTests.test_sandbox_is_denied_before_io) ... ok
+test_source_snapshot_all_crossbuild_inputs_match (test_mellow_payload.PayloadTests.test_source_snapshot_all_crossbuild_inputs_match) ... ok
+test_symlink (test_mellow_payload.PayloadTests.test_symlink) ... ok
+test_symlink_ancestor_is_rejected (test_mellow_payload.PayloadTests.test_symlink_ancestor_is_rejected) ... ok
+test_unknown_category (test_mellow_payload.PayloadTests.test_unknown_category) ... ok
+test_unknown_mode (test_mellow_payload.PayloadTests.test_unknown_mode) ... ok
+test_corrupted_backup_is_detected_before_target_deletion (test_mellow_transaction.MellowTransactionTests.test_corrupted_backup_is_detected_before_target_deletion) ... ok
+test_corrupted_expected_snapshot_blocks_installed_receipt (test_mellow_transaction.MellowTransactionTests.test_corrupted_expected_snapshot_blocks_installed_receipt) ... ok
+test_default_journal_is_rooted_in_explicit_data_root (test_mellow_transaction.MellowTransactionTests.test_default_journal_is_rooted_in_explicit_data_root) ... ok
+test_deferred_finalize_preserves_receipt_for_cache_retry (test_mellow_transaction.MellowTransactionTests.test_deferred_finalize_preserves_receipt_for_cache_retry) ... ok
+test_duplicate_category_and_wrong_root_are_rejected (test_mellow_transaction.MellowTransactionTests.test_duplicate_category_and_wrong_root_are_rejected) ... ok
+test_extra_files_in_new_target_block_destructive_rollback (test_mellow_transaction.MellowTransactionTests.test_extra_files_in_new_target_block_destructive_rollback) ... ok
+test_failed_archive_keeps_restored_receipt_for_retry (test_mellow_transaction.MellowTransactionTests.test_failed_archive_keeps_restored_receipt_for_retry) ... ok
+test_finalize_rejects_unrestored_transaction (test_mellow_transaction.MellowTransactionTests.test_finalize_rejects_unrestored_transaction) ... ok
+test_first_install_is_removed_by_verified_unpatch (test_mellow_transaction.MellowTransactionTests.test_first_install_is_removed_by_verified_unpatch) ... ok
+test_journal_cannot_overlap_component_or_payload (test_mellow_transaction.MellowTransactionTests.test_journal_cannot_overlap_component_or_payload) ... ok
+test_known_partial_first_install_is_removed (test_mellow_transaction.MellowTransactionTests.test_known_partial_first_install_is_removed) ... ok
+test_new_instance_cannot_finalize_or_rollback_another_active_transaction (test_mellow_transaction.MellowTransactionTests.test_new_instance_cannot_finalize_or_rollback_another_active_transaction) ... ok
+test_new_transaction_allowed_after_successful_restore (test_mellow_transaction.MellowTransactionTests.test_new_transaction_allowed_after_successful_restore) ... ok
+test_no_active_journal_returns_false_without_creating_it (test_mellow_transaction.MellowTransactionTests.test_no_active_journal_returns_false_without_creating_it) ... ok
+test_original_removed_by_engine_can_still_be_restored (test_mellow_transaction.MellowTransactionTests.test_original_removed_by_engine_can_still_be_restored) ... ok
+test_pending_and_files_verified_transactions_block_new_prepare (test_mellow_transaction.MellowTransactionTests.test_pending_and_files_verified_transactions_block_new_prepare) ... ok
+test_posix_original_owner_is_restored (test_mellow_transaction.MellowTransactionTests.test_posix_original_owner_is_restored) ... skipped 'Ownership restoration needs a privileged POSIX temporary fixture'
+test_post_restore_external_change_blocks_retry_and_finalization (test_mellow_transaction.MellowTransactionTests.test_post_restore_external_change_blocks_retry_and_finalization) ... ok
+test_preparation_copy_failure_leaves_blocked_journal_and_unchanged_original (test_mellow_transaction.MellowTransactionTests.test_preparation_copy_failure_leaves_blocked_journal_and_unchanged_original) ... ok
+test_prepare_fsync_failure_never_authorizes_target_overwrite (test_mellow_transaction.MellowTransactionTests.test_prepare_fsync_failure_never_authorizes_target_overwrite) ... ok
+test_prepare_only_creates_journal_and_preserves_existing_bytes_modes (test_mellow_transaction.MellowTransactionTests.test_prepare_only_creates_journal_and_preserves_existing_bytes_modes) ... ok
+test_prepare_then_rollback_without_copy_is_noop_for_target (test_mellow_transaction.MellowTransactionTests.test_prepare_then_rollback_without_copy_is_noop_for_target) ... ok
+test_readback_rejects_missing_or_truncated_copy_then_restores_original (test_mellow_transaction.MellowTransactionTests.test_readback_rejects_missing_or_truncated_copy_then_restores_original) ... ok
+test_real_copy_readback_and_persistent_unpatch_restore_original (test_mellow_transaction.MellowTransactionTests.test_real_copy_readback_and_persistent_unpatch_restore_original) ... ok
+test_receipt_checksum_failure_preserves_targets (test_mellow_transaction.MellowTransactionTests.test_receipt_checksum_failure_preserves_targets) ... ok
+test_receipt_replacement_failure_does_not_claim_files_verified (test_mellow_transaction.MellowTransactionTests.test_receipt_replacement_failure_does_not_claim_files_verified) ... ok
+test_recomputed_receipt_cannot_choose_arbitrary_destination (test_mellow_transaction.MellowTransactionTests.test_recomputed_receipt_cannot_choose_arbitrary_destination) ... ok
+test_recomputed_receipt_cannot_escape_with_backup_relative_path (test_mellow_transaction.MellowTransactionTests.test_recomputed_receipt_cannot_escape_with_backup_relative_path) ... ok
+test_restore_copy_failure_is_resumable_from_pending_receipt (test_mellow_transaction.MellowTransactionTests.test_restore_copy_failure_is_resumable_from_pending_receipt) ... ok
+test_symlink_inserted_after_install_blocks_rollback (test_mellow_transaction.MellowTransactionTests.test_symlink_inserted_after_install_blocks_rollback) ... ok
+test_symlinked_destination_parent_is_rejected_before_journal (test_mellow_transaction.MellowTransactionTests.test_symlinked_destination_parent_is_rejected_before_journal) ... ok
+test_unrecognized_bytes_are_not_deleted_even_at_mellow_destination (test_mellow_transaction.MellowTransactionTests.test_unrecognized_bytes_are_not_deleted_even_at_mellow_destination) ... ok
+test_default_inventory_does_not_copy_restore_ramdisk (test_prepare_macos27_inputs.PrepareMacOS27InputsTests.test_default_inventory_does_not_copy_restore_ramdisk) ... ok
+test_img4_derivative_keeps_signed_components_and_records_no_acceptance (test_prepare_macos27_inputs.PrepareMacOS27InputsTests.test_img4_derivative_keeps_signed_components_and_records_no_acceptance) ... ok
+test_install_target_inventory_is_metadata_only_and_uses_selected_identity (test_prepare_macos27_inputs.PrepareMacOS27InputsTests.test_install_target_inventory_is_metadata_only_and_uses_selected_identity) ... ok
+test_restore_logo_is_opt_in_and_keeps_signed_role_separate (test_prepare_macos27_inputs.PrepareMacOS27InputsTests.test_restore_logo_is_opt_in_and_keeps_signed_role_separate) ... ok
+test_restore_ramdisk_is_opt_in_and_payload_is_recorded_separately (test_prepare_macos27_inputs.PrepareMacOS27InputsTests.test_restore_ramdisk_is_opt_in_and_payload_is_recorded_separately) ... {
+  "schema": "26x86.macos27-signed-inputs/1",
+  "source": {
+    "path": "/tmp/tmp_65t9dar/fixture.ipsw",
+    "bytes": 1513,
+    "sha256": "9bfa22cdbd945ff74e06f60cbad41d27fb0bc07b284ba791411211aff4394446"
+  },
+  "build_manifest": {
+    "ipsw_path": "BuildManifest.plist",
+    "path": "/tmp/tmp_65t9dar/prepared/BuildManifest.plist",
+    "bytes": 946,
+    "sha256": "13d5c4b5b464aaca0410ce716cb73fcbd07dffba121da9f0e489f6e51959a95b"
+  },
+  "host_inputs": [],
+  "apple_manifests": [],
+  "install_target_inventory": [],
+  "selection": {
+    "requested_device": "j274",
+    "score": 180,
+    "device_class": "j274ap",
+    "board_config": null,
+    "variant": "Customer Erase Install (IPSW)",
+    "build_version": null,
+    "product_version": null,
+    "install_target_roles": [],
+    "loader_identity": null,
+    "restore_ramdisk_identity": null
+  },
+  "signed_inputs": [
+    {
+      "ipsw_path": "DeviceTree.j274ap.im4p",
+      "path": "/tmp/tmp_65t9dar/prepared/00-DeviceTree.j274ap.im4p",
+      "bytes": 23,
+      "sha256": "784b3545829a77aa2a1612c42ec782a41ea7e9e57d932a6b9b6b071e575cf944",
+      "component": "DeviceTree",
+      "identity_role": "macos",
+      "apple_info": {
+        "Path": "DeviceTree.j274ap.im4p"
+      }
+    }
+  ],
+  "derived_inputs": [],
+  "policy": {
+    "payloads_are_opaque": true,
+    "decrypted": false,
+    "resigned": false,
+    "input_mutated": false,
+    "ready_for_handoff_validation": true,
+    "ready_for_guest_execution": false,
+    "derived_payloads_present": false,
+    "restore_loaders_present": false,
+    "host_firmware_present": false,
+    "apple_ticket_present": false,
+    "ibss_img4_derivatives_present": false,
+    "install_target_inventory_enabled": false,
+    "install_target_members_extracted": false
+  }
+}
+{
+  "schema": "26x86.macos27-signed-inputs/1",
+  "source": {
+    "path": "/tmp/tmpn8g8nhkh/install-targets.ipsw",
+    "bytes": 1269,
+    "sha256": "d952a7807c5857774bbef82a0604c21bf1c87409688e587836cfe5c03e882b0c"
+  },
+  "build_manifest": {
+    "ipsw_path": "BuildManifest.plist",
+    "path": "/tmp/tmpn8g8nhkh/prepared/BuildManifest.plist",
+    "bytes": 1609,
+    "sha256": "710a104055eefc4fef8a7ce4f4cccfdaf7d254395e3ab2908c44adb216fc8598"
+  },
+  "host_inputs": [],
+  "apple_manifests": [],
+  "install_target_inventory": [
+    {
+      "role": "OS",
+      "manifest_component": "OS",
+      "ipsw_path": "Restore/UniversalMac_27.0_27A1_OS.aea",
+      "compressed_bytes": 36,
+      "uncompressed_bytes": 34,
+      "crc32": 3294919511,
+      "encrypted": true,
+      "opaque": true,
+      "extracted": false
+    },
+    {
+      "role": "SystemRestoreImage",
+      "manifest_component": "SystemRestoreImage",
+      "ipsw_path": "Restore/SystemRestoreImage_27A1.aea",
+      "compressed_bytes": 52,
+      "uncompressed_bytes": 50,
+      "crc32": 1851465798,
+      "encrypted": true,
+      "opaque": true,
+      "extracted": false
+    }
+  ],
+  "selection": {
+    "requested_device": "j274",
+    "score": 380,
+    "device_class": "j274ap",
+    "board_config": "J274AP",
+    "variant": "macOS Customer Erase Install (IPSW)",
+    "build_version": "27A1",
+    "product_version": "27.0",
+    "install_target_roles": [
+      "OS",
+      "SystemRestoreImage"
+    ],
+    "loader_identity": null,
+    "restore_ramdisk_identity": null
+  },
+  "signed_inputs": [
+    {
+      "ipsw_path": "DeviceTree.j274ap.im4p",
+      "path": "/tmp/tmpn8g8nhkh/prepared/00-DeviceTree.j274ap.im4p",
+      "bytes": 23,
+      "sha256": "784b3545829a77aa2a1612c42ec782a41ea7e9e57d932a6b9b6b071e575cf944",
+      "component": "DeviceTree",
+      "identity_role": "macos",
+      "apple_info": {
+        "Path": "DeviceTree.j274ap.im4p"
+      }
+    }
+  ],
+  "derived_inputs": [],
+  "policy": {
+    "payloads_are_opaque": true,
+    "decrypted": false,
+    "resigned": false,
+    "input_mutated": false,
+    "ready_for_handoff_validation": true,
+    "ready_for_guest_execution": false,
+    "derived_payloads_present": false,
+    "restore_loaders_present": false,
+    "host_firmware_present": false,
+    "apple_ticket_present": false,
+    "ibss_img4_derivatives_present": false,
+    "install_target_inventory_enabled": true,
+    "install_target_members_extracted": false
+  }
+}
+{
+  "schema": "26x86.macos27-signed-inputs/1",
+  "source": {
+    "path": "/tmp/tmp5q8qvrtg/fixture.ipsw",
+    "bytes": 1513,
+    "sha256": "9bfa22cdbd945ff74e06f60cbad41d27fb0bc07b284ba791411211aff4394446"
+  },
+  "build_manifest": {
+    "ipsw_path": "BuildManifest.plist",
+    "path": "/tmp/tmp5q8qvrtg/prepared/BuildManifest.plist",
+    "bytes": 946,
+    "sha256": "13d5c4b5b464aaca0410ce716cb73fcbd07dffba121da9f0e489f6e51959a95b"
+  },
+  "host_inputs": [],
+  "apple_manifests": [],
+  "install_target_inventory": [],
+  "selection": {
+    "requested_device": "j274",
+    "score": 180,
+    "device_class": "j274ap",
+    "board_config": null,
+    "variant": "Customer Erase Install (IPSW)",
+    "build_version": null,
+    "product_version": null,
+    "install_target_roles": [],
+    "loader_identity": null,
+    "restore_ramdisk_identity": null
+  },
+  "signed_inputs": [
+    {
+      "ipsw_path": "DeviceTree.j274ap.im4p",
+      "path": "/tmp/tmp5q8qvrtg/prepared/00-DeviceTree.j274ap.im4p",
+      "bytes": 23,
+      "sha256": "784b3545829a77aa2a1612c42ec782a41ea7e9e57d932a6b9b6b071e575cf944",
+      "component": "DeviceTree",
+      "identity_role": "macos",
+      "apple_info": {
+        "Path": "DeviceTree.j274ap.im4p"
+      }
+    },
+    {
+      "ipsw_path": "applelogo.im4p",
+      "path": "/tmp/tmp5q8qvrtg/prepared/01-applelogo.im4p",
+      "bytes": 23,
+      "sha256": "4ba7ced05c4f813859df255043198e44a40ee722b6e91072fe062c955056e434",
+      "component": "RestoreLogo",
+      "identity_role": "macos",
+      "apple_info": {
+        "Path": "applelogo.im4p"
+      }
+    }
+  ],
+  "derived_inputs": [],
+  "policy": {
+    "payloads_are_opaque": true,
+    "decrypted": false,
+    "resigned": false,
+    "input_mutated": false,
+    "ready_for_handoff_validation": true,
+    "ready_for_guest_execution": false,
+    "derived_payloads_present": false,
+    "restore_loaders_present": false,
+    "host_firmware_present": false,
+    "apple_ticket_present": false,
+    "ibss_img4_derivatives_present": false,
+    "install_target_inventory_enabled": false,
+    "install_target_members_extracted": false
+  }
+}
+{
+  "schema": "26x86.macos27-signed-inputs/1",
+  "source": {
+    "path": "/tmp/tmpf_nyoj_e/fixture.ipsw",
+    "bytes": 1513,
+    "sha256": "9bfa22cdbd945ff74e06f60cbad41d27fb0bc07b284ba791411211aff4394446"
+  },
+  "build_manifest": {
+    "ipsw_path": "BuildManifest.plist",
+    "path": "/tmp/tmpf_nyoj_e/prepared/BuildManifest.plist",
+    "bytes": 946,
+    "sha256": "13d5c4b5b464aaca0410ce716cb73fcbd07dffba121da9f0e489f6e51959a95b"
+  },
+  "host_inputs": [],
+  "apple_manifests": [],
+  "install_target_inventory": [],
+  "selection": {
+    "requested_device": "j274",
+    "score": 180,
+    "device_class": "j274ap",
+    "board_config": null,
+    "variant": "Customer Erase Install (IPSW)",
+    "build_version": null,
+    "product_version": null,
+    "install_target_roles": [],
+    "loader_identity": null,
+    "restore_ramdisk_identity": null
+  },
+  "signed_inputs": [
+    {
+      "ipsw_path": "DeviceTree.j274ap.im4p",
+      "path": "/tmp/tmpf_nyoj_e/prepared/00-DeviceTree.j274ap.im4p",
+      "bytes": 23,
+      "sha256": "784b3545829a77aa2a1612c42ec782a41ea7e9e57d932a6b9b6b071e575cf944",
+      "component": "DeviceTree",
+      "identity_role": "macos",
+      "apple_info": {
+        "Path": "DeviceTree.j274ap.im4p"
+      }
+    },
+    {
+      "ipsw_path": "094-ramdisk.dmg",
+      "path": "/tmp/tmpf_nyoj_e/prepared/01-094-ramdisk.dmg",
+      "bytes": 55,
+      "sha256": "0279e5e60bc9ac661df1a28fb31ec609d70d11472dbc3cf88a7401e2ab219c14",
+      "component": "RestoreRamDisk",
+      "identity_role": "macos",
+      "apple_info": {
+        "Path": "094-ramdisk.dmg"
+      }
+    }
+  ],
+  "derived_inputs": [
+    {
+      "kind": "RestoreRamDisk-payload",
+      "source_path": "/tmp/tmpf_nyoj_e/prepared/01-094-ramdisk.dmg",
+      "source_ipsw_path": "094-ramdisk.dmg",
+      "path": "/tmp/tmpf_nyoj_e/prepared/RestoreRamDisk.payload.raw",
+      "bytes": 36,
+      "sha256": "8b8f229a0818da3c3e0430f09e5e23ec8137e12d27973c84a1dc4faac0c5ae21",
+      "signed": false,
+      "payload_preserved": true,
+      "transformation": "IM4P payload extraction; no decryption or resigning"
+    }
+  ],
+  "policy": {
+    "payloads_are_opaque": true,
+    "decrypted": false,
+    "resigned": false,
+    "input_mutated": false,
+    "ready_for_handoff_validation": true,
+    "ready_for_guest_execution": false,
+    "derived_payloads_present": true,
+    "restore_loaders_present": false,
+    "host_firmware_present": false,
+    "apple_ticket_present": false,
+    "ibss_img4_derivatives_present": false,
+    "install_target_inventory_enabled": false,
+    "install_target_members_extracted": false
+  }
+}ok
+test_legacy_prefix_exact (test_sync_repositories.SyncContract.test_legacy_prefix_exact) ... ok
+test_owner_is_organization (test_sync_repositories.SyncContract.test_owner_is_organization) ... ok
+test_plan_lists_both_modules (test_sync_repositories.SyncContract.test_plan_lists_both_modules) ... ok
+
+----------------------------------------------------------------------
+Ran 130 tests in 34.386s
+
+OK (skipped=1)
+

@@ -1,7 +1,34 @@
-# NextCore 재개 검증 — 2026-09-08
+# NextCore 재개 검증 — 2026-09-09
 
 2026-09-07 작업의 통합 설명과 artifact index는
 `artifacts/NEXTCORE_SESSION_REPORT_20260907.md`에 있다.
+
+## BP29 최신 검증 — x86 EFI의 ARM64e scalar 메모리
+
+BP28 상위 PR #10과 변경된 5개 모듈 PR #2는 모두 main에 병합됐다.
+BP29 ISE는 정수 scalar 13종과 상세 MMU 실패 API를 구현했다. 기존 walker의
+비정상 VA 분류와 cold/cached 실패 주소 차이도 독립 ARM 대조로 수정했다.
+새 독립 ISE 클론에서 package 26개·참조 91개 테스트, native scalar 106,496경우/
+426,981assertions, 기존 PAC/IRQ/pair/C↔Rust ABI 검증이 통과했다. AT/PAR 118개와
+실제 EL1 abort 40개의 원래 제어값·페이지테이블을 실제 Rust walker에 전달해
+158개 결과와 오류 대조군까지 일치했다. 자세한 결과와 재현기는 ISE 모듈의
+`tools/mmu_fault_levels`에 있다. native SCTLR.M은 아직 허용하지 않는다.
+
+[실제 x86 EFI scalar 증거](artifacts/arm-scalar-memory-20260909/README.md)는
+11개 자체 작성 입력으로 정수 13종, Device/SP 정렬과 unsupported 처리를 검증한다.
+고의로 부호 확장을 잘못 실행한 입력도 실제 EFI 결과에서 거부했다. 이 EFI는
+원래 고정 scalar 커밋8b09f876으로 빌드했고, 통합 ISE33fea9f의 연결 소스12개가
+동일하다는 대조를 별도로 보존한다. 통합 커밋d45b107d의 EFI도 새 빌드·재실행으로39개 authored 검사를 통과했다.
+[전체 통합 결과](artifacts/integration-bp29-20260909/README.md)는472개 workspace
+테스트,91개 참조 테스트,158개 실제 ARM 입력 대조와 각 실행 명령을 보존한다.
+원본 macOS27 진입 진단은 47명령에서64명령/12native blocks로 진행했고,
+설정된 진단 예산 때문에 정지했다. 이 지점이 미지원 명령이라는 주장은 하지 않는다.
+[원본 aggregate 결과](artifacts/arm-original-prefix-bp29-20260909/results.json)에는
+원본 바이트나 실행 좌표가 없다.
+
+정상 macOS 부팅·사용 가능한 데스크톱·게스트 Metal은 미완료다. BP30에서는
+JIT의 Rust 메모리 서비스 연결과 별도 명시 opt-in 진단 예산 확장을 진행한다.
+아래 내용은 이전 검증의 역사이며 현재 구현/호스트 상태는 이 BP29 요약을 따른다.
 
 ## 현재 상태와 원하는 상태
 
@@ -10,7 +37,7 @@
 provider 경로 모두 실제 Tahoe XNU, userspace와 읽을 수 있는 Recovery GUI를 확인했다.
 native 경로의 restore-datapartition panic은 VM RAM 조건을 수정해 통과했다. 자체 KC loader 진입,
 전체 native HAL, macOS 전체 부팅과 Metal은 아직 완료되지 않았다.
-`docs/NEXTCORE_BUILD_PLAN.md`의 각 BP가 실행 계약이며 최신 진척은 아래 BP21/BP22다.
+`docs/NEXTCORE_BUILD_PLAN.md`의 각 BP가 실행 계약이며 해당 시점의 진척은 아래 BP21/BP22에 보존한다.
 
 ## BP21/BP22 최신 통합 — 2026-09-08
 

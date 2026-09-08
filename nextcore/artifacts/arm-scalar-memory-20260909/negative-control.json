@@ -1,0 +1,83 @@
+{
+  "schema": "nextcore.efi-scalar-memory.v1",
+  "cases": [
+    {
+      "name": "byte-signed",
+      "passed": false,
+      "checks": {
+        "diagnostic_completed": true,
+        "native_blocks_executed": true,
+        "marker": true,
+        "no_async_vector": true,
+        "no_pending_lines": true,
+        "inputs_preserved": true,
+        "halt": true,
+        "complete_retirement": true,
+        "no_fault_word": true,
+        "no_exception": true,
+        "x0_value": true,
+        "x1_value": false,
+        "x2_value": true,
+        "same_initial_stack": true
+      },
+      "execution": {
+        "status": 1,
+        "retired": 18,
+        "pc": 1107313736,
+        "compiled_blocks": 3,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 129,
+          "x1": 129,
+          "x2": 4294967169,
+          "x3": 83
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        }
+      },
+      "fixture_sha256": "a0f15d216bc86d6a43883d51b9a00d2e204e5f2a2fee985e240a068987f3ab25",
+      "raw_sha256": "903da3cc54ee481142d06c1415e74a06763e81fc10db0fb18c90c7108f96145b",
+      "receipt": "/home/sharh/work/bp29-scalar-efi/negative-sign/byte-signed/report.json",
+      "serial_log": "serial/negative-sign/byte-signed.log",
+      "serial_sha256": "0748495b87b0440d3fafb36b760bd8947e5e7b2d8feb69af2f3b3638bf1d75ad"
+    }
+  ],
+  "forms": [
+    "deliberately_wrong_LDRB_instead_of_LDRSB_X"
+  ],
+  "negative_control": true,
+  "passed": false,
+  "input_sha256_before": {
+    "/home/sharh/work/bp29-scalar-efi/target/x86_64-unknown-uefi/release/NXARMJIT.efi": "4972d9512d8758850b01f93ac717b458a5dffbdce5d8282a3b393b41dcd8d941",
+    "/home/sharh/work/bp29-scalar-efi/arm64_scalar_probe.S": "f3ef5bf3ed964380a32f21f9fcdb35e3e7ebfc6190aa408b7302d86d5b461de0",
+    "/home/sharh/work/bp29-scalar-efi/verify_scalar_ovmf.py": "f39ac6dde8776a33bf9494e25e041822883b3158fab996fbde6fc08554154202",
+    "/home/sharh/src/26x86/nextcore/tools/trace_arm_jit_ovmf.py": "e0c7b2666c8997058ca5ee2b7560da8eac5ccef24adfdc887b47e092f541bb49",
+    "/home/sharh/src/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "29a14a20596e1f68bbb48c77f20ae8565c26f4802567ac83596ada05c4f352a2",
+    "/home/sharh/src/26x86/nextcore/tools/build_arm64_handoff_probe.py": "57ac29fc0558f79152978e6f7660d8ddcb8b0d98a69cc571b13349dc032cf3ee"
+  },
+  "input_sha256_after": {
+    "/home/sharh/work/bp29-scalar-efi/target/x86_64-unknown-uefi/release/NXARMJIT.efi": "4972d9512d8758850b01f93ac717b458a5dffbdce5d8282a3b393b41dcd8d941",
+    "/home/sharh/work/bp29-scalar-efi/arm64_scalar_probe.S": "f3ef5bf3ed964380a32f21f9fcdb35e3e7ebfc6190aa408b7302d86d5b461de0",
+    "/home/sharh/work/bp29-scalar-efi/verify_scalar_ovmf.py": "f39ac6dde8776a33bf9494e25e041822883b3158fab996fbde6fc08554154202",
+    "/home/sharh/src/26x86/nextcore/tools/trace_arm_jit_ovmf.py": "e0c7b2666c8997058ca5ee2b7560da8eac5ccef24adfdc887b47e092f541bb49",
+    "/home/sharh/src/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "29a14a20596e1f68bbb48c77f20ae8565c26f4802567ac83596ada05c4f352a2",
+    "/home/sharh/src/26x86/nextcore/tools/build_arm64_handoff_probe.py": "57ac29fc0558f79152978e6f7660d8ddcb8b0d98a69cc571b13349dc032cf3ee"
+  },
+  "far_observed": false,
+  "guest_ram_after_fault_observed": false,
+  "physical_host_efi_verified": false,
+  "sptm_provided": false,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

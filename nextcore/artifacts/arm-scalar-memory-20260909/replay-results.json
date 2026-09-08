@@ -1,0 +1,15 @@
+{
+  "schema": "nextcore.bp29-scalar-efi-replay.v1",
+  "runtime_revision": "8b09f8764f13838baf71c1676575cb829bcd7902",
+  "efi_sha256": "4972d9512d8758850b01f93ac717b458a5dffbdce5d8282a3b393b41dcd8d941",
+  "historical_efi_binary_equal": true,
+  "positive_cases": 11,
+  "negative_control_rejected": true,
+  "runtime_sources_preserved": true,
+  "passed": true,
+  "far_observed": false,
+  "guest_ram_after_fault_observed": false,
+  "physical_host_efi_verified": false,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

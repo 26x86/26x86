@@ -97,3 +97,28 @@ Vulkan readback evidence comes from an AMD RX6800XT. Neither vendor enumeration
 nor that host result establishes NVIDIA/Intel hardware execution, an EFI GPU
 driver or guest Metal support. Original-prefix diagnostics are also separate
 from a usable macOS boot. Keep these outcomes explicit in milestone receipts.
+
+## Scalar and MMU development checks
+
+The ISE module implements the 13 unsigned-offset integer width/sign forms. Its
+reference walker preserves exact stage-1 fault levels and typed backing failures.
+The native JIT still rejects SCTLR.M; this interface is preparation for a checked
+memory provider, not native MMU completion. Reproduce the authored CPU checks:
+
+```bash
+cargo test --manifest-path nextcore/crates/nextcore-ise/runtime/preos/Cargo.toml
+python3 nextcore/crates/nextcore-ise/tools/probe_scalar_memory.py
+python3 nextcore/crates/nextcore-ise/tools/mmu_fault_levels/probe_fault_levels.py \
+  --output /path/to/new-mmu-at
+python3 nextcore/crates/nextcore-ise/tools/mmu_fault_levels/probe_abort_levels.py \
+  --output /path/to/new-mmu-abort
+python3 nextcore/crates/nextcore-ise/tools/mmu_fault_levels/compare_walker.py \
+  --runtime-checkout nextcore/crates/nextcore-ise \
+  --at-report /path/to/new-mmu-at/report.json \
+  --abort-report /path/to/new-mmu-abort/report.json --output /path/to/new-comparison
+```
+
+These independent AArch64 oracle commands additionally need `qemu-system-arm`.
+The actual x86 EFI scalar harness and recorded boundary checks are under
+`nextcore/artifacts/arm-scalar-memory-20260909`. It executes the same native C
+JIT in OVMF and keeps original-image diagnostics separate from authored fixtures.

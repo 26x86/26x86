@@ -1,0 +1,31 @@
+{
+  "schema": "nextcore.bp29-integration-evidence.v1",
+  "implementation_commit": "d45b107deb384278ee9efaaa471a66d1a6d3008b",
+  "passed": true,
+  "workspace_tests_passed": 472,
+  "architectural_tests_passed": 91,
+  "authored_x86_efi_cases": 39,
+  "scalar_efi_cases": 11,
+  "exact_mmu_at_cases": 118,
+  "exact_mmu_actual_abort_cases": 40,
+  "exact_mmu_walker_comparisons": 158,
+  "prior_mmu_cases": 18,
+  "modules": {
+    "ISE": "33fea9fdea844bc7c2d3228b8888600270210562",
+    "EFI": "6feba80a9ceea22811b6bf08f98010501654375e"
+  },
+  "efi_sha256": {
+    "NXARMJIT-default.efi": "9feacf1d5703cc79651126b396e48a029e3f8b2b25cb9e60ac447d9f5c0e5917",
+    "NXARMJIT-probe.efi": "912c9576c14c15474dd74bce1c6c341529e998b2cdc70df9394ce50f2cb3c3e7"
+  },
+  "macos_boot_verified": false,
+  "native_mmu_verified": false,
+  "guest_metal_verified": false,
+  "original_diagnostic": {
+    "retired": 64,
+    "compiled_blocks": 12,
+    "status": 5,
+    "budget_exhausted": true,
+    "separate_historical_binary": true
+  }
+}

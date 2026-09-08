@@ -1,0 +1,115 @@
+{
+  "schema": "nextcore.public-evidence-files.v1",
+  "files": [
+    {
+      "path": "EFI-merge.json",
+      "bytes": 10888,
+      "sha256": "05cfe21b66acc83ec43e3e5160040d4d919d85bb9d2df8861bffdded05553dfc"
+    },
+    {
+      "path": "ISE-merge.json",
+      "bytes": 10888,
+      "sha256": "28e9f333d09ae6da0bb369d91ccfbf32aab39cbb4654fbc2e52ab2e1ef91ae45"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1737,
+      "sha256": "b4abac0745eae2df02ce2583abf7caae17e48885e8cbcadc26a0167a88f6c8e9"
+    },
+    {
+      "path": "architectural-reference.log",
+      "bytes": 7356,
+      "sha256": "f190791ea6a4d11cc8293e8d9a829828147399ad02ebc33f3cb131e01f8aa406"
+    },
+    {
+      "path": "cli-utf8.log",
+      "bytes": 1289,
+      "sha256": "a66e6d16e999f9e4de52fa52683f4827de2f09bc9c27fa4d521c25d9a85a9e98"
+    },
+    {
+      "path": "clippy-efi.log",
+      "bytes": 29570,
+      "sha256": "2c8ec3a06fe74ae8dbcda300fe3a90e2d5a3370c8191e46e510be6b2b1141063"
+    },
+    {
+      "path": "clippy-host.log",
+      "bytes": 35855,
+      "sha256": "904dfaf652c0abb0cbe88a5350e819c969e15d2982ebecbf630f8c2ddcfbd7e3"
+    },
+    {
+      "path": "compiled-bundle.log",
+      "bytes": 470,
+      "sha256": "2864a3fc697c2e1885596788767ad390251ff9c4f5be82ce07883e96ffd068c1"
+    },
+    {
+      "path": "exact-mmu-comparison/report.json",
+      "bytes": 129200,
+      "sha256": "aac0e45b146a4b90fb6ff243425fdb528cf42f3953ba9d1ea61bf40262e34bac"
+    },
+    {
+      "path": "firmware-scalar/report.json",
+      "bytes": 19028,
+      "sha256": "76bba2be884225d0d9716de651bd737928f9c8157cb8d13789026557bdf78e6e"
+    },
+    {
+      "path": "gui-boundaries.log",
+      "bytes": 3520,
+      "sha256": "53d614b0f0eaeeac1e19ef83c426f97ca34bb02b7c56628e8bb3c84882edb8b7"
+    },
+    {
+      "path": "module-branch-cleanup.json",
+      "bytes": 653,
+      "sha256": "cb85dfd724142ac5f25b883557e51086944db31605acea462d1096b71ad9430b"
+    },
+    {
+      "path": "native-pac.json",
+      "bytes": 30585,
+      "sha256": "7fad925f5b8a4a38037f31db0aabdea2a97bf44c6d9095757e5d707ce8bd6845"
+    },
+    {
+      "path": "pair-oracle.json",
+      "bytes": 1810,
+      "sha256": "55c2ff532e8ea5cf73c409c701ac181a4ba4be334f6500fac9371a5686d3a9e0"
+    },
+    {
+      "path": "python.log",
+      "bytes": 30991,
+      "sha256": "4d997ca1247a9b2565196c1a48ee6d4abff29e8539a46cb26f737a03dde4bf76"
+    },
+    {
+      "path": "report.json",
+      "bytes": 10067,
+      "sha256": "94e4ac0bc17127d0b5d2bd854a77fa51e5ccdb27253a954c7f3e164d9f2d79e3"
+    },
+    {
+      "path": "root-initial-ci-upload-failure.json",
+      "bytes": 6315,
+      "sha256": "7e9e14a716f72710ee81df78bb523f5ad6cbd58aaceb202dbbfff11c3dd8b749"
+    },
+    {
+      "path": "scalar-oracle.json",
+      "bytes": 3065,
+      "sha256": "65fa7d7831c21c6f3e3f1acf8649d9ddb47b9bb6bdb11dff267842cde1986e16"
+    },
+    {
+      "path": "submodules-final.log",
+      "bytes": 1585,
+      "sha256": "2948f0a136e2241c40d0661270fb8ea4f95b6bc71237119530c8f1c6f1dc4f0f"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 1005,
+      "sha256": "428703fbd7c5ed40ad7b58ea30b451422711ea74940f246c3fbddaba9504715f"
+    },
+    {
+      "path": "vulkan.log",
+      "bytes": 9020,
+      "sha256": "7d02d148be6ba0add95329d07579c5584e26aa40c07fcf3009ac72db6612a6b8"
+    },
+    {
+      "path": "workspace.log",
+      "bytes": 43313,
+      "sha256": "3ef158436af5238bae290700b6d1eba5102c198e82825f629ee1106a41ad06fd"
+    }
+  ]
+}

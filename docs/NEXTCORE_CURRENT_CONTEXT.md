@@ -1,8 +1,35 @@
 # NextCore 현재 맥락과 재개 기준
 
-갱신: 2026-09-08. 이 문서는 다음 작업자가 가벼운 모델이더라도 현재 상태를
+갱신: 2026-09-09. 아래 BP29 요약이 이후 역사 기록보다 우선한다. 이 문서는 다음 작업자가 가벼운 모델이더라도 현재 상태를
 과장하지 않고 이어갈 수 있게 하는 정본 요약이다. 상세 설계는
 `docs/NEXTCORE_BUILD_PLAN.md`, 검증 결과는 `nextcore/VALIDATION.md`를 따른다.
+
+## BP29 현재 구현과 실행 대상
+
+실행 컴퓨터는 항상 x86_64이며 ARM64e macOS 27 입력을 x86 EFI의 전용 JIT/HAL로 처리한다.
+WSL은 빌드 환경이고 QEMU/OVMF는 x86 시험 장비다. 7개 Git 서브모듈이 각자의
+정식 원격 저장소와 고정 커밋으로 연결된다. 사용자는 검증 후 커밋·푸시·PR·main 병합과
+완료 브랜치 정리를 승인했다. 기기 전용 프로필과 Windows 앱의 샌드박스 테스터 제거는
+BP27에서 완료했다.
+
+BP28 상위 PR #10은 main 4ed3c9e로 병합됐다. ISE/GPU/EFI/APLS/Tool PR #2도 모두
+병합했다. BP29 scalar 정수 메모리 13종과 상세 MMU 오류 API를 구현했고, 새 독립
+ISE 클론의 91개 참조 테스트 및 ARM 158개 입력 대조가 통과했다. 실제 x86 EFI의
+11개 authored scalar 검사와 부호 확장 오류 대조군도 검증했다. 원본 진입 진단은
+47명령에서 현재 예산 64명령까지 진행했으며, 다음 중단점을 별도 진단한다.
+
+실제 macOS 부팅·사용 가능한 데스크톱·게스트 Metal은 미완료다. native SCTLR.M도
+아직 거부한다. 다음 단계는 동일 JIT의 Rust 메모리 서비스 호출, 실제 MMU·플랫폼
+제공자·정상 커널 진입이다. 현재 물리 GPU는 AMD RX 6800 XT이며 Windows Vulkan
+검증을 보존한다. NVIDIA/Intel 선택 및 메모리 경로는 공급사별 가정 없이 구현했지만
+이 두 GPU의 현재 실기 검증과 EFI GPU/게스트 Metal 검증은 남아 있다. 아래의 Intel
+실행 기록은 과거 다른 환경의 증거이며 현재 호스트의 증거로 바꾸어 쓰지 않는다.
+
+자세한 계약은 Build Plan BP29/BP30, scalar EFI 증거는
+`nextcore/artifacts/arm-scalar-memory-20260909`, MMU 오라클은
+ISE 모듈의 `tools/mmu_fault_levels`에 있다.
+
+## BP24까지의 역사 기록
 
 ## 목표와 현재 판정
 

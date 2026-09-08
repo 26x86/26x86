@@ -1,0 +1,18 @@
+[
+  {
+    "module": "ISE",
+    "tested_head": "33fea9fdea844bc7c2d3228b8888600270210562",
+    "remote_main": "abdbd1a7e6354c6434388897b698cae43435fe24",
+    "local_main_previous": "1b36e3f90ea4006d7221add78385811621771205",
+    "deleted_completed_branch": "codex/arm64e-scalar-memory",
+    "merge_ancestry_verified": true
+  },
+  {
+    "module": "EFI",
+    "tested_head": "6feba80a9ceea22811b6bf08f98010501654375e",
+    "remote_main": "fcd77bc2b21a60122a8ba68f7bc2c3b785b83fba",
+    "local_main_previous": "954d2a0ca8fec08db9a99438fb5b1db751caf766",
+    "deleted_completed_branch": "codex/arm64e-scalar-memory",
+    "merge_ancestry_verified": true
+  }
+]

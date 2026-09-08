@@ -70,9 +70,9 @@ boot claim: it makes each layer easier to inspect and test.
 | EFI picker | Actual OVMF GOP selection, matching child execution, Esc cancellation, automatic boot and text fallback | Verified at the firmware UI layer |
 | Tahoe native EFI | NextCore ConsoleControl → original booter → original XNU and launchd, correlated with a unique CPU memory sample | Early userspace reached; full HAL and OS acceptance unfinished |
 | Tahoe external reference | Signed recovery reaches WindowServer and the recovery GUI after a standard virtual SMC is supplied | Recovery GUI verified; installed OS and Metal unfinished |
-| ARM64e JIT in x86 EFI | Native translated blocks, software PAC/AUT, 16 GOP pixels read back, and 9 positive/negative firmware cases | Authored fixtures verified; macOS boot unfinished |
+| ARM64e JIT in x86 EFI | Scalar/pair memory, PAC/AUT, GOP readback and 39 authored firmware cases; original prefix reaches its 64-instruction diagnostic budget | Native MMU and usable macOS boot unfinished |
 | Golden Gate ARM recovery | DFU, iBEC endpoint, Stage2 prompt, five restore roles and `bootx` acknowledgement | A same-event unmapped MMIO read stops firmware before XNU |
-| Metal | Real Intel host GPU compute/readback; x86_64 and ARM64 guest Metal probes built | Guest Metal execution remains mandatory and unverified |
+| Metal | RX 6800 XT host Vulkan compute/readback; earlier Intel host evidence and guest probe binaries preserved separately | Current NVIDIA/Intel hardware, EFI GPU and guest Metal execution unverified |
 
 Read the complete acceptance boundary in [NextCore validation](nextcore/VALIDATION.md)
 and the [session evidence report](nextcore/artifacts/NEXTCORE_SESSION_REPORT_20260907.md).

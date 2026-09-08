@@ -1545,3 +1545,63 @@ with immutable tested heads retained in parent gitlinks. Fresh recursive source
 boundaries, compiled-EFI packaging and Clippy. Corrected original diagnostic
 remains47 retired/10 native blocks. Exact records live in
 `nextcore/artifacts/integration-bp28-20260909`; OS/Metal acceptance remains open.
+
+
+## BP29 — scalar memory and exact stage-1 failure information
+
+Current: BP28 parent PR #10 merged into main as4ed3c9e after27 final CI checks
+and a canonical recursive clone. The original diagnostic stops after47 retired
+instructions at a32-bit unsigned-immediate load. The walker loses fault levels
+and descriptor-read failure types, preventing a precise native memory provider.
+
+Decision and ownership: CPU agent implements the complete standard scalar
+integer unsigned-offset width/sign family in a separate ISE worktree, preserving
+native MMU gates and external ABI. Root owns the existing mmu.rs detailed-error
+interface, typed physical descriptor reads, cached leaf provenance and legacy
+method adapter. EFI agent owns an independent Arm exact-FSC oracle using actual
+captured control/table bytes, including real EL1 abort handlers. GPU agent owns
+independent code review and authored actual x86 EFI scalar execution in a separate
+output directory. Root owns integration, inventories, pins, tests, PR/main merges.
+
+The metadata-only walker change retains one implementation behind both APIs.
+Independent tests correct the prior noncanonical-VA AddressSize classification
+to the architectural Translation level0, and keep real physical-width failures
+distinct. EPD must be tested in the AArch64 target regime with HCR.RW explicitly
+set, and reports Translation level0. Native M=1, strict table/memory attributes,
+normal startup providers and guest Metal are not completed by this interface.
+
+BP30 CPU delegation: after immutable scalar source8b09f876, a new isolated
+worktree prepares the first native caller-owned Rust memory-provider path with
+M=0. Contract and fixed-width callback ABI are reviewed before code. All native
+fetch/scalar/pair accesses must route through the checked provider in that mode,
+with full-span preflight and exact commit boundaries; ALU/control remain generated
+x86, legacy APIs remain compatible, and every M=1 gate stays until its separate
+validated activation. No duplicate walker, hidden direct-memory path or claimed
+macOS completion is permitted. EFI caller wiring follows the approved ABI.
+
+
+BP29 source validation: immutable ISE33fea9f passes a fresh standalone clone's
+26 package and91 architectural tests,106496 scalar cases/426981 assertions,
+existing native PAC/IRQ/pair/ABI proofs, independent scalar execution and158
+captured AT/actual-abort comparisons plus negative controls. ISE PR #3 passed
+both final CI jobs and merged asabdbd1a7. Actual authored EFI11cases pass with
+frozen8b09 source; the12 linked runtime sources match33fea exactly. Historical
+and combined-source binary executions must retain separate hashes/receipts.
+
+BP30 diagnostic delegation: EFI agent owns separate Core/EFI source worktrees
+for opt-in tiered tracing. Preserve the public default64 platform/8 no-platform
+budget API and normal firmware behavior. A separate explicit feature may accept
+bounded tiers256/1024/4096, with a build marker and host opt-in. First prove an
+authored256-instruction case, then advance original diagnostics only when the
+previous run stops precisely at its budget. Public output remains aggregate-only.
+Root owns final dependency pins, metadata, integration tools and PR/main publication.
+
+
+BP29 integration closure: fresh recursive d45b107d passes472 workspace tests,
+91 reference tests,39 authored x86 EFI cases,158 captured ARM comparisons,
+the prior18 MMU oracle cases, native scalar/PAC/IRQ/pair/ABI execution, Python/GUI,
+Vulkan, firmware packaging and Clippy. Both changed module PR #3s are merged
+and their completed branches are removed after ancestry checks. Raw receipts
+and the initial CI artifact-finalization403 are preserved in
+nextcore/artifacts/integration-bp29-20260909. The final evidence-only commit
+receives its own canonical recursive clone/hash checks and final-head CI.

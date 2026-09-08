@@ -1,0 +1,49 @@
+{
+  "schema": "nextcore-submodules/1",
+  "modules": [
+    {
+      "crate": "nextcore-core",
+      "path": "nextcore/crates/nextcore-core",
+      "url": "https://github.com/26x86/Nextcore-Core.git",
+      "commit": "6105cd7996ef2ea4db35d7d3a1e8822d0703aae9"
+    },
+    {
+      "crate": "nextcore-efi",
+      "path": "nextcore/crates/nextcore-efi",
+      "url": "https://github.com/26x86/Nextcore-EFI.git",
+      "commit": "6feba80a9ceea22811b6bf08f98010501654375e"
+    },
+    {
+      "crate": "nextcore-tool",
+      "path": "nextcore/crates/nextcore-tool",
+      "url": "https://github.com/26x86/Nextcore-Tool.git",
+      "commit": "7282944f9b93fe9631fc11ba6eb8d8f75e973f62"
+    },
+    {
+      "crate": "nextcore-ise",
+      "path": "nextcore/crates/nextcore-ise",
+      "url": "https://github.com/26x86/Nextcore-ISE.git",
+      "commit": "33fea9fdea844bc7c2d3228b8888600270210562"
+    },
+    {
+      "crate": "nextcore-gpu",
+      "path": "nextcore/crates/nextcore-gpu",
+      "url": "https://github.com/26x86/Nextcore-GPU.git",
+      "commit": "eaab9fcfded3a8ee298453397790f13edace5694"
+    },
+    {
+      "crate": "nextcore-hal",
+      "path": "nextcore/crates/nextcore-hal",
+      "url": "https://github.com/26x86/Nextcore-HAL.git",
+      "commit": "9c1cd8dfff33478e32668c5cd181dd094ec2881b"
+    },
+    {
+      "crate": "nextcore-apls",
+      "path": "nextcore/crates/nextcore-apls",
+      "url": "https://github.com/26x86/Nextcore-APLS.git",
+      "commit": "9b6ccaa421f668fdb212ccd14969002f6196a18f"
+    }
+  ],
+  "cargo_local_resolution_checked": true,
+  "clean_required": true
+}
