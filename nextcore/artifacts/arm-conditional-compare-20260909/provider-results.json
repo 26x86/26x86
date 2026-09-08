@@ -1,0 +1,29 @@
+{
+  "schema": "nextcore-native-memory-provider-v1",
+  "passed": true,
+  "native_jit_executed": true,
+  "actual_c_rust_callbacks": true,
+  "source_preserved": true,
+  "negative_control_detected": true,
+  "source_sha256": {
+    "jit.c": "a4de6dec41823bfbfc85c683ad37627760cec57277352a03b7113e9714d60d67",
+    "jit.h": "6d36e0ecdd5cc71f0bcf82609bc23915b4a8c217e0d188988a9b3d8a3b10c7f0",
+    "arch.c": "99b5cf138ed60b7a98a6d94036567aa3538d5d05f880ce7bcb742c375eb2fbf9",
+    "boot_jit.c": "4885d29d7f6d7954a816b00d55600acf47992cf8ada469175b2d6130af62c8de",
+    "boot_jit.h": "def7ee05c4051107257407f3f4eed6ab6551ba04b61f7178e051f4e95126af81",
+    "platform_abi.h": "e0c19055be84de172df89495c822a18deae24d04315e4350cc42cba07fc90eba",
+    "memory_abi.h": "0ef6a89d512ef2d1fd0f92d0a25018536fa9c45106372e6c27f749b427b1f515",
+    "memory_boot.h": "d2972ffc34487e5c328ebdd51e8333d82282df9e7305b6c60426aea3c4fd11f8",
+    "memory_boot.c": "df874fc52f1a43ba71f137ebf45cf165b724d3435de9a2fa74a393adeca03dac",
+    "memory_boot.rs": "5031838160f1d9490f03d15ca479bcd3076ce2a0758129c121cace74781ea658",
+    "memory_layout.c": "df5dda0e88b0a37c3d656e45a2dc807a569831e7c223b474479fcd03a565ec65",
+    "test_memory_provider.rs": "8536474a38b83f76f665aaf1aed54145e8546cf3e4198b29c99fdc497bcb82d6",
+    "preos/src/platform.rs": "8034a1b63c14ef6dc420f2a61adbcce21cc6d990dc777962cc7fe063c8205769",
+    "memory-service/Cargo.toml": "de0adfb9b7194d455b380c5eb787db4c95318700bedec00687ee6b2e523d8f67",
+    "memory-service/src/lib.rs": "e2a00f7ed51e353c645234325ce3cbd86a9b2082f0887a656f2ba61b621c0726",
+    "memory-service/src/abi.rs": "66b794a18316deaa7f566b8584a258ea077a6305ef8abe18cb648aa30dd07415"
+  },
+  "scope": "M=0 caller-owned RAM only; no macOS boot claim",
+  "integration_tests": 12,
+  "service_tests": 5
+}

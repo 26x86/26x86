@@ -3,6 +3,23 @@
 2026-09-07 작업의 통합 설명과 artifact index는
 `artifacts/NEXTCORE_SESSION_REPORT_20260907.md`에 있다.
 
+## BP31 — 조건부 비교 명령어
+
+[새 재귀 통합 결과](artifacts/integration-bp31-20260909/README.md): baseline8bcf5c52에서
+workspace476/Python149/GUI25/참조93, 실제 x86 EFI78개 및 별도 CLI6개 통과.
+f38a2c30의 provider 필수 판정은 별도13개 성공/실제 우회 거부1개로 추가 검증했다.
+이후 최종 CI에서는 새 통합 바이너리에 필수 provider 판정을 적용한다.
+
+ISE0aabf085의 CCMP/CCMN reg/imm5 및32/64-bit 구현과 EFI7495633 연결을 각각
+모듈 PR #5로 병합했다. 독립 ISE 클론의 native34264경우/137070assertions,
+참조93개, Arm3668개와 native/provider/PAC/MMU 회귀 검사가 통과했다.
+새 standalone EFI는 빈 Cargo cache에서 정식 의존성으로 빌드됐고 실제 combined
+바이너리에서13개 authored 조건부 비교 사례가 통과했다.
+[역사적 실행과 원본 aggregate](artifacts/arm-conditional-compare-20260909/README.md)는
+별도 source/binary/hash로 보존한다. 원본은최대4096명령/1205blocks 예산으로 종료했다.
+현재 소스를 받는 상위 EFI runner는 runtime hash와 실제 결과를 다시 기록하며,
+기존65개 실제 EFI 사례에13개 조건부 비교 실행을 더한다. 상위 재귀 통합은 별도 검증한다.
+
 ## BP30 — 실제 EFI 메모리 서비스와 서브모듈 연결
 
 [새 재귀 통합 검증](artifacts/integration-bp30-20260909/README.md)은 구현 commit

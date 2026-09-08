@@ -1,0 +1,130 @@
+{
+  "module": "EFI",
+  "commit": "74956333503abe5724b13d22b1337d18a380bbf7",
+  "passed": true,
+  "fresh_standalone_clone": true,
+  "empty_cargo_cache": true,
+  "canonical_git_dependencies": true,
+  "root_workspace_patches": false,
+  "commands": [
+    {
+      "name": "clone",
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/work/bp31-efi-ccmp",
+        "/home/sharh/work/module-validation-bp31-efi-20260909/EFI"
+      ],
+      "exit_code": 0,
+      "seconds": 0.82
+    },
+    {
+      "name": "build-default",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 16.56
+    },
+    {
+      "name": "build-direct",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-probe,arm-jit-trace",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 3.73
+    },
+    {
+      "name": "build-combined",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-memory-provider,arm-jit-tiered-trace",
+        "--bin",
+        "NXARMJIT"
+      ],
+      "exit_code": 0,
+      "seconds": 3.99
+    },
+    {
+      "name": "all-features",
+      "command": [
+        "cargo",
+        "check",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 8.85
+    },
+    {
+      "name": "conditional-firmware",
+      "command": [
+        "python3",
+        "/home/sharh/work/bp31-ccmp-public/verify_efi.py",
+        "--efi",
+        "/home/sharh/work/module-validation-bp31-efi-20260909/NXARMJIT-combined.efi",
+        "--ise",
+        "/home/sharh/work/bp31-ise-ccmp",
+        "--output",
+        "/home/sharh/work/module-validation-bp31-efi-20260909/conditional-firmware"
+      ],
+      "exit_code": 0,
+      "seconds": 68.33
+    }
+  ],
+  "binaries": {
+    "default": {
+      "path": "/home/sharh/work/module-validation-bp31-efi-20260909/NXARMJIT-default.efi",
+      "sha256": "2324b48ae8ae0f66d707a2431aad62f4bed8147c2e0024dcb6e346fecc7da6d3"
+    },
+    "direct": {
+      "path": "/home/sharh/work/module-validation-bp31-efi-20260909/NXARMJIT-direct.efi",
+      "sha256": "2febbf8c41f7f9f1f13fc8a6eae279b9378243f8cb5eadbaa29772c04c6ac375"
+    },
+    "combined": {
+      "path": "/home/sharh/work/module-validation-bp31-efi-20260909/NXARMJIT-combined.efi",
+      "sha256": "75f6b63bd0fe4d46c644fd768de9877338c7c2e3c8e2c782460c46f36fcb33ef"
+    }
+  },
+  "nextcore_packages": [
+    {
+      "name": "nextcore-core",
+      "source": "git+https://github.com/26x86/Nextcore-Core.git?rev=40833dc29d8bcd2976d0a13c2f120533d02500c4#40833dc29d8bcd2976d0a13c2f120533d02500c4"
+    },
+    {
+      "name": "nextcore-efi",
+      "source": null
+    },
+    {
+      "name": "nextcore-ise",
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=0aabf085fa5d9bec38c83076f766274d3006358d#0aabf085fa5d9bec38c83076f766274d3006358d"
+    },
+    {
+      "name": "nextcore-memory-service",
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=0aabf085fa5d9bec38c83076f766274d3006358d#0aabf085fa5d9bec38c83076f766274d3006358d"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "nextcore.bp31-public-replay/1",
+  "passed": true,
+  "source_reconstruction_verified": true,
+  "reconstructed_source_efi_builds": {
+    "positive": "9d57c9cf15050a3d3eddbd8a840ee22721286cb8904af61ce1bb58eee08d2226",
+    "nv-never": "12052cf716a66454ba829389f733b5ef890bcb1021e924380ae7ef3e3feb923d"
+  },
+  "portable_efi_harness_positive_cases": 13,
+  "portable_efi_harness_nv_never_detected": true,
+  "harness_replay_binary_origin": "Frozen historical positive/negative EFI binaries; reconstructed source binaries separately compile-checked",
+  "source_preserved": true,
+  "macos_boot_verified": false
+}

@@ -1,0 +1,26 @@
+usage: x86 [-h] [--version]
+           {vsk,assets,sandbox,vmapple,personality,detect,build,patch,mellow,status,wizard}
+           ...
+
+NextCore — x86 Mac OpenCore EFI build and root patch tooling
+
+positional arguments:
+  {vsk,assets,sandbox,vmapple,personality,detect,build,patch,mellow,status,wizard}
+    vsk                 Validate VSK configuration offline; never authorize
+                        boot
+    assets              Read-only original guest asset inspection and
+                        integrity
+    sandbox             Apple Silicon Sandbox EFI status and self-test staging
+    vmapple             Run the caller-supplied VMApple research VM with a
+                        visible GTK/SDL window
+    personality         Validate the iBoot(AArch64) macOS-only guest policy
+    detect              Mac 모델 및 하드웨어 정보 확인
+    build               OpenCore EFI 빌드 (macOS 전용)
+    patch               루트 볼륨 패치 적용 (macOS 전용)
+    mellow              Mellow driver/root-patch 준비 및 검증
+    status              설정·패치·EFI 상태 요약
+    wizard              기본 GUI 마법사 실행
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit

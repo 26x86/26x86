@@ -1,0 +1,37 @@
+{
+  "schema": "nextcore.bp31-source-provenance/1",
+  "ise": {
+    "repository": "https://github.com/26x86/Nextcore-ISE.git",
+    "base_revision": "c0730b489300611cd95966a7af7a724143dd0535",
+    "patch": "ise-source.patch",
+    "source_sha256": {
+      "runtime/jit.c": "a4de6dec41823bfbfc85c683ad37627760cec57277352a03b7113e9714d60d67",
+      "runtime/preos/src/arch.rs": "b6aa68f95d61e1f0a253d82f1bce7bc882e3846d6bb39f16ca3c84d5d8b60cce",
+      "runtime/test_conditional_jit.c": "91525044f0ebac2d8f6b158e548979c74c8d2b8834025f5f94d114307441c737",
+      "runtime/test_memory_provider.rs": "8536474a38b83f76f665aaf1aed54145e8546cf3e4198b29c99fdc497bcb82d6",
+      "tools/probe_conditional_compare.py": "03b42da7c4786a4d083708bbaedac1d3f22c0f44328df7d7e68e0a00e6f1ade6",
+      "tools/probe_efi_native_pauth.py": "27e683de31e4ad198a87e25cefabbc7a7c0e34e0e58ddcd65742cea552bb2caa",
+      "docs/CONDITIONAL_COMPARE.md": "e49fbae91087332982a449aaef7c7b8146b059588f05abb807e056be17e21a67"
+    }
+  },
+  "core": {
+    "repository": "https://github.com/26x86/Nextcore-Core.git",
+    "revision": "40833dc29d8bcd2976d0a13c2f120533d02500c4",
+    "source_sha256": {
+      "Cargo.toml": "b2393acefdc9c6878b1212d7b8114c417a0170dfe372ce42c6b9cdf398eb0580",
+      "src/boot_config.rs": "be0e13ec360759c4605f16d34b53c904fb700246da3e7e08382b606069cc81c0",
+      "tests/arm64_platform_config.rs": "a6d5e6f56a801a639abdc71fe4e8698a38d904e382f0a6db2a5bd757d4de97bb"
+    }
+  },
+  "efi": {
+    "repository": "https://github.com/26x86/Nextcore-EFI.git",
+    "base_revision": "f2ca77a23d09b6de3f5371861e6b8bec61577955",
+    "patch": "efi-tiered-source.patch",
+    "source_sha256": {
+      "Cargo.toml": "3d5fe6272286366ac31ceb5f249e7c805d6bf9a449985ff0d87076dde9850fed",
+      "src/arm_jit.rs": "ee18572da2ffc21c6217c510f8b866e00a69311ee6c5cc45f30c6e06cc3c129c",
+      "build.rs": "788ca007f1b438c7907944b26395e9d75e0f237ce54191a0fda2d2e923fcc771"
+    }
+  },
+  "source_state": "Immutable base revisions plus explicit reviewable patches; final publication revisions are assigned by the integrator."
+}

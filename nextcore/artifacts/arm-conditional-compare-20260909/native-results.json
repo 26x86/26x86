@@ -1,0 +1,171 @@
+{
+  "schema": "nextcore.efi-native-pauth-proof/1",
+  "passed": true,
+  "host": {
+    "system": "Linux",
+    "machine": "x86_64"
+  },
+  "compiler_versions": {
+    "clang": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+    "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)"
+  },
+  "runtime_sources": {
+    "jit.c": "a4de6dec41823bfbfc85c683ad37627760cec57277352a03b7113e9714d60d67",
+    "jit.h": "6d36e0ecdd5cc71f0bcf82609bc23915b4a8c217e0d188988a9b3d8a3b10c7f0",
+    "arch.c": "99b5cf138ed60b7a98a6d94036567aa3538d5d05f880ce7bcb742c375eb2fbf9",
+    "boot_jit.c": "4885d29d7f6d7954a816b00d55600acf47992cf8ada469175b2d6130af62c8de",
+    "boot_jit.h": "def7ee05c4051107257407f3f4eed6ab6551ba04b61f7178e051f4e95126af81",
+    "memory_abi.h": "0ef6a89d512ef2d1fd0f92d0a25018536fa9c45106372e6c27f749b427b1f515",
+    "memory_boot.h": "d2972ffc34487e5c328ebdd51e8333d82282df9e7305b6c60426aea3c4fd11f8",
+    "test_jit.c": "dffedb72d4d3706d0dfd4b975be279db3f140a7d821eff16b7a2172fabe7c726",
+    "test_boot_jit.c": "eb0d2c371567d6998e35592a550016b2e12ae6ab5e752cdbc4fe7be4eaf6258a",
+    "test_pauth_jit.c": "bf6ad778a24182ed128d69334a7cbceed3f8fa79e684955b536a353f5906fe1e",
+    "test_flags_jit.c": "5c8c5bd854fd73577b72b81e0d8fd50d02ea601ecae27d1343ab98df59f3a777",
+    "test_thread_jit.c": "935a1f5e41e14001a23d900e41fdafc3e40ea2ce6c23efe00254ab90e7cb6fc1",
+    "test_irq_jit.c": "0b129c5403c17a650fe280572fa86c75afbb1a6f78d39420c7e2c0ce985cc3d5",
+    "platform_abi.h": "e0c19055be84de172df89495c822a18deae24d04315e4350cc42cba07fc90eba",
+    "platform_layout.c": "70ce0c588e602f06c3be49982c9060b736f08ee118a32039ff9df918d46f9d0d",
+    "preos/src/platform.rs": "8034a1b63c14ef6dc420f2a61adbcce21cc6d990dc777962cc7fe063c8205769",
+    "test_logical_jit.c": "2f53c9c225b08ecd7a9122b42398c624a8ac6b39357c5d2e5dc308d1bc509766",
+    "test_shift_jit.c": "cc44fa1d2e599e99bd2038b6bd78c2a29fa662f5274a2a8afb6754bc7fae6760",
+    "test_conditional_jit.c": "91525044f0ebac2d8f6b158e548979c74c8d2b8834025f5f94d114307441c737",
+    "test_pair_jit.c": "b9ab8e6431f0fb26095dfce49584893f6fa1d3d099f4f9a475587ddd446a5f38",
+    "test_scalar_jit.c": "b0ac953e238ac06c2d6c7c7c87d94d3fda9bd53860a92949001d5874360dacdd",
+    "abi_layout.c": "03b71dd9958a85655a50c30387c83d542ae51c808b1913f6a349b531d69f7617",
+    "preos_abi.h": "f355c3ab92457c569c3a4833b91ec8ad51ccdef6d0e8142d3ba236db5f37d5dc",
+    "preos/src/pauth.rs": "f0c93ce49e3b8fa27bc28805d60fd6689edb41acd299bc914b192c329938604c",
+    "preos/src/lib.rs": "64f5b38068319f7f3043d709edd7414182877ccda89ade97b797b2b84e18c793",
+    "preos/src/arch.rs": "b6aa68f95d61e1f0a253d82f1bce7bc882e3846d6bb39f16ca3c84d5d8b60cce",
+    "preos/src/mmu.rs": "4b275a53ed1543e58e849e918f5c644a49da81f7bcf5fb55c7ea8f0314d8f3df",
+    "preos/src/m1.rs": "cada02dd5bc459683ebebf3e28d0436933dba8097ba274ed0404a95010cd19f9",
+    "preos/src/machine.rs": "57c0ead54a9757281acc3abc00412355326e4aa9407692f085b76bfed5245592",
+    "preos/src/vmapple.rs": "bb4967dcd409c1679eb4acafe5d0bfe51a47a57768c86f45deb9b5abbc308c98"
+  },
+  "tests": {
+    "test_jit": {
+      "passed": true,
+      "assertions": 84,
+      "native_jit_executed": true,
+      "wx_enforced": true,
+      "executable_sha256": "84a8366ccbe27c2e8abadc5dba77a7e66d4f597e97ad989bec8798d2c902bf28"
+    },
+    "test_boot_jit": {
+      "passed": true,
+      "assertions": 34,
+      "native_jit_executed": true,
+      "nonzero_guest_ram_base": true,
+      "wx_enforced": true,
+      "executable_sha256": "b36aad9c783a91755e9328c36e196964348afe7f6e1f5bc9d2db28ded03cc2dd"
+    },
+    "test_pauth_jit": {
+      "passed": true,
+      "assertions": 21,
+      "native_jit_executed": true,
+      "software_qarma5": true,
+      "wx_enforced": true,
+      "executable_sha256": "f35c488bdd67be44f54849ee800ef6f5b1906a137ff31bb86e1e8b1f090f41c5"
+    },
+    "test_flags_jit": {
+      "passed": true,
+      "assertions": 841,
+      "native_jit_executed": true,
+      "nzcv_and_conditions": true,
+      "explicit_initial_registers": true,
+      "wx_enforced": true,
+      "executable_sha256": "1cf7baf7208a802fa79817f1e3ed64198f2018ee5922e6dfdaed5f81b5ca8eac"
+    },
+    "test_thread_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 624,
+      "thread_registers": 3,
+      "exception_levels": 4,
+      "opaque_cpu_size": 888,
+      "boot_result_size": 64,
+      "pauth_context_size": 368,
+      "executable_sha256": "14cfccc20c4a1e15307030117b7e2d1f6792028b2d91148ac8236d62ffe23d15"
+    },
+    "test_irq_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 1472,
+      "irq_fiq_levels": true,
+      "platform_profile": 1,
+      "executable_sha256": "92303287e4d12932be746156612f50874f12efe21c32ea6c37e1be0a552e6a81"
+    },
+    "test_logical_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 79668,
+      "logical_cases": 26544,
+      "executable_sha256": "ad2c388d45f7e4f366797278e2fd61772d2ed4a5721d746c314d293d68741651"
+    },
+    "test_shift_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 13834,
+      "shift_cases": 4608,
+      "executable_sha256": "f4fd7e7999911fe8cf289548391d3f8dbed430465d4f27f847a9964e1bdbc023"
+    },
+    "test_conditional_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 137070,
+      "conditional_cases": 34264,
+      "executable_sha256": "a30e310b2c12853045e6704f9814410a59c98b4b3524d45bb4a9777577435032"
+    },
+    "test_pair_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 14452,
+      "pair_cases": 3072,
+      "executable_sha256": "d6cc03c97e48dbe4586b03e1e2561126670d75ca7313608d476fb4d0535120c1"
+    },
+    "test_scalar_jit": {
+      "passed": true,
+      "native_jit_executed": true,
+      "assertions": 426981,
+      "scalar_cases": 106496,
+      "executable_sha256": "546865918e2ea4d709881a2457b425650b3332f4b941f7134f935605355789a1"
+    }
+  },
+  "c_rust_abi": {
+    "passed": true,
+    "values": {
+      "context_size": 152,
+      "context_align": 8,
+      "context_budget_offset": 16,
+      "context_guest_offset": 24,
+      "context_ram_offset": 40,
+      "context_handle_offset": 56,
+      "context_trace_offset": 64,
+      "context_expected_x1_offset": 80,
+      "context_reserved_offset": 128,
+      "request_size": 88,
+      "request_align": 8,
+      "request_handle_offset": 56,
+      "jit_result_size": 88,
+      "jit_result_align": 8,
+      "preos_result_size": 88,
+      "preos_result_align": 8,
+      "preos_result_x1_offset": 48
+    }
+  },
+  "platform_abi_v2": {
+    "passed": true,
+    "values": {
+      "options_size": 64,
+      "options_align": 8,
+      "options_override": 16,
+      "options_vbar": 32,
+      "result_size": 128,
+      "result_align": 8,
+      "result_override": 64,
+      "result_pending": 72,
+      "result_elr": 80,
+      "result_sp": 120
+    }
+  },
+  "reference_tests_passed": true,
+  "macos_boot_verified": false
+}

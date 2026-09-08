@@ -1,0 +1,48 @@
+{
+  "schema": "nextcore.conditional-provider-proof/1",
+  "passed": true,
+  "runner_sha256": "d4454372860a75cdb21039165638ead27c0bfd4ca062da033bb47e405dfa7078",
+  "commands": [
+    {
+      "name": "positive",
+      "command": [
+        "python3",
+        "/home/sharh/work/bp31-integration/nextcore/tools/verify_arm_conditional_compare_ovmf.py",
+        "--efi",
+        "/home/sharh/work/module-validation-bp31-efi-20260909/NXARMJIT-combined.efi",
+        "--ise",
+        "/home/sharh/work/bp31-integration/nextcore/crates/nextcore-ise",
+        "--output",
+        "/home/sharh/work/bp31-strict-provider-validation/positive",
+        "--require-memory-provider"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "report_sha256": "eb2e6d3091ae995cec36f474b1cf6df84ccc67c9e3703f02cf504f27bd4539bf"
+    },
+    {
+      "name": "direct-bypass",
+      "command": [
+        "python3",
+        "/home/sharh/work/bp31-integration/nextcore/tools/verify_arm_conditional_compare_ovmf.py",
+        "--efi",
+        "/home/sharh/work/module-validation-bp31-efi-20260909/NXARMJIT-direct.efi",
+        "--ise",
+        "/home/sharh/work/bp31-integration/nextcore/crates/nextcore-ise",
+        "--output",
+        "/home/sharh/work/bp31-strict-provider-validation/direct-bypass",
+        "--require-memory-provider",
+        "--negative-control"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "report_sha256": "cc7377c6e96defbf2def772f381e5e7cd0afc71df5dfef1b0866ec3e60c1c809"
+    }
+  ],
+  "actual_firmware_cases": 14,
+  "positive_cases": 13,
+  "direct_bypass_negative_cases": 1,
+  "negative_selector": "--negative-control selects one NV fixture; direct runtime arithmetic is correct and no NV mutation is used",
+  "binaries_from_canonical_standalone_EFI": "74956333503abe5724b13d22b1337d18a380bbf7",
+  "ISE": "0aabf085fa5d9bec38c83076f766274d3006358d"
+}
