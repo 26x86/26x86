@@ -1,9 +1,9 @@
-# 26x86
+# NextCore
 
 <div align="center">
-  <img src="resources/branding/26x86-logo-256.png" alt="26x86" width="144" />
-  <h3>Modern Intel/Apple Silicon macOS Bootloader</h3>
-  <p>Clean-room EFI boot research, OpenCore integration, and evidence-first compatibility tooling for macOS Tahoe.</p>
+  <img src="resources/branding/nextcore-logo-256.png" alt="NextCore" width="144" />
+  <h3>Intel / Apple Silicon boot engineering</h3>
+  <p>UEFI boot, HAL translation, and Metal acceleration development for macOS 26 Tahoe and macOS 27 Golden Gate.</p>
   <p>
     <a href="https://github.com/26x86/26x86/actions">Actions</a> ·
     <a href="https://26x86.github.io/26x86/">Documentation</a> ·
@@ -20,24 +20,25 @@
 
 | I want to… | Go to |
 | --- | --- |
-| Browse the documentation site | [26x86 docs](https://26x86.github.io/26x86/) |
+| Browse the documentation site | [NextCore docs](https://26x86.github.io/26x86/) |
 | Understand the public architecture | [Documentation hub](docs/wiki/README.md) |
 | Boot macOS on Intel hardware | [Setup and compatibility guide](docs/wiki/Home.md) |
 | Boot macOS on Apple Silicon | [Apple Silicon guide](docs/APPLE_SILICON_SANDBOX.md) |
 | Run the guided tool | `26x86.command` or `python3 -m x86 wizard` |
 | Build on Windows | [Windows EXE workflow](#windows-exe) |
 | Inspect supported operating modes | [Mellow integration](docs/MELLOW_INTEGRATION.md) |
-| Follow the boot-engineering work | [Nextcore validation](nextcore/VALIDATION.md) |
+| Follow the boot-engineering work | [NextCore validation](nextcore/VALIDATION.md) |
 | Review boundaries and notices | [Disclaimer](DISCLAIMER.md) · [Security](SECURITY.md) · [Source policy](SOURCE.md) |
 
 ## The platform
 
-26x86 is a modern macOS bootloader designed for both Intel and Apple Silicon hardware. It is organized as small, inspectable modules. The core repository carries
-the user-facing patcher, OpenCore integration, EFI preparation, diagnostics,
-and cross-layer contracts. The companion repositories isolate reusable boot
-and runtime components so their evidence can be reviewed independently. Those
-components are vendored into this repository as **git submodules** (one per
-crate under `nextcore/crates/`), so module source lives in exactly one place.
+NextCore is an experimental macOS bootloader and compatibility toolkit under
+development for Intel and Apple Silicon. Its required targets are Tahoe native
+HAL and Golden Gate AMD64↔Apple Silicon HAL with actual guest Metal acceleration.
+These are development goals; the measured results below define current support.
+The repository contains the guided tool, EFI implementation, external compatibility
+integrations and diagnostics. Reusable Rust crates live under `nextcore/crates/`
+and can be exported as independently tested modules.
 
 Changes to `main` arrive **only through pull requests**. `main` is protected:
 required reviews, required status checks (`docs-build`, `isolated-asset-guard`,
@@ -54,7 +55,7 @@ merge. See the [branching and release policy](docs/wiki/Branching-and-Release.md
 | **CLI** | [Nextcore-Tool](https://github.com/26x86/Nextcore-Tool) | Reproducible command-line orchestration |
 | **Compatibility packages** | [OpenCorePkg](https://github.com/26x86/OpenCorePkg) · [MetallibSupportPkg](https://github.com/26x86/MetallibSupportPkg) · [PatcherSupportPkg](https://github.com/26x86/PatcherSupportPkg) | Upstream integration and patcher support |
 
-Every exported Nextcore module has an independent `main` branch, fixed initial
+Every exported NextCore module has an independent `main` branch, fixed initial
 tag, file-hash inventory, and CI gate. The module boundary does not widen any
 boot claim: it makes each layer easier to inspect and test.
 
@@ -62,13 +63,25 @@ boot claim: it makes each layer easier to inspect and test.
 
 | Layer | Current evidence | Status |
 | --- | --- | --- |
-| x86 UEFI | Authored OVMF handoff probes validate allocation, memory-copy, flat DeviceTree, and 32-bit transition contracts | Contract verified; not XNU boot |
-| ARM recovery | DFU, iBEC endpoint, Stage2 prompt, restore-role transfer, and `bootx` acknowledgement are recorded | Firmware panic after `bootx`; macOS not verified |
-| Native Apple Silicon | The current Windows and registered remote hosts are x86_64 | A native macOS/Apple Silicon host is still required |
-| Userspace and Metal | No target-matching XNU/userspace boot evidence yet | Not verified |
+| EFI picker | Actual OVMF GOP selection, matching child execution, Esc cancellation, automatic boot and text fallback | Verified at the firmware UI layer |
+| Tahoe native EFI | NextCore ConsoleControl → original booter → original XNU and launchd, correlated with a unique CPU memory sample | Early userspace reached; full HAL and OS acceptance unfinished |
+| Tahoe external reference | Signed recovery reaches WindowServer and the recovery GUI after a standard virtual SMC is supplied | Recovery GUI verified; installed OS and Metal unfinished |
+| Golden Gate ARM recovery | DFU, iBEC endpoint, Stage2 prompt, five restore roles and `bootx` acknowledgement | A same-event unmapped MMIO read stops firmware before XNU |
+| Metal | Real Intel host GPU compute/readback; x86_64 and ARM64 guest Metal probes built | Guest Metal execution remains mandatory and unverified |
 
-Read the complete acceptance boundary in [Nextcore validation](nextcore/VALIDATION.md)
+Read the complete acceptance boundary in [NextCore validation](nextcore/VALIDATION.md)
 and the [session evidence report](nextcore/artifacts/NEXTCORE_SESSION_REPORT_20260907.md).
+
+## Firmware picker
+
+![NextCore picker running in OVMF](resources/branding/nextcore-picker.png)
+
+This is an actual OVMF screenshot with authored test entries. Set
+`Misc.Boot.ShowPicker=true` to select enabled `Misc.Entries` using the arrow keys
+or Tab, Enter to boot, and Esc to cancel. The current loader selects configured
+EFI applications on its own volume. Missing/false `ShowPicker` retains the
+existing single-entry automatic boot behavior. Unsupported graphics modes use
+the firmware text menu. This screen is separate from a macOS GUI or Metal result.
 
 ## Working modes
 
