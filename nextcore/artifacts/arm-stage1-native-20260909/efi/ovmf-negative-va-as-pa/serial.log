@@ -1,0 +1,8 @@
+[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01HBdsDxe: loading Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+BdsDxe: starting Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+NXMMU: ENTRY host=x86_64 profile=nextcore-stage1-fixed-nc-v1 authored=true
+NXMMU: ENTRY host=x86_64 profile=nextcore-stage1-fixed-nc-v1 authored=true
+NXMMU: CASE name=strb granule=4096 upper=false status=4 provider=5 retired=0 blocks=0 fetch=1 data=0 completed=0 esr=0x0 far=0x0 reply=3 fsc=0 pass=false
+NXMMU: MISMATCH_ABI version=2 size=320 fault=0x0 elr=0x0 spsr=0x0 sp=0x20006000 last=0x20000000 level=4294967295 context=0 restore=0
+NXMMU: MISMATCH pc=0x20000000 expected_pc=0x2000000c registers=[20004000, 11223344c0deab81, abcdef0187654321, 76543210fedcba98] expected=[20004000, 11223344c0deab81, abcdef0187654321, 76543210fedcba98] ram=false tables=true
+NXMMU: FAIL completed=0 status=COMPROMISED_DATA

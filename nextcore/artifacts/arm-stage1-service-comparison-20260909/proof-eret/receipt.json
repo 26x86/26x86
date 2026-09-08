@@ -1,0 +1,2659 @@
+{
+  "schema": "nextcore.captured-arm-stage1-service-comparison.v1",
+  "passed": true,
+  "oracle_kind": "eret78",
+  "oracle_case_count": 78,
+  "exact_profile_comparisons": 78,
+  "captured_btype_profile_rejections": 0,
+  "all_compared_cases_architectural_matches": true,
+  "source_preserved": true,
+  "source_sha256_before": {
+    "memory-service/src/lib.rs": "2a32dfe97b22c03aafcacbad9817d8aaf83a97f183f181952dfc2b9189eda367",
+    "memory-service/src/abi.rs": "66b794a18316deaa7f566b8584a258ea077a6305ef8abe18cb648aa30dd07415",
+    "memory-service/src/abi_v2.rs": "95840ea60a9e148dd273966e416d3a90083c3617aa0d89d268705e1285dc4b73",
+    "memory-service/src/stage1.rs": "9a5081e4c281b9a2fc9866ec2996296731a5c91ece3494fb64c08bcff0be627a",
+    "preos/src/mmu.rs": "c17c6d3332ee88697eb412e867befbb1c2b87263c50b027b7b68d6c1e0502955",
+    "preos/src/exception_level.rs": "254bbee46dfeab1015ad98e3953f51b4ca07f5527e26340f2746aed374c58ed7"
+  },
+  "source_sha256_after": {
+    "memory-service/src/lib.rs": "2a32dfe97b22c03aafcacbad9817d8aaf83a97f183f181952dfc2b9189eda367",
+    "memory-service/src/abi.rs": "66b794a18316deaa7f566b8584a258ea077a6305ef8abe18cb648aa30dd07415",
+    "memory-service/src/abi_v2.rs": "95840ea60a9e148dd273966e416d3a90083c3617aa0d89d268705e1285dc4b73",
+    "memory-service/src/stage1.rs": "9a5081e4c281b9a2fc9866ec2996296731a5c91ece3494fb64c08bcff0be627a",
+    "preos/src/mmu.rs": "c17c6d3332ee88697eb412e867befbb1c2b87263c50b027b7b68d6c1e0502955",
+    "preos/src/exception_level.rs": "254bbee46dfeab1015ad98e3953f51b4ca07f5527e26340f2746aed374c58ed7"
+  },
+  "oracle_sha256": {
+    "report.json": "14c01bbae5f9fb1bce4545857f85a4e544e9dc2d2ddad7969b74b140f4a0fd6a",
+    "normal.log": "c5f3f97663098ed8d2dddd6872eed4faa5c925eee0bc5fa741b717dfc0c0e324",
+    "operation_oracle.c": "4fcabed2149ab0c5a69a543bc34f52339d2e34386687ca2335b9b33d771a23d4",
+    "operation_start.S": "74f8a277460abd832036349bfcbd9fed91a1f9e1b398efe340a4b6c6e6301990"
+  },
+  "control_metadata": {
+    "abi_version": 2,
+    "struct_size": 80,
+    "profile": 1,
+    "epoch": 1,
+    "scr": {
+      "captured": null,
+      "service": 0,
+      "reason": "Inactive service profile field; original EL2 fixture did not capture SCR_EL3. No equality asserted."
+    }
+  },
+  "tool_sha256": {
+    "replay.py": "6a29cfe85f42a885db509d91d4c8058be6383feb4b21462d37a7b502dfd47653",
+    "service_replay.rs": "754d70bb9b661500ba6148f2893e397a37fe065b0e3172d70fa7aa52c140b0d3",
+    "source-freeze.json": "752402ad50e24d43fb528e842c4f5bc8f3b8d2f2f7b0c7857a9063c8fdb5649b"
+  },
+  "oracle_elf_sha256": "3ae9d0a625592835802141de572692d10e2f72efd757958d9b1d46c799022034",
+  "hcr_adaptation": {
+    "captured": 2147483648,
+    "service": 0,
+    "reason": "Only harness RW differs; VM/TGE/all other captured bits zero; service has no EL2."
+  },
+  "backing_provenance": {
+    "directly_captured": "Upper table base/first entry/second page, TTBR/TCR/MAIR/SCTLR, VA/access/SPSR and printed instruction PC",
+    "reconstructed_from_authored_source": "Original arrays zeroed; lower code table writes from C and ELF symbols; RET at data+0x230; STORE operands XZR/WZR.",
+    "elf_symbols": {
+      "tables": [
+        1074348032,
+        65536
+      ],
+      "code": [
+        1074413568,
+        65536
+      ],
+      "data": [
+        1074479104,
+        65536
+      ]
+    },
+    "ram_scope": "Exact64KiB original data array; block cases fault before missing backing. No replacement mappings."
+  },
+  "native_jit_executed": false,
+  "physical_arm_executed": false,
+  "original_os_boot_verified": false,
+  "negative_control_detected": true,
+  "known_12_pc_priority_cases_excluded": true,
+  "original_a0_negative_excluded": true,
+  "cases": [
+    {
+      "name": "g4096_el1_a2_L3_k0_u1_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 1,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 2315255808,
+        "address": 18446462598732841521
+      },
+      "actual": {
+        "result": 1,
+        "fault": 1,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 2315255808,
+        "address": 18446462598732841521,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k0_u0_cross0",
+      "expected": {
+        "result": 0,
+        "fault": 0,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 0,
+        "address": 0
+      },
+      "actual": {
+        "result": 0,
+        "fault": 0,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 0,
+        "address": 0,
+        "value0": 3596551104,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "authored_read_value": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 3,
+        "fsc": 7,
+        "esr": 2248146951,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 3,
+        "fsc": 7,
+        "esr": 2248146951,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k2_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 6,
+        "level": 3,
+        "fsc": 11,
+        "esr": 2248146955,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 6,
+        "level": 3,
+        "fsc": 11,
+        "esr": 2248146955,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k4_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L1_k2_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 6,
+        "level": 1,
+        "fsc": 9,
+        "esr": 2248146953,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 6,
+        "level": 1,
+        "fsc": 9,
+        "esr": 2248146953,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L1_k4_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 1,
+        "fsc": 13,
+        "esr": 2248146957,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 1,
+        "fsc": 13,
+        "esr": 2248146957,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L2_k2_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 6,
+        "level": 2,
+        "fsc": 10,
+        "esr": 2248146954,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 6,
+        "level": 2,
+        "fsc": 10,
+        "esr": 2248146954,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L2_k4_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 2,
+        "fsc": 14,
+        "esr": 2248146958,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 2,
+        "fsc": 14,
+        "esr": 2248146958,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L0_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 0,
+        "fsc": 4,
+        "esr": 2248146948,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 0,
+        "fsc": 4,
+        "esr": 2248146948,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L1_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 1,
+        "fsc": 5,
+        "esr": 2248146949,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 1,
+        "fsc": 5,
+        "esr": 2248146949,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L2_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 2,
+        "fsc": 6,
+        "esr": 2248146950,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 2,
+        "fsc": 6,
+        "esr": 2248146950,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k11_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k13_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k14_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k15_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k16_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k17_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k19_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k21_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k23_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el1_a2_L3_k25_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k0_u0_cross0",
+      "expected": {
+        "result": 0,
+        "fault": 0,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 0,
+        "address": 0
+      },
+      "actual": {
+        "result": 0,
+        "fault": 0,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 0,
+        "address": 0,
+        "value0": 3596551104,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "authored_read_value": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k0_u1_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 1,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 2315255808,
+        "address": 18446462598732841521
+      },
+      "actual": {
+        "result": 1,
+        "fault": 1,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 2315255808,
+        "address": 18446462598732841521,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 3,
+        "fsc": 7,
+        "esr": 2181038087,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 3,
+        "fsc": 7,
+        "esr": 2181038087,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k2_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 6,
+        "level": 3,
+        "fsc": 11,
+        "esr": 2181038091,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 6,
+        "level": 3,
+        "fsc": 11,
+        "esr": 2181038091,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k4_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L1_k2_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 6,
+        "level": 1,
+        "fsc": 9,
+        "esr": 2181038089,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 6,
+        "level": 1,
+        "fsc": 9,
+        "esr": 2181038089,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L1_k4_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 1,
+        "fsc": 13,
+        "esr": 2181038093,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 1,
+        "fsc": 13,
+        "esr": 2181038093,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L2_k2_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 6,
+        "level": 2,
+        "fsc": 10,
+        "esr": 2181038090,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 6,
+        "level": 2,
+        "fsc": 10,
+        "esr": 2181038090,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L2_k4_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 2,
+        "fsc": 14,
+        "esr": 2181038094,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 2,
+        "fsc": 14,
+        "esr": 2181038094,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L0_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 0,
+        "fsc": 4,
+        "esr": 2181038084,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 0,
+        "fsc": 4,
+        "esr": 2181038084,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L1_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 1,
+        "fsc": 5,
+        "esr": 2181038085,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 1,
+        "fsc": 5,
+        "esr": 2181038085,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L2_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 2,
+        "fsc": 6,
+        "esr": 2181038086,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 2,
+        "fsc": 6,
+        "esr": 2181038086,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k12_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k13_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k16_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k17_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k20_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k21_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k24_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g4096_el0_a2_L3_k25_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446462598732841520,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k0_u0_cross0",
+      "expected": {
+        "result": 0,
+        "fault": 0,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 0,
+        "address": 0
+      },
+      "actual": {
+        "result": 0,
+        "fault": 0,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 0,
+        "address": 0,
+        "value0": 3596551104,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "authored_read_value": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k0_u1_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 1,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 2315255808,
+        "address": 18446603336221196849
+      },
+      "actual": {
+        "result": 1,
+        "fault": 1,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 2315255808,
+        "address": 18446603336221196849,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 3,
+        "fsc": 7,
+        "esr": 2248146951,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 3,
+        "fsc": 7,
+        "esr": 2248146951,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k2_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 6,
+        "level": 3,
+        "fsc": 11,
+        "esr": 2248146955,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 6,
+        "level": 3,
+        "fsc": 11,
+        "esr": 2248146955,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k4_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L2_k2_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 6,
+        "level": 2,
+        "fsc": 10,
+        "esr": 2248146954,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 6,
+        "level": 2,
+        "fsc": 10,
+        "esr": 2248146954,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L2_k4_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 2,
+        "fsc": 14,
+        "esr": 2248146958,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 2,
+        "fsc": 14,
+        "esr": 2248146958,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L1_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 1,
+        "fsc": 5,
+        "esr": 2248146949,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 1,
+        "fsc": 5,
+        "esr": 2248146949,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L2_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 2,
+        "fsc": 6,
+        "esr": 2248146950,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 2,
+        "fsc": 6,
+        "esr": 2248146950,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k11_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k13_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k14_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k15_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k16_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k17_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k19_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k21_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k23_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el1_a2_L3_k25_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2248146959,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k0_u0_cross0",
+      "expected": {
+        "result": 0,
+        "fault": 0,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 0,
+        "address": 0
+      },
+      "actual": {
+        "result": 0,
+        "fault": 0,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 0,
+        "address": 0,
+        "value0": 3596551104,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "authored_read_value": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k0_u1_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 1,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 2315255808,
+        "address": 18446603336221196849
+      },
+      "actual": {
+        "result": 1,
+        "fault": 1,
+        "level": 4294967295,
+        "fsc": 0,
+        "esr": 2315255808,
+        "address": 18446603336221196849,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 3,
+        "fsc": 7,
+        "esr": 2181038087,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 3,
+        "fsc": 7,
+        "esr": 2181038087,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k2_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 6,
+        "level": 3,
+        "fsc": 11,
+        "esr": 2181038091,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 6,
+        "level": 3,
+        "fsc": 11,
+        "esr": 2181038091,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k4_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L2_k2_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 6,
+        "level": 2,
+        "fsc": 10,
+        "esr": 2181038090,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 6,
+        "level": 2,
+        "fsc": 10,
+        "esr": 2181038090,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L2_k4_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 2,
+        "fsc": 14,
+        "esr": 2181038094,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 2,
+        "fsc": 14,
+        "esr": 2181038094,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L1_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 1,
+        "fsc": 5,
+        "esr": 2181038085,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 1,
+        "fsc": 5,
+        "esr": 2181038085,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L2_k1_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 4,
+        "level": 2,
+        "fsc": 6,
+        "esr": 2181038086,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 4,
+        "level": 2,
+        "fsc": 6,
+        "esr": 2181038086,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k12_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k13_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k16_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k17_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k20_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k21_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k24_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "name": "g16384_el0_a2_L3_k25_u0_cross0",
+      "expected": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848
+      },
+      "actual": {
+        "result": 1,
+        "fault": 5,
+        "level": 3,
+        "fsc": 15,
+        "esr": 2181038095,
+        "address": 18446603336221196848,
+        "value0": 0,
+        "value1": 0,
+        "ram_unchanged": 1
+      },
+      "checks": {
+        "result": true,
+        "fault": true,
+        "level": true,
+        "fsc": true,
+        "esr": true,
+        "address": true,
+        "no_values_on_failure": true,
+        "original_zero_store_backing_unchanged": true
+      },
+      "passed": true
+    }
+  ]
+}

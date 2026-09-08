@@ -1,0 +1,8 @@
+{
+  "kind": "authored code leaf uses VA as PA",
+  "before": "let mut code_descriptor = RAM_PA | LEAF;",
+  "after": "let mut code_descriptor = va | LEAF;",
+  "source_before_sha256": "f3813c51ba2c0f9fd9f89f75248b51b1a3454b815ba93cca60e67981fee9c8d7",
+  "source_after_sha256": "b6f9994a9a1fc2241afc9c7be6652f0bb35b37838866de77fbc3fecda4d6963c",
+  "original_assets_used": false
+}

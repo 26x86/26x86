@@ -1,0 +1,16 @@
+[
+  "python3",
+  "/home/sharh/work/integration-validation-bp32-final-20260909/26x86/nextcore/artifacts/arm-stage1-service-comparison-20260909/replay.py",
+  "--oracle-kind",
+  "eret78",
+  "--oracle-run",
+  "/home/sharh/work/integration-validation-bp32-final-20260909/26x86/nextcore/artifacts/arm-stage1-service-comparison-20260909/oracle-eret",
+  "--oracle-elf",
+  "/home/sharh/work/integration-validation-bp32-final-20260909/26x86/nextcore/artifacts/arm-stage1-service-comparison-20260909/oracle-eret/normal.elf",
+  "--runtime",
+  "/home/sharh/work/integration-validation-bp32-final-20260909/26x86/nextcore/crates/nextcore-ise/runtime",
+  "--output",
+  "/home/sharh/work/bp32-recursive-service-replay/eret",
+  "--rustc",
+  "/home/sharh/.rustup/toolchains/1.98.1-x86_64-unknown-linux-gnu/bin/rustc"
+]

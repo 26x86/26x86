@@ -1,0 +1,10 @@
+{
+  "memory_stage1.inc": "ba87a10f4a53144eff86c1b97f474fc490d520b74f114507f9a6669c95c18f7f",
+  "memory_boot_v2.c": "eb07fea6ab40567c38616fd12822146e61be84e4fa6806398832935b6753938c",
+  "memory_boot_v2.h": "67564f55e7dbce6d19d6d3ae3daaa936c3d8801daae6dca027db62c225f70f7d",
+  "memory_abi_v2.h": "a22bd4f1b264c521889bb3650c5c3abcbed5cab9bd4fca72938ec2512d936264",
+  "jit.c": "6be2be04cd7f4f8ee091dcbd0218bb5f149924c153084244de6a164fd201a804",
+  "arch.c": "99b5cf138ed60b7a98a6d94036567aa3538d5d05f880ce7bcb742c375eb2fbf9",
+  "memory-service/src/stage1.rs": "9a5081e4c281b9a2fc9866ec2996296731a5c91ece3494fb64c08bcff0be627a",
+  "preos/src/mmu.rs": "e5e35204f177e9ec112c2326bec8fe5f567e34c25c3b2e5c7a7daf1b9cbe753c"
+}

@@ -112,7 +112,7 @@ python3 nextcore/crates/nextcore-ise/tools/mmu_fault_levels/probe_fault_levels.p
   --output /path/to/new-mmu-at
 python3 nextcore/crates/nextcore-ise/tools/mmu_fault_levels/probe_abort_levels.py \
   --output /path/to/new-mmu-abort
-python3 nextcore/crates/nextcore-ise/tools/mmu_fault_levels/compare_walker.py \
+python3 nextcore/crates/nextcore-ise/tools/mmu_fault_levels/compare_current_walker.py \
   --runtime-checkout nextcore/crates/nextcore-ise \
   --at-report /path/to/new-mmu-at/report.json \
   --abort-report /path/to/new-mmu-abort/report.json --output /path/to/new-comparison

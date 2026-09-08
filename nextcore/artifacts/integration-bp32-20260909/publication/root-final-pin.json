@@ -1,0 +1,12 @@
+{
+  "efi_commit": "f3f7938fba5a90aea9849edd1ef932a6bf60084e",
+  "fresh_baseline_efi_commit": "8d53dd2227cb4472e0b86813517fd1d70d166efa",
+  "changed": [
+    "docs/ARM_STAGE1_EFI_PROBE.md",
+    "repository-files.json",
+    "repository.json"
+  ],
+  "runtime_build_ci_unchanged": true,
+  "module_inventory_and_cargo_verified": true,
+  "reader_tests_passed": 4
+}

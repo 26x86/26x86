@@ -1,0 +1,40 @@
+{
+  "schema": "nextcore.bp32-integration-summary.v1",
+  "passed": true,
+  "baseline_commit": "df60198b50a7c3ae3d63c87d98d515e526e9f8c4",
+  "final_efi_documentation_pin": "f3f7938fba5a90aea9849edd1ef932a6bf60084e",
+  "baseline_efi_runtime_pin": "8d53dd2227cb4472e0b86813517fd1d70d166efa",
+  "ise_pin": "720d7c61140e39da0f457192bd88138a52017e22",
+  "workspace_tests": 476,
+  "python_suite_cases": 149,
+  "python_skipped": 1,
+  "gui_suite_cases": 25,
+  "gui_skipped": 1,
+  "reference_tests": 98,
+  "memory_service_tests": 39,
+  "actual_x86_efi_cases": 186,
+  "separate_cli_rejections": 6,
+  "native_stage1_tests": 10,
+  "stage1_reader_tests": 4,
+  "captured_arm_fault_comparisons": 158,
+  "conditional_arm_cases": 3668,
+  "vulkan_tests": 119,
+  "clang_rust_uefi_and_package_checks": true,
+  "clippy_completed_with_warnings": true,
+  "binaries_sha256": {
+    "NXARMJIT-default.efi": "a06585e69bc2e1c6f8b2755c11a0ef08d6e36d6fa468e0b0430c41eeeb702cc3",
+    "NXARMJIT-provider.efi": "3a7b13b8dbf801587c3f823904281834040d8df568c6deddfdf00267221e53ef",
+    "NXARMJIT-tiered.efi": "1ebda2ea6fcf333739d330ceeba92194abfa18d08cfd81cd9d023bd4f9793b89",
+    "NXARMJIT-probe.efi": "f0bd5456a24c7a25afda20c00f06f37f8b46c6e6f77fc2fe4c076e4c5abf0060",
+    "NXMMU.efi": "08eacf30e4cfc09096a8345d3d63f7370e6185099883edd0f024dc92fc657d03"
+  },
+  "separate_service_replay": {
+    "data_record_comparisons": 322,
+    "successful_fetch_completion_record_comparisons": 32,
+    "fault_site_btype_rejections": 74,
+    "new_eret_fetch_matches": 78,
+    "original_target_fetch_pstate_proven_for_completion_records": false
+  },
+  "normal_macos_boot_verified": false,
+  "guest_metal_verified": false
+}

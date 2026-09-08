@@ -1,0 +1,12 @@
+   Compiling nextcore-gpu v0.1.0 (/home/sharh/work/integration-validation-bp32-final-20260909/26x86/nextcore/crates/nextcore-gpu)
+   Compiling nextcore-apls v0.1.0 (/home/sharh/work/integration-validation-bp32-final-20260909/26x86/nextcore/crates/nextcore-apls)
+   Compiling nextcore-tool v0.1.0 (/home/sharh/work/integration-validation-bp32-final-20260909/26x86/nextcore/crates/nextcore-tool)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.39s
+     Running tests/bundle_cli.rs (nextcore/target/debug/deps/bundle_cli-1c19279fc42895a6)
+
+running 1 test
+compiled EFI copied and read back unchanged: 169472 bytes from /home/sharh/work/integration-validation-bp32-final-20260909/NXARMJIT-default.efi
+test compiled_efi_is_copied_without_changes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.31s
+

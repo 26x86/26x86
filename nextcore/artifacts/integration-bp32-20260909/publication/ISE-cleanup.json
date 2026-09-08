@@ -1,0 +1,8 @@
+{
+  "merged_pr": 6,
+  "tested_head": "720d7c61140e39da0f457192bd88138a52017e22",
+  "main": "91721d0884eba228afcd8e78ed8d353c8859ec6d",
+  "ancestry_verified": true,
+  "branch_removed": "codex/native-stage1-memory",
+  "source_worktree_detached_clean": true
+}

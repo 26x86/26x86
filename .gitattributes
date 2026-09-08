@@ -51,3 +51,11 @@ nextcore/artifacts/integration-bp30-20260909/** -text -whitespace
 nextcore/artifacts/arm-conditional-compare-20260909/** -text -whitespace
 
 nextcore/artifacts/integration-bp31-20260909/** -text -whitespace
+
+nextcore/artifacts/arm-stage1-native-20260909/** -text -whitespace
+
+nextcore/artifacts/arm-stage1-oracle-20260909/** -text -whitespace
+
+nextcore/artifacts/arm-stage1-service-comparison-20260909/** -text -whitespace
+
+nextcore/artifacts/integration-bp32-20260909/** -text -whitespace

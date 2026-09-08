@@ -1,0 +1,21 @@
+{
+  "command": [
+    "cargo",
+    "build",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "/home/sharh/work/bp32-efi-stage1-proof/workspace/Cargo.toml",
+    "-p",
+    "nextcore-efi",
+    "--bin",
+    "NXMMU",
+    "--features",
+    "arm-jit-stage1-probe",
+    "--release",
+    "--target",
+    "x86_64-unknown-uefi"
+  ],
+  "runtime_override": "/home/sharh/work/bp32-ise-native-mmu/runtime",
+  "target_dir": "/home/sharh/work/bp32-efi-stage1-proof/target-final"
+}

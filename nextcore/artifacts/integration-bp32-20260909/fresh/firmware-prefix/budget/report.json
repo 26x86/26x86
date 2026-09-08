@@ -1,0 +1,98 @@
+{
+  "schema": "nextcore.x86-efi-arm-trace.v1",
+  "host_architecture": "x86_64",
+  "handoff_abi": "unprovisioned-sptm-prefix",
+  "sptm_args_provided": false,
+  "platform_profile": null,
+  "profile_reset_origin": "unprovided",
+  "sptm_services_provided": false,
+  "platform_device_tree_provided": false,
+  "config": {
+    "Nextcore": {
+      "Kernel": {
+        "Profile": "x86-efi-arm64-trace",
+        "Path": "\\EFI\\NEXTCORE\\kernel.kc",
+        "Arguments": "-v",
+        "Trace": {
+          "HandoffAbi": "unprovisioned-sptm-prefix",
+          "PhysicalBase": 1073741824,
+          "VirtualBase": 18446741874686296064,
+          "MemorySize": 67108864,
+          "ActualMemorySize": 67108864,
+          "KernelPhysical": 1107296256,
+          "InstructionBudget": 1,
+          "DeviceTreePath": "\\EFI\\NEXTCORE\\diagnostic.dt"
+        }
+      }
+    }
+  },
+  "execution": {
+    "status": 5,
+    "retired": 1,
+    "pc": 1107313668,
+    "compiled_blocks": 1,
+    "fault_instruction": 0,
+    "registers": {
+      "x0": 0,
+      "x1": 1107345408,
+      "x2": 0,
+      "x3": 49
+    },
+    "platform": {
+      "profile": 0,
+      "override": 0,
+      "pending": 0,
+      "pstate": 965,
+      "sp": 1107443712
+    },
+    "exception": {
+      "elr": 0,
+      "spsr": 0,
+      "vector": 0,
+      "esr": 0
+    }
+  },
+  "tiered_diagnostic_requested": false,
+  "tiered_diagnostic_build_observed": false,
+  "markers": [
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: CONFIG_PARSED",
+    "NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152",
+    "NXARMJIT: TRACE_DT_CHECKED templates=0 platform_complete=false",
+    "NXARMJIT: TRACE_STAGING_VERIFIED source_unchanged=true",
+    "NXARMJIT: TRACE_HANDOFF_UNPROVISIONED abi=unprovisioned-sptm-prefix sptm_args=false sptm_services=false platform_device_tree=false",
+    "NXARMJIT: TRACE_PLATFORM_PROFILE name=absent reset_origin=unprovided",
+    "NXARMJIT: TRACE_ENTER entry=0x42004400 x0=0 x1=0x4200c000 x2=0 x3=0 budget=1",
+    "NXARMJIT: TRACE_RETURN status=5 retired=1 pc=0x42004404 blocks=1 instruction=0x0",
+    "NXARMJIT: TRACE_REGISTERS x0=0x0 x1=0x4200c000 x2=0x0 x3=0x31",
+    "NXARMJIT: TRACE_PLATFORM_STATE profile=0 override=0x0 pending=0 pstate=0x3c5 sp=0x42024000",
+    "NXARMJIT: TRACE_EXCEPTION_STATE elr=0x0 spsr=0x0 vector=0x0 esr=0x0 handler_executed=false",
+    "NXARMJIT: TRACE_ONLY macos_boot_verified=false metal_verified=false",
+    "NXARMJIT: ERROR status=ABORTED"
+  ],
+  "input_sha256_before": {
+    "/home/sharh/work/integration-validation-bp32-final-20260909/NXARMJIT-probe.efi": "f0bd5456a24c7a25afda20c00f06f37f8b46c6e6f77fc2fe4c076e4c5abf0060",
+    "/home/sharh/work/integration-validation-bp32-final-20260909/firmware-prefix/probe.kc": "12d69c4d795df75d8cd9d8cad9b4fea76b7219cbc5df89c0a1516d51a0df0b0c",
+    "/home/sharh/work/integration-validation-bp32-final-20260909/firmware-prefix/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "input_sha256_after": {
+    "/home/sharh/work/integration-validation-bp32-final-20260909/NXARMJIT-probe.efi": "f0bd5456a24c7a25afda20c00f06f37f8b46c6e6f77fc2fe4c076e4c5abf0060",
+    "/home/sharh/work/integration-validation-bp32-final-20260909/firmware-prefix/probe.kc": "12d69c4d795df75d8cd9d8cad9b4fea76b7219cbc5df89c0a1516d51a0df0b0c",
+    "/home/sharh/work/integration-validation-bp32-final-20260909/firmware-prefix/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "original_inputs_preserved": true,
+  "esp_copies_preserved": true,
+  "diagnostic_completed": true,
+  "native_execution_observed": true,
+  "elapsed_seconds": 5.032,
+  "failure": null,
+  "qemu_exit_code": 0,
+  "stopped_by_harness": true,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

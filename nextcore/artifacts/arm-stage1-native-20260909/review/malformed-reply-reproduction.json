@@ -1,0 +1,35 @@
+{
+  "source_sha256": {
+    "/home/sharh/work/bp32-ise-native-mmu/runtime/jit.c": "6be2be04cd7f4f8ee091dcbd0218bb5f149924c153084244de6a164fd201a804",
+    "/home/sharh/work/bp32-ise-native-mmu/runtime/memory_stage1.inc": "ba87a10f4a53144eff86c1b97f474fc490d520b74f114507f9a6669c95c18f7f",
+    "/home/sharh/work/bp32-ise-native-mmu/runtime/memory_abi_v2.h": "a22bd4f1b264c521889bb3650c5c3abcbed5cab9bd4fca72938ec2512d936264",
+    "/home/sharh/work/bp32-ise-native-mmu/runtime/arch.c": "99b5cf138ed60b7a98a6d94036567aa3538d5d05f880ce7bcb742c375eb2fbf9"
+  },
+  "records": [
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O2",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "/home/sharh/work/bp32-native-review/malformed_reply.c",
+        "/home/sharh/work/bp32-ise-native-mmu/runtime/arch.c",
+        "-Wl,--gc-sections",
+        "-o",
+        "/home/sharh/work/bp32-native-review/malformed_reply"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/sharh/work/bp32-native-review/malformed_reply"
+      ],
+      "returncode": 0,
+      "stdout": "case=0 status=16 provider=0 ESR=86000007 retired=0 context=2 level=3\ncase=1 status=17 provider=0 ESR=96000007 retired=0 context=2 level=3\ncase=2 status=17 provider=0 ESR=96000000 retired=0 context=4 level=0\ncase=3 status=17 provider=0 ESR=96000007 retired=0 context=3 level=3\n",
+      "stderr": ""
+    }
+  ]
+}

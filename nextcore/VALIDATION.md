@@ -1,3 +1,17 @@
+## BP32 implementation checkpoint — 2026-09-09
+
+ISE720d7c6 has passed final standalone source tests and module PR6 CI; it is
+merged as91721d0. EFI8d53dd2 pins it for both native sources and the Rust service.
+Fresh parentdf60198b passed41commands:476workspace/149Python/25GUI/98reference,
+186actualEFI plus6CLI rejections, native/Arm/Vulkan/package regressions. Final
+EFIf3f7938 changes only docs/metadata from tested8d53dd2 and passed module CI;
+final parent network checkout/CI is required before merge. Clippy warnings remain
+visible. Full receipts are in artifacts/integration-bp32-20260909.
+Historical authored native/EFI and independent Arm replay evidence retain their
+own provenance in artifacts/arm-stage1-{native,oracle,service-comparison}-20260909.
+The capture overlay distinguishes32 completion-state fetch comparisons from
+actual target-state evidence. Normal macOS boot and guest Metal remain unverified.
+
 # NextCore 재개 검증 — 2026-09-09
 
 2026-09-07 작업의 통합 설명과 artifact index는

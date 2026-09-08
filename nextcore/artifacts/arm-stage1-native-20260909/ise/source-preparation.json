@@ -1,0 +1,13 @@
+{
+  "schema": "nextcore.bp32-root-source-preparation.v1",
+  "agent_freeze_sha256": "e50c376fc856f5939b9801dba16993ed43d058cf6a642df0b64e30b846aad890",
+  "runtime_unchanged": true,
+  "current_adapter_relocated": "tools/mmu_fault_levels/compare_current_walker.py",
+  "historical_index_hashes_verified": true,
+  "root_changes": [
+    ".github/workflows/ci.yml",
+    "docs/NATIVE_MMU_PROVIDER_V2.md",
+    "repository.json",
+    "repository-files.json"
+  ]
+}

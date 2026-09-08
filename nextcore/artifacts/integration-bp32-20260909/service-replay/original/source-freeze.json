@@ -1,0 +1,13 @@
+{
+  "schema": "nextcore.stage1-service-replay-source-freeze.v1",
+  "owner_runtime_freeze_sha256": "5b7bed1dfaf821592a1f6c95b408a9a5b9205cbfefa7eca35b703b8ce0221808",
+  "owner_implementation_freeze_sha256": "e50c376fc856f5939b9801dba16993ed43d058cf6a642df0b64e30b846aad890",
+  "source_sha256": {
+    "memory-service/src/lib.rs": "2a32dfe97b22c03aafcacbad9817d8aaf83a97f183f181952dfc2b9189eda367",
+    "memory-service/src/abi.rs": "66b794a18316deaa7f566b8584a258ea077a6305ef8abe18cb648aa30dd07415",
+    "memory-service/src/abi_v2.rs": "95840ea60a9e148dd273966e416d3a90083c3617aa0d89d268705e1285dc4b73",
+    "memory-service/src/stage1.rs": "9a5081e4c281b9a2fc9866ec2996296731a5c91ece3494fb64c08bcff0be627a",
+    "preos/src/mmu.rs": "c17c6d3332ee88697eb412e867befbb1c2b87263c50b027b7b68d6c1e0502955",
+    "preos/src/exception_level.rs": "254bbee46dfeab1015ad98e3953f51b4ca07f5527e26340f2746aed374c58ed7"
+  }
+}

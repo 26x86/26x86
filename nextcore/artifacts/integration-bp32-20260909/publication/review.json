@@ -1,0 +1,131 @@
+{
+  "schema": "nextcore.bp32-publication-independent-review.v1",
+  "scope": "Read-only committed publication regression review; no runtime re-execution",
+  "inventory_checks": [
+    {
+      "revision": "cc797453c3863111aa1de5fbb3db865347c813de",
+      "inventory_count": 116,
+      "errors": [],
+      "omitted": [
+        "repository-files.json"
+      ],
+      "duplicate_paths": 0,
+      "extra_paths": []
+    },
+    {
+      "revision": "720d7c61140e39da0f457192bd88138a52017e22",
+      "inventory_count": 116,
+      "errors": [],
+      "omitted": [
+        "repository-files.json"
+      ],
+      "duplicate_paths": 0,
+      "extra_paths": []
+    },
+    {
+      "revision": "8d53dd2227cb4472e0b86813517fd1d70d166efa",
+      "inventory_count": 41,
+      "errors": [],
+      "omitted": [
+        "repository-files.json"
+      ],
+      "duplicate_paths": 0,
+      "extra_paths": []
+    }
+  ],
+  "historical_mmu_files_byte_identical": {
+    "tools/mmu_fault_levels/README.md": true,
+    "tools/mmu_fault_levels/abort_oracle.c": true,
+    "tools/mmu_fault_levels/abort_start.S": true,
+    "tools/mmu_fault_levels/captured-abort/report.json": true,
+    "tools/mmu_fault_levels/captured-at/report.json": true,
+    "tools/mmu_fault_levels/compare_walker.py": true,
+    "tools/mmu_fault_levels/contract.md": true,
+    "tools/mmu_fault_levels/differential-final/report.json": true,
+    "tools/mmu_fault_levels/differential-r1/report.json": true,
+    "tools/mmu_fault_levels/oracle.c": true,
+    "tools/mmu_fault_levels/oracle.ld": true,
+    "tools/mmu_fault_levels/oracle_start.S": true,
+    "tools/mmu_fault_levels/probe_abort_levels.py": true,
+    "tools/mmu_fault_levels/probe_fault_levels.py": true,
+    "tools/mmu_fault_levels/results.json": true
+  },
+  "efi_frozen_source_comparison": {
+    "Cargo.toml": {
+      "frozen_sha256": "dadf76abeadabd15265745c859a7e525f1123a9c4fe5b968dd56175dc0f6e353",
+      "published_sha256": "445d5589cbd8666f90cb40490b1bbe89c3d68c97ad68671ae9479e4c3e360600",
+      "same": false
+    },
+    "build.rs": {
+      "frozen_sha256": "bf1adb4f27b7e989e7cbaf84cab32cdf3d61c5acb84c61735875f4ee94970243",
+      "published_sha256": "bf1adb4f27b7e989e7cbaf84cab32cdf3d61c5acb84c61735875f4ee94970243",
+      "same": true
+    },
+    "src/mmu_probe.rs": {
+      "frozen_sha256": "f3813c51ba2c0f9fd9f89f75248b51b1a3454b815ba93cca60e67981fee9c8d7",
+      "published_sha256": "f3813c51ba2c0f9fd9f89f75248b51b1a3454b815ba93cca60e67981fee9c8d7",
+      "same": true
+    },
+    "docs/ARM_STAGE1_EFI_PROBE.md": {
+      "frozen_sha256": "3e58ec06547771628101036843fef14c3aa7a22357cf10f01981717bc2132033",
+      "published_sha256": "3e58ec06547771628101036843fef14c3aa7a22357cf10f01981717bc2132033",
+      "same": true
+    },
+    "docs/fixtures/stage1_pair.S": {
+      "frozen_sha256": "8e1a62d2a191dfc6576a70829be21e52bc30686a3a25751f1a13f4dd321c7060",
+      "published_sha256": "8e1a62d2a191dfc6576a70829be21e52bc30686a3a25751f1a13f4dd321c7060",
+      "same": true
+    },
+    "docs/fixtures/stage1_scalar.S": {
+      "frozen_sha256": "75673c3f3b0f9525bc1146e022a5265fe779e26d995013c4b774fac7577576bd",
+      "published_sha256": "75673c3f3b0f9525bc1146e022a5265fe779e26d995013c4b774fac7577576bd",
+      "same": true
+    },
+    "tools/verify_stage1_ovmf.py": {
+      "frozen_sha256": "0a7589f66733f0403bdd5521110f1b43420e06fb7a815eb3d8af9874fed2cff9",
+      "published_sha256": "0a7589f66733f0403bdd5521110f1b43420e06fb7a815eb3d8af9874fed2cff9",
+      "same": true
+    },
+    "tools/test_stage1_reader.py": {
+      "frozen_sha256": "5fefb30f31987722cf9f5ac4fc6a3917b3bc323927ab5a0beb9384988c1f5b77",
+      "published_sha256": "5fefb30f31987722cf9f5ac4fc6a3917b3bc323927ab5a0beb9384988c1f5b77",
+      "same": true
+    }
+  },
+  "historical_evidence_hashes_unchanged": {
+    "runtime-source-freeze.json": true,
+    "binary-final.json": true,
+    "reader-tests.log": true,
+    "isa/instruction-receipt.json": true,
+    "ovmf-final-r2/report.json": true,
+    "ovmf-negative-va-as-pa/report.json": true,
+    "negative-va-as-pa/mutation.json": true
+  },
+  "source_freeze_sha256": "c0089247756364171aab7d24461adfff83d37148dfc1c388c3ef9573361d0727",
+  "findings": [
+    {
+      "severity": "documentation",
+      "path": "docs/ARM_STAGE1_EFI_PROBE.md",
+      "line": 74,
+      "issue": "The after-parent-integration cargo build invocation omits --manifest-path nextcore/Cargo.toml although the following Python path requires parent-root cwd, which contains no Cargo.toml. Target path also requires explicit target directory or nextcore/target path.",
+      "root_notified": true,
+      "production_edit_performed": false
+    }
+  ],
+  "known_issues_already_resolved": {
+    "tracked_bytecode_removed": true,
+    "strict_test_filename": "tools/test_stage1_reader.py"
+  },
+  "reviewed_behavior": [
+    "108 unique exact case identities and exact required numeric fields; failure markers prohibit success",
+    "r2 strict-reader proof distinct from earlier r1; both use same recorded EFI binary",
+    "negative uses actual modified code leaf and fails first fetch; zero retirement and no fabricated guest ESR/FAR",
+    "ISE historical adapters/results unchanged and current adapter explicitly imports canonical enum/walker",
+    "CI invokes current walker adapter and builds UEFI memory service rather than metadata-only check"
+  ],
+  "limits": [
+    "No expensive OVMF/native rerun during this review",
+    "Cargo pin changes are not attributed to the historical eight-file source snapshot",
+    "No normal macOS boot, physical Arm, guest Metal or dynamic MMU support asserted"
+  ]
+}

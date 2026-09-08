@@ -1,0 +1,36 @@
+{
+  "schema": "nextcore.bp32-implementation-freeze.v1",
+  "runtime_freeze_preserved": true,
+  "source": "/home/sharh/work/bp32-ise-native-mmu",
+  "sha256": {
+    "docs/NATIVE_MMU_PROVIDER_V2.md": "25f9c0138297b2bf09d0790acf6274000a4fc536ab9a35b0c6d5a2ca8a6fdf54",
+    "runtime/jit.c": "6be2be04cd7f4f8ee091dcbd0218bb5f149924c153084244de6a164fd201a804",
+    "runtime/jit.h": "82ec08a23294a0d02dc95de0b98cc3c6b0d29f2de0656cbdcc4801f7c3161ce9",
+    "runtime/memory-service/src/abi_v2.rs": "95840ea60a9e148dd273966e416d3a90083c3617aa0d89d268705e1285dc4b73",
+    "runtime/memory-service/src/lib.rs": "2a32dfe97b22c03aafcacbad9817d8aaf83a97f183f181952dfc2b9189eda367",
+    "runtime/memory-service/src/stage1.rs": "9a5081e4c281b9a2fc9866ec2996296731a5c91ece3494fb64c08bcff0be627a",
+    "runtime/memory-service/src/stage1_tests.rs": "956ba369c32d1340b9be9c441fdff29c4e6d2da52deb25940bcf0fcd3c3a516e",
+    "runtime/memory_abi_v2.h": "a22bd4f1b264c521889bb3650c5c3abcbed5cab9bd4fca72938ec2512d936264",
+    "runtime/memory_boot_v2.c": "eb07fea6ab40567c38616fd12822146e61be84e4fa6806398832935b6753938c",
+    "runtime/memory_boot_v2.h": "67564f55e7dbce6d19d6d3ae3daaa936c3d8801daae6dca027db62c225f70f7d",
+    "runtime/memory_boot_v2.rs": "a6e2401432c419ca24d5e21d2e5f51a8b0b7b08dad89fa218645ffc866b6f1e0",
+    "runtime/memory_layout_v2.c": "5060ac83ae504815f6935f3518197a4f37d627f97eb4e1a110ce5b744d205c57",
+    "runtime/memory_stage1.inc": "c0a1fdd8debc75bd418bae475d1e97a097df47ddd1dd30ccf499b4241822dfb6",
+    "runtime/preos/src/arch.rs": "d184faf2c6135fd92796f3b7596c2059c03c2d798589b5d4cea3437a692e7506",
+    "runtime/preos/src/exception_level.rs": "254bbee46dfeab1015ad98e3953f51b4ca07f5527e26340f2746aed374c58ed7",
+    "runtime/preos/src/lib.rs": "2a60d25587bdb48e3ef725628129cafcdc989493d1e61efc02ea2d889b15f04b",
+    "runtime/preos/src/mmu.rs": "c17c6d3332ee88697eb412e867befbb1c2b87263c50b027b7b68d6c1e0502955",
+    "runtime/test_stage1_provider.rs": "3ae544bfb99fd8dc2525855123bf70e841d64ea638d5888c29ce83a9cad825f4",
+    "tools/mmu_fault_levels/compare_walker.py": "8aa2169e27d01f83bd3cdf2d5ec8f8301a2620a224a6d40e30a66356fe7fe22f",
+    "tools/probe_efi_memory_provider.py": "960c833e9dbd60287836f9763778a011abe88af67d3cca3b8e19e235540258a0",
+    "tools/probe_efi_native_pauth.py": "5caa0bb3beab2a4f22f777822790f2f65bf6c6a5ab8e7b9b8b17b600512f3cf0",
+    "tools/probe_efi_stage1_provider.py": "63992e10cf682c42aa27b2d0eb0bb9d0a0e2e264b8d7b8d9d9340a33ff26b20c"
+  },
+  "proofs": {
+    "native": "/home/sharh/work/bp32-native-proof-final/receipt.json",
+    "legacy_v1": "/home/sharh/work/bp32-legacy-v1-proof/receipt.json",
+    "legacy_native": "/home/sharh/work/bp32-native-legacy.json",
+    "walker158": "/home/sharh/work/bp32-walker-differential/report.json"
+  },
+  "pending": "Independent service replay and actual EFI receipt; no runtime changes planned"
+}

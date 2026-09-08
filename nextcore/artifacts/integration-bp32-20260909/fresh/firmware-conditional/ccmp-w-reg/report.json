@@ -1,0 +1,105 @@
+{
+  "schema": "nextcore.x86-efi-arm-trace.v1",
+  "host_architecture": "x86_64",
+  "handoff_abi": "unprovisioned-sptm-prefix",
+  "sptm_args_provided": false,
+  "platform_profile": "nextcore-irq-compat-v1",
+  "profile_reset_origin": "software_defined",
+  "sptm_services_provided": false,
+  "platform_device_tree_provided": false,
+  "config": {
+    "Nextcore": {
+      "Kernel": {
+        "Profile": "x86-efi-arm64-trace",
+        "Path": "\\EFI\\NEXTCORE\\kernel.kc",
+        "Arguments": "-v",
+        "Trace": {
+          "HandoffAbi": "unprovisioned-sptm-prefix",
+          "PhysicalBase": 1073741824,
+          "VirtualBase": 18446741874686296064,
+          "MemorySize": 67108864,
+          "ActualMemorySize": 67108864,
+          "KernelPhysical": 1107296256,
+          "InstructionBudget": 64,
+          "DeviceTreePath": "\\EFI\\NEXTCORE\\diagnostic.dt",
+          "PlatformProfile": "nextcore-irq-compat-v1",
+          "Platform": {
+            "InitialPstate": 965
+          }
+        }
+      }
+    }
+  },
+  "execution": {
+    "status": 1,
+    "retired": 12,
+    "pc": 1107313712,
+    "compiled_blocks": 12,
+    "fault_instruction": 0,
+    "registers": {
+      "x0": 1311768464867721216,
+      "x1": 1,
+      "x2": 1107443712,
+      "x3": 52273
+    },
+    "platform": {
+      "profile": 1,
+      "override": 0,
+      "pending": 0,
+      "pstate": 2147484613,
+      "sp": 1107443712
+    },
+    "exception": {
+      "elr": 0,
+      "spsr": 0,
+      "vector": 0,
+      "esr": 0
+    }
+  },
+  "tiered_diagnostic_requested": false,
+  "tiered_diagnostic_build_observed": true,
+  "markers": [
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: CONFIG_PARSED",
+    "NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152",
+    "NXARMJIT: TRACE_TIERED_DIAGNOSTIC maximum=4096",
+    "NXARMJIT: TRACE_DT_CHECKED templates=0 platform_complete=false",
+    "NXARMJIT: TRACE_STAGING_VERIFIED source_unchanged=true",
+    "NXARMJIT: TRACE_HANDOFF_UNPROVISIONED abi=unprovisioned-sptm-prefix sptm_args=false sptm_services=false platform_device_tree=false",
+    "NXARMJIT: TRACE_PLATFORM_PROFILE name=nextcore-irq-compat-v1 reset_origin=software_defined initial_override=0x0 initial_pstate=0x3c5 irq=0 fiq=0",
+    "NXARMJIT: TRACE_ENTER entry=0x42004400 x0=0 x1=0x4200c000 x2=0 x3=0 budget=64",
+    "NXARMJIT: TRACE_MEMORY_PROVIDER abi=1 mode=m0-only",
+    "NXARMJIT: TRACE_RETURN status=1 retired=12 pc=0x42004430 blocks=12 instruction=0x0",
+    "NXARMJIT: TRACE_REGISTERS x0=0x1234567800000000 x1=0x1 x2=0x42024000 x3=0xcc31",
+    "NXARMJIT: TRACE_PLATFORM_STATE profile=1 override=0x0 pending=0 pstate=0x800003c5 sp=0x42024000",
+    "NXARMJIT: TRACE_EXCEPTION_STATE elr=0x0 spsr=0x0 vector=0x0 esr=0x0 handler_executed=false",
+    "NXARMJIT: TRACE_MEMORY_RESULT abi=1 provider_status=0 guest_far=0x0 last_address=0x4200442c fetch_requests=12 data_requests=0 completed_data_operations=0",
+    "NXARMJIT: TRACE_ONLY macos_boot_verified=false metal_verified=false",
+    "NXARMJIT: ERROR status=ABORTED"
+  ],
+  "input_sha256_before": {
+    "/home/sharh/work/integration-validation-bp32-final-20260909/NXARMJIT-tiered.efi": "1ebda2ea6fcf333739d330ceeba92194abfa18d08cfd81cd9d023bd4f9793b89",
+    "/home/sharh/work/integration-validation-bp32-final-20260909/firmware-conditional/ccmp-w-reg.kc": "ccec86c857f2dcfbdce48fec0db39aa7a02642684432afdaec53b62dcfa5c423",
+    "/home/sharh/work/integration-validation-bp32-final-20260909/firmware-conditional/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "input_sha256_after": {
+    "/home/sharh/work/integration-validation-bp32-final-20260909/NXARMJIT-tiered.efi": "1ebda2ea6fcf333739d330ceeba92194abfa18d08cfd81cd9d023bd4f9793b89",
+    "/home/sharh/work/integration-validation-bp32-final-20260909/firmware-conditional/ccmp-w-reg.kc": "ccec86c857f2dcfbdce48fec0db39aa7a02642684432afdaec53b62dcfa5c423",
+    "/home/sharh/work/integration-validation-bp32-final-20260909/firmware-conditional/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "original_inputs_preserved": true,
+  "esp_copies_preserved": true,
+  "diagnostic_completed": true,
+  "native_execution_observed": true,
+  "elapsed_seconds": 4.784,
+  "failure": null,
+  "qemu_exit_code": 0,
+  "stopped_by_harness": true,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

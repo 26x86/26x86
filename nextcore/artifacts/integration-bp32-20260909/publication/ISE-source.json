@@ -1,0 +1,31 @@
+{
+  "commit": "cc797453c3863111aa1de5fbb3db865347c813de",
+  "paths": [
+    ".github/workflows/ci.yml",
+    "docs/NATIVE_MMU_PROVIDER_V2.md",
+    "repository-files.json",
+    "repository.json",
+    "runtime/jit.c",
+    "runtime/jit.h",
+    "runtime/memory-service/src/abi_v2.rs",
+    "runtime/memory-service/src/lib.rs",
+    "runtime/memory-service/src/stage1.rs",
+    "runtime/memory-service/src/stage1_tests.rs",
+    "runtime/memory_abi_v2.h",
+    "runtime/memory_boot_v2.c",
+    "runtime/memory_boot_v2.h",
+    "runtime/memory_boot_v2.rs",
+    "runtime/memory_layout_v2.c",
+    "runtime/memory_stage1.inc",
+    "runtime/preos/src/arch.rs",
+    "runtime/preos/src/exception_level.rs",
+    "runtime/preos/src/lib.rs",
+    "runtime/preos/src/mmu.rs",
+    "runtime/test_stage1_provider.rs",
+    "tools/mmu_fault_levels/compare_current_walker.py",
+    "tools/probe_efi_memory_provider.py",
+    "tools/probe_efi_native_pauth.py",
+    "tools/probe_efi_stage1_provider.py"
+  ],
+  "source_inventory_verified": true
+}
