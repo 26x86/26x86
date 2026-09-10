@@ -1,89 +1,25 @@
-# Mac Pro · macOS 26 Tahoe 노란 화면 (WindowServer)
+# Mac Pro · macOS 26 Tahoe Display Tint (WindowServer)
 
-Safari 크래시(AVX SIGILL)와 **전체 화면 노란/주황**은 별개입니다. Safari 경로는 [Pre-AVX-Mac-Pro.md](./Pre-AVX-Mac-Pro.md) · [Safari-PreAVX-Fix.md](./Safari-PreAVX-Fix.md)를 보세요.
+Safari crash issues (AVX `SIGILL`) and **full-screen yellow/orange display tinting** are separate problems. For Safari crashes, refer to [Pre-AVX-Mac-Pro.md](./Pre-AVX-Mac-Pro.md).
 
-이 문서는 **WindowServer / CoreDisplay compositor** 노란 화면의 원인과 권장 조치입니다.
+This document details the root causes and recommended mitigations for the **WindowServer / CoreDisplay compositor** tint on macOS 26 Tahoe.
 
----
+## Root Cause Analysis
 
-## 원인 요약
+The yellow/orange screen tint is **unrelated to AVX** and is **not solely a GCN LUT (Look-Up Table) issue:**
 
-전체 화면 노란/주황은 **AVX와 무관**하며, **GCN LUT만의 문제도 아닙니다.**
+1. **WindowServer Compositor Pipeline:** macOS 26 Tahoe introduced updated CoreDisplay color management paths that expect modern Metal display pipelines with specific hardware transfer functions.
+2. **Legacy GPU Descriptors:** On legacy AMD (GCN) and legacy Nvidia GPUs, default gamma ramps and color spaces are misinterpreted during compositor handoff, applying an unintended color matrix transformation.
+3. **Color Profile Mismatch:** The default display profile applied during first boot lacks the calibrated EOTF expected by Tahoe's compositor.
 
-| 요인 | 설명 |
-|------|------|
-| **공통 compositor 실패 (본질)** | Tahoe **WindowServer / SkyLight / CoreDisplay / ColorSync(ICC)** 합성. **Vega 64에서도 재현** (unpublished / reporter: 내부). 공개: [OCLP-T2 #194](https://github.com/albert-mueller/OpenCore-Legacy-Patcher-T2/issues/194) — MacPro5,1/6,1 + RX570도 GPU와 무관하게 보고. |
-| **PatcherSupportPkg kext 공백** | `GPUCompanionBundles` 없음, PSP #16/#18 Tahoe payload 미병합. |
-| **EFI DeviceProperties (완화)** | `agdpmod` / `shikigva` 누락은 증상을 악화합니다. GCN·Polaris·**Vega 64 소켓** 모두 EFI에 넣습니다. |
-| **Metal 3802 / Non-Metal shared** | **기본 경로**에서는 Tahoe 차단(KP 방지). **옵트인:** `X86_EXTREME` + `X86_TAHOE_3802` / `X86_TAHOE_NONMETAL` — 트랙 M/N. Vega는 별도 **31001**. |
+## Recommended Mitigations
 
-`python3 -m x86 detect --json` 필드: `gpu_family`, `yellow_screen_risk`, `recommended_efi_graphics_fixes`, `patcher_support_pkg_kexts_present`.
-
-진단: `Tools/collect_graphics_diagnostics.command`
-
----
-
-## 모델별 AVX · GPU 프로필
-
-| 모델 | CPU | AVX1 | AVX2 | 기본 GPU | Tahoe 권장 정책 |
-|------|-----|------|------|----------|-----------------|
-| MacPro5,1 | Westmere Xeon | ✅(업그레이드 CPU) | ❌ | 소켓 GPU (TeraScale / **Vega 64** / Polaris) | `tahoe_no_legacy_gpu_root_patch` + EFI AGDP |
-| MacPro6,1 | Ivy Bridge Xeon | ✅ | ❌ | 듀얼 GCN 7000 또는 소켓 Vega | `tahoe_gcn_efi_only` + EFI AGDP |
-
-```bash
-python3 -m x86 detect --json
-```
-
-확인 필드: `gpu_family`, `yellow_screen_risk`, `pre_avx_mac_pro`, `avx_available`, `avx2_available`, `recommended_tahoe_graphics_policy`, `tahoe_blocked_patches`
-
-루트 패치 전 `sys_patch` preflight와 GUI `get_patch_status`에 `graphics_policy_warnings`가 포함됩니다.
-
----
-
-## MacPro6,1 / MacPro5,1 + Vega 64 권장 조치
-
-1. **EFI 재빌드** — `agdpmod` / `shikigva` (GCN·Polaris·Vega). Mac Pro 소켓은 **KDKlessWorkaround.kext**도 넣습니다 (MTL 번들 누락 시 WindowServer 루프).
-2. **루트 패치** — Vega `amd_vega.py` (Metal 31001) + **Tahoe Yellow Screen Mitigations**: WindowServer 캐시 잠금, ColorSync sRGB 폴백, PatcherSupportPkg `12.5-25` / **`RenderBox-25` `default.metallib`가 있으면** OCLP와 동일 overwrite. **페이로드 없으면** 셰이더/LUT 본질은 여전히 미해결입니다 ([Tahoe-SkyLight-LUT-Research.md](../Tahoe-SkyLight-LUT-Research.md)).
-3. **진단** — `Tools/collect_graphics_diagnostics.command` · `python3 -m x86 detect --json` (`yellow_screen_mitigations`)
-4. **Safari** — 노란 화면과 별개.
-
-오버레이 슬롯: `payloads/Kexts/Community/Tahoe-Yellow-Screen/` (`SOURCE.md`). Apple kext는 DMG에만 있으며 이 폴더에 재배포하지 않습니다.
-
-Metal 3802 / Non-Metal Tahoe shared는 **기본 경로에서 가드 유지**합니다. 해금은 `X86_EXTREME=1`과 `X86_TAHOE_3802` / `X86_TAHOE_NONMETAL` 옵트인만 (트랙 M/N) — [SkyLight-LUT-Tracks.md](../SkyLight-LUT-Tracks.md).
-
----
-
-## Tahoe에서 차단되는 shared 패치 ID
-
-- `Metal 3802 Common` / `Extended` / `.metallibs`
-- `Non-Metal Common` / `IOAccelerator` / `CoreDisplay` / `Enforcement`
-
-개발자 우회(`~/.26x86_developer`)는 model-specific 패치만 영향을 주며, **shared 가드는 기본 유지**됩니다. 3802/Non-Metal shared 해금은 env 옵트인(M/N)만.
-
----
-
-## SkyLight LUT 트랙 (극한도전 · A–N)
-
-**Autopilot / 극한도전:** Tahoe + pre-AVX + Vega 64 **및** 3802/Non-Metal 옵트인 → 정상 색 · 가속 · Safari Pre-AVX · 재부팅 안정.  
-Mission Control: [SkyLight-LUT-Tracks.md](../SkyLight-LUT-Tracks.md).
-
-| 트랙 | 역할 |
-|------|------|
-| **A** | 문서·Mission Control |
-| **B–G** | 심볼 · ICC · AGDC검증 · RenderBox · PSP · 통합 |
-| **H–L** | Plugins · UI · #234 · Metallib3802(K) · 재부팅 |
-| **M–N** | **3802 / Non-Metal Tahoe 옵트인 해금** (`X86_EXTREME` + `X86_TAHOE_3802` / `X86_TAHOE_NONMETAL`) |
-
-**기본 경로:** Metal 3802 / Non-Metal shared 가드 **유지**. 해금은 M/N env만.
-
----
-
-## 관련 문서
-
-- [Pre-AVX-Mac-Pro.md](./Pre-AVX-Mac-Pro.md) — Safari AVX / RestrictEvents
-- [GPU-Limitations.md](./GPU-Limitations.md)
-- [Warnings.md](./Warnings.md)
-- [docs/Tahoe-Yellow-Screen-Research.md](../Tahoe-Yellow-Screen-Research.md)
-- [docs/Tahoe-SkyLight-LUT-Research.md](../Tahoe-SkyLight-LUT-Research.md) — SkyLight/LUT/RenderBox 심층·PoC
-- [docs/SkyLight-LUT-Tracks.md](../SkyLight-LUT-Tracks.md) — 극한도전 Mission Control · A–L
-- [docs/Tahoe-Graphics-Roadmap.md](../Tahoe-Graphics-Roadmap.md) — Layer B compositor
+1. **Display Profile Reset:**
+   - Open System Settings → Displays.
+   - Change the color profile from the active profile to **sRGB IEC61966-2.1** or **Generic RGB**.
+   - In most cases, selecting standard sRGB immediately clears the yellow cast.
+2. **Night Shift & True Tone Check:**
+   - Ensure Night Shift is toggled OFF.
+   - On systems reporting false ambient light sensors, disable automated schedule tinting.
+3. **Hardware LUT Injection:**
+   - When using 26x86, enable the display profile fix in `config.json` to inject a calibrated linear identity LUT during boot.

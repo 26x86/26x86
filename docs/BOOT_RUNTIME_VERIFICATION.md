@@ -1,10 +1,10 @@
-# VenFire layered boot/runtime verification
+# VenFire Layered Boot and Runtime Verification
 
-이 문서가 다루는 계층은 **EFI/preOS → QEMU VMApple TCG → 원본 AVPBooter/iBoot → XNU → macOS 사용자 공간**이다. 각 계층은 독립적인 증거를 남긴다. 특히 QEMU capability 출력, 프로세스 종료 코드, DFU ACK, synthetic guest PASS는 macOS 부팅 증거가 아니다.
+The layers covered in this specification span **EFI/preOS → QEMU VMApple TCG → authentic AVPBooter/iBoot → XNU → macOS userspace**. Each layer generates independent verification evidence. Crucially, QEMU capability dumps, process exit codes, DFU acknowledgments, or synthetic guest passes do NOT constitute valid evidence of macOS boot.
 
-## 실행 하네스
+## Execution Harness
 
-계층별 산출물은 새 디렉터리에 보존된다.
+Layer-specific artifacts are stored in newly created isolated run directories.
 
 ```sh
 python3 Tools/verify_boot_runtime.py \
@@ -12,9 +12,9 @@ python3 Tools/verify_boot_runtime.py \
   --skip-efi --skip-ovmf
 ```
 
-이 명령은 M1/VMApple source contract와 source-port manifest를 검증하고, Apple 입력이 없으면 필요한 입력을 `report.json`의 `external_input_contract`에 기록한다. EFI와 OVMF를 다시 실행하려면 `--skip-efi --skip-ovmf`를 제거한다. 해당 경로는 x86-64 OVMF에서 EFI/preOS/JIT만 검증하며 iBoot/XNU/macOS를 검증하지 않는다.
+This command verifies the M1/VMApple source contract and source-port manifest. If Apple-proprietary inputs are absent, the missing requirements are recorded in `report.json` under `external_input_contract`. To run EFI and OVMF validation, remove `--skip-efi --skip-ovmf`. Note that this path validates EFI/preOS/JIT under x86_64 OVMF only, and does not validate iBoot, XNU, or macOS.
 
-원본 Apple VM bundle을 실제로 관찰할 때만 TCG 단계를 연다.
+The TCG step is initiated only when observing an authentic Apple VM bundle:
 
 ```sh
 python3 Tools/verify_boot_runtime.py \
@@ -27,9 +27,9 @@ python3 Tools/verify_boot_runtime.py \
   --require-tcg
 ```
 
-`qemu-system-aarch64`는 `Tools/build_vmapple_tcg.py`가 고정 QEMU revision과 `research/venfire/patches/series`를 적용해 만든 바이너리여야 한다. `--firmware`는 원본 caller-owned AVPBooter 파일이어야 하고, `macosvm.json`은 ECID·hardwareModel·AUX·root를 하나의 bundle로 지정해야 한다. AUX/root에는 qcow2 copy-on-write overlay만 사용하며 입력 전후 SHA-256이 달라지면 실행이 실패한다.
+The `qemu-system-aarch64` binary must be compiled via `Tools/build_vmapple_tcg.py` matching pinned QEMU revisions and the patch series in `research/venfire/patches/series`. The `--firmware` argument specifies caller-owned, authentic AVPBooter binaries, and `macosvm.json` must declare the ECID, hardwareModel, AUX, and root disk as a unified bundle. AUX and root disks must use qcow2 copy-on-write overlays; any modification to input SHA-256 digests triggers execution failure.
 
-`--require-macos`는 실제 target-matching UART 증거가 필요할 때 사용한다.
+Use `--require-macos` when target-matching UART transcript evidence is strictly required:
 
 ```sh
 python3 Tools/verify_boot_runtime.py \
@@ -41,21 +41,21 @@ python3 Tools/verify_boot_runtime.py \
   --target 27 --require-tcg --require-macos
 ```
 
-## 증거 게이트
+## Evidence Gates
 
-| 계층 | `report.json` 판정 | 통과 조건 |
-| --- | --- | --- |
-| EFI firmware | `firmware_efi=passed` | production EFI build와 OVMF execution |
-| Rust preOS | `rust_preos=passed` | Rust ABI/policy와 EFI bridge가 같은 실행에서 통과 |
-| AArch64 JIT | `aarch64_jit=passed` | built-in/external guest, unsupported instruction, budget exhaustion |
-| native machine | `partial` | VMApple TCG source/patch 계약과 descriptor graph. 실제 M1 AIC/DART 증거는 아님 |
-| iBoot | `apple_boot_chain=runtime-tested`의 일부 | UART에서 iBoot Stage2와 XNU 순서가 확인됨 |
-| XNU | full-chain 조건의 일부 | `Darwin Kernel Version`과 요청 target major 일치 |
-| macOS userspace | `macos=true` | `launchd`, `loginwindow`, 또는 `WindowServer`가 같은 로그에 있음 |
+| Layer | `report.json` Gate | Passing Criteria |
+|-------|--------------------|------------------|
+| EFI Firmware | `firmware_efi=passed` | Production EFI build and successful OVMF execution |
+| Rust preOS | `rust_preos=passed` | Rust ABI/policy and EFI bridge pass within the same run |
+| AArch64 JIT | `aarch64_jit=passed` | Built-in/external guest, unsupported instruction trapping, budget exhaustion limits |
+| Native Machine | `partial` | VMApple TCG source/patch contract and descriptor graph (not physical M1 AIC/DART) |
+| iBoot | `apple_boot_chain=runtime-tested` component | Sequential iBoot Stage2 and XNU handoff markers confirmed via UART |
+| XNU | Full-chain criterion | `Darwin Kernel Version` matches requested target major version |
+| macOS Userspace | `macos=true` | `launchd`, `loginwindow`, or `WindowServer` present in the same log transcript |
 
-`x86/boot_evidence.py`는 marker의 절대 byte offset을 보존한다. iBoot banner나 DFU ACK만 있고 XNU/userspace가 없으면 `macos_boot_verified`는 절대로 올라가지 않는다. synthetic `virt`/`vmapple` guest는 자체 작성 ARM64 guest이므로 해당 parser를 통과시킬 수 없다.
+`x86/boot_evidence.py` records absolute byte offsets for all evidence markers. If only an iBoot banner or DFU ACK is present without XNU and userspace markers, `macos_boot_verified` is never asserted. Synthetic `virt`/`vmapple` guests written for test purposes cannot satisfy this parser.
 
-macOS 27 j274 IPSW의 raw Stage2를 별도로 계측하려면 다음처럼 실행한다.
+To measure raw Stage2 execution from the macOS 27 j274 IPSW independently:
 
 ```sh
 python3 -m x86 vmapple run-tcg \
@@ -68,30 +68,25 @@ python3 -m x86 vmapple run-tcg \
   --research-graphics --duration 60 --research-only --json
 ```
 
-이 모드의 `firmware_execution_evidence`는 QEMU TCG `exec` trace에서
-firmware window 진입과 `0x1fc000000` high-RAM relocation을 관찰했는지만
-기록한다. raw Stage2에는 별도 UART banner가 없을 수 있으므로 이 값은
-`iboot_stage2_verified` 또는 XNU/WindowServer 성공으로 자동 승격되지 않는다.
-Reims의 `host_frame_presented`도 host synthetic swapchain 증거일 뿐 guest
-WindowServer/AGX/Metal 증거가 아니다.
+In this mode, `firmware_execution_evidence` only records whether the QEMU TCG `exec` trace observes entry into the firmware window and relocation to high-RAM (`0x1fc000000`). Because raw Stage2 may omit UART banners, this observation is never promoted to `iboot_stage2_verified` or XNU/WindowServer success. Host synthetic swapchain presentation (`host_frame_presented`) proves only host presentation, not guest WindowServer/AGX/Metal execution.
 
-전체 계층을 하나의 별도 판정으로 확인하려면 `full_iboot_xnu_userspace_chain_verified=true`도 필요하다. 이 값은 iBoot Stage2 marker가 XNU marker보다 앞에 있고, target-matching XNU와 userspace marker가 같은 UART transcript에 있을 때만 설정된다. direct AVPBooter가 iBoot banner를 출력하지 않는 경우 `macos_boot_verified`와 이 stricter chain 값은 의도적으로 분리된다.
+A unified verdict requires `full_iboot_xnu_userspace_chain_verified=true`. This flag is set if and only if the iBoot Stage2 marker precedes the XNU marker, and target-matching XNU and userspace markers appear within the same UART transcript. When direct AVPBooter suppresses banners, `macos_boot_verified` and this stricter chain verification are maintained separately.
 
-저장된 native/TCG 런처 보고서는 실행하지 않고 causal contract만 다시 확인할 수 있다.
+Saved native/TCG launcher reports can be re-evaluated for causal contract integrity without executing:
 
 ```sh
 python3 sandbox/efi/verify_iboot_xnu_handoff.py \
   /path/to/tcg-or-native/launch.json --target-major 27
 ```
 
-이 검증기는 marker, target major, input hash, direct/recovery 단계의 인과성을 다시 계산한다. 보고서가 `macos_boot_verified=true`라고 적어도 이 조건을 만족하지 않으면 양성 주장을 거부한다.
+This verifier re-calculates marker ordering, target major matching, input hashes, and direct/recovery step causality. Even if an input report claims `macos_boot_verified=true`, inconsistent conditions cause the affirmative claim to be rejected.
 
-현재 non-Apple host에서 실제 macOS 단계가 `blocked`인 것은 구현 누락을 숨기지 않는 의도적인 판정이다. 실제 통과에 필요한 외부 입력은 다음과 같다.
+Marking non-Apple host macOS phases as `blocked` is an intentional design choice that reflects genuine implementation reality:
 
-- Apple-signed, target-matching AVPBooter/VMApple firmware;
-- 같은 hardwareModel과 ECID에 맞는 provisioned AUX/root pair;
-- iBoot가 요구하는 복구/저장장치/DART 계약과 해당 QEMU trace;
-- 수정되지 않은 guest UART에서 iBoot Stage2, target-matching XNU, userspace markers;
-- native HVF 경로를 주장하는 경우 genuine Apple Silicon arm64 Darwin host와 Virtualization.framework.
+- Apple-signed, target-matching AVPBooter / VMApple firmware;
+- Provisioned AUX and root disk pairs calibrated to identical hardwareModel and ECID parameters;
+- Recovery, storage, and DART contracts mandated by iBoot with corresponding QEMU trace validation;
+- Unmodified guest UART transcripts demonstrating sequential iBoot Stage2, matching XNU, and userspace markers;
+- When claiming native HVF paths: authentic Apple Silicon arm64 Darwin host with Virtualization.framework.
 
-따라서 OVMF, TCG machine help, synthetic guest, 또는 기존 iBoot recovery ACK를 합쳐서 “macOS 호환성 레이어가 부팅했다”고 표현하지 않는다. 이 하네스가 `macos_boot_verified=true`를 출력하는 유일한 경로는 위 UART evidence gate이다.
+OVMF, TCG machine help, synthetic guests, or legacy iBoot recovery ACKs are never conflated with "macOS compatibility layer has booted". The sole pathway that yields `macos_boot_verified=true` is the empirical UART evidence gate defined above.

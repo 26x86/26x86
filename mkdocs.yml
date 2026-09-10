@@ -18,14 +18,12 @@ exclude_docs: |
   Tahoe-*
   STAGE-WORKFLOW.md
   WIP-STATUS.md
-  KOREAN_EDITION.md
   ABSTRACTION_BINARIES.md
   NEXTCORE_CURRENT_CONTEXT.md
   NEXTCORE_PROMPTS.md
   ISOLATED_INVENTORY.md
   LICENSE.md
   README.en.md
-  SETUP.en.md
   Icon-Composer-*.zip
   ResXtreme.zip
   validation/**

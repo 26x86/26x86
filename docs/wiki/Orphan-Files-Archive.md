@@ -1,34 +1,19 @@
-# 제거·정리된 파일 목록
+# Orphan & Deprecated Files Archive
 
-2026-09-04 찌꺼기 정리로 저장소에서 **삭제**한 항목입니다.
+Record of deprecated and archived assets removed from the active tree during code health cleanups.
 
-## 삭제된 문서
+## Archived Documentation
 
-| 파일 | 사유 |
-|------|------|
-| `docs/ARCHITECTURE-26x86.md` | 내부 설계서 → [Developer.md](./Developer.md) |
-| `docs/DEPENDENCY-AUDIT.md` | 개발자 감사 로그 |
-| `docs/CLEANROOM-ARCHITECTURE.md` | Developer.md로 통합 |
-| `docs/wiki/Migration-from-OCLP.md` | [Migration.md](./Migration.md)와 중복 |
+| Path | Reason for Removal / Successor |
+|------|--------------------------------|
+| `docs/ARCHITECTURE-26x86.md` | Consolidated into [Developer.md](./Developer.md) and [wiki/Architecture.md](./Architecture.md) |
+| `docs/KOREAN_EDITION.md` | Removed under universal English-only documentation mandate |
+| `docs/SETUP.en.md` | Unified directly into canonical [SETUP.md](../SETUP.md) |
+| `docs/wiki/README.en.md` | Unified directly into canonical [wiki/README.md](./README.md) |
 
-## 삭제된 빌드·진입점
+## Archived Scripts & Binaries
 
-| 파일 | 사유 |
-|------|------|
-| `OpenCore-Patcher-GUI.spec` / `.command` | `26x86-GUI.spec` / `26x86-GUI.command`으로 이름 통일 (PyInstaller용) |
-
-## 삭제된 CI·로컬 아카이브
-
-| 파일 | 사유 |
-|------|------|
-| `ci_tooling/.../com.dortania...privileged-helper` | 구 helper 바이너리 |
-| `archive/legacy-oclp/` | EFI 비교 로그, `NEW_EFI_*`, 일회성 스크립트 |
-
-`archive/`는 `.gitignore` (로컬 전용).
-
-## 이전에 삭제
-
-- `payloads/Kexts/**/*.dSYM`
-- `rebrand_to_26x86.py`
-
-개발자: [Developer.md](./Developer.md)
+| Asset | Notes |
+|-------|-------|
+| Legacy shell wrappers | Replaced by unified `26x86.command`, `26x86.bat`, and `26x86.sh` |
+| Obsolete test payloads | Replaced by automated Python test suites in `tests/` |

@@ -1,64 +1,36 @@
-# QEMU GUI 검증 경로
+# QEMU GUI Validation Pathways
 
-이 문서는 macOS 27 Golden Gate를 “부팅했다”고 표시하기 위한 문서가
-아닙니다. QEMU GUI는 현재 두 계층을 확인하는 도구입니다.
+This document does NOT claim that macOS 27 Golden Gate has "booted". Rather, the QEMU GUI serves as an empirical harness for verifying two distinct boundary layers:
 
-* **EFI 계층:** x86_64 OVMF가 26x86 VSK 입력 검증 EFI를 실제로 실행합니다.
-* **iBoot/복구 계층:** 별도 연구용 VMApple QEMU가 원본 AVPBooter와 DFU USB
-  전송을 실행합니다.
+* **EFI Layer:** An x86_64 OVMF instance executes the 26x86 VSK input verification EFI application.
+* **iBoot / Recovery Layer:** A dedicated research-grade VMApple QEMU instance executes authentic AVPBooter firmware and DFU USB transports.
 
-VMApple의 MachineType은 `iBoot(AArch64)`로 고정되어 macOS 게스트에만
-사용됩니다. iOS와 iPadOS 및 기타 모바일 Apple OS는 지원 대상이 아니며,
-정책 검증 단계에서 DFU 업로드 전에 거부됩니다. 이 계층의 복구 범위는
-macOS용 DFU/IPSW이고 Local Recovery 기본 파일명은 `_default.ipsw`입니다.
+VMApple's MachineType is locked to `iBoot(AArch64)` and used exclusively for macOS guests. iOS, iPadOS, and other mobile Apple operating systems are strictly out of scope and rejected during policy validation prior to DFU upload. The recovery protocol for this tier is DFU/IPSW for macOS, with a local recovery default filename of `_default.ipsw`.
 
-OVMF 테스트는 항상 `macos_boot_verified=false`입니다. VMApple은 이제
-`--boot-selection macos`에서 복구 전송을 건너뛰고 AVPBooter의 정상 macOS
-항목을 직접 관찰합니다. 다만 `Darwin Kernel Version`과 `launchd`,
-`loginwindow`, `WindowServer` UART 증거가 모두 확인될 때만
-`macos_boot_verified=true`가 되며, Recovery 선택은 기존처럼 복구
-프로토콜 경계만 기록합니다.
+OVMF test cases always conclude with `macos_boot_verified=false`. VMApple now skips recovery transport when `--boot-selection macos` is specified, monitoring AVPBooter's authentic macOS boot entry directly. However, `macos_boot_verified=true` is asserted ONLY when `Darwin Kernel Version`, `launchd`, `loginwindow`, and `WindowServer` UART evidence markers are all confirmed. Selecting Recovery continues to record only recovery protocol boundary states.
 
-## qemu-t8030에서 가져온 Apple Silicon 장치 프로필
+## Apple Silicon Device Profiles Derived from qemu-t8030
 
-`qemu-t8030`의 [Bringing up the emulator 문서](https://github.com/TrungNguyen1909/qemu-t8030/wiki/Bringing-up-the-emulator)와
-소스는 Apple AIC, Apple ANS/NVMe, DART/SART, Apple UART, NVRAM, SMC,
-USB OTG/Type-C, 그리고 `m1_fb`/`xnu_ramfb` 계열의 장치 토폴로지를
-보여줍니다. 이 저장소는 iPhone 11/T8030 iOS 에뮬레이터이며 현재
-[보관(archived) 상태](https://github.com/TrungNguyen1909/qemu-t8030)이므로,
-26x86은 그 펌웨어·iOS device tree·복구 스크립트를 가져오지 않습니다.
-구성 요소의 이름과 연결 관계만 Apple Silicon Sandbox의 조사 입력으로
-기록하고, 게스트 정책은 계속 `iBoot(AArch64) → macOS`로 고정합니다.
+The [Bringing up the emulator documentation](https://github.com/TrungNguyen1909/qemu-t8030/wiki/Bringing-up-the-emulator) and source code of `qemu-t8030` illustrate Apple AIC, Apple ANS/NVMe, DART/SART, Apple UART, NVRAM, SMC, USB OTG/Type-C, and `m1_fb`/`xnu_ramfb` family device topologies. Because that repository is an archived iPhone 11 / T8030 iOS emulator, 26x86 does not import its firmware, iOS device trees, or recovery scripts. Component names and interconnect topologies are recorded solely as research inputs for the Apple Silicon Sandbox, while guest policy remains strictly locked to `iBoot(AArch64) -> macOS`.
 
-현재 구현의 경계는 다음과 같습니다.
+Current implementation boundaries are defined as follows:
 
-* EFI Sandbox는 AIC 전용 계약을 유지하고, 저장소의 first-party `aic_v1`
-  유선 IRQ 모델만 부분적으로 갖습니다. GIC 호환 경로를 추가하지 않습니다.
-* VMApple QEMU TCG 연구 머신은 아직 GICv3와 VMApple BDIF(AUX/root)를
-  사용합니다. 따라서 qemu-t8030의 AIC/ANS/DART/SART를 지원한다고 표시하지
-  않으며, `macos_boot_verified`를 올리지 않습니다.
-* qemu-t8030 문서에 나온 NVMe namespace 예시는 `nsid=1` 데이터와
-  `nsid=5` Apple NVRAM을 **참조 값**으로만 기록합니다. macOS용 AUX/root
-  레이아웃과 동일하다고 추론하지 않고 hardware-model provisioning 영수증을
-  계속 요구합니다.
-* 현재 TCG 연구 실행에는 Apple PV graphics가 없으므로 `m1_fb` 또는
-  `xnu_ramfb` 이름만으로 설치 화면·Metal을 주장하지 않습니다.
+* The EFI Sandbox maintains an AIC-specific contract and contains only a partial first-party `aic_v1` wired IRQ model. No GIC-compatible fallback path is added.
+* The VMApple QEMU TCG research machine utilizes GICv3 and VMApple BDIF (AUX/root). Consequently, it does not claim support for qemu-t8030's AIC/ANS/DART/SART, and never asserts `macos_boot_verified`.
+* NVMe namespace examples in the qemu-t8030 documentation (`nsid=1` data and `nsid=5` Apple NVRAM) are preserved strictly as **reference values**. They are not inferred to match macOS AUX/root layouts, and hardware-model provisioning receipts continue to be required.
+* Because current TCG research runs lack Apple Paravirtualized Graphics, mentioning `m1_fb` or `xnu_ramfb` names does not imply installer UI or Metal execution claims.
 
-프로필은 입력 파일을 열거나 수정하지 않고 확인할 수 있습니다.
+Capabilities can be inspected without opening or mutating input files:
 
 ```sh
 python3 -m x86 vmapple capabilities
 ```
 
-출력의 `reference` 블록은 qemu-t8030의 고정된 조사 리비전과 iOS 전용
-범위를, `interrupt_controller`, `device_topology`, `storage` 블록은
-현재 26x86 구현과 남은 차이를 각각 보여줍니다. 이 명령은 QEMU를 시작하지
-않으며 부팅 또는 설치 성공을 의미하지 않습니다.
+The `reference` block in the output highlights the pinned research revision and iOS-only scope of qemu-t8030, while `interrupt_controller`, `device_topology`, and `storage` blocks delineate the current 26x86 implementation and remaining deltas. This inspection command does not launch QEMU and implies no boot or installation success.
 
-## OVMF EFI 창
+## OVMF EFI Window
 
-WSL Ubuntu에서 clang, QEMU, OVMF와 테스트 번들이 준비되어 있을 때 다음
-명령을 실행합니다.
+When clang, QEMU, OVMF, and test bundles are prepared in WSL Ubuntu or Linux, run:
 
 ```sh
 cd /path/to/26x86
@@ -72,13 +44,9 @@ python3 sandbox/vsk/tools/verify_efi_inputs.py \
   --ovmf-vars /usr/share/OVMF/OVMF_VARS_4M.fd
 ```
 
-`--gui`는 GTK 창을 하나만 열고, EFI의 debug-exit 결과와 debug console을
-수집합니다. `--display none`이 기본값인 전체 3-case 검증은 CI용으로
-사용합니다. GUI를 사용하려면 `--case valid`처럼 단일 case를 선택해야
-합니다. `QEMU_SYSTEM_X86_64`, `OVMF_CODE`, `OVMF_VARS` 환경 변수로 경로를
-지정할 수도 있습니다.
+`--gui` spawns a single GTK window and captures EFI debug-exit status and debug console streams. The full 3-case validation suite defaults to `--display none` for automated CI. Interactive GUI execution requires specifying a single test case (e.g. `--case valid`). Paths can also be supplied via `QEMU_SYSTEM_X86_64`, `OVMF_CODE`, and `OVMF_VARS` environment variables.
 
-성공적인 GUI 보고서에는 다음 값이 함께 있어야 합니다.
+A successful GUI execution report must contain the following fields:
 
 ```json
 {
@@ -91,17 +59,11 @@ python3 sandbox/vsk/tools/verify_efi_inputs.py \
 }
 ```
 
-보고서는 QEMU 버전과 OVMF 코드/변수 템플릿의 SHA-256도 기록합니다. 이
-정보는 창이 생성되었다는 사실과 EFI 입력 검증 결과를 같은 실험으로
-재현하기 위한 것입니다.
+The report records the QEMU revision alongside SHA-256 digests of the OVMF code and variable templates, enabling reproducible correlation of window creation with EFI input verification results.
 
-## VMApple 복구 창(연구용)
+## VMApple Recovery Window (Research Use)
 
-VMApple은 OVMF와 다른 AArch64 머신입니다. 별도로 빌드한 연구용 QEMU가
-`vmapple` 머신을 제공해야 합니다. 표시 백엔드는 `auto`를 기본으로 사용하며,
-native Apple Silicon/macOS에서는 Cocoa를 선택하고 Linux/WSL 연구 빌드에서는
-QEMU가 광고한 headless 백엔드(`none` 등)를 선택합니다. GTK/SDL은 해당 빌드가
-실제로 광고할 때만 명시적으로 선택할 수 있습니다.
+VMApple is an AArch64 machine architecture distinct from OVMF. A custom-built research QEMU binary providing the `vmapple` machine target is required. The display backend defaults to `auto`, which selects Cocoa on native Apple Silicon macOS and headless backends (`none`) on Linux/WSL research builds. GTK or SDL are selected only when explicitly advertised by the build.
 
 ```sh
 qemu-system-aarch64 \
@@ -117,59 +79,20 @@ qemu-system-aarch64 \
   -blockdev '<COW overlay over an immutable root fixture>'
 ```
 
-`allow-block-writes`는 26x86 write-enabled BDIF 패치가 `-device
-vmapple-bdif,help`에서 광고할 때만 런너가 자동으로 추가합니다. upstream BDIF가
-그 속성을 제공하지 않으면 알 수 없는 `-global`을 전달하지 않고 읽기/부팅
-관찰을 계속하며, 보고서의 `backend.bdif_block_writes=false`로 기능 차이를
-명시합니다.
+The `allow-block-writes` flag is added automatically by the runner only when the 26x86 write-enabled BDIF patch is advertised via `-device vmapple-bdif,help`. If upstream BDIF lacks that property, the runner continues read and boot observation without injecting unknown `-global` options, explicitly noting the divergence via `backend.bdif_block_writes=false`.
 
-복구 입력은 반드시 원본 파일을 별도로 해시하고, AUX/root는 빈 raw 기반의
-COW overlay를 사용합니다. 원본 IPSW, 기존 ESP 또는 물리 디스크를 QEMU의
-쓰기 대상으로 지정하지 않습니다. `Apple M1 (Virtual)` / `VM0001`은
-게스트가 선택한 VMApple 메타데이터이며 Apple 기기 인증이나 호환성 보증이
-아닙니다. 개발자 host bypass를 사용한 실험은 로컬 연구 로그에만 남기며
-제품 번들·배포 경로에는 포함하지 않습니다. `optional-rpc-unavailable`은
-원본 iBEC의 선택 RPC 실패 경계를 확인하는 별도 음성 실험이므로 기본 명령에
-넣지 않습니다.
+Recovery inputs require independent cryptographic hashing of authentic files, and AUX/root images must utilize copy-on-write overlays over raw backing fixtures. Never designate authentic IPSW archives, active ESPs, or raw physical disks as writable targets. The `Apple M1 (Virtual)` and `VM0001` metadata strings reflect guest-facing VMApple parameters and carry no hardware authorization or warranty claims. Experiments utilizing developer host bypasses remain confined to local research logs and are excluded from production distributions. The `optional-rpc-unavailable` case tests authentic iBEC failure handling as an explicit negative control and is omitted from standard commands.
 
-26x86 GUI의 `Apple Silicon Sandbox` 단계에서 같은 런너를 사용할 수 있습니다.
-`VMApple QEMU`, `qemu-img`, `AVPBooter`, 공식 BuildManifest, TSS 요청 도구,
-변경하지 않은 원본 iBSS/iBEC, AUX/root 원본과 새 출력 폴더를 입력하고
-`VM 창 열기`를 누르면 로컬 브리지의 `launch_vmapple`이 실행됩니다.
-GUI 기본 경로는 현재 USB nonce를 읽어 Apple TSS에 요청하고 새 출력 폴더에만
-개인화 IMG4를 만듭니다. Windows GUI에서 QEMU나 입력이 `/home/...` 같은 WSL
-경로이면 브리지는 셸을 거치지 않고 `wsl.exe --cd ... --exec python3 -m x86
-vmapple run --live-personalize --research-only --json`을 시작하며 WSLg의 GTK
-창을 사용합니다.
-경로는 모두 명시적 인자로 전달되고, 기존 출력 폴더는 런너가 거부합니다.
-실행 결과는 입력 폴더의 `launch.json`에 기록되며, GUI 응답의 PID와 로그 경로로
-프로세스를 추적할 수 있습니다.
+The same runner is accessible via the `Apple Silicon Sandbox` step in the 26x86 GUI. Providing `VMApple QEMU`, `qemu-img`, `AVPBooter`, the official BuildManifest, TSS tooling, unmodified iBSS/iBEC binaries, AUX/root sources, and a clean output directory, then clicking `Open VM Window` triggers `launch_vmapple` via the local bridge. The GUI default pathway reads the current USB nonce, queries Apple TSS, and generates personalized IMG4 payloads exclusively inside the designated output folder. Under Windows, if inputs reference WSL paths (e.g. `/home/...`), the bridge directly invokes `wsl.exe --cd ... --exec python3 -m x86 vmapple run --live-personalize --research-only --json` using the WSLg GTK display.
+All file paths are passed as explicit arguments, and pre-existing output folders are rejected. Execution results are serialized to `launch.json` in the run directory, with process tracking available via returned PID and log path metadata.
 
-실행 전에 GUI의 `2초 부트 피커 시작`을 누르고 2초 안에 Alt/Option을 입력해야
-합니다. 피커에서 `macOS Recovery · _default.ipsw`를 선택하면 `Recovery VM 창
-열기`가 활성화되고, 브리지는 실제 DOM 입력 기록을
-`--boot-picker-trigger alt-enter`로 worker에 전달합니다. 시간 안에 Alt를
-누르지 않으면 정상 macOS 항목이 선택됩니다. 직접 macOS 선택에서는
-iBSS/iBEC 개인화나 DFU 전송을 수행하지 않고, AVPBooter가 프로비저닝된
-AUX/root에서 부팅하는 동안 UART 증거를 관찰합니다. Recovery 선택만
-iBSS/iBEC 입력과 DFU/IPSW 체인을 요구합니다.
+Prior to execution, operator action requires clicking `Start 2-Second Boot Picker` in the GUI and pressing Alt/Option within 2 seconds. Selecting `macOS Recovery · _default.ipsw` enables `Open Recovery VM Window`, with the bridge transmitting DOM input records to the worker via `--boot-picker-trigger alt-enter`. If the timeout expires without Alt input, standard macOS boot is selected. In direct macOS mode, iBSS/iBEC personalization and DFU transfer are skipped, with AVPBooter monitored via UART while booting from provisioned AUX/root storage. Only Recovery selection engages the iBSS/iBEC pipeline and DFU/IPSW chain.
 
-직접 macOS 부팅은 다음처럼 호출할 수 있습니다. `--ibss`, `--ibec`,
-`--live-personalize`, `--restore-chain`은 이 모드에서 사용하지 않습니다.
+Direct macOS boot can be invoked as follows (omitting `--ibss`, `--ibec`, `--live-personalize`, and `--restore-chain`):
 
-Virtualization.framework로 만든 VM은 `macosvm.json`과 같은 디렉터리에 있는
-`machineId`, `hardwareModel`, `aux.img`, `disk.img`를 하나의 입력 계약으로
-사용하는 것이 권장됩니다. 런너는 두 plist를 읽기 전용으로 해시하고 ECID를
-검증한 뒤, JSON이 가리키는 AUX/root와 다른 수동 경로를 섞지 않습니다. 원본
-`aux.img`의 첫 `0x4000` 바이트는 VMApple 메타데이터이므로 JSON 경로에서는
-QEMU의 문서화된 AUX 뷰 오프셋 `0x4000`을 자동 적용합니다. 원본 이미지를
-자르거나 덮어쓰지 않으며, 실행 중에는 두 원본 위에 새 qcow2 COW overlay만
-만듭니다. 이 동작은 [QEMU VMApple 문서](https://www.qemu.org/docs/master/system/arm/vmapple.html)의
-`dd ... bs=0x4000 skip=1` 요구사항과 일치합니다.
+For VMs generated via Virtualization.framework, designating `machineId`, `hardwareModel`, `aux.img`, and `disk.img` within the same directory as `macosvm.json` constitutes the recommended input contract. The runner hashes both property lists read-only and validates the ECID, preventing cross-contamination with manual paths. Because the initial `0x4000` bytes of `aux.img` contain VMApple metadata, JSON pathways automatically apply QEMU's documented AUX view offset of `0x4000`. Authentic images are neither truncated nor overwritten; execution runs on top of freshly instantiated qcow2 COW overlays. This adheres to the `dd ... bs=0x4000 skip=1` specification in the [QEMU VMApple documentation](https://www.qemu.org/docs/master/system/arm/vmapple.html).
 
-아직 `macosvm.json` 번들이 없다면 실제 Apple-Silicon macOS 호스트에서만
-다음처럼 새 번들을 만들 수 있습니다. IPSW는 호출자가 준비하며, 도구는
-다운로드·복호화·수정하지 않습니다.
+If a `macosvm.json` bundle does not yet exist, a new bundle can be provisioned on an authentic Apple Silicon macOS host as follows. IPSW images are supplied by the operator; tooling does not download, decrypt, or tamper with source archives.
 
 ```sh
 python3 -m x86 vmapple provision \
@@ -178,17 +101,9 @@ python3 -m x86 vmapple provision \
   --disk-size 32g --timeout 86400 --json
 ```
 
-이 명령은 Linux/WSL, AVPBooter가 없는 호스트, 기존 출력 디렉터리, 잘못된
-용량을 거부하고 생성한 디렉터리에 `provision-report.json`과 실행 로그를
-남깁니다. 프로비저닝 영수증은 direct-run 입력 검증을 충족하지만 macOS
-부팅 성공을 의미하지 않으며, 이후 `--vm-json` 직접 실행에서 XNU와
-userspace UART 증거를 별도로 확인해야 합니다.
+This command rejects Linux/WSL environments, hosts lacking AVPBooter, existing output directories, and invalid disk sizes, writing `provision-report.json` and session logs to the newly initialized directory. Provisioning receipts satisfy direct-run input verification but do not constitute proof of macOS boot; subsequent direct runs via `--vm-json` must independently confirm XNU and userspace UART markers.
 
-macOS 26/27의 실제 실행은 QEMU direct entry와 분리된 native
-Virtualization.framework 경로를 사용한다. `macosvm`이 기본 serial을
-표준 출력에 연결하고 `--ephemeral`로 storage clone을 만들기 때문에, 26x86은
-그 경로를 다음처럼 bounded worker로 감싼다. PTY는 upstream tool이 연결 전
-표준 입력의 newline을 요구하므로 자동 실행에서는 사용하지 않는다.
+Physical execution of macOS 26/27 relies on native Virtualization.framework pathways isolated from QEMU direct entry. Because `macosvm` connects the primary serial console to stdout and instantiates storage clones with `--ephemeral`, 26x86 wraps the process in a bounded worker. PTYs are avoided in automated pipelines because upstream tooling requires carriage returns on standard input prior to connecting.
 
 ```sh
 python3 -m x86 vmapple run-native \
@@ -200,16 +115,11 @@ python3 -m x86 vmapple run-native \
   --research-only --json
 ```
 
-이 명령은 Apple-Silicon macOS host에서만 실행되며, `macosvm.log`의 Darwin/XNU
-marker와 `launchd`/`loginwindow`/`WindowServer` userspace marker를 각각 기록한다.
-둘 다 관찰될 때만 `macos_boot_verified=true`가 되고, 설치 완료 영수증이
-없으면 `installation_verified=false`로 남는다. QEMU의 VMApple 문서가 최신
-게스트 버전을 지원하지 않는다고 명시하는 범위에서는 QEMU direct 경로를
-Golden Gate 부팅 경로로 사용하지 않는다.
+This command executes solely on Apple Silicon macOS hosts, logging Darwin/XNU and `launchd`/`loginwindow`/`WindowServer` userspace markers from `macosvm.log`. `macos_boot_verified=true` is asserted only when both marker tiers appear; absent installation receipts, `installation_verified` remains `false`. Where QEMU VMApple documentation disclaims support for newer guest versions, QEMU direct entry is not employed for Golden Gate boot verification.
 
 ```sh
-# Legacy QEMU direct-entry shape (target 27 is rejected by the runner;
-# use `vmapple run-native` above for the real macOS 26/27 path).
+# Legacy QEMU direct-entry invocation (target 27 is rejected by the runner;
+# use `vmapple run-native` above for genuine macOS 26/27 pathways).
 python3 -m x86 vmapple run --target 27 --display auto \
   --qemu /path/to/qemu-system-aarch64 \
   --qemu-img /usr/bin/qemu-img \
@@ -219,18 +129,15 @@ python3 -m x86 vmapple run --target 27 --display auto \
   --boot-delay 2 --duration 600 --research-only --json
 ```
 
-JSON을 사용하지 않는 경우에는 기존처럼 이미 올바른 AUX 뷰를 가리키는
-`--aux`와 `--root`를 직접 지정하고, 원본 AUX를 직접 지정할 때만
-`--aux-offset 0x4000`을 명시합니다. 읽기 전용 사전 검사는 다음처럼 같은
-번들 계약을 사용할 수 있습니다.
+When operating without JSON descriptors, `--aux` and `--root` specify pre-configured AUX views, with `--aux-offset 0x4000` applied only when referencing raw authentic AUX fixtures. Read-only pre-flight checks enforce the identical bundle contract:
 
 ```sh
 python3 -m x86 vmapple inspect-storage --vm-json /path/to/macosvm.json --json
 ```
 
 ```sh
-# Legacy raw-input QEMU shape; this is a protocol/compatibility experiment,
-# not a supported Golden Gate boot command.
+# Legacy raw-input QEMU invocation; this serves as a protocol compatibility experiment,
+# not an endorsed Golden Gate boot command.
 python3 -m x86 vmapple run --target 27 --display auto \
   --qemu /path/to/qemu-system-aarch64 \
   --qemu-img /usr/bin/qemu-img \
@@ -241,13 +148,9 @@ python3 -m x86 vmapple run --target 27 --display auto \
   --boot-delay 2 --duration 600 --research-only --json
 ```
 
-직접 실행의 `launch.json`에는 `direct_boot.dfu_entered=false`와 각 UART
-marker의 절대 offset이 남습니다. marker가 없으면 런너는
-`direct-boot-evidence-timeout`으로 종료하고 `macos_boot_verified=false`를
-유지합니다. AUX/root가 zero-filled이거나 hardware-model provisioning
-receipt가 없다는 사실은 별도의 storage blocker로 함께 기록됩니다.
+In direct execution mode, `launch.json` records `direct_boot.dfu_entered=false` and absolute byte offsets for each UART marker. Missing markers cause execution to terminate with `direct-boot-evidence-timeout`, preserving `macos_boot_verified=false`. Zero-filled AUX/root fixtures or missing hardware provisioning receipts are categorized as independent storage blockers.
 
-동일한 경로는 CLI에서도 다음처럼 호출할 수 있습니다.
+The identical execution path can be invoked via CLI:
 
 ```sh
 python3 -m x86 vmapple run --target 27 --display auto \
@@ -264,66 +167,28 @@ python3 -m x86 vmapple run --target 27 --display auto \
   --live-personalize --research-only --json
 ```
 
-`--research-only`는 배포 금지 개발 플래그이며 생략할 수 없습니다. 런너는
-원본 BuildManifest의 `Customer Erase Install (IPSW)` identity와 실제 USB
-CPID/BDID/SDOM/nonce를 함께 검증하고, Apple TSS status `0` 및 IM4M을 받은
-뒤에만 새 IMG4를 만듭니다. reset 뒤 실제 USB descriptor를 다시 읽어 bulk
-OUT endpoint 4가 확인될 때만 iBEC 업로드를 시도합니다. `05ac:1227` iBSS
-DFU가 유지되면 `transition_state: transition-blocked`로 종료하고 어떠한
-강제 전환도 수행하지 않습니다. 입력 해시가 실행 중 바뀌면 산출물을
-삭제하고 실패합니다.
+`--research-only` is a mandatory internal safety flag. The runner verifies the `Customer Erase Install (IPSW)` identity from the BuildManifest against live USB CPID/BDID/SDOM/nonce parameters, generating personalized IMG4 payloads only after receiving Apple TSS status `0` and valid IM4Ms. iBEC upload is initiated only when re-reading USB descriptors confirms bulk OUT endpoint 4. If `05ac:1227` iBSS DFU persists, the runner exits with `transition_state: transition-blocked` without forcing transitions. Any mutation of input hashes during execution immediately aborts the run and purges artifacts.
 
-CLI/GUI의 `machine_type`, `guest_os`, `recovery_protocol`,
-`recovery_image_name` 값은 동일한 iBoot 정책 검증기를 통과해야 합니다.
-`guest_os=iOS` 또는 `guest_os=iPadOS`를 넣으면 `VF_GUEST_SCOPE_VIOLATION`,
-`recovery_protocol=Fastboot`를 넣으면 `VF_RECOVERY_SCOPE_VIOLATION`이
-반환되며 QEMU 프로세스와 USB 전송은 시작되지 않습니다.
+Input values for `machine_type`, `guest_os`, `recovery_protocol`, and `recovery_image_name` must satisfy policy validation. Supplying `guest_os=iOS` or `guest_os=iPadOS` triggers `VF_GUEST_SCOPE_VIOLATION`, while `recovery_protocol=Fastboot` raises `VF_RECOVERY_SCOPE_VIOLATION`, halting QEMU launch and USB transport.
 
-실행 전에는 GUI의 `AUX · root 설치 대상 검사`를 사용하거나 CLI의 읽기 전용
-검사를 먼저 실행할 수 있습니다.
+Storage targets should be pre-flighted using the GUI storage inspector or CLI:
 
 ```sh
 python3 -m x86 vmapple inspect-storage \
   --aux /path/to/aux.raw --root /path/to/root.raw --aux-offset 0
 ```
 
-검사는 원본 파일을 열어 쓰지 않고, 512바이트 정렬 뷰의 크기와 제한된
-zero-content 범위, 일부 APFS 표식만 기록합니다. `provisioning_status`가
-`unprovisioned-zero` 또는 `partially-unprovisioned`이면 해당 파일은 프로토콜
-경계 실험용일 뿐 설치 대상이 아닙니다. 0이 아닌 바이트나 `NXSB` 표식만으로는 Apple Silicon
-hardware-model과 일치하는 `VZMacAuxiliaryStorage`, APFS 설치 대상, 서명된
-부팅 가능성을 증명할 수 없으므로 상태는 `unverified`로 남습니다. 이 검사는
-IPSW/설치 파일을 추출·복호화·변조하지 않으며, 입력 파일을 별도 출력 폴더에
-복사하지도 않습니다.
+The inspector evaluates 512-byte aligned views, bounded zero-content spans, and APFS signatures without modifying files. If `provisioning_status` reports `unprovisioned-zero` or `partially-unprovisioned`, the files are flagged for protocol testing only. Non-zero bytes or `NXSB` headers alone cannot prove `VZMacAuxiliaryStorage` compatibility with Apple Silicon hardware models, APFS installation validity, or signed boot capability, keeping status at `unverified`. This tool does not extract, decrypt, modify, or copy input files.
 
-최신 확인된 VMApple GUI 범위는 원본 27.0 iBSS의 173개 DFU 블록 전송(DFU
-suffix 포함), `WAIT_RESET`, USB reset acknowledgement, 실제 `05ac:1281`
-재열거와 bulk OUT endpoint 4, LocalPolicy/iBEC 전송 및 `go` acknowledgement
-입니다. Apple TSS status `0`, nonce 일치, 원본 payload 해시 보존과
-`installer_modified: false`도 확인했습니다. 선택적 RPC 비가용성 실험에서
-원본 iBEC의 Stage2 UART command prompt를 관찰했고, 이어서 BuildManifest와
-일치하는 다섯 개 restore role을 전송했습니다. pre-boot 알림에서는 게스트의
-실제 `0200` STALL을 성공으로 바꾸지 않고 기록한 뒤 `bootx` acknowledgement를
-받았지만, iBoot가 XNU 이전에 패닉했습니다. 따라서
-`signature_acceptance_verified`, `xnu_executed`, `macos_boot_verified`와
-Golden Gate 설치 UI는 모두 `false`입니다. Linux QEMU 빌드에는 Apple
-ParavirtualizedGraphics 장치가 없어 `graphics_device_enabled`도 `false`입니다.
-VMApple 창이 열렸거나 DFU/`go`/`bootx`가 완료되어도 Golden Gate 부팅 성공으로
-판정하지 않습니다. 2초 게이트의 실제 Alt→Recovery 입력을 포함한 실행 요약은
-[`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json)에
-고정되어 있으며, 원본 전체 `launch.json`은 보고서의 `source_report` 경로에서
-확인할 수 있습니다.
+Empirically verified VMApple GUI scope includes transmitting 173 DFU blocks of authentic 27.0 iBSS (including DFU suffix), `WAIT_RESET`, USB reset acknowledgment, authentic `05ac:1281` re-enumeration with bulk OUT endpoint 4, and LocalPolicy/iBEC transfer with `go` acknowledgment. Apple TSS status `0`, matching nonces, original payload hash retention, and `installer_modified: false` have been established. In selective RPC unavailability experiments, the authentic iBEC Stage2 UART command prompt was captured, followed by transmission of five restore roles matching the BuildManifest. During pre-boot notification, the guest's authentic `0200` STALL was faithfully recorded, followed by receipt of `bootx` acknowledgment before iBoot encountered a kernel panic prior to XNU entry. As a result, `signature_acceptance_verified`, `xnu_executed`, `macos_boot_verified`, and the Golden Gate installation UI are all marked `false`. Due to the absence of Apple Paravirtualized Graphics in Linux QEMU builds, `graphics_device_enabled` is also `false`. Spawning the VMApple window or completing DFU/`go`/`bootx` stages does not constitute Golden Gate boot success. Full session summaries (including Alt-to-Recovery input handling) are codified in [`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json), with root `launch.json` logs accessible via `source_report`.
 
-## 결과 판정
+## Verification Verdicts
 
-QEMU GUI 검증은 개발 중인 EFI/JIT 및 복구 USB 계층의 재현성을 높입니다.
-실제 제품 판정에는 다음 단계가 별도로 필요합니다.
+QEMU GUI validation ensures reproducible testing of EFI, JIT, and recovery USB layers during development. Production qualification requires distinct physical milestones:
 
-1. 물리 Intel Mac에서 OpenCore가 `Sandbox.efi`를 로드하는지 확인합니다.
-2. EFI에서 `ExitBootServices`, VMX/EPT, VT-d/인터럽트 리매핑을 실제 하드웨어
-   상태로 확인합니다.
-3. 원본 iBoot가 AIC 장치 모델과 저장장치를 통해 XNU까지 진입하는지 확인합니다.
-4. macOS 26/27 사용자 공간과 GPU/Metal을 별도 로그로 확인합니다.
+1. Verification that OpenCore reliably loads `Sandbox.efi` on physical Intel Mac hardware.
+2. Verification of `ExitBootServices`, VMX/EPT, and VT-d / interrupt remapping states on bare metal.
+3. Verification that authentic iBoot enters XNU via genuine AIC device models and storage controllers.
+4. Independent log verification of macOS 26/27 userspace initialization and GPU/Metal acceleration.
 
-이 중 하나라도 완료되지 않은 보고서는 EFI 자체 검사 또는 복구 프로토콜
-증거로만 보존합니다.
+Any report lacking complete verification across these tiers is categorized strictly as EFI self-test or recovery protocol boundary evidence.

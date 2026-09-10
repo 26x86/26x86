@@ -1,22 +1,22 @@
-# 26x86 개발환경 셋업 가이드
+# 26x86 Development Environment Setup Guide
 
-macOS 26 Tahoe x86 Mac 지원 프로젝트 **26x86**의 로컬 개발·빌드·테스트 환경 구성 방법입니다.
+This guide describes how to configure, build, and test **26x86**, the clean-room boot engineering and compatibility project for macOS 26 Tahoe and x86 Macintosh hardware.
 
-## 디렉터리 구조
+## Directory Structure
 
 ```
 ~/Desktop/26x86/
-├── 26x86/                      # 메인 패처 (Python GUI/CLI)
-├── 26x86-MetallibSupportPkg/   # Metal 라이브러리 패치
-├── 26x86-PatcherSupportPkg/    # 유니버설 바이너리·패치 DMG
-├── 26x86-OpenCorePkg/          # OpenCore 부트로더 (T2 지원 포크)
-├── .venv/                      # Python 3.13 가상환경
-├── scripts/                    # 셋업·빌드 스크립트
-├── docs/                       # 문서
-└── vm/                         # UTM 가상머신 템플릿
+├── 26x86/                      # Main patcher and NextCore CLI/GUI
+├── 26x86-MetallibSupportPkg/   # Metal library patching utilities
+├── 26x86-PatcherSupportPkg/    # Universal binaries and patch DMGs
+├── 26x86-OpenCorePkg/          # OpenCore bootloader integration fork
+├── .venv/                      # Python 3.13 virtual environment
+├── scripts/                    # Setup and build automation scripts
+├── docs/                       # Project documentation
+└── vm/                         # UTM / QEMU virtual machine templates
 ```
 
-## 빠른 시작 (원클릭)
+## Quick Start (One-Click)
 
 ```bash
 cd ~/Desktop/26x86
@@ -26,77 +26,77 @@ cd 26x86
 python3 26x86.command
 ```
 
-## 수동 설치
+## Manual Installation
 
-### 1. 사전 요구사항
+### 1. Prerequisites
 
-| 항목 | 버전/설명 |
-|------|-----------|
-| macOS | 15.x (Sequoia) 이상 권장 |
-| Python | **3.13+** (python.org 또는 `uv python install 3.13`) |
+| Component | Version / Notes |
+|-----------|-----------------|
+| macOS | macOS 15.x (Sequoia) or newer recommended |
+| Python | **3.13+** (python.org or `uv python install 3.13`) |
 | Xcode CLT | `xcode-select --install` |
 | Git | `git --version` |
-| gh CLI | GitHub 인증 (선택) |
+| GitHub CLI | GitHub authentication (`gh auth status`, optional) |
 
-> 개발 환경 주의사항(Python 3.9 비지원, VM 호스트 등): [wiki/Installation-Notes.md](./wiki/Installation-Notes.md) · [wiki/Warnings.md](./wiki/Warnings.md)
+> For development environment considerations (Python 3.9 deprecation, VM host limitations, etc.): see [wiki/Installation-Notes.md](./wiki/Installation-Notes.md) and [wiki/Warnings.md](./wiki/Warnings.md).
 
-### 2. 저장소 클론
+### 2. Clone Repositories
 
 ```bash
 mkdir -p ~/Desktop/26x86 && cd ~/Desktop/26x86
 
-git clone https://github.com/NiSeullent/26x86.git
-git clone https://github.com/NiSeullent/26x86-MetallibSupportPkg.git
-git clone https://github.com/NiSeullent/26x86-PatcherSupportPkg.git
-git clone https://github.com/NiSeullent/26x86-OpenCorePkg.git
+git clone https://github.com/26x86/26x86.git
+git clone https://github.com/26x86/MetallibSupportPkg.git
+git clone https://github.com/26x86/PatcherSupportPkg.git
+git clone https://github.com/26x86/OpenCorePkg.git
 ```
 
-### 3. Python 가상환경
+### 3. Python Virtual Environment
 
 ```bash
-# uv 사용 (권장)
+# Using uv (recommended)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 uv python install 3.13
 ~/.local/bin/python3.13 -m venv .venv
 source .venv/bin/activate
 
-# 종속성 설치 (PyInstaller 부트로더 재컴파일 포함)
+# Install dependencies (including PyInstaller bootloader rebuild)
 PYINSTALLER_COMPILE_BOOTLOADER=1 pip install --no-binary pyinstaller -r 26x86/requirements.txt
 ```
 
-### 4. 실행 확인
+### 4. Verification & Running
 
 ```bash
 cd 26x86
-python3 26x86.command --help     # CLI
-python3 26x86.command              # GUI (마법사 모드)
-python3 26x86.command --detect     # Mac 모델 감지
+python3 26x86.command --help     # CLI help
+python3 26x86.command            # GUI (Wizard mode)
+python3 26x86.command --detect   # Hardware model detection
 python3 26x86.command --build --model iMac11,2 --verbose
 ```
 
-## Windows / Linux에서 실행 (소스)
+## Running on Windows / Linux (Source)
 
-26x86의 **전체 기능(EFI 빌드·루트 패치·LaunchAgent)** 은 **macOS 전용**입니다. Windows/Linux에서는 CLI·HTML 마법사 GUI를 실행해 도움말·설정·플랫폼 정보를 확인할 수 있습니다.
+Full system modifications (**EFI partition deployment, live root patching, LaunchAgent persistence**) are **macOS-only**. On Windows and Linux, the CLI and HTML wizard GUI can be used for configuration inspection, platform detection, validation probes, and offline bundle assembly.
 
-### 공통 사전 요구사항
+### Cross-Platform Prerequisites
 
-| 항목 | Windows | Linux |
+| Item | Windows | Linux |
 |------|---------|-------|
 | Python | **3.13+** | **3.13+** |
-| 가상환경 | `python -m venv .venv` | `python3 -m venv .venv` |
-| 종속성 | `pip install -r 26x86/requirements.txt` | 동일 |
-| GUI (권장) | **Tauri** (WebView2) + Python HTTP 브릿지 | **Tauri** (WebKitGTK) 또는 pywebview |
-| GUI 폴백 | pywebview + Edge WebView2 Runtime | pywebview + GTK (`python3-gi`) |
-| GUI (비권장) | `X86_GUI_BACKEND=qt` (Qt WebEngine/Chromium) | 동일 |
+| Virtual Env | `python -m venv .venv` | `python3 -m venv .venv` |
+| Dependencies | `pip install -r 26x86/requirements.txt` | Same |
+| GUI (Recommended) | **Tauri** (WebView2) + Python HTTP bridge | **Tauri** (WebKitGTK) or pywebview |
+| GUI Fallback | pywebview + Edge WebView2 Runtime | pywebview + GTK (`python3-gi`) |
+| GUI (Non-recommended) | `X86_GUI_BACKEND=qt` (Qt WebEngine/Chromium) | Same |
 
-> macOS 전용 패키지(`pyobjc`, `py_sip_xnu` 등)는 `requirements.txt`의 platform marker로 자동 제외됩니다.
+> macOS-specific packages (`pyobjc`, `py_sip_xnu`, etc.) are excluded automatically via platform environment markers in `requirements.txt`.
 
 ### Windows
 
 ```cmd
 cd 26x86
 python -m venv ..\.venv
-..\.venv\Scripts\activate
+..\.venv\Scriptsctivate
 pip install -r requirements.txt
 
 python -m x86 --help
@@ -104,12 +104,12 @@ python -m x86 wizard
 python -m x86 detect --json
 python -m x86 status
 
-REM 또는
+REM Or use the batch wrapper:
 26x86.bat
 26x86.bat detect --json
 ```
 
-설정·로그 위치: `%APPDATA%\26x86\` (`config.json`, `logs\`)
+Configuration and logs: `%APPDATA%x86\` (`config.json`, `logs\`).
 
 ### Linux
 
@@ -119,7 +119,7 @@ python3 -m venv ../.venv
 source ../.venv/bin/activate
 pip install -r requirements.txt
 
-# GTK 백엔드 (Debian/Ubuntu 예시)
+# WebKitGTK bindings (Debian/Ubuntu example)
 sudo apt install python3-gi gir1.2-webkit2-4.1
 
 python3 -m x86 --help
@@ -130,53 +130,53 @@ chmod +x 26x86.sh
 ./26x86.sh
 ```
 
-설정·로그 위치: `~/.config/26x86/config.json`, `~/.local/state/26x86/logs/`
+Configuration and logs: `~/.config/26x86/config.json`, `~/.local/state/26x86/logs/`.
 
-### 플랫폼별 기능 요약
+### Platform Feature Matrix
 
-| 기능 | macOS | Windows / Linux |
-|------|-------|-----------------|
-| `wizard` (HTML GUI) | ✅ Tauri / pywebview | ✅ (Tauri/WebView2 또는 pywebview) |
-| `detect --json` | ✅ Mac 하드웨어 | ✅ 호스트 OS·플랫폼 정보 |
-| `status` | ✅ | ✅ (설정 JSON) |
-| `build` / `patch` | ✅ | ❌ (한국어 안내 메시지) |
-| OpenCore EFI 빌드 | ✅ | ❌ |
-| LaunchAgent (`com.niseullent.26x86.*`) | ✅ | ❌ |
+| Feature | macOS | Windows / Linux |
+|---------|-------|-----------------|
+| `wizard` (HTML GUI) | ✅ Tauri / pywebview | ✅ Tauri (WebView2/WebKitGTK) or pywebview |
+| `detect --json` | ✅ Mac hardware probe | ✅ Host OS and platform environment info |
+| `status` | ✅ | ✅ Configuration JSON inspection |
+| `build` / `patch` | ✅ | ❌ Offline configuration only (guided notices) |
+| OpenCore EFI build | ✅ | ❌ |
+| LaunchAgent (`com.26x86.*`) | ✅ | ❌ |
 
-## 빌드 환경
+## Build Environment
 
-### OpenCorePkg 빌드
+### OpenCorePkg Build
 
 ```bash
 bash scripts/build-opencore.sh
 ```
 
-**방법 A — 네이티브 (Xcode CLT 필요):**
+**Method A — Native (Xcode CLT required):**
 ```bash
 cd 26x86-OpenCorePkg
 ./build_oc.tool
 ```
 
-**방법 B — Docker:**
+**Method B — Docker:**
 ```bash
-brew install --cask docker   # Docker Desktop 설치 후
+brew install --cask docker   # Install Docker Desktop
 cd 26x86-OpenCorePkg
 docker compose up --build
 ```
 
-빌드 결과(`OpenCore-RELEASE.zip`, `OpenCore-DEBUG.zip`)를 `26x86/payloads/OpenCore/`에 배치하거나:
+Place build artifacts (`OpenCore-RELEASE.zip`, `OpenCore-DEBUG.zip`) into `26x86/payloads/OpenCore/` or run:
 
 ```bash
 cd 26x86/payloads/OpenCore
 python3 Update-OpenCore.command
 ```
 
-### PatcherSupportPkg DMG 생성
+### PatcherSupportPkg DMG Creation
 
 ```bash
 cd 26x86-PatcherSupportPkg
 python3 ci.py
-# 또는 Generate-DMG.command 실행
+# Or run Generate-DMG.command
 ```
 
 ### MetallibSupportPkg
@@ -187,7 +187,7 @@ pip install -r requirements.txt
 python3 metallib.py --help
 ```
 
-### 앱 번들 빌드 (PyInstaller)
+### App Bundle Build (PyInstaller)
 
 ```bash
 source .venv/bin/activate
@@ -196,60 +196,58 @@ python3 Build-Project.command
 open ./dist/
 ```
 
-## UTM 가상머신 (테스트용)
+## UTM Virtual Machine (Testing)
 
-실제 Mac 하드웨어 없이 EFI/부트 설정을 검증하려면 UTM을 사용합니다.
+UTM or QEMU can be used to validate EFI boot configuration without modifying physical Mac hardware.
 
-### UTM 설치
+### UTM Installation
 
 ```bash
-# Homebrew (Intel Mac 권한 문제 시 수동 설치)
 brew install --cask utm
-
-# 또는 https://mac.getutm.app 에서 직접 다운로드
+# Or download directly from https://mac.getutm.app
 ```
 
-### VM 템플릿 사용
+### VM Template Setup
 
-1. UTM 실행 → **파일 → 가져오기**
-2. `vm/26x86-test.utm` 선택
-3. 디스크 이미지: macOS Recovery 또는 설치 ISO 마운트
-4. EFI 파티션에 26x86으로 생성한 OpenCore EFI 복사
+1. Launch UTM → **File → Import**
+2. Select `vm/26x86-test.utm`
+3. Mount the macOS Recovery image or installation ISO
+4. Copy the generated OpenCore EFI layout to the virtual disk's EFI partition
 
-자세한 VM 설정은 [vm/README.md](../vm/README.md)를 참고하세요. VM 호스트 제한은 [wiki/Installation-Notes.md](./wiki/Installation-Notes.md)를 참고하세요.
+See [wiki/Installation-Notes.md](./wiki/Installation-Notes.md) for virtualization host boundary details.
 
-## 환경 변수
+## Environment Variables
 
-`.env.example`을 `.env`로 복사하여 경로를 커스터마이즈할 수 있습니다:
+Copy `.env.example` to `.env` to configure localized asset paths:
 
 ```bash
 cp .env.example .env
 ```
 
-## 종속 GitHub 포크
+## Repository Relationships
 
-| 포크 | 원본 |
-|------|------|
-| [NiSeullent/26x86](https://github.com/NiSeullent/26x86) | albert-mueller/OpenCore-Legacy-Patcher-T2 |
-| [NiSeullent/26x86-OpenCorePkg](https://github.com/NiSeullent/26x86-OpenCorePkg) | albert-mueller/OpenCorePkg-add-T2-support |
-| [NiSeullent/26x86-PatcherSupportPkg](https://github.com/NiSeullent/26x86-PatcherSupportPkg) | hackdoc/PatcherSupportPkg |
-| [NiSeullent/26x86-MetallibSupportPkg](https://github.com/NiSeullent/26x86-MetallibSupportPkg) | dortania/MetallibSupportPkg |
+| Repository | Upstream Origin |
+|------------|-----------------|
+| [26x86/26x86](https://github.com/26x86/26x86) | albert-mueller/OpenCore-Legacy-Patcher-T2 |
+| [26x86/OpenCorePkg](https://github.com/26x86/OpenCorePkg) | albert-mueller/OpenCorePkg-add-T2-support |
+| [26x86/PatcherSupportPkg](https://github.com/26x86/PatcherSupportPkg) | hackdoc/PatcherSupportPkg |
+| [26x86/MetallibSupportPkg](https://github.com/26x86/MetallibSupportPkg) | dortania/MetallibSupportPkg |
 
-Acidanthera kext (Lilu, WhateverGreen 등)는 `payloads/Kexts/Update-Kexts.command`로 upstream에서 가져옵니다.
+Acidanthera kexts (Lilu, WhateverGreen, etc.) are fetched from upstream releases via `payloads/Kexts/Update-Kexts.command`.
 
-## 문제 해결
+## Troubleshooting
 
-| 증상 | 해결 |
-|------|------|
-| `Python 3.9` 오류 | `.venv` 재생성, python3.13 사용 확인 |
-| PyInstaller codesign 오류 | `PYINSTALLER_COMPILE_BOOTLOADER=1` 로 재설치 |
-| wxPython import 실패 | `pip install 'wxpython<4.2.5'` |
-| Homebrew 권한 오류 | `sudo chown -R $(whoami) /usr/local/share/man/man8` 또는 [MacPorts](https://www.macports.org) 사용 |
-| OpenCore 빌드 실패 | Xcode CLT 설치 확인, `./build_oc.tool --help` |
+| Symptom | Resolution |
+|---------|------------|
+| `Python 3.9` error | Recreate `.venv` and verify Python 3.13+ is active |
+| PyInstaller codesign failure | Reinstall with `PYINSTALLER_COMPILE_BOOTLOADER=1` |
+| wxPython import failure | Run `pip install 'wxpython<4.2.5'` |
+| Homebrew permissions issue | Run `sudo chown -R $(whoami) /usr/local/share/man/man8` or use MacPorts |
+| OpenCore build error | Verify Xcode CLT is installed, then check `./build_oc.tool --help` |
 
-## 관련 문서
+## Related Documentation
 
-- [wiki/Home.md](./wiki/Home.md) — 위키 목차 (주의사항·이슈·설치)
-- [SOURCE.md](../SOURCE.md) — 소스에서 실행
-- [DISCLAIMER.md](../DISCLAIMER.md) — 면책사항
-- [RESEARCH_INVENTORY.md](./RESEARCH_INVENTORY.md) — 연구 자료 목록
+- [wiki/README.md](./wiki/README.md) — Documentation index and architectural overview
+- [SOURCE.md](../SOURCE.md) — Running from source
+- [DISCLAIMER.md](../DISCLAIMER.md) — Legal and liability disclaimer
+- [wiki/Developer.md](./wiki/Developer.md) — Contributor guide and English-only documentation standard

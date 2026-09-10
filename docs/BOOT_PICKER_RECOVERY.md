@@ -1,13 +1,10 @@
-# 26x86 부트 피커와 macOS 복구
+# 26x86 Boot Picker and macOS Recovery
 
-이 문서는 `Alt/Option` 입력으로 macOS Recovery를 선택하는 경로를 설명합니다.
-대상은 `iBoot(AArch64)`의 macOS 게스트이며, iOS·iPadOS 및 기타 모바일 Apple
-운영체제는 이 경로에 포함되지 않습니다.
+This specification defines the `Alt/Option` key handling pathway used to trigger macOS Recovery. This applies specifically to `iBoot(AArch64)` macOS guests; iOS, iPadOS, and other mobile Apple platforms are out of scope.
 
-## EFI/OpenCore 계층 — 실제 Intel Mac
+## EFI / OpenCore Layer — Physical Intel Mac
 
-참조 설정은 [`integration/opencore/Sample.plist`](../integration/opencore/Sample.plist)입니다.
-`Misc -> Boot`에 다음 정책을 고정했습니다.
+The reference configuration is [`integration/opencore/Sample.plist`](../integration/opencore/Sample.plist). The following policy is enforced under `Misc -> Boot`:
 
 ```text
 PollAppleHotKeys = true
@@ -16,52 +13,32 @@ Timeout          = 2
 PickerMode       = Builtin
 ```
 
-따라서 전원을 켠 뒤 2초 동안 Option(Alt)을 누르면 OpenCore의 내장 피커가
-표시됩니다. `macOS Recovery` 항목은 해당 APFS 볼륨에 실제 Recovery 환경이
-탐지될 때만 나타납니다. `ScanPolicy`, APFS 드라이버와 실제 볼륨 상태가
-일치하지 않으면 피커에 항목이 없는 것이 정상이며, 이 참조 plist는 활성 ESP에
-자동으로 기록되지 않습니다.
+Holding Option (Alt) for 2 seconds upon system power-on opens OpenCore's built-in picker. The `macOS Recovery` entry is populated dynamically only when a valid Recovery environment is detected on the corresponding APFS volume container. If `ScanPolicy`, APFS drivers, or volume states do not align, omitting the recovery entry is expected behavior. This reference plist is never written automatically to the active ESP without explicit operator command.
 
-실제 Intel Mac에서 확인해야 할 증거는 다음과 같습니다.
+Evidence required on physical Intel Mac systems includes:
 
-1. 전원 인가 후 2초 안에 Option 키가 입력되었다는 OpenCore 로그
-2. 내장 피커에 일반 macOS와 `macOS Recovery`가 함께 표시된 화면
-3. Recovery 선택 뒤 해당 APFS Recovery 볼륨의 `boot.efi`가 로드된 로그
-4. 복구 환경에서의 디스크 선택 화면
+1. OpenCore debug log verifying Option key detection within 2 seconds of power-on;
+2. Built-in picker screen displaying both production macOS and `macOS Recovery` entries;
+3. Loader logs confirming successful transfer to `boot.efi` on the target APFS Recovery volume;
+4. Display of the macOS Recovery utilities and disk selection interface.
 
-이 중 화면이나 로그를 직접 확인하지 않은 상태는 정적 plist 검사로만
-기록합니다.
+If screen captures or log files are unavailable, the state is recorded strictly as static plist verification.
 
-## VMApple GUI 계층 — 입력 상태 머신과 복구 전송
+## VMApple GUI Layer — Input State Machine & Recovery Transport
 
-Windows 또는 macOS GUI의 `Apple Silicon Sandbox` 단계는
-`x86/boot_picker.py`의 동일한 2초 정책을 사용합니다.
+The `Apple Silicon Sandbox` step within the Windows and macOS GUI employs the identical 2-second timeout policy via `x86/boot_picker.py`:
 
-1. `2초 부트 피커 시작`을 누르면 상태가 `armed`가 됩니다.
-2. 브라우저/WebView의 실제 `keydown` 이벤트에서 `Alt` 또는 `Option`을
-   받으면 상태가 `picker`로 바뀝니다.
-3. `macOS Recovery · _default.ipsw`를 클릭하거나 아래 화살표 후 Enter를
-   누르면 `selected`가 되고, 선택 결과와 입력 시각이 브리지에 보존됩니다.
-4. `Recovery VM 창 열기`는 Recovery 선택 결과를 `--boot-selection recovery`와
-   `--boot-picker-trigger alt-enter`로 VMApple worker에 전달합니다. 일반
-   macOS 선택은 `--boot-selection macos`로 직접 전달됩니다.
-5. Recovery worker는 QEMU가 복구 소켓을 연 뒤 2초 게이트를 완료하고 나서만
-   iBSS DFU 전송을 시작합니다. 직접 macOS worker는 DFU/복구 전송을 건너뛰고
-   AVPBooter의 AUX/root 부팅을 관찰합니다. Recovery reset 뒤 실제 USB
-   descriptor에 bulk OUT endpoint 4가 나타나지 않으면 `transition-blocked`로
-   멈춥니다.
+1. Clicking `Start 2-Second Boot Picker` sets the state machine to `armed`.
+2. Receiving an authentic `Alt` or `Option` `keydown` event from the browser or WebView shifts the state to `picker`.
+3. Selecting `macOS Recovery · _default.ipsw` or navigating via Down Arrow followed by Enter transitions the state to `selected`, persisting selection and timestamp data to the IPC bridge.
+4. Clicking `Open Recovery VM Window` passes `--boot-selection recovery` and `--boot-picker-trigger alt-enter` to the VMApple worker. Standard boots pass `--boot-selection macos` directly.
+5. The Recovery worker initiates iBSS DFU payload transfer only after QEMU opens the recovery socket and fulfills the 2-second timing gate. Direct macOS workers skip DFU transfer and monitor AVPBooter AUX/root boot sequence. If bulk OUT endpoint 4 fails to enumerate following recovery reset, execution halts at `transition-blocked`.
 
-상태 머신의 입력 이벤트는 `get_boot_picker_status`, `start_boot_picker`,
-`tick_boot_picker`, `boot_picker_key`, `select_boot_entry` HTTP/pywebview
-브리지 API로 확인할 수 있습니다. 이 API는 EFI를 쓰거나 macOS 게스트 파일을
-변경하지 않습니다.
+State machine transitions are verifiable via the bridge API endpoints (`get_boot_picker_status`, `start_boot_picker`, `tick_boot_picker`, `boot_picker_key`, `select_boot_entry`). These APIs perform read-only state changes without altering EFI or guest disk contents.
 
-## Golden Gate 27 설치 판정
+## Golden Gate 27 Installation Verdict
 
-현재 저장된 Golden Gate 실험 자산은 원본 AVPBooter/iBSS와 읽기 전용 AUX/root
-입력입니다. 새 출력 폴더에는 COW overlay와 `launch.json`만 생성합니다.
-따라서 이 기능을 추가한 뒤에도 다음 세 가지가 모두 확인되어야 설치 화면에
-도달한 것으로 판정합니다.
+The experimental Golden Gate assets comprise authentic AVPBooter/iBSS binaries and read-only AUX/root disks. Output directories contain only COW overlays and `launch.json`. Consequently, reaching the installer UI requires fulfilling all four verification criteria:
 
 ```text
 signature_acceptance_verified = true
@@ -70,29 +47,13 @@ xnu_executed                  = true
 macos_boot_verified           = true
 ```
 
-최신 live-TSS 실행에서는 iBSS DFU reset 뒤 실제 장치가 `05ac:1281`로
-재열거되고 bulk OUT endpoint 4를 광고했습니다. LocalPolicy와 원본 iBEC의
-개인화 IMG4를 전송하고 `go` acknowledgement를 받았습니다. 선택적 RPC
-비가용성 실험에서 Stage2 command prompt까지 관찰한 뒤, 다섯 개 공식
-restore role을 전송하고 pre-boot 알림의 실제 `0200` STALL을 기록했으며
-`bootx` acknowledgement까지 받았습니다. 그 직후 iBoot가 패닉했으므로 이
-경계에서는 서명 수락, XNU 실행, Recovery UI와 Golden Gate 설치 UI를
-추정하지 않습니다. 보고서의 `macos_boot_verified`는 계속 `false`이고,
-`forced_transition`도 계속 `false`입니다. Linux QEMU에는 Apple PV graphics
-장치가 없으므로 그래픽 UI도 검증할 수 없습니다. 상세 결과는
-[`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json)에
-고정되어 있습니다.
+In live TSS test runs, following iBSS DFU reset, the virtual device re-enumerated as `05ac:1281` advertising bulk OUT endpoint 4. Personalized IMG4 payloads for LocalPolicy and authentic iBEC were transmitted, followed by receipt of `go` acknowledgments. Following Stage2 prompt observation in selective RPC experiments, all five official restore roles were transmitted, pre-boot notification `0200` STALL was logged, and `bootx` acknowledgments were received. Subsequent iBoot kernel panics mean that signature acceptance, XNU handoff, and Recovery UI presentation cannot be presumed. In reports, `macos_boot_verified` and `forced_transition` remain `false`. Without Apple PV graphics virtualization on Linux QEMU, visual UI cannot be verified. Full data is archived in [`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json).
 
-직접 macOS 경로에서는 이 복구 판정표를 재사용하지 않습니다. 런너는
-`Darwin Kernel Version` 또는 `Darwin Kernel`을 XNU 실행 증거로, `launchd`,
-`loginwindow`, `WindowServer`를 macOS userspace 증거로 각각 기록하고 두
-종류가 모두 있을 때만 `macos_boot_verified=true`를 설정합니다. 증거가
-없으면 `direct-boot-evidence-timeout`으로 종료하며, 설치 완료
-(`installation_verified`)와 Apple 하드웨어 인증은 별도로 `false`입니다.
+In direct boot paths, this recovery table is not reused. The runner records `Darwin Kernel Version` as XNU execution evidence and `launchd`/`loginwindow`/`WindowServer` as userspace evidence, asserting `macos_boot_verified=true` only when both tiers are present. Missing evidence triggers `direct-boot-evidence-timeout`, and `installation_verified` remains `false`.
 
-## 구성 예시
+## Configuration Schema
 
-`config.plist`의 26x86 fragment에는 다음 구조를 사용합니다.
+The 26x86 fragment in `config.plist` utilizes the following schema:
 
 ```xml
 <key>Venfire</key>
@@ -116,6 +77,4 @@ restore role을 전송하고 pre-boot 알림의 실제 `0200` STALL을 기록했
 </dict>
 ```
 
-`x86.sandbox_config.validate()`는 이 정책을 입력·EFI 경로·SMBIOS 검사보다
-먼저 확인하고, 지연 시간이 2초가 아니거나 Alt/Option이 아니거나
-`_default.ipsw`가 아니면 실패합니다.
+`x86.sandbox_config.validate()` enforces this specification before evaluating EFI or SMBIOS parameters, rejecting configurations where delay is not 2 seconds, key is not Alt/Option, or recovery image is not `_default.ipsw`.

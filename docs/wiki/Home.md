@@ -1,21 +1,21 @@
-# 26x86 위키
+# 26x86 Wiki
 
 <div align="center">
-<img src="../../resources/branding/26x86-logo-256.png" alt="26x86 로고" width="128" />
+<img src="../../resources/branding/26x86-logo-256.png" alt="26x86 Logo" width="128" />
 </div>
 
-**26x86** — x86 Mac을 위한 macOS 26 (Tahoe) 패처
+**26x86** — NextCore EFI boot engineering and compatibility tooling for macOS 26 (Tahoe) on x86-based Macintosh systems.
 
-> **한국어가 기본 문서 언어입니다.** 영문: [README.en.md](./README.en.md) · [docs/README.en.md](../README.en.md)
+> **Documentation Standard:** All official documentation is maintained strictly in English.
 
 ---
 
-## 빠른 시작
+## Quick Start
 
-| 방법 | 명령 |
-|------|------|
-| **권장** | `26x86.command` 더블클릭 |
-| 마법사 | `python3 -m x86 wizard` |
+| Method | Command |
+|--------|---------|
+| **Recommended** | Double-click `26x86.command` |
+| Wizard | `python3 -m x86 wizard` |
 | CLI | `python3 -m x86 --help` |
 
 ```bash
@@ -27,36 +27,32 @@ python3 -m x86 status
 
 ---
 
-## 목차
+## Documentation Index
 
-| 문서 | 설명 |
-|------|------|
-| [Warnings.md](./Warnings.md) | ⚠️ 주의사항 통합 |
-| [Known-Issues.md](./Known-Issues.md) | 알려진 이슈 |
-| [Disclaimer.md](./Disclaimer.md) | 면책 요약 |
-| [GPU-Limitations.md](./GPU-Limitations.md) | GPU 제한 |
-| [Pre-AVX-Mac-Pro.md](./Pre-AVX-Mac-Pro.md) | Pre-AVX Mac Pro Phase 1 |
-| [Safari-PreAVX-Fix.md](./Safari-PreAVX-Fix.md) | MacPro5,1 Safari 26 Pre-AVX RestrictEvents |
-| [Mac-Pro-Tahoe-Yellow-Screen.md](./Mac-Pro-Tahoe-Yellow-Screen.md) | Mac Pro Tahoe 노란 화면 |
-| [Tahoe-SkyLight-LUT-Research.md](../Tahoe-SkyLight-LUT-Research.md) | SkyLight / LUT / RenderBox 합성 Research·PoC |
-| [SkyLight-LUT-Tracks.md](../SkyLight-LUT-Tracks.md) | 극한도전 Mission Control · 트랙 A–L |
-| [Tahoe-Graphics-Roadmap.md](../Tahoe-Graphics-Roadmap.md) | Tahoe 그래픽 Layer A/B 로드맵 |
-| [T2-Mac-Notes.md](./T2-Mac-Notes.md) | T2 Mac 주의 |
-| [Installation-Notes.md](./Installation-Notes.md) | 설치·업그레이드 |
-| [Configuration.md](./Configuration.md) | 설정 경로 |
-| [Migration.md](./Migration.md) | 이전 패처에서 전환 |
-| [Upstream-Repositories.md](./Upstream-Repositories.md) | 원본 저장소 (법적) |
-| [Developer.md](./Developer.md) | 개발자 안내 |
-| [Orphan-Files-Archive.md](./Orphan-Files-Archive.md) | 제거된 찌꺼기 파일 목록 |
+| Document | Description |
+|----------|-------------|
+| [Warnings.md](./Warnings.md) | Consolidated warnings and hardware risks |
+| [Known-Issues.md](./Known-Issues.md) | Known issues and current mitigation status |
+| [Disclaimer.md](./Disclaimer.md) | Legal and warranty disclaimer summary |
+| [GPU-Limitations.md](./GPU-Limitations.md) | GPU compatibility tiers and graphics acceleration status |
+| [Pre-AVX-Mac-Pro.md](./Pre-AVX-Mac-Pro.md) | Pre-AVX Mac Pro (5,1 / 6,1) detection and mitigation |
+| [Safari-PreAVX-Fix.md](./Safari-PreAVX-Fix.md) | Safari 26 Pre-AVX instruction bypass |
+| [Mac-Pro-Tahoe-Yellow-Screen.md](./Mac-Pro-Tahoe-Yellow-Screen.md) | WindowServer and compositor tint troubleshooting |
+| [T2-Mac-Notes.md](./T2-Mac-Notes.md) | Apple T2 security chip considerations |
+| [Installation-Notes.md](./Installation-Notes.md) | Clean installation and upgrade procedures |
+| [Configuration.md](./Configuration.md) | Configuration paths and environment settings |
+| [Migration.md](./Migration.md) | Migration from earlier patchers to 26x86 |
+| [Upstream-Repositories.md](./Upstream-Repositories.md) | Upstream projects and integration map |
+| [Developer.md](./Developer.md) | Contributor guidelines and English-only documentation standard |
+| [Orphan-Files-Archive.md](./Orphan-Files-Archive.md) | Deprecated and cleaned asset archive |
 
 ---
 
-## 법적·라이선스
+## Legal & Licensing
 
 [DISCLAIMER.md](../../DISCLAIMER.md) · [LICENSE.txt](../../LICENSE.txt) · [NOTICE.md](../../NOTICE.md) · [CREDITS.md](../../CREDITS.md) · [THIRD_PARTY_LICENSES.md](../../THIRD_PARTY_LICENSES.md)
 
-## 외부 링크
+## External Links
 
-- [Releases](https://github.com/NiSeullent/26x86/releases)
-- [보안 정책](https://github.com/NiSeullent/26x86/security/policy)
-- [Discord](https://discord.gg/rqdPgH8xSN)
+- [Releases](https://github.com/26x86/26x86/releases)
+- [Security Policy](https://github.com/26x86/26x86/security/policy)

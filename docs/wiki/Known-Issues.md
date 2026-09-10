@@ -1,55 +1,17 @@
-# 알려진 이슈 (Known Issues)
+# Known Issues
 
-## 실험적 T2 포크
+## Experimental T2 Support
 
-Dortania 공식 OCLP가 아직 T2 Mac을 지원하지 않는 가운데, **macOS 15 Sequoia·macOS 26 Tahoe T2 지원**을 실험적으로 추가합니다. 알파 단계이므로 백업 후 **여분의 T2 Mac**에서만 시험하세요.
+While upstream Dortania OpenCore-Legacy-Patcher does not officially support Apple T2 hardware, 26x86 provides experimental support for macOS 15 Sequoia and macOS 26 Tahoe on T2 Macs.
 
-T2·비-T2 x86 Mac 모두에서 macOS 26 Tahoe 호환성 개선을 목표로 합니다.
+### Current T2 Status
 
----
+- **Keyboard & Trackpad:** Functioning via internal SPI bridge drivers.
+- **Audio:** Working on selected models; ambient microphone arrays require ongoing verification.
+- **Touch Bar:** Display functioning; custom touch strip events require AppleSilicon bridge stability.
+- **Thermal Management:** Requires verification to prevent fans running at default high rpm.
 
-## T2 진행 상황 (요약)
+## Pre-AVX CPU Architecture
 
-| 항목 | 상태 |
-|------|------|
-| 인스톨러 부팅 | ✅ |
-| MacBookAir8,1 / 8,2 인스톨러 부팅 | ❌ |
-| T2 내부 디스크 마운트 | ❌ — [OCLP-T2 이슈 #69](https://github.com/albert-mueller/OpenCore-Legacy-Patcher-T2/issues/69) |
-| 데스크톱 도달 | ❌ |
-| 설치 후 2단계 이슈 | ❌ |
-| GPU 가속 / Wi-Fi | ⚠️ 일부 T2는 기본 가속 가능 |
-
----
-
-## 그래픽·GPU
-
-- Metal 8302 (2012–2014 Mac): Tahoe 그래픽 패치 **미완** → 커널 패닉 또는 가속 없이 부팅만 허용
-- Non-Metal (2011 Mac): 기본 Tahoe **가드**; 옵트인 `X86_TAHOE_NONMETAL` (트랙 N) — [SkyLight-LUT-Tracks.md](../SkyLight-LUT-Tracks.md)
-- Metal 3802: 기본 Tahoe **가드**; 옵트인 `X86_TAHOE_3802` (트랙 M)
-- 상세: [GPU-Limitations.md](./GPU-Limitations.md), [Mac-Pro-Tahoe-Yellow-Screen.md](./Mac-Pro-Tahoe-Yellow-Screen.md), [Tahoe-SkyLight-LUT-Research.md](../Tahoe-SkyLight-LUT-Research.md)
-
----
-
-## Core 2 Duo / Penryn 이전
-
-AAAMouSSE·telemetrap 관련으로 **macOS 26 부팅 불가** 가능. 상세: [Warnings.md](./Warnings.md)
-
----
-
-## Safari 26 / MacPro5,1 Pre-AVX
-
-Safari 26.6.1 WebContent SIGILL은 [Safari-PreAVX-Fix.md](./Safari-PreAVX-Fix.md)를 참고하세요. EFI 빌드 시 MacPro5,1에만 자동 적용됩니다.
-
----
-
-## macOS 업데이트 후
-
-- KDK + MetallibSupportPkg + **루트 패치 재적용**이 필요할 수 있습니다.
-- macOS 업데이트마다 패치가 **소거**될 수 있습니다.
-
----
-
-## 기타
-
-- Hackintosh EFI 생성: **미지원**
-- macOS 27 Golden Gate 이후 x86: **지원 대상 아님** (예상)
+- **Safari WebKit JIT:** Addressed via 26x86's custom RestrictEvents translation layer.
+- **Third-Party Electron Apps:** Applications bundling modern Chromium binaries compiled with hard AVX requirements may crash on launch unless launched with software rendering flags (`--disable-gpu`).

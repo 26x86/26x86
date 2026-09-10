@@ -27,6 +27,8 @@ jobs:
         run: pip install -r requirements-docs.txt
       - name: Build site (strict)
         run: mkdocs build --strict
+      - name: Verify English-only documentation policy
+        run: python tests/test_docs_english_only.py
       - name: Verify assembled nav coverage
         run: |
           python - <<'EOF'
