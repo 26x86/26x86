@@ -37,8 +37,8 @@
       "id": "display",
       "layer": "Display",
       "status": "not-ready",
-      "summary": "Diagnostic GOP pixels do not establish a kernel framebuffer, WindowServer, or a usable desktop.",
-      "evidence_url": "https://github.com/26x86/26x86/pull/19"
+      "summary": "An authored guest reads encoded boot-video fields, writes its owned framebuffer and passes exact GOP RGB readback in OVMF. Persistent presentation, normal startup and a physical desktop remain unverified.",
+      "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/docs/BOOT_FRAMEBUFFER_VALIDATION.md"
     },
     {
       "title": "Install and reboot on physical hardware",
@@ -67,6 +67,12 @@
     }
   ],
   "latest": [
+    {
+      "date": "2026-09-12",
+      "title": "Owned guest framebuffer connects to firmware display",
+      "summary": "Nine authored checks pass at 1280 by 800 pixels, including exact GOP RGB readback after guest writes. Without GOP, the CPU diagnostic still completes 64 instructions while video reports NOT_FOUND and remains unverified. This is firmware evidence, not a macOS desktop.",
+      "url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/docs/BOOT_FRAMEBUFFER_VALIDATION.md"
+    },
     {
       "summary": "BFM/BFI/BFXIL/BFC source tests, a 64-instruction authored EFI consumer and the unchanged captured-Arm comparator pass. The local kernel prefix reaches its 16,384-instruction limit.",
       "date": "2026-09-12",

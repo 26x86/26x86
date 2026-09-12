@@ -1,0 +1,99 @@
+{
+  "schema": "nextcore.framebuffer-evidence.v1",
+  "module_commits": {
+    "core": "cead709d8dc4894296b093f3f71859a54d05c65f",
+    "efi": "90e4a50436a262abcc07632744fb51761c7f68f8",
+    "tool": "4010fe24f14dfa3c8bd062f0cc2b932d2be81d9f",
+    "ise": "002d2eff8b262e728224b9b039b9ffe168ed4586"
+  },
+  "files": [
+    {
+      "path": "owned-gop/receipt.json",
+      "bytes": 3363,
+      "sha256": "945adb2e2123cf1d94915de55faff855accad9bec267c3ec1163dda5209979a7"
+    },
+    {
+      "path": "owned-gop/firmware/report.json",
+      "bytes": 6711,
+      "sha256": "c59865705aaeab009060af6e50595f8b5bd4a1ff02dccbfcdfece7ea9e0a08f4"
+    },
+    {
+      "path": "owned-gop/firmware/serial.log",
+      "bytes": 1984,
+      "sha256": "417eb6e9236e018b8c3bbf520fd179911153de0c64fe66fc8076c025c641465c"
+    },
+    {
+      "path": "owned-gop/probe.S",
+      "bytes": 582,
+      "sha256": "57adf5aff4bada151a390803228c6e1e27ac06a9de6a9e4141d1c6d0ceaca778"
+    },
+    {
+      "path": "old-efi-negative/receipt.json",
+      "bytes": 3257,
+      "sha256": "25b8522bed2235ac5a0a14291dfeb373d5d437ea2a88acf1174b0618e696d3de"
+    },
+    {
+      "path": "old-efi-negative/firmware/report.json",
+      "bytes": 6265,
+      "sha256": "e26e8b228bb8f3d9ed32ea6844a9ffe1b61306f8cbcbb7d616bb74240cf6f70d"
+    },
+    {
+      "path": "old-efi-negative/firmware/serial.log",
+      "bytes": 1685,
+      "sha256": "dc3c4c35472c405adf7326c905062d436c009a7263cdf0ca16621d89a790aa4b"
+    },
+    {
+      "path": "old-efi-negative/probe.S",
+      "bytes": 582,
+      "sha256": "57adf5aff4bada151a390803228c6e1e27ac06a9de6a9e4141d1c6d0ceaca778"
+    },
+    {
+      "path": "headless-bfm/receipt.json",
+      "bytes": 2804,
+      "sha256": "8b820bcc0c6b4f4d854560c31228284aa309a92e008847fad72ad3b5295efa31"
+    },
+    {
+      "path": "headless-bfm/firmware/report.json",
+      "bytes": 6240,
+      "sha256": "09f3258d00bb536f69a5c173e68e7159b9d94e3a148a4a7bee9549628061e6f2"
+    },
+    {
+      "path": "headless-bfm/firmware/serial.log",
+      "bytes": 1701,
+      "sha256": "2f1092685a2775f29bbb90d80323275333101728d0c6b432ec869381828d7387"
+    },
+    {
+      "path": "headless-bfm/probe.S",
+      "bytes": 329,
+      "sha256": "5103d428599df18d6acbbad42ae6d989b81f3ed3c38b582d0c2650a22bf46cd6"
+    },
+    {
+      "path": "no-gop/receipt.json",
+      "bytes": 6188,
+      "sha256": "a9083e28939e74cdee6b2f64cf5bb961c1c18bbff2be60aab4fd3aaca0ef0870"
+    },
+    {
+      "path": "no-gop/firmware/report.json",
+      "bytes": 6322,
+      "sha256": "fd3c71013cfe2681789398de11d9e9169018cb657a486caa1d03d0cff61769fb"
+    },
+    {
+      "path": "no-gop/firmware/serial.log",
+      "bytes": 1707,
+      "sha256": "69127a376fb9b5f2134bf8b816ede48f09beb390a2166881eb7e9f8bd5d6a3ae"
+    },
+    {
+      "path": "no-gop/qemu-no-gop",
+      "bytes": 581,
+      "sha256": "c7079cc3da0dcb8c16e24b47e7f93aca848b4bce1034eba0879598898fedb80f"
+    },
+    {
+      "path": "no-gop/wrapper-invocation.json",
+      "bytes": 1333,
+      "sha256": "7f11e7cac5c2bb660011aa7fcbd6ea7577f60893adf58410449135a536b398a4"
+    }
+  ],
+  "original_images_used": false,
+  "physical_display_verified": false,
+  "macos_boot_verified": false
+}
