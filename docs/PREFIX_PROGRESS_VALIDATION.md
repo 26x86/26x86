@@ -2,15 +2,16 @@
 
 ## Current Status
 
-The r22 mapped diagnostic retires **42,252,452 instructions**, issues
-**42,252,453 fetch requests** and completes **6,010,805 data operations** in
-413.518 seconds. It stops with UNSUPPORTED_INSTRUCTION (status 8) at scalar
-register ORR. The provider reports no error. The input and EFI are preserved.
-The owned framebuffer remains zero and matches GOP readback at 1280 by 800;
-no macOS screen has been established.
+The r23 mapped diagnostic retires **42,255,830 instructions**, issues
+**42,255,831 fetch requests** and completes **6,012,249 data operations** in
+134.696 seconds. It stops with UNSUPPORTED_INSTRUCTION (status 8) at scalar LDR
+with post-indexed immediate addressing. The provider reports no error. The input
+and EFI are preserved. The owned framebuffer remains zero and matches GOP
+readback at 1280 by 800; no macOS screen has been established.
 
-This completed run includes scalar unscaled transfers and firmware watchdog
-ownership. The next bounded implementation boundary is scalar register ORR.
+This completed run includes the logical shifted-register family, scalar unscaled
+transfers and firmware watchdog ownership. The next bounded implementation
+boundary is scalar post-indexed immediate addressing.
 The selected software-defined Normal-NC profile, high virtual alias, canonical
 PAC callback and immutable stack selection remain explicit diagnostic conditions.
 They do not establish the target reset entry ABI, SPTM services, complete platform
@@ -23,9 +24,10 @@ The source contains one watchdog-disable call at this entry point. The authored
 timer control below establishes the helper behavior. r22 completes beyond the
 prior r21 termination time, but that does not by itself prove r21's cause.
 
-[Latest r22 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r22-watchdog-summary.json)
+[Latest r23 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r23-logical-shifted-summary.json)
 records this boundary without publishing original instruction words or addresses.
-Historical r20 completed 42,252,448 instructions and 6,010,803 data operations
+Historical r22 completed 42,252,452 instructions and 6,010,805 data operations
+before register ORR. Historical r20 completed 42,252,448 instructions and 6,010,803 data operations
 before an unscaled-load boundary. r21 supplied no terminal execution record.
 
 ## Historical M=0 boundary
@@ -74,7 +76,7 @@ cases across 4 KiB/16 KiB mappings and both virtual-address halves. The receipt
 reader passes five tests and module inventories match actual committed Git bytes.
 
 [Authored profile receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/unaligned-normal-profile/summary.json)
-records these results separately from the unchanged original-input boundary above.
+records these results separately from original-input execution.
 That unaligned-transfer increment did not replay the original kernel in a new
 memory environment. The subsequent authored mapped diagnostic below adds a
 separate PAC callback entry point; the previous entry point remains unchanged.
@@ -92,7 +94,7 @@ r19 mapped attempt retires 13 instructions and stops with SYSTEM_REGISTER_TRAP
 at SPSel, with zero completed data operations. Its owned framebuffer remains
 zero and matches GOP readback at 1280 by 800. This new mapping regime did not
 advance beyond r18; its retirement count is not a same-regime regression or
-progress comparison. The subsequent r20 run above includes verified immutable stack selection.
+progress comparison. The subsequent r20 run includes verified immutable stack selection.
 The [r19 mapped receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r19-mapped-summary.json)
 records this boundary without original instruction words or addresses.
 
@@ -148,7 +150,7 @@ independent actual Arm cases match both the native C execution and Rust referenc
 The canonical service suite passes 33 tests in each of three modes; the authored
 EFI consumer passes ten aggregate checks. [Unscaled scalar memory evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/unscaled-scalar-memory/summary.json)
 records this instruction-family scope. These authored results do not establish
-original-input progress by themselves; the completed r22 receipt above records
+original-input progress by themselves; the completed r23 receipt above records
 the separate original replay.
 
 ## Firmware watchdog ownership and incomplete r21 run
@@ -157,7 +159,7 @@ The r21 attempt ended after 334.283 seconds with QEMU exit 0 and no host-request
 termination. It has no terminal execution record and therefore no verified
 retired-instruction count. Its input and EFI hashes were preserved. r20 remained
 the strongest completed original diagnostic at that point; no progress is inferred
-from r21 elapsed time or clean process exit. Completed r22 is now reported above.
+from r21 elapsed time or clean process exit. Subsequent completed runs are distinguished above.
 
 A separate authored OVMF test arms an actual two-second firmware watchdog and
 stalls for three seconds. The control naturally exits before completion; the
@@ -171,7 +173,25 @@ instruction budgets remain unchanged.
 
 [Watchdog integrity evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/firmware-watchdog/summary.json)
 records the timer control independently. It does not establish that watchdog
-expiry caused r21 or that any physical machine boots macOS. The completed r22 original replay is reported separately above.
+expiry caused r21 or that any physical machine boots macOS. The subsequent original replays are reported separately above.
+
+## Authored logical shifted-register support
+
+AND, BIC, ORR, ORN, EOR, EON, ANDS and BICS now support both integer widths and
+LSL, LSR, ASR and ROR operands. The native bit-origin oracle passes 64,512 cases
+and 197,122 assertions. The independent Arm capture supplies 768 result/flag
+vectors for comparison against native execution and the Rust reference. The
+canonical regression suite passes 31 tests in each of three native modes, and
+the authored mapped EFI consumer passes ten checks.
+
+The new provider-specific comparison covers exposed execution results and ordered
+memory requests, with RAM asserted unchanged; it is not a complete private-CPU
+or reply snapshot comparison. ZR positions, source/destination overlap, W result
+zero-extension, preserved PSTATE, flag-setting forms and undefined W shift amounts
+are covered. [Logical shifted-register evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/logical-shifted-register/summary.json)
+records the authored result separately from original kernel execution. The
+completed r23 original receipt above establishes the new observed boundary;
+instruction support alone is not evidence of boot progress.
 
 ## Observations and Controls
 
@@ -254,5 +274,6 @@ host tests and no_std UEFI compilation pass. An authored BFM loop executes the
 full 67,108,864 steps in the final EFI and preserves expected state and inputs;
 the old build rejects the new selector before guest entry. The unchanged
 600-second timeout remains a hard limit. Historical r18 stopped at the alignment
-fault; later mapped r20 stopped at an unscaled load and r22 stops at register ORR.
+fault; r20 stopped at an unscaled load, r22 at register ORR, and r23 at
+post-indexed LDR.
 These runs do not reach the requested maximum, which is not their retirement count.

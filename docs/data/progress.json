@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-09-12",
+  "updated_at": "2026-09-13",
   "physical_desktop_verified": false,
   "boundary": {
-    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r22-watchdog-summary.json",
-    "label": "Mapped prefix: 42,252,452 instructions; register ORR boundary",
-    "detail": "r22 completes 6,010,805 data operations in 413.518 seconds after unscaled memory support and watchdog ownership. It stops at unsupported scalar register ORR. The 1280 by 800 framebuffer remains zero with matching GOP readback; normal startup and physical desktop remain unverified."
+    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r23-logical-shifted-summary.json",
+    "label": "Mapped prefix: 42,255,830 instructions; post-indexed LDR boundary",
+    "detail": "r23 completes 6,012,249 data operations in 134.696 seconds and stops at unsupported scalar post-indexed LDR. The provider reports no error. The 1280 by 800 framebuffer remains zero with matching GOP readback; normal startup and physical desktop remain unverified."
   },
   "headline": "Building the path to a real macOS desktop",
   "milestones": [
@@ -21,7 +21,7 @@
       "id": "execution",
       "layer": "CPU runtime",
       "status": "in-progress",
-      "summary": "r22 retires 42,252,452 instructions and completes 6,010,805 data operations before unsupported scalar register ORR. Unscaled memory and watchdog control have authored evidence. Reset entry ABI, normal startup and physical boot remain unverified.",
+      "summary": "r23 retires 42,255,830 instructions and completes 6,012,249 data operations before unsupported scalar post-indexed LDR. All eight logical shifted-register operations have authored native, Arm, provider and EFI evidence. Normal startup and physical boot remain unverified.",
       "evidence_url": "https://github.com/26x86/Nextcore-ISE/pull/9"
     },
     {
@@ -61,12 +61,18 @@
       "detail": "31 successful checks on development revision 606d3c4a. Later mapped-profile integration is tracked separately; CI is not physical boot proof."
     },
     {
-      "value": "42,252,452",
+      "value": "42,255,830",
       "label": "Latest bounded prefix",
-      "detail": "Retired instructions before unsupported scalar register ORR in the completed r22 mapped OVMF diagnostic."
+      "detail": "Retired instructions before unsupported scalar post-indexed LDR in the completed r23 mapped OVMF diagnostic."
     }
   ],
   "latest": [
+    {
+      "date": "2026-09-13",
+      "title": "Logical shifted-register execution reaches post-indexed LDR",
+      "summary": "r23 completes 42,255,830 instructions and 6,012,249 data operations in 134.696 seconds before unsupported scalar post-indexed LDR. Its framebuffer remains zero. Authored logical tests pass 64,512 cases, 768 actual Arm comparisons and ten mapped EFI checks.",
+      "url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r23-logical-shifted-summary.json"
+    },
     {
       "date": "2026-09-12",
       "title": "Completed mapped run reaches register ORR after watchdog ownership",
