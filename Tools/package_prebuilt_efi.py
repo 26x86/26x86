@@ -136,8 +136,10 @@ Compilation and archive validation do not prove firmware compatibility or macOS 
 EFI/BOOT/BOOTX64.EFI is the baseline x86_64 UEFI application, built without
 selected diagnostic features. EFI/OC/config.plist is its public configuration
 path. The supplied empty configuration selects no guest; the baseline displays
-"No enabled boot entries" and returns to firmware with NOT_FOUND. Supply a deliberate, supported
-entry configuration before attempting a target; this package cannot install macOS.
+the configuration recovery screen. Enter retries this same configuration and
+Esc returns to firmware with NOT_FOUND. Required display or input failures return
+their actual error. Supply a deliberate, supported entry configuration before
+attempting a target; this package cannot install macOS.
 
 Use a separate FAT-formatted removable test volume. The EFI directory is relative
 to that volume's root. Preserve your existing system EFI and recovery path; this

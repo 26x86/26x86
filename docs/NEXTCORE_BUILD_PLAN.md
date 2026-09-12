@@ -998,3 +998,53 @@ authentication to the immutable v2 runner, construct kernel page tables or enabl
 normal startup. Those require separate explicit contracts and runtime evidence.
 Root owns integration and this Build Plan section; delegated runtime implementation
 and independent tests have disjoint source ownership.
+### Visible configuration recovery
+
+Current Status: EFI `06b767498ba9af6d119b3600ce4a6aa44d0f81ee` displays a recovery
+screen for missing, zero-length, malformed and empty-entry configuration. Enter
+rereads the same configuration; Escape returns the original error. Ten authored
+OVMF cases pass, including required display/input failures and optional screen
+clear failure. The previous default binary fails the same recovery test, while
+three existing picker regressions pass. The actual 1280 by 800 recovery screen
+was captured and visually checked. Physical firmware input/display and macOS
+startup remain unverified. See the [configuration recovery evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/configuration-recovery/summary.json).
+
+Target State: Show the exact configuration path and actual failure reason with
+explicit Enter-to-retry and Escape-to-return actions. Retry only the same
+`\EFI\OC\config.plist` on the current loaded-image file system and perform all
+size and parse checks again. Do not search other volumes, choose an arbitrary
+child, write files or NVRAM, or automatically retry/boot. A failed display write
+or unavailable key-input service must return its actual error rather than
+silently claim an interactive screen. Preserve valid configurations, ShowPicker
+policy and child NOT_READY failure handling. Verify in actual OVMF that a first
+read failure can recover through explicit input to the intended authored child;
+also check persistent missing/empty/malformed/no-entry states, Escape, and
+display/input failures without child execution. Use authored file-system
+protocol wrappers or copied test media; never alter physical disks for this test.
+Keep normal macOS readiness and the fixed original-replay binaries unchanged.
+
+### Scalar immediate writeback
+
+Current Status: Original r23 reaches a post-indexed scalar LDR that the current
+scalar decoder does not admit. Pair transfers already commit base writeback only
+after a successful transaction; the scalar path currently uses offset-only
+addressing. The next change must preserve precise failure behavior.
+
+Target State: Admit pre-indexed and post-indexed forms of the thirteen supported
+integer scalar transfers. Sign-extend the nine-bit byte offset without scaling;
+pre-index uses base plus offset and post-index uses the original base. Commit
+the updated base only after a successful transaction. Rn=31 uses SP and Rt=31
+uses ZR; retain width/sign extension, flags, original-SP alignment checks,
+translation/permission faults and exact store WnR classification. Reject
+non-SP base/destination overlap as an explicit unsupported policy before data
+access; do not claim this policy is the only architectural overlap behavior.
+Keep unprivileged, SIMD, prefetch and reserved forms outside this addition.
+Cover both indexing modes, every scalar form, signed offset endpoints, SP/ZR,
+unaligned Normal transfers, page crossings and failure-before-writeback using
+independent actual Arm/native/reference and all canonical cache modes. Only a
+final EFI replay of unchanged original input can advance the observed boundary.
+
+Primary encoding reference:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/a64.decode#L345-L390
+Primary transaction/writeback ordering reference:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/translate-a64.c#L3079-L3138
