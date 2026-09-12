@@ -73,6 +73,11 @@ The following items are standard engineering concepts and do NOT constitute secu
 - Every decision item must clearly distinguish codified decisions from open questions.
 - Unresolved items are logged strictly as single-line `OPEN_QUESTION` entries.
 - All documentation is maintained in **English only**.
+- Every website deployment must publish `prebuiltefi.zip` with the site. Build it
+  from an explicit immutable public source revision and verify the archive,
+  executable types, file hashes and source provenance before deployment. Missing
+  or invalid archives must block deployment. Keep normal firmware and diagnostic
+  binaries clearly identified, and state the actual boot-validation boundary.
 
 ## 7. Git Commit Disciplines
 
