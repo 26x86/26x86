@@ -87,6 +87,28 @@ prove that every fixup succeeded.
 [Sanitized membership evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-chain-membership-summary.json)
 records the scope explicitly.
 
+## Alignment stop and entry memory regime
+
+The initialization diagnostic stops after 1,542,930 retired instructions at an
+ordinary 64-bit load whose address is four-byte aligned. The failing address is
+encoded chain node 51,889. The preceding successful stores match nodes 51,887
+and 51,888. Provider status is zero; this is a guest alignment fault, not a host
+callback failure or an exhausted instruction budget.
+
+Arm [AArch64 memory attributes and properties, 102376_0200_01_en](https://documentation-service.arm.com/static/63a43e333f28e5456434e18b),
+sections 3.2 (page 11) and 12.1 (page 33), specifies the MMU-off Device default
+without an applicable virtualization override and alignment faults for unaligned
+Device accesses. Clearing SCTLR.A does not make Device data unaligned accesses
+legal. The current M=0, HCR=0 provider fault is therefore consistent with its
+selected contract and must not be suppressed.
+
+The pinned public [legacy startup](https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/arm64/start.s)
+sets bootstrap translation tables and MAIR, writes the default SCTLR and executes
+ISB before returning to arm_init. That public precondition is not equivalent to
+the current MMU-off diagnostic. Establish how the actual outer entry relates to
+this setup before providing a mapped entry profile. HCR.DC changes additional
+virtualization behavior and is not an alignment-error bypass.
+
 ## Remaining acceptance requirements
 
 - Target-specific argument layouts backed by authoritative public contracts.
