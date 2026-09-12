@@ -1,0 +1,175 @@
+{
+  "schema": "nextcore.x86-efi-arm-deep-trace.v1",
+  "host_architecture": "x86_64",
+  "handoff_abi": "unprovisioned-sptm-prefix",
+  "sptm_args_provided": false,
+  "platform_profile": "nextcore-irq-compat-v1",
+  "profile_reset_origin": "software_defined",
+  "sptm_services_provided": false,
+  "platform_device_tree_provided": false,
+  "config": {
+    "Nextcore": {
+      "Kernel": {
+        "Profile": "x86-efi-arm64-trace",
+        "Path": "\\EFI\\NEXTCORE\\kernel.kc",
+        "Arguments": "-v",
+        "Trace": {
+          "HandoffAbi": "unprovisioned-sptm-prefix",
+          "PhysicalBase": 1073741824,
+          "VirtualBase": 18446741874686296064,
+          "MemorySize": 67108864,
+          "ActualMemorySize": 67108864,
+          "KernelPhysical": 1107296256,
+          "InstructionBudget": 65536,
+          "DeviceTreePath": "\\EFI\\NEXTCORE\\diagnostic.dt",
+          "DiagnosticTier": "long-65536",
+          "MemoryProfile": "mapped-normal-nc-v1",
+          "PlatformProfile": "nextcore-irq-compat-v1"
+        }
+      }
+    }
+  },
+  "execution": {
+    "status": 5,
+    "retired": 65536,
+    "pc": 18446741874719868088,
+    "compiled_blocks": 65536,
+    "fault_instruction": 0,
+    "registers": {
+      "x0": 131074,
+      "x1": 18446741874719868104,
+      "x2": 1234605616436508552,
+      "x3": 18446741874719868104
+    },
+    "platform": {
+      "profile": 1,
+      "override": 0,
+      "pending": 0,
+      "pstate": 1610613701,
+      "sp": 1107443712
+    },
+    "exception": {
+      "elr": 0,
+      "spsr": 0,
+      "vector": 0,
+      "esr": 0
+    },
+    "memory": {
+      "abi": 2,
+      "provider_status": 0,
+      "guest_far": 0,
+      "last_address": 18446741874719868084,
+      "fetch_requests": 65536,
+      "data_requests": 26203,
+      "completed_data_operations": 26203
+    }
+  },
+  "mapped_profile": {
+    "requested": true,
+    "validated": true,
+    "mapping": {
+      "physical_base": 1073741824,
+      "virtual_base": 18446741874686296064,
+      "memory_size": 67108864,
+      "table_base": 1140850688,
+      "table_bytes": 131072,
+      "ttbr0": 1140850688,
+      "ttbr1": 1140867072,
+      "tcr": 22549725201,
+      "sctlr": 818939905,
+      "entry": 18446741874719867904
+    },
+    "build_observed": true,
+    "selected_observed": true,
+    "original_entry_abi_verified": false
+  },
+  "deep_diagnostic_requested": false,
+  "deep_diagnostic_build_observed": true,
+  "deep_diagnostic_selected_observed": false,
+  "long_diagnostic_requested": true,
+  "long_diagnostic_build_observed": true,
+  "long_diagnostic_selected_observed": true,
+  "initialization_diagnostic_requested": false,
+  "initialization_diagnostic_build_observed": true,
+  "initialization_diagnostic_selected_observed": false,
+  "tool_source_sha256_before": {
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py": "212834cea0242dcaa25c6e2ac40261c23bd3254b5e9791ec4c47899557a228cd",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "549914a7980ee519afcccaa97e952a0125d1d257c8fb66f97b5c311a1c5a52de"
+  },
+  "tool_source_sha256_after": {
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py": "212834cea0242dcaa25c6e2ac40261c23bd3254b5e9791ec4c47899557a228cd",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "549914a7980ee519afcccaa97e952a0125d1d257c8fb66f97b5c311a1c5a52de"
+  },
+  "tool_sources_preserved": true,
+  "tiered_diagnostic_requested": false,
+  "tiered_diagnostic_build_observed": true,
+  "markers": [
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: CONFIG_PARSED",
+    "NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152",
+    "NXARMJIT: TRACE_TIERED_DIAGNOSTIC maximum=4096",
+    "NXARMJIT: TRACE_DEEP_DIAGNOSTIC_BUILD maximum=16384",
+    "NXARMJIT: TRACE_LONG_DIAGNOSTIC_BUILD maximum=65536",
+    "NXARMJIT: TRACE_INITIALIZATION_DIAGNOSTIC_BUILD maximum=67108864",
+    "NXARMJIT: TRACE_MAPPED_DIAGNOSTIC_BUILD profile=mapped-normal-nc-v1",
+    "NXARMJIT: TRACE_MAPPED_DIAGNOSTIC_SELECTED profile=mapped-normal-nc-v1",
+    "NXARMJIT: TRACE_LONG_DIAGNOSTIC_SELECTED tier=65536",
+    "NXARMJIT: TRACE_DT_CHECKED templates=0 platform_complete=false",
+    "NXARMJIT: TRACE_STAGING_VERIFIED source_unchanged=true",
+    "NXARMJIT: TRACE_HANDOFF_UNPROVISIONED abi=unprovisioned-sptm-prefix sptm_args=false sptm_services=false platform_device_tree=false",
+    "NXARMJIT: TRACE_PLATFORM_PROFILE name=nextcore-irq-compat-v1 reset_origin=software_defined initial_override=0x0 initial_pstate=0x3c5 irq=0 fiq=0",
+    "NXARMJIT: TRACE_ENTER entry=0xfffffe0002004400 x0=0 x1=0x4200c000 x2=0 x3=0 budget=65536",
+    "NXARMJIT: TRACE_MAPPINGS_READY granule=16384 profile=3 physical_base=0x40000000 virtual_base=0xfffffe0000000000 memory_size=67108864 table_base=0x44000000 table_bytes=131072 ttbr0=0x44000000 ttbr1=0x44004000 tcr=0x540118011 sctlr=0x30d00801 entry=0xfffffe0002004400",
+    "NXARMJIT: TRACE_MEMORY_PROVIDER abi=2 mode=mapped-normal-nc-v1",
+    "NXARMJIT: TRACE_MAPPED_REPLY result=0 fault=0 address=0x0 output_pa=0x0 descriptor_pa=0x0 level=4294967295 context=0 metadata_flags=0 esr=0x0",
+    "NXARMJIT: TRACE_PROTECTION_CALLS writable=48 executable=47 failures=0 includes_restore=true",
+    "NXARMJIT: TRACE_RETURN status=5 retired=65536 pc=0xfffffe00020044b8 blocks=65536 instruction=0x0",
+    "NXARMJIT: TRACE_REGISTERS x0=0x20002 x1=0xfffffe00020044c8 x2=0x1122334455667788 x3=0xfffffe00020044c8",
+    "NXARMJIT: TRACE_PLATFORM_STATE profile=1 override=0x0 pending=0 pstate=0x600003c5 sp=0x42024000",
+    "NXARMJIT: TRACE_EXCEPTION_STATE elr=0x0 spsr=0x0 vector=0x0 esr=0x0 handler_executed=false",
+    "NXARMJIT: TRACE_MEMORY_RESULT abi=2 provider_status=0 guest_far=0x0 last_address=0xfffffe00020044b4 fetch_requests=65536 data_requests=26203 completed_data_operations=26203",
+    "NXARMJIT: TRACE_ONLY macos_boot_verified=false metal_verified=false",
+    "NXARMJIT: ERROR status=ABORTED"
+  ],
+  "input_sha256_before": {
+    "/tmp/nextcore-unscaled-unobserved-r2-20260912.efi": "f7ea687d3c4fa676999d7e45e4eee3e5c3fedc990141c749f23e237600411561",
+    "/tmp/nextcore-unscaled-efi-20260912-r2/probe.kc": "f63a0f2764b0405a33711f0239461beb7cf534a904ced8e7c7ff25fa49647b50",
+    "/tmp/nextcore-unscaled-efi-20260912-r2/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "input_sha256_after": {
+    "/tmp/nextcore-unscaled-unobserved-r2-20260912.efi": "f7ea687d3c4fa676999d7e45e4eee3e5c3fedc990141c749f23e237600411561",
+    "/tmp/nextcore-unscaled-efi-20260912-r2/probe.kc": "f63a0f2764b0405a33711f0239461beb7cf534a904ced8e7c7ff25fa49647b50",
+    "/tmp/nextcore-unscaled-efi-20260912-r2/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "original_inputs_preserved": true,
+  "esp_copies_preserved": true,
+  "diagnostic_completed": true,
+  "video_requested": false,
+  "video": {
+    "requested": false,
+    "ready_observed": false,
+    "configuration_validated": false,
+    "geometry": null,
+    "unavailable_markers": [],
+    "presented": false,
+    "validated": false,
+    "status": "not-requested",
+    "physical_display_verified": false,
+    "macos_desktop_verified": false
+  },
+  "requested_checks_completed": true,
+  "native_execution_observed": true,
+  "elapsed_seconds": 5.797,
+  "failure": null,
+  "serial_observation_retries": 0,
+  "serial_observation_last_errno": null,
+  "qemu_exit_code": 0,
+  "stopped_by_harness": true,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

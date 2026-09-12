@@ -2,14 +2,12 @@
 
 ## Current Status
 
-The active exact runtime is ISE `ea0a892c4d55c0c09df35c576931c5a6f65c1426`,
-including integer scalar unscaled transfers and matching store-fault syndrome
-classification. These six captures retain their original dynamic profile-2
-inputs and expectations. This replay checks shared runtime regression behavior;
-it does not replace independent unscaled-instruction or original-entry tests.
-See `VALIDATION_UNSCALED_20260912.md` and `evidence-unscaled-20260912`.
-The preceding `b4f34be` selected source package is preserved byte-for-byte
-under `history/b4f34be`; `evidence-spsel-20260912` remains unchanged.
+The active exact runtime is ISE `b4f34be46cc5f61a531c084595a747a2f4a13ad4`,
+including the bounded immutable-v2 EL1 SPSel selections. These six captures
+continue using dynamic profile 2, whose PSTATE behavior is unchanged. This replay
+checks the shared runtime regression contract; it does not test SPSel or approve
+an original-image mapped entry. See `VALIDATION_SPSEL_20260912.md` and
+`evidence-spsel-20260912`.
 The preceding `f102f07` selected source package is preserved byte-for-byte
 under `history/f102f07`; `evidence-mapped-20260912` remains unchanged.
 The preceding `bd3a819` selected source package is preserved byte-for-byte

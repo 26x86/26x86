@@ -36,6 +36,17 @@ _start:
     add sp, sp, #16
     cmp x2, x5
     b.ne mapped_failure
+    // Signed byte displacement is unscaled and does not update the base.
+    sub sp, sp, #16
+    add x9, sp, #8
+    stur x5, [x9, #-8]
+    ldur x2, [x9, #-8]
+    cmp x2, x5
+    b.ne mapped_failure
+    add x10, sp, #8
+    cmp x9, x10
+    b.ne mapped_failure
+    add sp, sp, #16
     add x8, x4, #4
 mapped_loop:
     str x5, [x8]

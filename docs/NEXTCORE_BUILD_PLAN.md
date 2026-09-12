@@ -1074,9 +1074,13 @@ https://community.arm.com/forums/f/architectures-and-processors-forum/8141/is-an
 
 ### Scalar unscaled memory transfers
 
-Current Status: Original mapped execution reaches an unsupported scalar unscaled
-load after 42,252,448 instructions. The native decoder and Rust reference both
-exclude the signed immediate unscaled addressing class.
+Current Status: The signed immediate unscaled class now passes 546 native cases,
+39 actual Arm vectors compared against both C and Rust execution, and 33
+canonical-memory tests in each of three cache modes. Final authored EFI passes
+ten checks. An independent failure exposed missing store-fault WnR classification;
+the corrected exception encoder passes exact-syndrome regressions. The previous
+original run stopped at this class after 42,252,448 instructions; replay with the
+verified implementation is in progress.
 
 Target State: Support the thirteen integer unscaled forms: byte/halfword/word/
 doubleword stores and zero-extending loads, signed byte/halfword loads to W/X,

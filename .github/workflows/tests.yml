@@ -166,12 +166,13 @@ jobs:
         with:
           targets: x86_64-unknown-uefi
       - name: Install native translated-memory firmware tools
-        run: sudo apt-get update && sudo apt-get install -y clang lld llvm qemu-system-x86 ovmf
+        run: sudo apt-get update && sudo apt-get install -y clang lld llvm qemu-system-x86 qemu-system-arm ovmf
       - name: Check stage-1 receipt rejection and native callback semantics
         run: |
           python3 -m unittest discover -s nextcore/crates/nextcore-efi/tools -p test_stage1_reader.py -v
           python3 nextcore/crates/nextcore-ise/tools/probe_efi_stage1_provider.py --work-dir "$RUNNER_TEMP/native-stage1" --output "$RUNNER_TEMP/native-stage1.json"
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_mapped_native.py --output "$RUNNER_TEMP/mapped-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_unscaled_native.py --output "$RUNNER_TEMP/unscaled-native"
       - name: Build the authored stage-1 EFI consumer
         working-directory: nextcore
         run: cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-stage1-probe --bin NXMMU
@@ -208,6 +209,8 @@ jobs:
           path: |
             ${{ runner.temp }}/native-stage1.json
             ${{ runner.temp }}/mapped-native/receipt.json
+            ${{ runner.temp }}/unscaled-native/receipt.json
+            ${{ runner.temp }}/unscaled-native/*.log
             ${{ runner.temp }}/nextcore-stage1-proof/*.json
             ${{ runner.temp }}/nextcore-stage1-proof/*.log
             ${{ runner.temp }}/nextcore-dt-proof/*.json
