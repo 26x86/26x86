@@ -2,21 +2,23 @@
 
 ## Current Status
 
-The r24 mapped diagnostic retires **42,255,878 instructions**, issues
-**42,255,879 fetch requests** and completes **6,012,259 data operations** in
-110.822 seconds. It stops with UNSUPPORTED_INSTRUCTION (status 8) at variable
-register logical left shift, LSLV (LSL alias). The provider reports no error.
-The original input, EFI, host tools and ESP copies are preserved; the process
-is reaped. The owned framebuffer remains zero and matches GOP readback at
+The r25 mapped diagnostic retires 42,255,990 instructions, issues 42,255,991
+fetch requests and completes 6,012,273 data operations in 109.910 seconds.
+It stops with SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64ZFR0_EL1,
+an SVE feature-identification register read. This is a system-register trap,
+not an unsupported-instruction status. The provider reports no error. The
+original input, EFI, host tools and ESP copies are preserved; the process is
+reaped. The owned framebuffer remains zero and matches GOP readback at
 1280 by 800. No macOS screen has been established.
 
-This completed run passes the prior post-indexed LDR boundary and adds 48 retired
-instructions and ten data operations relative to r23. The elapsed time is a
-single-run observation, not a benchmark. The next bounded implementation boundary
-is variable-register shifting. The selected software-defined Normal-NC profile, high virtual alias, canonical
-PAC callback and immutable stack selection remain explicit diagnostic conditions.
-They do not establish the target reset entry ABI, SPTM services, complete platform
-DeviceTree, kernel initialization, userspace or physical boot.
+This completed run passes LSLV and adds 112 retired instructions and fourteen
+data operations relative to r24. The elapsed time is a single-run observation,
+not a benchmark. The next bounded implementation boundary is the declared
+feature-identification profile. The selected software-defined Normal-NC profile,
+high virtual alias, canonical PAC callback and immutable stack selection remain
+explicit diagnostic conditions. They do not establish the target reset entry
+ABI, SPTM services, complete platform DeviceTree, kernel initialization,
+userspace or physical boot.
 
 The watchdog success marker appears twice because reporting writes to both
 ConOut and Serial. The summary records the observation count and success presence
@@ -25,12 +27,35 @@ The source contains one watchdog-disable call at this entry point. The authored
 timer control below establishes the helper behavior. r22 completes beyond the
 prior r21 termination time, but that does not by itself prove r21's cause.
 
-[Latest r24 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r24-indexed-summary.json)
+[Latest r25 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r25-variable-shift-summary.json)
 records this boundary without publishing original instruction words or addresses.
-Historical r23 completed 42,255,830 instructions and 6,012,249 data operations
+Historical r24 completed 42,255,878 instructions and 6,012,259 data operations
+before LSLV. Historical r23 completed 42,255,830 instructions and 6,012,249 data operations
 before post-indexed LDR. Historical r22 completed 42,252,452 instructions and 6,010,805 data operations
 before register ORR. Historical r20 completed 42,252,448 instructions and 6,010,803 data operations
 before an unscaled-load boundary. r21 supplied no terminal execution record.
+
+## Authored variable-register shift validation
+
+LSLV, LSRV, ASRV and RORV at W and X widths pass 16,464 direct native cases
+with 53,246 assertions. Independently assembled instructions executed by QEMU
+Arm supply 1,920 result and NZCV vectors compared against the native translator
+and Rust reference. These cover every count residue, high count bits and seven
+register-overlap or ZR patterns. The reference harness passes 34 tests. Ten authored EFI integration checks
+pass. The dynamic comparator freezes 106 files and passes six captured replays,
+fourteen regressions and three negative controls; 142 prior evidence files
+remain unchanged.
+
+[Public variable-shift evidence](https://github.com/26x86/26x86/tree/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/variable-register-shifts)
+records the authored native and EFI checks.
+
+The canonical provider harness passes 31 tests in each of cached, uncached and
+small-slot modes. Its exposed execution results, ordered requests and RAM
+snapshots agree between modes; this is not a full private CPU or reply-structure
+comparison. Sources remain preserved and the oracle process is reaped. No
+original image is used in these authored checks. The completed r25 replay passes LSLV and reaches the feature-register trap
+described above. These
+results do not establish kernel startup, a macOS screen or physical boot.
 
 ## Historical M=0 boundary
 
