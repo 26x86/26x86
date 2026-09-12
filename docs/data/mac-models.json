@@ -24476,6 +24476,120 @@
       ]
     },
     {
+      "id": "legacy-112188",
+      "name": "Macintosh II",
+      "family": "Macintosh",
+      "catalog_level": "named-model",
+      "year": 1987,
+      "identifiers": [],
+      "architecture": "m68k",
+      "era": "68k",
+      "apple_support": {
+        "status": "official-historical-specification",
+        "latest_macos": null,
+        "source_url": "https://support.apple.com/en-us/112188",
+        "verified_at": "2026-09-12",
+        "macos_27": {
+          "status": "ineligible",
+          "source_url": "https://www.apple.com/os/macos/",
+          "basis": "macOS 27 lists Apple silicon Macs; this historical architecture is outside that list."
+        }
+      },
+      "nextcore": {
+        "status": "unverified",
+        "architecture_support": "not-implemented",
+        "summary": "Historical catalog entry. No Nextcore implementation or physical macOS boot evidence for this architecture.",
+        "evidence_url": null
+      },
+      "sources": [
+        {
+          "label": "Apple historical technical specifications",
+          "url": "https://support.apple.com/en-us/112188"
+        },
+        {
+          "label": "Apple Mac documentation index",
+          "url": "https://support.apple.com/en-us/docs/mac"
+        },
+        {
+          "label": "Apple macOS 27 eligibility",
+          "url": "https://www.apple.com/os/macos/"
+        }
+      ],
+      "variants": [],
+      "repository_hardware": [],
+      "technical_specifications": [],
+      "source_sha256": "6cde50555c7a858e24ce1b8b070f9ac51c5cdcd57d5a41fd601fa4c7181a6e19",
+      "details": {
+        "cpu": "68020, 16",
+        "memory": "1 MB - 20 MB",
+        "storage": "40-80MB",
+        "graphics": null,
+        "ports": null
+      },
+      "notes": [
+        "Named historical model or configuration from an Apple specification page; not a modern SMBIOS identifier.",
+        "No claim of complete sales-SKU or legacy-model coverage. Null fields are unverified.",
+        "Historical source may contain typographical errors; ambiguous values are not converted into boot contracts."
+      ]
+    },
+    {
+      "id": "legacy-112189",
+      "name": "Macintosh IIx",
+      "family": "Macintosh",
+      "catalog_level": "named-model",
+      "year": 1988,
+      "identifiers": [],
+      "architecture": "m68k",
+      "era": "68k",
+      "apple_support": {
+        "status": "official-historical-specification",
+        "latest_macos": null,
+        "source_url": "https://support.apple.com/en-us/112189",
+        "verified_at": "2026-09-12",
+        "macos_27": {
+          "status": "ineligible",
+          "source_url": "https://www.apple.com/os/macos/",
+          "basis": "macOS 27 lists Apple silicon Macs; this historical architecture is outside that list."
+        }
+      },
+      "nextcore": {
+        "status": "unverified",
+        "architecture_support": "not-implemented",
+        "summary": "Historical catalog entry. No Nextcore implementation or physical macOS boot evidence for this architecture.",
+        "evidence_url": null
+      },
+      "sources": [
+        {
+          "label": "Apple historical technical specifications",
+          "url": "https://support.apple.com/en-us/112189"
+        },
+        {
+          "label": "Apple Mac documentation index",
+          "url": "https://support.apple.com/en-us/docs/mac"
+        },
+        {
+          "label": "Apple macOS 27 eligibility",
+          "url": "https://www.apple.com/os/macos/"
+        }
+      ],
+      "variants": [],
+      "repository_hardware": [],
+      "technical_specifications": [],
+      "source_sha256": "c3d8e6722e98302c510049dc8b2532f779e10095dec3fffec15a01cb13fecea6",
+      "details": {
+        "cpu": "68030, 16",
+        "memory": "1 MB - 32 MB",
+        "storage": "40-80MB",
+        "graphics": null,
+        "ports": null
+      },
+      "notes": [
+        "Named historical model or configuration from an Apple specification page; not a modern SMBIOS identifier.",
+        "No claim of complete sales-SKU or legacy-model coverage. Null fields are unverified.",
+        "Historical source may contain typographical errors; ambiguous values are not converted into boot contracts."
+      ]
+    },
+    {
       "id": "legacy-112190",
       "name": "Macintosh 128K",
       "family": "Macintosh",
@@ -24590,6 +24704,120 @@
       ]
     },
     {
+      "id": "legacy-112192",
+      "name": "Macintosh IIcx",
+      "family": "Macintosh",
+      "catalog_level": "named-model",
+      "year": 1989,
+      "identifiers": [],
+      "architecture": "m68k",
+      "era": "68k",
+      "apple_support": {
+        "status": "official-historical-specification",
+        "latest_macos": null,
+        "source_url": "https://support.apple.com/en-us/112192",
+        "verified_at": "2026-09-12",
+        "macos_27": {
+          "status": "ineligible",
+          "source_url": "https://www.apple.com/os/macos/",
+          "basis": "macOS 27 lists Apple silicon Macs; this historical architecture is outside that list."
+        }
+      },
+      "nextcore": {
+        "status": "unverified",
+        "architecture_support": "not-implemented",
+        "summary": "Historical catalog entry. No Nextcore implementation or physical macOS boot evidence for this architecture.",
+        "evidence_url": null
+      },
+      "sources": [
+        {
+          "label": "Apple historical technical specifications",
+          "url": "https://support.apple.com/en-us/112192"
+        },
+        {
+          "label": "Apple Mac documentation index",
+          "url": "https://support.apple.com/en-us/docs/mac"
+        },
+        {
+          "label": "Apple macOS 27 eligibility",
+          "url": "https://www.apple.com/os/macos/"
+        }
+      ],
+      "variants": [],
+      "repository_hardware": [],
+      "technical_specifications": [],
+      "source_sha256": "4e5b643aa534f2def063a48a96973dbf2717afe62d5ad16d6fc6b361a03c5e88",
+      "details": {
+        "cpu": "68030, 16",
+        "memory": "1 MB - 128 MB",
+        "storage": "40-80MB",
+        "graphics": null,
+        "ports": null
+      },
+      "notes": [
+        "Named historical model or configuration from an Apple specification page; not a modern SMBIOS identifier.",
+        "No claim of complete sales-SKU or legacy-model coverage. Null fields are unverified.",
+        "Historical source may contain typographical errors; ambiguous values are not converted into boot contracts."
+      ]
+    },
+    {
+      "id": "legacy-112193",
+      "name": "Macintosh IIsi",
+      "family": "Macintosh",
+      "catalog_level": "named-model",
+      "year": 1990,
+      "identifiers": [],
+      "architecture": "m68k",
+      "era": "68k",
+      "apple_support": {
+        "status": "official-historical-specification",
+        "latest_macos": null,
+        "source_url": "https://support.apple.com/en-us/112193",
+        "verified_at": "2026-09-12",
+        "macos_27": {
+          "status": "ineligible",
+          "source_url": "https://www.apple.com/os/macos/",
+          "basis": "macOS 27 lists Apple silicon Macs; this historical architecture is outside that list."
+        }
+      },
+      "nextcore": {
+        "status": "unverified",
+        "architecture_support": "not-implemented",
+        "summary": "Historical catalog entry. No Nextcore implementation or physical macOS boot evidence for this architecture.",
+        "evidence_url": null
+      },
+      "sources": [
+        {
+          "label": "Apple historical technical specifications",
+          "url": "https://support.apple.com/en-us/112193"
+        },
+        {
+          "label": "Apple Mac documentation index",
+          "url": "https://support.apple.com/en-us/docs/mac"
+        },
+        {
+          "label": "Apple macOS 27 eligibility",
+          "url": "https://www.apple.com/os/macos/"
+        }
+      ],
+      "variants": [],
+      "repository_hardware": [],
+      "technical_specifications": [],
+      "source_sha256": "e7af20a0477ecdfeaf138d1e97ee202380cbcb6e53cd09233bf59a848dfafa6b",
+      "details": {
+        "cpu": "68030, 20",
+        "memory": "1 MB - 17 MB",
+        "storage": "40-80MB",
+        "graphics": null,
+        "ports": null
+      },
+      "notes": [
+        "Named historical model or configuration from an Apple specification page; not a modern SMBIOS identifier.",
+        "No claim of complete sales-SKU or legacy-model coverage. Null fields are unverified.",
+        "Historical source may contain typographical errors; ambiguous values are not converted into boot contracts."
+      ]
+    },
+    {
       "id": "legacy-112195",
       "name": "Macintosh Classic",
       "family": "Macintosh",
@@ -24637,6 +24865,63 @@
         "cpu": "68000, 8",
         "memory": "1 MB - 4 MB",
         "storage": "none-40MB",
+        "graphics": null,
+        "ports": null
+      },
+      "notes": [
+        "Named historical model or configuration from an Apple specification page; not a modern SMBIOS identifier.",
+        "No claim of complete sales-SKU or legacy-model coverage. Null fields are unverified.",
+        "Historical source may contain typographical errors; ambiguous values are not converted into boot contracts."
+      ]
+    },
+    {
+      "id": "legacy-112196",
+      "name": "Macintosh IIfx",
+      "family": "Macintosh",
+      "catalog_level": "named-model",
+      "year": 1990,
+      "identifiers": [],
+      "architecture": "m68k",
+      "era": "68k",
+      "apple_support": {
+        "status": "official-historical-specification",
+        "latest_macos": null,
+        "source_url": "https://support.apple.com/en-us/112196",
+        "verified_at": "2026-09-12",
+        "macos_27": {
+          "status": "ineligible",
+          "source_url": "https://www.apple.com/os/macos/",
+          "basis": "macOS 27 lists Apple silicon Macs; this historical architecture is outside that list."
+        }
+      },
+      "nextcore": {
+        "status": "unverified",
+        "architecture_support": "not-implemented",
+        "summary": "Historical catalog entry. No Nextcore implementation or physical macOS boot evidence for this architecture.",
+        "evidence_url": null
+      },
+      "sources": [
+        {
+          "label": "Apple historical technical specifications",
+          "url": "https://support.apple.com/en-us/112196"
+        },
+        {
+          "label": "Apple Mac documentation index",
+          "url": "https://support.apple.com/en-us/docs/mac"
+        },
+        {
+          "label": "Apple macOS 27 eligibility",
+          "url": "https://www.apple.com/os/macos/"
+        }
+      ],
+      "variants": [],
+      "repository_hardware": [],
+      "technical_specifications": [],
+      "source_sha256": "9da92b6d4d9a748da020f253ffde157437f7327f9328b9d7b77588c417a36bf3",
+      "details": {
+        "cpu": "68030, 40",
+        "memory": "4 MB - 128 MB",
+        "storage": "40-160MB",
         "graphics": null,
         "ports": null
       },
@@ -24749,6 +25034,120 @@
       "source_sha256": "f09b0f541c72aa3234a09b90f2023a150406b6aa543f9479f53627af42c8e770",
       "details": {
         "cpu": "68020, 16",
+        "memory": "2 MB - 10 MB",
+        "storage": "40-80MB",
+        "graphics": null,
+        "ports": null
+      },
+      "notes": [
+        "Named historical model or configuration from an Apple specification page; not a modern SMBIOS identifier.",
+        "No claim of complete sales-SKU or legacy-model coverage. Null fields are unverified.",
+        "Historical source may contain typographical errors; ambiguous values are not converted into boot contracts."
+      ]
+    },
+    {
+      "id": "legacy-112200",
+      "name": "Macintosh Color Classic",
+      "family": "Macintosh",
+      "catalog_level": "named-model",
+      "year": 1993,
+      "identifiers": [],
+      "architecture": "m68k",
+      "era": "68k",
+      "apple_support": {
+        "status": "official-historical-specification",
+        "latest_macos": null,
+        "source_url": "https://support.apple.com/en-us/112200",
+        "verified_at": "2026-09-12",
+        "macos_27": {
+          "status": "ineligible",
+          "source_url": "https://www.apple.com/os/macos/",
+          "basis": "macOS 27 lists Apple silicon Macs; this historical architecture is outside that list."
+        }
+      },
+      "nextcore": {
+        "status": "unverified",
+        "architecture_support": "not-implemented",
+        "summary": "Historical catalog entry. No Nextcore implementation or physical macOS boot evidence for this architecture.",
+        "evidence_url": null
+      },
+      "sources": [
+        {
+          "label": "Apple historical technical specifications",
+          "url": "https://support.apple.com/en-us/112200"
+        },
+        {
+          "label": "Apple Mac documentation index",
+          "url": "https://support.apple.com/en-us/docs/mac"
+        },
+        {
+          "label": "Apple macOS 27 eligibility",
+          "url": "https://www.apple.com/os/macos/"
+        }
+      ],
+      "variants": [],
+      "repository_hardware": [],
+      "technical_specifications": [],
+      "source_sha256": "787b53299dddb47a86e84e3a3926e9a28704857731c1a1420ef5445f240b0c89",
+      "details": {
+        "cpu": "68030, 16",
+        "memory": "4 MB - 10MB",
+        "storage": "40-160MB",
+        "graphics": null,
+        "ports": null
+      },
+      "notes": [
+        "Named historical model or configuration from an Apple specification page; not a modern SMBIOS identifier.",
+        "No claim of complete sales-SKU or legacy-model coverage. Null fields are unverified.",
+        "Historical source may contain typographical errors; ambiguous values are not converted into boot contracts."
+      ]
+    },
+    {
+      "id": "legacy-112201",
+      "name": "Macintosh Classic II",
+      "family": "Macintosh",
+      "catalog_level": "named-model",
+      "year": 1991,
+      "identifiers": [],
+      "architecture": "m68k",
+      "era": "68k",
+      "apple_support": {
+        "status": "official-historical-specification",
+        "latest_macos": null,
+        "source_url": "https://support.apple.com/en-us/112201",
+        "verified_at": "2026-09-12",
+        "macos_27": {
+          "status": "ineligible",
+          "source_url": "https://www.apple.com/os/macos/",
+          "basis": "macOS 27 lists Apple silicon Macs; this historical architecture is outside that list."
+        }
+      },
+      "nextcore": {
+        "status": "unverified",
+        "architecture_support": "not-implemented",
+        "summary": "Historical catalog entry. No Nextcore implementation or physical macOS boot evidence for this architecture.",
+        "evidence_url": null
+      },
+      "sources": [
+        {
+          "label": "Apple historical technical specifications",
+          "url": "https://support.apple.com/en-us/112201"
+        },
+        {
+          "label": "Apple Mac documentation index",
+          "url": "https://support.apple.com/en-us/docs/mac"
+        },
+        {
+          "label": "Apple macOS 27 eligibility",
+          "url": "https://www.apple.com/os/macos/"
+        }
+      ],
+      "variants": [],
+      "repository_hardware": [],
+      "technical_specifications": [],
+      "source_sha256": "9d368f788c1ec9f3ce3481457e10d2eeb055027b7e1ca3d76546da3287ccd624",
+      "details": {
+        "cpu": "68030, 16",
         "memory": "2 MB - 10 MB",
         "storage": "40-80MB",
         "graphics": null,
@@ -25720,6 +26119,120 @@
         "cpu": "601, 50",
         "memory": "4 MB - 36 MB",
         "storage": "80-250MB",
+        "graphics": null,
+        "ports": null
+      },
+      "notes": [
+        "Named historical model or configuration from an Apple specification page; not a modern SMBIOS identifier.",
+        "No claim of complete sales-SKU or legacy-model coverage. Null fields are unverified.",
+        "Historical source may contain typographical errors; ambiguous values are not converted into boot contracts."
+      ]
+    },
+    {
+      "id": "legacy-112241",
+      "name": "Macintosh Color Classic II",
+      "family": "Macintosh",
+      "catalog_level": "named-model",
+      "year": 1993,
+      "identifiers": [],
+      "architecture": "m68k",
+      "era": "68k",
+      "apple_support": {
+        "status": "official-historical-specification",
+        "latest_macos": null,
+        "source_url": "https://support.apple.com/en-us/112241",
+        "verified_at": "2026-09-12",
+        "macos_27": {
+          "status": "ineligible",
+          "source_url": "https://www.apple.com/os/macos/",
+          "basis": "macOS 27 lists Apple silicon Macs; this historical architecture is outside that list."
+        }
+      },
+      "nextcore": {
+        "status": "unverified",
+        "architecture_support": "not-implemented",
+        "summary": "Historical catalog entry. No Nextcore implementation or physical macOS boot evidence for this architecture.",
+        "evidence_url": null
+      },
+      "sources": [
+        {
+          "label": "Apple historical technical specifications",
+          "url": "https://support.apple.com/en-us/112241"
+        },
+        {
+          "label": "Apple Mac documentation index",
+          "url": "https://support.apple.com/en-us/docs/mac"
+        },
+        {
+          "label": "Apple macOS 27 eligibility",
+          "url": "https://www.apple.com/os/macos/"
+        }
+      ],
+      "variants": [],
+      "repository_hardware": [],
+      "technical_specifications": [],
+      "source_sha256": "e817041169009b4565dff217641516ebb0ff81e9701e07f333e915ad78a3cbe5",
+      "details": {
+        "cpu": "68030, 33",
+        "memory": "4 MB - 36 MB",
+        "storage": "80-160MB",
+        "graphics": null,
+        "ports": null
+      },
+      "notes": [
+        "Named historical model or configuration from an Apple specification page; not a modern SMBIOS identifier.",
+        "No claim of complete sales-SKU or legacy-model coverage. Null fields are unverified.",
+        "Historical source may contain typographical errors; ambiguous values are not converted into boot contracts."
+      ]
+    },
+    {
+      "id": "legacy-112247",
+      "name": "Macintosh SE/30",
+      "family": "Macintosh",
+      "catalog_level": "named-model",
+      "year": 1989,
+      "identifiers": [],
+      "architecture": "m68k",
+      "era": "68k",
+      "apple_support": {
+        "status": "official-historical-specification",
+        "latest_macos": null,
+        "source_url": "https://support.apple.com/en-us/112247",
+        "verified_at": "2026-09-12",
+        "macos_27": {
+          "status": "ineligible",
+          "source_url": "https://www.apple.com/os/macos/",
+          "basis": "macOS 27 lists Apple silicon Macs; this historical architecture is outside that list."
+        }
+      },
+      "nextcore": {
+        "status": "unverified",
+        "architecture_support": "not-implemented",
+        "summary": "Historical catalog entry. No Nextcore implementation or physical macOS boot evidence for this architecture.",
+        "evidence_url": null
+      },
+      "sources": [
+        {
+          "label": "Apple historical technical specifications",
+          "url": "https://support.apple.com/en-us/112247"
+        },
+        {
+          "label": "Apple Mac documentation index",
+          "url": "https://support.apple.com/en-us/docs/mac"
+        },
+        {
+          "label": "Apple macOS 27 eligibility",
+          "url": "https://www.apple.com/os/macos/"
+        }
+      ],
+      "variants": [],
+      "repository_hardware": [],
+      "technical_specifications": [],
+      "source_sha256": "caa8ef21aacbc4d9693dd3354e87a31f1d45a882356e50a96289051892b115a0",
+      "details": {
+        "cpu": "68030, 16",
+        "memory": "1 MB - 32 MB",
+        "storage": "40-80MB",
         "graphics": null,
         "ports": null
       },
@@ -31408,8 +31921,25 @@
           "linked_specifications": 46
         }
       ],
-      "specifications_discovered": 215,
-      "records": 211,
+      "supplemental_specification_urls": [
+        "https://support.apple.com/en-us/112184",
+        "https://support.apple.com/en-us/112154",
+        "https://support.apple.com/en-us/112195",
+        "https://support.apple.com/en-us/112315",
+        "https://support.apple.com/en-us/112318",
+        "https://support.apple.com/en-us/112188",
+        "https://support.apple.com/en-us/112196",
+        "https://support.apple.com/en-us/112201",
+        "https://support.apple.com/en-us/112247",
+        "https://support.apple.com/en-us/112189",
+        "https://support.apple.com/en-us/112192",
+        "https://support.apple.com/en-us/112193",
+        "https://support.apple.com/en-us/112200",
+        "https://support.apple.com/en-us/112241"
+      ],
+      "directory_pagination_observation": "No next/load-more link or button was present in the inspected public directory HTML. Some lists contain 50 specifications; this is not proof of all historical models.",
+      "specifications_discovered": 224,
+      "records": 220,
       "excluded_accessories": [
         {
           "name": "Macintosh Duo Dock",
@@ -31439,7 +31969,7 @@
     "specification_pages": 129,
     "specification_fetch_failures": [],
     "counts": {
-      "models": 387,
+      "models": 396,
       "identifiers": 175,
       "families": {
         "Mac Studio": 6,
@@ -31455,7 +31985,7 @@
         "Power Mac": 67,
         "Twentieth Anniversary Macintosh": 1,
         "PowerBook": 58,
-        "Macintosh": 8,
+        "Macintosh": 17,
         "LC": 9,
         "Centris": 2,
         "Quadra": 6,
@@ -31467,7 +31997,7 @@
         "apple-silicon": 55,
         "intel": 121,
         "powerpc": 154,
-        "m68k": 57
+        "m68k": 66
       }
     }
   }

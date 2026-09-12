@@ -1,6 +1,6 @@
 # Mac hardware catalog method
 
-Current Status: The September 12, 2026 snapshot contains 387 catalog records across 20 families: 175 unique model identifiers and 212 name-based records. Seven Apple identification pages are reconciled with the repository's historical SMBIOS data; historical Apple technical specifications supply 211 named records. No catalog entry has physical Nextcore macOS boot evidence.
+Current Status: The September 12, 2026 snapshot contains 396 catalog records across 20 families: 175 unique model identifiers and 221 name-based records. Seven Apple identification pages are reconciled with the repository's historical SMBIOS data; historical Apple technical specifications supply 220 named records. No catalog entry has physical Nextcore macOS boot evidence.
 
 Target State: A searchable catalog spanning real Mac families, with explicit architecture, source-backed hardware details, Apple operating-system eligibility, and independently recorded Nextcore execution evidence.
 
@@ -21,11 +21,13 @@ Apple's macOS 27 eligibility is recorded separately from the newest released sys
 | Intel | 121 | Model identifiers, including Xserve |
 | Apple silicon | 55 | 54 model identifiers and MacBook Neo by name |
 | PowerPC | 154 | Named historical models/configurations |
-| Motorola 68k | 57 | Named historical models/configurations |
+| Motorola 68k | 66 | Named historical models/configurations |
 
 The catalog covers MacBook, MacBook Air, MacBook Pro, MacBook Neo, Mac mini, Mac Studio, Mac Pro, iMac, iMac Pro, Xserve, Power Mac, PowerBook, iBook, eMac, Macintosh, LC, Centris, Quadra, Performa, and Twentieth Anniversary Macintosh. Apple pages verify 144 of the 175 modern identifiers; 31 are preserved only from the explicitly attributed repository dataset. Duplicate source dictionary keys and `_v2`/`_v3` board variants are preserved within their owning model, not counted as additional identifiers. Internal, developer, virtual-machine and bridge-only entries are excluded.
 
 The generator follows 86 historical documentation directories, including [Earlier Desktops](https://support.apple.com/en-us/docs/mac/pp210), [Earlier Power Mac](https://support.apple.com/en-us/docs/mac/pp201), and [Earlier PowerBooks](https://support.apple.com/en-us/docs/mac/pp212). It opens the linked specification pages and classifies the primary architecture from documented processor fields or explicit processor-family names. Four docking accessories are excluded. Historical DOS-compatible coprocessors do not turn the primary Mac into an Intel Mac. Legacy records have `nextcore.architecture_support: not-implemented`; inclusion is an inventory entry, never an assertion that Nextcore runs on those architectures.
+
+A bounded follow-up checked the public directory HTML for next-page and load-more links/buttons; none were present. The inspected lists contain 50 specification links each, so that observation does not establish completeness. Public Apple search results separately supplied Macintosh II, IIx, IIcx, IIsi, IIfx, SE/30, Classic II, Color Classic and Color Classic II. These nine additions use actual opened Apple specification URLs. No pagination endpoint or numeric article ID was guessed. Validation now guards 128K, 512K, Plus, SE, SE/30, II, IIci, Portable, IIfx and Color Classic II as historical sentinels. Further missing variants remain an open inventory task.
 
 This is not a claim to enumerate every regional order number, build-to-order configuration or all Macintosh models since 1984. Some Apple historical directories expose a limited initial list. Missing historical revisions, educational/server variants, regional names and unlisted specification pages remain coverage gaps. The generated `coverage` object records source hashes, discovered counts, exclusions, fetch failures and repository-only identifiers. These gaps must remain visible in a checker and must not be displayed as a complete all-Mac certification.
 
@@ -48,7 +50,7 @@ python Tools/build_mac_catalog.py --cache ../mac-catalog-cache --refresh
 
 Keep the HTML cache outside the published tree. The generator parses the historical Python dataset as an AST without importing or executing its platform-dependent modules. A refresh fetches public HTML; it does not download product images. Reusing the cache reproduces source parsing; `--refresh` is required before treating a later run as newly checked Apple information. Source-content SHA-256 values are retained in the catalog; hashes prove input identity, not Apple authenticity or hardware execution.
 
-Validation checks unique stable IDs and model identifiers, minimum coverage, architecture/status separation, essential old/new model sentinels, sources, and absence of fabricated Nextcore boot evidence. The identification parser rejects a page if any listed model identifier was lost. The September 12 run fetched all 215 discovered legacy specification pages, excluded four accessories, and recorded one unavailable modern specification page (`111932`) explicitly. This does not erase the model or invent its missing detail. It is a data-validation receipt only; physical boot, firmware, display, input, storage and installed-system reboot remain separate acceptance gates.
+Validation checks unique stable IDs and model identifiers, minimum coverage, architecture/status separation, essential old/new model sentinels, sources, and absence of fabricated Nextcore boot evidence. The identification parser rejects a page if any listed model identifier was lost. The September 12 follow-up fetched all 224 discovered legacy specification pages, excluded four accessories, and completed all 129 modern specification fetches. One initially unavailable page (`111932`) was recovered on a later public fetch. An unavailable source is recorded explicitly rather than erasing its model or inventing missing detail. This is a data-validation receipt only; physical boot, firmware, display, input, storage and installed-system reboot remain separate acceptance gates.
 
 OPEN_QUESTION: Inventory: Expand beyond the discovered historical directory lists and reconcile missing Macintosh variants without inventing modern identifiers.
-OPEN_QUESTION: Inventory: Verify MacBook Neo's exact public model identifier and recover the unavailable modern specification page before filling those unknown fields.
+OPEN_QUESTION: Inventory: Verify MacBook Neo's exact public model identifier before filling its empty identifier array.
