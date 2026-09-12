@@ -1,6 +1,6 @@
 {
   "schema": "nextcore-runtime-source-freeze-v1",
-  "base": "b4f34be46cc5f61a531c084595a747a2f4a13ad4",
+  "base": "f102f0769fcae98597478f6738ee1a69247e5207",
   "provenance": "git archive of immutable Nextcore-ISE commit; every archive file SHA-256 independently matched to git show commit:path bytes; no working-tree source",
   "files": {
     "abi_layout.c": "03b71dd9958a85655a50c30387c83d542ae51c808b1913f6a349b531d69f7617",
@@ -39,7 +39,7 @@
     "memory_dynamic_layout.c": "454fc5e1a94a38f0b9cfc4a5823e13797d015c33cca61da57a663142dc9cb71a",
     "memory_layout.c": "df5dda0e88b0a37c3d656e45a2dc807a569831e7c223b474479fcd03a565ec65",
     "memory_layout_v2.c": "5060ac83ae504815f6935f3518197a4f37d627f97eb4e1a110ce5b744d205c57",
-    "memory_stage1.inc": "dbab953c5f00cccf4bc95538d20446da6f76de9cd7805756d00a2439f315e434",
+    "memory_stage1.inc": "4ee1b1f2051617dab15d59095c720071d3ef8d5b3aa82992998c3e91f5f0f73b",
     "multiply_add_cases.rs": "4e3cc5fec4ef7b237fb3ef585ca7ef4afa6dd33161e887aa9aaa0aecac9949cb",
     "platform_abi.h": "e0c19055be84de172df89495c822a18deae24d04315e4350cc42cba07fc90eba",
     "platform_layout.c": "70ce0c588e602f06c3be49982c9060b736f08ee118a32039ff9df918d46f9d0d",
@@ -70,8 +70,8 @@
     "test_irq_jit.c": "0b129c5403c17a650fe280572fa86c75afbb1a6f78d39420c7e2c0ce985cc3d5",
     "test_jit.c": "dffedb72d4d3706d0dfd4b975be279db3f140a7d821eff16b7a2172fabe7c726",
     "test_logical_jit.c": "2f53c9c225b08ecd7a9122b42398c624a8ac6b39357c5d2e5dc308d1bc509766",
-    "test_mapped_provider.rs": "940104bfa41913a6a5b65c9081dd6777280bcb2e9a4e90d16e55f57a13468df9",
-    "test_mapped_snapshot.c": "48b558888ce6d234b9d0aa7ea97f840b37933003bf0c883c669d59e09274e456",
+    "test_mapped_provider.rs": "b7229310cdb9f0b6a53da36aae6a3e7de0ad39299621d283e84000626ec90417",
+    "test_mapped_snapshot.c": "d75695be0e5d4bfe4ccfced30e91498536da843aa881265e6c36584aef7ff653",
     "test_memory_provider.rs": "76b1a9baf5ff2ad082f29d5c48cd85981a083a990c6067f07702fd14a6757249",
     "test_multiply_add_jit.c": "55fd66b62c0fa8b9d1a9d85081699996c752a30385409d09a3217cfe1c16ea32",
     "test_pair_jit.c": "e73afb379232d6cc02765a0f5d040b4e22a6a817b90493eeec412b665dc4a70a",

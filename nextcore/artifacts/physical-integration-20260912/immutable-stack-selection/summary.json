@@ -1,0 +1,87 @@
+{
+  "schema": "nextcore.immutable-stack-selection.v1",
+  "ise_commit": "b4f34be46cc5f61a531c084595a747a2f4a13ad4",
+  "authored_efi_passed": true,
+  "native_passed": true,
+  "contract": "EL1 immediate stack bank selection, same-bank live SP preservation, subsequent stack accesses, existing rejection gates",
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "original_images_used": false,
+  "files": [
+    {
+      "path": "efi/cached/report.json",
+      "bytes": 17023,
+      "sha256": "9e312919e52c73336a50e5604f1a1c5b28479c01f7649f64db087e630797a7b9"
+    },
+    {
+      "path": "efi/cached/serial.log",
+      "bytes": 11176,
+      "sha256": "570dc8316ee5d54c2fc6ba58f97629bd5ef53ffda9c0beaa060dbfca9522a90b"
+    },
+    {
+      "path": "efi/old/report.json",
+      "bytes": 8249,
+      "sha256": "e57c85bba339c7ccfce3effe80e722a299f59dcf80520bbd621bdbedd068928a"
+    },
+    {
+      "path": "efi/old/serial.log",
+      "bytes": 3107,
+      "sha256": "b3b60f7d81aabd1145ba06ff671ec14461b4420a233a28585b7334a26d92c891"
+    },
+    {
+      "path": "efi/receipt.json",
+      "bytes": 39013,
+      "sha256": "085286175d555ce3a0eea92c9a69ee0543d2fc002a010af393d52d1eb069d26b"
+    },
+    {
+      "path": "efi/uncached/report.json",
+      "bytes": 17034,
+      "sha256": "aeb0885fdef44e035d62a2ca899708b267f79830caa24bf1d9dbdb3e8623fccc"
+    },
+    {
+      "path": "efi/uncached/serial.log",
+      "bytes": 11182,
+      "sha256": "295b1abc4961b2a830964554d4471bc6c405dc60f6e8a09f5c776583ea7ae0d0"
+    },
+    {
+      "path": "efi/unobserved/report.json",
+      "bytes": 8069,
+      "sha256": "71c8364a8e695f133f70505d31f480e067a29ea165f70b3b90d3bf2dbe68c75b"
+    },
+    {
+      "path": "efi/unobserved/serial.log",
+      "bytes": 2604,
+      "sha256": "2f4b33b8a7d0ddfa91b8acc8469f9728e64e3b7ced1f40859e8883f1e8f03a47"
+    },
+    {
+      "path": "native/cached/tests.log",
+      "bytes": 2608,
+      "sha256": "342d6c0d76c1c6108da40349952597368d9e0237f92234f5edfb6e272812ed5c"
+    },
+    {
+      "path": "native/m0-tests.log",
+      "bytes": 1542,
+      "sha256": "f4457f4431d565a0858cadcf10f04f27a242e9365bfd2c27f998c98d3ffda665"
+    },
+    {
+      "path": "native/pauth-test.log",
+      "bytes": 102,
+      "sha256": "65370bce6c9854c0bfd2021ed5f59d02ce43c337f87c37f2c0461fbc99abb231"
+    },
+    {
+      "path": "native/receipt.json",
+      "bytes": 25394,
+      "sha256": "c1e43eeac9b58e726d56bcc9b42aa02660b6e908922bd3aa5b49c1e271270a80"
+    },
+    {
+      "path": "native/small-slot/tests.log",
+      "bytes": 2608,
+      "sha256": "8e073cef45d31b1c5eba26ee54e55ae3accca951acb42483ea9ab74bdb32de65"
+    },
+    {
+      "path": "native/uncached/tests.log",
+      "bytes": 2608,
+      "sha256": "07f76d9fa67c5a014b034db21924afbd25f4e01eacc450b91f9a0e7b486bf0a9"
+    }
+  ]
+}

@@ -1004,7 +1004,8 @@ and independent tests have disjoint source ownership.
 Current Status: The explicit mapped NXARMJIT path passes authored EFI acceptance
 with the final published module revisions. Three native cache variants pass 31
 tests each and nine complete-state comparisons; the existing M=0 suite passes
-20 regressions. The original image has not yet executed through profile 3.
+20 regressions. The first original profile-3 attempt stops at immediate stack
+selection after 13 retired instructions; it does not exceed the M0 result.
 
 Target State: Add a separately built and explicitly selected mapped diagnostic.
 Use 16 KiB Normal-NC profile 3 (T0SZ=T1SZ=17, IPS=48), an immutable caller-owned
@@ -1049,9 +1050,14 @@ address signing disabled and does not widen that contract.
 
 ### Immutable mapped stack selection
 
-Current Status: The first original mapped replay stops after 13 retired
-instructions at immediate SPSel selection. The existing M0 PSTATE helper is
-deliberately gated to M0 and is absent from the immutable v2 dispatch path.
+Current Status: The first original mapped replay stopped after 13 retired
+instructions at immediate SPSel selection. A dedicated immutable v2 handler now
+passes 32 native tests in each of three modes and ten authored EFI checks.
+Distinct banks, stale saved-bank values, following stack accesses and existing
+EL0/reserved-encoding failures are verified. The unchanged original mapped replay
+now retires 42,252,448 instructions and completes 6,010,803 data operations before
+an unsupported scalar unscaled load. Its framebuffer remains zero. This proves
+progress in the explicit diagnostic regime, not normal or physical macOS boot.
 
 Target State: Implement the two architected immediate SPSel selections at EL1
 in the immutable v2 runner. Save the active stack bank, set only PSTATE.SP,

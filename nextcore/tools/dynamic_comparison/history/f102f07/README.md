@@ -2,14 +2,12 @@
 
 ## Current Status
 
-The active exact runtime is ISE `b4f34be46cc5f61a531c084595a747a2f4a13ad4`,
-including the bounded immutable-v2 EL1 SPSel selections. These six captures
-continue using dynamic profile 2, whose PSTATE behavior is unchanged. This replay
-checks the shared runtime regression contract; it does not test SPSel or approve
-an original-image mapped entry. See `VALIDATION_SPSEL_20260912.md` and
-`evidence-spsel-20260912`.
-The preceding `f102f07` selected source package is preserved byte-for-byte
-under `history/f102f07`; `evidence-mapped-20260912` remains unchanged.
+The active exact runtime is ISE `f102f0769fcae98597478f6738ee1a69247e5207`,
+including the separately selected immutable mapped PAC entry and v2 native reuse.
+These six captures continue using dynamic profile 2 with its original alignment
+and PAC boundary. This replay verifies the shared runtime regression contract;
+it does not exercise or approve an original-image mapped entry.
+See `VALIDATION_MAPPED_20260912.md` and `evidence-mapped-20260912`.
 The preceding `bd3a819` selected source package is preserved byte-for-byte
 under `history/bd3a819`; `evidence-unaligned-20260912` remains unchanged.
 The preceding `f387224b` selected source package is preserved byte-for-byte

@@ -25,6 +25,17 @@ _start:
     movk x5, #0x5566, lsl #16
     movk x5, #0x3344, lsl #32
     movk x5, #0x1122, lsl #48
+    // Roundtrip SP_EL1 -> SP_EL0 -> SP_EL1, including repeated selections.
+    msr spsel, #0
+    msr spsel, #0
+    msr spsel, #1
+    msr spsel, #1
+    sub sp, sp, #16
+    str x5, [sp]
+    ldr x2, [sp]
+    add sp, sp, #16
+    cmp x2, x5
+    b.ne mapped_failure
     add x8, x4, #4
 mapped_loop:
     str x5, [x8]
