@@ -47,10 +47,54 @@ reader passes five tests and module inventories match actual committed Git bytes
 
 [Authored profile receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/unaligned-normal-profile/summary.json)
 records these results separately from the unchanged original-input boundary above.
-This increment does not replay the original kernel in a new environment. That
-requires explicit entry mappings and mapped pointer authentication; the current
-immutable runner has no PAC callback and cannot supply later arbitrary control
-changes. Normal startup and physical macOS output remain unverified.
+That unaligned-transfer increment did not replay the original kernel in a new
+memory environment. The subsequent authored mapped diagnostic below adds a
+separate PAC callback entry point; the previous entry point remains unchanged.
+The immutable profile still rejects arbitrary control changes. Normal startup
+and physical macOS output remain unverified.
+
+## Authored mapped diagnostic and PAC scope
+
+A separately selected diagnostic now connects explicit Normal-NC mappings to
+the canonical PAC callback and run-local native reuse. Profile 3 keeps address
+PAC disabled; XPAC, PACGA and disabled PAC instructions are covered. This is an
+authored execution capability, not evidence that the original kernel has run
+under the new mapping. **r18 remains the strongest original-input receipt;
+r19 has not been executed for this documentation update.**
+
+The independent native proof passes 31 tests in each of three separately compiled
+modes: cached, uncached and 64-byte cache slots. Nine scenarios compare complete
+CPU state, execution results, all RAM and ordered canonical Rust memory-service
+requests/replies. Only the process-dependent callback pointer is normalized.
+Real memory permissions enforce writable/executable transitions. Loop protection
+calls fall from 528 to 6, and self-modifying code from 528 to 8, with equal
+execution records. Coverage includes fresh-fetch failure, 65-PC eviction,
+current-EL specialization, small-buffer bypass, slot-overflow fallback and both
+writable and executable protection failures. The existing M=0 suite passes
+20 tests; canonical PAC/native checks pass 125 assertions. Immutable-control
+mutation attempts are rejected before callback state can be committed.
+
+The independent Arm CPU capture retains 24 raw 47/48-bit vectors. Its QEMU CPU
+advertises **APA5**, while the runtime implements **APA1**. Enabled sign/auth
+comparison passes for **16 lower-range vectors** where the public semantics
+coincide. XPAC and disabled-operation comparisons pass for **all 24 vectors**.
+The **eight upper-range enabled vectors are not verified against an APA1 CPU**;
+their APA5 results remain unmodified. This does not establish enabled address
+PAC under mapped profile 3. The primary QEMU implementation defines the
+[PAuth2 pointer-XOR distinction](https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/pauth_helper.c).
+
+The authored EFI fixture passes ten aggregate checks across cached, uncached
+and unobserved runs. Each retires 65,536 instructions and completes 26,207 data
+operations. Cached execution uses 28 writable and 27 executable transitions,
+including final writable restore, versus 65,537 and 65,536 without reuse.
+Observed and unobserved execution records agree. These fixtures do not establish
+original kernel initialization, complete chained-fixup traversal, userspace,
+installation or a physical desktop. Normal startup remains NOT_READY.
+
+[Mapped diagnostic summary](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/mapped-normal-profile/summary.json),
+[final authored EFI receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/mapped-normal-profile/efi/receipt.json), and
+[independent native receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/mapped-normal-profile/native/receipt.json)
+record these results separately from the original r18 boundary.
 
 ## Observations and Controls
 

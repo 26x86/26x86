@@ -1,0 +1,25 @@
+
+running 20 tests
+test actual_c_and_rust_layouts_match_every_field_and_mmu_gate_prevents_callbacks ... ok
+test all_thirteen_scalar_forms_use_provider_with_signed_and_zero_register_semantics ... ok
+test bfm_v1_executes_without_data_requests ... ok
+test bfm_v1_invalid_fields_preserve_state ... ok
+test callback_failures_and_malformed_replies_are_not_guest_exceptions ... ok
+test conditional_comparison_stays_native_between_provider_fetches ... ok
+test conditional_selection_native_through_v1_provider ... ok
+test data_alignment_has_exact_esr_far_and_unchanged_memory_registers ... ok
+test extended_arithmetic_native_through_v1_provider ... ok
+test lower_el_fault_and_original_sp_priority_keep_the_precise_saved_state ... ok
+test missing_second_element_and_invalid_encoding_never_partially_commit ... ok
+test multiply_add_v1_executes_without_data_requests ... ok
+test native_alu_and_memory_commit_through_actual_rust_callbacks ... ok
+test only_committed_control_flow_is_fetched_and_pc_alignment_is_precise ... ok
+test pair_modes_widths_and_success_only_writeback_use_one_full_span_request ... ok
+test platform::tests::platform_abi_receipt ... ok
+test public_entry_rejects_missing_callback_overflow_and_known_alias_before_effects ... ok
+test register_offset_v1_all_forms_and_host_or_guest_failures ... ok
+test test_bit_v1_fetches_only_committed_pc_and_retains_branch_on_fault ... ok
+test ubfm_is_native_with_v1_callbacks_and_preserves_state ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.46s
+

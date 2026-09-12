@@ -171,6 +171,7 @@ jobs:
         run: |
           python3 -m unittest discover -s nextcore/crates/nextcore-efi/tools -p test_stage1_reader.py -v
           python3 nextcore/crates/nextcore-ise/tools/probe_efi_stage1_provider.py --work-dir "$RUNNER_TEMP/native-stage1" --output "$RUNNER_TEMP/native-stage1.json"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_mapped_native.py --output "$RUNNER_TEMP/mapped-native"
       - name: Build the authored stage-1 EFI consumer
         working-directory: nextcore
         run: cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-stage1-probe --bin NXMMU
@@ -206,6 +207,7 @@ jobs:
           name: nextcore-x86-efi-stage1
           path: |
             ${{ runner.temp }}/native-stage1.json
+            ${{ runner.temp }}/mapped-native/receipt.json
             ${{ runner.temp }}/nextcore-stage1-proof/*.json
             ${{ runner.temp }}/nextcore-stage1-proof/*.log
             ${{ runner.temp }}/nextcore-dt-proof/*.json
@@ -269,11 +271,22 @@ jobs:
             exit 1
           fi
           python3 -c 'import json,os; from pathlib import Path; p=Path(os.environ["RUNNER_TEMP"])/"initialization-old-negative"; r=json.loads((p/"receipt.json").read_text()); f=json.loads((p/"firmware/report.json").read_text()); assert not r["passed"] and r["checks"]["inputs_preserved"] and any(m.startswith("NXARMJIT: TRACE_CONFIG_INVALID") for m in f["markers"])'
+      - name: Execute explicit mapped entry with cached, uncached and unobserved controls
+        run: |
+          python3 -m unittest discover -s nextcore/tools -p test_trace_mapped.py -v
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-mapped-trace,arm-jit-video-readback,arm-jit-memory-observation,arm-jit-protection-observation --bin NXARMJIT
+          cp nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/mapped-cached.efi"
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-mapped-trace,arm-jit-video-readback,arm-jit-memory-observation,arm-jit-protection-observation,arm-jit-provider-uncached --bin NXARMJIT
+          cp nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/mapped-uncached.efi"
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-mapped-trace,arm-jit-video-readback,arm-jit-protection-observation --bin NXARMJIT
+          python3 nextcore/tools/verify_mapped_trace_ovmf.py --cached-efi "$RUNNER_TEMP/mapped-cached.efi" --uncached-efi "$RUNNER_TEMP/mapped-uncached.efi" --unobserved-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --old-efi "$RUNNER_TEMP/cached-long.efi" --output "$RUNNER_TEMP/mapped-efi"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: nextcore-deep-trace
           path: |
+            ${{ runner.temp }}/mapped-efi/**/*.json
+            ${{ runner.temp }}/mapped-efi/**/*.log
             ${{ runner.temp }}/deep-trace/report.json
             ${{ runner.temp }}/deep-trace/*.log
             ${{ runner.temp }}/deep-trace/deep16384/*.json

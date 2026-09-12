@@ -21,7 +21,7 @@
       "id": "execution",
       "layer": "CPU runtime",
       "status": "in-progress",
-      "summary": "The original prefix remains at its 1,542,930-instruction alignment boundary. A separate Normal-memory unaligned profile passes actual native tests and 152 authored EFI cases. Original entry mappings and mapped pointer authentication remain required.",
+      "summary": "The original prefix remains at r18: 1,542,930 instructions and an alignment fault. A separate mapped diagnostic passes native differential tests and authored EFI checks with PAC address signing disabled. Original mapped replay and physical boot remain unverified.",
       "evidence_url": "https://github.com/26x86/Nextcore-ISE/pull/9"
     },
     {
@@ -67,6 +67,12 @@
     }
   ],
   "latest": [
+    {
+      "date": "2026-09-12",
+      "title": "Authored mapped execution preserves state across native reuse",
+      "summary": "Three native modes pass 31 tests each and nine complete-state comparisons; 20 M=0 regressions and ten authored EFI checks pass. QEMU APA5 comparisons cover 16 enabled sign/auth and 24 XPAC/disabled vectors; eight upper enabled vectors remain unverified for APA1. Original evidence remains r18.",
+      "url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/docs/PREFIX_PROGRESS_VALIDATION.md"
+    },
     {
       "date": "2026-09-12",
       "title": "Mapped unaligned transfers pass native and EFI execution",

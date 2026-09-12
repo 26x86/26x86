@@ -998,3 +998,51 @@ authentication to the immutable v2 runner, construct kernel page tables or enabl
 normal startup. Those require separate explicit contracts and runtime evidence.
 Root owns integration and this Build Plan section; delegated runtime implementation
 and independent tests have disjoint source ownership.
+
+### Explicit mapped original-entry diagnostic
+
+Current Status: The explicit mapped NXARMJIT path passes authored EFI acceptance
+with the final published module revisions. Three native cache variants pass 31
+tests each and nine complete-state comparisons; the existing M=0 suite passes
+20 regressions. The original image has not yet executed through profile 3.
+
+Target State: Add a separately built and explicitly selected mapped diagnostic.
+Use 16 KiB Normal-NC profile 3 (T0SZ=T1SZ=17, IPS=48), an immutable caller-owned
+table image, and identity plus VirtualBase aliases for the validated RAM span.
+The entry PC is the staged entry's corresponding VirtualBase alias. Keep the
+existing declared x0=0/x1=physical boot args/x2=x3=0 and physical stack through
+the identity alias. This is software-defined diagnostic setup, not a proven
+original reset ABI. Tables occupy a disjoint physical range immediately after
+RAM. Reject overflow, noncanonical aliases, overlap, alignment and capacity
+errors before guest execution. Page tables are immutable and normal readiness
+remains NOT_READY.
+
+A distinct vf_boot_run_memory_pauth_v2 entry adds the canonical PAC callback
+immediately after initial_x0_x3 in the existing v2 signature. The old v2 entry
+continues without PAC. The new path must refuse callback changes to immutable
+controls/current EL before committing any context. Extend the existing bounded
+PAC address profile from 48 to 47 bits only with public-contract and independent
+oracle evidence; do not change QARMA, key defaults or PAC enable semantics.
+Profile 3 keeps its fixed enable bits, so disabled PAC instructions retain their
+architecturally disabled behavior. XPAC and generic authentication instructions
+must use their actual supported semantics, never instruction skipping.
+
+Reuse native entries in the immutable v2 loop only after its existing per-step
+control checks and fresh validated fetch. Match PC, word and EL, preserve all
+fault/interrupt/data/retirement behavior and protection failure handling, and
+retain a compiled uncached comparison. Dynamic execution remains unchanged.
+
+Core owns a checked 16 KiB alias-table planner and a mapped-only trace parser:
+parse_arm64_trace_configuration_with_mapped_tier, admitting the existing budgets
+plus exact MemoryProfile=mapped-normal-nc-v1. Existing parser APIs must reject
+that field instead of silently ignoring it. EFI requires arm-jit-mapped-trace
+and emits build/selection/mapping/provider acknowledgements. The host requires
+those acknowledgements before accepting --mapped-diagnostic. Authored mapped
+execution, old-build rejection and cached/uncached equality precede the original
+replay. Original assets and raw coordinates stay isolated.
+
+Acceptance scope: the independent Arm oracle advertises APA5 while the runtime
+implements APA1. Sixteen enabled lower-range sign/auth vectors and all 24
+XPAC/disabled vectors compare directly. Eight upper-range enabled vectors are
+not verified against a same-feature CPU. The selected mapped profile keeps
+address signing disabled and does not widen that contract.

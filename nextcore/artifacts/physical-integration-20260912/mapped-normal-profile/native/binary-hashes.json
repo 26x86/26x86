@@ -1,0 +1,25 @@
+{
+  "scope": "Executed authored native r4 binaries; binary payloads are not included.",
+  "files": {
+    "cached/test": {
+      "sha256": "e64b7484bbd5eff1df662c280d03a7bda256f4916c13f84c7014b9ab6e2f2a95",
+      "bytes": 7209096
+    },
+    "uncached/test": {
+      "sha256": "78b063ec8f90e7a41e30beb2248435780df971bfc76f5fd404e04f58c029d71f",
+      "bytes": 7207576
+    },
+    "small-slot/test": {
+      "sha256": "69f41338d0142c613b8cfb1604c044bcf5bba41dec0b400a24785a912401fabd",
+      "bytes": 7209080
+    },
+    "test-m0": {
+      "sha256": "0e32a9c4225a128e4421f196dfaa0f6f4a98d384853ec06cd72601de07a4542f",
+      "bytes": 7130080
+    },
+    "pauth-test": {
+      "sha256": "02aeecfbcbf0f566df0b510179ee2533d86e891644dce3fde8bb1d88a0cbbc17",
+      "bytes": 684584
+    }
+  }
+}

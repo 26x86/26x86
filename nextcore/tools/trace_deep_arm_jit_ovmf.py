@@ -77,6 +77,42 @@ def parse_trace_video(actual: list[str], requested: bool, physical_base: int, me
             "physical_display_verified": False, "macos_desktop_verified": False}
 
 
+def parse_mapped_profile(actual: list[str], requested: bool, physical: int, virtual: int, size: int) -> dict:
+    build = "NXARMJIT: TRACE_MAPPED_DIAGNOSTIC_BUILD profile=mapped-normal-nc-v1"
+    selected = "NXARMJIT: TRACE_MAPPED_DIAGNOSTIC_SELECTED profile=mapped-normal-nc-v1"
+    provider = "NXARMJIT: TRACE_MEMORY_PROVIDER abi=2 mode=mapped-normal-nc-v1"
+    rows = [row for row in actual if row.startswith("NXARMJIT: TRACE_MAPPINGS_READY ")]
+    mapping = None
+    if len(rows) == 1:
+        match = re.fullmatch(r"NXARMJIT: TRACE_MAPPINGS_READY granule=16384 profile=3 "
+            r"physical_base=(0x[0-9a-f]+) virtual_base=(0x[0-9a-f]+) memory_size=(\d+) "
+            r"table_base=(0x[0-9a-f]+) table_bytes=(\d+) ttbr0=(0x[0-9a-f]+) "
+            r"ttbr1=(0x[0-9a-f]+) tcr=(0x[0-9a-f]+) sctlr=(0x[0-9a-f]+) entry=(0x[0-9a-f]+)", rows[0])
+        if match:
+            mapping = dict(zip(("physical_base", "virtual_base", "memory_size", "table_base",
+                "table_bytes", "ttbr0", "ttbr1", "tcr", "sctlr", "entry"),
+                (int(value, 0) for value in match.groups())))
+    entries = [row for row in actual if row.startswith("NXARMJIT: TRACE_ENTER ")]
+    entry = re.fullmatch(r"NXARMJIT: TRACE_ENTER entry=(0x[0-9a-f]+) x0=0 x1=(0x[0-9a-f]+) x2=0 x3=0 budget=(\d+)", entries[0]) if len(entries) == 1 else None
+    valid = bool(requested and mapping and entry and all(actual.count(row) == 1 for row in (build, selected, provider))
+        and actual.index(build) < actual.index(selected) < actual.index(rows[0]) < actual.index(provider)
+        and (mapping["physical_base"], mapping["virtual_base"], mapping["memory_size"]) == (physical, virtual, size)
+        and physical % 16384 == virtual % 16384 == size % 16384 == 0
+        and physical + size <= 2**47 and virtual >= 0xffff800000000000
+        and physical + size == mapping["table_base"] == mapping["ttbr0"]
+        and mapping["ttbr1"] == mapping["table_base"] + 16384
+        and 32768 <= mapping["table_bytes"] <= 2 * 1024**2 and mapping["table_bytes"] % 16384 == 0
+        and mapping["table_base"] + mapping["table_bytes"] <= 2**48
+        and mapping["tcr"] == (17 | (2 << 14) | (17 << 16) | (1 << 30) | (5 << 32))
+        and mapping["sctlr"] == 0x30d00801
+        and virtual <= mapping["entry"] < virtual + size <= 2**64
+        and mapping["entry"] == int(entry.group(1), 16)
+        and physical <= int(entry.group(2), 16) < physical + size)
+    return {"requested": requested, "validated": valid, "mapping": mapping,
+            "build_observed": build in actual, "selected_observed": selected in actual,
+            "original_entry_abi_verified": False}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("efi", "kernel", "device-tree", "output"):
@@ -98,12 +134,16 @@ def main() -> int:
     parser.add_argument("--allow-incomplete-sptm-prefix", action="store_true", required=True)
     parser.add_argument("--gop-framebuffer", action="store_true",
                         help="request guest framebuffer setup and require explicit ready/presented evidence")
+    parser.add_argument("--mapped-diagnostic", action="store_true",
+                        help="require explicit mapped Normal-NC memory and matching EFI acknowledgements")
     parser.add_argument("--qemu", default="qemu-system-x86_64")
     parser.add_argument("--host-memory-mib", type=int, default=768)
     parser.add_argument("--timeout", type=float, default=180)
     parser.add_argument("--ovmf-code", type=Path, default=Path("/usr/share/OVMF/OVMF_CODE_4M.fd"))
     parser.add_argument("--ovmf-vars", type=Path, default=Path("/usr/share/OVMF/OVMF_VARS_4M.fd"))
     args = parser.parse_args()
+    if args.mapped_diagnostic and args.platform_profile != "nextcore-irq-compat-v1":
+        parser.error("--mapped-diagnostic requires the named software platform profile")
     maximum_budget = 64 if args.platform_profile else 8
     if args.tiered_diagnostic and args.platform_profile:
         maximum_budget = 4096
@@ -205,6 +245,8 @@ def main() -> int:
         trace["DiagnosticTier"] = "initialization-67108864"
     if args.gop_framebuffer:
         trace["Video"] = "gop-framebuffer"
+    if args.mapped_diagnostic:
+        trace["MemoryProfile"] = "mapped-normal-nc-v1"
     if args.platform_profile:
         trace["PlatformProfile"] = args.platform_profile
         if platform_options:
@@ -313,12 +355,16 @@ def main() -> int:
     initialization_selected = "NXARMJIT: TRACE_INITIALIZATION_DIAGNOSTIC_SELECTED tier=67108864" in actual
     if args.initialization_diagnostic:
         completed = completed and long_build and initialization_build and initialization_selected
-    if args.deep_diagnostic or args.long_diagnostic or args.initialization_diagnostic:
+    if args.deep_diagnostic or args.long_diagnostic or args.initialization_diagnostic or args.mapped_diagnostic:
         memory = execution.get("memory") if execution else None
         completed = bool(completed and tiered_marker and deep_build and memory
-            and memory["abi"] == 1 and execution["retired"] <= memory["fetch_requests"] <= execution["retired"]+1
+            and memory["abi"] == (2 if args.mapped_diagnostic else 1) and execution["retired"] <= memory["fetch_requests"] <= execution["retired"]+1
             and 0 <= memory["completed_data_operations"] <= memory["data_requests"] <= memory["fetch_requests"]
-            and "NXARMJIT: TRACE_MEMORY_PROVIDER abi=1 mode=m0-only" in actual)
+            and ("NXARMJIT: TRACE_MEMORY_PROVIDER abi=2 mode=mapped-normal-nc-v1" if args.mapped_diagnostic
+                 else "NXARMJIT: TRACE_MEMORY_PROVIDER abi=1 mode=m0-only") in actual)
+    mapped = parse_mapped_profile(actual, args.mapped_diagnostic, args.physical_base, args.virtual_base, args.memory_size)
+    if args.mapped_diagnostic:
+        completed = completed and mapped["validated"]
     video = parse_trace_video(actual, args.gop_framebuffer, args.physical_base, args.memory_size)
     requested_checks_completed = completed and (not args.gop_framebuffer or video["validated"])
     receipt = {
@@ -327,6 +373,7 @@ def main() -> int:
         "platform_profile": args.platform_profile, "profile_reset_origin": "software_defined" if args.platform_profile else "unprovided",
         "sptm_services_provided": False, "platform_device_tree_provided": False,
         "config": config, "execution": execution,
+        "mapped_profile": mapped,
         "deep_diagnostic_requested": args.deep_diagnostic,
         "deep_diagnostic_build_observed": deep_build,
         "deep_diagnostic_selected_observed": deep_selected,
