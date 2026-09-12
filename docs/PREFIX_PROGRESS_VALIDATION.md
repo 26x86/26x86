@@ -2,21 +2,31 @@
 
 ## Current Status
 
-The r20 mapped diagnostic retires **42,252,448 instructions** and completes
-**6,010,803 data operations** before UNSUPPORTED_INSTRUCTION at a scalar unscaled
-64-bit load with a negative offset. The provider reports no error. The original
-input is preserved. The owned framebuffer remains zero and matches GOP readback
-at 1280 by 800; no macOS screen has been established.
+The r22 mapped diagnostic retires **42,252,452 instructions**, issues
+**42,252,453 fetch requests** and completes **6,010,805 data operations** in
+413.518 seconds. It stops with UNSUPPORTED_INSTRUCTION (status 8) at scalar
+register ORR. The provider reports no error. The input and EFI are preserved.
+The owned framebuffer remains zero and matches GOP readback at 1280 by 800;
+no macOS screen has been established.
 
+This completed run includes scalar unscaled transfers and firmware watchdog
+ownership. The next bounded implementation boundary is scalar register ORR.
 The selected software-defined Normal-NC profile, high virtual alias, canonical
-PAC callback and immutable stack selection are explicit diagnostic conditions.
-They do not establish the target's reset entry ABI, SPTM services, complete
-platform DeviceTree, kernel initialization, userspace or physical boot. This
-mapped run is distinct from the historical M=0 alignment profile below.
+PAC callback and immutable stack selection remain explicit diagnostic conditions.
+They do not establish the target reset entry ABI, SPTM services, complete platform
+DeviceTree, kernel initialization, userspace or physical boot.
 
-[Latest r20 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r20-spsel-summary.json)
-records the stop without publishing original instruction words or addresses.
-The next bounded implementation boundary is scalar unscaled memory addressing.
+The watchdog success marker appears twice because reporting writes to both
+ConOut and Serial. The summary records the observation count and success presence
+with no failure marker; it does not infer API call count from duplicate output.
+The source contains one watchdog-disable call at this entry point. The authored
+timer control below establishes the helper behavior. r22 completes beyond the
+prior r21 termination time, but that does not by itself prove r21's cause.
+
+[Latest r22 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r22-watchdog-summary.json)
+records this boundary without publishing original instruction words or addresses.
+Historical r20 completed 42,252,448 instructions and 6,010,803 data operations
+before an unscaled-load boundary. r21 supplied no terminal execution record.
 
 ## Historical M=0 boundary
 
@@ -129,6 +139,40 @@ subsequent stack accesses. Authored EFI cached/uncached checks pass and the old
 runtime rejects the new operation. [Stack-selection evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/immutable-stack-selection/summary.json)
 separates those authored checks from the r20 original-input result.
 
+## Authored scalar unscaled memory support
+
+Thirteen scalar integer unscaled transfer forms now support signed byte
+displacements without base-register writeback. The authored native proof passes
+546 cases and 2,022 assertions, including exact fault classification. Thirty-nine
+independent actual Arm cases match both the native C execution and Rust reference.
+The canonical service suite passes 33 tests in each of three modes; the authored
+EFI consumer passes ten aggregate checks. [Unscaled scalar memory evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/unscaled-scalar-memory/summary.json)
+records this instruction-family scope. These authored results do not establish
+original-input progress by themselves; the completed r22 receipt above records
+the separate original replay.
+
+## Firmware watchdog ownership and incomplete r21 run
+
+The r21 attempt ended after 334.283 seconds with QEMU exit 0 and no host-requested
+termination. It has no terminal execution record and therefore no verified
+retired-instruction count. Its input and EFI hashes were preserved. r20 remained
+the strongest completed original diagnostic at that point; no progress is inferred
+from r21 elapsed time or clean process exit. Completed r22 is now reported above.
+
+A separate authored OVMF test arms an actual two-second firmware watchdog and
+stalls for three seconds. The control naturally exits before completion; the
+shared production disable helper permits the completion marker. Fifteen host
+checks pass, including ordered markers, reaped processes, source preservation
+and an injected DEVICE_ERROR forwarded unchanged. The injected failure tests the
+helper boundary, not a real firmware-error response. Baseline BOOTX64 and NXARMJIT
+now request disable after service initialization and report success or the exact
+failure while preserving otherwise usable operation. Host timeouts and guest
+instruction budgets remain unchanged.
+
+[Watchdog integrity evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/firmware-watchdog/summary.json)
+records the timer control independently. It does not establish that watchdog
+expiry caused r21 or that any physical machine boots macOS. The completed r22 original replay is reported separately above.
+
 ## Observations and Controls
 
 | Checkpoint | Retired instructions | Completed data operations | Provider status |
@@ -210,5 +254,5 @@ host tests and no_std UEFI compilation pass. An authored BFM loop executes the
 full 67,108,864 steps in the final EFI and preserves expected state and inputs;
 the old build rejects the new selector before guest entry. The unchanged
 600-second timeout remains a hard limit. Historical r18 stopped at the alignment
-fault; the later mapped r20 run stops at an unsupported unscaled load. Neither
-run reaches the requested maximum, which is not its actual retirement count.
+fault; later mapped r20 stopped at an unscaled load and r22 stops at register ORR.
+These runs do not reach the requested maximum, which is not their retirement count.
