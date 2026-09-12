@@ -1151,3 +1151,24 @@ instruction words and addresses remain private.
 
 Primary encoding and execution reference:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/translate-a64.c#L7011-L7095
+
+### Visible configuration recovery
+
+Current Status: Baseline EFI returns immediately when its own loaded-image file
+system cannot supply a usable configuration. Missing, zero-length, malformed or
+empty-entry configuration therefore leaves no retry screen. The existing valid
+configuration and child-return picker paths remain separate and usable.
+
+Target State: Show the exact configuration path and actual failure reason with
+explicit Enter-to-retry and Escape-to-return actions. Retry only the same
+`\\EFI\\OC\\config.plist` on the current loaded-image file system and perform all
+size and parse checks again. Do not search other volumes, choose an arbitrary
+child, write files or NVRAM, or automatically retry/boot. A failed display write
+or unavailable key-input service must return its actual error rather than
+silently claim an interactive screen. Preserve valid configurations, ShowPicker
+policy and child NOT_READY failure handling. Verify in actual OVMF that a first
+read failure can recover through explicit input to the intended authored child;
+also check persistent missing/empty/malformed/no-entry states, Escape, and
+display/input failures without child execution. Use authored file-system
+protocol wrappers or copied test media; never alter physical disks for this test.
+Keep normal macOS readiness and the fixed original-replay binaries unchanged.
