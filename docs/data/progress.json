@@ -2,9 +2,9 @@
   "updated_at": "2026-09-12",
   "physical_desktop_verified": false,
   "boundary": {
-    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r13-long-summary.json",
+    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-cache-comparison.json",
     "label": "Bounded kernel prefix: 65,536 instructions; display unverified",
-    "detail": "The unchanged local macOS 27 input reaches the explicit long budget with 11,702 data operations and advancing stores in the observed windows. The framebuffer hash remains that of a zero-filled frame. Normal startup and physical display remain unverified."
+    "detail": "The unchanged macOS 27 input reaches 65,536 instructions and 11,702 data operations. Run-local native reuse preserves the reported state and observed requests while reducing permission transitions. The framebuffer remains all zero; normal startup and physical display remain unverified."
   },
   "headline": "Building the path to a real macOS desktop",
   "milestones": [
@@ -21,7 +21,7 @@
       "id": "execution",
       "layer": "CPU runtime",
       "status": "in-progress",
-      "summary": "The original kernel prefix reaches 65,536 instructions. Bounded request windows show changing memory accesses; this does not establish full initialization or userspace.",
+      "summary": "Freshly fetched native entries are reused within each v1 provider run. Independent native and EFI comparisons preserve execution and memory requests. The original prefix remains bounded at 65,536 instructions; full initialization and userspace are unverified.",
       "evidence_url": "https://github.com/26x86/Nextcore-ISE/pull/9"
     },
     {
@@ -58,7 +58,7 @@
     {
       "value": "31 / 31",
       "label": "Completed public CI checkpoint",
-      "detail": "31 successful checks on development revision 4f46a645. Later trace collection and added firmware CI checks are tracked separately; CI is not physical boot proof."
+      "detail": "31 successful checks on development revision 5dc67f08. Later cache integration checks are tracked separately; CI is not physical boot proof."
     },
     {
       "value": "65,536",
@@ -67,6 +67,12 @@
     }
   ],
   "latest": [
+    {
+      "date": "2026-09-12",
+      "title": "Native reuse preserves execution while reducing EFI permission changes",
+      "summary": "Thirteen native differential cases and five mutation controls pass. Final EFI framebuffer and long-loop comparisons preserve results, including the mandatory permission restore. The original macOS framebuffer remains all zero.",
+      "url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/docs/PREFIX_PROGRESS_VALIDATION.md"
+    },
     {
       "date": "2026-09-12",
       "title": "Observed kernel memory progress and reliable trace collection",

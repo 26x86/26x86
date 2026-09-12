@@ -51,15 +51,43 @@ failure. The successful original replay uses the same final EFI bytes.
 and [authored long-tier evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/long-diagnostic/inventory.json)
 preserve the distinction between execution, observation and physical boot.
 
+## Run-local Native Reuse
+
+The v1 memory provider now reuses native entries within one run, keyed by PC,
+freshly fetched instruction word and current EL. Every iteration still fetches
+through the memory service. Small buffers bypass the cache; slot overflow
+invalidates all entries and retries with the original full buffer.
+
+Thirteen independent native cases compare complete CPU/result bytes, entire RAM
+and ordered requests/replies against a separately compiled uncached variant.
+Self-modifying code, PC/EL keys, eviction, malformed fetches, data faults, small
+buffers and protection failures pass. Five compiled semantic mutants are
+rejected. The unchanged dynamic backend also reproduces six captured Arm cases
+and fourteen comparator regressions against an immutable 83-file source freeze.
+
+Final EFI variants pass the authored framebuffer and 65,536-step BFM consumers.
+The latter requires 13 executable transitions with reuse versus 65,536 without
+reuse, with one final writable restore and no protection failures. The framebuffer
+consumer retains exact full GOP RGB readback. The native-entry counter still
+counts executions, not translations.
+
+The final original-input comparison preserves the complete reported execution
+record and last 64 request metadata entries. Both variants retire 65,536
+instructions and complete 11,702 data operations. Executable transitions fall
+from 65,536 to 283, with 284 writable transitions including restore and no
+protection failures. The single serial runs took 57.754 seconds uncached and
+23.868 seconds cached, including staging, UART and GOP; this is not a benchmark
+or a guaranteed speedup. Complete original guest RAM was not compared.
+
+[Authored cache evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/provider-cache/inventory.json)
+and the [original-prefix comparison](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-cache-comparison.json)
+separate test coverage from physical acceptance.
+
 ## Next Execution Boundary
 
-The current [provider loop](https://github.com/26x86/Nextcore-ISE/blob/002d2eff8b262e728224b9b039b9ffe168ed4586/runtime/jit.c#L782) generates native code and changes code-page permissions
-after every successful instruction fetch. Its `compiled_blocks` counter measures
-native entries, not a separate compilation statistic. Repeated PCs make a
-run-local reuse investigation relevant, but any reuse must still perform fresh
-instruction fetches, reply validation and data accesses. No cache speedup or
-self-modifying-code correctness is claimed by the current evidence.
-
-The [entry contract](NEXTCORE_ARM64E_ENTRY_CONTRACT.md) also distinguishes guest
+Normal startup remains NOT_READY. Source-bound kernel initialization, complete
+platform services, persistent presentation, installation and physical reboot
+remain required. The framebuffer remains all zero in the original prefix.
+The [entry contract](NEXTCORE_ARM64E_ENTRY_CONTRACT.md) distinguishes guest
 self-fixups from unproven loader-side work. Do not rebase opaque pointers or
 change startup registers solely to extend the trace.
