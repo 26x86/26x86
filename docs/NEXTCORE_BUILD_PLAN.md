@@ -1455,7 +1455,7 @@ confirms the current IPS-dependent limits through 48 bits. These observations
 confirm the inconsistencies above; no common MMFR0/ISAR1 policy has yet been
 implemented. Receipts are under `pac-address-selection/profile-matrix`.
 
-##### Next implementation: coherent MMFR0 and fixed eight-bit ASID context
+### Next implementation: coherent MMFR0 and fixed eight-bit ASID context
 
 #### Current Status
 
