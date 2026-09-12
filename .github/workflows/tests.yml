@@ -331,6 +331,12 @@ jobs:
         run: cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features test-child --bin BOOTX64 --bin NXTEST
       - name: Recover failed targets through the production picker
         run: python3 nextcore/tools/verify_picker_recovery_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/BOOTX64.efi --child nextcore/target/x86_64-unknown-uefi/release/NXTEST.efi --output "$RUNNER_TEMP/picker-recovery"
+      - name: Recover unusable configuration through actual firmware input
+        run: |
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --bin BOOTX64
+          cp nextcore/target/x86_64-unknown-uefi/release/BOOTX64.efi "$RUNNER_TEMP/config-baseline.efi"
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features config-recovery-probe --bin NXCONFIG
+          python3 Tools/verify_config_recovery_ovmf.py --efi "$RUNNER_TEMP/config-baseline.efi" --probe nextcore/target/x86_64-unknown-uefi/release/NXCONFIG.efi --child nextcore/target/x86_64-unknown-uefi/release/NXTEST.efi --output "$RUNNER_TEMP/config-recovery"
       - name: Verify firmware watchdog ownership against an armed control
         run: |
           cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features watchdog-probe --bin NXWATCHDOG
@@ -346,3 +352,6 @@ jobs:
             ${{ runner.temp }}/picker-recovery/**/*.log
             ${{ runner.temp }}/watchdog-proof/**/*.json
             ${{ runner.temp }}/watchdog-proof/**/*.log
+            ${{ runner.temp }}/config-recovery/**/*.json
+            ${{ runner.temp }}/config-recovery/**/*.log
+            ${{ runner.temp }}/config-recovery/**/*.ppm

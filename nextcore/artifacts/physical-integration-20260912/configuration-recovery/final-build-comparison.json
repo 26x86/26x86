@@ -1,0 +1,50 @@
+[
+  {
+    "new": "/tmp/nextcore-config-recovery-target-20260913/x86_64-unknown-uefi/release/BOOTX64.efi",
+    "old": "/tmp/nextcore-config-recovery-clear-bootx64-20260913.efi",
+    "new_sha256": "b8019f68192173073f1d21d6bf5448a162d3f5c6adf610c64bf233113b45df47",
+    "old_sha256": "39bb2ab9b07c1d8149921e9630cf127dfb690602031df0d41553ac86d60da395",
+    "different_offsets": [
+      128,
+      129,
+      155196,
+      155197,
+      155224,
+      155225,
+      155226,
+      155227,
+      155228,
+      155229,
+      155230,
+      155231
+    ],
+    "coff_timestamp_offset": 128,
+    "debug_directory_offset": 155192,
+    "debug_data_offset": 155220,
+    "equal_except_pe_timestamps_and_codeview_guid": true
+  },
+  {
+    "new": "/tmp/nextcore-logical-shifted-final-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi",
+    "old": "/tmp/nextcore-logical-shifted-mapped-final-20260912.efi",
+    "new_sha256": "19f8678491edbee9669a5ecd3a46bae456f0633e05d18093a16ccd3c8b3d2295",
+    "old_sha256": "4961f49925fc5e0a8b938bc28306885ff54481c4801d6bf29d8b98e9f34a7fc5",
+    "different_offsets": [
+      128,
+      129,
+      305216,
+      305217,
+      305244,
+      305245,
+      305246,
+      305247,
+      305248,
+      305249,
+      305250,
+      305251
+    ],
+    "coff_timestamp_offset": 128,
+    "debug_directory_offset": 305212,
+    "debug_data_offset": 305240,
+    "equal_except_pe_timestamps_and_codeview_guid": true
+  }
+]

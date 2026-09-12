@@ -1156,10 +1156,14 @@ https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/targe
 
 ### Visible configuration recovery
 
-Current Status: Baseline EFI returns immediately when its own loaded-image file
-system cannot supply a usable configuration. Missing, zero-length, malformed or
-empty-entry configuration therefore leaves no retry screen. The existing valid
-configuration and child-return picker paths remain separate and usable.
+Current Status: EFI `06b767498ba9af6d119b3600ce4a6aa44d0f81ee` displays a recovery
+screen for missing, zero-length, malformed and empty-entry configuration. Enter
+rereads the same configuration; Escape returns the original error. Ten authored
+OVMF cases pass, including required display/input failures and optional screen
+clear failure. The previous default binary fails the same recovery test, while
+three existing picker regressions pass. The actual 1280 by 800 recovery screen
+was captured and visually checked. Physical firmware input/display and macOS
+startup remain unverified. See the [configuration recovery evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/configuration-recovery/summary.json).
 
 Target State: Show the exact configuration path and actual failure reason with
 explicit Enter-to-retry and Escape-to-return actions. Retry only the same

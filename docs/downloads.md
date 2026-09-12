@@ -23,9 +23,11 @@ package; it is not a working macOS installer or a hardware compatibility promise
 
 Use a separate FAT-formatted removable test volume with the `EFI` directory at
 its root. Preserve the existing system EFI and recovery path. The package makes
-no disk or NVRAM changes automatically. With its empty configuration, the baseline displays "No enabled boot entries"
-and returns to firmware with NOT_FOUND. It does not show a usable picker or boot
-a guest: hardware-specific configuration and Apple payloads are not included.
+no disk or NVRAM changes automatically. With its empty configuration, the baseline
+shows the configuration recovery screen: Enter retries the same file and Esc
+returns to firmware with NOT_FOUND. Required display or input failures retain
+their actual error. It does not select or boot a guest: hardware-specific
+configuration and Apple payloads are not included.
 
 Do not rename `NXARMJIT.efi` to `BOOTX64.EFI`. The diagnostic requires separately
 supplied inputs and an explicitly accepted configuration. It does not prove that
