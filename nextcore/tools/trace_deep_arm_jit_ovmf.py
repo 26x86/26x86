@@ -72,6 +72,7 @@ def main() -> int:
     parser.add_argument("--instruction-budget", type=int, default=8)
     diagnostic = parser.add_mutually_exclusive_group()
     diagnostic.add_argument("--deep-diagnostic", action="store_true", help="explicitly select only the deep-16384 tier")
+    diagnostic.add_argument("--long-diagnostic", action="store_true", help="explicitly select only the long-65536 tier")
     diagnostic.add_argument("--tiered-diagnostic", action="store_true",
                         help="explicitly require the opt-in tiered EFI build; allows256/1024/4096")
     parser.add_argument("--platform-profile", choices=["nextcore-irq-compat-v1"])
@@ -93,9 +94,13 @@ def main() -> int:
         if args.platform_profile != "nextcore-irq-compat-v1" or args.instruction_budget != 16384:
             parser.error("--deep-diagnostic requires the named profile and exact budget16384")
         maximum_budget = 16384
+    if args.long_diagnostic:
+        if args.platform_profile != "nextcore-irq-compat-v1" or args.instruction_budget != 65536:
+            parser.error("--long-diagnostic requires the named profile and exact budget65536")
+        maximum_budget = 65536
     if not 1 <= args.instruction_budget <= maximum_budget:
         parser.error(f"selected diagnostic budget must be 1..{maximum_budget}")
-    if args.instruction_budget > 64 and args.instruction_budget not in (256, 1024, 4096) and not args.deep_diagnostic:
+    if args.instruction_budget > 64 and args.instruction_budget not in (256, 1024, 4096) and not (args.deep_diagnostic or args.long_diagnostic):
         parser.error("extended diagnostic budget must be256,1024 or4096")
     platform_fields = {"InitialOverride": "initial_override", "InitialPstate": "initial_pstate",
                        "VectorBase": "vector_base", "IrqLevel": "irq_level", "FiqLevel": "fiq_level"}
@@ -173,6 +178,8 @@ def main() -> int:
     }
     if args.deep_diagnostic:
         trace["DiagnosticTier"] = "deep-16384"
+    if args.long_diagnostic:
+        trace["DiagnosticTier"] = "long-65536"
     if args.gop_framebuffer:
         trace["Video"] = "gop-framebuffer"
     if args.platform_profile:
@@ -262,8 +269,14 @@ def main() -> int:
     deep_build = "NXARMJIT: TRACE_DEEP_DIAGNOSTIC_BUILD maximum=16384" in actual
     deep_selected = "NXARMJIT: TRACE_DEEP_DIAGNOSTIC_SELECTED tier=16384" in actual
     if args.deep_diagnostic:
+        completed = completed and deep_selected
+    long_build = "NXARMJIT: TRACE_LONG_DIAGNOSTIC_BUILD maximum=65536" in actual
+    long_selected = "NXARMJIT: TRACE_LONG_DIAGNOSTIC_SELECTED tier=65536" in actual
+    if args.long_diagnostic:
+        completed = completed and long_build and long_selected
+    if args.deep_diagnostic or args.long_diagnostic:
         memory = execution.get("memory") if execution else None
-        completed = bool(completed and tiered_marker and deep_build and deep_selected and memory
+        completed = bool(completed and tiered_marker and deep_build and memory
             and memory["abi"] == 1 and execution["retired"] <= memory["fetch_requests"] <= execution["retired"]+1
             and 0 <= memory["completed_data_operations"] <= memory["data_requests"] <= memory["fetch_requests"]
             and "NXARMJIT: TRACE_MEMORY_PROVIDER abi=1 mode=m0-only" in actual)
@@ -278,6 +291,9 @@ def main() -> int:
         "deep_diagnostic_requested": args.deep_diagnostic,
         "deep_diagnostic_build_observed": deep_build,
         "deep_diagnostic_selected_observed": deep_selected,
+        "long_diagnostic_requested": args.long_diagnostic,
+        "long_diagnostic_build_observed": long_build,
+        "long_diagnostic_selected_observed": long_selected,
         "tool_source_sha256_before": tool_before,
         "tool_source_sha256_after": tool_after,
         "tool_sources_preserved": tool_before == tool_after,
