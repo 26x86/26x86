@@ -1,0 +1,490 @@
+{
+  "schema": "nextcore.mmfr0-asid8-evidence.v1",
+  "packaging_complete": true,
+  "pending": [],
+  "completed_evidence_passed": true,
+  "contract": "Exact MMFR0 0x0f100005 and immutable 8-bit ASID tags selected by TCR.A1; TCR.AS and upper ASID bits remain rejected.",
+  "native_scope": "ASID r4 directly observes actual canonical MMU tags for profiles 1/3, both granules, A1 selections and VA halves, cold/warm translations; compiled force-zero, ignored-A1 and VA-based-tag mutants fail. 35 provider tests in each of three cache modes and 102 reference tests pass.",
+  "efi_scope": "Authored current EFI executes all 64 cases with nine retired instructions and two completed data operations per case, returns TTBR/TCR and MMFR0 values. Old same-fixture binary rejects before any case completes. EFI readback is distinct from native internal-ASID observation.",
+  "history": [
+    "MMFR0 r1 had an incorrect expectation for an already known MSR; r2 corrects the test and passes. Failed r1 logs remain here; no production failure inferred.",
+    "ASID r3 is superseded by r4 which explicitly covers profiles 1 and 3. Earlier scratch captures remain outside this package.",
+    "The earlier paired EFI build receipt includes the ASID r3 test-file hash. Final native r4 explicitly covers both profiles; final pinned rebuild proves both already tested EFI binaries byte-identical after binding the final ISE commit. Historical receipts are preserved unchanged."
+  ],
+  "original_images_used": false,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "inventory_scope": "Every payload file, excluding summary.json to avoid a self-referential hash.",
+  "files": [
+    {
+      "path": "asid-efi/current/command.json",
+      "bytes": 576,
+      "sha256": "f951bb4d855a4f307eeba4aa4d3151d2f96741fc1d4902e9066c3f3ad5141f53"
+    },
+    {
+      "path": "asid-efi/current/probe.S",
+      "bytes": 302,
+      "sha256": "210f90f34d256c8b9fb488008c31de7a3675269342da6ae76eb1b0b1ca31023f"
+    },
+    {
+      "path": "asid-efi/current/probe.bin",
+      "bytes": 40,
+      "sha256": "1439bf2fd79187216a6475ca45e0de4a74b224c3d84ea58eade7d013350547b7"
+    },
+    {
+      "path": "asid-efi/current/receipt.json",
+      "bytes": 44075,
+      "sha256": "ac8a07193d27544d0299ed69b29f7c86b2a5147ab1f0970c5bdaf5b6056212d0"
+    },
+    {
+      "path": "asid-efi/current/serial.log",
+      "bytes": 14330,
+      "sha256": "8dc893015d38cac633ee1adeeb85a30e1b94ee2d77f46b3ff1f9b597425a4194"
+    },
+    {
+      "path": "asid-efi/current/stderr.log",
+      "bytes": 67,
+      "sha256": "f9a0bd6d5e1d808b008398c3908f7520738cd303199c37449c2a026b41129015"
+    },
+    {
+      "path": "asid-efi/current/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "asid-efi/old/command.json",
+      "bytes": 564,
+      "sha256": "8ba97243c90dad703614020a08dc7b1d3cdaff986540ad9d5f0f93591f53c233"
+    },
+    {
+      "path": "asid-efi/old/probe.S",
+      "bytes": 302,
+      "sha256": "210f90f34d256c8b9fb488008c31de7a3675269342da6ae76eb1b0b1ca31023f"
+    },
+    {
+      "path": "asid-efi/old/probe.bin",
+      "bytes": 40,
+      "sha256": "1439bf2fd79187216a6475ca45e0de4a74b224c3d84ea58eade7d013350547b7"
+    },
+    {
+      "path": "asid-efi/old/receipt.json",
+      "bytes": 3101,
+      "sha256": "d6bea15701b28635b5531367487ff79c96ca520748fe6bb25b394a55683998db"
+    },
+    {
+      "path": "asid-efi/old/serial.log",
+      "bytes": 495,
+      "sha256": "f08e307264cf0755aefebe2bf3e74979db8b058be839f97efc47974594738c19"
+    },
+    {
+      "path": "asid-efi/old/stderr.log",
+      "bytes": 67,
+      "sha256": "48e11b05d03436899538266eca706019e7f68043c31bc21b774d0ab810537863"
+    },
+    {
+      "path": "asid-efi/old/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "asid-efi/paired-build/commands.json",
+      "bytes": 6500,
+      "sha256": "3d6a842ff925ac8e27df0e3222e5ad30d629fa6bf23c430b7543764660e9eae5"
+    },
+    {
+      "path": "asid-efi/paired-build/current-build.log",
+      "bytes": 3665,
+      "sha256": "718bc20944bf79a25b5cee96bd4bfeb003a02e4ff7dc83511f7a8be734035753"
+    },
+    {
+      "path": "asid-efi/paired-build/old-build.log",
+      "bytes": 3624,
+      "sha256": "cd6c525f002e36e6cb11ce25a0ad0f46d5a05f79320bbe7239cca45c96f92e09"
+    },
+    {
+      "path": "asid-efi/paired-build/receipt.json",
+      "bytes": 22065,
+      "sha256": "8f2a836c0dd3872efc73ac6a6bc6402b6caa34f2eb87b6341324c5aeb487bb78"
+    },
+    {
+      "path": "mapped/cached/command.json",
+      "bytes": 606,
+      "sha256": "e02aae033379320d977e95f986d9c47d6e194a626c3eb723f189020bbade2f34"
+    },
+    {
+      "path": "mapped/cached/report.json",
+      "bytes": 17088,
+      "sha256": "7c442c922fa8153258141747430aa9e2519001095f11abae6d226b1fa0dfbe30"
+    },
+    {
+      "path": "mapped/cached/serial.log",
+      "bytes": 11191,
+      "sha256": "55b1c26c59b6a84eab5443a32ee3d53cf8db3a0cbee4f038e47da56127596fdb"
+    },
+    {
+      "path": "mapped/cached/stderr.log",
+      "bytes": 78,
+      "sha256": "59c1e3f91c4088c7f96b7203f15175c854cfc32ebf20978ba645f67c9e7a7768"
+    },
+    {
+      "path": "mapped/cached/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mapped/commands.json",
+      "bytes": 6205,
+      "sha256": "1f5a4c56bff267c0cd92fc28618ba16d9a21ffc90a3d25a99db4e9401bede0cd"
+    },
+    {
+      "path": "mapped/old/command.json",
+      "bytes": 597,
+      "sha256": "6a3b6bbc5b7afcd22fc3a3959d0d36ea4c55cb525bf4ceb63716a100094925b6"
+    },
+    {
+      "path": "mapped/old/report.json",
+      "bytes": 8281,
+      "sha256": "0eab40c40e06a2a485d401c33a49bc5a9731b984eb8601d25f1d7a609b6e7fcd"
+    },
+    {
+      "path": "mapped/old/serial.log",
+      "bytes": 3107,
+      "sha256": "b3b60f7d81aabd1145ba06ff671ec14461b4420a233a28585b7334a26d92c891"
+    },
+    {
+      "path": "mapped/old/stderr.log",
+      "bytes": 78,
+      "sha256": "1fa958943cb3008efb679e8fb2f00bce4c6468c108df7afac458c76aa0ddb935"
+    },
+    {
+      "path": "mapped/old/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mapped/probe.bin",
+      "bytes": 600,
+      "sha256": "91468570e465c8d001756a52383700512a90b47ccffd1c4bad3ba7f02df79a74"
+    },
+    {
+      "path": "mapped/receipt.json",
+      "bytes": 39073,
+      "sha256": "e876e25db2843278d67e9e5269bfa5ad012153e682092ccb7c0adfbca5a6669b"
+    },
+    {
+      "path": "mapped/uncached/command.json",
+      "bytes": 612,
+      "sha256": "d49317ccc8262b974b55129806a6ce094ebf00703b5e5e277ea591acfbe45ed2"
+    },
+    {
+      "path": "mapped/uncached/report.json",
+      "bytes": 17111,
+      "sha256": "6a9fba09d3286660125d60b85893ff07cdd1f1259723cca4a833b1624cb8d943"
+    },
+    {
+      "path": "mapped/uncached/serial.log",
+      "bytes": 11195,
+      "sha256": "635069be00e986d651370b5e2257e1153d67d5db88f82ba658b49e4d64ac07fe"
+    },
+    {
+      "path": "mapped/uncached/stderr.log",
+      "bytes": 78,
+      "sha256": "2f311a60bc648e6727fed0a19d38c9595902861f59dc438e1b69bfc55772db13"
+    },
+    {
+      "path": "mapped/uncached/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mapped/unobserved/command.json",
+      "bytes": 618,
+      "sha256": "166d7be7bb86a0faf2a4b08b9356d37ade0c63eaa5108ba77bc23fe63aa2f77b"
+    },
+    {
+      "path": "mapped/unobserved/report.json",
+      "bytes": 8148,
+      "sha256": "cf1b3fd4228c53f78909c3b58620ce73f27087948f8e846c663f2b2193683bcc"
+    },
+    {
+      "path": "mapped/unobserved/serial.log",
+      "bytes": 2619,
+      "sha256": "cb91c3d2d0ddb10fb5c30cdbc5dbe2d316c11f9ac8c7acefa3768c708ce0c733"
+    },
+    {
+      "path": "mapped/unobserved/stderr.log",
+      "bytes": 78,
+      "sha256": "ac9031e428f1c93097fea37a99f069423a2e14250e22d669cba09ee1425e9595"
+    },
+    {
+      "path": "mapped/unobserved/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native/asid8/cached.log",
+      "bytes": 2741,
+      "sha256": "68f63b7369bdf3959956d20278765255e05f23018f7a09bb01f7048f7124d051"
+    },
+    {
+      "path": "native/asid8/forced-zero.log",
+      "bytes": 643,
+      "sha256": "b9a59c0b1476fc94f5ce43edc2a78256b5623e295c6aa07a5f2aeb4624e90478"
+    },
+    {
+      "path": "native/asid8/ignored-a1.log",
+      "bytes": 645,
+      "sha256": "199e41b188445203c029b6270703c285160a352de3624ba399d66240bedd0ae7"
+    },
+    {
+      "path": "native/asid8/mutants.json",
+      "bytes": 189,
+      "sha256": "7810d7a372dd5e4efb6ca3831a3e8621783086c5a0f759db09f2aab305ae4293"
+    },
+    {
+      "path": "native/asid8/receipt.json",
+      "bytes": 23177,
+      "sha256": "d8cb9d5fcf6367454fedcaecd149d04d1e8375505f62d662c3a3ac6a6f1e71bc"
+    },
+    {
+      "path": "native/asid8/reference.log",
+      "bytes": 8349,
+      "sha256": "b87d2fedc898e3bb8885e3dd0567995f39eed1c249dea377db1e155bfc2fac5f"
+    },
+    {
+      "path": "native/asid8/small-slot.log",
+      "bytes": 2741,
+      "sha256": "68f63b7369bdf3959956d20278765255e05f23018f7a09bb01f7048f7124d051"
+    },
+    {
+      "path": "native/asid8/uncached.log",
+      "bytes": 2741,
+      "sha256": "52c55b3d7c67a65dd17dace470355e6f7cc248cecef6e42c5b11ba2e1dba1f81"
+    },
+    {
+      "path": "native/asid8/va-based-tag.log",
+      "bytes": 646,
+      "sha256": "79e9ef931f1b40d16fc4f6d224dfbd546383424f5f94cf2cec93b91de8131fdc"
+    },
+    {
+      "path": "native/asid8-old/cached.log",
+      "bytes": 639,
+      "sha256": "a9c44a8ae403da5719eb849e3c3f21915d7a7555ab3c7091d326d9748da8e515"
+    },
+    {
+      "path": "native/asid8-old/receipt.json",
+      "bytes": 15121,
+      "sha256": "7ad71c731a8afebb287cb99b0d0cabca327e7971bb723208523d8995126f0301"
+    },
+    {
+      "path": "native/isar0-regression/native.log",
+      "bytes": 33,
+      "sha256": "2484be0778c136ee5017886d2b9f07c0aae6beb605d6c4c4cb7241e970d4af1b"
+    },
+    {
+      "path": "native/isar0-regression/oracle-results.bin",
+      "bytes": 512,
+      "sha256": "709055b5609aba0964216429cd275ef5323a8c8b813dac59e2ac1a2a0e0e3a79"
+    },
+    {
+      "path": "native/isar0-regression/oracle.S",
+      "bytes": 7690,
+      "sha256": "01e7ba7a32603ef28dd35d9d96895ced0d6036a3ff431685af8273a31556b82a"
+    },
+    {
+      "path": "native/isar0-regression/oracle.h",
+      "bytes": 1933,
+      "sha256": "3b270c19519ddda12d1a9c1ed4b436015f6a1340339572c5ac996d90ddf9405f"
+    },
+    {
+      "path": "native/isar0-regression/provider.log",
+      "bytes": 2549,
+      "sha256": "77f620bb913c6f80bafadbf57ade7717fc2017402198f09cbf163791c1e8ccde"
+    },
+    {
+      "path": "native/isar0-regression/receipt.json",
+      "bytes": 22836,
+      "sha256": "2c71abcd7754fc27c705f78e9bb64e5550cb78354ae269accbb21b495d20610d"
+    },
+    {
+      "path": "native/isar0-regression/reference.log",
+      "bytes": 2742,
+      "sha256": "b3c36dae4f44d5931a3115f90efa8e279da66c5039ae8faef0c36913684bacd3"
+    },
+    {
+      "path": "native/isar0-regression/small-slot.log",
+      "bytes": 2549,
+      "sha256": "4f576008941d9d5099ea2b0f2545af42c454a79287c32ecb590cb62e5d7e8aae"
+    },
+    {
+      "path": "native/isar0-regression/uncached.log",
+      "bytes": 2549,
+      "sha256": "eff8d5c643808a50d530562d4de464618ea0cb5b8ff0ee9a1f068a3b90d75108"
+    },
+    {
+      "path": "native/isar2-regression/native.log",
+      "bytes": 33,
+      "sha256": "5da6dca5fe5404f5e0318286fda4091d2a02e0814c7204574063706acf7dfbdc"
+    },
+    {
+      "path": "native/isar2-regression/oracle-results.bin",
+      "bytes": 512,
+      "sha256": "0e97841b10b6841456da1108e1b45f1a5b505274445d96da3380e1b94fcd7b0e"
+    },
+    {
+      "path": "native/isar2-regression/oracle.S",
+      "bytes": 7690,
+      "sha256": "68030fcc7c2fa12e9861d2ef0b61419f5f85f7505a9c3ce12469a962c5ada1cb"
+    },
+    {
+      "path": "native/isar2-regression/oracle.h",
+      "bytes": 1824,
+      "sha256": "2e3cbb2ecd4bdc5d8ad96af8cbbf3b61f0871f8ca7f14f53642f71fd5b315953"
+    },
+    {
+      "path": "native/isar2-regression/provider.log",
+      "bytes": 2549,
+      "sha256": "cf51521568a1a91df7cb29f2d65337e4213fb149ab9a72d97759e5c0086b7f41"
+    },
+    {
+      "path": "native/isar2-regression/receipt.json",
+      "bytes": 22529,
+      "sha256": "09e227610b49ea5df0a76a938ee781900169fc7507c70c2b1567f062c8339212"
+    },
+    {
+      "path": "native/isar2-regression/reference.log",
+      "bytes": 2742,
+      "sha256": "b79a850844fca32e9930ff21884be64def3e95236506d5bd47dd93702ea0d200"
+    },
+    {
+      "path": "native/isar2-regression/small-slot.log",
+      "bytes": 2549,
+      "sha256": "2e7c7302003b60973f5d54f6dc2b07df1303d92be52340f6c4305951c5178c8f"
+    },
+    {
+      "path": "native/isar2-regression/uncached.log",
+      "bytes": 2549,
+      "sha256": "691e8930b3d957af00f69161a5ec78286a39cd3d22e4aba2dda3b51776a74110"
+    },
+    {
+      "path": "native/mmfr0/native.log",
+      "bytes": 33,
+      "sha256": "f3ff44157520cfc0b6604d42c27cf4373ac87df91d2883c8c7646b7f9ca1e054"
+    },
+    {
+      "path": "native/mmfr0/oracle-results.bin",
+      "bytes": 512,
+      "sha256": "d4d472b2461278eefb74449e051ce063745accd64ed1eb1b3f7a3ec2cd4b1889"
+    },
+    {
+      "path": "native/mmfr0/oracle.S",
+      "bytes": 7690,
+      "sha256": "ba92bd7dfea353f6db0d8c8847c7b952ca9e6ae268525f1b56375750ca8446d2"
+    },
+    {
+      "path": "native/mmfr0/oracle.h",
+      "bytes": 1901,
+      "sha256": "e2eb99ecac68dbd03c8bf0df434c16017c2ce083b3fe6c2af004fb0c76618e73"
+    },
+    {
+      "path": "native/mmfr0/provider.log",
+      "bytes": 2497,
+      "sha256": "53b5be693f66b6fd691f631f0612bb5b58064b5bfa7b9a23610fd36416402ea1"
+    },
+    {
+      "path": "native/mmfr0/receipt.json",
+      "bytes": 21082,
+      "sha256": "72415daa5328320e8f00846a05101a57c5aa6fc8ca5e666ceeaa053891e2630a"
+    },
+    {
+      "path": "native/mmfr0/reference.log",
+      "bytes": 2693,
+      "sha256": "eb1c609a88060a306cf9b132642ed80f397d321a4b1045f0839d5727315c447d"
+    },
+    {
+      "path": "native/mmfr0/small-slot.log",
+      "bytes": 2497,
+      "sha256": "422c21ef7d1025a89e7e293f876ad4804b8cdb5f5d0538134436e096b8d109f1"
+    },
+    {
+      "path": "native/mmfr0/uncached.log",
+      "bytes": 2497,
+      "sha256": "422c21ef7d1025a89e7e293f876ad4804b8cdb5f5d0538134436e096b8d109f1"
+    },
+    {
+      "path": "native/mmfr0-r1-history/native.log",
+      "bytes": 33,
+      "sha256": "f3ff44157520cfc0b6604d42c27cf4373ac87df91d2883c8c7646b7f9ca1e054"
+    },
+    {
+      "path": "native/mmfr0-r1-history/provider.log",
+      "bytes": 3006,
+      "sha256": "887b2c0c56bc19e86846ce98c44ecfa2580548c9b40317c5dd5967ebe0c31270"
+    },
+    {
+      "path": "pinned-rebuild/NXARMJIT.log",
+      "bytes": 1537,
+      "sha256": "ae02282b0ed92bb56c4fb56797fdeaeae3961b538222e5c18b8170c125bf899d"
+    },
+    {
+      "path": "pinned-rebuild/NXASID.log",
+      "bytes": 2286,
+      "sha256": "6928d22f5dedb86c95325e65f6bcff5d46d684e28656b0deaee5dcfaaa0cffb8"
+    },
+    {
+      "path": "pinned-rebuild/published.json",
+      "bytes": 409,
+      "sha256": "1feaebefacf4e7070091f0ddc7305f2daecf4ad154bc0158556103cd37e0bfec"
+    },
+    {
+      "path": "pinned-rebuild/receipt.json",
+      "bytes": 1306,
+      "sha256": "545a307121a7fef4dc8d0da6deb832cfd9e0558997b292db80352cc518f709df"
+    },
+    {
+      "path": "prior-mmfr0-efi/receipt.json",
+      "bytes": 2298,
+      "sha256": "b7e331ed0af48e6e88e64cc05e92a9c7b022ee1e37ca347e477f7dbdfe8ba8ee"
+    },
+    {
+      "path": "prior-mmfr0-efi/run/command.json",
+      "bytes": 582,
+      "sha256": "c8d0838f67da99c5a028c2169d36b1e0d6a99cc01e11262a4ca2dcae1671e204"
+    },
+    {
+      "path": "prior-mmfr0-efi/run/report.json",
+      "bytes": 16989,
+      "sha256": "ae4ee0e9bc56a6609bf3aedae3cddee06feee279c32ee45a6562001d2486eadd"
+    },
+    {
+      "path": "prior-mmfr0-efi/run/serial.log",
+      "bytes": 11059,
+      "sha256": "2ad7b85636c136ea87bef9cd9ce6bb1d779ffe3dd337ac864b133e3c14b9e0c8"
+    },
+    {
+      "path": "prior-mmfr0-efi/run/stderr.log",
+      "bytes": 78,
+      "sha256": "e478bc9fd6050edfc26a7304ba2bb5c2a5332401777110538fdbf5b297b3364f"
+    },
+    {
+      "path": "prior-mmfr0-efi/run/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "prior-mmfr0-efi/run.log",
+      "bytes": 213,
+      "sha256": "a44645c30673f93664b8df97edf4c9493e9379adea264112acbf04c2c0fdaa9d"
+    }
+  ],
+  "passed": true,
+  "ise_commit": "feb09b5f1ef5eecce60120ba39e624bb020bd071",
+  "efi_commit": "5c4509e1ed070b760732f4adbfabb6a137d58d75",
+  "efi_inventory_entries": 76,
+  "mapped_checks": 10,
+  "prior_mmfr0_checks": 8,
+  "prior_mmfr0_retired": 128,
+  "prior_mmfr0_status": 13,
+  "pinned_binaries_byte_equal": true,
+  "mapped_scope": "Authored full mapped diagnostic passes ten aggregate checks across cached, uncached and unobserved binaries. The preceding EFI reaches exact MMFR0 MRS then traps with status 13 after 128 retired instructions; this is distinct from the NXASID admission negative."
+}

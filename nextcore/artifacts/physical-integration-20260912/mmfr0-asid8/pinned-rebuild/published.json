@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "commit": "5c4509e1ed070b760732f4adbfabb6a137d58d75",
+  "remote_commit": "5c4509e1ed070b760732f4adbfabb6a137d58d75",
+  "branch": "codex/physical-display-fallback-20260912",
+  "clean": true,
+  "inventory_files": 76,
+  "archive_files": 77,
+  "archive_sha256": "47bbc55719136e5df3aac9423d7d453320ad806c0c28a61847fdb3ab7d4fa2e4",
+  "ise_commit": "feb09b5f1ef5eecce60120ba39e624bb020bd071"
+}

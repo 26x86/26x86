@@ -1422,7 +1422,8 @@ can read it even though the ordinary JIT traps. The callback does not read or
 update the C ID field. PACGA is implemented but the advertised GPA field stays
 zero; any change requires an explicit supported-profile decision and proof.
 
-MMFR0 resets to 0x00101122 in C and Rust and has API/reference reads, but lacks
+Before the MMFR0/ASID8 revision below, MMFR0 reset to 0x00101122 and had
+API/reference reads, but lacked
 ordinary native or mapped MRS dispatch. This literal advertises 16-bit ASIDs,
 mixed endianness, security-state distinctions and 64KiB granules beyond the
 immutable provider's accepted contract. The reference walker supports ASID
@@ -1452,24 +1453,26 @@ not affect the fixed PAC MRS value. Both 4KiB/16KiB fetches pass while 64KiB,
 immutable ASIDs and big-endian controls are rejected; the separate reference
 walker accepts its ASID case. Synthetic RAM at selected 39/40/47-bit addresses
 confirms the current IPS-dependent limits through 48 bits. These observations
-confirm the inconsistencies above; no common MMFR0/ISAR1 policy has yet been
-implemented. Receipts are under `pac-address-selection/profile-matrix`.
+confirmed the inconsistencies above. The MMFR0/ASID8 revision below resolves
+its memory feature policy; cross-path ISAR1 policy remains open. Receipts are under `pac-address-selection/profile-matrix`.
 
-### Next implementation: coherent MMFR0 and fixed eight-bit ASID context
+### Coherent MMFR0 and fixed eight-bit ASID context
 
 #### Current Status
 
-This is the accepted next implementation contract after the r28 website and EFI
-package deployment. No production source changes or completed validation are
-claimed by this contract.
+ISE `feb09b5f1ef5eecce60120ba39e624bb020bd071` implements this contract.
+EFI `5c4509e1ed070b760732f4adbfabb6a137d58d75` pins that runtime. Independent
+ASID/MMFR0 tests and actual authored EFI checks pass; physical macOS output
+remains unverified.
 
-The current C/Rust MMFR0 value 0x00101122 declares capabilities beyond the
-bounded memory implementation. Ordinary native execution does not recognize its
-MRS, while the existing API/reference paths return that value. The underlying
+Before this revision, C/Rust MMFR0 value 0x00101122 declared capabilities
+beyond the bounded memory implementation. Ordinary native execution rejected
+its MRS while the API/reference paths returned that value. The underlying
 walker implements stage-1 4 KiB/16 KiB translation and IPS widths through 48 bits.
-Immutable profiles reject every nonzero TTBR ASID and TCR.A1/AS. Dynamic profile 2
-reuses that validator and must not inherit an accidental expansion. Generic Rust
-sync_mmu currently takes a full 16-bit tag from TTBR0 and ignores AS/A1 selection.
+Immutable profiles now accept fixed eight-bit tags and A1 selection; AS=1 and
+upper tag bits remain rejected. Dynamic profile 2 has an explicit guard retaining
+its previous admission. Generic model synchronization selects the correct
+A1-dependent eight-bit tag.
 
 No PFR0/PFR1 feature identity is exposed by the native, C, Rust or PAC decoder.
 Generic Rust supports separately tested EL2/EL3 register banks and exception
@@ -1484,8 +1487,8 @@ translation are absent specifically in this model. Keep immutable control and
 native-cache ownership unchanged. Do not claim complete compliance with a named
 Arm architecture revision or identify this model with the original hardware.
 
-After the ASID substrate and field/access tests pass, use the common model value
-`0x000000000f100005` for exact MMFR0 reads and consistent model reset values:
+The tested common model value is `0x000000000f100005` for exact MMFR0 reads
+and consistent model reset values:
 
 | Field | Value | Meaning in this model |
 | --- | --- | --- |
@@ -1601,6 +1604,23 @@ produce a second feature identity.
 
 #### Decision boundary
 
-Root accepted the proposed non-secure EL1-only diagnostic scope and baseline
-eight-bit ASID direction. The r28 release is complete. Production implementation follows this contract;
-the new MMFR0 value must remain unavailable until its acceptance gates pass.
+The non-secure EL1 model and fixed eight-bit ASID contract are implemented.
+MMFR0 passes 964 native assertions, 31 provider tests per cache mode and 34
+reference tests. Thirty-two actual Arm observations check encoding/access;
+their feature value 0x1124 differs from the software model value 0x0f100005.
+ASID r4 directly covers both profiles, with 35 provider tests per mode, 102
+reference tests and three compiled bad-selector controls. The old exact source
+rejects the same new tagged input.
+
+Actual NXASID EFI passes 64 combinations, each with nine retired instructions
+and two completed alias data operations. The same consumer built against the
+old runtime rejects the first tagged context before execution. Actual mapped
+EFI passes ten checks; the preceding EFI reaches the authored MMFR0 read and
+traps after 128 instructions. Pinned rebuilds of mapped and NXASID binaries
+match their tested bytes exactly. Receipts are under
+`nextcore/artifacts/physical-integration-20260912/mmfr0-asid8`.
+
+The 128-file exact Git archive also reproduces six unchanged captures, fourteen
+comparator tests and three negative controls. All 202 prior history/evidence
+files remain unchanged. These checks do not establish dynamic ASID switching,
+normal startup, the original reset ABI or physical macOS desktop output.

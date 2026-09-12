@@ -140,6 +140,17 @@ _start:
     mrs xzr, S3_0_C0_C6_2
     b.ne mapped_failure
     b.cc mapped_failure
+    // Model MMFR0 matches 48-bit PA, baseline ASID8, 4KiB/16KiB and no 64KiB.
+    mrs x11, S3_0_C0_C7_0
+    b.ne mapped_failure
+    b.cc mapped_failure
+    mov w12, #5
+    movk w12, #0x0f10, lsl #16
+    cmp x11, x12
+    b.ne mapped_failure
+    mrs xzr, S3_0_C0_C7_0
+    b.ne mapped_failure
+    b.cc mapped_failure
     add x8, x4, #4
 mapped_loop:
     str x5, [x8]

@@ -179,14 +179,19 @@ jobs:
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_zfr0_native.py --output "$RUNNER_TEMP/zfr0-native"
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_isar0_native.py --output "$RUNNER_TEMP/isar0-native"
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_isar2_native.py --output "$RUNNER_TEMP/isar2-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_mmfr0_native.py --output "$RUNNER_TEMP/mmfr0-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_asid8_native.py --output "$RUNNER_TEMP/asid8-native"
       - name: Build the authored stage-1 EFI consumer
         working-directory: nextcore
-        run: cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-stage1-probe --bin NXMMU
+        run: cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-stage1-probe --bin NXMMU --bin NXASID
       - name: Execute translated fetch and memory on the x86 EFI computer
         run: |
           python3 nextcore/crates/nextcore-efi/tools/verify_stage1_ovmf.py \
             --efi-probe nextcore/target/x86_64-unknown-uefi/release/NXMMU.efi \
             --output "$RUNNER_TEMP/nextcore-stage1-proof"
+          python3 nextcore/crates/nextcore-efi/tools/verify_asid_ovmf.py \
+            --efi-probe nextcore/target/x86_64-unknown-uefi/release/NXASID.efi \
+            --output "$RUNNER_TEMP/nextcore-asid8-proof"
       - name: Check owned backing and lifetime gates
         working-directory: nextcore
         run: |
@@ -229,6 +234,12 @@ jobs:
             ${{ runner.temp }}/isar0-native/*.log
             ${{ runner.temp }}/isar2-native/receipt.json
             ${{ runner.temp }}/isar2-native/*.log
+            ${{ runner.temp }}/mmfr0-native/receipt.json
+            ${{ runner.temp }}/mmfr0-native/*.log
+            ${{ runner.temp }}/asid8-native/receipt.json
+            ${{ runner.temp }}/asid8-native/*.json
+            ${{ runner.temp }}/nextcore-asid8-proof/*.json
+            ${{ runner.temp }}/nextcore-asid8-proof/*.log
             ${{ runner.temp }}/nextcore-stage1-proof/*.json
             ${{ runner.temp }}/nextcore-stage1-proof/*.log
             ${{ runner.temp }}/nextcore-dt-proof/*.json
