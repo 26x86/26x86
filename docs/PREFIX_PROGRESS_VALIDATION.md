@@ -2,22 +2,22 @@
 
 ## Current Status
 
-The r27 mapped diagnostic retires 42,256,360 instructions, issues 42,256,361
-fetch requests and completes 6,012,373 data operations in 106.090 seconds.
-It stops with SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64ISAR2_EL1,
-an instruction-set feature-identification register read. The provider reports
-no error. The original input, EFI, host tools and ESP copies are preserved;
-the process is reaped. The owned framebuffer remains zero and matches GOP
-readback at 1280 by 800. No macOS screen has been established.
+The r28 mapped diagnostic retires 42,256,369 instructions, issues 42,256,370
+fetch requests and completes 6,012,373 data operations in 104.333 seconds.
+It stops with SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64MMFR0_EL1,
+a memory-model feature-identification register read. The provider reports no
+error. Original input, EFI, host tools and ESP copies are preserved; the process
+is reaped. The owned 1280 by 800 framebuffer remains zero and matches GOP.
+An independent calculation over its 3,072,000 zero RGB bytes matches the recorded
+hash dff2e40b0a1ba325. No macOS screen has been established.
 
-This completed run passes the ISAR0 read and adds 362 retired instructions
-and 98 data operations relative to r26. The elapsed time is a single-run
-observation, not a benchmark. The next bounded implementation boundary is the
-ISAR2 instruction-set feature profile. The selected software-defined Normal-NC
-profile, high virtual alias, canonical PAC callback and immutable stack selection
-remain explicit diagnostic conditions. They do not establish the target reset
-entry ABI, SPTM services, complete platform DeviceTree, kernel initialization,
-userspace or physical boot.
+This completed run passes ISAR2 and adds nine retired instructions with no new
+data operations relative to r27. The elapsed time is a single-run observation,
+not a benchmark. MMFR0 feature-policy coherence is the next implementation
+boundary. The software-defined Normal-NC profile, high virtual alias, canonical
+PAC callback and immutable stack selection remain explicit diagnostic conditions.
+They do not establish the target reset entry ABI, SPTM services, complete platform
+DeviceTree, kernel initialization, userspace or physical boot.
 
 The watchdog success marker appears twice because reporting writes to both
 ConOut and Serial. The summary records the observation count and success presence
@@ -26,15 +26,83 @@ The source contains one watchdog-disable call at this entry point. The authored
 timer control below establishes the helper behavior. r22 completes beyond the
 prior r21 termination time, but that does not by itself prove r21's cause.
 
-[Latest r27 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r27-isar0-summary.json)
+[Latest r28 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r28-isar2-summary.json)
 records this boundary without publishing original instruction words or addresses.
-Historical r26 completed 42,255,998 instructions and 6,012,275 data operations
+Historical r27 completed 42,256,360 instructions and 6,012,373 data operations
+before the ISAR2 read. Historical r26 completed 42,255,998 instructions and 6,012,275 data operations
 before the ISAR0 read. Historical r25 completed 42,255,990 instructions and 6,012,273 data operations
 before the ZFR0 read. Historical r24 completed 42,255,878 instructions and 6,012,259 data operations
 before LSLV. Historical r23 completed 42,255,830 instructions and 6,012,249 data operations
 before post-indexed LDR. Historical r22 completed 42,252,452 instructions and 6,010,805 data operations
 before register ORR. Historical r20 completed 42,252,448 instructions and 6,010,803 data operations
 before an unscaled-load boundary. r21 supplied no terminal execution record.
+
+## Authored exact ISAR2 and PAC address-selection validation
+
+The exact read-only ISAR2 MRS returns the explicit bounded scalar-profile value
+zero at EL1 with live HCR/SCR zero. Native tests pass 918 assertions covering
+all destinations, rejected accesses and controls changed after compilation.
+Six representative timed-wait, branch-consistency, memory-copy/set and range
+prefetch extension instructions remain rejected without retirement or memory
+changes. The 32 actual Cortex-A72 observations report zero and match this
+profile's read result; they do not establish QARMA3, floating-point or complete
+architectural conformance. The reference harness passes 35 tests, and canonical
+mapped provider tests pass 32 cases in each of three cache modes with equal
+exposed results, requests and RAM.
+
+Independent public Arm pseudocode review found a PAC signing address-size
+selection defect shared by the previous Rust implementation and QEMU 8.2.2.
+For this non-TBI baseline APA1 contract, signing selects the address size from
+pointer bit 63, whereas authentication and stripping select from bit 55.
+The correction changes signing only; the cipher and failure policy are preserved.
+
+A separately built test-only APA1 QEMU model runs 48 authored inputs. During
+PAC only, both address-size fields are set to the size selected by the original
+pointer's bit 63; the original TCR is restored before AUT/XPAC. Guest readbacks
+verify original, temporary and restored controls plus unchanged pointers,
+modifiers and keys. All 288 results agree with the corrected Rust implementation;
+288 real C-ABI callback cases preserve non-destination state. The frozen old
+source fails the same expected values. Forty unsupported-control rows and three
+invalid key indices are rejected. This is an explicitly adapted control oracle,
+not an identical-state observation from stock QEMU or physical hardware.
+
+Separate native regressions pass 125 PAC assertions and 20 M0 tests. Nine full
+CPU/RAM/ordered-request-and-reply cases agree across cached, uncached and small-slot
+modes. The immutable mapped profile disables address PAC, so its PACDA operation
+is a no-op while XPAC remains active. These mapped regressions do not verify
+active signing under that profile.
+
+A separate actual OVMF M0/provider-v1 EFI fixture enables all four address-PAC
+keys and retains the original asymmetric TCR for every operation. It checks
+control and selected-key readbacks and passes all 48 inputs / 288 numeric
+comparisons, with 432 data operations. The preceding EFI runs the identical
+input and reaches the distinct signing assertion for zero-based row 4 after
+40 data operations. Both runs complete their 65,536-instruction diagnostic
+budget and are reaped; the checker distinguishes the success and failure loops
+by exact registers and PC. This supplies enabled-signing evidence separately
+from the disabled mapped profile. The fixture omits ISB after a preserved earlier
+run trapped on that instruction; it tests synchronous M0 callback controls and
+does not establish architectural barrier execution.
+
+Normal startup and physical desktop remain unverified. The completed r28 original-input replay passes ISAR2 and reaches the MMFR0
+trap described above.
+
+Ten authored mapped EFI checks pass, with eight preceding-EFI control checks
+separately identifying the old ISAR2 trap. The register profile does not infer
+support for extensions whose fields are zero.
+
+[ISAR2 native and EFI receipts](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/isar2-scalar-profile/summary.json)
+and [PAC oracle, M0 EFI and profile-matrix receipts](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/pac-address-selection/summary.json)
+preserve the authored results and their provenance.
+
+The updated dynamic comparator freezes 120 runtime files, passes six captured
+replays, fourteen regressions and three negative controls, and preserves 187
+prior evidence files. The pinned integration rebuild matches the tested EFI
+bytes; website packages are independently built and have their own hashes.
+
+[Published ISAR2 contract](https://github.com/26x86/Nextcore-ISE/blob/5cd1e44413958450875392d8a431dba15bb76f2e/docs/ISAR2_SCALAR_PROFILE.md)
+and [PAC qualification contract](https://github.com/26x86/Nextcore-ISE/blob/5cd1e44413958450875392d8a431dba15bb76f2e/docs/MAPPED_PAUTH_V2.md)
+record the supported feature scope and primary references.
 
 ## Authored exact ISAR0 scalar-profile validation
 
@@ -59,8 +127,8 @@ original-kernel progress result. The dynamic comparator freezes 114 files and
 passes six captured replays, fourteen regressions and three negative controls,
 while preserving 172 historical evidence files. The integration receipt records a pinned runtime rebuild matching its tested
 binary bytes; independently built website packages have their own hashes. Normal startup and physical boot remain
-unverified. The completed r27 original replay passes ISAR0 and reaches the ISAR2 trap
-described above.
+unverified. The historical r27 original replay passed ISAR0 and reached the ISAR2 trap;
+r28 now passes that read.
 
 [Public ISAR0 evidence](https://github.com/26x86/26x86/tree/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/isar0-scalar-profile)
 records the scoped checks.
