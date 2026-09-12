@@ -173,6 +173,7 @@ jobs:
           python3 nextcore/crates/nextcore-ise/tools/probe_efi_stage1_provider.py --work-dir "$RUNNER_TEMP/native-stage1" --output "$RUNNER_TEMP/native-stage1.json"
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_mapped_native.py --output "$RUNNER_TEMP/mapped-native"
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_unscaled_native.py --output "$RUNNER_TEMP/unscaled-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_logical_shifted_native.py --output "$RUNNER_TEMP/logical-shifted-native"
       - name: Build the authored stage-1 EFI consumer
         working-directory: nextcore
         run: cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-stage1-probe --bin NXMMU
@@ -211,6 +212,8 @@ jobs:
             ${{ runner.temp }}/mapped-native/receipt.json
             ${{ runner.temp }}/unscaled-native/receipt.json
             ${{ runner.temp }}/unscaled-native/*.log
+            ${{ runner.temp }}/logical-shifted-native/receipt.json
+            ${{ runner.temp }}/logical-shifted-native/*.log
             ${{ runner.temp }}/nextcore-stage1-proof/*.json
             ${{ runner.temp }}/nextcore-stage1-proof/*.log
             ${{ runner.temp }}/nextcore-dt-proof/*.json

@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "tests": 14,
+  "failures": 0,
+  "errors": 0,
+  "return_code": 0,
+  "output": "test_all_six_frozen_cases (__main__.ComparisonTests.test_all_six_frozen_cases) ... ok\ntest_changed_backing_expectation_rejected (__main__.ComparisonTests.test_changed_backing_expectation_rejected) ... ok\ntest_changed_expected_esr (__main__.ComparisonTests.test_changed_expected_esr) ... ok\ntest_changed_hvc_fetch_rejected (__main__.ComparisonTests.test_changed_hvc_fetch_rejected) ... ok\ntest_changed_loaded_witness_rejected (__main__.ComparisonTests.test_changed_loaded_witness_rejected) ... ok\ntest_changed_pc_rejected (__main__.ComparisonTests.test_changed_pc_rejected) ... ok\ntest_duplicate_native_record_rejected (__main__.ComparisonTests.test_duplicate_native_record_rejected) ... ok\ntest_false_success_or_system_trap_rejected (__main__.ComparisonTests.test_false_success_or_system_trap_rejected) ... ok\ntest_historical_missing_instruction_length_rejected (__main__.ComparisonTests.test_historical_missing_instruction_length_rejected) ... ok\ntest_missing_compiled_blocks_rejected (__main__.ComparisonTests.test_missing_compiled_blocks_rejected) ... ok\ntest_missing_real_callback_rejected (__main__.ComparisonTests.test_missing_real_callback_rejected) ... ok\ntest_native_unsupported_bookkeeping_rejected (__main__.ComparisonTests.test_native_unsupported_bookkeeping_rejected) ... ok\ntest_success_cannot_retire_hvc (__main__.ComparisonTests.test_success_cannot_retire_hvc) ... ok\ntest_unexpected_native_record_rejected (__main__.ComparisonTests.test_unexpected_native_record_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 0.013s\n\nOK\n"
+}

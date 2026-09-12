@@ -1130,9 +1130,11 @@ Public contract: https://uefi.org/specs/UEFI/2.11/03_Boot_Manager.html#load-opti
 ### Logical shifted-register execution
 
 Current Status: Original r22 stops at shifted-register ORR after 42,252,452
-retired instructions. The native translator admits only its MOV-register alias;
-general logical shifted-register instructions reach the undefined-instruction
-result without retirement. The Rust reference also lacks this general class.
+retired instructions. The formerly missing general class is now implemented in
+the native translator and Rust reference. Independent tests pass 64,512 native
+cases, 768 actual Arm comparisons and 31 complete canonical regressions in each
+of three cache modes. The immutable 98-file runtime also reproduces all six
+captured Arm cases. Final EFI and unchanged-original replay remain separate gates.
 
 Target State: Implement AND/BIC, ORR/ORN, EOR/EON and ANDS/BICS at both W and X
 widths, with LSL, LSR, ASR and ROR applied to the second operand before optional
@@ -1148,4 +1150,4 @@ cache modes and final EFI before another unchanged-original replay. Original
 instruction words and addresses remain private.
 
 Primary encoding and execution reference:
-https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/translate-a64.c#L7548-L7635
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/translate-a64.c#L7011-L7095

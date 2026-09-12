@@ -47,6 +47,26 @@ _start:
     cmp x9, x10
     b.ne mapped_failure
     add sp, sp, #16
+    // General logical registers, shifted operand, W zero-extension and flags.
+    mov x9, #0xf0
+    mov x10, #0x0f
+    orr x11, x9, x10
+    mov x12, #0xff
+    cmp x11, x12
+    b.ne mapped_failure
+    eor w14, w11, w10, lsl #4
+    cmp w14, w10
+    b.ne mapped_failure
+    orn w13, wzr, w10
+    add x14, x13, #16
+    movz x15, #1, lsl #32
+    cmp x14, x15
+    b.ne mapped_failure
+    ands xzr, x11, x10
+    b.eq mapped_failure
+    b.mi mapped_failure
+    b.cs mapped_failure
+    b.vs mapped_failure
     add x8, x4, #4
 mapped_loop:
     str x5, [x8]
