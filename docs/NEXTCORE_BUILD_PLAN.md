@@ -1126,3 +1126,26 @@ completion marker, while the helper path must reach that marker. Also exercise
 the reported failure path without pretending that a failed disable succeeded.
 No disk, NVRAM, guest instruction or memory-regime changes are part of this fix.
 Public contract: https://uefi.org/specs/UEFI/2.11/03_Boot_Manager.html#load-option-processing
+
+### Logical shifted-register execution
+
+Current Status: Original r22 stops at shifted-register ORR after 42,252,452
+retired instructions. The native translator admits only its MOV-register alias;
+general logical shifted-register instructions reach the undefined-instruction
+result without retirement. The Rust reference also lacks this general class.
+
+Target State: Implement AND/BIC, ORR/ORN, EOR/EON and ANDS/BICS at both W and X
+widths, with LSL, LSR, ASR and ROR applied to the second operand before optional
+inversion. Register 31 means ZR in every operand position, never SP. W results
+zero-extend; only ANDS/BICS update N/Z and clear C/V. Reject a W instruction with
+imm6 bit 5 set before changing registers, flags, PC or retirement. Preserve
+existing MOV alias behavior, all unrelated CPU state, fetch accounting and
+precise rejection. Implement native execution and the Rust reference consistently.
+Independent authored tests must cover eight operations, two widths, four shifts,
+shift endpoints, sign bits, aliases/ZR, flags and reserved encodings. Compare
+actual Arm results, native and reference state, then exercise all canonical
+cache modes and final EFI before another unchanged-original replay. Original
+instruction words and addresses remain private.
+
+Primary encoding and execution reference:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/translate-a64.c#L7548-L7635
