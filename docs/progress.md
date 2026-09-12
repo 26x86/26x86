@@ -8,6 +8,8 @@ hide: [toc]
 
 Each milestone has its own acceptance gate. Passing a firmware test does not establish kernel, userspace or physical display success.
 
+**Development channel:** These latest runtime results belong to [PR #19](https://github.com/26x86/26x86/pull/19) and its pinned module branches. Publishing this documentation does not merge that runtime into `main` or release a bootable macOS system. Use the [explicit development checkout](wiki/Nextcore-Modules.md#clone-and-build) to reproduce it.
+
 <div class="portal-boundary" data-progress-boundary markdown>
 <span class="portal-badge">Current execution boundary</span>
 

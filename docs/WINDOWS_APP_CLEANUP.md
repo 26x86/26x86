@@ -1,6 +1,19 @@
 # Windows application cleanup — BP27-C
 
-Current: the shared desktop frontend exposes a retired device-specific profile,
+## Current Status
+
+This page preserves the completed September 8, 2026 cleanup scope and its dated
+validation. It is a historical application change, not the current boot status.
+See [development progress](progress.md) for the latest runtime evidence.
+
+## Target State
+
+Keep application preparation controls distinct from developer-only execution
+fixtures and preserve the historical validation scope below.
+
+## Historical scope
+
+Before the cleanup, the shared desktop frontend exposed a retired device-specific profile,
 EFI self-test packaging, synthetic execution demonstrations and research VM
 launch controls beside the intended ARM EFI preparation workflow. The user
 requested removal of the dedicated device content and unnecessary app testers.
@@ -33,7 +46,7 @@ transport passed 4 tests; the real Chrome frontend test covered removed controls
 ARM mode preparation, native dispatch, saved settings, errors and a 390px layout.
 The actual Windows build script produced an EXE; all 6 final EXE startup checks
 passed. Build snapshot hashes match the final edited app sources. Evidence is in
-[the validation receipt](validation/windows-app-cleanup-20260908/receipt.json).
+[the validation receipt](https://github.com/26x86/26x86/blob/main/docs/validation/windows-app-cleanup-20260908/receipt.json).
 The startup check does not exercise a rendered EXE WebView window, and these
 results do not establish guest macOS boot, guest Metal or an EFI GPU backend.
 
