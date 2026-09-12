@@ -1295,7 +1295,11 @@ regression tests and ten authored EFI checks pass. The preceding ZFR0 EFI
 stops at the first ISAR0 read after 114 instructions in the same authored
 fixture, while the new EFI reaches 65,536. The 114-file immutable freeze passes
 six captures, fourteen regressions and three negative controls. Original r27
-is next; r26 stopped because this exact register read was not recognized.
+passes ISAR0 and retires 42,256,360 instructions with 6,012,373 data operations
+before status 13 at MRS ID_AA64ISAR2_EL1. It completes in 106.090 seconds with
+unchanged inputs and binaries. Its 1280 by 800 framebuffer hash matches zero
+RGB and GOP readback; physical macOS display remains unverified. This adds
+362 retired instructions and 98 data operations relative to r26.
 The runtime does not implement the extensions described by its AES, SHA1,
 SHA2, CRC32, Atomic, TME, RDM, SHA3, SM3, SM4, DP, FHM, TS, TLB or RNDR fields.
 Baseline exclusives are not LSE; baseline TLBI is not the outer-shareable or
