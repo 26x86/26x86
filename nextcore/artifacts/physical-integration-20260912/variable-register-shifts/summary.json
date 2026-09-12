@@ -97,6 +97,11 @@
       "path": "native/uncached.log",
       "bytes": 2506,
       "sha256": "d9abc23e03b17d5c7ef35f2db08e4ab085beed260d9dc4b96301bf94c805a99a"
+    },
+    {
+      "path": "pinned-build-comparison.json",
+      "bytes": 4486,
+      "sha256": "f3b943d4507e6303bfa8fbbb9d7c91c164703efea8372eb1a272a4c9ef3e89ad"
     }
   ]
 }
