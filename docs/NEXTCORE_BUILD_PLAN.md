@@ -1282,3 +1282,34 @@ Primary access reference: https://documentation-service.arm.com/static/6526e1bd9
 Version-matched model references:
 https://github.com/qemu/qemu/blob/v8.2.2/target/arm/cpu64.c#L264-L275
 https://github.com/qemu/qemu/blob/v8.2.2/target/arm/tcg/cpu64.c#L1141-L1151
+
+### Exact ISAR0 read in the bounded scalar profile
+
+Current Status: Original r26 stops at ID_AA64ISAR0_EL1. The native JIT, C
+register API and Rust reference do not currently recognize this register.
+The runtime does not implement the extensions described by its AES, SHA1,
+SHA2, CRC32, Atomic, TME, RDM, SHA3, SM3, SM4, DP, FHM, TS, TLB or RNDR fields.
+Baseline exclusives are not LSE; baseline TLBI is not the outer-shareable or
+range extension; software CRC calculation is not guest CRC32 instruction
+support. Existing ISAR1 reset values differ between C and Rust and remain a
+separate issue; they are not the cause of this missing ISAR0 dispatch.
+
+Target State: Add only exact read-only MRS ID_AA64ISAR0_EL1, S3_0_C0_C6_0.
+Define each extension field as absent and the reserved low nibble as zero in
+the explicit bounded software profile. Permit EL1 with live inactive HCR/SCR
+controls; retain rejection of writes, other ELs, unsupported controls and
+neighboring unknown registers. This policy does not claim full Arm-version
+conformance or reproduce the original hardware's feature register. Preserve
+XZR, SP/NZCV, memory and exact retirement semantics without changing CPU layout,
+cache keys, PFR values or readiness. Independently test every destination,
+live control changes after translation, rejected accesses and representative
+unimplemented extensions in native, reference and all provider cache modes.
+Authored EFI consumption must precede another unchanged-original execution.
+
+Primary field reference: Arm Cortex-A520 Cryptographic Extension TRM section
+2.2, table 2-2: https://documentation-service.arm.com/static/672e536f27eda361ad4da11a
+Version-pinned field and feature predicates:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/cpu.h
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/cpu-features.h
+Read-only registration and access policy:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/helper.c
