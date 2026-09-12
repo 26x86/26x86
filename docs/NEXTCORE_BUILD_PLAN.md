@@ -1454,3 +1454,153 @@ walker accepts its ASID case. Synthetic RAM at selected 39/40/47-bit addresses
 confirms the current IPS-dependent limits through 48 bits. These observations
 confirm the inconsistencies above; no common MMFR0/ISAR1 policy has yet been
 implemented. Receipts are under `pac-address-selection/profile-matrix`.
+
+##### Next implementation: coherent MMFR0 and fixed eight-bit ASID context
+
+#### Current Status
+
+This is the accepted next implementation contract after the r28 website and EFI
+package deployment. No production source changes or completed validation are
+claimed by this contract.
+
+The current C/Rust MMFR0 value 0x00101122 declares capabilities beyond the
+bounded memory implementation. Ordinary native execution does not recognize its
+MRS, while the existing API/reference paths return that value. The underlying
+walker implements stage-1 4 KiB/16 KiB translation and IPS widths through 48 bits.
+Immutable profiles reject every nonzero TTBR ASID and TCR.A1/AS. Dynamic profile 2
+reuses that validator and must not inherit an accidental expansion. Generic Rust
+sync_mmu currently takes a full 16-bit tag from TTBR0 and ignores AS/A1 selection.
+
+No PFR0/PFR1 feature identity is exposed by the native, C, Rust or PAC decoder.
+Generic Rust supports separately tested EL2/EL3 register banks and exception
+states. Those facilities are not a virtualization or secure-memory service and
+must not be removed or relabeled as absent across the entire runtime.
+
+#### Target State and model scope
+
+Define an explicit non-secure EL1 software diagnostic model, with EL0 memory
+requests where already supported. EL2, EL3 security services and stage-2
+translation are absent specifically in this model. Keep immutable control and
+native-cache ownership unchanged. Do not claim complete compliance with a named
+Arm architecture revision or identify this model with the original hardware.
+
+After the ASID substrate and field/access tests pass, use the common model value
+`0x000000000f100005` for exact MMFR0 reads and consistent model reset values:
+
+| Field | Value | Meaning in this model |
+| --- | --- | --- |
+| PARange | 5 | Maximum supported translated physical address width is 48 bits |
+| ASIDBits | 0 | Eight-bit ASID support, implemented and tested; not no-ASID |
+| BigEnd | 0 | Fixed little-endian execution |
+| SNSMem | 0 | No Secure/Non-secure memory distinction; no EL3 in this model |
+| BigEndEL0 | 0 | No EL0 mixed-endian support |
+| TGran16 | 1 | 16 KiB stage-1 granule supported |
+| TGran64 | 15 | 64 KiB stage-1 granule not supported |
+| TGran4 | 0 | 4 KiB stage-1 granule supported |
+| TGran16_2/TGran64_2/TGran4_2 | 0 | Required zero when EL2 is not implemented |
+| ExS | 0 | No configurable non-synchronizing exception-entry/exit extension |
+| FGT/ECV | 0 | No fine-grained trapping or enhanced counter virtualization |
+| Other upper bits | 0 | Reserved under the selected field definition |
+
+The stage-2 fields remain read-only required zero under the EL2-absent condition;
+do not call them RES0 access fields. The ordinary zero-means-inherit interpretation
+does not override the explicit EL2-absent rule. If a future model implements EL2,
+its stage-2 fields require a fresh policy decision and validation.
+
+#### ASID selection and admission
+
+For baseline AS=0, select the active tag as:
+
+`selected_ttbr = TCR.A1 ? TTBR1_EL1 : TTBR0_EL1`
+
+`asid = (selected_ttbr >> 48) & 0xff`
+
+TCR.A1 is bit 22. TCR.AS is bit 36 and stays zero in this bounded eight-bit
+model. Admit TTBR bits 55:48 as the tag; reject bits 63:56 in the bounded control
+contract rather than confusing them with a physical address or silently
+truncating an unsupported configuration. Preserve all existing root alignment,
+physical-width, granule, TnSZ, attribute, endian, wrap and overlap checks.
+
+Immutable profiles 1 and 3 may admit these low-eight-bit tags and A1 selection
+at construction only. Initialize the strict walker with the selected tag instead
+of its current hardcoded zero. The full control snapshot remains immutable and
+is validated on every request and cache hit. A guest cannot change TTBR, A1,
+ASID, epoch or table contents through this change. An ASID-only context change is
+still a rejected changed snapshot. No native-code cache key or CPU/FFI layout
+change is required: fresh fetch/control validation and per-run ownership remain.
+
+Generic Rust Cpu sync_mmu must select the same eight-bit tag from the A1-selected
+TTBR under this model. Validate/reject unsupported AS=1 and high TTBR tag bits
+before committing model control changes. Preserve unrelated generic EL2/EL3
+register-bank tests and the low-level walker's independently scoped utilities;
+an internal u16 tag representation does not itself advertise sixteen-bit support.
+
+Dynamic profile 2 retains its existing admission exactly: ASID=0 in both TTBRs,
+A1=0, AS=0. Add an explicit restriction before it delegates to the broadened
+immutable validator in both C and Rust. Do not widen dynamic prepare/commit,
+TLBI, ISB, epoch, or cache semantics as a side effect of this work.
+
+#### Exact feature-register access
+
+The only new native admission is read-only MRS ID_AA64MMFR0_EL1,
+S3_0_C0_C7_0, Rt-cleared encoding 0xd5380700, C key 0x4038. The same model value
+and live EL1/HCR_EL2=0/SCR_EL3=0 gate must govern C API, native execution and
+Rust reference. Keep XZR behavior, SP/NZCV, exact retirement, fault reporting,
+and memory invariants. Reject writes, other ELs, unsupported live controls and
+unknown neighbors. Do not blanket-zero ID registers or change other ID policies.
+
+Existing public structure fields must retain ABI layout. Whether a model read
+returns an explicit constant or stored value must be one documented choice,
+with reset/API/native/reference equality tests; a stale field must not silently
+produce a second feature identity.
+
+#### Acceptance experiments before publication
+
+1. Independently assemble exact MMFR0 MRS and neighboring/writable controls.
+   Test all 32 Rt destinations; API/native/reference results; EL0/2/3 and low/
+   high nonzero HCR/SCR rejection; same generated block before and after control
+   changes; unchanged ZFR0/ISAR0/ISAR1/ISAR2 behavior.
+2. On both 4 KiB and 16 KiB immutable profiles 1/3, construct distinct TTBR0/TTBR1
+   tags and exercise A1=0/1, tags 0/1/0x7f/0xff, lower and upper VA regions,
+   cold/warm TLB, and distinct authored contexts mapping the same VA differently.
+   Both VA regions use the A1-selected tag, not a tag selected by VA sign.
+3. Directly test generic Rust ASID selection and TLB behavior with conflicting
+   TTBR tags. Reject AS=1/high-eight tag values transactionally. Preserve existing
+   generic EL2/EL3 state tests. Add compiled negative controls that force tag zero,
+   ignore A1, or select the tag by VA region.
+4. Change only ASID/A1 in an immutable request snapshot and prove rejection with
+   no register/RAM/native-code state commit. Verify dynamic profile 2 still
+   rejects every newly admitted immutable configuration and passes its existing
+   six captures/fourteen regressions/negative controls without source-history loss.
+5. Couple PARange/granule assertions to actual transfers at IPS=2/5 boundaries,
+   including bit 40/47 physical addresses, supported pages, and precise rejected
+   output addresses. Retain rejection of 64 KiB, mixed granules, TBI, endian,
+   LPA2/52-bit regimes and unsupported descriptor attributes.
+6. Compare native cached/uncached/forced-small-slot runs, full CPU/RAM and ordered
+   provider requests/replies. Exercise authored actual EFI readback plus memory
+   transfer using the declared profile, then an old-binary negative control.
+   Only after these gates should the unchanged original input be run again.
+
+#### Primary references and provenance
+
+- Arm Cortex-A57 MPCore TRM, **DDI0488H**, sections 4.3.44/4.3.46, tables 4-56
+  and 4-58, printed/PDF pages **153–154**. Actual official PDF was downloaded and
+  read: https://documentation-service.arm.com/static/5e906b9fc8052b1608760b6b
+  It defines A1's choice of TTBR and AS=0 lower eight bits [55:48].
+- Arm Cortex-A55 TRM **100442_0100_00_en**, B2.55, PDF page **359**. Actual
+  official PDF was downloaded and read; its concrete MMFR0 value explains the
+  current over-advertisement: https://documentation-service.arm.com/static/5e7e1405b471823cb9de57ae
+- Arm-authored system register definition, **version 2026.06**, MMFR0 field
+  sections **TGran4_2 [43:40], TGran64_2 [39:36], TGran16_2 [35:32]**. Each
+  explicitly requires zero when EL2 is not implemented. Actual HTML opened:
+  https://arm.jonpalmisc.com/latest_sysreg/AArch64-id_aa64mmfr0_el1
+  This is a community-hosted mirror with an Arm copyright/version footer, not
+  an Arm-hosted endpoint. The older 2024 mirror lacks this explicit clarification;
+  do not attribute the wording to that older edition. The attempted Arm developer
+  endpoint was unavailable, so no successful official-host HTML fetch is claimed.
+
+#### Decision boundary
+
+Root accepted the proposed non-secure EL1-only diagnostic scope and baseline
+eight-bit ASID direction. The r28 release is complete. Production implementation follows this contract;
+the new MMFR0 value must remain unavailable until its acceptance gates pass.
