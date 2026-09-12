@@ -58,7 +58,7 @@
     {
       "value": "31 / 31",
       "label": "Latest public CI",
-      "detail": "Successful checks on development revision 8f562ac1; CI is not hardware boot proof."
+      "detail": "Successful checks on development revision 8c039b35, including the corrected GOP evidence inventory; CI is not hardware boot proof."
     },
     {
       "value": "16,384",
