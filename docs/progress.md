@@ -22,6 +22,14 @@ r29 completes 6,012,373 data operations and passes MMFR0 before SYSTEM_REGISTER_
 
 <div class="portal-metrics" data-progress-metrics></div>
 
+## New authored hierarchy qualification
+
+The latest increment qualifies hierarchical memory permissions with 961 OVMF EFI cases, 306 Arm QEMU TCG observations and 258 direct service comparisons. Native provider suites pass 34 tests in each of three cache modes, with 104 reference tests and two detected semantic mutants. This does not advance the original-input boundary: r29 remains unchanged at the MMFR1 trap.
+
+The original r6 preservation check failed because an uncompiled Arm host runner changed during collection; separate source auditing qualifies the completed native checks without rewriting that failure. A [fresh public CI replay](https://github.com/26x86/26x86/actions/runs/34713439375) now repeats the complete gate with all source hashes preserved; all six workspace jobs and the separate Sandbox workflow pass.
+
+[Reviewed hierarchy evidence](https://github.com/26x86/26x86/blob/3d3a434dfc9f84dcc1c34a2257f8cf7ceaafd99c/nextcore/artifacts/physical-integration-20260912/hierarchy-20260913/README.md) · [Public boot-source audit](BOOT_PRIMARY_SOURCE_AUDIT_20260913.md)
+
 ## Evidence by layer
 
 <div class="portal-milestones" data-progress-milestones markdown>
