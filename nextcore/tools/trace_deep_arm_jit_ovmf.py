@@ -24,6 +24,20 @@ def digest(path: Path) -> str:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
+def terminal_error_complete(serial: Path) -> bool:
+    """Wait for a complete UART row before terminating the firmware process."""
+    if not serial.exists():
+        return False
+    # Text universal-newline conversion and splitlines both mistake a trailing
+    # CR for completion. Discard the unfinished suffix before decoding rows.
+    complete_rows = serial.read_bytes().split(b"\n")[:-1]
+    for row in complete_rows:
+        row = re.sub(rb"\x1b\[[0-?]*[ -/]*[@-~]", b"", row).removesuffix(b"\r")
+        if re.fullmatch(rb"NXARMJIT: ERROR status=\S+(?: .*)?", row):
+            return True
+    return False
+
+
 def parse_trace_video(actual: list[str], requested: bool, physical_base: int, memory_size: int) -> dict:
     """Keep acknowledged framebuffer configuration and successful presentation distinct.
 
@@ -215,8 +229,7 @@ def main() -> int:
         with (output / "stdout.log").open("wb") as stdout, (output / "stderr.log").open("wb") as stderr:
             process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
             while process.poll() is None and time.monotonic() - start < args.timeout:
-                actual = lines(serial)
-                if any(line.startswith("NXARMJIT: ERROR") for line in actual):
+                if terminal_error_complete(serial):
                     break
                 time.sleep(.1)
     except Exception as error:
