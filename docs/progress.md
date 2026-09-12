@@ -52,7 +52,9 @@ An authored guest reads the encoded boot-video fields and writes its reserved fr
 
 This connects guest memory to firmware output. Persistent presentation, firmware-exit lifetime, normal startup and a physical macOS desktop remain unverified.
 
-The original local kernel prefix also accepts the owned video buffer and reaches the same 16,384-instruction budget. Its screen hash still matches a zero-filled frame; no kernel-generated visible output has been established.
+The original local kernel prefix also accepts the owned video buffer and reaches an explicitly selected 65,536-instruction budget. Its final store address advances beyond the earlier checkpoint, while its screen hash still matches a zero-filled frame. No kernel-generated visible output has been established.
+
+[Bounded memory progress and collection fixes](PREFIX_PROGRESS_VALIDATION.md)
 
 [Framebuffer contract and validation](BOOT_FRAMEBUFFER_VALIDATION.md)
 </article>

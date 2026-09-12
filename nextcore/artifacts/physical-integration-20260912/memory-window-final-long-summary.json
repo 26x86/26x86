@@ -1,0 +1,26 @@
+{
+  "schema": "nextcore.bounded-memory-window.v1",
+  "retained": 64,
+  "consecutive_sequence": true,
+  "successful_replies": true,
+  "fetches": 55,
+  "unique_fetch_pcs": 22,
+  "loads": 7,
+  "unique_load_addresses": 4,
+  "stores": 2,
+  "unique_store_addresses": 2,
+  "store_address_deltas": [
+    8
+  ],
+  "store_widths": [
+    8
+  ],
+  "platform_config_identical": true,
+  "original_inputs_preserved": true,
+  "macos_boot_verified": false,
+  "physical_hardware_verified": false,
+  "limitation": "A final bounded request window does not prove whole-run forward progress, pointer-value correctness or an entry ABI.",
+  "execution_identical_to_prior_partial_terminal_run": true,
+  "baseline_record": "original-r11-long",
+  "last_store_address_advance_bytes_since_16384": 17872
+}
