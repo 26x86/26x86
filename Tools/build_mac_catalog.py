@@ -131,6 +131,11 @@ def validate(data):
     assert all(m['apple_support']['macos_27']['status'] == ('eligible' if m['architecture'] == 'apple-silicon' else 'unknown' if m['architecture'] == 'unknown' else 'ineligible') for m in models)
     for expected in ('MacBook1,1', 'MacPro5,1', 'Xserve3,1', 'MacBookAir10,1', 'Mac14,8', 'Mac17,9'):
         assert expected in ids, f'Missing sentinel {expected}'
+    names = {m['name'] for m in models}
+    for expected in ('Macintosh 128K', 'Macintosh 512K', 'Macintosh Plus', 'Macintosh SE',
+                     'Macintosh SE/30', 'Macintosh II', 'Macintosh IIci', 'Macintosh Portable',
+                     'Macintosh IIfx', 'Macintosh Color Classic II'):
+        assert expected in names, f'Missing historical sentinel {expected}'
     return {'models': len(models), 'identifiers': len(ids), 'families': dict(Counter(m['family'] for m in models)),
             'architectures': dict(Counter(m['architecture'] for m in models))}
 
@@ -202,7 +207,12 @@ def legacy_records(cache, refresh):
         except requests.RequestException as exc:
             failures.append({'url': url, 'error': type(exc).__name__})
             return url, set(), None
-    spec_urls = {'https://support.apple.com/en-us/' + p for p in ('112184', '112154', '112195', '112315', '112318')}
+    # Additional public Apple search results cover named models absent from the
+    # inspected directory's first list; these are observed URLs, not guessed IDs.
+    supplemental_specs = ('112184', '112154', '112195', '112315', '112318',
+                          '112188', '112196', '112201', '112247', '112189',
+                          '112192', '112193', '112200', '112241')
+    spec_urls = {'https://support.apple.com/en-us/' + p for p in supplemental_specs}
     with ThreadPoolExecutor(max_workers=8) as pool:
         for url, urls, digest in pool.map(links, sorted(directories)):
             spec_urls.update(urls)
@@ -254,6 +264,8 @@ def legacy_records(cache, refresh):
     with ThreadPoolExecutor(max_workers=8) as pool:
         models = [r for r in pool.map(record, sorted(spec_urls)) if r]
     return models, {'index_url': index_url, 'index_sha256': index_hash, 'directories': receipts,
+                    'supplemental_specification_urls': ['https://support.apple.com/en-us/' + p for p in supplemental_specs],
+                    'directory_pagination_observation': 'No next/load-more link or button was present in the inspected public directory HTML. Some lists contain 50 specifications; this is not proof of all historical models.',
                     'specifications_discovered': len(spec_urls), 'records': len(models),
                     'excluded_accessories': sorted(excluded_accessories, key=lambda x: x['source_url']),
                     'failures': sorted(failures, key=lambda x: x['url'])}
