@@ -2,12 +2,10 @@
 
 ## Current Status
 
-The active exact runtime is ISE `002d2eff8b262e728224b9b039b9ffe168ed4586`,
-including BFM and prior multiply/reference branch corrections. Its fresh
-six-case replay and 14 comparator tests passed; see
-`VALIDATION_BFM_20260912.md` and `evidence-bfm-20260912`.
-The preceding `7cd9ac0` selected source package is preserved byte-for-byte
-under `history/7cd9ac0`; existing `evidence-madd-20260912` remains in place.
+The active exact runtime is ISE `7cd9ac04016cbe436b3090fbf84e7cae67c6e8dc`,
+including MADD/MSUB and the reference compare/register-branch corrections. Its
+fresh six-case replay and 14 comparator tests passed; see
+`VALIDATION_MADD_20260912.md` and `evidence-madd-20260912`.
 
 The preceding `a8a06da` source package is preserved byte-for-byte under
 `history/a8a06da`, with its existing `evidence-tbz-20260912` left in place.
