@@ -103,9 +103,9 @@ markdown_extensions:
       permalink: true
 
 extra_css:
-  - assets/stylesheets/extra.css
+  - assets/stylesheets/extra.css?v=20260912-2
 extra_javascript:
-  - assets/javascripts/portal.js
+  - assets/javascripts/portal.js?v=20260912-2
 
 copyright: |
   <a href="https://github.com/26x86/26x86">NextCore</a> — clean-room EFI boot research and compatibility tooling. Not affiliated with or endorsed by Apple.
