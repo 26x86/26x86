@@ -162,7 +162,10 @@ def main():
     parser.add_argument('--efi', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--instruction-family', choices=['ubfm', 'extended', 'select', 'register-memory', 'test-bit', 'multiply', 'bitfield-merge'], default='ubfm')
+    parser.add_argument('--long-diagnostic', action='store_true',
+                        help='require explicit long-65536 firmware capability and exact retirement')
     args = parser.parse_args()
+    budget = 65536 if args.long_diagnostic else 64
     efi = args.efi.resolve(strict=True)
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=False)
@@ -198,8 +201,10 @@ def main():
         '--device-tree', str(out / 'diagnostic.dt'), '--output', str(out / 'firmware'),
         '--physical-base', hex(PHYSICAL - 0x2000000),
         '--virtual-base', hex(VIRTUAL - 0x2000000), '--memory-size', str(64 * 1024 * 1024),
-        '--kernel-physical', hex(PHYSICAL), '--instruction-budget', '64',
+        '--kernel-physical', hex(PHYSICAL), '--instruction-budget', str(budget),
         '--platform-profile', 'nextcore-irq-compat-v1', '--allow-incomplete-sptm-prefix', '--timeout', '60']
+    if args.long_diagnostic:
+        command.append('--long-diagnostic')
     commands.append(command)
     result = subprocess.run(command, capture_output=True, text=True, timeout=80)
     (out / 'firmware.log').write_text(result.stdout + result.stderr)
@@ -211,15 +216,16 @@ def main():
     x1 = re.search(r' x1=(0x[0-9a-f]+) ', entered)
     checks = {
         'completed': result.returncode == 0 and receipt['diagnostic_completed'],
-        'exact_retirement': execution.get('status') == 5 and execution.get('retired') == 64,
+        'exact_retirement': execution.get('status') == 5 and execution.get('retired') == budget,
         'final_loop_pc': execution.get('pc') == PHYSICAL + ENTRY_OFFSET + loop_offset,
         'arithmetic_results': (registers.get('x0'), registers.get('x2'), registers.get('x3')) == expected_registers,
         'boot_argument_preserved': bool(x1) and registers.get('x1') == int(x1.group(1), 16),
-        'memory_provider': memory.get('provider_status') == 0 and memory.get('fetch_requests') == 64
+        'memory_provider': memory.get('provider_status') == 0 and memory.get('fetch_requests') == budget
             and memory.get('data_requests') == expected_data and memory.get('completed_data_operations') == expected_data,
         'inputs_preserved': before == {str(p): sha(p) for p in inputs} and receipt['original_inputs_preserved'] and receipt['esp_copies_preserved'],
     }
     summary = dict(schema='nextcore.arithmetic-existing-efi-consumer.v1', instruction_family=args.instruction_family,
+                   instruction_budget=budget, long_diagnostic_requested=args.long_diagnostic,
                    passed=all(checks.values()), checks=checks,
                    commands=commands, source_hashes=before, original_images_used=False, macos_boot_verified=False)
     (out / 'receipt.json').write_text(json.dumps(summary, indent=2) + '\n')

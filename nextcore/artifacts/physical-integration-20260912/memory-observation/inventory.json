@@ -1,5 +1,5 @@
 {
-  "schema": "nextcore.framebuffer-evidence.v1",
+  "schema": "nextcore.memory-observation-evidence.v1",
   "module_commits": {
     "core": "cead709d8dc4894296b093f3f71859a54d05c65f",
     "efi": "e5b21ef6c77333dada426dbc36da688766851778",

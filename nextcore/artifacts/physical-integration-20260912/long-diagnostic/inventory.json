@@ -1,0 +1,74 @@
+{
+  "schema": "nextcore.long-diagnostic-evidence.v1",
+  "module_commits": {
+    "core": "041ff769096bad303ebb85b98dfb083e7ea817da",
+    "efi": "c87f0fc99a40da7ffb93ec15e45b2a9755aa072e",
+    "tool": "b9c0a212506907af3d799aeef611dde3027a41cf",
+    "ise": "002d2eff8b262e728224b9b039b9ffe168ed4586"
+  },
+  "files": [
+    {
+      "path": "long-bfm/receipt.json",
+      "bytes": 2797,
+      "sha256": "b497974b0296ec9a92610a85e5196e87436f92123cc60832abde44793ccdf6be"
+    },
+    {
+      "path": "long-bfm/firmware/report.json",
+      "bytes": 14421,
+      "sha256": "821507898def4c36f6437e5227c29fb1935eee8befdcc776dbf4d2a31858451e"
+    },
+    {
+      "path": "long-bfm/firmware/serial.log",
+      "bytes": 9367,
+      "sha256": "400913b58b61c57ad02d43bca860c7d0683ebd5d9b02d56243b6ccf4543587cb"
+    },
+    {
+      "path": "long-bfm/probe.S",
+      "bytes": 329,
+      "sha256": "5103d428599df18d6acbbad42ae6d989b81f3ed3c38b582d0c2650a22bf46cd6"
+    },
+    {
+      "path": "old-efi-negative/receipt.json",
+      "bytes": 2832,
+      "sha256": "bdc9f3f3b8b39412b919a8c6584bba5ab88dde8f4509f16bfcfdbd318db7c3b3"
+    },
+    {
+      "path": "old-efi-negative/firmware/report.json",
+      "bytes": 4623,
+      "sha256": "0641b013a6e3affc5446c4868f7821c692e39560cb96ee1814858288bf64b577"
+    },
+    {
+      "path": "old-efi-negative/firmware/serial.log",
+      "bytes": 685,
+      "sha256": "b6110da175376a120ca1ff29557cfd8d0bbcef9be241f5b448315c6bafa7a64d"
+    },
+    {
+      "path": "old-efi-negative/probe.S",
+      "bytes": 329,
+      "sha256": "5103d428599df18d6acbbad42ae6d989b81f3ed3c38b582d0c2650a22bf46cd6"
+    },
+    {
+      "path": "default-gop/receipt.json",
+      "bytes": 3353,
+      "sha256": "a8472f166d684f11ee3542da26304c8e1b54d866addc807e70c3fa69403ee73f"
+    },
+    {
+      "path": "default-gop/firmware/report.json",
+      "bytes": 14604,
+      "sha256": "9a73a5937eb0579716d74a88e9a4c6eec7f4023cb24d26d5e013ba5ce6ea12da"
+    },
+    {
+      "path": "default-gop/firmware/serial.log",
+      "bytes": 9390,
+      "sha256": "d7293d9bdf4464517b570bbb227aeb1e49914de3ca832429683b3648222578f2"
+    },
+    {
+      "path": "default-gop/probe.S",
+      "bytes": 656,
+      "sha256": "00b2014385f9c8517068fdcb3acb0c273c0c2a0c5f5a576d059cc1a5c754611a"
+    }
+  ],
+  "original_images_used": false,
+  "physical_display_verified": false,
+  "macos_boot_verified": false
+}
