@@ -1247,8 +1247,13 @@ validation passes 912 native assertions, 32 actual Cortex-A72 destination
 vectors against C and Rust, 31 provider tests in each of three cache modes,
 and ten authored EFI checks. The pinned EFI rebuild is byte-identical to the
 tested candidate. The 110-file immutable runtime freeze passes six captured
-cases, fourteen regressions and three negative controls. Original r26 is next;
-r25 stopped because native and Rust dispatch did not recognize this register.
+cases, fourteen regressions and three negative controls. Original r26 passes
+ZFR0 and retires 42,255,998 instructions with 6,012,275 data operations before
+status 13 at MRS ID_AA64ISAR0_EL1. It completes in 122.167 seconds with unchanged
+inputs and binaries. Its 1280 by 800 framebuffer hash matches zero RGB and GOP
+readback. Physical macOS display remains unverified. The next gate is to
+reconcile ISAR0 access and feature fields with the implemented scalar profile;
+r25 stopped because native and Rust dispatch did not recognize ZFR0.
 PFR0/PFR1 remain absent; no existing PFR read has
 advertised a contradictory SVE value. Authored EL1 reads on QEMU 8.2.2 cortex-a72
 return ZFR0=0. The same fixture on max,sve=off,sme=off returns nonzero ZFR0 despite
