@@ -83,6 +83,10 @@
 .portal-filters label { display: flex; flex-direction: column; gap: .35rem; font-size: .67rem; font-weight: 650; min-width: 0; }
 .portal-filters :is(input,select) { width: 100%; min-height: 44px; min-width: 0; background: var(--portal-card); color: var(--portal-ink); border: 1px solid var(--portal-border); border-radius: .35rem; padding: .6rem; font: inherit; font-size: 16px; }
 .portal-result-status { font-size: .68rem; color: var(--portal-muted); min-height: 1.5rem; }
+.portal-coverage { border: 1px solid var(--portal-border); border-radius: .5rem; padding: 1rem; margin: 1.2rem 0; }
+.portal-coverage h2 { margin: 0 0 .5rem; font-size: 1rem; }
+.portal-coverage :is(p,li,a) { font-size: .7rem; }
+.portal-coverage-counts, .portal-model-card .portal-variant-count { font-weight: 700; color: var(--portal-ink); font-variant-numeric: tabular-nums; }
 .portal-model-card h3 { font-size: .95rem; margin: .65rem 0; }
 .portal-model-id { font-family: var(--md-code-font-family); overflow-wrap: anywhere; }
 .portal-card-button { display: block; margin-top: 1rem; min-height: 44px; border: 0; padding: .4rem 0; background: transparent; color: var(--portal-accent); font: inherit; font-size: .72rem; font-weight: 700; cursor: pointer; text-align: left; }

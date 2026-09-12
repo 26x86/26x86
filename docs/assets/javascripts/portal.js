@@ -151,6 +151,18 @@
       if (catalog.schema !== "nextcore.mac-model-catalog.v1" || !Array.isArray(catalog.models)) throw new Error("Invalid catalog");
       const rows = [...catalog.models].sort((a, b) => (b.year || 0) - (a.year || 0) || a.name.localeCompare(b.name));
       const families = [...new Set(rows.map(row => row.family).filter(Boolean))].sort();
+      const coverage = root.querySelector("[data-model-coverage]");
+      if (coverage) {
+        const identifiers = new Set(rows.flatMap(row => row.identifiers || []));
+        const named = rows.filter(row => row.catalog_level === "named-model").length;
+        const number = new Intl.NumberFormat("en");
+        coverage.replaceChildren(el("h2", "Catalog coverage"), el("p", number.format(rows.length) + " records · " + number.format(identifiers.size) + " model identifiers · " + number.format(named) + " source-named models · " + number.format(families.length) + " families", "portal-coverage-counts"));
+        coverage.append(el("p", "Sources: Apple identification and specification pages, plus separately labeled historical repository records."));
+        const gaps = catalog.coverage?.gaps || ["This catalog does not cover every regional sales configuration or historical revision."];
+        const list = el("ul");
+        for (const gap of gaps) list.append(el("li", gap));
+        coverage.append(list, link("Read the catalog sources and coverage limits →", "HARDWARE_CATALOG_METHOD/"));
+      }
       for (const family of families) {
         const option = el("option", family); option.value = family; form.elements.family.append(option);
       }
@@ -220,6 +232,7 @@
           const card = el("article", undefined, "portal-model-card");
           card.append(el("span", model.family + " / " + labelArchitecture(model.architecture), "portal-eyebrow"));
           card.append(el("h3", model.name), el("p", (model.identifiers || []).join(" · ") || "Identifier not verified", "portal-model-id"));
+          if ((model.variants || []).length > 1) card.append(el("p", model.variants.length + " release variants share this record", "portal-variant-count"));
           card.append(el("p", "Apple OS: " + (model.apple_support?.latest_macos || "See source")), badge("NextCore: " + (model.nextcore?.status || "unverified"), "pending"));
           const button = el("button", "View model & sources →", "portal-card-button");
           button.type = "button";

@@ -12,6 +12,14 @@ Search by model name or identifier. Apple operating system support and NextCore 
 **A model listing is not a NextCore compatibility approval.** Physical macOS desktop output remains unverified. Generic PCs, including the current Samsung target, are outside this Apple model catalog.
 </div>
 
+<section class="portal-coverage" data-model-coverage markdown>
+## Catalog coverage
+
+Apple identification and specification pages are combined with clearly labeled historical repository records. This catalog does not cover every regional sales configuration or historical revision.
+
+[Read the catalog sources and coverage limits](HARDWARE_CATALOG_METHOD.md)
+</section>
+
 <form class="portal-filters" data-model-filters role="search" hidden>
 <label class="portal-search-label">Search models<input type="search" name="q" placeholder="MacPro5,1, MacBook Air, M4…" autocomplete="off"></label>
 <label>Family<select name="family"><option value="">All families</option></select></label>
