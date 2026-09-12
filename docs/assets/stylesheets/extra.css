@@ -100,6 +100,14 @@
 .portal-library-card h3 { font-size: 1rem; margin: .6rem 0; }
 .portal-library-card p { overflow-wrap: anywhere; }
 .portal-update { padding: 1rem 0; border-bottom: 1px solid var(--portal-border); }
+.portal-variant-section { border-top: 1px solid var(--portal-border); margin-top: 1.5rem; padding-top: .5rem; }
+.portal-variant { background: var(--portal-surface); border: 1px solid var(--portal-border); border-radius: .5rem; padding: 1rem; margin: 1rem 0; }
+.portal-variant h4 { margin: 0 0 .5rem; font-size: .95rem; }
+.portal-specification { margin-top: 1rem; padding-top: .3rem; border-top: 1px solid var(--portal-border); }
+.portal-specification h5 { color: var(--portal-ink); text-transform: none; font-size: .75rem; }
+.portal-historical { padding: 1rem; margin: 1rem 0; border: 1px dashed var(--portal-border); border-radius: .5rem; }
+.portal-historical > summary { cursor: pointer; min-height: 44px; font-weight: 700; color: var(--portal-ink); }
+.portal-historical > summary:focus-visible { outline: 3px solid var(--portal-accent); outline-offset: 4px; }
 @media (min-width: 600px) {
   .portal-route-grid, .portal-model-grid, .portal-library-grid, .portal-milestones { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .portal-filters { grid-template-columns: repeat(2,minmax(0,1fr)); }
