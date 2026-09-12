@@ -2,9 +2,9 @@
   "updated_at": "2026-09-13",
   "physical_desktop_verified": false,
   "boundary": {
-    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r24-indexed-summary.json",
-    "label": "Mapped prefix: 42,255,878 instructions; variable-shift boundary",
-    "detail": "r24 completes 6,012,259 data operations and passes post-indexed LDR before unsupported variable-register logical left shift (LSLV). The provider reports no error. The 1280 by 800 framebuffer remains zero with matching GOP readback; normal startup and physical desktop remain unverified."
+    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r25-variable-shift-summary.json",
+    "label": "Mapped prefix: 42,255,990 instructions; feature-register boundary",
+    "detail": "r25 completes 6,012,273 data operations and passes LSLV before SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64ZFR0_EL1, an SVE feature-identification read. The provider reports no error. The 1280 by 800 framebuffer remains zero with matching GOP readback; normal startup and physical desktop remain unverified."
   },
   "headline": "Building the path to a real macOS desktop",
   "milestones": [
@@ -21,7 +21,7 @@
       "id": "execution",
       "layer": "CPU runtime",
       "status": "in-progress",
-      "summary": "r24 retires 42,255,878 instructions and completes 6,012,259 data operations before unsupported LSLV. Indexed transfers have authored native, Arm, provider and EFI evidence. Normal startup and physical boot remain unverified.",
+      "summary": "r25 retires 42,255,990 instructions and completes 6,012,273 data operations before the SVE feature-register read traps. Variable shifts have authored native, Arm, provider and EFI evidence. Normal startup and physical boot remain unverified.",
       "evidence_url": "https://github.com/26x86/Nextcore-ISE/pull/9"
     },
     {
@@ -61,12 +61,18 @@
       "detail": "31 successful checks on development revision 606d3c4a. Later mapped-profile integration is tracked separately; CI is not physical boot proof."
     },
     {
-      "value": "42,255,878",
+      "value": "42,255,990",
       "label": "Latest bounded prefix",
-      "detail": "Retired instructions before unsupported variable-register logical left shift in completed r24 mapped OVMF execution."
+      "detail": "Retired instructions before the SVE feature-register read traps in completed r25 mapped OVMF execution."
     }
   ],
   "latest": [
+    {
+      "date": "2026-09-13",
+      "title": "Variable shifts reach the SVE feature-register boundary",
+      "summary": "r25 completes 42,255,990 instructions and 6,012,273 data operations in 109.910 seconds, adding 112 instructions and fourteen data operations beyond r24. It stops with SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64ZFR0_EL1. The framebuffer remains zero; this is not a benchmark. Authored shifts pass 16,464 native cases, 1,920 actual Arm comparisons and ten EFI checks.",
+      "url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r25-variable-shift-summary.json"
+    },
     {
       "date": "2026-09-13",
       "title": "Indexed memory execution reaches variable-register shifting",
