@@ -1,0 +1,62 @@
+{
+  "mode": "disabled",
+  "passed": true,
+  "checks": {
+    "required_markers_once": true,
+    "ordered_markers": true,
+    "no_failure": true,
+    "process_reaped": true,
+    "within_deadline": true,
+    "binary_copy_preserved": true,
+    "survived_real_delay": true
+  },
+  "command": [
+    "/usr/bin/qemu-system-x86_64",
+    "-machine",
+    "q35,accel=tcg,smm=off",
+    "-cpu",
+    "Nehalem",
+    "-m",
+    "512",
+    "-smp",
+    "1",
+    "-display",
+    "none",
+    "-vga",
+    "std",
+    "-monitor",
+    "none",
+    "-serial",
+    "file:/tmp/nextcore-watchdog-ovmf-20260912-r1/disabled/serial.log",
+    "-net",
+    "none",
+    "-no-reboot",
+    "-drive",
+    "if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd",
+    "-drive",
+    "if=pflash,format=raw,file=/tmp/nextcore-watchdog-ovmf-20260912-r1/disabled/vars.fd",
+    "-drive",
+    "format=raw,file=fat:rw:/tmp/nextcore-watchdog-ovmf-20260912-r1/disabled/esp"
+  ],
+  "markers": [
+    "NXWATCHDOG: FAILURE_PRESERVED status=DEVICE_ERROR",
+    "NXWATCHDOG: ARMED seconds=2",
+    "NXWATCHDOG: DISABLED",
+    "NXWATCHDOG: STALL seconds=3",
+    "NXWATCHDOG: SURVIVED"
+  ],
+  "marker_observed_seconds": {
+    "NXWATCHDOG: FAILURE_PRESERVED status=DEVICE_ERROR": 8.997827937000011,
+    "NXWATCHDOG: ARMED seconds=2": 8.997827937000011,
+    "NXWATCHDOG: DISABLED": 8.997827937000011,
+    "NXWATCHDOG: STALL seconds=3": 8.997827937000011,
+    "NXWATCHDOG: SURVIVED": 11.995060106999972
+  },
+  "elapsed_seconds": 12.062,
+  "failure": null,
+  "qemu_exit_code": 0,
+  "stopped_by_harness": true,
+  "timed_out": false,
+  "transient_serial_retries": 0,
+  "efi_sha256": "a92d71d27a1b0287b0ad401fb55db8cc52785c57ec1b998e18acc54783fddcca"
+}

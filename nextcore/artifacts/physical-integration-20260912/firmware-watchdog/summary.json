@@ -1,0 +1,60 @@
+{
+  "schema": "nextcore.firmware-watchdog.v1",
+  "passed": true,
+  "checks": 15,
+  "contract": "Actual two-second UEFI watchdog control versus shared production disable followed by a three-second stall",
+  "disabled_survived": true,
+  "armed_natural_exit": true,
+  "injected_device_error_preserved": true,
+  "original_images_used": false,
+  "r21_watchdog_cause_verified": false,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "files": [
+    {
+      "path": "receipt.json",
+      "bytes": 4608,
+      "sha256": "14dd213707629ef019f162708556318c34d5a83cfbe1c1c0378f452834734674"
+    },
+    {
+      "path": "disabled/report.json",
+      "bytes": 1698,
+      "sha256": "519aeb05f3e92ffbf13351db6de7e65c7a021ce6a207adb71b453294835daa4a"
+    },
+    {
+      "path": "disabled/serial.log",
+      "bytes": 459,
+      "sha256": "0f9a60c4467a59514f28c65f94daad7e9648b51a32646840f0eb967620328788"
+    },
+    {
+      "path": "disabled/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "disabled/stderr.log",
+      "bytes": 68,
+      "sha256": "0c693fc7d92c55e7c17035451891fde81710bc633e2cbc1b95496cce94b518aa"
+    },
+    {
+      "path": "armed/report.json",
+      "bytes": 1655,
+      "sha256": "d878c991179ddb1d349696edf370ccfd07b7c0253c0f38e07a1a7aa2bcb7614d"
+    },
+    {
+      "path": "armed/serial.log",
+      "bytes": 442,
+      "sha256": "0a2f2a13ece96438f653a7e6d68dc771545dcbc7484fddce22b0d24adea2b4ac"
+    },
+    {
+      "path": "armed/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "armed/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

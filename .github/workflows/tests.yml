@@ -328,6 +328,12 @@ jobs:
         run: cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features test-child --bin BOOTX64 --bin NXTEST
       - name: Recover failed targets through the production picker
         run: python3 nextcore/tools/verify_picker_recovery_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/BOOTX64.efi --child nextcore/target/x86_64-unknown-uefi/release/NXTEST.efi --output "$RUNNER_TEMP/picker-recovery"
+      - name: Verify firmware watchdog ownership against an armed control
+        run: |
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features watchdog-probe --bin NXWATCHDOG
+          cp nextcore/target/x86_64-unknown-uefi/release/NXWATCHDOG.efi "$RUNNER_TEMP/watchdog-disabled.efi"
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features watchdog-probe-armed --bin NXWATCHDOG
+          python3 nextcore/tools/verify_watchdog_ovmf.py --disabled-efi "$RUNNER_TEMP/watchdog-disabled.efi" --armed-efi nextcore/target/x86_64-unknown-uefi/release/NXWATCHDOG.efi --timeout 60 --output "$RUNNER_TEMP/watchdog-proof"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -335,3 +341,5 @@ jobs:
           path: |
             ${{ runner.temp }}/picker-recovery/**/*.json
             ${{ runner.temp }}/picker-recovery/**/*.log
+            ${{ runner.temp }}/watchdog-proof/**/*.json
+            ${{ runner.temp }}/watchdog-proof/**/*.log

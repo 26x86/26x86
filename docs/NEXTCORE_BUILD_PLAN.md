@@ -1080,7 +1080,9 @@ canonical-memory tests in each of three cache modes. Final authored EFI passes
 ten checks. An independent failure exposed missing store-fault WnR classification;
 the corrected exception encoder passes exact-syndrome regressions. The previous
 original run stopped at this class after 42,252,448 instructions; replay with the
-verified implementation is in progress.
+verified implementation ended without a terminal record after about 334 seconds.
+No retired count can be inferred from that incomplete run. A separate firmware
+watchdog ownership experiment now precedes another unchanged-input replay.
 
 Target State: Support the thirteen integer unscaled forms: byte/halfword/word/
 doubleword stores and zero-extending loads, signed byte/halfword loads to W/X,
@@ -1100,10 +1102,14 @@ https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/targe
 
 Current Status: Original r21 exits QEMU after about 334 seconds without a terminal
 execution record. The input and EFI remain unchanged, but no instruction count
-or desktop result can be inferred. Neither the baseline picker nor NXARMJIT
-currently takes ownership of the firmware boot watchdog. UEFI requires the boot
-manager to arm a five-minute watchdog before starting a boot image; watchdog
-expiry is a hypothesis for this stop, not yet a confirmed cause.
+or desktop result can be inferred. The baseline picker and NXARMJIT now request
+watchdog disable immediately after service initialization and report the actual
+result. An authored OVMF pair passes fifteen checks: a real two-second timer
+is disabled before a three-second stall, while the armed control exits naturally
+before completion. An injected DEVICE_ERROR is preserved exactly. UEFI requires
+the boot manager to arm a five-minute watchdog before starting a boot image;
+expiry remains a hypothesis for r21, not a confirmed cause. See
+[watchdog validation](FIRMWARE_WATCHDOG_VALIDATION.md).
 
 Target State: Request watchdog disable immediately after service initialization
 in the baseline picker and NXARMJIT, before waiting for input or running a long
