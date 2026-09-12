@@ -1095,3 +1095,23 @@ Independent authored cases must cover all forms, displacement endpoints, SP/ZR,
 signed results, preserved base, cross-page Normal accesses, permission failures
 and rejected adjacent encodings before original replay. Public encoding source:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/a64.decode
+
+### Firmware watchdog ownership
+
+Current Status: Original r21 exits QEMU after about 334 seconds without a terminal
+execution record. The input and EFI remain unchanged, but no instruction count
+or desktop result can be inferred. Neither the baseline picker nor NXARMJIT
+currently takes ownership of the firmware boot watchdog. UEFI requires the boot
+manager to arm a five-minute watchdog before starting a boot image; watchdog
+expiry is a hypothesis for this stop, not yet a confirmed cause.
+
+Target State: Request watchdog disable immediately after service initialization
+in the baseline picker and NXARMJIT, before waiting for input or running a long
+guest. Report success or the actual unsupported/error status; a failure must
+not prevent otherwise usable firmware operation. Keep the host diagnostic time
+limit and instruction budget intact. Use one shared helper and test it in actual
+EFI by arming a short watchdog: the armed control must reset before its delayed
+completion marker, while the helper path must reach that marker. Also exercise
+the reported failure path without pretending that a failed disable succeeded.
+No disk, NVRAM, guest instruction or memory-regime changes are part of this fix.
+Public contract: https://uefi.org/specs/UEFI/2.11/03_Boot_Manager.html#load-option-processing
