@@ -1,0 +1,36 @@
+
+running 31 tests
+test actual_c_rust_abi_and_control_validation_match_all_fields ... ok
+test alignment_priority_lower_el_and_irq_vector_boundaries_are_precise ... ok
+test bfm_v2_executes_through_both_granules ... ok
+test bfm_v2_invalid_fields_preserve_state ... ok
+test broken_store_callback_is_host_failure_without_a_ram_rollback_promise ... ok
+test conditional_selection_native_through_v2_provider ... ok
+test extended_arithmetic_native_through_v2_provider ... ok
+test logical_shifted_canonical_all_forms_no_data_and_cache_equivalence ... ok
+test malformed_fault_combinations_cannot_commit_guest_exception_or_retire ... ok
+test mapped_provider::canonical_pauth::tests::authentication_failure_and_unsupported_modes ... ok
+test mapped_provider::canonical_pauth::tests::layer_inverses_and_involutory_matrix ... ok
+test mapped_provider::canonical_pauth::tests::qemu_executed_generic_mac_vectors ... ok
+test mapped_provider::canonical_pauth::tests::qemu_executed_pacia_vector ... ok
+test mapped_provider::hostile_pac_cannot_commit_any_register_or_immutable_control_change ... ok
+test mapped_provider::mapped_xpac_generic_and_disabled_pac_use_canonical_provider ... ok
+test mapped_provider::old_entry_and_null_callback_do_not_gain_pac ... ok
+test multiply_add_v2_executes_through_both_granules ... ok
+test nonidentity_native_alu_scalar_and_pair_use_actual_rust_callbacks ... ok
+test platform::tests::platform_abi_receipt ... ok
+test readonly_controls_and_unsupported_changes_preserve_fixed_regime ... ok
+test register_offset_v2_all_forms_and_precise_service_faults ... ok
+test second_page_abort_and_bad_replies_preserve_architectural_state ... ok
+test sp_alignment_precedes_effective_address_and_data_provider_in_each_el ... ok
+test test_bit_v2_fetch_trace_and_target_translation_fault_are_precise ... ok
+test translated_scalar_width_and_sign_families_keep_native_register_semantics ... ok
+test ubfm_is_native_after_v2_nonidentity_fetch_without_data_requests ... ok
+test unaligned_profile::c_rejects_fabricated_alignment_for_profile3_without_committing_state ... ok
+test unaligned_profile::control_contract_and_wrap_preserve_strict_profile ... ok
+test unaligned_profile::profile3_keeps_pc_and_optional_sp_alignment_checks ... ok
+test unaligned_profile::scalar_and_pair_unaligned_transfers_preflight_noncontiguous_pages ... ok
+test unaligned_profile::second_page_fault_is_precise_and_never_partially_commits ... ok
+
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.11s
+
