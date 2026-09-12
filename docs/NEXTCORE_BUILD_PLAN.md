@@ -953,3 +953,25 @@ The optional EFI protection observer forwards each callback exactly once and
 returns its result unchanged. It counts writable/executable attempts and failures,
 including the final writable restore, and emits counts only after execution.
 The uncached EFI build is a compile-time comparison control, not a runtime mode.
+
+### Explicit initialization diagnostic for collection fixups
+
+Current Status: The original file contains 1,010,443 format-8 chained entries.
+The observed final two stores at the 65,536-step boundary match consecutive
+input chain nodes 2,722 and 2,723. This establishes local membership, not stored
+value correctness or full phase completion. The source-defined loop performs
+work per entry before later kernel/platform initialization.
+
+Target State: Provide a separately built and explicitly selected
+initialization-67108864 diagnostic with an exact 67,108,864-step ceiling and the
+existing named software profile. The large bound permits an experiment beyond
+the observed early chain nodes; it does not assert a complete phase or boot.
+Old parsers/builds must reject this selector. New parsing retains prior deep and
+long selectors and the unselected 4096 ceiling. Normal readiness is unchanged.
+
+Require build/selection markers and memory-provider evidence in the host receipt.
+Keep the existing 600-second timeout cap. Validate malformed selection and old
+build rejection, then run an authored cached loop with exact retirement before
+using unchanged original input. Compare the resulting PC/function region and
+request membership to determine the next execution boundary. Do not modify
+original pointers, skip instructions or invent platform/service responses.

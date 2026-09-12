@@ -2,16 +2,26 @@
 
 ## Current Status
 
-The unchanged local macOS 27.0 / 26A5425a input reaches an explicitly selected
-65,536-instruction budget with 11,702 completed data operations and no memory
-provider error. The final request window contains successful stores at distinct
-adjacent addresses. Its final store address is 17,872 bytes beyond the final
-store observed at the 16,384-instruction checkpoint.
+The unchanged local macOS 27.0 / 26A5425a input now stops after 1,542,930
+retired instructions with a guest data-alignment fault, before the explicitly
+selected initialization budget of 67,108,864. It completes 208,610 data
+operations; the memory provider itself reports no error.
 
-These observations show changing memory accesses in the measured windows. They
-do not establish correct pointer transformations, the original entry ABI, full
-kernel initialization or userspace. The owned framebuffer RGB hash still matches
-an all-zero frame. Normal startup and physical desktop output remain unverified.
+The faulting instruction is an ordinary 64-bit scalar load from an address that
+is four-byte aligned but not eight-byte aligned. Static input metadata identifies
+that location as chained-fixup node 51,889, immediately after the two nodes in
+the final successful store window. This binds the next boundary to an actual
+memory access rather than an exhausted instruction limit.
+
+The selected M=0, HCR=0 memory profile requires Device-nGnRnE natural alignment.
+Its fault must not be removed simply to extend execution. Establish the target's
+entry memory regime and supply a supported, validated profile. Normal startup,
+complete fixup traversal and userspace remain unverified. The owned framebuffer
+still matches an all-zero frame.
+
+[Latest original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r18-initialization-summary.json)
+and [fault membership](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-chain-fault-membership-summary.json)
+retain the distinction between a completed diagnostic and a booted OS.
 
 ## Target State
 
@@ -26,6 +36,7 @@ instruction count is not an acceptance substitute.
 | --- | ---: | ---: | --- |
 | Observed bounded prefix | 16,384 | 2,763 | No error |
 | Explicit long prefix | 65,536 | 11,702 | No error |
+| Initialization diagnostic | 1,542,930 | 208,610 | No provider error; guest alignment fault |
 
 The allocation-free observer forwards each request through the same memory
 service exactly once and returns its unchanged reply. It retains only the last
@@ -91,3 +102,13 @@ remain required. The framebuffer remains all zero in the original prefix.
 The [entry contract](NEXTCORE_ARM64E_ENTRY_CONTRACT.md) distinguishes guest
 self-fixups from unproven loader-side work. Do not rebase opaque pointers or
 change startup registers solely to extend the trace.
+
+## Explicit initialization bound
+
+The new Core API, separate EFI build and host selector require the exact
+initialization tier, budget and named profile. Twenty-four Core tests, fourteen
+host tests and no_std UEFI compilation pass. An authored BFM loop executes the
+full 67,108,864 steps in the final EFI and preserves expected state and inputs;
+the old build rejects the new selector before guest entry. The unchanged
+600-second timeout remains a hard limit. The original input stops earlier at the
+reported alignment fault; the requested maximum is not its retirement count.
