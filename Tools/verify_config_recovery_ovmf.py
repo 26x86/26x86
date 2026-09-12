@@ -46,8 +46,8 @@ def run_case(args, case):
     command=['qemu-system-x86_64','-machine','q35,accel=tcg,smm=off','-cpu','Nehalem','-m','256','-smp','1','-display','none','-vga','std','-net','none','-no-reboot','-serial',f'file:{serial}','-qmp',f'unix:{qmp},server=on,wait=off','-drive','if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE_4M.fd','-drive',f'if=pflash,format=raw,file={variables}','-drive',f'format=raw,file=fat:rw:{esp}']
     (out/'command.json').write_text(json.dumps(command,indent=2))
     def text():
-        raw=serial.read_text(errors='replace') if serial.exists() else ''
-        complete=raw[:raw.rfind('\n')+1]
+        raw=serial.read_bytes() if serial.exists() else b''
+        complete=raw[:raw.rfind(b'\n')+1].decode(errors='replace').replace('\r\n','\n')
         return re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]','',complete)
     def terminal():
         return re.search(r'^NXCONFIG: RETURN case=\d+ status=\w+ opens=\d+ injected=\d+\n',text(),re.M) is not None
