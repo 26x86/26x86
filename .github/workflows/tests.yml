@@ -120,6 +120,8 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y clang lld llvm qemu-system-x86 ovmf
       - name: Check memory proof failure detection
         run: python3 tests/test_arm_memory_provider_runner.py -v
+      - name: Compare cached and uncached native execution with real W^X
+        run: python3 nextcore/crates/nextcore-ise/runtime/tests/verify_provider_cache.py --output "$RUNNER_TEMP/provider-cache-native"
       - name: Build direct, provider and combined bounded-tier firmware
         working-directory: nextcore
         run: |
@@ -245,7 +247,8 @@ jobs:
       - name: Build explicit long trace with observed framebuffer
         run: |
           cp nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/deep-only.efi"
-          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-long-trace,arm-jit-video-readback,arm-jit-memory-observation --bin NXARMJIT
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-long-trace,arm-jit-video-readback,arm-jit-memory-observation,arm-jit-protection-observation --bin NXARMJIT
+          cp nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/cached-long.efi"
       - name: Execute owned framebuffer and long budget contracts
         run: |
           python3 nextcore/tools/verify_boot_framebuffer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --memory-observation --output "$RUNNER_TEMP/observed-framebuffer"
@@ -254,6 +257,10 @@ jobs:
             exit 1
           fi
           python3 -c 'import json,os; from pathlib import Path; p=Path(os.environ["RUNNER_TEMP"])/"long-old-negative"; r=json.loads((p/"receipt.json").read_text()); f=json.loads((p/"firmware/report.json").read_text()); assert not r["passed"] and r["checks"]["inputs_preserved"] and any(m.startswith("NXARMJIT: TRACE_CONFIG_INVALID") for m in f["markers"])'
+      - name: Compare final cached and uncached EFI permission transitions
+        run: |
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-long-trace,arm-jit-video-readback,arm-jit-memory-observation,arm-jit-protection-observation,arm-jit-provider-uncached --bin NXARMJIT
+          python3 nextcore/tools/verify_provider_cache_ovmf.py --cached-efi "$RUNNER_TEMP/cached-long.efi" --uncached-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --output "$RUNNER_TEMP/provider-cache-efi"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -275,6 +282,8 @@ jobs:
             ${{ runner.temp }}/long-bfm/**/*.log
             ${{ runner.temp }}/long-old-negative/**/*.json
             ${{ runner.temp }}/long-old-negative/**/*.log
+            ${{ runner.temp }}/provider-cache-efi/**/*.json
+            ${{ runner.temp }}/provider-cache-efi/**/*.log
 
   x86-efi-picker-recovery:
     runs-on: ubuntu-24.04

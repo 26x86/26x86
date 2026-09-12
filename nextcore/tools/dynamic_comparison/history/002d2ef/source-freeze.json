@@ -1,6 +1,6 @@
 {
   "schema": "nextcore-runtime-source-freeze-v1",
-  "base": "f387224baf43fc309436d2f27a5ca4677c8b2008",
+  "base": "002d2eff8b262e728224b9b039b9ffe168ed4586",
   "provenance": "git archive of immutable Nextcore-ISE commit; no working-tree source",
   "files": {
     "abi_layout.c": "03b71dd9958a85655a50c30387c83d542ae51c808b1913f6a349b531d69f7617",
@@ -11,7 +11,7 @@
     "gop_scanout.c": "85e9a454846614e8a17420d628f806f93e6925a4c39a5b1b648e6b691895a912",
     "gop_scanout.h": "5025bcf913b70baf13888792091efd67b4bf42f2fa34c5b4bb52163cfacde5b6",
     "handoff.h": "82d91868045b55e5d79b931d9a29acb10d11d02f0f164d7578012515919b68a2",
-    "jit.c": "f23a9381c05969b0677681eab53640b77860acbe2c3c8c51ac4ba6fdacdb206d",
+    "jit.c": "403b47a4aab0012b1406088928ade91c37b74cbb4210d87bdff7e013308bb120",
     "jit.h": "82ec08a23294a0d02dc95de0b98cc3c6b0d29f2de0656cbdcc4801f7c3161ce9",
     "jit_protection.c": "aaaae4ed9d644e91d4da26e745c336ce767dfdd60e8e1a9a2a9287c0ed60ddc7",
     "main.c": "e60b0a038268582c5612858fbcbdb5cd6d47d42740b43fcb386333a369421ede",
@@ -74,7 +74,6 @@
     "test_multiply_add_jit.c": "55fd66b62c0fa8b9d1a9d85081699996c752a30385409d09a3217cfe1c16ea32",
     "test_pair_jit.c": "e73afb379232d6cc02765a0f5d040b4e22a6a817b90493eeec412b665dc4a70a",
     "test_pauth_jit.c": "bf6ad778a24182ed128d69334a7cbceed3f8fa79e684955b536a353f5906fe1e",
-    "test_provider_cache.c": "9692bc5e8792737f896ec17b6745e6c1060409ee4ddf84f93aa8cb58dcd86ae5",
     "test_register_offset_jit.c": "028fa176fed6cc1342fa81de502fe9da099c396d5cfdbde1077f5ff78dfea1a1",
     "test_scalar_jit.c": "4c53adbbc951b4087c9ccfad7adff3872ae446fe5cc515fed1f89a94110a56ec",
     "test_shift_jit.c": "cc44fa1d2e599e99bd2038b6bd78c2a29fa662f5274a2a8afb6754bc7fae6760",
@@ -83,7 +82,6 @@
     "test_thread_jit.c": "935a1f5e41e14001a23d900e41fdafc3e40ea2ce6c23efe00254ab90e7cb6fc1",
     "test_ubfm_jit.c": "85cacd1a5b944c8cc2bbd04f51d50408a73d7b08153d9dcefdec2ab5bfe97bf3",
     "test_wx.c": "afa4209e70d3c566493865b49c315295503ed0787f0e64dfb1338e713b23c6e4",
-    "tests/verify_provider_cache.py": "6b9e7d98e480ecf66621e142591f81c36300c0f932f2b93566bfc6cda6e240ec",
     "ubfm_provider_cases.rs": "9b96ab3801696fb970e99ad3b2d0ab7cc0c1aa0dd202c49899be9b6cd542118a",
     "uefi.h": "ad65b75ad72ddca190093a8df01ec2e89622fadaaee0b1e149a704e80106e32b"
   }

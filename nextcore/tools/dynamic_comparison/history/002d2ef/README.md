@@ -2,13 +2,10 @@
 
 ## Current Status
 
-The active exact runtime is ISE `f387224baf43fc309436d2f27a5ca4677c8b2008`,
-including run-local native reuse in the v1 physical-memory provider. The dynamic
-provider used by these six captures does not use that cache; this replay checks
-that its existing behavior remains unchanged. See `VALIDATION_CACHE_20260912.md`
-and `evidence-cache-20260912` for the fresh replay and comparator regressions.
-The preceding `002d2ef` selected source package is preserved byte-for-byte
-under `history/002d2ef`; its `evidence-bfm-20260912` remains unchanged.
+The active exact runtime is ISE `002d2eff8b262e728224b9b039b9ffe168ed4586`,
+including BFM and prior multiply/reference branch corrections. Its fresh
+six-case replay and 14 comparator tests passed; see
+`VALIDATION_BFM_20260912.md` and `evidence-bfm-20260912`.
 The preceding `7cd9ac0` selected source package is preserved byte-for-byte
 under `history/7cd9ac0`; existing `evidence-madd-20260912` remains in place.
 

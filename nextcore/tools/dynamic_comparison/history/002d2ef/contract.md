@@ -7,11 +7,6 @@ the historical missing-IL undefined syndrome. Native unsupported A64 HVC uses
 exact ESR `0x02000000`; all other state and effect comparisons stay exact.
 Historical source and evidence remain under the original artifact directory.
 
-The admitted cache revision changes only the v1 physical-memory provider's
-native-entry reuse and adds independent cache acceptance tests. This comparator
-executes the dynamic provider, whose dispatch and service sources are unchanged.
-Its captured-Arm replay is a regression gate, not a cache-performance test.
-
 ## Target State
 
 Replay the original captured transitions against the admitted exact runtime

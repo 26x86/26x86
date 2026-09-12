@@ -919,3 +919,37 @@ request. No normal-entry gate, provider behavior, guest input or instruction
 semantics changes. An authored bounded loop validates the selected budget and
 old-build rejection before replaying the same original input. The next fault or
 observed state, not the larger count itself, determines the next implementation.
+
+### Run-local native reuse for physical-memory execution
+
+Current Status: The v1 provider loop fetches every instruction, translates a
+single native entry and transitions the complete code allocation RW then RX on
+every iteration. Original-prefix windows repeatedly execute a small set of PCs.
+
+Target State: Reuse single-instruction native entries within one v1 provider run
+only after a fresh successful fetch. Key entries by guest PC, fetched instruction
+word and current EL, with provider mode fixed. Preserve state checks, interrupt
+polling, fetch/reply validation, data callbacks, slow paths, retirement, faults
+and native-entry counters on hits. Never cache memory replies or use epoch zero
+as proof that guest code is unchanged. Other execution backends remain unchanged.
+
+Use bounded stack metadata and the caller's existing code allocation; no new
+executable allocator or persistent cache. Code slots are invalid until complete
+translation and a successful RX transition. Misses may change permissions for
+the whole allocation only while no cached native entry is executing. If a slot
+cannot hold an otherwise valid instruction, invalidate the cache and use the
+existing full-buffer translation path, preserving its status semantics. Small
+buffers retain the uncached path. Failed protection or translation never leaves
+a reusable entry. The original final protection restore remains mandatory.
+
+An independently compiled uncached variant is the comparison oracle. Authored
+tests must compare complete CPU/RAM/request/fault results, exercise guest code
+stores, different PC/EL, fetch failures on apparent hits, collisions and small
+buffers, and measure fewer real protection calls. Replay the same original input
+and budget with final EFI bytes before claiming a measured improvement. Larger
+budgets, new entry registers and normal readiness are outside this cache change.
+
+The optional EFI protection observer forwards each callback exactly once and
+returns its result unchanged. It counts writable/executable attempts and failures,
+including the final writable restore, and emits counts only after execution.
+The uncached EFI build is a compile-time comparison control, not a runtime mode.

@@ -1,0 +1,421 @@
+{
+  "passed": true,
+  "source_sha256": {
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/arch.c": "1184d86c6cfdd3c2cff50ac93483bd0d09040d0b6af34c8971ecc633db20337a",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/boot_jit.h": "def7ee05c4051107257407f3f4eed6ab6551ba04b61f7178e051f4e95126af81",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/gop_scanout.h": "5025bcf913b70baf13888792091efd67b4bf42f2fa34c5b4bb52163cfacde5b6",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/handoff.h": "82d91868045b55e5d79b931d9a29acb10d11d02f0f164d7578012515919b68a2",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/jit.c": "f23a9381c05969b0677681eab53640b77860acbe2c3c8c51ac4ba6fdacdb206d",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/jit.h": "82ec08a23294a0d02dc95de0b98cc3c6b0d29f2de0656cbdcc4801f7c3161ce9",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory_abi.h": "0ef6a89d512ef2d1fd0f92d0a25018536fa9c45106372e6c27f749b427b1f515",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory_abi_v2.h": "a22bd4f1b264c521889bb3650c5c3abcbed5cab9bd4fca72938ec2512d936264",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory_boot.h": "d2972ffc34487e5c328ebdd51e8333d82282df9e7305b6c60426aea3c4fd11f8",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory_boot_v2.h": "67564f55e7dbce6d19d6d3ae3daaa936c3d8801daae6dca027db62c225f70f7d",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory_dynamic.h": "75c964df1d079840a7919cc52bb55bb7857f22c9d39995417d36fb69c2d4b295",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory_dynamic.inc": "c6c4c9af889e33919da59246532bf8cc0168259109c834f786ae54a9bb094615",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory_stage1.inc": "8f683a886b08314a8aac1b887c00e78cfbfdd1323e7ee72d14aaec20603ddf38",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/platform_abi.h": "e0c19055be84de172df89495c822a18deae24d04315e4350cc42cba07fc90eba",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/preos_abi.h": "f355c3ab92457c569c3a4833b91ec8ad51ccdef6d0e8142d3ba236db5f37d5dc",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/preos_bridge.h": "97a63e5667b5dadaa1cf9ee6f1ae66e4595cfd8c86c21281043529e79392a112",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_provider_cache.c": "9692bc5e8792737f896ec17b6745e6c1060409ee4ddf84f93aa8cb58dcd86ae5",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/tests/verify_provider_cache.py": "6b9e7d98e480ecf66621e142591f81c36300c0f932f2b93566bfc6cda6e240ec",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/uefi.h": "ad65b75ad72ddca190093a8df01ec2e89622fadaaee0b1e149a704e80106e32b"
+  },
+  "sources_preserved": true,
+  "commands": [
+    [
+      "cc",
+      "-O2",
+      "-g",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_provider_cache.c",
+      "-o",
+      "/tmp/nextcore-provider-cache-20260912-r4/cached/test"
+    ],
+    [
+      "cc",
+      "-O2",
+      "-g",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-DNEXTCORE_DISABLE_PROVIDER_CACHE",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_provider_cache.c",
+      "-o",
+      "/tmp/nextcore-provider-cache-20260912-r4/uncached/test"
+    ],
+    [
+      "cc",
+      "-O2",
+      "-g",
+      "-std=gnu11",
+      "-Wall",
+      "-Wextra",
+      "-DNEXTCORE_PROVIDER_CACHE_SLOT_BYTES=64",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_provider_cache.c",
+      "-o",
+      "/tmp/nextcore-provider-cache-20260912-r4/small-slot/test"
+    ],
+    [
+      "cc",
+      "-O2",
+      "-std=gnu11",
+      "-I",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime",
+      "/tmp/nextcore-provider-cache-20260912-r4/ignore-pc/jit.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_provider_cache.c",
+      "-o",
+      "/tmp/nextcore-provider-cache-20260912-r4/ignore-pc/test"
+    ],
+    [
+      "cc",
+      "-O2",
+      "-std=gnu11",
+      "-I",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime",
+      "/tmp/nextcore-provider-cache-20260912-r4/ignore-word/jit.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_provider_cache.c",
+      "-o",
+      "/tmp/nextcore-provider-cache-20260912-r4/ignore-word/test"
+    ],
+    [
+      "cc",
+      "-O2",
+      "-std=gnu11",
+      "-I",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime",
+      "/tmp/nextcore-provider-cache-20260912-r4/ignore-el/jit.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_provider_cache.c",
+      "-o",
+      "/tmp/nextcore-provider-cache-20260912-r4/ignore-el/test"
+    ],
+    [
+      "cc",
+      "-O2",
+      "-std=gnu11",
+      "-I",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime",
+      "-DNEXTCORE_PROVIDER_CACHE_SLOT_BYTES=64",
+      "/tmp/nextcore-provider-cache-20260912-r4/retain-overwritten-slots/jit.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_provider_cache.c",
+      "-o",
+      "/tmp/nextcore-provider-cache-20260912-r4/retain-overwritten-slots/test"
+    ],
+    [
+      "cc",
+      "-O2",
+      "-std=gnu11",
+      "-I",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime",
+      "/tmp/nextcore-provider-cache-20260912-r4/skip-hit-entry-count/jit.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_provider_cache.c",
+      "-o",
+      "/tmp/nextcore-provider-cache-20260912-r4/skip-hit-entry-count/test"
+    ]
+  ],
+  "cases": 13,
+  "modes": {
+    "cached": {
+      "loop": {
+        "protect": 6,
+        "rw": 3,
+        "rx": 3,
+        "status": 5,
+        "retired": 256
+      },
+      "fetch-failure": {
+        "protect": 2,
+        "rw": 1,
+        "rx": 1,
+        "status": 4,
+        "retired": 4
+      },
+      "fetch-malformed": {
+        "protect": 2,
+        "rw": 1,
+        "rx": 1,
+        "status": 4,
+        "retired": 4
+      },
+      "self-modifying": {
+        "protect": 8,
+        "rw": 4,
+        "rx": 4,
+        "status": 5,
+        "retired": 256
+      },
+      "pc-eviction": {
+        "protect": 528,
+        "rw": 264,
+        "rx": 264,
+        "status": 5,
+        "retired": 264
+      },
+      "el-specialization": {
+        "protect": 6,
+        "rw": 3,
+        "rx": 3,
+        "status": 8,
+        "retired": 2
+      },
+      "data-fault": {
+        "protect": 4,
+        "rw": 2,
+        "rx": 2,
+        "status": 4,
+        "retired": 1
+      },
+      "undefined": {
+        "protect": 2,
+        "rw": 1,
+        "rx": 1,
+        "status": 8,
+        "retired": 0
+      },
+      "slot-fallback": {
+        "protect": 4,
+        "rw": 2,
+        "rx": 2,
+        "status": 5,
+        "retired": 256
+      },
+      "small-buffer": {
+        "protect": 512,
+        "rw": 256,
+        "rx": 256,
+        "status": 5,
+        "retired": 256
+      },
+      "full-buffer-overflow": {
+        "protect": 1,
+        "rw": 1,
+        "rx": 0,
+        "status": 6,
+        "retired": 0
+      },
+      "rw-failure": {
+        "protect": 1,
+        "rw": 1,
+        "rx": 0,
+        "status": 7,
+        "retired": 0
+      },
+      "rx-failure": {
+        "protect": 2,
+        "rw": 1,
+        "rx": 1,
+        "status": 7,
+        "retired": 0
+      }
+    },
+    "uncached": {
+      "loop": {
+        "protect": 512,
+        "rw": 256,
+        "rx": 256,
+        "status": 5,
+        "retired": 256
+      },
+      "fetch-failure": {
+        "protect": 8,
+        "rw": 4,
+        "rx": 4,
+        "status": 4,
+        "retired": 4
+      },
+      "fetch-malformed": {
+        "protect": 8,
+        "rw": 4,
+        "rx": 4,
+        "status": 4,
+        "retired": 4
+      },
+      "self-modifying": {
+        "protect": 512,
+        "rw": 256,
+        "rx": 256,
+        "status": 5,
+        "retired": 256
+      },
+      "pc-eviction": {
+        "protect": 528,
+        "rw": 264,
+        "rx": 264,
+        "status": 5,
+        "retired": 264
+      },
+      "el-specialization": {
+        "protect": 6,
+        "rw": 3,
+        "rx": 3,
+        "status": 8,
+        "retired": 2
+      },
+      "data-fault": {
+        "protect": 4,
+        "rw": 2,
+        "rx": 2,
+        "status": 4,
+        "retired": 1
+      },
+      "undefined": {
+        "protect": 2,
+        "rw": 1,
+        "rx": 1,
+        "status": 8,
+        "retired": 0
+      },
+      "slot-fallback": {
+        "protect": 512,
+        "rw": 256,
+        "rx": 256,
+        "status": 5,
+        "retired": 256
+      },
+      "small-buffer": {
+        "protect": 512,
+        "rw": 256,
+        "rx": 256,
+        "status": 5,
+        "retired": 256
+      },
+      "full-buffer-overflow": {
+        "protect": 1,
+        "rw": 1,
+        "rx": 0,
+        "status": 6,
+        "retired": 0
+      },
+      "rw-failure": {
+        "protect": 1,
+        "rw": 1,
+        "rx": 0,
+        "status": 7,
+        "retired": 0
+      },
+      "rx-failure": {
+        "protect": 2,
+        "rw": 1,
+        "rx": 1,
+        "status": 7,
+        "retired": 0
+      }
+    },
+    "small-slot": {
+      "loop": {
+        "protect": 6,
+        "rw": 3,
+        "rx": 3,
+        "status": 5,
+        "retired": 256
+      },
+      "fetch-failure": {
+        "protect": 2,
+        "rw": 1,
+        "rx": 1,
+        "status": 4,
+        "retired": 4
+      },
+      "fetch-malformed": {
+        "protect": 2,
+        "rw": 1,
+        "rx": 1,
+        "status": 4,
+        "retired": 4
+      },
+      "self-modifying": {
+        "protect": 8,
+        "rw": 4,
+        "rx": 4,
+        "status": 5,
+        "retired": 256
+      },
+      "pc-eviction": {
+        "protect": 528,
+        "rw": 264,
+        "rx": 264,
+        "status": 5,
+        "retired": 264
+      },
+      "el-specialization": {
+        "protect": 6,
+        "rw": 3,
+        "rx": 3,
+        "status": 8,
+        "retired": 2
+      },
+      "data-fault": {
+        "protect": 4,
+        "rw": 2,
+        "rx": 2,
+        "status": 4,
+        "retired": 1
+      },
+      "undefined": {
+        "protect": 2,
+        "rw": 1,
+        "rx": 1,
+        "status": 8,
+        "retired": 0
+      },
+      "slot-fallback": {
+        "protect": 512,
+        "rw": 256,
+        "rx": 256,
+        "status": 5,
+        "retired": 256
+      },
+      "small-buffer": {
+        "protect": 6,
+        "rw": 3,
+        "rx": 3,
+        "status": 5,
+        "retired": 256
+      },
+      "full-buffer-overflow": {
+        "protect": 1,
+        "rw": 1,
+        "rx": 0,
+        "status": 6,
+        "retired": 0
+      },
+      "rw-failure": {
+        "protect": 1,
+        "rw": 1,
+        "rx": 0,
+        "status": 7,
+        "retired": 0
+      },
+      "rx-failure": {
+        "protect": 2,
+        "rw": 1,
+        "rx": 1,
+        "status": 7,
+        "retired": 0
+      }
+    }
+  },
+  "rejected_mutants": [
+    "ignore-pc",
+    "ignore-word",
+    "ignore-el",
+    "retain-overwritten-slots",
+    "skip-hit-entry-count"
+  ],
+  "comparison": "complete CPU bytes, result bytes, RAM, ordered requests/replies/callback results",
+  "actual_mprotect_wx": true,
+  "physical_boot_verified": false
+}

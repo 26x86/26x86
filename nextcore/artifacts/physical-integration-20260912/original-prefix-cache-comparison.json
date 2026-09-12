@@ -1,0 +1,35 @@
+{
+  "schema": "nextcore.original-prefix-cache-comparison.v1",
+  "passed": true,
+  "checks": {
+    "completed": true,
+    "same_execution": true,
+    "same_observed_state": true,
+    "framebuffer_still_all_zero": true,
+    "uncached_exact_calls": true,
+    "cached_calls_reduced": true
+  },
+  "protection_calls": {
+    "cached": {
+      "writable": 284,
+      "executable": 283,
+      "failures": 0
+    },
+    "uncached": {
+      "writable": 65537,
+      "executable": 65536,
+      "failures": 0
+    }
+  },
+  "retired": 65536,
+  "completed_data_operations": 11702,
+  "elapsed_seconds": {
+    "cached": 23.868,
+    "uncached": 57.754
+  },
+  "timing_scope": "One serial run per variant; includes staging, UART and GOP; not a benchmark or guaranteed speedup.",
+  "observation_scope": "Complete reported execution record and final 64 request metadata entries, not complete original guest RAM comparison.",
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "normal_startup_verified": false
+}
