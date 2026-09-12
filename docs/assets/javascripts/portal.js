@@ -30,6 +30,75 @@
   const termsMatch = (haystack, query) => searchText(query).trim().split(/\s+/).every(term => haystack.includes(term));
   const badge = (text, style = "") => el("span", text, "portal-badge " + style);
   const statusLabel = value => ({"validated-in-ovmf": "Validated in OVMF", "in-progress": "In development", "not-ready": "Not ready", unverified: "Unverified"}[value] || value);
+  const factList = entries => {
+    const list = el("dl", undefined, "portal-facts");
+    for (const [label, value] of entries) {
+      const text = Array.isArray(value) ? value.join(" · ") : value;
+      list.append(el("dt", label), el("dd", text === false ? "No" : text === true ? "Yes" : text || "Not documented"));
+    }
+    return list;
+  };
+  function specificationDetails(model) {
+    const section = el("section", undefined, "portal-variant-section");
+    section.append(el("h3", "Apple variants & technical specifications"), el("p", "A model identifier can cover different releases and configurations. Keep each variant and its source page separate.", "portal-small"));
+    const specs = model.technical_specifications || [];
+    const used = new Set();
+    const appendSpec = (container, spec) => {
+      const block = el("div", undefined, "portal-specification");
+      block.append(el("h5", "Options mentioned on the specification page"));
+      block.append(factList([
+        ["Processor mentions", spec.processor_mentions],
+        ["Memory capacity mentions", spec.memory_capacity_mentions],
+        ["Storage capacity mentions", spec.storage_capacity_mentions]
+      ]));
+      block.append(el("p", spec.scope || "Specification-page options; not measured installed hardware.", "portal-small"));
+      block.append(link("Read this Apple specification →", spec.source_url));
+      container.append(block);
+    };
+    for (const variant of model.variants || []) {
+      const card = el("article", undefined, "portal-variant");
+      card.append(el("h4", variant.name), el("p", (variant.identifiers || []).join(" · ") || "Identifier not verified", "portal-model-id"));
+      const factLabels = {chip: "Chip", colors: "Colors", front_ports: "Front ports", ports: "Ports"};
+      const entries = Object.entries(variant.facts || {}).map(([key, value]) => [factLabels[key] || key.replaceAll("_", " "), value]);
+      if (entries.length) card.append(factList(entries));
+      else card.append(el("p", "Additional configuration facts are not transcribed for this variant. Consult its technical specification.", "portal-small"));
+      if (variant.source_url) card.append(link("Apple identification source →", variant.source_url));
+      for (const url of variant.technical_specs_urls || []) {
+        const spec = specs.find(item => item.source_url === url);
+        if (spec) { appendSpec(card, spec); used.add(url); }
+        else { const reference = el("p"); reference.append(link("Apple technical specification →", url)); card.append(reference); }
+      }
+      section.append(card);
+    }
+    for (const spec of specs.filter(item => !used.has(item.source_url))) {
+      const card = el("article", undefined, "portal-variant");
+      card.append(el("h4", "Model specification reference"));
+      appendSpec(card, spec); section.append(card);
+    }
+    if (!(model.variants || []).length && !specs.length) {
+      section.append(el("p", "No separate variant records are transcribed. Consult the source-linked catalog summary and Apple technical specification."));
+      if (model.apple_support?.source_url) section.append(link("Open Apple source →", model.apple_support.source_url));
+    }
+    const historical = model.repository_hardware || [];
+    if (historical.length) {
+      const disclosure = el("details", undefined, "portal-historical");
+      disclosure.append(el("summary", "Historical repository hardware records (" + historical.length + ")"));
+      disclosure.append(el("p", "These are recorded dataset values, not Apple-verified specifications or measurements of your Mac. Internal device names are preserved as recorded. They do not establish NextCore compatibility.", "portal-small"));
+      for (const record of historical) {
+        disclosure.append(el("h4", record.dataset_key || record.name || "Historical record"));
+        disclosure.append(factList([
+          ["CPU generation", record.cpu_generation], ["Stock GPUs", record.stock_gpus],
+          ["Stock storage", record.stock_storage], ["Display size (inches)", record.screen_inches],
+          ["Wireless", record.wireless], ["Bluetooth", record.bluetooth],
+          ["Ethernet", record.ethernet], ["UGA graphics", record.uga_graphics]
+        ]));
+      }
+      const source = (model.sources || []).find(item => /repository.*historical|SMBIOS/i.test(item.label));
+      if (source) disclosure.append(link(source.label, source.url));
+      section.append(disclosure);
+    }
+    return section;
+  }
   const empty = (target, title, text) => {
     target.replaceChildren();
     const panel = el("div", undefined, "portal-empty");
@@ -127,6 +196,7 @@
         if (model.nextcore?.architecture_support === "not-implemented") nextcore.append(el("p", "NextCore execution support for this architecture is not implemented."));
         if (model.nextcore?.evidence_url) nextcore.append(link("Read model evidence →", model.nextcore.evidence_url));
         panel.append(apple, nextcore);
+        panel.append(specificationDetails(model));
         const sources = el("ul");
         for (const source of model.sources || []) {
           const item = el("li"); item.append(link(source.label, source.url)); sources.append(item);
