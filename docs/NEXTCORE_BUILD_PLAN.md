@@ -868,9 +868,9 @@ profile name does not establish its normal startup ABI; see the
 
 ### Owned non-accelerated framebuffer handoff
 
-Current Status: The trace supplies zero boot-video fields. The existing GOP
-helper can present caller-owned pixels, but no boot-video allocation is reserved
-with the kernel handoff. Physical desktop output remains unverified.
+Current Status: The opt-in trace reserves owned boot-video storage and authored
+guest writes match actual GOP RGB readback. The original-input prefix still has
+a screen hash matching an all-zero frame. Physical desktop output is unverified.
 
 Target State: An explicitly selected display path reads the real current GOP
 mode, reserves a checked 32-bit guest framebuffer in the handoff allocation,
@@ -887,3 +887,35 @@ slot owns checked current-GOP geometry and presentation adaptation. Authored
 guest writes must be read back from the actual GOP in OVMF, with the framebuffer
 bytes and geometry taken from the encoded boot arguments. Such a result proves
 this display connection only, not WindowServer or a physical macOS desktop.
+
+### Bounded memory-request observation
+
+Current Status: A 16,384-instruction return supplies a final PC and aggregate
+memory counters. It cannot establish whether initialization advanced or repeated.
+
+Target State: A separate build-only observation feature records the last 64
+memory requests and successful replies through the same MemoryService execution
+path. A fixed ring avoids allocation, never changes guest inputs or replies, and
+prints only after execution returns. Request sequence, operation, PC, address,
+width and count are sufficient; guest instruction/data values are not emitted.
+The existing budget, entry state, memory permissions and readiness gates remain
+unchanged. Raw original-image coordinates stay in the isolated output directory.
+Authored requests must prove chronological ring order and identical RAM/replies
+with observation enabled and disabled before replaying the original input.
+
+### Explicit long diagnostic after observed advancing stores
+
+Current Status: The final 64-request window of the 16,384-instruction original
+prefix contains successful 8-byte stores at two distinct adjacent addresses.
+Observation preserves the complete prior execution result and configuration.
+This refutes a fixed-address stall in that observed window, but not all loops.
+
+Target State: A separate `arm-jit-long-trace` build and exact `long-65536`
+selector permit one 65,536-instruction diagnostic with the existing named
+software profile. Existing default, tiered and deep parsers keep their ceilings;
+even a long-capable build requires the explicit selector and exact budget.
+The host requires build and selection acknowledgement before accepting that
+request. No normal-entry gate, provider behavior, guest input or instruction
+semantics changes. An authored bounded loop validates the selected budget and
+old-build rejection before replaying the same original input. The next fault or
+observed state, not the larger count itself, determines the next implementation.

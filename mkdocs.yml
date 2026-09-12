@@ -156,6 +156,7 @@ nav:
       - Boot runtime verification: BOOT_RUNTIME_VERIFICATION.md
       - Boot picker recovery: BOOT_PICKER_RECOVERY.md
       - Boot framebuffer validation: BOOT_FRAMEBUFFER_VALIDATION.md
+      - Bounded original-prefix progress: PREFIX_PROGRESS_VALIDATION.md
       - ARM64 startup coverage: A64_STARTUP_COVERAGE_20260912.md
       - ARM64e entry contract: NEXTCORE_ARM64E_ENTRY_CONTRACT.md
       - Module repositories: wiki/Nextcore-Modules.md
