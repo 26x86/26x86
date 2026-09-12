@@ -81,3 +81,36 @@ implementation contract must connect each chosen software feature value to
 its actual optional-control acceptance or rejection. Positive synchronization
 or branch-history guarantees require separate evidence. No MMFR1 instruction
 support, original-input progress, or readiness change follows from acquisition.
+
+## Target identity cross-check
+
+A bounded read-only load-command audit identifies the target kernel member's
+source version as `13432.1.9`. The pinned public Apple import identifies itself
+as `xnu-12377.121.6`. These different version identities do not prove ABI
+incompatibility, but they prevent treating that public source as a verified
+target-source binding. The [sanitized identity receipt](evidence/target-entry-audit-20260913.json)
+records input preservation and scope; UUID values and original coordinates
+remain isolated.
+
+Existing staging and r29 metadata agree on the outer LC_UNIXTHREAD entry;
+the member entry differs. The selected entry is inside a file-backed executable
+boot segment. These relations corroborate the current entry selection, not its
+exact register or service contract. They supply no basis for replacing the
+entry with an image base or a different member PC. Target SPTM applicability
+remains unverified.
+
+OPEN_QUESTION: Build Plan: Bind the exact selected entry to matching target symbols or a UUID-matched KDK/source identity before changing initial state; an approximate symbol or older public startup path is insufficient.
+
+## Clean CI confirmation
+
+The complete immutable source `3d3a434dfc9f84dcc1c34a2257f8cf7ceaafd99c`
+passed all six workspace/EFI jobs in
+[run 34713439375](https://github.com/26x86/26x86/actions/runs/34713439375)
+and the separate EFI Sandbox. Its fresh hierarchy run passes 306 Arm TCG cases,
+258 direct joins, 34 native tests in each mode, 104 reference tests, and 961 EFI
+cases with source preservation. Five downloaded original CI receipts and their
+hashes are retained under
+`nextcore/artifacts/physical-integration-20260912/hierarchy-ci-20260913`.
+This fresh successful run supplements the separately qualified local r6 evidence;
+the original local preservation failure remains recorded. No physical or macOS
+boot claim follows from the CI result.
