@@ -2,15 +2,10 @@
 
 ## Current Status
 
-The active exact runtime is ISE `7cd9ac04016cbe436b3090fbf84e7cae67c6e8dc`,
-including MADD/MSUB and the reference compare/register-branch corrections. Its
-fresh six-case replay and 14 comparator tests passed; see
-`VALIDATION_MADD_20260912.md` and `evidence-madd-20260912`.
-
-The preceding `a8a06da` source package is preserved byte-for-byte under
-`history/a8a06da`, with its existing `evidence-tbz-20260912` left in place.
-Only selected sources, the exact freeze and documentation are copied; histories
-and evidence are never recursively duplicated.
+The active exact runtime is ISE `a8a06dad15449b15ffb2383934f6a4239a54327f`,
+including TBZ/TBNZ and the inclusive last-word fetch correction. Its fresh
+six-case replay and 14 comparator tests passed; see
+`VALIDATION_TBZ_20260912.md` and `evidence-tbz-20260912`.
 
 The preceding `08156f4` comparator sources, freeze, and documentation are
 preserved byte-for-byte under `history/08156f4`. Their original
