@@ -1,0 +1,402 @@
+{
+  "schema": "nextcore.authored-entry-provenance.v1",
+  "passed": true,
+  "source_inputs_preserved": true,
+  "source_hashes": {
+    "/tmp/nextcore-physical-runtime-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi": "dc413ead68408ad6fa017e06062349771568ab84061dbede4fda45261563a376",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_entry_provenance_ovmf.py": "dd1a2b9621a41cd43578fb2abca9a457561219b1ca979f0f7c971f34460183d2",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/build_arm64_handoff_probe.py": "2013476485d750c74e11a092b15566cb8a9f571ddd61dab5000d691d4d41dc6b",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py": "0fddad2396e905a6241c08aef6a64220fc3b79d9ab7e639612d0a324342d5741",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "549914a7980ee519afcccaa97e952a0125d1d257c8fb66f97b5c311a1c5a52de"
+  },
+  "assembly_commands": [
+    [
+      "clang",
+      "--target=aarch64-none-elf",
+      "-c",
+      "/tmp/nextcore-entry-provenance-20260912-r3/canaries.S",
+      "-o",
+      "/tmp/nextcore-entry-provenance-20260912-r3/canaries.o"
+    ],
+    [
+      "llvm-objcopy",
+      "-O",
+      "binary",
+      "--only-section=.text",
+      "/tmp/nextcore-entry-provenance-20260912-r3/canaries.o",
+      "/tmp/nextcore-entry-provenance-20260912-r3/canaries.bin"
+    ]
+  ],
+  "image_base_virtual": 18446741874719834112,
+  "outer_entry_virtual": 18446741874719867904,
+  "member_entry_virtual": 18446741874719867968,
+  "cases": [
+    {
+      "name": "outer-entry",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "entry_pc": true,
+        "exact_budget_return": true,
+        "exact_loop_pc": true,
+        "canary_registers": true,
+        "boot_argument_preserved": true,
+        "memory_provider": true,
+        "inputs_preserved": true
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py",
+        "--tools",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools",
+        "--efi",
+        "/tmp/nextcore-physical-runtime-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi",
+        "--kernel",
+        "/tmp/nextcore-entry-provenance-20260912-r3/outer-entry/authored.kc",
+        "--device-tree",
+        "/tmp/nextcore-entry-provenance-20260912-r3/diagnostic.dt",
+        "--output",
+        "/tmp/nextcore-entry-provenance-20260912-r3/outer-entry/firmware",
+        "--physical-base",
+        "0x40000000",
+        "--virtual-base",
+        "0xfffffe0000000000",
+        "--memory-size",
+        "67108864",
+        "--kernel-physical",
+        "0x41ffc000",
+        "--instruction-budget",
+        "64",
+        "--platform-profile",
+        "nextcore-irq-compat-v1",
+        "--allow-incomplete-sptm-prefix",
+        "--timeout",
+        "60"
+      ],
+      "fixture_sha256": "9559c97be856db933507c68642963e2f4cb6fe3e54bbe11f4999eb13e607823d",
+      "entry_virtual": 18446741874719867904,
+      "entry_physical": 1107313664,
+      "expected_registers": [
+        4369,
+        43690,
+        273
+      ],
+      "observed_execution": {
+        "status": 5,
+        "retired": 64,
+        "pc": 1107313676,
+        "compiled_blocks": 64,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 4369,
+          "x1": 1107345408,
+          "x2": 43690,
+          "x3": 273
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        },
+        "memory": {
+          "abi": 1,
+          "provider_status": 0,
+          "guest_far": 0,
+          "last_address": 1107313676,
+          "fetch_requests": 64,
+          "data_requests": 0,
+          "completed_data_operations": 0
+        }
+      },
+      "entered": "NXARMJIT: TRACE_ENTER entry=0x42004400 x0=0 x1=0x4200c000 x2=0 x3=0 budget=64",
+      "mutation_byte_offsets": [],
+      "mutated_pc_field_offset": null
+    },
+    {
+      "name": "outer-selects-member",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "entry_pc": true,
+        "exact_budget_return": true,
+        "exact_loop_pc": true,
+        "canary_registers": true,
+        "boot_argument_preserved": true,
+        "memory_provider": true,
+        "inputs_preserved": true
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py",
+        "--tools",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools",
+        "--efi",
+        "/tmp/nextcore-physical-runtime-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi",
+        "--kernel",
+        "/tmp/nextcore-entry-provenance-20260912-r3/outer-selects-member/authored.kc",
+        "--device-tree",
+        "/tmp/nextcore-entry-provenance-20260912-r3/diagnostic.dt",
+        "--output",
+        "/tmp/nextcore-entry-provenance-20260912-r3/outer-selects-member/firmware",
+        "--physical-base",
+        "0x40000000",
+        "--virtual-base",
+        "0xfffffe0000000000",
+        "--memory-size",
+        "67108864",
+        "--kernel-physical",
+        "0x41ffc000",
+        "--instruction-budget",
+        "64",
+        "--platform-profile",
+        "nextcore-irq-compat-v1",
+        "--allow-incomplete-sptm-prefix",
+        "--timeout",
+        "60"
+      ],
+      "fixture_sha256": "20337ce10c9f31d96d48178aef3935f9c522c4c7a354ec754d0259a751237675",
+      "entry_virtual": 18446741874719867968,
+      "entry_physical": 1107313728,
+      "expected_registers": [
+        8738,
+        48059,
+        546
+      ],
+      "observed_execution": {
+        "status": 5,
+        "retired": 64,
+        "pc": 1107313740,
+        "compiled_blocks": 64,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 8738,
+          "x1": 1107345408,
+          "x2": 48059,
+          "x3": 546
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        },
+        "memory": {
+          "abi": 1,
+          "provider_status": 0,
+          "guest_far": 0,
+          "last_address": 1107313740,
+          "fetch_requests": 64,
+          "data_requests": 0,
+          "completed_data_operations": 0
+        }
+      },
+      "entered": "NXARMJIT: TRACE_ENTER entry=0x42004440 x0=0 x1=0x4200c000 x2=0 x3=0 budget=64",
+      "mutation_byte_offsets": [
+        520
+      ],
+      "mutated_pc_field_offset": 520
+    },
+    {
+      "name": "member-metadata-changes",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "entry_pc": true,
+        "exact_budget_return": true,
+        "exact_loop_pc": true,
+        "canary_registers": true,
+        "boot_argument_preserved": true,
+        "memory_provider": true,
+        "inputs_preserved": true
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py",
+        "--tools",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools",
+        "--efi",
+        "/tmp/nextcore-physical-runtime-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi",
+        "--kernel",
+        "/tmp/nextcore-entry-provenance-20260912-r3/member-metadata-changes/authored.kc",
+        "--device-tree",
+        "/tmp/nextcore-entry-provenance-20260912-r3/diagnostic.dt",
+        "--output",
+        "/tmp/nextcore-entry-provenance-20260912-r3/member-metadata-changes/firmware",
+        "--physical-base",
+        "0x40000000",
+        "--virtual-base",
+        "0xfffffe0000000000",
+        "--memory-size",
+        "67108864",
+        "--kernel-physical",
+        "0x41ffc000",
+        "--instruction-budget",
+        "64",
+        "--platform-profile",
+        "nextcore-irq-compat-v1",
+        "--allow-incomplete-sptm-prefix",
+        "--timeout",
+        "60"
+      ],
+      "fixture_sha256": "7d4edba5af6a29f59dbbd26d4fd6f2c3c2a43e03f5f2c61903fe40df386cae1b",
+      "entry_virtual": 18446741874719867904,
+      "entry_physical": 1107313664,
+      "expected_registers": [
+        4369,
+        43690,
+        273
+      ],
+      "observed_execution": {
+        "status": 5,
+        "retired": 64,
+        "pc": 1107313676,
+        "compiled_blocks": 64,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 4369,
+          "x1": 1107345408,
+          "x2": 43690,
+          "x3": 273
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        },
+        "memory": {
+          "abi": 1,
+          "provider_status": 0,
+          "guest_far": 0,
+          "last_address": 1107313676,
+          "fetch_requests": 64,
+          "data_requests": 0,
+          "completed_data_operations": 0
+        }
+      },
+      "entered": "NXARMJIT: TRACE_ENTER entry=0x42004400 x0=0 x1=0x4200c000 x2=0 x3=0 budget=64",
+      "mutation_byte_offsets": [
+        16832
+      ],
+      "mutated_pc_field_offset": 16832
+    },
+    {
+      "name": "outer-selects-image-base",
+      "passed": true,
+      "checks": {
+        "diagnostic_completed": true,
+        "entry_pc": true,
+        "exact_budget_return": true,
+        "exact_loop_pc": true,
+        "canary_registers": true,
+        "boot_argument_preserved": true,
+        "memory_provider": true,
+        "inputs_preserved": true
+      },
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py",
+        "--tools",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools",
+        "--efi",
+        "/tmp/nextcore-physical-runtime-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi",
+        "--kernel",
+        "/tmp/nextcore-entry-provenance-20260912-r3/outer-selects-image-base/authored.kc",
+        "--device-tree",
+        "/tmp/nextcore-entry-provenance-20260912-r3/diagnostic.dt",
+        "--output",
+        "/tmp/nextcore-entry-provenance-20260912-r3/outer-selects-image-base/firmware",
+        "--physical-base",
+        "0x40000000",
+        "--virtual-base",
+        "0xfffffe0000000000",
+        "--memory-size",
+        "67108864",
+        "--kernel-physical",
+        "0x41ffc000",
+        "--instruction-budget",
+        "64",
+        "--platform-profile",
+        "nextcore-irq-compat-v1",
+        "--allow-incomplete-sptm-prefix",
+        "--timeout",
+        "60"
+      ],
+      "fixture_sha256": "a7ab6231f20c314df1a8fffd50bd32ee4da8f51ce8d038a04c2b7f093a781638",
+      "entry_virtual": 18446741874719834112,
+      "entry_physical": 1107279872,
+      "expected_registers": [
+        13107,
+        52428,
+        819
+      ],
+      "observed_execution": {
+        "status": 5,
+        "retired": 64,
+        "pc": 1107279884,
+        "compiled_blocks": 64,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 13107,
+          "x1": 1107345408,
+          "x2": 52428,
+          "x3": 819
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 965,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        },
+        "memory": {
+          "abi": 1,
+          "provider_status": 0,
+          "guest_far": 0,
+          "last_address": 1107279884,
+          "fetch_requests": 64,
+          "data_requests": 0,
+          "completed_data_operations": 0
+        }
+      },
+      "entered": "NXARMJIT: TRACE_ENTER entry=0x41ffc000 x0=0 x1=0x4200c000 x2=0 x3=0 budget=64",
+      "mutation_byte_offsets": [
+        521,
+        522,
+        523
+      ],
+      "mutated_pc_field_offset": 520
+    }
+  ],
+  "apple_assets_used": false,
+  "normal_startup_verified": false,
+  "macos_boot_verified": false
+}
