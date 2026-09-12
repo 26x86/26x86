@@ -60,6 +60,33 @@ repeated addresses from advancing accesses at a fixed budget. It does not reveal
 branch operands, prove correct pointer values or identify a startup ABI. Raw
 original-image PCs and addresses remain isolated.
 
+## Observed chain membership
+
+A read-only traversal of the unchanged original file finds 1,010,443 encoded
+format-8 nodes in 657 page chains, including 899,149 authenticated nodes. The two
+successful eight-byte stores in the final 65,536-step request window match nodes
+at zero-based traversal ordinals 2,722 and 2,723. The first node's saved next
+field points exactly to the second location. This is stronger than adjacent
+addresses alone, but it does not verify store values, all preceding execution,
+complete chain traversal or the function's identity.
+
+The pinned public [chain walker](https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/mach/dyld_kernel_fixups.h)
+saves each encoded word before overwrite and advances using its saved next
+field. Format 8 uses four-byte units; format 11 uses byte units. The original
+metadata traversal uses these published format rules and validates file backing,
+unique visited nodes and termination. Raw locations and words remain isolated.
+The nearby symbol is outside the metadata-defined containing function and is
+not used to name it.
+
+The workload size motivates a separately selected initialization diagnostic.
+The larger ceiling only permits observing the next boundary. It does not enable
+normal startup or claim correct rebasing. The public legacy caller also does not
+check the chain walker's return value; completing that call alone would not
+prove that every fixup succeeded.
+
+[Sanitized membership evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-chain-membership-summary.json)
+records the scope explicitly.
+
 ## Remaining acceptance requirements
 
 - Target-specific argument layouts backed by authoritative public contracts.

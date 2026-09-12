@@ -162,10 +162,14 @@ def main():
     parser.add_argument('--efi', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--instruction-family', choices=['ubfm', 'extended', 'select', 'register-memory', 'test-bit', 'multiply', 'bitfield-merge'], default='ubfm')
-    parser.add_argument('--long-diagnostic', action='store_true',
+    diagnostic = parser.add_mutually_exclusive_group()
+    diagnostic.add_argument('--long-diagnostic', action='store_true',
                         help='require explicit long-65536 firmware capability and exact retirement')
+    diagnostic.add_argument('--initialization-diagnostic', action='store_true',
+                        help='require explicit initialization-67108864 capability and exact retirement')
     args = parser.parse_args()
-    budget = 65536 if args.long_diagnostic else 64
+    budget = 67108864 if args.initialization_diagnostic else 65536 if args.long_diagnostic else 64
+    timeout = 600 if args.initialization_diagnostic else 60
     efi = args.efi.resolve(strict=True)
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=False)
@@ -202,11 +206,13 @@ def main():
         '--physical-base', hex(PHYSICAL - 0x2000000),
         '--virtual-base', hex(VIRTUAL - 0x2000000), '--memory-size', str(64 * 1024 * 1024),
         '--kernel-physical', hex(PHYSICAL), '--instruction-budget', str(budget),
-        '--platform-profile', 'nextcore-irq-compat-v1', '--allow-incomplete-sptm-prefix', '--timeout', '60']
+        '--platform-profile', 'nextcore-irq-compat-v1', '--allow-incomplete-sptm-prefix', '--timeout', str(timeout)]
     if args.long_diagnostic:
         command.append('--long-diagnostic')
+    if args.initialization_diagnostic:
+        command.append('--initialization-diagnostic')
     commands.append(command)
-    result = subprocess.run(command, capture_output=True, text=True, timeout=80)
+    result = subprocess.run(command, capture_output=True, text=True, timeout=timeout + 20)
     (out / 'firmware.log').write_text(result.stdout + result.stderr)
     receipt = json.loads((out / 'firmware/report.json').read_text())
     execution = receipt.get('execution') or {}
@@ -226,6 +232,7 @@ def main():
     }
     summary = dict(schema='nextcore.arithmetic-existing-efi-consumer.v1', instruction_family=args.instruction_family,
                    instruction_budget=budget, long_diagnostic_requested=args.long_diagnostic,
+                   initialization_diagnostic_requested=args.initialization_diagnostic,
                    passed=all(checks.values()), checks=checks,
                    commands=commands, source_hashes=before, original_images_used=False, macos_boot_verified=False)
     (out / 'receipt.json').write_text(json.dumps(summary, indent=2) + '\n')

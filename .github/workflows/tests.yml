@@ -261,6 +261,14 @@ jobs:
         run: |
           cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-long-trace,arm-jit-video-readback,arm-jit-memory-observation,arm-jit-protection-observation,arm-jit-provider-uncached --bin NXARMJIT
           python3 nextcore/tools/verify_provider_cache_ovmf.py --cached-efi "$RUNNER_TEMP/cached-long.efi" --uncached-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --output "$RUNNER_TEMP/provider-cache-efi"
+      - name: Execute explicit initialization bound and reject the old build
+        run: |
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-initialization-trace,arm-jit-protection-observation --bin NXARMJIT
+          python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family bitfield-merge --initialization-diagnostic --output "$RUNNER_TEMP/initialization-bfm"
+          if python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi "$RUNNER_TEMP/cached-long.efi" --instruction-family bitfield-merge --initialization-diagnostic --output "$RUNNER_TEMP/initialization-old-negative"; then
+            exit 1
+          fi
+          python3 -c 'import json,os; from pathlib import Path; p=Path(os.environ["RUNNER_TEMP"])/"initialization-old-negative"; r=json.loads((p/"receipt.json").read_text()); f=json.loads((p/"firmware/report.json").read_text()); assert not r["passed"] and r["checks"]["inputs_preserved"] and any(m.startswith("NXARMJIT: TRACE_CONFIG_INVALID") for m in f["markers"])'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -284,6 +292,10 @@ jobs:
             ${{ runner.temp }}/long-old-negative/**/*.log
             ${{ runner.temp }}/provider-cache-efi/**/*.json
             ${{ runner.temp }}/provider-cache-efi/**/*.log
+            ${{ runner.temp }}/initialization-bfm/**/*.json
+            ${{ runner.temp }}/initialization-bfm/**/*.log
+            ${{ runner.temp }}/initialization-old-negative/**/*.json
+            ${{ runner.temp }}/initialization-old-negative/**/*.log
 
   x86-efi-picker-recovery:
     runs-on: ubuntu-24.04
