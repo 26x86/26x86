@@ -10,7 +10,8 @@ hide: [navigation, toc]
 Clean-room macOS boot engineering for standard UEFI systems. Track the latest evidence and what remains before a physical desktop.
 
 <div class="portal-actions" markdown>
-[Explore development progress](progress.md){ .portal-button }
+[Download prebuilt EFI](downloads.md){ .portal-button }
+[Explore development progress](progress.md){ .portal-button .secondary }
 [Check a Mac model](compatibility.md){ .portal-button .secondary }
 </div>
 </div>

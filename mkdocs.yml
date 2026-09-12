@@ -111,6 +111,7 @@ copyright: |
   <a href="https://github.com/26x86/26x86">NextCore</a> — clean-room EFI boot research and compatibility tooling. Not affiliated with or endorsed by Apple.
 
 nav:
+  - Download EFI: downloads.md
   - Home: index.md
   - Development progress: progress.md
   - Compatibility: compatibility.md
