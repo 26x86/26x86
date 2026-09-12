@@ -24,6 +24,44 @@ def digest(path: Path) -> str:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
+def parse_trace_video(actual: list[str], requested: bool, physical_base: int, memory_size: int) -> dict:
+    """Keep acknowledged framebuffer configuration and successful presentation distinct.
+
+    Missing markers include old EFI consumers that ignore the new selector. These
+    never validate requested video even when bounded guest execution completed.
+    """
+    ready_lines = [line for line in actual if line.startswith("NXARMJIT: TRACE_VIDEO_READY")]
+    unavailable = [line for line in actual if line.startswith("NXARMJIT: TRACE_VIDEO_UNAVAILABLE")]
+    presented_lines = [line for line in actual if line.startswith("NXARMJIT: TRACE_VIDEO_PRESENTED")]
+    geometry = None
+    if len(ready_lines) == 1:
+        match = re.fullmatch(
+            r"NXARMJIT: TRACE_VIDEO_READY width=(\d+) height=(\d+) base=(0x[0-9a-fA-F]+) row_bytes=(\d+)(?: bytes=(\d+))?",
+            ready_lines[0])
+        if match:
+            width, height, base, row_bytes, size = match.groups()
+            width, height, row_bytes = int(width), int(height), int(row_bytes)
+            base = int(base, 16)
+            span = row_bytes * height
+            if (0 < width <= 0xffffffff and 0 < height <= 0xffffffff and row_bytes >= width * 4
+                    and row_bytes % 4 == 0 and physical_base <= base < 2**64
+                    and base + span <= physical_base + memory_size < 2**64
+                    and (size is None or int(size) >= span and base + int(size) <= physical_base + memory_size)):
+                geometry = {"width": width, "height": height, "base": base, "row_bytes": row_bytes,
+                            "visible_span_bytes": span, "allocation_bytes": int(size) if size else None}
+    configured = requested and geometry is not None and not unavailable
+    presented = (configured and presented_lines == ["NXARMJIT: TRACE_VIDEO_PRESENTED status=SUCCESS"]
+                 and actual.index(ready_lines[0]) < actual.index(presented_lines[0]))
+    return {"requested": requested, "ready_observed": bool(ready_lines),
+            "configuration_validated": configured, "geometry": geometry,
+            "unavailable_markers": unavailable, "presented": presented,
+            "validated": presented,
+            "status": "not-requested" if not requested else "unavailable" if unavailable else
+                      "validated" if presented else "presentation-missing-or-invalid" if configured else
+                      "ready-missing-or-invalid",
+            "physical_display_verified": False, "macos_desktop_verified": False}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("efi", "kernel", "device-tree", "output"):
@@ -40,6 +78,8 @@ def main() -> int:
     for name in ("initial-override", "initial-pstate", "vector-base", "irq-level", "fiq-level"):
         parser.add_argument(f"--{name}", type=lambda value: int(value, 0))
     parser.add_argument("--allow-incomplete-sptm-prefix", action="store_true", required=True)
+    parser.add_argument("--gop-framebuffer", action="store_true",
+                        help="request guest framebuffer setup and require explicit ready/presented evidence")
     parser.add_argument("--qemu", default="qemu-system-x86_64")
     parser.add_argument("--host-memory-mib", type=int, default=768)
     parser.add_argument("--timeout", type=float, default=180)
@@ -133,6 +173,8 @@ def main() -> int:
     }
     if args.deep_diagnostic:
         trace["DiagnosticTier"] = "deep-16384"
+    if args.gop_framebuffer:
+        trace["Video"] = "gop-framebuffer"
     if args.platform_profile:
         trace["PlatformProfile"] = args.platform_profile
         if platform_options:
@@ -225,6 +267,8 @@ def main() -> int:
             and memory["abi"] == 1 and execution["retired"] <= memory["fetch_requests"] <= execution["retired"]+1
             and 0 <= memory["completed_data_operations"] <= memory["data_requests"] <= memory["fetch_requests"]
             and "NXARMJIT: TRACE_MEMORY_PROVIDER abi=1 mode=m0-only" in actual)
+    video = parse_trace_video(actual, args.gop_framebuffer, args.physical_base, args.memory_size)
+    requested_checks_completed = completed and (not args.gop_framebuffer or video["validated"])
     receipt = {
         "schema": "nextcore.x86-efi-arm-deep-trace.v1", "host_architecture": platform.machine(),
         "handoff_abi": "unprovisioned-sptm-prefix", "sptm_args_provided": False,
@@ -243,6 +287,8 @@ def main() -> int:
         "input_sha256_before": before, "input_sha256_after": after,
         "original_inputs_preserved": before == after, "esp_copies_preserved": copies_unchanged,
         "diagnostic_completed": completed,
+        "video_requested": args.gop_framebuffer, "video": video,
+        "requested_checks_completed": requested_checks_completed,
         "native_execution_observed": bool(execution and execution["retired"] > 0 and execution["compiled_blocks"] > 0),
         "elapsed_seconds": round(time.monotonic() - start, 3), "failure": failure,
         "qemu_exit_code": process.returncode if process else None,
@@ -250,8 +296,9 @@ def main() -> int:
     }
     (output / "report.json").write_text(json.dumps(receipt, indent=2) + "\n")
     print(json.dumps({"report": str(output / "report.json"), "diagnostic_completed": completed,
+                      "video_validated": video["validated"], "requested_checks_completed": requested_checks_completed,
                       "native_execution_observed": receipt["native_execution_observed"], "failure": failure}))
-    return 0 if completed else 1
+    return 0 if requested_checks_completed else 1
 
 
 if __name__ == "__main__":
