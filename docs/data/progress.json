@@ -1,0 +1,83 @@
+{
+  "updated_at": "2026-09-12",
+  "physical_desktop_verified": false,
+  "boundary": {
+    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r8-summary.json",
+    "label": "Pre-OS diagnostic budget reached: 16,384 instructions",
+    "detail": "The bounded local macOS 27 kernel prefix reached its 16,384-instruction budget after BFM support. No unsupported instruction stopped this run. Budget exhaustion does not establish forward boot progress or normal startup."
+  },
+  "headline": "Building the path to a real macOS desktop",
+  "milestones": [
+    {
+      "title": "EFI recovery",
+      "id": "efi",
+      "layer": "Firmware",
+      "status": "validated-in-ovmf",
+      "summary": "Picker display failures and child-return recovery have authored OVMF evidence. Physical firmware coverage is pending.",
+      "evidence_url": "https://github.com/26x86/Nextcore-EFI/pull/10"
+    },
+    {
+      "title": "A64 startup execution",
+      "id": "execution",
+      "layer": "CPU runtime",
+      "status": "in-progress",
+      "summary": "BFM source and authored EFI checks pass. The bounded local kernel prefix now reaches the diagnostic budget; normal startup and OS progress remain unverified.",
+      "evidence_url": "https://github.com/26x86/Nextcore-ISE/pull/9"
+    },
+    {
+      "title": "Normal kernel handoff",
+      "id": "platform",
+      "layer": "Platform",
+      "status": "not-ready",
+      "summary": "Normal startup returns NOT_READY. A complete validated entry profile, platform services and live mappings are not implemented.",
+      "evidence_url": "https://github.com/26x86/26x86/pull/19"
+    },
+    {
+      "title": "Non-accelerated desktop output",
+      "id": "display",
+      "layer": "Display",
+      "status": "not-ready",
+      "summary": "Diagnostic GOP pixels do not establish a kernel framebuffer, WindowServer, or a usable desktop.",
+      "evidence_url": "https://github.com/26x86/26x86/pull/19"
+    },
+    {
+      "title": "Install and reboot on physical hardware",
+      "id": "physical",
+      "layer": "Physical acceptance",
+      "status": "unverified",
+      "summary": "No physical macOS 27 desktop, installation or reboot has been demonstrated by this project.",
+      "evidence_url": "https://github.com/26x86/26x86/pull/19"
+    }
+  ],
+  "metrics": [
+    {
+      "value": "0",
+      "label": "Physical macOS desktops verified",
+      "detail": "No model is certified as booting macOS 27 through Nextcore."
+    },
+    {
+      "value": "31 / 31",
+      "label": "Latest public CI",
+      "detail": "Successful checks on development revision 8f562ac1; CI is not hardware boot proof."
+    },
+    {
+      "value": "16,384",
+      "label": "Latest bounded prefix",
+      "detail": "Retired instructions in an isolated OVMF diagnostic."
+    }
+  ],
+  "latest": [
+    {
+      "summary": "BFM/BFI/BFXIL/BFC source tests, a 64-instruction authored EFI consumer and the unchanged captured-Arm comparator pass. The local kernel prefix reaches its 16,384-instruction limit.",
+      "date": "2026-09-12",
+      "title": "Bitfield execution reaches the diagnostic budget",
+      "url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r8-summary.json"
+    },
+    {
+      "date": "2026-09-12",
+      "url": "https://github.com/26x86/26x86/pull/19",
+      "summary": "Published MADD/MSUB execution, branch validation fixes and exact-source regression evidence.",
+      "title": "Multiply and reference-branch corrections"
+    }
+  ]
+}
