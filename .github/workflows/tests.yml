@@ -177,6 +177,7 @@ jobs:
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_indexed_native.py --output "$RUNNER_TEMP/indexed-native"
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_variable_shift_native.py --output "$RUNNER_TEMP/variable-shift-native"
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_zfr0_native.py --output "$RUNNER_TEMP/zfr0-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_isar0_native.py --output "$RUNNER_TEMP/isar0-native"
       - name: Build the authored stage-1 EFI consumer
         working-directory: nextcore
         run: cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-stage1-probe --bin NXMMU
@@ -223,6 +224,8 @@ jobs:
             ${{ runner.temp }}/variable-shift-native/*.log
             ${{ runner.temp }}/zfr0-native/receipt.json
             ${{ runner.temp }}/zfr0-native/*.log
+            ${{ runner.temp }}/isar0-native/receipt.json
+            ${{ runner.temp }}/isar0-native/*.log
             ${{ runner.temp }}/nextcore-stage1-proof/*.json
             ${{ runner.temp }}/nextcore-stage1-proof/*.log
             ${{ runner.temp }}/nextcore-dt-proof/*.json

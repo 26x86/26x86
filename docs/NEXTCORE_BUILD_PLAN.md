@@ -1285,8 +1285,17 @@ https://github.com/qemu/qemu/blob/v8.2.2/target/arm/tcg/cpu64.c#L1141-L1151
 
 ### Exact ISAR0 read in the bounded scalar profile
 
-Current Status: Original r26 stops at ID_AA64ISAR0_EL1. The native JIT, C
-register API and Rust reference do not currently recognize this register.
+Current Status: ISE `29413d9ca770c2b6e9487f91838452c7987f3a4e` and EFI
+`2099d59fc42ec8c41a116b3ffe1a131ed1acc297` implement this exact read. Independent
+validation passes 928 native assertions, 35 reference tests, 32 provider tests
+per cache mode and rejection of 16 unsupported extensions. Thirty-two
+Cortex-A72 model observations validate access/encoding/XZR/NZCV, with its
+nonzero feature value retained separately from the software policy. ZFR0
+regression tests and ten authored EFI checks pass. The preceding ZFR0 EFI
+stops at the first ISAR0 read after 114 instructions in the same authored
+fixture, while the new EFI reaches 65,536. The 114-file immutable freeze passes
+six captures, fourteen regressions and three negative controls. Original r27
+is next; r26 stopped because this exact register read was not recognized.
 The runtime does not implement the extensions described by its AES, SHA1,
 SHA2, CRC32, Atomic, TME, RDM, SHA3, SM3, SM4, DP, FHM, TS, TLB or RNDR fields.
 Baseline exclusives are not LSE; baseline TLBI is not the outer-shareable or

@@ -1,0 +1,157 @@
+{
+  "schema": "nextcore.efi-pinned-build-comparison.v1",
+  "efi_commit": "2099d59fc42ec8c41a116b3ffe1a131ed1acc297",
+  "ise_commit": "29413d9ca770c2b6e9487f91838452c7987f3a4e",
+  "fixed_tested_binary": "/tmp/nextcore-isar0-mapped-final-20260913.efi",
+  "rebuilt_binary": "/tmp/nextcore-isar0-cached-target-20260913/x86_64-unknown-uefi/release/NXARMJIT.efi",
+  "fixed_sha256": "a96307cf782d440c3deb073ed4c198e0b690795598d553b8fd8c6385d17d497c",
+  "rebuilt_sha256": "a96307cf782d440c3deb073ed4c198e0b690795598d553b8fd8c6385d17d497c",
+  "fixed_bytes": 308736,
+  "rebuilt_bytes": 308736,
+  "exact_equal": true,
+  "normalized_pe_debug_metadata_equal": true,
+  "executable_sections_equal": true,
+  "fixed_pe": {
+    "pe_offset": 120,
+    "entry_rva": 9696,
+    "sections": [
+      {
+        "name": ".text",
+        "virtual_size": 275655,
+        "rva": 4096,
+        "raw_size": 275968,
+        "raw_offset": 1024,
+        "flags": 1610612768,
+        "sha256": "edffc8ffab8199c7de89b2b6e70b0e8737159bc65e8ba50a410444341358ec55"
+      },
+      {
+        "name": ".rdata",
+        "virtual_size": 29326,
+        "rva": 282624,
+        "raw_size": 29696,
+        "raw_offset": 276992,
+        "flags": 1073741888,
+        "sha256": "3ab5104bd852c76303fc282d3a30746325da7965980f79b311e6c23c48599536"
+      },
+      {
+        "name": ".data",
+        "virtual_size": 168,
+        "rva": 315392,
+        "raw_size": 512,
+        "raw_offset": 306688,
+        "flags": 3221225536,
+        "sha256": "486258f837bf0c1dd6c953b091c5270aacc8a315480b76a4cfda45f642c36592"
+      },
+      {
+        "name": ".eh_fram",
+        "virtual_size": 64,
+        "rva": 319488,
+        "raw_size": 512,
+        "raw_offset": 307200,
+        "flags": 1073741888,
+        "sha256": "2b1a77bc57e3feebc17568163abd00c08ed7eb0a81c4a913474d7c6e019ce642"
+      },
+      {
+        "name": ".reloc",
+        "virtual_size": 680,
+        "rva": 323584,
+        "raw_size": 1024,
+        "raw_offset": 307712,
+        "flags": 1107296320,
+        "sha256": "298961a2500cda8daf4cdb19dd18d58d58f781412bbea179eef82315d45feccd"
+      }
+    ],
+    "metadata_fields": [
+      {
+        "offset": 128,
+        "bytes": 4,
+        "meaning": "COFF timestamp"
+      },
+      {
+        "offset": 306240,
+        "bytes": 4,
+        "meaning": "debug directory timestamp"
+      },
+      {
+        "offset": 306268,
+        "bytes": 16,
+        "meaning": "CodeView RSDS GUID"
+      }
+    ]
+  },
+  "rebuilt_pe": {
+    "pe_offset": 120,
+    "entry_rva": 9696,
+    "sections": [
+      {
+        "name": ".text",
+        "virtual_size": 275655,
+        "rva": 4096,
+        "raw_size": 275968,
+        "raw_offset": 1024,
+        "flags": 1610612768,
+        "sha256": "edffc8ffab8199c7de89b2b6e70b0e8737159bc65e8ba50a410444341358ec55"
+      },
+      {
+        "name": ".rdata",
+        "virtual_size": 29326,
+        "rva": 282624,
+        "raw_size": 29696,
+        "raw_offset": 276992,
+        "flags": 1073741888,
+        "sha256": "3ab5104bd852c76303fc282d3a30746325da7965980f79b311e6c23c48599536"
+      },
+      {
+        "name": ".data",
+        "virtual_size": 168,
+        "rva": 315392,
+        "raw_size": 512,
+        "raw_offset": 306688,
+        "flags": 3221225536,
+        "sha256": "486258f837bf0c1dd6c953b091c5270aacc8a315480b76a4cfda45f642c36592"
+      },
+      {
+        "name": ".eh_fram",
+        "virtual_size": 64,
+        "rva": 319488,
+        "raw_size": 512,
+        "raw_offset": 307200,
+        "flags": 1073741888,
+        "sha256": "2b1a77bc57e3feebc17568163abd00c08ed7eb0a81c4a913474d7c6e019ce642"
+      },
+      {
+        "name": ".reloc",
+        "virtual_size": 680,
+        "rva": 323584,
+        "raw_size": 1024,
+        "raw_offset": 307712,
+        "flags": 1107296320,
+        "sha256": "298961a2500cda8daf4cdb19dd18d58d58f781412bbea179eef82315d45feccd"
+      }
+    ],
+    "metadata_fields": [
+      {
+        "offset": 128,
+        "bytes": 4,
+        "meaning": "COFF timestamp"
+      },
+      {
+        "offset": 306240,
+        "bytes": 4,
+        "meaning": "debug directory timestamp"
+      },
+      {
+        "offset": 306268,
+        "bytes": 16,
+        "meaning": "CodeView RSDS GUID"
+      }
+    ]
+  },
+  "byte_difference_count": 0,
+  "inventory_entries_verified": 72,
+  "inventory_archive_and_working_equal": true,
+  "production_sources_changed": false,
+  "fixed_tested_binary_preserved": true,
+  "original_inputs_used": false,
+  "physical_boot_verified": false
+}

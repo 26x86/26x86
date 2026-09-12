@@ -1,0 +1,169 @@
+{
+  "schema": "nextcore.isar0-scalar-profile.v1",
+  "ise_commit": "29413d9ca770c2b6e9487f91838452c7987f3a4e",
+  "authored_efi_passed": true,
+  "native_passed": true,
+  "contract": "Exact read-only ISAR0 in the bounded scalar profile, per-field absence policy, live EL and control checks; CPU-model register observations do not define this software profile",
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "original_images_used": false,
+  "files": [
+    {
+      "path": "efi/cached/report.json",
+      "bytes": 17087,
+      "sha256": "03ec300fea03b3112217406fe169cdb72d99cbdff593b6ade141ff741fd3689e"
+    },
+    {
+      "path": "efi/cached/serial.log",
+      "bytes": 11191,
+      "sha256": "eab76bc41cf81a6eac8a203de8bb245db75e163c4d39bbd065afd3c2485822bd"
+    },
+    {
+      "path": "efi/old/report.json",
+      "bytes": 8281,
+      "sha256": "611551b1b64cdcf755de0b7dad0a2c5e7ce38f333e4a4ca8951749cc505f9305"
+    },
+    {
+      "path": "efi/old/serial.log",
+      "bytes": 3107,
+      "sha256": "b3b60f7d81aabd1145ba06ff671ec14461b4420a233a28585b7334a26d92c891"
+    },
+    {
+      "path": "efi/receipt.json",
+      "bytes": 39073,
+      "sha256": "3b8ee12d9200d556b5cc5439c8d3e048c263ab17ac9e0dfb6e02c057c124af97"
+    },
+    {
+      "path": "efi/uncached/report.json",
+      "bytes": 17111,
+      "sha256": "0d0844b4a0cd65ce7d7f961cc3f9f52eabc6df84d822622775017a2f66280e8d"
+    },
+    {
+      "path": "efi/uncached/serial.log",
+      "bytes": 11195,
+      "sha256": "4cc92128736ca9ff054482cf237eb3b07eaa424ab335e9796715d8626442b206"
+    },
+    {
+      "path": "efi/unobserved/report.json",
+      "bytes": 8148,
+      "sha256": "618673ad7d6eab374323c06367e2936d7fab4a7e6739779690b85b1986de4e6f"
+    },
+    {
+      "path": "efi/unobserved/serial.log",
+      "bytes": 2619,
+      "sha256": "f294bacb62f95fe8d15d489f3a66507d12af63216e0181c67b6410bf0b51e824"
+    },
+    {
+      "path": "native/native.log",
+      "bytes": 33,
+      "sha256": "2484be0778c136ee5017886d2b9f07c0aae6beb605d6c4c4cb7241e970d4af1b"
+    },
+    {
+      "path": "native/oracle-results.bin",
+      "bytes": 512,
+      "sha256": "709055b5609aba0964216429cd275ef5323a8c8b813dac59e2ac1a2a0e0e3a79"
+    },
+    {
+      "path": "native/oracle.S",
+      "bytes": 7690,
+      "sha256": "01e7ba7a32603ef28dd35d9d96895ced0d6036a3ff431685af8273a31556b82a"
+    },
+    {
+      "path": "native/oracle.h",
+      "bytes": 1933,
+      "sha256": "3b270c19519ddda12d1a9c1ed4b436015f6a1340339572c5ac996d90ddf9405f"
+    },
+    {
+      "path": "native/provider.log",
+      "bytes": 2549,
+      "sha256": "48abae1abb12563896a300a611f181f11a5a0eed0569cdd052103736f0e6d298"
+    },
+    {
+      "path": "native/receipt.json",
+      "bytes": 20773,
+      "sha256": "8f82ef27218ce6d5d27a6cb615b4b925c38bed6e872acb7c417678e803ecf9b5"
+    },
+    {
+      "path": "native/reference.log",
+      "bytes": 2742,
+      "sha256": "89ef6062d7ec2f361b1a85f130326f6c5e645f4ffaec3019eb7937fc6a7db50e"
+    },
+    {
+      "path": "native/small-slot.log",
+      "bytes": 2549,
+      "sha256": "43d29f2a0cf35a12a3e262da5398c560faeebdf0cbf5663579942da394ac380b"
+    },
+    {
+      "path": "native/uncached.log",
+      "bytes": 2549,
+      "sha256": "418450fe2029c154fad43bcbfea88d5a574b4d34edeb3c5e623160387c5d620d"
+    },
+    {
+      "path": "prior-efi/receipt.json",
+      "bytes": 2296,
+      "sha256": "10137ba0c59d2a5535cd47a9b9c43ef5dba210eb9439fefce6c7762be79bd854"
+    },
+    {
+      "path": "prior-efi/report.json",
+      "bytes": 16957,
+      "sha256": "6cd9f556063724e9c5cb095ec06a2821dc7dffcc7fcfa12d92c00ec8680ac362"
+    },
+    {
+      "path": "prior-efi/serial.log",
+      "bytes": 11029,
+      "sha256": "740acaec02603e48b75243135a8d801822ec7f8e71a8fd55950db06ce84813d7"
+    },
+    {
+      "path": "prior-efi/verify.py",
+      "bytes": 3130,
+      "sha256": "31bd20acefebb9ef3a97cacf6bf067ba60d1a8baea8cc2e7231888990be01fb0"
+    },
+    {
+      "path": "zfr0-regression/native.log",
+      "bytes": 33,
+      "sha256": "c50568e656dd50343236303a3e603ff1d78f558171824097a922bfab3705c7d1"
+    },
+    {
+      "path": "zfr0-regression/oracle-results.bin",
+      "bytes": 512,
+      "sha256": "0e97841b10b6841456da1108e1b45f1a5b505274445d96da3380e1b94fcd7b0e"
+    },
+    {
+      "path": "zfr0-regression/oracle.S",
+      "bytes": 7658,
+      "sha256": "fd7852852cd00a23d702272320fae4a1d911f6ea6b8617cec67513c733f7391c"
+    },
+    {
+      "path": "zfr0-regression/oracle.h",
+      "bytes": 1715,
+      "sha256": "1c847b55dbe2619b80ac3d59bb0583d1792d1e3c417735679d9cff7a9fe0a781"
+    },
+    {
+      "path": "zfr0-regression/provider.log",
+      "bytes": 2496,
+      "sha256": "4e702e2610ffb66e5f7035a4f1815ac08c924399c6a2c89baeee508ca3d6d356"
+    },
+    {
+      "path": "zfr0-regression/receipt.json",
+      "bytes": 19967,
+      "sha256": "3d92a99b3d93bbc6a7f981f8f186e118f5859f59baccfe29538eed4c40bcc5d9"
+    },
+    {
+      "path": "zfr0-regression/reference.log",
+      "bytes": 2692,
+      "sha256": "869e636e7d4415fd8b0f0985b48c86e6bb791bfc693ce73a7d5148f00af8e957"
+    },
+    {
+      "path": "zfr0-regression/small-slot.log",
+      "bytes": 2496,
+      "sha256": "c16ac64b391cdd083f9492927a002defc2ad4bce9f9a708928d260b055d694a7"
+    },
+    {
+      "path": "zfr0-regression/uncached.log",
+      "bytes": 2496,
+      "sha256": "01056aee0a169ec92f8a3dce1f794e45600a45f9444a53e7fffde281a177ee45"
+    }
+  ],
+  "prior_efi_control_passed": true,
+  "prior_efi_control_scope": "The preceding ZFR0 EFI accepts mapped profile 3 and stops at the first exact ISAR0 read after 114 authored instructions; the new EFI reaches its 65536 instruction budget with the same fixture."
+}

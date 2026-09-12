@@ -124,6 +124,14 @@ _start:
     mrs xzr, S3_0_C0_C4_4
     b.ne mapped_failure
     b.cc mapped_failure
+    // Every ISAR0 extension field is absent in this bounded scalar profile.
+    mrs x11, S3_0_C0_C6_0 // ID_AA64ISAR0_EL1, read-only feature register.
+    b.ne mapped_failure
+    b.cc mapped_failure
+    cbnz x11, mapped_failure
+    mrs xzr, S3_0_C0_C6_0
+    b.ne mapped_failure
+    b.cc mapped_failure
     add x8, x4, #4
 mapped_loop:
     str x5, [x8]

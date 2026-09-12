@@ -4,7 +4,7 @@ from pathlib import Path
 import argparse,copy,hashlib,json,os,platform,struct,subprocess
 
 PUBLIC_SHA="29ccd46ff85dd9da2f8ee8023f86362bfb469e461b04a26d4a07bb7ae0b990cc"
-FREEZE_SHA="557bf4cb1e531941b375f65e7b1aab1b19591e0faac099ce4fb058c8ca593ddc"
+FREEZE_SHA="a029ec66cfc3ea8b254b0609678ea70d2533369f11a2ab9a4e00e4e7f02e2e21"
 RESULT=["status","abi","size","provider","fetches","data_requests","completed","last_address","guest_far",
         "reply_result","reply_fault","reply_fsc","reply_level","reply_address","reply_esr","reply_value0",
         "state_tag","revision","epoch","invalidations","software_table_reads"]
