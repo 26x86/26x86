@@ -1,0 +1,12 @@
+{
+  "run": 34710249000,
+  "job": 103597595468,
+  "source_commit": "64d8faa2ac73da31726a0e78d1bf9d7113bace61",
+  "whole_job_log_sha256": "122691a04a48a1628ff2863464517f307f6e8fc357e5722d8a9bddfda4a01f76",
+  "failure_lines": [
+    "2026-09-12T18:08:34.2670523Z test result: FAILED. 43 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-09-12T18:08:34.2672346Z thread 'stage1::tests::controls_requests_and_missing_tables_have_fresh_diagnostics' (4564) panicked at /home/runner/work/26x86/26x86/nextcore/crates/nextcore-ise/runtime/memory-service/src/stage1_tests.rs:67:81:",
+    "2026-09-12T18:08:34.2674049Z assertion failed: !controls_valid(&bad)"
+  ],
+  "scope": "Earliest failure in the canonical memory-service test; later commands in that CI step did not run."
+}

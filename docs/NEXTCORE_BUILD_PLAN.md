@@ -1624,3 +1624,99 @@ The 128-file exact Git archive also reproduces six unchanged captures, fourteen
 comparator tests and three negative controls. All 202 prior history/evidence
 files remain unchanged. These checks do not establish dynamic ASID switching,
 normal startup, the original reset ABI or physical macOS desktop output.
+
+### Canonical ASID test correction and release provenance
+
+The final release pins ISE `58e712a5a93448014addd635d6fab9e9e8fcc00c`
+and EFI `13fc35e28454a54a5bdfcde249bc15ea320311af`. CI run 34710249000
+found a stale canonical test that still rejected TCR.A1. The correction changes
+only the test and publication metadata: positive A1 and low-eight-bit tags,
+negative high tag bits and AS=1, and immutable changed-A1 rejection.
+
+The twelve commands in the affected CI step pass locally. The final enhanced
+canonical service probe also passes with all four mutation controls detected.
+Pinned mapped/NXASID EFI rebuilds match the previously executed binaries byte
+for byte. The actual r29 original-input run remains attributed to its original
+f2256f1 source revision; this test-only correction is not a new guest run.
+
+The new 128-file exact freeze reproduces six captures, fourteen comparator
+regressions and three negative controls. All 217 prior history/evidence files
+are preserved. See `nextcore/artifacts/physical-integration-20260912/mmfr0-ci-correction`
+and `nextcore/tools/dynamic_comparison/VALIDATION_MMFR0_CI_20260913.md`.
+
+### Next implementation contract: baseline stage-1 table permissions
+
+Current Status: original bounded execution r29 stops at MMFR1. The strict
+walker rejects APTable/PXNTable/UXNTable and the generic walker does not
+accumulate them. No MMFR1 read policy is implemented by this contract.
+
+Target State: complete baseline hierarchical permissions for the admitted
+non-secure EL0/EL1 4 KiB/16 KiB stage-1 memory model before exposing MMFR1.
+Keep normal startup and physical macOS desktop acceptance outstanding.
+
+#### Input and output contract
+
+Admit descriptor bits 59 (PXNTable), 60 (UXNTable), and 62:61 (APTable) in
+supported table descriptors. OR-accumulate each restriction across all visited
+table levels. Preserve the current rejection of NSTable, unsupported address
+widths, optional attributes, granules, and security/translation regimes.
+No TCR.HPD, HA/HD, stage-2, EL2/EL3 translation, or optional feature admission
+is implied. Preserve separately scoped legacy EL2/EL3 bank behavior.
+
+At the final leaf/block, combine restrictions with leaf permissions before
+checking the requested access. APTable[0] removes EL0 data access;
+APTable[1] removes writes at both EL0 and EL1. APTable alone does not forbid
+EL0 execute-only access. PXNTable and UXNTable separately forbid EL1 and EL0
+execution. The implicit EL1 execute restriction depends on effective EL0 write
+permission after hierarchical restrictions, not the original leaf AP bits.
+
+Do not fault early merely because an ancestor limits permissions. Finish the
+walk and preserve invalid-descriptor, physical-address, table-read and AF fault
+priority. A permission fault identifies the final leaf/block level, descriptor
+and output address. AF=0 still faults without updating any descriptor.
+
+Cache effective permissions independent of the populating access type and EL,
+along with final leaf/block provenance. A data read that populates the cache
+must not bypass later execute restrictions. Keep selected ASID8 and immutable
+control validation unchanged, and preserve transactional pair-store behavior.
+This shared-walker change also needs existing dynamic-profile regressions;
+it must not broaden dynamic control admission or invent table-update semantics.
+
+#### Discriminating evidence
+
+1. On 4 KiB/16 KiB and both immutable profiles, use permissive leaves with
+   one parent restriction at a time, then restrictions split across ancestors.
+   Cover every admitted table level and valid block/page leaf shape.
+2. Compare EL0/EL1 read/write/execute, including EL0 execute-only with APTable
+   no-EL0-data, and implicit EL1 XN lifted by effective read-only/no-EL0 limits
+   while explicit leaf/table PXN still wins.
+3. Compare cold walks and warmed final-translation caches, including a data
+   access warming the entry before a denied execute, and opposite-EL reuse.
+4. Deeper invalid descriptor, out-of-range output and AF=0 must take priority
+   over ancestor permission denial. Check exact fault level, descriptor/output
+   address, ESR/FSC, unmodified RAM/tables and no partial pair store.
+5. Use independent Arm-authored fixtures and a captured Arm execution oracle
+   where its regime is demonstrably equivalent. Compare native provider and
+   reference paths; compiled mutants ignoring hierarchy or using leaf-only
+   implicit-XN input must fail. Do not treat the same shared walker as an oracle.
+6. Build and execute the actual EFI consumer with authored hierarchy cases,
+   preserve an old-runtime negative control, and keep bounded process cleanup.
+   Re-run the nearest ASID and dynamic regression gates after production edits.
+
+Only after this substrate is validated may an exact MMFR1 feature policy be
+accepted from a separate field-by-field contract. Do not blanket-zero unknown
+feature registers or treat an ID-read workaround as full architecture support.
+
+#### Primary evidence inspected
+
+Arm A64 Instruction Set Architecture, DDI0596 ID121321, Armv8.8
+(2021-12), local PDF SHA-256
+756449b122fa43ff55d81be5e889451bc8c7ba8576ad4a877b91c77b8675e349:
+S1HasPermissionsFault (PDF3051/printed3048), S1ApplyTablePerms
+(PDF3071/printed3068), S1Translate (PDF3064/printed3061), and S1Walk
+(PDF3076-3077/printed3073-3074). Independent review read these algorithms.
+The matching official landing is https://developer.arm.com/documentation/ddi0596/2021-12
+(opened, without extractable document text). The original PDF download URL has
+not been recovered in this continuation; do not
+invent a successful current official-host fetch. The PDF stays outside the
+public source and evidence packages.

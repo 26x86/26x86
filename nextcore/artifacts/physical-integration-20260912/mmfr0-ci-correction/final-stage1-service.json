@@ -1,0 +1,368 @@
+{
+  "schema": "nextcore-native-stage1-provider-v2",
+  "passed": true,
+  "native_jit_executed": true,
+  "actual_c_rust_callbacks": true,
+  "source_preserved": true,
+  "negative_control_detected": true,
+  "service_negative_controls": {
+    "reuse_first_pair_locations": true,
+    "omit_second_store_permission": true,
+    "backing_failure_as_guest_abort": true
+  },
+  "source_sha256": {
+    "jit.c": "2be058a43f1485620d92c7ce5de4c625bc6a58cf68c3a43f7728807a4bbef582",
+    "jit.h": "82ec08a23294a0d02dc95de0b98cc3c6b0d29f2de0656cbdcc4801f7c3161ce9",
+    "arch.c": "25287b593ee7a27e56a417c255c0a2357e46275697153b2ec288db9551d0f2e7",
+    "boot_jit.c": "4885d29d7f6d7954a816b00d55600acf47992cf8ada469175b2d6130af62c8de",
+    "boot_jit.h": "def7ee05c4051107257407f3f4eed6ab6551ba04b61f7178e051f4e95126af81",
+    "platform_abi.h": "e0c19055be84de172df89495c822a18deae24d04315e4350cc42cba07fc90eba",
+    "memory_abi.h": "0ef6a89d512ef2d1fd0f92d0a25018536fa9c45106372e6c27f749b427b1f515",
+    "memory_boot.h": "d2972ffc34487e5c328ebdd51e8333d82282df9e7305b6c60426aea3c4fd11f8",
+    "memory_boot.c": "df874fc52f1a43ba71f137ebf45cf165b724d3435de9a2fa74a393adeca03dac",
+    "memory_boot.rs": "5031838160f1d9490f03d15ca479bcd3076ce2a0758129c121cace74781ea658",
+    "memory_abi_v2.h": "2a85803179635696b5d8e72704734ca67d0fed462b0b5fd75c414b327ba12b95",
+    "memory_boot_v2.h": "c7a078ed587b0e0665c253f8eb66a4f55ba880c83eefe51567851894c088c1e0",
+    "memory_boot_v2.c": "9c84f287e8f89d05777806f2c0c6b117add7ccc875ab6cf9f0e605c73d1a41d4",
+    "memory_boot_v2.rs": "a6e2401432c419ca24d5e21d2e5f51a8b0b7b08dad89fa218645ffc866b6f1e0",
+    "memory_stage1.inc": "dbab953c5f00cccf4bc95538d20446da6f76de9cd7805756d00a2439f315e434",
+    "memory_layout_v2.c": "5060ac83ae504815f6935f3518197a4f37d627f97eb4e1a110ce5b744d205c57",
+    "test_stage1_provider.rs": "e71ce27f0afe570766b03698c22af0add0da252a1591e293638330a1e281a22c",
+    "preos/src/platform.rs": "8034a1b63c14ef6dc420f2a61adbcce21cc6d990dc777962cc7fe063c8205769",
+    "preos/src/exception_level.rs": "254bbee46dfeab1015ad98e3953f51b4ca07f5527e26340f2746aed374c58ed7",
+    "preos/src/mmu.rs": "cd725f05589e4fa004687cb83aef564b128af1fca5baedb8b8fafc18193c9cbd",
+    "memory-service/Cargo.toml": "de0adfb9b7194d455b380c5eb787db4c95318700bedec00687ee6b2e523d8f67",
+    "memory-service/src/lib.rs": "352f935fa0ef7c585a7eaf605ffb68061fde62e5387b85115e1a70a86e936aef",
+    "memory-service/src/abi.rs": "66b794a18316deaa7f566b8584a258ea077a6305ef8abe18cb648aa30dd07415",
+    "memory-service/src/abi_v2.rs": "d70aeeaf79bae69ba8185de33431d10dfef2003e61a7f46deb2fd82f2fc938e4",
+    "memory-service/src/stage1.rs": "704ce1970055d67df2623a5394343bfdf9734900e5c1ff44c6153ddd83a9ff1c",
+    "memory-service/src/stage1_tests.rs": "26e055b15193057208a938067a50edaeb90e81c67c3e8a45bdaf978b0c3a420b",
+    "memory-service/src/dynamic.rs": "9aa64aa36d1a394011ab0f0fbdec0eba46310a26d9e2cafc0bd682ebc27009bd",
+    "memory-service/src/dynamic_abi.rs": "91edc87b8068fd64884cb9bb3dfe41d2ffd29455ecf08b1b46dd622ede5393f9",
+    "memory-service/src/dynamic_tests.rs": "89a5b219d28193332e8cb92d6bfcca3f0561da8e4c33083bbc226791622a6bbc",
+    "memory_dynamic.h": "abd722eb6cc7078a9210ac2d5d6c7fd4ce38d427ad4f804a85859c7f9e9bfbee",
+    "memory_dynamic.inc": "c6c4c9af889e33919da59246532bf8cc0168259109c834f786ae54a9bb094615"
+  },
+  "records": [
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--crate-type=rlib",
+        "--crate-name=nextcore_memory_service",
+        "-Copt-level=2",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory-service/src/lib.rs",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/libnextcore_memory_service.rlib"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/jit.c",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/jit.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/arch.c",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/arch.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/boot_jit.c",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/boot_jit.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory_boot.c",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_boot.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory_boot_v2.c",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_boot_v2.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory_layout_v2.c",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_layout_v2.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "-Copt-level=2",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_stage1_provider.rs",
+        "--extern",
+        "nextcore_memory_service=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/libnextcore_memory_service.rlib",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_provider_tests",
+        "-Clink-arg=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/jit.o",
+        "-Clink-arg=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/arch.o",
+        "-Clink-arg=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/boot_jit.o",
+        "-Clink-arg=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_boot.o",
+        "-Clink-arg=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_boot_v2.o",
+        "-Clink-arg=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_layout_v2.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "warning: struct `Recorder` is never constructed\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:70:8\n   |\n70 | struct Recorder<'a>{service:MemoryServiceV2<'a>,events:Vec<u8>,fetches:u64,failure:bool}\n   |        ^^^^^^^^\n   |\n   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: function `recorded` is never used\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:71:22\n   |\n71 | unsafe extern \"C\" fn recorded(owner:*mut c_void,q:*const Request,r:*mut Reply)->i32 {\n   |                      ^^^^^^^^\n\nwarning: struct `Permissions` is never constructed\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:80:8\n   |\n80 | struct Permissions {calls:u64,fail:u64}\n   |        ^^^^^^^^^^^\n\nwarning: function `counted` is never used\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:81:22\n   |\n81 | unsafe extern \"C\" fn counted(p:*mut c_void,n:usize,x:i32,owner:*mut c_void)->i32 {\n   |                      ^^^^^^^\n\nwarning: function `test_mapped_cpu_size` is never used\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:13:8\n   |\n13 |     fn test_mapped_cpu_size()->usize;\n   |        ^^^^^^^^^^^^^^^^^^^^\n\nwarning: function `test_mapped_stack_state` is never used\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:14:8\n   |\n14 |     fn test_mapped_stack_state(snapshot:*const u8,c:*const Controls)->i32;\n   |        ^^^^^^^^^^^^^^^^^^^^^^^\n\nwarning: function `test_mapped_snapshot` is never used\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:15:8\n   |\n15 |     fn test_mapped_snapshot(c:*const Controls,code:*mut u8,capacity:usize,budget:u64,\n   |        ^^^^^^^^^^^^^^^^^^^^\n\nwarning: associated function `new` is never used\n   --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/preos/src/pauth.rs:183:19\n    |\n182 | impl PauthContext {\n    | ----------------- associated function in this implementation\n183 |     pub(crate) fn new(x: [u64; 31], sp: u64, pc: u64, sctlr: u64, tcr: u64,\n    |                   ^^^\n\nwarning: 8 warnings emitted\n\n"
+    },
+    {
+      "command": [
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_provider_tests",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "returncode": 0,
+      "stdout": "\nrunning 30 tests\ntest actual_c_rust_abi_and_control_validation_match_all_fields ... ok\ntest alignment_priority_lower_el_and_irq_vector_boundaries_are_precise ... ok\ntest bfm_v2_executes_through_both_granules ... ok\ntest bfm_v2_invalid_fields_preserve_state ... ok\ntest broken_store_callback_is_host_failure_without_a_ram_rollback_promise ... ok\ntest conditional_selection_native_through_v2_provider ... ok\ntest extended_arithmetic_native_through_v2_provider ... ok\ntest malformed_fault_combinations_cannot_commit_guest_exception_or_retire ... ok\ntest mapped_provider::canonical_pauth::tests::authentication_failure_and_unsupported_modes ... ok\ntest mapped_provider::canonical_pauth::tests::layer_inverses_and_involutory_matrix ... ok\ntest mapped_provider::canonical_pauth::tests::qemu_executed_generic_mac_vectors ... ok\ntest mapped_provider::canonical_pauth::tests::qemu_executed_pacia_vector ... ok\ntest mapped_provider::hostile_pac_cannot_commit_any_register_or_immutable_control_change ... ok\ntest mapped_provider::mapped_xpac_generic_and_disabled_pac_use_canonical_provider ... ok\ntest mapped_provider::old_entry_and_null_callback_do_not_gain_pac ... ok\ntest multiply_add_v2_executes_through_both_granules ... ok\ntest nonidentity_native_alu_scalar_and_pair_use_actual_rust_callbacks ... ok\ntest platform::tests::platform_abi_receipt ... VF_PLATFORM_ABI {\"options_size\":64,\"options_align\":8,\"options_override\":16,\"options_vbar\":32,\"result_size\":128,\"result_align\":8,\"result_override\":64,\"result_pending\":72,\"result_elr\":80,\"result_sp\":120}\nok\ntest readonly_controls_and_unsupported_changes_preserve_fixed_regime ... ok\ntest register_offset_v2_all_forms_and_precise_service_faults ... ok\ntest second_page_abort_and_bad_replies_preserve_architectural_state ... ok\ntest sp_alignment_precedes_effective_address_and_data_provider_in_each_el ... ok\ntest test_bit_v2_fetch_trace_and_target_translation_fault_are_precise ... ok\ntest translated_scalar_width_and_sign_families_keep_native_register_semantics ... ok\ntest ubfm_is_native_after_v2_nonidentity_fetch_without_data_requests ... ok\ntest unaligned_profile::c_rejects_fabricated_alignment_for_profile3_without_committing_state ... ok\ntest unaligned_profile::control_contract_and_wrap_preserve_strict_profile ... ok\ntest unaligned_profile::profile3_keeps_pc_and_optional_sp_alignment_checks ... ok\ntest unaligned_profile::scalar_and_pair_unaligned_transfers_preflight_noncontiguous_pages ... ok\ntest unaligned_profile::second_page_fault_is_precise_and_never_partially_commits ... ok\n\ntest result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.44s\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "-Copt-level=2",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory-service/src/lib.rs",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_service_tests"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_service_tests",
+        "--nocapture"
+      ],
+      "returncode": 0,
+      "stdout": "\nrunning 44 tests\ntest abi_v2::tests::v2_layout_is_fixed_and_separate_from_v1 ... ok\ntest dynamic_abi::tests::dynamic_record_layouts_are_separate ... ok\ntest mmu::tests::detailed_access_flags_and_reserved_blocks_keep_their_level ... ok\ntest mmu::tests::detailed_epd_and_root_address_errors_use_aarch64_level_zero ... ok\ntest mmu::tests::detailed_input_errors_never_invent_a_leaf_or_table_read ... ok\ntest mmu::tests::detailed_invalid_descriptors_preserve_level_and_read_address ... ok\ntest mmu::tests::detailed_leaf_and_cached_permission_failures_agree ... ok\ntest mmu::tests::detailed_output_address_errors_keep_descriptor_level ... ok\ntest mmu::tests::detailed_table_failures_are_not_invalid_descriptors ... ok\ntest mmu::tests::disabled_is_identity_and_instruction_alignment_is_four_bytes ... ok\ntest mmu::tests::disabled_translation_accepts_full_guest_address_width ... ok\ntest mmu::tests::disabled_walk_is_translation_fault_without_reading_descriptors ... ok\ntest mmu::tests::dynamic_start_level_supports_t0sz_25_four_kib_blocks ... ok\ntest mmu::tests::el0_execute_only_tlb_fill_preserves_later_el1_write_permission ... ok\ntest mmu::tests::execution_permission_matrix_matches_arm_table_in_cold_and_cached_walks ... ok\ntest mmu::tests::page_walk_and_asid_tlb_hit ... ok\ntest mmu::tests::permission_and_access_flag_faults_are_distinct ... ok\ntest mmu::tests::partial_initial_tables_exclude_upper_canonical_bits ... ok\ntest mmu::tests::physical_output_width_bounds_roots_tables_and_leaf_pages ... ok\ntest mmu::tests::sixteen_kib_l1_blocks_require_unsupported_lpa2 ... ok\ntest mmu::tests::sixteen_kib_upper_page_uses_distinct_tg1_encoding ... ok\ntest mmu::tests::strict_profile_rejects_unmodeled_attributes_and_preserves_legacy_mode ... ok\ntest mmu::tests::tlb_does_not_bypass_el0_access_permission ... ok\ntest mmu::tests::tlb_keeps_el0_uxn_and_privileged_pxn_permissions_distinct ... ok\ntest mmu::tests::sixteen_kib_tcr_selects_l2_block_and_preserves_fault_class ... ok\ntest mmu::tests::virtual_range_gaps_are_translation_faults_without_reading_tables ... ok\ntest mmu::tests::upper_canonical_addresses_use_ttbr1_and_asid_tlb ... ok\ntest stage1::dynamic::tests::cancel_replay_stale_and_foreign_tokens_cannot_commit ... ok\ntest mmu::tests::rejected_tcr_preserves_previous_configuration_and_cached_mapping ... ok\ntest stage1::dynamic::tests::m0_device_alignment_and_effective_snapshot_are_preserved ... ok\ntest stage1::tests::constructor_rejects_invalid_physical_ranges_without_effects ... ok\ntest stage1::tests::controls_requests_and_missing_tables_have_fresh_diagnostics ... ok\ntest stage1::dynamic::tests::enable_splits_architectural_effective_state_then_reuses_real_tlb ... ok\ntest mmu::tests::unsupported_physical_regime_preserves_cached_configuration ... ok\ntest stage1::dynamic::tests::guarded_enable_failures_leave_all_state_and_ram_unchanged ... ok\ntest tests::all_widths_and_counts_preflight_and_transfer_raw_elements ... ok\ntest stage1::tests::nonidentity_scalar_and_discontiguous_pair_transfers_both_granules ... ok\ntest tests::device_alignment_and_pc_alignment_have_exact_syndromes ... ok\ntest tests::malformed_requests_are_rejected_without_effects ... ok\ntest tests::rejected_pair_never_partially_writes_the_first_element ... ok\ntest stage1::tests::pair_second_page_failure_never_commits_a_first_transfer ... ok\ntest tests::unsupported_modes_and_backing_do_not_invent_guest_faults ... ok\ntest stage1::tests::fetch_uses_execute_permissions_and_upper_va_root ... ok\ntest mmu::tests::strict_profile_validates_table_hierarchy_and_block_output_bits ... ok\n\ntest result: ok. 44 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime",
+        "-c",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/jit_provider_bypass.c",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/jit_provider_bypass.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "-Copt-level=2",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_stage1_provider.rs",
+        "--extern",
+        "nextcore_memory_service=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/libnextcore_memory_service.rlib",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_provider_bypass_tests",
+        "-Clink-arg=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/jit_provider_bypass.o",
+        "-Clink-arg=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/arch.o",
+        "-Clink-arg=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/boot_jit.o",
+        "-Clink-arg=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_boot.o",
+        "-Clink-arg=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_boot_v2.o",
+        "-Clink-arg=/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_layout_v2.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "warning: struct `Recorder` is never constructed\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:70:8\n   |\n70 | struct Recorder<'a>{service:MemoryServiceV2<'a>,events:Vec<u8>,fetches:u64,failure:bool}\n   |        ^^^^^^^^\n   |\n   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: function `recorded` is never used\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:71:22\n   |\n71 | unsafe extern \"C\" fn recorded(owner:*mut c_void,q:*const Request,r:*mut Reply)->i32 {\n   |                      ^^^^^^^^\n\nwarning: struct `Permissions` is never constructed\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:80:8\n   |\n80 | struct Permissions {calls:u64,fail:u64}\n   |        ^^^^^^^^^^^\n\nwarning: function `counted` is never used\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:81:22\n   |\n81 | unsafe extern \"C\" fn counted(p:*mut c_void,n:usize,x:i32,owner:*mut c_void)->i32 {\n   |                      ^^^^^^^\n\nwarning: function `test_mapped_cpu_size` is never used\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:13:8\n   |\n13 |     fn test_mapped_cpu_size()->usize;\n   |        ^^^^^^^^^^^^^^^^^^^^\n\nwarning: function `test_mapped_stack_state` is never used\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:14:8\n   |\n14 |     fn test_mapped_stack_state(snapshot:*const u8,c:*const Controls)->i32;\n   |        ^^^^^^^^^^^^^^^^^^^^^^^\n\nwarning: function `test_mapped_snapshot` is never used\n  --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_mapped_provider.rs:15:8\n   |\n15 |     fn test_mapped_snapshot(c:*const Controls,code:*mut u8,capacity:usize,budget:u64,\n   |        ^^^^^^^^^^^^^^^^^^^^\n\nwarning: associated function `new` is never used\n   --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/preos/src/pauth.rs:183:19\n    |\n182 | impl PauthContext {\n    | ----------------- associated function in this implementation\n183 |     pub(crate) fn new(x: [u64; 31], sp: u64, pc: u64, sctlr: u64, tcr: u64,\n    |                   ^^^\n\nwarning: 8 warnings emitted\n\n"
+    },
+    {
+      "command": [
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/memory_provider_bypass_tests",
+        "--exact",
+        "nonidentity_native_alu_scalar_and_pair_use_actual_rust_callbacks",
+        "--nocapture"
+      ],
+      "returncode": 101,
+      "stdout": "\nrunning 1 test\ntest nonidentity_native_alu_scalar_and_pair_use_actual_rust_callbacks ... FAILED\n\nfailures:\n\nfailures:\n    nonidentity_native_alu_scalar_and_pair_use_actual_rust_callbacks\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 29 filtered out; finished in 0.00s\n\n",
+      "stderr": "\nthread 'nonidentity_native_alu_scalar_and_pair_use_actual_rust_callbacks' (246) panicked at /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_stage1_provider.rs:196:9:\nassertion `left == right` failed\n  left: (17, 1, 2, 42, 0, 0)\n right: (1, 5, 5, 42, 42, 47)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+      "expected_failure": true
+    },
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "-Copt-level=2",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/reuse_first_pair_locations/lib.rs",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/reuse_first_pair_locations/service_tests"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/reuse_first_pair_locations/service_tests",
+        "--exact",
+        "stage1::tests::nonidentity_scalar_and_discontiguous_pair_transfers_both_granules",
+        "--nocapture"
+      ],
+      "returncode": 101,
+      "stdout": "\nrunning 1 test\ntest stage1::tests::nonidentity_scalar_and_discontiguous_pair_transfers_both_granules ... FAILED\n\nfailures:\n\nfailures:\n    stage1::tests::nonidentity_scalar_and_discontiguous_pair_transfers_both_granules\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 43 filtered out; finished in 0.00s\n\n",
+      "stderr": "\nthread 'stage1::tests::nonidentity_scalar_and_discontiguous_pair_transfers_both_granules' (290) panicked at /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory-service/src/stage1_tests.rs:45:9:\nassertion `left == right` failed\n  left: (0, 2309737967, 2309737967)\n right: (0, 1985229440, 2309737967)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+      "expected_failure": true,
+      "mutation": "reuse_first_pair_locations",
+      "mutated_stage1_sha256": "25ca875d2f3250ab80909305f3bd1ce6824035c67d4de413c1fb0fb0690b1ba9",
+      "mutated_wrapper_sha256": "15f5dfce0ad05b34207d8666652979f30f3dd25ba30a2dde9ff7708870c7522b"
+    },
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "-Copt-level=2",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/omit_second_store_permission/lib.rs",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/omit_second_store_permission/service_tests"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/omit_second_store_permission/service_tests",
+        "--exact",
+        "stage1::tests::pair_second_page_failure_never_commits_a_first_transfer",
+        "--nocapture"
+      ],
+      "returncode": 101,
+      "stdout": "\nrunning 1 test\ntest stage1::tests::pair_second_page_failure_never_commits_a_first_transfer ... FAILED\n\nfailures:\n\nfailures:\n    stage1::tests::pair_second_page_failure_never_commits_a_first_transfer\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 43 filtered out; finished in 0.00s\n\n",
+      "stderr": "\nthread 'stage1::tests::pair_second_page_failure_never_commits_a_first_transfer' (334) panicked at /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory-service/src/stage1_tests.rs:59:9:\nassertion `left != right` failed\n  left: 0\n right: 0\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+      "expected_failure": true,
+      "mutation": "omit_second_store_permission",
+      "mutated_stage1_sha256": "a0e390e2332f76e8d0c3eeb90a60091128a092272535d38c42f97e9118048d78",
+      "mutated_wrapper_sha256": "15f5dfce0ad05b34207d8666652979f30f3dd25ba30a2dde9ff7708870c7522b"
+    },
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "-Copt-level=2",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/backing_failure_as_guest_abort/lib.rs",
+        "-o",
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/backing_failure_as_guest_abort/service_tests"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-asid8-ci-repair-final-20260913/native-stage1/backing_failure_as_guest_abort/service_tests",
+        "--exact",
+        "stage1::tests::pair_second_page_failure_never_commits_a_first_transfer",
+        "--nocapture"
+      ],
+      "returncode": 101,
+      "stdout": "\nrunning 1 test\ntest stage1::tests::pair_second_page_failure_never_commits_a_first_transfer ... FAILED\n\nfailures:\n\nfailures:\n    stage1::tests::pair_second_page_failure_never_commits_a_first_transfer\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 43 filtered out; finished in 0.00s\n\n",
+      "stderr": "\nthread 'stage1::tests::pair_second_page_failure_never_commits_a_first_transfer' (378) panicked at /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/memory-service/src/stage1_tests.rs:61:22:\nassertion `left == right` failed\n  left: (4, 2516582404, 4)\n right: (0, 0, 0)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+      "expected_failure": true,
+      "mutation": "backing_failure_as_guest_abort",
+      "mutated_stage1_sha256": "ac85f3ac376d4af1554ea618c39b88ef8c4b463df63ee56ba6e73518906a1e61",
+      "mutated_wrapper_sha256": "15f5dfce0ad05b34207d8666652979f30f3dd25ba30a2dde9ff7708870c7522b"
+    }
+  ],
+  "scope": "M=1 immutable Normal-NC caller-owned RAM/table image; no macOS boot claim"
+}

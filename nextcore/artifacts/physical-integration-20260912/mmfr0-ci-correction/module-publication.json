@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "modules": [
+    {
+      "module": "ise",
+      "commit": "58e712a5a93448014addd635d6fab9e9e8fcc00c",
+      "clean": true,
+      "remote_verified": true,
+      "inventory_files": 211,
+      "archive_files": 212,
+      "archive_sha256": "beff2f99ea4f6c45c34de8bc88ab5425c7684d4db7f5851df17d00a315f11bc6"
+    },
+    {
+      "module": "efi",
+      "commit": "13fc35e28454a54a5bdfcde249bc15ea320311af",
+      "clean": true,
+      "remote_verified": true,
+      "inventory_files": 76,
+      "archive_files": 77,
+      "archive_sha256": "265869d07d2a19ad246fae9b2e6ff58a1ef49f0ec67713f08a2bd13a38b5087c"
+    }
+  ]
+}

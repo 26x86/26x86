@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "ise_commit": "58e712a5a93448014addd635d6fab9e9e8fcc00c",
+  "builds": [
+    {
+      "binary": "NXARMJIT",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "nextcore-efi",
+        "--bin",
+        "NXARMJIT",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-mapped-trace,arm-jit-protection-observation,arm-jit-video-readback,arm-jit-memory-observation"
+      ],
+      "returncode": 0,
+      "reaped": true,
+      "elapsed_seconds": 0.5680864729999939,
+      "byte_equal": true,
+      "sha256": "51e451b929ec32763eae1f84c220a385b3f30b7a73ba43750ffcc941b6e38b88",
+      "fixed": "/tmp/nextcore-mmfr0-mapped-final-20260913.efi"
+    },
+    {
+      "binary": "NXASID",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "nextcore-efi",
+        "--bin",
+        "NXASID",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-stage1-probe"
+      ],
+      "returncode": 0,
+      "reaped": true,
+      "elapsed_seconds": 0.366773008999985,
+      "byte_equal": true,
+      "sha256": "573f2935380e37334f484a38812b172bc15d3b6696184f7f25c8e563adabc3de",
+      "fixed": "/tmp/nextcore-asid-efi-current-20260913.efi"
+    }
+  ]
+}

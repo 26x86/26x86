@@ -1,6 +1,6 @@
 {
   "schema": "nextcore-runtime-source-freeze-v1",
-  "base": "58e712a5a93448014addd635d6fab9e9e8fcc00c",
+  "base": "feb09b5f1ef5eecce60120ba39e624bb020bd071",
   "provenance": "git archive of immutable Nextcore-ISE commit; every archive file SHA-256 independently matched to git show commit:path bytes; no working-tree source",
   "files": {
     "abi_layout.c": "03b71dd9958a85655a50c30387c83d542ae51c808b1913f6a349b531d69f7617",
@@ -23,7 +23,7 @@
     "memory-service/src/dynamic_tests.rs": "89a5b219d28193332e8cb92d6bfcca3f0561da8e4c33083bbc226791622a6bbc",
     "memory-service/src/lib.rs": "352f935fa0ef7c585a7eaf605ffb68061fde62e5387b85115e1a70a86e936aef",
     "memory-service/src/stage1.rs": "704ce1970055d67df2623a5394343bfdf9734900e5c1ff44c6153ddd83a9ff1c",
-    "memory-service/src/stage1_tests.rs": "26e055b15193057208a938067a50edaeb90e81c67c3e8a45bdaf978b0c3a420b",
+    "memory-service/src/stage1_tests.rs": "956ba369c32d1340b9be9c441fdff29c4e6d2da52deb25940bcf0fcd3c3a516e",
     "memory_abi.h": "0ef6a89d512ef2d1fd0f92d0a25018536fa9c45106372e6c27f749b427b1f515",
     "memory_abi_v2.h": "2a85803179635696b5d8e72704734ca67d0fed462b0b5fd75c414b327ba12b95",
     "memory_boot.c": "df874fc52f1a43ba71f137ebf45cf165b724d3435de9a2fa74a393adeca03dac",

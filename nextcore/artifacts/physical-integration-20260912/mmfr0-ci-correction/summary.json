@@ -1,0 +1,39 @@
+{
+  "schema": "nextcore-mmfr0-ci-correction-v1",
+  "passed": true,
+  "ise_commit": "58e712a5a93448014addd635d6fab9e9e8fcc00c",
+  "efi_commit": "13fc35e28454a54a5bdfcde249bc15ea320311af",
+  "runtime_delta": [
+    "memory-service/src/stage1_tests.rs"
+  ],
+  "production_semantics_changed": false,
+  "correction": "Replace stale TCR.A1 rejection with positive immutable admission; preserve AS=1 rejection, add low8/high8 TTBR boundaries and changed-A1 request rejection.",
+  "chronology": "All twelve commands passed after the initial A1 test correction. Four additional TTBR boundary assertions were then added and the complete canonical service probe reran against the final source bytes. Earlier receipts retain their original source identity.",
+  "original_execution": "r29 remains the actual execution of f2256f173ffae32924f1519ece7b1f0e4b251d6a, ISE feb09b5 and EFI 5c4509e. New final-pin NXARMJIT and NXASID builds are byte-identical to those tested binaries. No new original-kernel run is claimed for this test-only correction.",
+  "dynamic_freeze": "nextcore/tools/dynamic_comparison/evidence-mmfr0-ci-20260913",
+  "normal_startup": "NOT_READY",
+  "physical_macOS_boot_verified": false,
+  "desktop_verified": false,
+  "files": {
+    "final-stage1-service.json": {
+      "bytes": 28494,
+      "sha256": "69cb09408fd516e2942f0972720d83c0c9c4b3b60b8f4e6802746d4f1cf7491c"
+    },
+    "module-publication.json": {
+      "bytes": 632,
+      "sha256": "0d57c70724350c4f666140ba15f2aa60c3a9f6cbc6809dc08ff045fba0008d81"
+    },
+    "pinned-binary-rebuild.json": {
+      "bytes": 1305,
+      "sha256": "726b25de5e8472d4b06401052f75051e3922d6abc36f95a4dc4dbed7270f1d2b"
+    },
+    "prior-ci-failure.json": {
+      "bytes": 802,
+      "sha256": "70a91b7c00c5cc0eff9c3650770b592350a0a113eeaa3b1661c776d52b603ad2"
+    },
+    "whole-stage1-step.json": {
+      "bytes": 2917,
+      "sha256": "b831a959ab353664e3dabbd24ac9e3e6aa0730a9255f5cbf80622375392750e8"
+    }
+  }
+}
