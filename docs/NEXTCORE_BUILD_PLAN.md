@@ -865,3 +865,25 @@ The existing Design/Build Plan pages are explicitly delegated for this documenta
 SPTM applicability to the selected j274 target is unverified. The diagnostic
 profile name does not establish its normal startup ABI; see the
 [entry contract](NEXTCORE_ARM64E_ENTRY_CONTRACT.md).
+
+### Owned non-accelerated framebuffer handoff
+
+Current Status: The trace supplies zero boot-video fields. The existing GOP
+helper can present caller-owned pixels, but no boot-video allocation is reserved
+with the kernel handoff. Physical desktop output remains unverified.
+
+Target State: An explicitly selected display path reads the real current GOP
+mode, reserves a checked 32-bit guest framebuffer in the handoff allocation,
+encodes its public boot-video fields, and presents that same backing buffer.
+The allocation must not overlap the kernel, argument page, DeviceTree or stack;
+the occupied-memory boundary must include its complete page-rounded storage.
+Unknown or unsupported firmware geometry fails the optional display selection
+without inventing successful video support. Normal entry readiness and existing
+diagnostic limits remain unchanged until their separate providers are complete.
+
+Root owns integration and the explicit trace consumer. The Core slot owns the
+allocation/encoding contract and independent overlap/overflow tests. The EFI
+slot owns checked current-GOP geometry and presentation adaptation. Authored
+guest writes must be read back from the actual GOP in OVMF, with the framebuffer
+bytes and geometry taken from the encoded boot arguments. Such a result proves
+this display connection only, not WindowServer or a physical macOS desktop.

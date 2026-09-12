@@ -39,6 +39,7 @@ Search the published documentation, from your first configuration to the evidenc
 - [Build and development](wiki/Build-and-Development.md)
 - [Boot runtime verification](BOOT_RUNTIME_VERIFICATION.md)
 - [Picker recovery](BOOT_PICKER_RECOVERY.md)
+- [Boot framebuffer validation](BOOT_FRAMEBUFFER_VALIDATION.md)
 - [Instruction coverage](A64_STARTUP_COVERAGE_20260912.md)
 - [Module repositories](wiki/Nextcore-Modules.md)
 </article>
