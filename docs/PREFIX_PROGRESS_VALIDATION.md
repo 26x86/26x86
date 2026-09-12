@@ -2,17 +2,18 @@
 
 ## Current Status
 
-The r23 mapped diagnostic retires **42,255,830 instructions**, issues
-**42,255,831 fetch requests** and completes **6,012,249 data operations** in
-134.696 seconds. It stops with UNSUPPORTED_INSTRUCTION (status 8) at scalar LDR
-with post-indexed immediate addressing. The provider reports no error. The input
-and EFI are preserved. The owned framebuffer remains zero and matches GOP
-readback at 1280 by 800; no macOS screen has been established.
+The r24 mapped diagnostic retires **42,255,878 instructions**, issues
+**42,255,879 fetch requests** and completes **6,012,259 data operations** in
+110.822 seconds. It stops with UNSUPPORTED_INSTRUCTION (status 8) at variable
+register logical left shift, LSLV (LSL alias). The provider reports no error.
+The original input, EFI, host tools and ESP copies are preserved; the process
+is reaped. The owned framebuffer remains zero and matches GOP readback at
+1280 by 800. No macOS screen has been established.
 
-This completed run includes the logical shifted-register family, scalar unscaled
-transfers and firmware watchdog ownership. The next bounded implementation
-boundary is scalar post-indexed immediate addressing.
-The selected software-defined Normal-NC profile, high virtual alias, canonical
+This completed run passes the prior post-indexed LDR boundary and adds 48 retired
+instructions and ten data operations relative to r23. The elapsed time is a
+single-run observation, not a benchmark. The next bounded implementation boundary
+is variable-register shifting. The selected software-defined Normal-NC profile, high virtual alias, canonical
 PAC callback and immutable stack selection remain explicit diagnostic conditions.
 They do not establish the target reset entry ABI, SPTM services, complete platform
 DeviceTree, kernel initialization, userspace or physical boot.
@@ -24,9 +25,10 @@ The source contains one watchdog-disable call at this entry point. The authored
 timer control below establishes the helper behavior. r22 completes beyond the
 prior r21 termination time, but that does not by itself prove r21's cause.
 
-[Latest r23 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r23-logical-shifted-summary.json)
+[Latest r24 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r24-indexed-summary.json)
 records this boundary without publishing original instruction words or addresses.
-Historical r22 completed 42,252,452 instructions and 6,010,805 data operations
+Historical r23 completed 42,255,830 instructions and 6,012,249 data operations
+before post-indexed LDR. Historical r22 completed 42,252,452 instructions and 6,010,805 data operations
 before register ORR. Historical r20 completed 42,252,448 instructions and 6,010,803 data operations
 before an unscaled-load boundary. r21 supplied no terminal execution record.
 
@@ -150,7 +152,7 @@ independent actual Arm cases match both the native C execution and Rust referenc
 The canonical service suite passes 33 tests in each of three modes; the authored
 EFI consumer passes ten aggregate checks. [Unscaled scalar memory evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/unscaled-scalar-memory/summary.json)
 records this instruction-family scope. These authored results do not establish
-original-input progress by themselves; the completed r23 receipt above records
+original-input progress by themselves; the completed r24 receipt above records
 the separate original replay.
 
 ## Firmware watchdog ownership and incomplete r21 run
@@ -190,8 +192,18 @@ or reply snapshot comparison. ZR positions, source/destination overlap, W result
 zero-extension, preserved PSTATE, flag-setting forms and undefined W shift amounts
 are covered. [Logical shifted-register evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/logical-shifted-register/summary.json)
 records the authored result separately from original kernel execution. The
-completed r23 original receipt above establishes the new observed boundary;
+completed r24 original receipt above establishes the new observed boundary;
 instruction support alone is not evidence of boot progress.
+
+## Authored scalar indexed memory support
+
+Scalar pre-indexed and post-indexed transfers now have independent authored
+coverage: 910 native cases and 3,432 assertions, 78 actual Arm comparisons against
+both native C and Rust execution, 35 canonical provider tests in each of three
+modes, and ten authored EFI consumer checks. The immutable dynamic-comparison
+freeze contains 102 files and preserves six captured Arm replays, fourteen
+regressions and three negative controls. These are instruction and integration
+checks, not original-input progress or physical boot evidence. The completed r24 receipt above records the separate original replay.
 
 ## Observations and Controls
 
