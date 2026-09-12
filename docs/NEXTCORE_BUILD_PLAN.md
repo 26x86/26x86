@@ -1046,3 +1046,22 @@ implements APA1. Sixteen enabled lower-range sign/auth vectors and all 24
 XPAC/disabled vectors compare directly. Eight upper-range enabled vectors are
 not verified against a same-feature CPU. The selected mapped profile keeps
 address signing disabled and does not widen that contract.
+
+### Immutable mapped stack selection
+
+Current Status: The first original mapped replay stops after 13 retired
+instructions at immediate SPSel selection. The existing M0 PSTATE helper is
+deliberately gated to M0 and is absent from the immutable v2 dispatch path.
+
+Target State: Implement the two architected immediate SPSel selections at EL1
+in the immutable v2 runner. Save the active stack bank, set only PSTATE.SP,
+then load the selected SP_EL0 or SP_EL1 bank. Preserve NZCV, DAIF, current EL,
+all memory controls, PAC keys and unrelated registers. Retire exactly once,
+advance PC once and retain the normal next-step control and fetch validation.
+EL0 and reserved immediate encodings must retain their existing failure paths.
+Do not open DAIF, TLBI, ERET or arbitrary system writes through this helper.
+The existing M0 and dynamic implementations remain unchanged. Authored bank
+switch, same-bank selection, following stack use and negative tests precede
+another original replay. Arm's public PSTATE synchronization contract requires
+subsequent instructions to observe the new stack without an added barrier:
+https://community.arm.com/forums/f/architectures-and-processors-forum/8141/is-any-synchronization-barrier-instruction-necessary-after-writing-spsel-to-switch-to-sp0-on-armv8
