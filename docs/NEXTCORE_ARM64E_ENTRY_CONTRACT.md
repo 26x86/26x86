@@ -17,7 +17,7 @@ storage, display and userspace. See [progress](progress.md).
 | Public SPTM cold startup | x0 selects startup mode; x1 carries traditional boot arguments; x2 carries SPTM arguments |
 | Warm/resume/panic startup | Arguments depend on the selected path; do not reuse the cold table blindly |
 
-Apple's public [SPTM startup source](https://github.com/apple-oss-distributions/xnu/blob/main/osfmk/arm64/sptm/start_sptm.s)
+Apple's pinned public [SPTM startup source](https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/osfmk/arm64/sptm/start_sptm.s)
 saves the cold argument pointers and invokes SPTM during initialization. The
 register distinction is a public interface observation, checked on 2026-09-12;
 it does not establish the exact ABI of a particular unreleased image. A legacy
@@ -28,7 +28,8 @@ boot-argument codec cannot be relabeled a complete SPTM environment.
 The bounded trace uses the explicit `unprovisioned-sptm-prefix` profile. This
 name describes a diagnostic assumption, not verified j274 SPTM applicability: x0 is
 zero, x1 refers to the staged legacy boot arguments and x2/x3 are zero. Its boot
-video fields are zero and its DeviceTree platform state is incomplete. This
+video fields are zero by default; the opt-in GOP path supplies owned framebuffer
+storage and geometry. Its DeviceTree platform state remains incomplete. This
 profile exists to expose the next architectural requirement; it is not normal
 cold-boot provisioning. The 2026-09-12 manifest-only check found no SPTM/TXM
 roles in the selected j274 build identities. That absence does not independently
@@ -38,6 +39,26 @@ Checked memory services and authored stage-1/dynamic-MMU fixtures demonstrate
 their own translated accesses. They do not supply the complete original platform
 or make the legacy v1 memory path support MMU enablement. Keep the exact selected
 runtime mode in every receipt.
+
+## Fixup phase and bounded progress observation
+
+The pinned public legacy [initialization source](https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/arm/arm_init.c)
+calls `arm_slide_rebase_and_sign_image()` before copying boot arguments. The
+separately pinned SPTM startup also invokes that routine before its fixup-complete
+operation. Opaque chained words preserved by Core therefore do not, on their
+own, identify a missing loader transformation. Establish the executed phase and
+the required pointer producer before proposing rebasing.
+
+The [legacy startup](https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/arm64/start.s)
+consumes an incoming x0 boot-argument pointer. That contract applies only after
+the actual entry is bound to this path. The symbolic SPTM entry reasons do not
+establish numeric sentinel values or missing external argument structures.
+
+The optional `arm-jit-memory-observation` build records the last 64 request
+metadata entries through the unchanged memory service. It can distinguish
+repeated addresses from advancing accesses at a fixed budget. It does not reveal
+branch operands, prove correct pointer values or identify a startup ABI. Raw
+original-image PCs and addresses remain isolated.
 
 ## Remaining acceptance requirements
 

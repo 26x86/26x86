@@ -16,13 +16,13 @@ ASSEMBLY = """.text
 .global _start
 _start:
     mov x0, #0
-    ldr x4, [x1, #40]
-    ldr x5, [x1, #56]
-    ldr x6, [x1, #64]
-    ldr x7, [x1, #72]
-    ldr x8, [x1, #80]
-    ldr x9, [x1, #48]
-    ldr x10, [x1, #32]
+load_base: ldr x4, [x1, #40]
+load_stride: ldr x5, [x1, #56]
+load_width: ldr x6, [x1, #64]
+load_height: ldr x7, [x1, #72]
+load_depth: ldr x8, [x1, #80]
+load_display: ldr x9, [x1, #48]
+load_top: ldr x10, [x1, #32]
     cbz x4, done
     cbz x6, done
     cbz x7, done
@@ -37,10 +37,10 @@ _start:
     cmp x10, x11
     b.lo done
     mov w12, #0xff0000
-    str w12, [x4]
+store_first: str w12, [x4]
     sub x11, x11, #4
     mov w12, #0xff
-    str w12, [x11]
+store_last: str w12, [x11]
     mov x2, x5
     mul x3, x6, x7
     mov x0, #0x600d
@@ -61,6 +61,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--efi', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--memory-observation', action='store_true',
+                        help='also require exact bounded request observation from the diagnostic EFI build')
     args = parser.parse_args()
     efi = args.efi.resolve(strict=True)
     out = args.output.resolve()
@@ -124,6 +126,31 @@ def main():
         'inputs_preserved': before == {str(p): sha(p) for p in inputs}
             and receipt['original_inputs_preserved'] and receipt['esp_copies_preserved'],
     }
+    if args.memory_observation:
+        entries = [m for m in receipt['markers'] if m.startswith('NXARMJIT: TRACE_MEMORY_REQUEST ')]
+        headers = [m for m in receipt['markers'] if m.startswith('NXARMJIT: TRACE_MEMORY_OBSERVATION ')]
+        pattern = r'NXARMJIT: TRACE_MEMORY_REQUEST sequence=(\d+) operation=(\d+) pc=(0x[0-9a-f]+) address=(0x[0-9a-f]+) width=(\d+) count=(\d+) result=(\d+)'
+        parsed = [re.fullmatch(pattern, item) for item in entries]
+        actual_requests = [tuple(int(v, 0) for v in match.groups()) for match in parsed if match]
+        symbol_map = {name: int(address, 16) for address, name in
+                      re.findall(r'^([0-9a-fA-F]+)\s+\w\s+(\w+)$', symbols, re.MULTILINE)}
+        base_pc = PHYSICAL + ENTRY_OFFSET
+        args_address = int(x1.group(1), 16) if x1 else 0
+        sites = {symbol_map[name]: (2, args_address + offset, 8) for name, offset in
+                 [('load_base', 40), ('load_stride', 56), ('load_width', 64),
+                  ('load_height', 72), ('load_depth', 80), ('load_display', 48), ('load_top', 32)]}
+        sites[symbol_map['store_first']] = (3, geometry.get('base', 0), 4)
+        sites[symbol_map['store_last']] = (3, geometry.get('base', 0) + count * 4 - 4, 4)
+        expected_requests = []
+        for retired_index in range(64):
+            offset = min(retired_index * 4, symbol_map['done'])
+            pc = base_pc + offset
+            expected_requests.append((len(expected_requests) + 1, 1, pc, pc, 4, 1, 0))
+            if offset in sites:
+                operation, address, width = sites[offset]
+                expected_requests.append((len(expected_requests) + 1, operation, pc, address, width, 1, 0))
+        checks['exact_request_observation'] = (headers == ['NXARMJIT: TRACE_MEMORY_OBSERVATION total=73 retained=64']
+            and len(parsed) == 64 and all(parsed) and actual_requests == expected_requests[-64:])
     summary = dict(schema='nextcore.boot-framebuffer-efi-consumer.v1', passed=all(checks.values()),
                    checks=checks, geometry=geometry, commands=commands, source_hashes=before,
                    expected_rgb_hash=expected_hash, original_images_used=False,
