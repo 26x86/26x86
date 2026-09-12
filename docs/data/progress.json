@@ -2,9 +2,9 @@
   "updated_at": "2026-09-12",
   "physical_desktop_verified": false,
   "boundary": {
-    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r8-summary.json",
+    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r9-video-summary.json",
     "label": "Pre-OS diagnostic budget reached: 16,384 instructions",
-    "detail": "The bounded local macOS 27 kernel prefix reached its 16,384-instruction budget after BFM support. No unsupported instruction stopped this run. Budget exhaustion does not establish forward boot progress or normal startup."
+    "detail": "The bounded local macOS 27 kernel prefix reaches 16,384 instructions with an owned framebuffer. GOP readback matches, but the RGB hash still matches a zero-filled frame. Kernel-generated visible output and normal startup remain unverified."
   },
   "headline": "Building the path to a real macOS desktop",
   "milestones": [
