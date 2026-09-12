@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source_repository": "https://github.com/26x86/26x86.git",
-  "source_commit": "22ead003b01948dd3712fdf50b74078b80ca74d7",
+  "source_commit": "26a3c936a81bd185b8ce97d7342a554e6b638e1a",
   "target": "x86_64-unknown-uefi",
   "rust_toolchain": "1.97.1",
   "diagnostic_features": [

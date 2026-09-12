@@ -2,22 +2,22 @@
 
 ## Current Status
 
-The r26 mapped diagnostic retires 42,255,998 instructions, issues 42,255,999
-fetch requests and completes 6,012,275 data operations in 122.167 seconds.
-It stops with SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64ISAR0_EL1,
+The r27 mapped diagnostic retires 42,256,360 instructions, issues 42,256,361
+fetch requests and completes 6,012,373 data operations in 106.090 seconds.
+It stops with SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64ISAR2_EL1,
 an instruction-set feature-identification register read. The provider reports
 no error. The original input, EFI, host tools and ESP copies are preserved;
 the process is reaped. The owned framebuffer remains zero and matches GOP
 readback at 1280 by 800. No macOS screen has been established.
 
-This completed run passes the ZFR0 read and adds eight retired instructions
-and two data operations relative to r25. The elapsed time is a single-run
+This completed run passes the ISAR0 read and adds 362 retired instructions
+and 98 data operations relative to r26. The elapsed time is a single-run
 observation, not a benchmark. The next bounded implementation boundary is the
-instruction-set feature-identification profile. The selected software-defined
-Normal-NC profile, high virtual alias, canonical PAC callback and immutable
-stack selection remain explicit diagnostic conditions. They do not establish
-the target reset entry ABI, SPTM services, complete platform DeviceTree,
-kernel initialization, userspace or physical boot.
+ISAR2 instruction-set feature profile. The selected software-defined Normal-NC
+profile, high virtual alias, canonical PAC callback and immutable stack selection
+remain explicit diagnostic conditions. They do not establish the target reset
+entry ABI, SPTM services, complete platform DeviceTree, kernel initialization,
+userspace or physical boot.
 
 The watchdog success marker appears twice because reporting writes to both
 ConOut and Serial. The summary records the observation count and success presence
@@ -26,14 +26,44 @@ The source contains one watchdog-disable call at this entry point. The authored
 timer control below establishes the helper behavior. r22 completes beyond the
 prior r21 termination time, but that does not by itself prove r21's cause.
 
-[Latest r26 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r26-zfr0-summary.json)
+[Latest r27 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r27-isar0-summary.json)
 records this boundary without publishing original instruction words or addresses.
-Historical r25 completed 42,255,990 instructions and 6,012,273 data operations
+Historical r26 completed 42,255,998 instructions and 6,012,275 data operations
+before the ISAR0 read. Historical r25 completed 42,255,990 instructions and 6,012,273 data operations
 before the ZFR0 read. Historical r24 completed 42,255,878 instructions and 6,012,259 data operations
 before LSLV. Historical r23 completed 42,255,830 instructions and 6,012,249 data operations
 before post-indexed LDR. Historical r22 completed 42,252,452 instructions and 6,010,805 data operations
 before register ORR. Historical r20 completed 42,252,448 instructions and 6,010,803 data operations
 before an unscaled-load boundary. r21 supplied no terminal execution record.
+
+## Authored exact ISAR0 scalar-profile validation
+
+The exact read-only ISAR0 MRS uses an explicit scalar profile with all fifteen
+extension fields absent and its reserved low nibble zero. This is not an
+unknown-register fallback. Native tests pass 928 assertions, including every
+destination, rejected accesses and live control changes. Sixteen representative
+unsupported extension instructions are rejected with the expected exception
+class and without retirement or data changes. The shared ZFR0 regression passes.
+
+An actual QEMU cortex-a72 reports ISAR0=0x11120, whereas this software profile
+returns zero. The 32 Arm observations verify encoding, access, XZR and NZCV
+behavior; they do not verify equality of the hardware and software feature
+values. The Rust reference harness passes 35 tests. Canonical mapped v2 provider
+tests pass 32 cases in each of cached, uncached and small-slot modes with equal
+exposed results, requests and RAM.
+
+Ten authored EFI checks pass. With the same authored input, the preceding EFI
+stops at the first ISAR0 read after 114 retired instructions; the new EFI
+completes 65,536. This discriminates support in the fixture and is not an
+original-kernel progress result. The dynamic comparator freezes 114 files and
+passes six captured replays, fourteen regressions and three negative controls,
+while preserving 172 historical evidence files. The integration receipt records a pinned runtime rebuild matching its tested
+binary bytes; independently built website packages have their own hashes. Normal startup and physical boot remain
+unverified. The completed r27 original replay passes ISAR0 and reaches the ISAR2 trap
+described above.
+
+[Public ISAR0 evidence](https://github.com/26x86/26x86/tree/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/isar0-scalar-profile)
+records the scoped checks.
 
 ## Authored exact ZFR0 scalar-profile validation
 

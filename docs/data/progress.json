@@ -2,9 +2,9 @@
   "updated_at": "2026-09-13",
   "physical_desktop_verified": false,
   "boundary": {
-    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r26-zfr0-summary.json",
-    "label": "Mapped prefix: 42,255,998 instructions; ISAR0 feature-register boundary",
-    "detail": "r26 completes 6,012,275 data operations and passes ZFR0 before SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64ISAR0_EL1. The provider reports no error. The 1280 by 800 framebuffer remains zero with matching GOP readback; normal startup and physical desktop remain unverified."
+    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r27-isar0-summary.json",
+    "label": "Mapped prefix: 42,256,360 instructions; ISAR2 feature-register boundary",
+    "detail": "r27 completes 6,012,373 data operations and passes ISAR0 before SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64ISAR2_EL1. The provider reports no error. The 1280 by 800 framebuffer remains zero with matching GOP readback; normal startup and physical desktop remain unverified."
   },
   "headline": "Building the path to a real macOS desktop",
   "milestones": [
@@ -21,7 +21,7 @@
       "id": "execution",
       "layer": "CPU runtime",
       "status": "in-progress",
-      "summary": "r26 retires 42,255,998 instructions and completes 6,012,275 data operations before the ISAR0 feature-register read traps. Exact ZFR0 reads have authored native, Arm, provider and EFI evidence. Normal startup and physical boot remain unverified.",
+      "summary": "r27 retires 42,256,360 instructions and completes 6,012,373 data operations before the ISAR2 feature-register read traps. Exact ISAR0 reads have authored native, access, provider and EFI evidence. Normal startup and physical boot remain unverified.",
       "evidence_url": "https://github.com/26x86/Nextcore-ISE/pull/9"
     },
     {
@@ -61,12 +61,18 @@
       "detail": "31 successful checks on development revision 606d3c4a. Later mapped-profile integration is tracked separately; CI is not physical boot proof."
     },
     {
-      "value": "42,255,998",
+      "value": "42,256,360",
       "label": "Latest bounded prefix",
-      "detail": "Retired instructions before the ISAR0 feature-register read traps in completed r26 mapped OVMF execution."
+      "detail": "Retired instructions before the ISAR2 feature-register read traps in completed r27 mapped OVMF execution."
     }
   ],
   "latest": [
+    {
+      "date": "2026-09-13",
+      "title": "Exact ISAR0 reads reach the ISAR2 feature-register boundary",
+      "summary": "r27 completes 42,256,360 instructions and 6,012,373 data operations in 106.090 seconds, adding 362 instructions and 98 data operations beyond r26. It stops with SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64ISAR2_EL1. The framebuffer remains zero; this is not a benchmark. Authored ISAR0 tests pass 928 assertions, 32 Arm access observations and ten EFI checks.",
+      "url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r27-isar0-summary.json"
+    },
     {
       "date": "2026-09-13",
       "title": "Exact ZFR0 reads reach the ISAR0 feature-register boundary",
