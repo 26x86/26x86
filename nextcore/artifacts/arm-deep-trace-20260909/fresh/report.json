@@ -1,0 +1,232 @@
+{
+  "schema": "nextcore.targeted-fresh-integration/1",
+  "passed": true,
+  "integration_commit": "6bca290729a0dff1fcf341085e37bcfa2e1bba34",
+  "recursive_modules": true,
+  "working_tree_clean": true,
+  "commands": [
+    {
+      "name": "submodules",
+      "command": [
+        "python3",
+        "Tools/verify_nextcore_submodules.py",
+        "--cargo",
+        "--require-clean"
+      ],
+      "exit_code": 0,
+      "seconds": 4.29
+    },
+    {
+      "name": "workspace",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "--workspace"
+      ],
+      "exit_code": 0,
+      "seconds": 37.52
+    },
+    {
+      "name": "python",
+      "command": [
+        "/home/sharh/.venvs/nextcore/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 51.32
+    },
+    {
+      "name": "core-no-default",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "-p",
+        "nextcore-core",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "seconds": 5.85
+    },
+    {
+      "name": "deep-cli-help",
+      "command": [
+        "python3",
+        "nextcore/tools/trace_deep_arm_jit_ovmf.py",
+        "--tools",
+        "nextcore/tools",
+        "--help"
+      ],
+      "exit_code": 0,
+      "seconds": 0.15
+    },
+    {
+      "name": "efi-tiered",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "--release",
+        "-p",
+        "nextcore-efi",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--bin",
+        "NXARMJIT",
+        "--features",
+        "arm-jit-memory-provider,arm-jit-tiered-trace"
+      ],
+      "exit_code": 0,
+      "seconds": 22.9
+    },
+    {
+      "name": "efi-deep",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "--release",
+        "-p",
+        "nextcore-efi",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--bin",
+        "NXARMJIT",
+        "--features",
+        "arm-jit-deep-trace"
+      ],
+      "exit_code": 0,
+      "seconds": 3.9
+    },
+    {
+      "name": "deep-authored",
+      "command": [
+        "python3",
+        "nextcore/tools/verify_deep_budget_ovmf.py",
+        "--tools",
+        "nextcore/tools",
+        "--efi",
+        "/home/sharh/work/integration-validation-bp35-20260909/NXARMJIT-deep.efi",
+        "--default-efi",
+        "/home/sharh/work/integration-validation-bp35-20260909/NXARMJIT-tiered.efi",
+        "--clamped-efi",
+        "/home/sharh/work/bp35-canonical-deep-proof/clamped-efi/target/x86_64-unknown-uefi/release/NXARMJIT.efi",
+        "--core-source",
+        "nextcore/crates/nextcore-core",
+        "--efi-source",
+        "nextcore/crates/nextcore-efi",
+        "--output",
+        "/home/sharh/work/integration-validation-bp35-20260909/deep-authored"
+      ],
+      "exit_code": 0,
+      "seconds": 40.06
+    },
+    {
+      "name": "debug-nxapfs",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "-p",
+        "nextcore-efi",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features",
+        "--bin",
+        "NXAPFS"
+      ],
+      "exit_code": 0,
+      "seconds": 10.33
+    },
+    {
+      "name": "memory-service",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "nextcore/crates/nextcore-ise/runtime/memory-service/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "seconds": 2.09
+    },
+    {
+      "name": "package-policy",
+      "command": [
+        "python3",
+        "tests/test_nextcore_package_policy.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 1.37
+    },
+    {
+      "name": "clippy-host",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "--workspace",
+        "--exclude",
+        "nextcore-efi",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 9.15
+    },
+    {
+      "name": "clippy-efi",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--manifest-path",
+        "nextcore/Cargo.toml",
+        "-p",
+        "nextcore-efi",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "seconds": 7.25
+    },
+    {
+      "name": "submodules-final",
+      "command": [
+        "python3",
+        "Tools/verify_nextcore_submodules.py",
+        "--cargo",
+        "--require-clean"
+      ],
+      "exit_code": 0,
+      "seconds": 0.82
+    }
+  ],
+  "scope": "Targeted explicit-deep integration after BP34 full53-command suite; unchanged native/Arm/GPU suites are not relabeled as rerun here. Existing full CI remains.",
+  "actual_firmware_cases": 5,
+  "fresh_integrated_firmware_cases": 4,
+  "separately_compiled_canonical_clamp_cases": 1,
+  "cli_rejections": 28,
+  "receipt_only_negative": 1,
+  "clamp_sha256": "6557d08ea3e991ecea54d87ef6b5e1c5960f1ce7102438f1ac48155e95ac56ef",
+  "clamp_source_provenance": "/home/sharh/work/bp35-canonical-deep-proof/mutation.json",
+  "clone_transport": "committed local repositories with temporary URL maps; canonical network publication separate"
+}

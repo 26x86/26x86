@@ -1,0 +1,101 @@
+{
+  "core": {
+    "root": "/home/sharh/work/bp35-core-deep-trace",
+    "base": "f77c98f0b457ab488f37e5be10a608a364d996c7",
+    "files": {
+      "src/boot_config.rs": "b8355f5e37adb84558de81ce7d03ff0e7c727c49ee11263ccd1872a20764a016",
+      "tests/arm64_platform_config.rs": "6adc66e59b459f85d6a0842fcbbdb7d3576726be4be99b95dc72a5825dd918c4",
+      "docs/DEEP_ARM_TRACE.md": "a982580a0f6e45bb28673fc84b5e7cccc1e3818ce05d2d6c90ef8eb860d5195a"
+    },
+    "current_commit": "f1589a01c3d8d93f2fd7b238833230a3d1decc27"
+  },
+  "efi": {
+    "root": "/home/sharh/work/bp35-efi-deep-trace",
+    "base": "93286527c9624d4ca8d46d2c4221fa58a4aa0854",
+    "files": {
+      "Cargo.toml": "c2be6809f81b3c7d7d8f37c4031aae7d12489beb431c3f816a4311fd850d2636",
+      "src/arm_jit.rs": "860698c11f273ef8938218de982b7e48900b7770fbc1cde1801d353813b1c3bb",
+      "docs/DEEP_ARM_TRACE.md": "a6587ed34b47fbac79ef93c51dac525d79c861c147927094436f326feee17b8f"
+    }
+  },
+  "tools": {
+    "root": "/home/sharh/work/bp35-deep-trace",
+    "files": {
+      "trace_deep_arm_jit_ovmf.py": "ec297530bb91719e7290c34c802ace3a6857b4fa25942480c5a9407ef2ed7113",
+      "verify_deep_budget_ovmf.py": "781f7bd9ba4ae34319089d829be8ad4154c46a460082c2f096bf52f9f1f72aea",
+      "deep_budget_probe.S": "7a410c87311209211566d3b1b6462a03983ba2e29813527084f64e83f572e6ed"
+    }
+  },
+  "binaries": {
+    "default.efi": "bf10b24789ee74e3df5a67e2f4a4a7501b527971c04eca9453dec881207a582f",
+    "clamped.efi": "096c6b155f530ec2b84477af1ff52d1e96d4f4da32975a6a8d33618bb7d62b42",
+    "deep.efi": "67796134e6ac0333a57af684ae996a61a19061b8728e02ea7d781429a0252d13"
+  },
+  "resolved_packages": [
+    {
+      "name": "nextcore-core",
+      "version": "0.1.0",
+      "source": null,
+      "manifest_path": "/home/sharh/work/bp35-deep-trace/build-workspace/core/Cargo.toml"
+    },
+    {
+      "name": "nextcore-efi",
+      "version": "0.1.0",
+      "source": null,
+      "manifest_path": "/home/sharh/work/bp35-deep-trace/build-workspace/efi/Cargo.toml"
+    },
+    {
+      "name": "nextcore-ise",
+      "version": "0.1.0",
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=720d7c61140e39da0f457192bd88138a52017e22#720d7c61140e39da0f457192bd88138a52017e22",
+      "manifest_path": "/home/sharh/.cargo/git/checkouts/nextcore-ise-4cebcf906001f6ff/720d7c6/Cargo.toml"
+    },
+    {
+      "name": "nextcore-memory-service",
+      "version": "0.1.0",
+      "source": "git+https://github.com/26x86/Nextcore-ISE.git?rev=720d7c61140e39da0f457192bd88138a52017e22#720d7c61140e39da0f457192bd88138a52017e22",
+      "manifest_path": "/home/sharh/.cargo/git/checkouts/nextcore-ise-4cebcf906001f6ff/720d7c6/runtime/memory-service/Cargo.toml"
+    }
+  ],
+  "core_source_patch": "Development build explicitly patches Core to the BP35 worktree; the three original Core source hashes remain unchanged. Root owns canonical dependency publication.",
+  "negative_control": {
+    "source": "/home/sharh/work/bp35-deep-trace/clamped-efi/src/arm_jit.rs",
+    "sha256": "338fae551151dd096f93406ca327294c00a3eb6eb7b79a2ea5cb98d7aa2ca664",
+    "change": "The two boot calls clamp the actual instruction budget to4096; config and deep markers remain16384."
+  },
+  "metadata_command": [
+    "/home/sharh/.cargo/bin/cargo",
+    "metadata",
+    "--offline",
+    "--locked",
+    "--format-version",
+    "1",
+    "--manifest-path",
+    "/home/sharh/work/bp35-deep-trace/build-workspace/Cargo.toml",
+    "--features",
+    "nextcore-efi/arm-jit-deep-trace"
+  ],
+  "corrected_authored_gate": {
+    "path": "/home/sharh/work/bp35-efi-authored-corrected-r2/report.json",
+    "sha256": "e705094e9e972e37e905effc9e149b640fb208f73046bbe422f9e66c875e0702",
+    "cases": 30,
+    "preflight_rejections": 28,
+    "actual_efi_cases": 1,
+    "receipt_only_negative_controls": 1,
+    "passed": true,
+    "source_preserved": true,
+    "source_checkpoint": "before helper import and all fixture compilation/construction"
+  },
+  "historical_evidence": {
+    "full_five_actual_cases": {
+      "path": "/home/sharh/work/bp35-efi-authored-final/report.json",
+      "sha256": "b510df082316a7b7b77817297d19fc93cc5c03722b5ac9b21be2554ce1877178"
+    },
+    "old_tools": "/home/sharh/work/bp35-deep-trace/historical-tools-final1",
+    "old_freeze_sha256": "5cdbd66637a9216fd400501c016ebd7faf06ede34a2cad6b471da240ae3c62a0",
+    "reader_recheck_sha256": "ad76396be1d51a1739e54d78da48e1cb9506cb54c6293cc86831f2a41d5b916f"
+  },
+  "original_execution_authorized": false,
+  "original_execution_launched": false,
+  "macos_boot_verified": false
+}

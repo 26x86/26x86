@@ -1,0 +1,20 @@
+test_actual_cargo_resolver_local_auxiliary_and_git_duplicate (__main__.PackagePolicyTests.test_actual_cargo_resolver_local_auxiliary_and_git_duplicate) ... ok
+test_auxiliary_inventory_covers_and_hashes_actual_files (__main__.PackagePolicyTests.test_auxiliary_inventory_covers_and_hashes_actual_files) ... ok
+test_auxiliary_path_and_owner_are_exact (__main__.PackagePolicyTests.test_auxiliary_path_and_owner_are_exact) ... ok
+test_canonical_url_revision_and_no_path_required (__main__.PackagePolicyTests.test_canonical_url_revision_and_no_path_required) ... ok
+test_cargo_rejects_unselected_auxiliary_wrong_path_and_eighth_member (__main__.PackagePolicyTests.test_cargo_rejects_unselected_auxiliary_wrong_path_and_eighth_member) ... ok
+test_cargo_requires_local_auxiliary_and_rejects_remote_duplicate (__main__.PackagePolicyTests.test_cargo_requires_local_auxiliary_and_rejects_remote_duplicate) ... ok
+test_conflicting_revisions_are_not_overwritten (__main__.PackagePolicyTests.test_conflicting_revisions_are_not_overwritten) ... ok
+test_nested_non_nextcore_package_cannot_hide_nextcore_dependencies (__main__.PackagePolicyTests.test_nested_non_nextcore_package_cannot_hide_nextcore_dependencies) ... ok
+test_primary_and_auxiliary_share_one_owner_revision (__main__.PackagePolicyTests.test_primary_and_auxiliary_share_one_owner_revision) ... ok
+test_refresher_real_git_fixture_records_one_revision_and_rejects_conflict_without_writes (__main__.PackagePolicyTests.test_refresher_real_git_fixture_records_one_revision_and_rejects_conflict_without_writes) ... ok
+test_target_alias_resolves_package_identity (__main__.PackagePolicyTests.test_target_alias_resolves_package_identity) ... ok
+test_unknown_auxiliary_manifest_is_rejected (__main__.PackagePolicyTests.test_unknown_auxiliary_manifest_is_rejected) ... ok
+test_unknown_names_and_alias_escapes_fail (__main__.PackagePolicyTests.test_unknown_names_and_alias_escapes_fail) ... ok
+test_workspace_dependencies_are_not_an_alias_escape (__main__.PackagePolicyTests.test_workspace_dependencies_are_not_an_alias_escape) ... ok
+test_workspace_has_seven_members_and_eight_owned_patches (__main__.PackagePolicyTests.test_workspace_has_seven_members_and_eight_owned_patches) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 1.235s
+
+OK

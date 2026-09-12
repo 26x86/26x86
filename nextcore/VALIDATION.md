@@ -1,3 +1,13 @@
+## BP35 explicit deep-diagnostic integration — 2026-09-09
+
+Merged Corebab7/EFI03a/Tool8ea retain ISE0d and all legacy/default caps.
+Canonical standalone EFI, five actual deep/legacy/rejection/clamp firmware
+controls,28 CLI rejections and one x1 reader negative pass. The initial wrong
+non-trace control selection remains a failed receipt; the corrected tiered-only
+control passes without changing production or predicate sources. Parent targeted
+fresh recursive6bca2907 passes14 targeted commands: workspace505/Python149, Core235+3doctests, four freshly integrated firmware controls plus one canonical clamp,28 CLI rejections and one x1 negative. Debug NXAPFS, service44, package and Clippy checks pass. Existing warnings remain; final network clone and CI precede merge. Full receipts are in artifacts/arm-deep-trace-20260909. The historical original diagnostic
+stops at5311 retired instructions; it does not establish normal macOS boot.
+
 ## BP34 dynamic-MMU integration checkpoint — 2026-09-09
 
 ISE0d722886 and EFIed9ba255 are merged module heads. Standalone canonical builds

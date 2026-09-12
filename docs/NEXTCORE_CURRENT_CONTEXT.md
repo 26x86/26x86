@@ -2,6 +2,24 @@
 
 Updated: 2026-09-09. The latest BP summaries take precedence over legacy historical logs. This document provides an objective baseline summary so future agents and contributors can resume development without overstating completion states. Detailed specifications reside in `docs/NEXTCORE_BUILD_PLAN.md`, and verification records are maintained in `nextcore/VALIDATION.md`.
 
+## BP35 Integration and Physical Boot Work
+
+PR #17 adds explicit deep diagnostics with Core bab7ac4, EFI 03a376d and Tool
+8ea73c8. Historical authored firmware gates reached the selected 16384 budget;
+the historical original-input diagnostic stopped after 5311 retired instructions
+at UBFM. Those receipts do not establish normal startup or macOS boot.
+
+The 2026-09-12 integration preserves those historical results and connects ISE
+0f69e76 (UBFM, undefined-syndrome correction and extended-register arithmetic)
+with EFI 2aef036. Authored native/EFI arithmetic and production picker recovery
+pass; receipts are in `nextcore/artifacts/physical-integration-20260912`.
+The local original-prefix diagnostic retires 5316 instructions before CSEL,
+with normal startup prerequisites still incomplete. The physical target is Samsung 750XHD with Intel
+Core Ultra 7 255U and Intel Graphics 8086:7D41. Acceptance requires external-media
+installation and an interactive macOS 27 desktop after reboot. Optional firmware
+presentation failures must degrade gracefully. Graphics acceleration is deferred.
+SPTM services, complete platform providers and physical OS boot remain unverified.
+
 ## BP34 Development Status
 
 BP33 was merged into upstream main (`9ef0e262`) via PR #15 following validation across 29 CI checks and clean recursive cloning audits. BP34 integrates merged ISE updates (`PR #7 / bcf1ca9`) and EFI updates (`PR #8 / cfc8af9`). The 7-submodule architecture (Core, EFI, Tool, ISE, GPU, HAL, APLS) is preserved.

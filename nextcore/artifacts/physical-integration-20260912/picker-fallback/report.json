@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "cases": [
+    [
+      "1",
+      "28",
+      "1",
+      "1",
+      "0",
+      "true",
+      "true"
+    ],
+    [
+      "2",
+      "2",
+      "1",
+      "1",
+      "0",
+      "true",
+      "true"
+    ],
+    [
+      "3",
+      "1",
+      "1",
+      "1",
+      "14",
+      "true",
+      "true"
+    ],
+    [
+      "4",
+      "1",
+      "1",
+      "0",
+      "1",
+      "false",
+      "true"
+    ]
+  ],
+  "probe_sha256": "30c8145c5fe6148231b3e50e1c9e14dc4a750774150bf889dcaf09fa08e1c31a",
+  "probe_unchanged": true,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "elapsed_seconds": 2.125
+}

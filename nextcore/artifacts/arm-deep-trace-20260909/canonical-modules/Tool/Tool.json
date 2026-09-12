@@ -1,0 +1,32 @@
+{
+  "module": "Tool",
+  "commit": "8ea73c8ccda579566964cc3488844b6c52b1518f",
+  "passed": true,
+  "fresh_standalone_clone": true,
+  "canonical_dependencies": true,
+  "core_source": "git+https://github.com/26x86/Nextcore-Core.git?rev=bab7ac453a0f8ceab558eca1ad069bcfaf139776#bab7ac453a0f8ceab558eca1ad069bcfaf139776",
+  "commands": [
+    {
+      "name": "clone",
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "/home/sharh/work/bp35-tool-deep-trace",
+        "/home/sharh/work/module-validation-bp35-tool-20260909/Tool"
+      ],
+      "exit_code": 0,
+      "seconds": 0.59
+    },
+    {
+      "name": "test",
+      "command": [
+        "cargo",
+        "test",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 21.31
+    }
+  ]
+}

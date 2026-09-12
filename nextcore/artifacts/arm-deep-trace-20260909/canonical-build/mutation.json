@@ -1,0 +1,7 @@
+{
+  "base": "03a376d6652fdaabe8b567c047dad9d41926dc84",
+  "path": "src/arm_jit.rs",
+  "before_sha256": "860698c11f273ef8938218de982b7e48900b7770fbc1cde1801d353813b1c3bb",
+  "after_sha256": "338fae551151dd096f93406ca327294c00a3eb6eb7b79a2ea5cb98d7aa2ca664",
+  "change": "Actual two execution calls clamp budget to4096; config/markers unchanged."
+}

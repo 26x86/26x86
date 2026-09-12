@@ -1,0 +1,51 @@
+usage: trace_deep_arm_jit_ovmf.py [-h] --efi EFI --kernel KERNEL --device-tree
+                                  DEVICE_TREE --output OUTPUT --physical-base
+                                  PHYSICAL_BASE --virtual-base VIRTUAL_BASE
+                                  --memory-size MEMORY_SIZE --kernel-physical
+                                  KERNEL_PHYSICAL --tools TOOLS
+                                  [--instruction-budget INSTRUCTION_BUDGET]
+                                  [--deep-diagnostic | --tiered-diagnostic]
+                                  [--platform-profile {nextcore-irq-compat-v1}]
+                                  [--initial-override INITIAL_OVERRIDE]
+                                  [--initial-pstate INITIAL_PSTATE]
+                                  [--vector-base VECTOR_BASE]
+                                  [--irq-level IRQ_LEVEL]
+                                  [--fiq-level FIQ_LEVEL]
+                                  --allow-incomplete-sptm-prefix [--qemu QEMU]
+                                  [--host-memory-mib HOST_MEMORY_MIB]
+                                  [--timeout TIMEOUT] [--ovmf-code OVMF_CODE]
+                                  [--ovmf-vars OVMF_VARS]
+
+Bounded, opt-in incomplete SPTM prefix diagnostic inside x86 OVMF EFI. This
+records an actual fault or instruction-budget return; it does not provide SPTM
+services, a platform device tree, authentication, or a macOS boot result.
+Original-image addresses and instruction words belong in a private output
+path.
+
+options:
+  -h, --help            show this help message and exit
+  --efi EFI
+  --kernel KERNEL
+  --device-tree DEVICE_TREE
+  --output OUTPUT
+  --physical-base PHYSICAL_BASE
+  --virtual-base VIRTUAL_BASE
+  --memory-size MEMORY_SIZE
+  --kernel-physical KERNEL_PHYSICAL
+  --tools TOOLS         canonical authored OVMF helper directory
+  --instruction-budget INSTRUCTION_BUDGET
+  --deep-diagnostic     explicitly select only the deep-16384 tier
+  --tiered-diagnostic   explicitly require the opt-in tiered EFI build;
+                        allows256/1024/4096
+  --platform-profile {nextcore-irq-compat-v1}
+  --initial-override INITIAL_OVERRIDE
+  --initial-pstate INITIAL_PSTATE
+  --vector-base VECTOR_BASE
+  --irq-level IRQ_LEVEL
+  --fiq-level FIQ_LEVEL
+  --allow-incomplete-sptm-prefix
+  --qemu QEMU
+  --host-memory-mib HOST_MEMORY_MIB
+  --timeout TIMEOUT
+  --ovmf-code OVMF_CODE
+  --ovmf-vars OVMF_VARS

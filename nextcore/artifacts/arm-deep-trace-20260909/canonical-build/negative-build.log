@@ -1,0 +1,34 @@
+     Locking 32 packages to latest compatible versions
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling version_check v0.9.5
+   Compiling typenum v1.20.1
+   Compiling thiserror v2.0.20
+   Compiling bitflags v2.13.1
+   Compiling log v0.4.34
+   Compiling cfg-if v1.0.4
+   Compiling memchr v2.8.3
+   Compiling uguid v2.2.1
+   Compiling bit_field v0.10.3
+   Compiling cpufeatures v0.2.17
+   Compiling nextcore-memory-service v0.1.0 (https://github.com/26x86/Nextcore-ISE.git?rev=0d722886753268ec366f068823c37ea10132fb43#0d722886)
+   Compiling ucs2 v0.3.3
+   Compiling uefi-raw v0.16.0
+   Compiling roxmltree v0.21.1
+   Compiling generic-array v0.14.7
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling nextcore-core v0.1.0 (https://github.com/26x86/Nextcore-Core.git?rev=bab7ac453a0f8ceab558eca1ad069bcfaf139776#bab7ac45)
+   Compiling syn v3.0.5
+   Compiling syn v2.0.119
+   Compiling thiserror-impl v2.0.20
+   Compiling ptr_meta_derive v0.3.2
+   Compiling uefi-macros v0.19.0
+   Compiling ptr_meta v0.3.2
+   Compiling uefi v0.40.0
+   Compiling nextcore-ise v0.1.0 (https://github.com/26x86/Nextcore-ISE.git?rev=0d722886753268ec366f068823c37ea10132fb43#0d722886)
+   Compiling nextcore-efi v0.1.0 (/home/sharh/work/bp35-canonical-deep-proof/clamped-efi)
+    Finished `release` profile [optimized] target(s) in 39.40s

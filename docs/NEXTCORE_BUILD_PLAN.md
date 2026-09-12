@@ -798,3 +798,37 @@ require corrected unknown-reason IL only at typed unsupported boundaries, bind
 the new runtime71 explicitly, and rerun captured native6 without changing real
 Arm abort observations. Root owns active parent CI/driver selection and the
 current EFI omission-reader expectation. No historical result is rewritten.
+
+
+## BP35 — integrate explicit deep diagnostics
+
+Root connects merged Corebab7, EFI03a and Tool8ea while retaining ISE0d.
+The external CLI and authored gate are promoted byte-for-byte to parent tools.
+Existing/default parser caps remain unchanged; a separate deep-capable feature
+and exact deep-16384 selection are required. Root performs targeted fresh
+recursive workspace/config/actual deep-control checks in addition to the just
+completed BP34 full suite and canonical EFI standalone regression matrix.
+CI retains all existing jobs and adds one actual deep execution with28 preflight
+rejections and x1 corruption rejection. The separately compiled clamp and five
+actual canonical controls retain their own recorded evidence. No repeated
+original run or new unsupported instruction support belongs to this milestone.
+
+
+BP35 validation closure: fresh recursive6bca2907 passes the14-command targeted
+suite with workspace505/Core235+3doctests/Python149, actual integrated4 and
+separately built canonical clamp1,28 CLI rejections and x1 negative. Legacy full
+CI remains and final public bytes/network checkout are independently checked.
+
+## BP37 - Physical macOS 27 display-first continuation
+
+Root owns integration pins, new execution receipts and the build-plan contract.
+The EFI picker agent owns optional presentation fallback and its module-local
+contract/tests. Root will independently review that change before integration.
+Use the published UBFM implementation with the existing deep diagnostic as a
+bounded observation tool, without changing normal-entry or provider gates.
+Verify native semantics and actual EFI consumption before original-input replay.
+Replays must identify their actual input and incomplete startup state; do not
+compare different device kernels as a single execution history. Preserve raw
+original inputs and traces in the ignored isolated directory. The selected
+physical acceptance is external-media installation, reboot and an interactive
+macOS 27 desktop on Samsung 750XHD; GPU acceleration is outside this milestone.
