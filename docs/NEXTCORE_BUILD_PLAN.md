@@ -1285,8 +1285,21 @@ https://github.com/qemu/qemu/blob/v8.2.2/target/arm/tcg/cpu64.c#L1141-L1151
 
 ### Exact ISAR0 read in the bounded scalar profile
 
-Current Status: Original r26 stops at ID_AA64ISAR0_EL1. The native JIT, C
-register API and Rust reference do not currently recognize this register.
+Current Status: ISE `29413d9ca770c2b6e9487f91838452c7987f3a4e` and EFI
+`2099d59fc42ec8c41a116b3ffe1a131ed1acc297` implement this exact read. Independent
+validation passes 928 native assertions, 35 reference tests, 32 provider tests
+per cache mode and rejection of 16 unsupported extensions. Thirty-two
+Cortex-A72 model observations validate access/encoding/XZR/NZCV, with its
+nonzero feature value retained separately from the software policy. ZFR0
+regression tests and ten authored EFI checks pass. The preceding ZFR0 EFI
+stops at the first ISAR0 read after 114 instructions in the same authored
+fixture, while the new EFI reaches 65,536. The 114-file immutable freeze passes
+six captures, fourteen regressions and three negative controls. Original r27
+passes ISAR0 and retires 42,256,360 instructions with 6,012,373 data operations
+before status 13 at MRS ID_AA64ISAR2_EL1. It completes in 106.090 seconds with
+unchanged inputs and binaries. Its 1280 by 800 framebuffer hash matches zero
+RGB and GOP readback; physical macOS display remains unverified. This adds
+362 retired instructions and 98 data operations relative to r26.
 The runtime does not implement the extensions described by its AES, SHA1,
 SHA2, CRC32, Atomic, TME, RDM, SHA3, SM3, SM4, DP, FHM, TS, TLB or RNDR fields.
 Baseline exclusives are not LSE; baseline TLBI is not the outer-shareable or
@@ -1311,5 +1324,70 @@ Primary field reference: Arm Cortex-A520 Cryptographic Extension TRM section
 Version-pinned field and feature predicates:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/cpu.h
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/cpu-features.h
+
+### Exact ISAR2 read and pointer-authentication feature constraints
+
+Current Status: Original r27 stops at ID_AA64ISAR2_EL1. No ordinary native,
+Rust or PAC callback path currently recognizes this ID. The public read is
+S3_0_C0_C6_2, Rt-cleared MRS 0xd5380640, C key 0x4032. The pinned field map
+defines WFXT, RPRES, GPA3, APA3, MOPS, BC, PAC_frac, CLRBHB, SYSREG_128,
+SYSINSTR_128, PRFMSLC, RPRFM, CSSC and ATS1A. Existing QARMA5/PACGA execution
+does not implement QARMA3; baseline conditional branches do not implement BC.
+RPRES zero selects baseline estimate precision in the relevant FP context,
+not a declaration that floating-point execution is absent.
+
+Target State: Derive an explicit ISAR2 value from implemented semantics before
+adding exact read-only dispatch under the existing EL1/live inactive-control
+gate. Do not infer PAC_frac from generic PAC presence: it describes constant
+PAC field behavior, and the documented CONSTPACFIELD dependency includes
+PAuth2 while this runtime advertises APA1. First exercise asymmetric T0SZ/T1SZ
+and a noncanonical pointer against the selected APA1 contract to qualify the
+bit-55/address-mask behavior. Preserve other ID policy and readiness gates.
+Then validate all destinations, rejection/control changes, cache modes and
+representative absent extensions, followed by authored EFI and original input.
+Current ISAR0 negative tests use ISAR2 as an unknown neighbor; admitting ISAR2
+requires a new positive case and a genuinely unsupported replacement negative,
+with that deliberate expectation change recorded rather than hiding a failure.
+
+OPEN_QUESTION: Build Plan: Qualify PAC_frac=0 against asymmetric address sizes and noncanonical pointer behavior under the bounded APA1 profile before admitting ISAR2.
+
+Pinned field definitions and read-only/TID3 registration:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/cpu.h#L2046-L2059
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/helper.c#L8507-L8511
+Arm feature dependency reference, 109697_2024_12 page 48:
+https://documentation-service.arm.com/static/6762ba2527eda361ad4e0432
 Read-only registration and access policy:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/helper.c
+
+### Feature-profile coherence across execution paths
+
+Current Status: Register storage, API reads and executed MRS results do not yet
+share one complete policy. ISAR1 resets to zero in C and 0x10 in Rust. The PAC
+callback independently returns 0x10 for ISAR1, so the current mapped PAC path
+can read it even though the ordinary JIT traps. The callback does not read or
+update the C ID field. PACGA is implemented but the advertised GPA field stays
+zero; any change requires an explicit supported-profile decision and proof.
+
+MMFR0 resets to 0x00101122 in C and Rust and has API/reference reads, but lacks
+ordinary native or mapped MRS dispatch. This literal advertises 16-bit ASIDs,
+mixed endianness, security-state distinctions and 64KiB granules beyond the
+immutable provider's accepted contract. The reference walker supports ASID
+matching, while the immutable provider rejects TTBR ASID bits and TCR.AS.
+Both 4KiB and 16KiB translation are implemented; 64KiB is explicitly rejected.
+PARange advertises 40 bits although the walker accepts IPS values through 48.
+The IRQ platform override does not replace these ID fields. Do not expose the
+existing MMFR0 literal as a new native read without reconciling these meanings.
+
+Target State: Build one authored profile matrix across C API, native JIT, Rust
+reference, mapped non-PAC and mapped PAC. Separate API values from actual MRS
+retirement/traps. A test-only ISAR1 sentinel must distinguish the stored C field
+from the fixed PAC callback value. Couple MMFR0 observations to granule, ASID,
+endianness and physical-width behavior. Document a common policy and explicit
+per-profile limits before changing advertised values or execution support.
+This is a prerequisite to a coherent guest CPU model, not a claim of complete
+Arm conformance or original hardware identity.
+
+Primary MMFR0 field reference: Arm Cortex-A55 TRM B2.55,
+https://documentation-service.arm.com/static/5e7e1405b471823cb9de57ae
+ISAR1 feature predicates:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/cpu-features.h
