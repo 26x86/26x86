@@ -1,0 +1,46 @@
+
+running 3 tests
+test mapped_provider::matrix_ids ... id=0 mapped_pac=false sentinel=false status=13 x0=feed pc=10000 retired=0 fetch=1 data=0 requests=1 ram_equal=true
+id=0 mapped_pac=false sentinel=true status=13 x0=feed pc=10000 retired=0 fetch=1 data=0 requests=1 ram_equal=true
+id=0 mapped_pac=true sentinel=false status=1 x0=10 pc=10008 retired=2 fetch=2 data=0 requests=2 ram_equal=true
+id=0 mapped_pac=true sentinel=true status=1 x0=10 pc=10008 retired=2 fetch=2 data=0 requests=2 ram_equal=true
+id=1 mapped_pac=false sentinel=false status=13 x0=feed pc=10000 retired=0 fetch=1 data=0 requests=1 ram_equal=true
+id=1 mapped_pac=false sentinel=true status=13 x0=feed pc=10000 retired=0 fetch=1 data=0 requests=1 ram_equal=true
+id=1 mapped_pac=true sentinel=false status=13 x0=feed pc=10000 retired=0 fetch=1 data=0 requests=1 ram_equal=true
+id=1 mapped_pac=true sentinel=true status=13 x0=feed pc=10000 retired=0 fetch=1 data=0 requests=1 ram_equal=true
+ok
+test matrix_controls ... control_kind=0 Caccepted=1 Rustaccepted=true
+control_kind=1 Caccepted=1 Rustaccepted=true
+control_kind=2 Caccepted=0 Rustaccepted=false
+control_kind=3 Caccepted=0 Rustaccepted=false
+control_kind=4 Caccepted=0 Rustaccepted=false
+control_kind=5 Caccepted=0 Rustaccepted=false
+control_kind=6 Caccepted=0 Rustaccepted=false
+control_kind=7 Caccepted=1 Rustaccepted=true
+control_kind=8 Caccepted=1 Rustaccepted=true
+control_kind=9 Caccepted=1 Rustaccepted=true
+control_kind=10 Caccepted=1 Rustaccepted=true
+control_kind=11 Caccepted=1 Rustaccepted=true
+control_kind=12 Caccepted=1 Rustaccepted=true
+control_kind=13 Caccepted=0 Rustaccepted=false
+granule=4 actual_status=1 retired=1 fetch=1
+granule=16 actual_status=1 retired=1 fetch=1
+ok
+test matrix_provider_output_width ... provider_IPS=2 PA_bit=39 result=0 fault=0 fsc=0 output_pa=0 value=d4400000
+provider_IPS=2 PA_bit=40 result=1 fault=3 fsc=3 output_pa=10000000000 value=0
+provider_IPS=2 PA_bit=47 result=1 fault=3 fsc=3 output_pa=800000000000 value=0
+provider_IPS=5 PA_bit=39 result=0 fault=0 fsc=0 output_pa=0 value=d4400000
+provider_IPS=5 PA_bit=40 result=0 fault=0 fsc=0 output_pa=0 value=d4400000
+provider_IPS=5 PA_bit=47 result=0 fault=0 fsc=0 output_pa=0 value=d4400000
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 30 filtered out; finished in 0.00s
+
+stored_isar1=0
+stored_isar1=123456789abcdef0
+stored_isar1=0
+stored_isar1=123456789abcdef0
+stored_isar1=0
+stored_isar1=123456789abcdef0
+stored_isar1=0
+stored_isar1=123456789abcdef0

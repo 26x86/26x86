@@ -1,0 +1,407 @@
+{
+  "key_lo": "0x48ad369c24681357",
+  "key_hi": "0xb752c963db97eca8",
+  "rows": [
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 0,
+      "pointer": "0x130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 0,
+      "pointer": "0x800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 0,
+      "pointer": "0xffff800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 0,
+      "pointer": "0xffff000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 0,
+      "pointer": "0x80000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 0,
+      "pointer": "0xff7f800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 1,
+      "pointer": "0x130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 1,
+      "pointer": "0x800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 1,
+      "pointer": "0xffff800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 1,
+      "pointer": "0xffff000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 1,
+      "pointer": "0x80000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 1,
+      "pointer": "0xff7f800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 2,
+      "pointer": "0x130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 2,
+      "pointer": "0x800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 2,
+      "pointer": "0xffff800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 2,
+      "pointer": "0xffff000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 2,
+      "pointer": "0x80000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 2,
+      "pointer": "0xff7f800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 3,
+      "pointer": "0x130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 3,
+      "pointer": "0x800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 3,
+      "pointer": "0xffff800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 3,
+      "pointer": "0xffff000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 3,
+      "pointer": "0x80000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 16,
+      "t1sz": 17,
+      "tcr": "0x540118010",
+      "key": 3,
+      "pointer": "0xff7f800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 0,
+      "pointer": "0x130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 0,
+      "pointer": "0x800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 0,
+      "pointer": "0xffff800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 0,
+      "pointer": "0xffff000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 0,
+      "pointer": "0x80000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 0,
+      "pointer": "0xff7f800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 1,
+      "pointer": "0x130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 1,
+      "pointer": "0x800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 1,
+      "pointer": "0xffff800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 1,
+      "pointer": "0xffff000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 1,
+      "pointer": "0x80000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 1,
+      "pointer": "0xff7f800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 2,
+      "pointer": "0x130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 2,
+      "pointer": "0x800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 2,
+      "pointer": "0xffff800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 2,
+      "pointer": "0xffff000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 2,
+      "pointer": "0x80000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 2,
+      "pointer": "0xff7f800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 3,
+      "pointer": "0x130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 3,
+      "pointer": "0x800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 3,
+      "pointer": "0xffff800000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 3,
+      "pointer": "0xffff000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 3,
+      "pointer": "0x80000000000130",
+      "modifier": "0x9876"
+    },
+    {
+      "t0sz": 17,
+      "t1sz": 16,
+      "tcr": "0x540108011",
+      "key": 3,
+      "pointer": "0xff7f800000000130",
+      "modifier": "0x9876"
+    }
+  ],
+  "header": [
+    "CurrentEL",
+    "ISAR1",
+    "ISAR2",
+    "vector_count"
+  ],
+  "record": [
+    "TCR",
+    "SCTLR",
+    "signed",
+    "auth_signed",
+    "xpac_original",
+    "xpac_signed",
+    "auth_corrupted_bit54",
+    "auth_original"
+  ],
+  "sctlr": "0xf8d02800"
+}

@@ -1,0 +1,137 @@
+{
+  "schema": "nextcore.enabled-pac-m0-efi.v1",
+  "passed": true,
+  "checks": {
+    "current_enabled_pac_efi_pass": true,
+    "old_efi_distinct_assertion": true,
+    "sources_binaries_oracle_preserved": true,
+    "authored_inputs_preserved": true,
+    "all_outer_processes_reaped": true
+  },
+  "runs": {
+    "current": {
+      "checks": {
+        "actual_m0": true,
+        "exact_budget": true,
+        "provider_success": true,
+        "inputs_preserved": true,
+        "complete_terminal": true,
+        "inner_process_returned": true,
+        "all_288_guest_comparisons": true,
+        "exact_success_pc": true,
+        "exact_data": true
+      },
+      "execution": {
+        "status": 5,
+        "retired": 65536,
+        "pc": 1107314352,
+        "compiled_blocks": 65536,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 5259587,
+          "x1": 48,
+          "x2": 288,
+          "x3": 1
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        },
+        "memory": {
+          "abi": 1,
+          "provider_status": 0,
+          "guest_far": 0,
+          "last_address": 1107314352,
+          "fetch_requests": 65536,
+          "data_requests": 432,
+          "completed_data_operations": 432
+        }
+      },
+      "elapsed_seconds": 3.438,
+      "qemu_exit_code": 0
+    },
+    "old": {
+      "checks": {
+        "actual_m0": true,
+        "exact_budget": true,
+        "provider_success": true,
+        "inputs_preserved": true,
+        "complete_terminal": true,
+        "inner_process_returned": true,
+        "distinct_old_sign_assertion": true,
+        "exact_failure_pc": true,
+        "exact_data": true
+      },
+      "execution": {
+        "status": 5,
+        "retired": 65536,
+        "pc": 1107314372,
+        "compiled_blocks": 65536,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 2989,
+          "x1": 4,
+          "x2": 0,
+          "x3": 18390026865902354736
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 536871877,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        },
+        "memory": {
+          "abi": 1,
+          "provider_status": 0,
+          "guest_far": 0,
+          "last_address": 1107314372,
+          "fetch_requests": 65536,
+          "data_requests": 40,
+          "completed_data_operations": 40
+        }
+      },
+      "elapsed_seconds": 2.734,
+      "qemu_exit_code": 0
+    }
+  },
+  "source_sha256": {
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/pac_m0_probe.S": "c4010e0483a7d5f04e53539c13b6588332cda35df37cc0d39aa6b6fc7b2a9410",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_pac_m0_ovmf.py": "f338e4109a5678a3f865bd078c03415b96b5e9908ba4c11177dd81985a48fd5c",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py": "212834cea0242dcaa25c6e2ac40261c23bd3254b5e9791ec4c47899557a228cd",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "549914a7980ee519afcccaa97e952a0125d1d257c8fb66f97b5c311a1c5a52de",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/build_arm64_handoff_probe.py": "2013476485d750c74e11a092b15566cb8a9f571ddd61dab5000d691d4d41dc6b",
+    "/tmp/nextcore-isar2-mapped-final-20260913.efi": "b581e7bb7ec54421e1a91ea23e8c5a7cbae4ad3cbcbd9c7af85ea65d49283583",
+    "/tmp/nextcore-isar0-mapped-final-20260913.efi": "a96307cf782d440c3deb073ed4c198e0b690795598d553b8fd8c6385d17d497c",
+    "/tmp/nextcore-pac-address-selection-20260913-r1/receipt.json": "df706dade042d2e91ecc494ba029425030c1f7399d0433cf8fe4f87301f096b4",
+    "/tmp/nextcore-pac-address-selection-20260913-r1/manifest.json": "fd5e1cd8ba6c7474be8b77a62350473be045d11fddb906d75c37db36c3bd6ab7",
+    "/tmp/nextcore-pac-address-selection-20260913-r1/results.bin": "89385554ea4e4d09ddb25d9a617240113b8a717f0c93219eb5b2b55cc7e70f81"
+  },
+  "authored_sha256": {
+    "/tmp/nextcore-pac-m0-efi-20260913-r2/probe.kc": "8a70987babf8040397a82eaccc49ea47e9a10f4135e1417103e362d71139b45c",
+    "/tmp/nextcore-pac-m0-efi-20260913-r2/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/tmp/nextcore-pac-m0-efi-20260913-r2/probe.bin": "3cdd2c723fdd1cdc3c6597bff71e1ca2a819160004ba4649c7196ddbc68cf793",
+    "/tmp/nextcore-pac-m0-efi-20260913-r2/pac_m0_vectors.inc": "8cfdf33e3e70763a441f4c98c2a44554bac80554d3e7fb2db4729a55d7f10796"
+  },
+  "oracle_scope": "Adapted-control APA1 QEMU expected values; EFI uses original asymmetric TCR.",
+  "vectors": 48,
+  "numeric_assertions": 288,
+  "original_images_used": false,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false
+}

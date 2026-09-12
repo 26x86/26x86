@@ -1,0 +1,10 @@
+warning: field `flags` is never read
+ --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/ubfm_provider_cases.rs:2:89
+  |
+2 | ...uct Case {pub word:u32,pub source:u64,pub destination:usize,pub expected:u64,pub flags:u64}
+  |        ---- field in this struct                                                    ^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+

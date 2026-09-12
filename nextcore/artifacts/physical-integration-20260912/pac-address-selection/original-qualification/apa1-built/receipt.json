@@ -1,0 +1,1026 @@
+{
+  "completed": true,
+  "failure": null,
+  "commands": [
+    [
+      "clang-18",
+      "--target=aarch64-none-elf",
+      "-nostdlib",
+      "-Wl,-Ttext=0x40080000",
+      "-Wl,-e,_start",
+      "/tmp/nextcore-pac-frac-qualification-20260913-r1/apa1-built/probe.S",
+      "-o",
+      "/tmp/nextcore-pac-frac-qualification-20260913-r1/apa1-built/probe.elf"
+    ],
+    [
+      "/tmp/nextcore-qemu-apa1-8.2.2-20260913",
+      "-machine",
+      "virt,virtualization=off,secure=off",
+      "-cpu",
+      "neoverse-v1",
+      "-accel",
+      "tcg",
+      "-m",
+      "128",
+      "-display",
+      "none",
+      "-serial",
+      "none",
+      "-monitor",
+      "none",
+      "-nic",
+      "none",
+      "-qmp",
+      "unix:/tmp/nextcore-pac-frac-qualification-20260913-r1/apa1-built/qmp.sock,server=on,wait=off",
+      "-kernel",
+      "/tmp/nextcore-pac-frac-qualification-20260913-r1/apa1-built/probe.elf"
+    ]
+  ],
+  "elapsed_seconds": 0.3373700210001971,
+  "qemu_returncode": 0,
+  "process_reaped": true,
+  "qmp_stopped": true,
+  "kill_fallback": false,
+  "qemu_sha256": "cfdfe408911c7c2ac797fc7e54c3f510e6c682b67e50ce025e25b7846ac8705a",
+  "qemu_version": "QEMU emulator version 8.2.2 (v8.2.2-dirty)",
+  "source_sha256": "7f91f1e820f8238f5931b2bccf9b48ac1bdcf2033b4434108bf9eb595e5cf9cf",
+  "manifest_sha256": "41155535c1495f961e0fb3bb3e94b07ed3cba3779dee7ae5c118816e1151fda7",
+  "elf_sha256": "cd1205b55530ab9b329a15866eac9c00bdb7746f3e6edf564869c03dd8fc6c37",
+  "original_inputs_used": false,
+  "architecture_oracle_qualification": "Actual QEMU observations only; asymmetric AddPAC must separately agree with Arm primary pseudocode.",
+  "header": {
+    "CurrentEL": "0x4",
+    "ISAR1": "0x111000001211012",
+    "ISAR2": "0x0",
+    "vector_count": "0x30"
+  },
+  "results_sha256": "ea622db9c838409ab5a0ba78fea3d072b503cc59c9b66c63a8bce454307916b6",
+  "observed_el1": true,
+  "observed_vector_count": 48,
+  "observed_APA": 1,
+  "observed_PAC_frac": 0,
+  "register_controls_match_manifest": true,
+  "rust_differing_rows": [],
+  "records": [
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 0,
+        "pointer": "0x130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbf36000000000130",
+        "auth_signed": "0x130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x2000000000000130",
+        "auth_original": "0x2000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 0,
+        "pointer": "0x800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xa525800000000130",
+        "auth_signed": "0x800000000130",
+        "xpac_original": "0x800000000130",
+        "xpac_signed": "0x800000000130",
+        "auth_corrupted_bit54": "0x2000800000000130",
+        "auth_original": "0x2000800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 0,
+        "pointer": "0xffff800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xffde000000000130",
+        "auth_signed": "0xffff800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xbfff800000000130",
+        "auth_original": "0xbfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 0,
+        "pointer": "0xffff000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbfde000000000130",
+        "auth_signed": "0xbfff800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xbfff800000000130",
+        "auth_original": "0xbfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 0,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xff36800000000130",
+        "auth_signed": "0x2000800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0x800000000130",
+        "auth_corrupted_bit54": "0x2000800000000130",
+        "auth_original": "0xbfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 0,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbfde800000000130",
+        "auth_signed": "0xbfff800000000130",
+        "xpac_original": "0x800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xbfff800000000130",
+        "auth_original": "0x2000800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 1,
+        "pointer": "0x130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbf36000000000130",
+        "auth_signed": "0x130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x4000000000000130",
+        "auth_original": "0x4000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 1,
+        "pointer": "0x800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xa525800000000130",
+        "auth_signed": "0x800000000130",
+        "xpac_original": "0x800000000130",
+        "xpac_signed": "0x800000000130",
+        "auth_corrupted_bit54": "0x4000800000000130",
+        "auth_original": "0x4000800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 1,
+        "pointer": "0xffff800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xffde000000000130",
+        "auth_signed": "0xffff800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xdfff800000000130",
+        "auth_original": "0xdfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 1,
+        "pointer": "0xffff000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbfde000000000130",
+        "auth_signed": "0xdfff800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xdfff800000000130",
+        "auth_original": "0xdfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 1,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xff36800000000130",
+        "auth_signed": "0x4000800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0x800000000130",
+        "auth_corrupted_bit54": "0x4000800000000130",
+        "auth_original": "0xdfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 1,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbfde800000000130",
+        "auth_signed": "0xdfff800000000130",
+        "xpac_original": "0x800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xdfff800000000130",
+        "auth_original": "0x4000800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 2,
+        "pointer": "0x130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbf36000000000130",
+        "auth_signed": "0x130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x2000000000000130",
+        "auth_original": "0x2000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 2,
+        "pointer": "0x800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xa525800000000130",
+        "auth_signed": "0x800000000130",
+        "xpac_original": "0x800000000130",
+        "xpac_signed": "0x800000000130",
+        "auth_corrupted_bit54": "0x2000800000000130",
+        "auth_original": "0x2000800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 2,
+        "pointer": "0xffff800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xffde000000000130",
+        "auth_signed": "0xffff800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xbfff800000000130",
+        "auth_original": "0xbfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 2,
+        "pointer": "0xffff000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbfde000000000130",
+        "auth_signed": "0xbfff800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xbfff800000000130",
+        "auth_original": "0xbfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 2,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xff36800000000130",
+        "auth_signed": "0x2000800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0x800000000130",
+        "auth_corrupted_bit54": "0x2000800000000130",
+        "auth_original": "0xbfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 2,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbfde800000000130",
+        "auth_signed": "0xbfff800000000130",
+        "xpac_original": "0x800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xbfff800000000130",
+        "auth_original": "0x2000800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 3,
+        "pointer": "0x130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbf36000000000130",
+        "auth_signed": "0x130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x4000000000000130",
+        "auth_original": "0x4000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 3,
+        "pointer": "0x800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xa525800000000130",
+        "auth_signed": "0x800000000130",
+        "xpac_original": "0x800000000130",
+        "xpac_signed": "0x800000000130",
+        "auth_corrupted_bit54": "0x4000800000000130",
+        "auth_original": "0x4000800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 3,
+        "pointer": "0xffff800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xffde000000000130",
+        "auth_signed": "0xffff800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xdfff800000000130",
+        "auth_original": "0xdfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 3,
+        "pointer": "0xffff000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbfde000000000130",
+        "auth_signed": "0xdfff800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xdfff800000000130",
+        "auth_original": "0xdfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 3,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xff36800000000130",
+        "auth_signed": "0x4000800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0x800000000130",
+        "auth_corrupted_bit54": "0x4000800000000130",
+        "auth_original": "0xdfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 3,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540118010",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbfde800000000130",
+        "auth_signed": "0xdfff800000000130",
+        "xpac_original": "0x800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xdfff800000000130",
+        "auth_original": "0x4000800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 0,
+        "pointer": "0x130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbf36800000000130",
+        "auth_signed": "0x130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x2000000000000130",
+        "auth_original": "0x2000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 0,
+        "pointer": "0x800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xff36800000000130",
+        "auth_signed": "0x2000000000000130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x2000000000000130",
+        "auth_original": "0x2000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 0,
+        "pointer": "0xffff800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xffde800000000130",
+        "auth_signed": "0xffff800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xbfff800000000130",
+        "auth_original": "0xbfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 0,
+        "pointer": "0xffff000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0x95fe000000000130",
+        "auth_signed": "0xffff000000000130",
+        "xpac_original": "0xffff000000000130",
+        "xpac_signed": "0xffff000000000130",
+        "auth_corrupted_bit54": "0xbfff000000000130",
+        "auth_original": "0xbfff000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 0,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xff36000000000130",
+        "auth_signed": "0x2000000000000130",
+        "xpac_original": "0xffff000000000130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x2000000000000130",
+        "auth_original": "0xbfff000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 0,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbfde000000000130",
+        "auth_signed": "0xbfff000000000130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0xffff000000000130",
+        "auth_corrupted_bit54": "0xbfff000000000130",
+        "auth_original": "0x2000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 1,
+        "pointer": "0x130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbf36800000000130",
+        "auth_signed": "0x130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x4000000000000130",
+        "auth_original": "0x4000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 1,
+        "pointer": "0x800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xff36800000000130",
+        "auth_signed": "0x4000000000000130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x4000000000000130",
+        "auth_original": "0x4000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 1,
+        "pointer": "0xffff800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xffde800000000130",
+        "auth_signed": "0xffff800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xdfff800000000130",
+        "auth_original": "0xdfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 1,
+        "pointer": "0xffff000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0x95fe000000000130",
+        "auth_signed": "0xffff000000000130",
+        "xpac_original": "0xffff000000000130",
+        "xpac_signed": "0xffff000000000130",
+        "auth_corrupted_bit54": "0xdfff000000000130",
+        "auth_original": "0xdfff000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 1,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xff36000000000130",
+        "auth_signed": "0x4000000000000130",
+        "xpac_original": "0xffff000000000130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x4000000000000130",
+        "auth_original": "0xdfff000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 1,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbfde000000000130",
+        "auth_signed": "0xdfff000000000130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0xffff000000000130",
+        "auth_corrupted_bit54": "0xdfff000000000130",
+        "auth_original": "0x4000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 2,
+        "pointer": "0x130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbf36800000000130",
+        "auth_signed": "0x130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x2000000000000130",
+        "auth_original": "0x2000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 2,
+        "pointer": "0x800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xff36800000000130",
+        "auth_signed": "0x2000000000000130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x2000000000000130",
+        "auth_original": "0x2000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 2,
+        "pointer": "0xffff800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xffde800000000130",
+        "auth_signed": "0xffff800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xbfff800000000130",
+        "auth_original": "0xbfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 2,
+        "pointer": "0xffff000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0x95fe000000000130",
+        "auth_signed": "0xffff000000000130",
+        "xpac_original": "0xffff000000000130",
+        "xpac_signed": "0xffff000000000130",
+        "auth_corrupted_bit54": "0xbfff000000000130",
+        "auth_original": "0xbfff000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 2,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xff36000000000130",
+        "auth_signed": "0x2000000000000130",
+        "xpac_original": "0xffff000000000130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x2000000000000130",
+        "auth_original": "0xbfff000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 2,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbfde000000000130",
+        "auth_signed": "0xbfff000000000130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0xffff000000000130",
+        "auth_corrupted_bit54": "0xbfff000000000130",
+        "auth_original": "0x2000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 3,
+        "pointer": "0x130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbf36800000000130",
+        "auth_signed": "0x130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x4000000000000130",
+        "auth_original": "0x4000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 3,
+        "pointer": "0x800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xff36800000000130",
+        "auth_signed": "0x4000000000000130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x4000000000000130",
+        "auth_original": "0x4000000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 3,
+        "pointer": "0xffff800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xffde800000000130",
+        "auth_signed": "0xffff800000000130",
+        "xpac_original": "0xffff800000000130",
+        "xpac_signed": "0xffff800000000130",
+        "auth_corrupted_bit54": "0xdfff800000000130",
+        "auth_original": "0xdfff800000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 3,
+        "pointer": "0xffff000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0x95fe000000000130",
+        "auth_signed": "0xffff000000000130",
+        "xpac_original": "0xffff000000000130",
+        "xpac_signed": "0xffff000000000130",
+        "auth_corrupted_bit54": "0xdfff000000000130",
+        "auth_original": "0xdfff000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 3,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xff36000000000130",
+        "auth_signed": "0x4000000000000130",
+        "xpac_original": "0xffff000000000130",
+        "xpac_signed": "0x130",
+        "auth_corrupted_bit54": "0x4000000000000130",
+        "auth_original": "0xdfff000000000130"
+      }
+    },
+    {
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 3,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "output": {
+        "TCR": "0x540108011",
+        "SCTLR": "0xf8d02800",
+        "signed": "0xbfde000000000130",
+        "auth_signed": "0xdfff000000000130",
+        "xpac_original": "0x130",
+        "xpac_signed": "0xffff000000000130",
+        "auth_corrupted_bit54": "0xdfff000000000130",
+        "auth_original": "0x4000000000000130"
+      }
+    }
+  ]
+}

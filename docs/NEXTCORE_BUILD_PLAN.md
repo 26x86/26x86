@@ -1327,8 +1327,9 @@ https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/targe
 
 ### Exact ISAR2 read and pointer-authentication feature constraints
 
-Current Status: Original r27 stops at ID_AA64ISAR2_EL1. No ordinary native,
-Rust or PAC callback path currently recognizes this ID. The public read is
+Current Status: Original r27 stopped at ID_AA64ISAR2_EL1. ISE
+`5cd1e44413958450875392d8a431dba15bb76f2e` now implements the exact native
+and Rust read under the existing EL1/live HCR/SCR gate. The public read is
 S3_0_C0_C6_2, Rt-cleared MRS 0xd5380640, C key 0x4032. The pinned field map
 defines WFXT, RPRES, GPA3, APA3, MOPS, BC, PAC_frac, CLRBHB, SYSREG_128,
 SYSINSTR_128, PRFMSLC, RPRFM, CSSC and ATS1A. Existing QARMA5/PACGA execution
@@ -1349,7 +1350,41 @@ Current ISAR0 negative tests use ISAR2 as an unknown neighbor; admitting ISAR2
 requires a new positive case and a genuinely unsupported replacement negative,
 with that deliberate expectation change recorded rather than hiding a failure.
 
-OPEN_QUESTION: Build Plan: Qualify PAC_frac=0 against asymmetric address sizes and noncanonical pointer behavior under the bounded APA1 profile before admitting ISAR2.
+Qualification finding: Arm DDI0596 ID121321 distinguishes AddPAC's untagged
+bit-63 selection from Auth/Strip's bit-55 selection. The preceding runtime and
+QEMU 8.2.2 both used bit 55 to choose AddPAC's address size; 16 of 48 authored
+asymmetric/noncanonical vectors differ from the required address placement.
+Correct only signing's address-size selection to bit 63 under the existing
+TBI-disabled APA1 contract. Authentication and stripping retain bit 55, and
+unsupported widths, TBI controls, keys and failure behavior remain bounded.
+The shared QARMA5 cipher is not reimplemented or requalified by this correction.
+
+Independent validation must preserve the direct QEMU observations, including
+their shared discrepancy. An explicitly adapted control may set both TnSZ
+fields to the original bit-63-selected size during PAC only, then restore the
+original TCR before AUT/XPAC. This removes QEMU's wrong selector for that one
+operation without changing pointer, key, modifier or cipher. Validate the
+adaptation against the primary rule and label it as an adapted-control oracle,
+not an identical-state hardware run. Use all 48 vectors plus rejection and
+cross-path regression checks before admitting the explicit ISAR2 profile.
+
+Primary address-selection reference: Arm-authored DDI0596 ID121321,
+AddPAC/Auth/CalculateBottomPACBit/Strip, printed pages 2941/2947/2952/2961
+(PDF pages 2944/2950/2955/2964), hosted mirror:
+https://student.cs.uwaterloo.ca/~cs452/docs/rpi4b/ISA_A64_xml_v88A-2021-12_OPT.pdf
+
+Qualification experiment contract: QEMU 8.2.2 commit
+`11aa0b1ff115b86160c4d37e7c37e6a6b13b77ea` supplies a controlled test model.
+Build an unchanged neoverse-v1 baseline, then change only its ISAR1 APA nibble
+from 3 to 1 and rebuild. Preserve QARMA5, GPA and all other fields and helper
+sources. Actual guest readback must confirm the selected ID fields, EL, TCR
+and SCTLR. This is a test-only CPU model, not an unmodified hardware identity.
+Run the same 48 authored IA/IB/DA/DB vectors on both binaries, with T0SZ/T1SZ
+16/17 and 17/16, TBI disabled, canonical and noncanonical pointers, signing,
+authentication and stripping. Preserve source/patch/binary/input hashes and
+process cleanup. Compare against the published architectural selection rules;
+agreement with QEMU alone cannot settle a shared address-selection defect.
+No QEMU helper implementation is imported into the production runtime.
 
 Pinned field definitions and read-only/TID3 registration:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/cpu.h#L2046-L2059
@@ -1358,6 +1393,25 @@ Arm feature dependency reference, 109697_2024_12 page 48:
 https://documentation-service.arm.com/static/6762ba2527eda361ad4e0432
 Read-only registration and access policy:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/helper.c
+
+Qualification result: All 48 adapted-control vectors and 288 results pass,
+including 288 actual enabled PAC FFI callbacks, 40 unsupported control rows
+and three invalid key indices. The previous signing source fails the expected
+asymmetric-address comparison. Actual x86 OVMF EFI also runs all 48 vectors
+under their original asymmetric TCR through enabled M0 ABI1: 288 comparisons,
+65,536 retired instructions, 432 data operations and no provider error. The
+same input on the preceding EFI reaches the expected signing failure instead.
+An initial authored ISB trapped before these vectors; the final synchronous M0
+fixture omits it and does not establish architectural barrier support.
+
+Actual mapped EFI independently passes ten checks across three modes; the old
+ISAR0 EFI traps precisely at the authored ISAR2 read after 121 instructions.
+The mapped profile disables address PAC, so its PAC no-op/XPAC checks remain
+distinct from the enabled M0 proof. ISAR2 native checks pass 918 assertions,
+32 actual Arm destination observations, 35 reference tests and 32 provider
+tests per mode. ISAR0/ZFR0 regressions pass. Authored evidence is published in
+`nextcore/artifacts/physical-integration-20260912/isar2-scalar-profile`,
+`pac-address-selection` and `pac-m0-efi`. Physical/macOS boot remains unverified.
 
 ### Feature-profile coherence across execution paths
 
@@ -1391,3 +1445,12 @@ Primary MMFR0 field reference: Arm Cortex-A55 TRM B2.55,
 https://documentation-service.arm.com/static/5e7e1405b471823cb9de57ae
 ISAR1 feature predicates:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/cpu-features.h
+
+Profile-matrix observation: The authored matrix has now executed C API, native,
+reference, mapped non-PAC and mapped PAC paths. A stored ISAR1 sentinel does
+not affect the fixed PAC MRS value. Both 4KiB/16KiB fetches pass while 64KiB,
+immutable ASIDs and big-endian controls are rejected; the separate reference
+walker accepts its ASID case. Synthetic RAM at selected 39/40/47-bit addresses
+confirms the current IPS-dependent limits through 48 bits. These observations
+confirm the inconsistencies above; no common MMFR0/ISAR1 policy has yet been
+implemented. Receipts are under `pac-address-selection/profile-matrix`.

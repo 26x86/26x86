@@ -2,12 +2,14 @@
 
 ## Current Status
 
-The active exact runtime is ISE `29413d9ca770c2b6e9487f91838452c7987f3a4e`,
-including exact ISAR0 and ZFR0 reads in the bounded scalar profile.
+The active exact runtime is ISE `5cd1e44413958450875392d8a431dba15bb76f2e`,
+including exact ISAR2, ISAR0 and ZFR0 reads and corrected non-TBI APA1 signing address selection.
 These six captures retain their original dynamic profile-2 inputs and
 expectations. This replay checks shared runtime regressions; it does not replace
 independent instruction or original-entry tests. See
-`VALIDATION_ISAR0_20260913.md` and `evidence-isar0-20260913`.
+`VALIDATION_ISAR2_20260913.md` and `evidence-isar2-20260913`.
+The preceding ISAR0 sources remain under `history/29413d9`, with
+`evidence-isar0-20260913` unchanged.
 The preceding ZFR0 sources remain under `history/401619a`, with
 `evidence-zfr0-20260913` unchanged.
 The preceding variable-shift sources remain under `history/00243e6`, with

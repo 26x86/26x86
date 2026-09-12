@@ -132,6 +132,14 @@ _start:
     mrs xzr, S3_0_C0_C6_0
     b.ne mapped_failure
     b.cc mapped_failure
+    // Exact ISAR2 reads advertise no new extension in this bounded profile.
+    mrs x11, S3_0_C0_C6_2
+    b.ne mapped_failure
+    b.cc mapped_failure
+    cbnz x11, mapped_failure
+    mrs xzr, S3_0_C0_C6_2
+    b.ne mapped_failure
+    b.cc mapped_failure
     add x8, x4, #4
 mapped_loop:
     str x5, [x8]

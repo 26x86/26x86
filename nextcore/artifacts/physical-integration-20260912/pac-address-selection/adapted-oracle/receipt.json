@@ -1,0 +1,129 @@
+{
+  "passed": true,
+  "adapted_qemu_test_model": true,
+  "stock_qemu_or_physical_conformance": false,
+  "rows": 48,
+  "results_compared": 288,
+  "ffi_callback_cases": 288,
+  "unsupported_rows": 40,
+  "invalid_key_indices": 3,
+  "all_control_input_key_readbacks_match": true,
+  "old_source_negative_rejected": true,
+  "qemu_guest_isar1": "0x111000001211012",
+  "qemu_guest_isar2": "0x0",
+  "qemu_sha256": "cfdfe408911c7c2ac797fc7e54c3f510e6c682b67e50ce025e25b7846ac8705a",
+  "qemu_process_reaped": true,
+  "qemu_exit_code": 0,
+  "elapsed_seconds": 16.851528464,
+  "source_hashes": {
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/preos/src/pauth.rs": "df8bf69c90a07f030f6b871111787b5cafd919da231c087459fabf0698fbdf01",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/test_pac_address_selection.rs": "07b14753ff8a7d20599e451b2ec3e492248d6610cf4d971fa6979f76655f4ae4",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/tests/verify_pac_address_selection.py": "c9a51d9e70c78074daf5c7dbc445db5f1c41359e0a6aa331c1682aaa67690f5b"
+  },
+  "source_preserved": true,
+  "old_pauth_sha256": "dc0379c365cf6c1fca77d1c4c344c2a5c82daabb480c30e7c681a646197990ee",
+  "commands": [
+    [
+      "clang-18",
+      "--target=aarch64-none-elf",
+      "-nostdlib",
+      "-Wl,-Ttext=0x40080000",
+      "-Wl,-e,_start",
+      "/tmp/nextcore-pac-address-selection-20260913-r1/probe.S",
+      "-o",
+      "/tmp/nextcore-pac-address-selection-20260913-r1/probe.elf"
+    ],
+    [
+      "clang-18",
+      "--target=aarch64-none-elf",
+      "-c",
+      "/tmp/nextcore-pac-address-selection-20260913-r1/opcodes.S",
+      "-o",
+      "/tmp/nextcore-pac-address-selection-20260913-r1/opcodes.o"
+    ],
+    [
+      "llvm-objcopy-18",
+      "-O",
+      "binary",
+      "--only-section=.text",
+      "/tmp/nextcore-pac-address-selection-20260913-r1/opcodes.o",
+      "/tmp/nextcore-pac-address-selection-20260913-r1/opcodes.bin"
+    ],
+    [
+      "/tmp/nextcore-qemu-apa1-8.2.2-20260913",
+      "-machine",
+      "virt,virtualization=off,secure=off",
+      "-cpu",
+      "neoverse-v1",
+      "-accel",
+      "tcg",
+      "-m",
+      "128",
+      "-display",
+      "none",
+      "-serial",
+      "none",
+      "-monitor",
+      "none",
+      "-nic",
+      "none",
+      "-qmp",
+      "unix:/tmp/nextcore-pac-address-selection-20260913-r1/qmp.sock,server=on,wait=off",
+      "-kernel",
+      "/tmp/nextcore-pac-address-selection-20260913-r1/probe.elf"
+    ],
+    [
+      "rustc",
+      "--edition=2021",
+      "-Copt-level=2",
+      "/tmp/nextcore-pac-address-selection-20260913-r1/check.rs",
+      "-o",
+      "/tmp/nextcore-pac-address-selection-20260913-r1/check"
+    ],
+    [
+      "/tmp/nextcore-pac-address-selection-20260913-r1/check"
+    ],
+    [
+      "rustc",
+      "--edition=2021",
+      "-Copt-level=2",
+      "/tmp/nextcore-pac-address-selection-20260913-r1/old.rs",
+      "-o",
+      "/tmp/nextcore-pac-address-selection-20260913-r1/old"
+    ],
+    [
+      "python3",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/tests/verify_mapped_native.py",
+      "--output",
+      "/tmp/nextcore-pac-address-selection-20260913-r1/mapped",
+      "--rustc",
+      "rustc"
+    ]
+  ],
+  "artifact_hashes": {
+    "opcodes-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "oracle.rs": "05ebbf569ea6d7c13a436e47e456d11ec47128e422f693b112fee0050ebec8f1",
+    "qemu.log": "a55848399d6b660b183721dcf6593e0eb14185cdb4aa23fa420228b33853a286",
+    "arm-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "rust-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "opcodes-extract.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "opcodes.S": "74d70e0057817d2a03f438254751ff93e6497bec692d61b20b9dfd884f8482a1",
+    "results.bin": "89385554ea4e4d09ddb25d9a617240113b8a717f0c93219eb5b2b55cc7e70f81",
+    "manifest.json": "fd5e1cd8ba6c7474be8b77a62350473be045d11fddb906d75c37db36c3bd6ab7",
+    "probe.S": "218843e1eaf3701c5e8bd954e85d7c6a9dc33775a5e0ea2cda5b01139005ff7b",
+    "mapped-run.log": "2970878f62fdc8e0513c3c4215240a44cccdb020bd8a1fe9853a87d6447abe72",
+    "old": "71f22ee2cfce974e074cbea7811423f97249794d7003cb37d4930dcbe7784ab2",
+    "opcodes.bin": "755c6d494b99916e21894f08cfbc52c875a0f3807d499e767eaab7924b67115c",
+    "qemu-build-receipt.json": "8e26b82587fba81beb984dccec24460a9b0a4ece7f4efaa9401c5a12b59e530d",
+    "check": "a9dbc73a711f46823dddd06d36d9f43e80dcc7d8f1d0a1326e89ff8f07e5d6fd",
+    "opcodes.o": "94e92e713695f91306a7bfe557accb646a5dacefeb7f575ad5d6b80e1637de82",
+    "check.rs": "2a13aa9d9cfad73a1688639e3f008de4ae7dd61d59aef297c5cf39ee84d161e3",
+    "registers.txt": "c03fc28e672803a01e8667b261d4aa2bfd1be449f29c634d573651371744196c",
+    "old-negative.log": "597f8f7ed695eb6ed80db4b874e65b685d916f2bc53c15f7079a8bcb898187ed",
+    "old.rs": "b3352c58021beb8602fdee20bc6f90e9d2509d7213ec437a05b2b18d543740c6",
+    "rust-results.log": "ba13a54987b30efb8d025937824fad80344835b91bb9fca600c3cd50124693bb",
+    "probe.elf": "00b17b7215e96c1a81b2749ae10fa224a843eaab1514e1e3b89acc720ea68159",
+    "old-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "mapped_regression_requested": true
+}

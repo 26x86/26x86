@@ -1,0 +1,72 @@
+{
+  "scope": "Observed existing implementation profile matrix; no conformance claim or production changes.",
+  "rows": [
+    {
+      "path": "C register API",
+      "ISAR1": "0; sentinel 0x123456789abcdef0 is read unchanged",
+      "MMFR0": "0x00101122",
+      "status": "VF_SYSREG_OK; no instruction retirement"
+    },
+    {
+      "path": "Direct native JIT MRS",
+      "ISAR1": "trap13",
+      "MMFR0": "trap13",
+      "status": "0 retired, PC unchanged, X0 sentinel unchanged"
+    },
+    {
+      "path": "Rust GuestCpuState MRS",
+      "ISAR1": "0x10",
+      "MMFR0": "0x00101122",
+      "status": "Continue, PC+4, SP/NZCV/RAM unchanged"
+    },
+    {
+      "path": "Mapped non-PAC canonical v2",
+      "ISAR1": "trap13",
+      "MMFR0": "trap13",
+      "status": "0 retired,1fetch,0data,RAM unchanged"
+    },
+    {
+      "path": "Mapped PAC canonical v2",
+      "ISAR1": "0x10 regardless of C stored-field sentinel",
+      "MMFR0": "trap13",
+      "status": "ISAR1:2 retired(MRS+HLT),2fetch,0data; MMFR0:0retired,1fetch,0data;RAM unchanged"
+    }
+  ],
+  "provider_controls": {
+    "4KiB": "accepted; actual translated instruction fetch retires HLT",
+    "16KiB": "accepted; actual translated instruction fetch retires HLT",
+    "64KiB": "both C control checker and canonical Rust immutable service reject",
+    "TTBR_ASID_bits": "both reject",
+    "TCR_AS": "both reject",
+    "SCTLR_EE_and_E0E": "both reject",
+    "IPS_0_through_5": "accepted",
+    "IPS_6": "rejected"
+  },
+  "reference_distinction": {
+    "layer": "Rust GuestCpuState and VfMmu, separate from Rust immutable memory service",
+    "ASID": "configure_tcr accepts explicit ASID and TCR.AS; existing page_walk_and_asid_tlb_hit and upper-canonical ASID tests pass in full reference log",
+    "64KiB": "configure_tcr rejects",
+    "endian": "GuestCpuState LDR with EE=0 returns0x44332211; EE=1 returnsSystemRegisterTrap",
+    "IPS": "0..5 configure; actual walk IPS2 accepts PA bit39 and rejects bits40/47;IPS5 accepts39/40/47",
+    "PA_bit48_probe": "Outside modeled bits47:12; observed reference masks bit48 and yields PA0. Not treated as 49-bit physical support or a conformance pass."
+  },
+  "actual_high_PA_backend": {
+    "scope": "Authored Vec-backed guest RAM assigned synthetic guest-physical bases, not physical host allocations at those addresses.",
+    "test": "Canonical MemoryServiceV2 FETCH through real table walks and RAM backend, returning HLT0xd4400000",
+    "IPS2_40bit": "bit39 success; bit40/47 address-size fault result1/fault3/FSC3",
+    "IPS5_48bit": "bit39/40/47 success"
+  },
+  "processes": "All commands completed under180s subprocess timeout, reaped; no QEMU needed for this cross-implementation matrix.",
+  "files": {
+    "run.py": "9534cf3aeb65c43d26a0ea68b93da55012a96f3983781ec0d318eb619179ea5a",
+    "direct.c": "f2cd7d76f98cef5498bc56d056ba27c81a4205e5151736dd928e5f1a7a450f16",
+    "snapshot.c": "787393b7531c3e9b1584e627316117331fefb1e6efeb75bbf576ec5317402f1b",
+    "mapped-extra.rs": "14137da325b629012ea9a4c39fe48e3b21754f84b0d50688b8839cceb935cffe",
+    "controls-extra.rs": "0f3bb04b33ca862f886a7a1e58cc41081a5aa257d95cbab303a8883d6e539174",
+    "reference-extra.rs": "546f07e9566e22007b130d48e5a9f159e3730929ffe523e4f646e264a195575a",
+    "direct.log": "3a28918450eb4d741c4a2e0f318180e32a881ccf25e4242c6d6f2303b36cbc1b",
+    "provider.log": "21463027fc86c11365678198b5829be5d90de5fcd5b5ae1152c8fb1d6c262b63",
+    "reference.log": "80e7780d707a7422b682534c752e910b8627e6447e9804bd65d09ec0739b46c8",
+    "receipt.json": "99344a4a3e705541fa58c58feda18b46f2b82447c44060cf8fa1451799617fd3"
+  }
+}
