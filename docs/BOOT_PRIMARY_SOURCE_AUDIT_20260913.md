@@ -52,3 +52,65 @@ OPEN_QUESTION: Build Plan: Establish ordered target storage, root mount, launchd
 ## Classification
 
 **Confirmed:** the pinned public interfaces, downloaded source hashes, documented acquisition failures, bounded hierarchy qualification and present diagnostic display behavior. **Inferred:** the priority of future gates from those dependencies; this is not a prediction of the next original instruction. **Unknown:** exact target ABI equivalence, modern hierarchy equivalence, physical post-firmware display behavior and macOS userspace completion. Normal readiness is unchanged.
+
+
+## Official Arm acquisition follow-up
+
+After the first hierarchy publication, two additional official Arm documents
+were downloaded, hashed and opened locally. The source index preserves their
+exact identities; the PDFs remain outside the public repository.
+
+- [Cortex-X925 r0p1 Technical Reference Manual](https://documentation-service.arm.com/static/665741bb876c8d213b78610b),
+  document 102807_0001_05_en, Issue 05: A.5.15/Table A-313, PDF pages 419-421.
+  This identifies the core's implemented MMFR1 values. It confirms that
+  CMOW=0 and TIDCP1=0 omit their named controls; AFP=1 adds the corresponding
+  FPCR controls; nTLBPA=1 excludes noncoherent physical intermediate walk
+  caches. This edition describes ETS=1 as no enhanced translation
+  synchronization. A numeric one must not be interpreted as feature support
+  without its field definition. These are X925-specific values, not an
+  authorized NextCore feature word or a complete generic value table.
+- [Architecture Registers Release Note](https://documentation-service.arm.com/static/68da4ea586b96e39e38c215c?token=),
+  document 111109_2025-09_01_en, Issue 01: the change list records revisions
+  to CMOW and ECBHB descriptions. It establishes that wording changed, not
+  the full replacement semantics. Its future-extension content has an
+  explicit Alpha-quality qualification.
+
+The current generic DDI0601 MMFR1 table remains unacquired. The official
+2024 core manual does not become the 2026 register specification. The next
+implementation contract must connect each chosen software feature value to
+its actual optional-control acceptance or rejection. Positive synchronization
+or branch-history guarantees require separate evidence. No MMFR1 instruction
+support, original-input progress, or readiness change follows from acquisition.
+
+## Target identity cross-check
+
+A bounded read-only load-command audit identifies the target kernel member's
+source version as `13432.1.9`. The pinned public Apple import identifies itself
+as `xnu-12377.121.6`. These different version identities do not prove ABI
+incompatibility, but they prevent treating that public source as a verified
+target-source binding. The [sanitized identity receipt](evidence/target-entry-audit-20260913.json)
+records input preservation and scope; UUID values and original coordinates
+remain isolated.
+
+Existing staging and r29 metadata agree on the outer LC_UNIXTHREAD entry;
+the member entry differs. The selected entry is inside a file-backed executable
+boot segment. These relations corroborate the current entry selection, not its
+exact register or service contract. They supply no basis for replacing the
+entry with an image base or a different member PC. Target SPTM applicability
+remains unverified.
+
+OPEN_QUESTION: Build Plan: Bind the exact selected entry to matching target symbols or a UUID-matched KDK/source identity before changing initial state; an approximate symbol or older public startup path is insufficient.
+
+## Clean CI confirmation
+
+The complete immutable source `3d3a434dfc9f84dcc1c34a2257f8cf7ceaafd99c`
+passed all six workspace/EFI jobs in
+[run 34713439375](https://github.com/26x86/26x86/actions/runs/34713439375)
+and the separate EFI Sandbox. Its fresh hierarchy run passes 306 Arm TCG cases,
+258 direct joins, 34 native tests in each mode, 104 reference tests, and 961 EFI
+cases with source preservation. Five downloaded original CI receipts and their
+hashes are retained under
+`nextcore/artifacts/physical-integration-20260912/hierarchy-ci-20260913`.
+This fresh successful run supplements the separately qualified local r6 evidence;
+the original local preservation failure remains recorded. No physical or macOS
+boot claim follows from the CI result.

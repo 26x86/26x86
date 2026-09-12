@@ -56,9 +56,9 @@
       "detail": "No model is certified as booting macOS 27 through Nextcore."
     },
     {
-      "value": "31 / 31",
-      "label": "Completed public CI checkpoint",
-      "detail": "31 successful checks on development revision 606d3c4a. Later mapped-profile integration is tracked separately; CI is not physical boot proof."
+      "value": "6 / 6",
+      "label": "Latest workspace CI",
+      "detail": "All six workspace and EFI jobs pass on source revision 3d3a434d; the separate Sandbox workflow also passes. CI is not physical boot proof."
     },
     {
       "value": "42,256,374",
@@ -70,8 +70,14 @@
     {
       "date": "2026-09-13",
       "title": "Hierarchical permissions qualified; original boundary unchanged",
-      "summary": "Authored hierarchy tests pass 34 provider tests in each of three cache modes, 104 reference tests and two rejected semantic mutants. Arm QEMU TCG supplies 306 observations; 258 directly agree with canonical service replies. OVMF executes 961 native EFI cases. The original r6 source-preservation gate failed on an uncompiled Arm host-runner edit and is separately qualified, not relabeled. No new original-input replay was run: r29 remains at 42,256,374 instructions and the MMFR1 trap. Normal startup remains NOT_READY.",
+      "summary": "Authored hierarchy tests pass 34 provider tests in each of three cache modes, 104 reference tests and two rejected semantic mutants. Arm QEMU TCG supplies 306 observations; 258 directly agree with canonical service replies. OVMF executes 961 native EFI cases. The original r6 source-preservation gate failed on an uncompiled Arm host-runner edit and is separately qualified, not relabeled. No new original-input replay was run: r29 remains at 42,256,374 instructions and the MMFR1 trap. Normal startup remains NOT_READY. A fresh public CI replay repeats the complete gate with source preservation passing; the older r6 record remains unchanged.",
       "url": "https://github.com/26x86/26x86/blob/3d3a434dfc9f84dcc1c34a2257f8cf7ceaafd99c/nextcore/artifacts/physical-integration-20260912/hierarchy-20260913/README.md"
+    },
+    {
+      "date": "2026-09-13",
+      "title": "Fresh public hierarchy CI preserves all sources",
+      "summary": "The public workflow repeats 34 provider tests in each of three cache modes, 104 reference tests, 306 Arm QEMU observations and 258 direct joins with sources_preserved=true. The EFI gate passes 961 cases. All six workspace jobs and the separate Sandbox workflow pass on the pinned runtime source.",
+      "url": "https://github.com/26x86/26x86/actions/runs/34713439375"
     },
     {
       "date": "2026-09-13",
