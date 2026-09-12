@@ -5,9 +5,9 @@ hide: [navigation, toc]
 <div class="portal-hero" markdown>
 <span class="portal-eyebrow">26x86 / Open boot engineering</span>
 
-# A clearer path to boot.
+# NextCore, in development.
 
-NextCore is a clean-room EFI boot project exploring macOS on standard UEFI systems. Follow the engineering, inspect the evidence, and find the documentation for your hardware.
+Clean-room macOS boot engineering for standard UEFI systems. Track the latest evidence and what remains before a physical desktop.
 
 <div class="portal-actions" markdown>
 [Explore development progress](progress.md){ .portal-button }
