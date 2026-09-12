@@ -1,0 +1,102 @@
+{
+  "schema": "nextcore.variable-register-shifts.v1",
+  "ise_commit": "00243e65b934abb79c87719cd4ef06860c8489f2",
+  "authored_efi_passed": true,
+  "native_passed": true,
+  "contract": "Four variable-register shifts at both widths, masked counts, ZR and aliases, preserved flags, independent actual Arm comparison",
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "original_images_used": false,
+  "files": [
+    {
+      "path": "efi/cached/report.json",
+      "bytes": 17142,
+      "sha256": "f89e2f1a2a031cdb8b4b28928c711faad1680ea7e2cf5a55298f4148acde9408"
+    },
+    {
+      "path": "efi/cached/serial.log",
+      "bytes": 11191,
+      "sha256": "ff50c9ef357c6d5d85501292ada29fdc974aeea1da30c78b65a82c8c7c5f4170"
+    },
+    {
+      "path": "efi/old/report.json",
+      "bytes": 8317,
+      "sha256": "486f0c17149d4ccd2c8ae4a63d8b44a9aedf7bd6cc1111a156f8f5cd02de569b"
+    },
+    {
+      "path": "efi/old/serial.log",
+      "bytes": 3107,
+      "sha256": "b3b60f7d81aabd1145ba06ff671ec14461b4420a233a28585b7334a26d92c891"
+    },
+    {
+      "path": "efi/receipt.json",
+      "bytes": 39127,
+      "sha256": "4252483a4c9df7e7da984e035b0bbc0c915ca7eca9394076462978148abeb8fe"
+    },
+    {
+      "path": "efi/uncached/report.json",
+      "bytes": 17165,
+      "sha256": "4ee457362f639cda715bb343e9c1f904afdd28258f4a14184f316b0bae3181d1"
+    },
+    {
+      "path": "efi/uncached/serial.log",
+      "bytes": 11195,
+      "sha256": "df6faee6b869f0a72d614577143328ecc9513ca0ec260d728025fad3dee962bd"
+    },
+    {
+      "path": "efi/unobserved/report.json",
+      "bytes": 8202,
+      "sha256": "9b22280790040f71d1e6d4276c38ea773f715e2638c3f7252eae39c64796eace"
+    },
+    {
+      "path": "efi/unobserved/serial.log",
+      "bytes": 2619,
+      "sha256": "fb1ef74ac8173f1624f6a6db0915e7050d979bb14dc4af58124acdfcd6fb54de"
+    },
+    {
+      "path": "native/native.log",
+      "bytes": 49,
+      "sha256": "acc2bca34d17a2819f5a6dd05a790cbcdb6c6c4aa69ab452c9071bb324646043"
+    },
+    {
+      "path": "native/oracle-results.bin",
+      "bytes": 30720,
+      "sha256": "8b0e9a12d9ba35186a3aba6f688ec9e760d56841b9fbfbaf787335f03f480788"
+    },
+    {
+      "path": "native/oracle.S",
+      "bytes": 715078,
+      "sha256": "5bbfe5dbf9955124e4577e1191f4bb4c6210f97e6d7da29c89922ce690a52b73"
+    },
+    {
+      "path": "native/oracle.h",
+      "bytes": 133669,
+      "sha256": "595a586feeb2f6beaa3da7bf4a1ac63b7eaa8129ef08d870fb5eb290f12cbbc0"
+    },
+    {
+      "path": "native/provider.log",
+      "bytes": 2506,
+      "sha256": "fc0b298731959476aa56d916576877232d10721229597c02aecddc00edf1164a"
+    },
+    {
+      "path": "native/receipt.json",
+      "bytes": 19190,
+      "sha256": "13df08b48f1c64af79274a47ddd5a848db7c416e0e5c827c4f4eab589b17e6c1"
+    },
+    {
+      "path": "native/reference.log",
+      "bytes": 2702,
+      "sha256": "d55ded70901d035347d5ed04d32e525b7fb4b18e02465cf4cd6ba0819263f554"
+    },
+    {
+      "path": "native/small-slot.log",
+      "bytes": 2506,
+      "sha256": "8e47a55dc75da348f6f395713e4bea0aec2291380e25e1e8650712333aa8f66b"
+    },
+    {
+      "path": "native/uncached.log",
+      "bytes": 2506,
+      "sha256": "d9abc23e03b17d5c7ef35f2db08e4ab085beed260d9dc4b96301bf94c805a99a"
+    }
+  ]
+}

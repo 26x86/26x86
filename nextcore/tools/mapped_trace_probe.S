@@ -86,6 +86,35 @@ _start:
     b.ne mapped_failure
     cmp x9, x4
     b.ne mapped_failure
+    // Variable shifts mask the count, preserve NZCV and zero-extend W results.
+    mov x9, #-1
+    mov x10, #64
+    cmp x5, x5
+    lslv w11, w9, w10
+    b.ne mapped_failure
+    b.cc mapped_failure
+    movz x12, #1, lsl #32
+    add x13, x11, #1
+    cmp x13, x12
+    b.ne mapped_failure
+    mov x9, #1
+    mov x10, #65
+    lslv x9, x9, x10
+    cmp x9, #2
+    b.ne mapped_failure
+    lsrv x11, x9, x10
+    cmp x11, #1
+    b.ne mapped_failure
+    mov x10, #63
+    rorv x11, x11, x10
+    cmp x11, #2
+    b.ne mapped_failure
+    mov w9, #0x80000000
+    mov w10, #31
+    asrv w11, w9, w10
+    add x13, x11, #1
+    cmp x13, x12
+    b.ne mapped_failure
     add x8, x4, #4
 mapped_loop:
     str x5, [x8]

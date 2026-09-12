@@ -1,6 +1,6 @@
 {
   "schema": "nextcore-runtime-source-freeze-v1",
-  "base": "00243e65b934abb79c87719cd4ef06860c8489f2",
+  "base": "fa5fe9e1b78cfce6b3bf0a0da82e68ece0704979",
   "provenance": "git archive of immutable Nextcore-ISE commit; every archive file SHA-256 independently matched to git show commit:path bytes; no working-tree source",
   "files": {
     "abi_layout.c": "03b71dd9958a85655a50c30387c83d542ae51c808b1913f6a349b531d69f7617",
@@ -11,7 +11,7 @@
     "gop_scanout.c": "85e9a454846614e8a17420d628f806f93e6925a4c39a5b1b648e6b691895a912",
     "gop_scanout.h": "5025bcf913b70baf13888792091efd67b4bf42f2fa34c5b4bb52163cfacde5b6",
     "handoff.h": "82d91868045b55e5d79b931d9a29acb10d11d02f0f164d7578012515919b68a2",
-    "jit.c": "4405a2bec13d608bf210e25f31f1be2f97d4e78fb5c91b83b304d054fa55dfc7",
+    "jit.c": "5903769e98cb21b3668944f1bf31a68a50185585d05223d9bdcd92e41c0d5305",
     "jit.h": "82ec08a23294a0d02dc95de0b98cc3c6b0d29f2de0656cbdcc4801f7c3161ce9",
     "jit_protection.c": "aaaae4ed9d644e91d4da26e745c336ce767dfdd60e8e1a9a2a9287c0ed60ddc7",
     "main.c": "e60b0a038268582c5612858fbcbdb5cd6d47d42740b43fcb386333a369421ede",
@@ -45,7 +45,7 @@
     "platform_layout.c": "70ce0c588e602f06c3be49982c9060b736f08ee118a32039ff9df918d46f9d0d",
     "preos/Cargo.lock": "e0b8566b2229be151981d2c2b0f4419cc5eb49285ae88c73594a78aed5993231",
     "preos/Cargo.toml": "37636ea1746d9cb5ff56d6f2ba02ba1d009a8ca2b686e8684cc601cc86cb5fe9",
-    "preos/src/arch.rs": "fae52464948d4540b671a41a22504b81e710a133e45454d2b619a89bfe3bbb63",
+    "preos/src/arch.rs": "c7ba7a0a679071d5690e48a67ec0ba1d7b09486cdd8016d77882c69aa63bdee7",
     "preos/src/exception_level.rs": "254bbee46dfeab1015ad98e3953f51b4ca07f5527e26340f2746aed374c58ed7",
     "preos/src/lib.rs": "3f9c2461eed6330d753b8035c7c61cdbbaf49ea53bea1a56913d3352a8912331",
     "preos/src/m1.rs": "cada02dd5bc459683ebebf3e28d0436933dba8097ba274ed0404a95010cd19f9",
@@ -94,9 +94,6 @@
     "test_unscaled_jit.c": "79dbaf73e5a40323cb6838ba3418812a13d14cbafebf56cfe1bd7f01dde0e4cb",
     "test_unscaled_provider.rs": "f2ae4519dec6d0902eb6d77a7cbcc2c71d83dfc6990949bf822824bbc16ceb5b",
     "test_unscaled_reference.rs": "911b5d1487bab693c77cfa830995154232c3834906f83b0125f3d715b54c4d1d",
-    "test_variable_shift_jit.c": "39402b1e0d7182d02856db5d31d2614044253a1cf441ebacc4dfa9a51a88b588",
-    "test_variable_shift_provider.rs": "92df2d219642f758b72a938a795cd0bdb99c1cbcbc28a2792564f2e63bceb85d",
-    "test_variable_shift_reference.rs": "c430e2694b9f320a3aaf4f2ad56f741bc8b1442977acf36346cdc144d8b54f23",
     "test_wx.c": "afa4209e70d3c566493865b49c315295503ed0787f0e64dfb1338e713b23c6e4",
     "tests/capture_pauth_width_oracle.py": "5e7c614149e6676c545d6fa27651a6cbca756d36ae9de882ba0a1477000a3fa7",
     "tests/pauth_width_oracle.h": "d7b8de8dc9222ba49a2a12ccd3cbc15ef0fa6f11b7057693f55cd5c2214542ce",
@@ -106,7 +103,6 @@
     "tests/verify_mapped_native.py": "856fb1eb8653051e87c54ff398a028d1d517c322452d8a2a11a7d180cf420a30",
     "tests/verify_provider_cache.py": "6b9e7d98e480ecf66621e142591f81c36300c0f932f2b93566bfc6cda6e240ec",
     "tests/verify_unscaled_native.py": "1f82e3e98835939cc17b6bef3fe12cd823224cd768b3744fe178589ac93a3863",
-    "tests/verify_variable_shift_native.py": "705534c7598188164bd4a4c1b98284dd8d0da9e1e1f8e3169b70bfcadd4e7fce",
     "ubfm_provider_cases.rs": "9b96ab3801696fb970e99ad3b2d0ab7cc0c1aa0dd202c49899be9b6cd542118a",
     "uefi.h": "ad65b75ad72ddca190093a8df01ec2e89622fadaaee0b1e149a704e80106e32b"
   }

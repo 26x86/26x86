@@ -175,6 +175,7 @@ jobs:
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_unscaled_native.py --output "$RUNNER_TEMP/unscaled-native"
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_logical_shifted_native.py --output "$RUNNER_TEMP/logical-shifted-native"
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_indexed_native.py --output "$RUNNER_TEMP/indexed-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_variable_shift_native.py --output "$RUNNER_TEMP/variable-shift-native"
       - name: Build the authored stage-1 EFI consumer
         working-directory: nextcore
         run: cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-stage1-probe --bin NXMMU
@@ -217,6 +218,8 @@ jobs:
             ${{ runner.temp }}/logical-shifted-native/*.log
             ${{ runner.temp }}/indexed-native/receipt.json
             ${{ runner.temp }}/indexed-native/*.log
+            ${{ runner.temp }}/variable-shift-native/receipt.json
+            ${{ runner.temp }}/variable-shift-native/*.log
             ${{ runner.temp }}/nextcore-stage1-proof/*.json
             ${{ runner.temp }}/nextcore-stage1-proof/*.log
             ${{ runner.temp }}/nextcore-dt-proof/*.json

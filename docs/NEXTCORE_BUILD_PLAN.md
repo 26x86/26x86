@@ -1212,9 +1212,12 @@ https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/targe
 
 ### Variable-register shifts
 
-Current Status: Original r24 reaches an unsupported LSLV (LSL alias). Immediate
-shifts and shifted logical operands do not implement this separate register
-shift family. No variable-register shift support is claimed by r24.
+Current Status: ISE `00243e65b934abb79c87719cd4ef06860c8489f2` implements all
+four variable shifts and passes 16,464 native cases, 1,920 actual Arm comparisons
+against C and Rust, and 31 full provider tests in each of three cache modes.
+Ten authored EFI checks pass. Original r24 stopped at LSLV; unchanged-original
+replay with this implementation remains the next gate. Normal startup and
+physical desktop boot remain unverified.
 
 Target State: Implement LSLV, LSRV, ASRV and RORV for W and X registers. Use the
 low five or six count bits respectively, including zero and counts above the
