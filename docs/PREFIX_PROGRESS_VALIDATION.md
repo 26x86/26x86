@@ -30,6 +30,28 @@ platform services, persistent display and physical install/reboot evidence.
 Use an observed execution requirement to choose the next implementation; a larger
 instruction count is not an acceptance substitute.
 
+## Explicit Normal-memory unaligned support
+
+An independently selected immutable profile 3 now provides Normal-NC mappings
+with SCTLR.A clear. Existing M=0 Device alignment and strict mapped profile 1
+remain unchanged. The new path validates each transferred byte before any store
+or register update, including adjacent virtual pages with nonadjacent backing.
+
+The actual native C/Rust suite passes 23 stage-1 tests and 20 existing M=0 tests.
+New coverage includes 48 successful scalar/pair transfers, 20 precise second-page
+failures without partial mutation, PC/SP checks and fabricated-reply rejection.
+Three separately compiled defective variants are rejected. Final committed EFI
+sources pass 152 authored OVMF cases, including 44 new unaligned success/failure
+cases across 4 KiB/16 KiB mappings and both virtual-address halves. The receipt
+reader passes five tests and module inventories match actual committed Git bytes.
+
+[Authored profile receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/unaligned-normal-profile/summary.json)
+records these results separately from the unchanged original-input boundary above.
+This increment does not replay the original kernel in a new environment. That
+requires explicit entry mappings and mapped pointer authentication; the current
+immutable runner has no PAC callback and cannot supply later arbitrary control
+changes. Normal startup and physical macOS output remain unverified.
+
 ## Observations and Controls
 
 | Checkpoint | Retired instructions | Completed data operations | Provider status |

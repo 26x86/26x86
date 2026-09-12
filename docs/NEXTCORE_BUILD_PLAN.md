@@ -975,3 +975,26 @@ build rejection, then run an authored cached loop with exact retirement before
 using unchanged original input. Compare the resulting PC/function region and
 request membership to determine the next execution boundary. Do not modify
 original pointers, skip instructions or invent platform/service responses.
+
+### Immutable Normal-memory unaligned diagnostic profile
+
+Current Status: The original initialization diagnostic stops at an ordinary
+unaligned data load under the M=0 Device-memory contract. Suppressing that fault
+would misrepresent architectural behavior. The existing immutable stage-1
+profile 1 supports Normal-NC memory with SCTLR.A set.
+
+Target State: Add explicit immutable profile 3, named fixed Normal-NC unaligned,
+with SCTLR fixed to 0x30d00801 except optional SA/SA0 bits. Its other controls,
+readonly table ownership, complete byte preflight and precise fault behavior
+match profile 1. Ordinary data transfers may be unaligned only in this profile;
+instruction and configured SP alignment checks remain. Profile 1, dynamic profile
+2 and M=0 Device behavior remain unchanged. C and Rust validate the same contract
+and reject fabricated alignment-fault replies for ordinary profile-3 transfers.
+Cross-page stores must preflight every byte before any mutation. Add actual native
+provider tests and an authored OVMF selection before using original input.
+
+This profile does not establish the original image entry ABI, supply pointer
+authentication to the immutable v2 runner, construct kernel page tables or enable
+normal startup. Those require separate explicit contracts and runtime evidence.
+Root owns integration and this Build Plan section; delegated runtime implementation
+and independent tests have disjoint source ownership.

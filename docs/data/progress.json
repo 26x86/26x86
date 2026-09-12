@@ -21,7 +21,7 @@
       "id": "execution",
       "layer": "CPU runtime",
       "status": "in-progress",
-      "summary": "The original prefix reaches 1,542,930 instructions and stops at a real alignment boundary. The next requirement is a validated target memory regime; the selected MMU-off profile must not silently ignore alignment.",
+      "summary": "The original prefix remains at its 1,542,930-instruction alignment boundary. A separate Normal-memory unaligned profile passes actual native tests and 152 authored EFI cases. Original entry mappings and mapped pointer authentication remain required.",
       "evidence_url": "https://github.com/26x86/Nextcore-ISE/pull/9"
     },
     {
@@ -58,7 +58,7 @@
     {
       "value": "31 / 31",
       "label": "Completed public CI checkpoint",
-      "detail": "31 successful checks on development revision a83e97c9. Later initialization-diagnostic integration is tracked separately; CI is not physical boot proof."
+      "detail": "31 successful checks on development revision 606d3c4a. Later mapped-profile integration is tracked separately; CI is not physical boot proof."
     },
     {
       "value": "1,542,930",
@@ -67,6 +67,12 @@
     }
   ],
   "latest": [
+    {
+      "date": "2026-09-12",
+      "title": "Mapped unaligned transfers pass native and EFI execution",
+      "summary": "An explicit Normal-memory profile passes 23 native stage-1 tests, 20 M=0 regressions and 152 authored EFI cases. Cross-page failures preserve all data. The original kernel needs its entry mapping and pointer authentication integration.",
+      "url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/docs/PREFIX_PROGRESS_VALIDATION.md"
+    },
     {
       "date": "2026-09-12",
       "title": "Initialization advances to an actual memory-alignment boundary",
