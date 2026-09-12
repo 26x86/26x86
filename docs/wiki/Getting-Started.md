@@ -1,17 +1,27 @@
 # Getting started
 
-NextCore's companion tools prepare an external OpenCore-based EFI workflow for Intel Macs and related
-experimental targets. Begin with a complete backup and identify the exact Mac
-model, GPU, storage layout, firmware mode, and target macOS release.
+**Current Status:** Read-only setup and preparation guide for experimental workflows.
 
-## Recommended path
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
 
-1. Read [Supported models](Supported-Models.md).
-2. Read the matching [macOS support](macOS-Support.md) notes.
-3. Prepare an installer and recovery path.
-4. Generate and inspect the OpenCore configuration.
-5. Install to a known ESP only after the static checks are clean.
-6. Record physical boot and device results separately from file validation.
+Choose a workflow from the [documentation portal](../index.md), then check the
+[compatibility catalog](../compatibility.md) before preparing media. NextCore's
+macOS 27 ARM64e-on-x86 path is experimental and does not yet provide a usable
+physical macOS desktop. External OpenCore preparation is a separate workflow.
 
-Do not treat a generated EFI, emulator result, or validation tool output as
-proof of a physical Mac boot.
+## Read-only first steps
+
+1. Identify the real model, CPU features, firmware architecture, GPU, storage
+   controller and target macOS build. An SMBIOS override is not the real model.
+2. Read [current progress](../progress.md) and the relevant hardware entry.
+3. For application inspection, follow [Setup](../SETUP.md) and run
+   `python -m x86 detect --json`; detection does not certify support.
+4. For firmware development, use the recursive clone and pinned-module build
+   instructions in [Module repositories](Nextcore-Modules.md).
+5. Prepare backups and a separately bootable recovery path before a deployment.
+6. Validate a complete candidate EFI on external media, then record physical
+   firmware, guest boot, display and input observations separately.
+
+`NOT_READY` from normal ARM64e entry means required providers are missing.
+`ABORTED` from an explicitly bounded trace is its diagnostic result, not an
+installation failure to bypass. See [Troubleshooting](Troubleshooting.md).

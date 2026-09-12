@@ -1,5 +1,5 @@
 site_name: NextCore
-site_description: NextCore EFI boot engineering for macOS 26 Tahoe and experimental macOS 27 Golden Gate HAL and Metal support
+site_description: Follow NextCore development progress, inspect boot evidence, explore Mac model references, and find technical documentation.
 site_url: https://26x86.github.io/26x86/
 repo_url: https://github.com/26x86/26x86
 repo_name: 26x86/26x86
@@ -22,6 +22,7 @@ exclude_docs: |
   NEXTCORE_CURRENT_CONTEXT.md
   NEXTCORE_PROMPTS.md
   ISOLATED_INVENTORY.md
+  DOCS_PORTAL_SPEC.md
   LICENSE.md
   README.en.md
   Icon-Composer-*.zip
@@ -41,6 +42,7 @@ theme:
     code: JetBrains Mono
   features:
     - navigation.instant
+    - navigation.tabs
     - navigation.sections
     - navigation.expand
     - navigation.top
@@ -102,16 +104,22 @@ markdown_extensions:
 
 extra_css:
   - assets/stylesheets/extra.css
+extra_javascript:
+  - assets/javascripts/portal.js
 
 copyright: |
   <a href="https://github.com/26x86/26x86">NextCore</a> — clean-room EFI boot research and compatibility tooling. Not affiliated with or endorsed by Apple.
 
 nav:
   - Home: index.md
+  - Development progress: progress.md
+  - Compatibility: compatibility.md
+  - Documentation library: library.md
   - Quick start:
       - wiki/README.md
       - Getting started: wiki/Getting-Started.md
       - Supported hardware: wiki/Supported-Models.md
+      - Catalog sources and scope: HARDWARE_CATALOG_METHOD.md
       - Setup guides: SETUP.md
       - Apple Silicon sandbox: APPLE_SILICON_SANDBOX.md
   - macOS compatibility:
@@ -147,6 +155,8 @@ nav:
       - NextCore build plan: NEXTCORE_BUILD_PLAN.md
       - Boot runtime verification: BOOT_RUNTIME_VERIFICATION.md
       - Boot picker recovery: BOOT_PICKER_RECOVERY.md
+      - ARM64 startup coverage: A64_STARTUP_COVERAGE_20260912.md
+      - ARM64e entry contract: NEXTCORE_ARM64E_ENTRY_CONTRACT.md
       - Module repositories: wiki/Nextcore-Modules.md
       - Repository layout: REPOSITORY_LAYOUT.md
   - Contribution:

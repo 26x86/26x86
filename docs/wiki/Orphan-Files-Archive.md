@@ -1,5 +1,9 @@
 # Orphan & Deprecated Files Archive
 
+**Current Status:** Historical archive index; entries are not active deployment instructions.
+
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
+
 Record of deprecated and archived assets removed from the active tree during code health cleanups.
 
 ## Archived Documentation
@@ -17,3 +21,11 @@ Record of deprecated and archived assets removed from the active tree during cod
 |-------|-------|
 | Legacy shell wrappers | Replaced by unified `26x86.command`, `26x86.bat`, and `26x86.sh` |
 | Obsolete test payloads | Replaced by automated Python test suites in `tests/` |
+
+## Current evidence and hardware coverage
+
+Reviewed for documentation freshness on 2026-09-12. See the
+[portal](../index.md), [progress](../progress.md),
+[compatibility catalog](../compatibility.md) and
+[library](../library.md) for the active evidence boundary. Historical
+receipts in this guide retain their original scope and date.

@@ -1,5 +1,9 @@
 # Mellow in 26x86
 
+**Current Status:** Diagnostic artifact and deployment checks; working guest Metal remains unavailable.
+
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
+
 **Mellow — Metal Emulation Layer Logic for OpenGL/OpenCL Workloads** is integrated
 as a driver/runtime project, not solely an OpenCore kext switch. This change
 connects the available native diagnostic artifact to 26x86 deployment policy and
@@ -164,7 +168,17 @@ inspection, then actual device-attributed GPU output/readback and sustained
 submission tests. The bundled diagnostic payload reports native Metal, GPU
 submission and WindowServer acceleration as unavailable.
 
-Recorded local checks are in [validation evidence](validation/mellow-20260906/).
+The 2026-09-06 local checks are retained in the repository-only
+[validation evidence](https://github.com/26x86/26x86/tree/main/docs/validation/mellow-20260906).
+They are historical artifact/deployment checks, not current GPU acceptance.
 The WSL root ownership test exercises actual UID/GID restoration on temporary
 files. The two complete EFI configurations pass the matching OpenCore 1.0.7
 validator; this remains a configuration check, not an OS boot result.
+
+## Current evidence and hardware coverage
+
+Reviewed for documentation freshness on 2026-09-12. See the
+[portal](index.md), [progress](progress.md),
+[compatibility catalog](compatibility.md) and
+[library](library.md) for the active evidence boundary. Historical
+receipts in this guide retain their original scope and date.

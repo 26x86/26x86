@@ -1,6 +1,31 @@
-# VenFire Layered Boot and Runtime Verification
+# Layered boot and runtime verification
+
+**Current Status:** Layered acceptance gates with separately scoped VMApple harness history.
+
+**Target State:** Source-bound XNU/userspace evidence, then physical guest display/input and storage persistence.
 
 The layers covered in this specification span **EFI/preOS → QEMU VMApple TCG → authentic AVPBooter/iBoot → XNU → macOS userspace**. Each layer generates independent verification evidence. Crucially, QEMU capability dumps, process exit codes, DFU acknowledgments, or synthetic guest passes do NOT constitute valid evidence of macOS boot.
+
+## Current NextCore physical milestone
+
+Normal ARM64e entry reports `NOT_READY` because live providers are incomplete.
+The explicit original-prefix trace returns `ABORTED`; its instruction count and
+stop reason are diagnostic evidence. See [progress](progress.md) for the latest
+source-bound replay and [entry contracts](NEXTCORE_ARM64E_ENTRY_CONTRACT.md) for
+legacy versus SPTM startup.
+
+Physical acceptance requires the named target computer, external-media boot,
+reboot, persistent guest display and interactive input. Firmware GOP or a
+post-run test blit does not establish guest scanout or post-ExitBootServices
+ownership. Persistent storage/platform service behavior is also required.
+Acceleration follows as a separate guest Metal gate. CI and authored fixtures
+cannot promote any of these missing results.
+
+The harness below records the separate VMApple/original-booter research path.
+Its legacy tool names and dated observations are preserved for reproduction;
+it is not the physical x86 EFI runtime architecture. A VM running on Apple
+Silicon remains virtualization evidence. Check [compatibility](compatibility.md)
+for model eligibility separately from these execution results.
 
 ## Execution Harness
 
@@ -81,7 +106,7 @@ python3 sandbox/efi/verify_iboot_xnu_handoff.py \
 
 This verifier re-calculates marker ordering, target major matching, input hashes, and direct/recovery step causality. Even if an input report claims `macos_boot_verified=true`, inconsistent conditions cause the affirmative claim to be rejected.
 
-Marking non-Apple host macOS phases as `blocked` is an intentional design choice that reflects genuine implementation reality:
+For this VMApple harness, missing execution prerequisites keep the corresponding phases incomplete:
 
 - Apple-signed, target-matching AVPBooter / VMApple firmware;
 - Provisioned AUX and root disk pairs calibrated to identical hardwareModel and ECID parameters;
@@ -89,4 +114,4 @@ Marking non-Apple host macOS phases as `blocked` is an intentional design choice
 - Unmodified guest UART transcripts demonstrating sequential iBoot Stage2, matching XNU, and userspace markers;
 - When claiming native HVF paths: authentic Apple Silicon arm64 Darwin host with Virtualization.framework.
 
-OVMF, TCG machine help, synthetic guests, or legacy iBoot recovery ACKs are never conflated with "macOS compatibility layer has booted". The sole pathway that yields `macos_boot_verified=true` is the empirical UART evidence gate defined above.
+OVMF, TCG machine help, synthetic guests, or legacy iBoot recovery ACKs are never conflated with "macOS compatibility layer has booted". This harness sets `macos_boot_verified=true` only through its empirical UART gate. That flag alone does not establish a physical desktop or completed installation.

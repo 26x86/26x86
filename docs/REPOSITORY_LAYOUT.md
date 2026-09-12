@@ -1,62 +1,54 @@
-# 26x86 repository layout
+# Repository layout and ownership
 
-The GitHub publication boundary is explicit at the repository/CI layer. All
-modules live in the [`26x86`](https://github.com/26x86) organization and use
-OpenCore-style naming: no organization prefix inside the organization (the
-same convention as `acidanthera/OpenCorePkg`).
+**Current Status:** Seven-module ownership and separate legacy research/export scope.
 
-| Repository | Layer | Owns | Depends on |
-| --- | --- | --- | --- |
-| `26x86/26x86` | Core EFI/control plane | OpenCore, EFI, native host control and integration contracts | none |
-| `26x86/VenFire` | User-space emulation/evidence | ARM64 synthetic guests, input integrity, storage/recovery policy, packaging and conformance | `26x86/VenFire-QEMU` |
-| `26x86/VenFire-QEMU` | Emulator backend | Pinned QEMU commit, VMApple TCG/headless patch series, backend audit/build tools | upstream QEMU commit `ff1d2d19d7e24893e2012d879f8e73077e17b9bd` |
-| `26x86/OpenCorePkg` | Bootloader fork | OpenCore bootloader with 26x86 integration | `acidanthera/OpenCorePkg` |
-| `26x86/MetallibSupportPkg` | Support package | Metal library patching utilities | none |
-| `26x86/PatcherSupportPkg` | Support package | Patcher support | none |
-| `26x86/.github` | Organization profile | `profile/README.md` module-family overview | none |
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
 
-`26x86/26x86` is the transferred continuation of the former `NiSeullent/26x86`
-repository; GitHub redirects the old URL. The support packages were likewise
-transferred from their `26x86-*` personal-repository names.
+The integration repository records exact commits for seven independent NextCore
+module repositories. [Module repositories](wiki/Nextcore-Modules.md) is the
+canonical clone/build/publication guide; the [documentation library](library.md)
+indexes specifications and verification material.
 
-`26x86-VenFire` is not a release namespace inside the core repository. Its
-release tags and assets belong to the standalone repository. The QEMU patch
-series is likewise published under its own module repository so a backend
-change cannot be mistaken for an EFI or macOS guest release.
+| Location | Owns |
+| --- | --- |
+| `nextcore/crates/nextcore-core` | Formats, configuration, placement and owned staging |
+| `nextcore/crates/nextcore-efi` | UEFI picker, handoff and firmware consumers |
+| `nextcore/crates/nextcore-ise` | A64 generated-native execution, reference CPU and checked memory service |
+| `nextcore/crates/nextcore-tool` | CLI orchestration |
+| `nextcore/crates/nextcore-hal` | Platform descriptions and device contracts |
+| `nextcore/crates/nextcore-gpu` | Graphics/backend experiments and evidence |
+| `nextcore/crates/nextcore-apls` | Execution adapters and guest contracts |
+| `x86/`, `Tools/`, `integration/` | Application, integration and validation tools |
+| `docs/` | Public guides, specifications and dated evidence boundaries |
+| `_isolated/` | Ignored local inputs and private runtime material; never published |
 
-The portable runtime boundary is:
+The allocation-free `nextcore-memory-service` package is owned inside ISE; it is
+not an eighth Git submodule. Parent Cargo patches bind both ISE packages to the
+same local checkout. Standalone dependencies use immutable remote revisions.
 
-```text
-26x86 core contract -> VenFire control plane -> VenFire-QEMU backend
-                              |
-                       QEMU TCG -> AArch64 guest
-```
+External OpenCore/support packages and separately maintained VMApple/QEMU
+research remain attributed to their own source identities. They are not the
+seven clean-room workspace modules and do not replace the physical x86 EFI
+product runtime. See [Upstream repositories](wiki/Upstream-Repositories.md).
 
-The chain is software emulation on non-Apple hosts. It does not depend on
-Virtualization.framework. A QEMU capability probe or synthetic guest PASS is
-not a macOS boot result; the VenFire UART gate still requires target-matching
-XNU and userspace evidence from caller-supplied signed Golden Gate inputs.
+## Updating published modules
 
-## Export and publication
+Commit and validate changes inside the owning module, publish its reviewed
+source, then integrate the exact gitlink and dependency identities in the parent.
+Verify fresh recursive resolution before publication. Do not use an exporter to
+reinitialize existing module histories or recreate release tags. Never substitute
+`git submodule update --remote` for an immutable integration checkout.
 
-From a clean working tree, generate fresh local trees:
+Legacy export/synchronization tools are historical migration utilities, not the
+routine module release path. Review their side effects before use; documentation
+refreshes do not authorize repository creation, release deletion or tag changes.
 
-```sh
-python3 Tools/export_repositories.py --output /tmp/26x86-repositories
-```
+[Progress](progress.md) records release and execution evidence separately.
 
-The exporter refuses to overwrite an existing output. Each tree is given its
-own initial commit and module-specific tag. Publishing uses only the `ADGIT`
-credential and never writes it into a Git remote URL or a file:
+## Current evidence and hardware coverage
 
-```sh
-python3 Tools/sync_github_repositories.py \
-  --exports /tmp/26x86-repositories --apply
-```
-
-The synchronization command creates missing organization repositories as
-public, verifies the authenticated user is an active admin of the `26x86`
-organization, pushes the module branch/tags, and removes only legacy core
-releases whose tag starts with the exact known-wrong prefix
-`26x86-VenFire-GoldenGate-v` (release and tag are cleaned together).
-Deletion is opt-in via `--apply` and is reported per release.
+Reviewed for documentation freshness on 2026-09-12. See the
+[portal](index.md), [progress](progress.md),
+[compatibility catalog](compatibility.md) and
+[library](library.md) for the active evidence boundary. Historical
+receipts in this guide retain their original scope and date.

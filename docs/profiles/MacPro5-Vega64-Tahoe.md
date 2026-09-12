@@ -1,24 +1,22 @@
-# MacPro5,1 Pre-AVX + RX Vega 64 → macOS Tahoe Profile (Track K)
+# MacPro5,1 and Radeon RX Vega 64 reference profile
 
-Reference physical host: Flashed Mac Pro (5,1 class), Pre-AVX Xeon CPU, AMD Radeon RX Vega 64, targeting macOS 26 Tahoe.
+**Current Status:** Configuration reference, not physical boot or acceleration evidence.
 
-## CLI Execution
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
 
-```bash
-python -m x86.profiles apply macpro5-vega64-tahoe --extreme   # Or with X86_EXTREME=1
-```
+This is a configuration reference for a MacPro5,1-class machine with an older
+Xeon CPU and Radeon RX Vega 64 targeting Tahoe. It is not a physical-boot,
+Safari-fix, color-correction or storage-performance receipt.
 
-Equivalent direct invocation:
-```bash
-python -m x86.profiles.macpro5_vega64_tahoe apply --extreme
-```
+A MacPro7,1 SMBIOS override changes the reported identity; it does not change the
+physical model or prove that firmware was flashed. Record both identities and
+the actual CPU/GPU/firmware revisions before evaluating the profile.
 
-## Profile Specification
+Earlier apply commands on this page selected an aggressive profile mode. Review
+the current profile implementation and its proposed changes before invoking an
+apply operation. No disk identifier or mitigation is universally appropriate.
+Use a complete backup and external test media.
 
-| Property | Value |
-|----------|-------|
-| Target Model | MacPro5,1 (Flashed MacPro7,1 SMBIOS for firmware handoff) |
-| CPU Architecture | Intel Westmere / Nehalem (Pre-AVX, SSE4.2 only) |
-| GPU | AMD Radeon RX Vega 64 (GCN 5 / Vega architecture) |
-| Target OS | macOS 26 Tahoe |
-| Applied Mitigations | Safari pre-AVX opcode patch, WindowServer color profile correction, APFS Fusion optimization |
+See [compatibility](../compatibility.md), [CPU notes](../wiki/Pre-AVX-Mac-Pro.md),
+[display diagnostics](../wiki/Mac-Pro-Tahoe-Yellow-Screen.md) and
+[installation boundaries](../wiki/Installation-Notes.md).

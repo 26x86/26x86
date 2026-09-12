@@ -1,8 +1,20 @@
 # Apple Silicon Sandbox
 
+**Current Status:** Separate bounded Sandbox/VSK and VMApple research paths; original OS boot unverified.
+
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
+
 26x86 has two execution paths: native OpenCore/root patching and an experimental
 Apple Silicon Sandbox. User-facing platform research branding is 26x86; the
 internal `venfire` namespace remains available under `research/venfire`.
+
+## Scope relative to the current product
+
+This page preserves the separate Sandbox/VSK and VMApple research contracts.
+The VSK `AppleIntelOnly` admission policy is specific to that design and does
+not redefine the active NextCore physical x86 target. The product's live status,
+startup gaps and physical acceptance are recorded in [progress](progress.md),
+[compatibility](compatibility.md) and [Design](NEXTCORE_DESIGN.md).
 
 ## Architecture contract
 
@@ -38,19 +50,19 @@ project's BDIF AUX/root path; this is recorded as a capability gap instead of
 being relabelled as AIC/ANS support. Use `python3 -m x86 vmapple capabilities`
 to inspect the pinned reference and the current implementation boundary.
 
-The iBoot(AArch64) MachineType is a macOS guest personality only. Its supported
+The iBoot(AArch64) MachineType is a macOS guest personality only. Its guest-policy
 matrix is fixed and enforced before firmware inputs are opened:
 
 ```text
 iBoot(AArch64)
- ├─ macOS     → Supported
+ ├─ macOS     → Allowed guest target; boot unverified
  ├─ iOS       → Unsupported
  └─ iPadOS    → Unsupported
 ```
 
 Other mobile Apple operating systems are rejected by the same scope validator.
-The personality implements only the interfaces needed by macOS boot and
-recovery. DFU and Local IPSW Recovery are macOS recovery paths; the local image
+The personality targets interfaces needed by macOS boot and recovery; current
+implementations are partial. DFU and Local IPSW Recovery are macOS recovery paths; the local image
 name is `_default.ipsw`. A request for iOS/iPadOS, Fastboot, or another recovery
 image is stopped with a policy error before any DFU transfer. The broader
 Venfire MachineType catalogue in the attached design remains a reference for
@@ -134,9 +146,9 @@ boundary and never forces a transition or modifies the installer.
 The VMApple report records the explicit guest metadata `Apple M1 (Virtual)` /
 `VM0001` as `virtual_identity_mode: metadata-only`; it does not claim Apple
 hardware attestation. The sanitized result is retained in
-[`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json),
+[`integration/vmapple-gui-bootpicker-report.json`](https://github.com/26x86/26x86/blob/main/integration/vmapple-gui-bootpicker-report.json),
 with the earlier iBSS-only report preserved separately at
-[`integration/vmapple-gui-recovery-report.json`](../integration/vmapple-gui-recovery-report.json).
+[`integration/vmapple-gui-recovery-report.json`](https://github.com/26x86/26x86/blob/main/integration/vmapple-gui-recovery-report.json).
 
 The prior Linux research directory includes useful original-image hashing,
 normal personalization and device experiments. It retains its historical CPU

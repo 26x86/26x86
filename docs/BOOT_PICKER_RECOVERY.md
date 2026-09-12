@@ -1,10 +1,14 @@
 # 26x86 Boot Picker and macOS Recovery
 
+**Current Status:** Reference picker policy and historical VMApple recovery observations.
+
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
+
 This specification defines the `Alt/Option` key handling pathway used to trigger macOS Recovery. This applies specifically to `iBoot(AArch64)` macOS guests; iOS, iPadOS, and other mobile Apple platforms are out of scope.
 
 ## EFI / OpenCore Layer — Physical Intel Mac
 
-The reference configuration is [`integration/opencore/Sample.plist`](../integration/opencore/Sample.plist). The following policy is enforced under `Misc -> Boot`:
+The reference configuration is [`integration/opencore/Sample.plist`](https://github.com/26x86/26x86/blob/main/integration/opencore/Sample.plist). The following policy is enforced under `Misc -> Boot`:
 
 ```text
 PollAppleHotKeys = true
@@ -13,7 +17,7 @@ Timeout          = 2
 PickerMode       = Builtin
 ```
 
-Holding Option (Alt) for 2 seconds upon system power-on opens OpenCore's built-in picker. The `macOS Recovery` entry is populated dynamically only when a valid Recovery environment is detected on the corresponding APFS volume container. If `ScanPolicy`, APFS drivers, or volume states do not align, omitting the recovery entry is expected behavior. This reference plist is never written automatically to the active ESP without explicit operator command.
+This reference configuration intends Option/Alt to select OpenCore's built-in picker during startup; the firmware/key timing must be verified on the actual machine. The `macOS Recovery` entry is populated dynamically only when a valid Recovery environment is detected on the corresponding APFS volume container. If `ScanPolicy`, APFS drivers, or volume states do not align, omitting the recovery entry is expected behavior. This reference plist is never written automatically to the active ESP without explicit operator command.
 
 Evidence required on physical Intel Mac systems includes:
 
@@ -36,9 +40,9 @@ The `Apple Silicon Sandbox` step within the Windows and macOS GUI employs the id
 
 State machine transitions are verifiable via the bridge API endpoints (`get_boot_picker_status`, `start_boot_picker`, `tick_boot_picker`, `boot_picker_key`, `select_boot_entry`). These APIs perform read-only state changes without altering EFI or guest disk contents.
 
-## Golden Gate 27 Installation Verdict
+## Historical VMApple recovery observations and installation gates
 
-The experimental Golden Gate assets comprise authentic AVPBooter/iBSS binaries and read-only AUX/root disks. Output directories contain only COW overlays and `launch.json`. Consequently, reaching the installer UI requires fulfilling all four verification criteria:
+In the recorded research setup, caller-owned Golden Gate inputs comprise authentic AVPBooter/iBSS binaries and read-only AUX/root disks. Output directories contain only COW overlays and `launch.json`. Consequently, reaching the installer UI requires fulfilling all four verification criteria:
 
 ```text
 signature_acceptance_verified = true
@@ -47,7 +51,7 @@ xnu_executed                  = true
 macos_boot_verified           = true
 ```
 
-In live TSS test runs, following iBSS DFU reset, the virtual device re-enumerated as `05ac:1281` advertising bulk OUT endpoint 4. Personalized IMG4 payloads for LocalPolicy and authentic iBEC were transmitted, followed by receipt of `go` acknowledgments. Following Stage2 prompt observation in selective RPC experiments, all five official restore roles were transmitted, pre-boot notification `0200` STALL was logged, and `bootx` acknowledgments were received. Subsequent iBoot kernel panics mean that signature acceptance, XNU handoff, and Recovery UI presentation cannot be presumed. In reports, `macos_boot_verified` and `forced_transition` remain `false`. Without Apple PV graphics virtualization on Linux QEMU, visual UI cannot be verified. Full data is archived in [`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json).
+In live TSS test runs, following iBSS DFU reset, the virtual device re-enumerated as `05ac:1281` advertising bulk OUT endpoint 4. Personalized IMG4 payloads for LocalPolicy and authentic iBEC were transmitted, followed by receipt of `go` acknowledgments. Following Stage2 prompt observation in selective RPC experiments, all five official restore roles were transmitted, pre-boot notification `0200` STALL was logged, and `bootx` acknowledgments were received. Subsequent iBoot kernel panics mean that signature acceptance, XNU handoff, and Recovery UI presentation cannot be presumed. In reports, `macos_boot_verified` and `forced_transition` remain `false`. Without Apple PV graphics virtualization on Linux QEMU, visual UI cannot be verified. Full data is archived in [`integration/vmapple-gui-bootpicker-report.json`](https://github.com/26x86/26x86/blob/main/integration/vmapple-gui-bootpicker-report.json).
 
 In direct boot paths, this recovery table is not reused. The runner records `Darwin Kernel Version` as XNU execution evidence and `launchd`/`loginwindow`/`WindowServer` as userspace evidence, asserting `macos_boot_verified=true` only when both tiers are present. Missing evidence triggers `direct-boot-evidence-timeout`, and `installation_verified` remains `false`.
 
@@ -78,3 +82,11 @@ The 26x86 fragment in `config.plist` utilizes the following schema:
 ```
 
 `x86.sandbox_config.validate()` enforces this specification before evaluating EFI or SMBIOS parameters, rejecting configurations where delay is not 2 seconds, key is not Alt/Option, or recovery image is not `_default.ipsw`.
+
+## Current evidence and hardware coverage
+
+Reviewed for documentation freshness on 2026-09-12. See the
+[portal](index.md), [progress](progress.md),
+[compatibility catalog](compatibility.md) and
+[library](library.md) for the active evidence boundary. Historical
+receipts in this guide retain their original scope and date.

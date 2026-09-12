@@ -1,25 +1,32 @@
-# Mac Pro · macOS 26 Tahoe Display Tint (WindowServer)
+# Mac Pro display tint diagnostics
 
-Safari crash issues (AVX `SIGILL`) and **full-screen yellow/orange display tinting** are separate problems. For Safari crashes, refer to [Pre-AVX-Mac-Pro.md](./Pre-AVX-Mac-Pro.md).
+**Current Status:** Diagnostic procedure; a universal cause or repair is not established.
 
-This document details the root causes and recommended mitigations for the **WindowServer / CoreDisplay compositor** tint on macOS 26 Tahoe.
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
 
-## Root Cause Analysis
+A yellow/orange display is a symptom, not proof of a specific WindowServer,
+CoreDisplay, LUT or GPU-descriptor defect. Earlier causal explanations on this
+page were not tied to a reproducible build/device receipt and are not a verified
+root cause. This guide does not promise a calibrated boot-time LUT injector.
 
-The yellow/orange screen tint is **unrelated to AVX** and is **not solely a GCN LUT (Look-Up Table) issue:**
+Record the real GPU, display, cable/adapter, connector, macOS build and whether
+the tint appears in firmware, Recovery, the login screen or only one session.
+Compare a screenshot with a photograph: their difference can help distinguish
+compositor output from the physical display path, but is not conclusive alone.
 
-1. **WindowServer Compositor Pipeline:** macOS 26 Tahoe introduced updated CoreDisplay color management paths that expect modern Metal display pipelines with specific hardware transfer functions.
-2. **Legacy GPU Descriptors:** On legacy AMD (GCN) and legacy Nvidia GPUs, default gamma ramps and color spaces are misinterpreted during compositor handoff, applying an unintended color matrix transformation.
-3. **Color Profile Mismatch:** The default display profile applied during first boot lacks the calibrated EOTF expected by Tahoe's compositor.
+Inspect Night Shift, True Tone and the selected display color profile. Save the
+current selection before trying a standard profile or another connector; report
+the observed result for that setup rather than calling it a universal repair.
+Keep CPU `SIGILL` investigation separate from color diagnosis.
 
-## Recommended Mitigations
+For absent guest output, see [graphics limitations](GPU-Limitations.md) and
+[current progress](../progress.md). EFI presentation is not persistent guest
+scanout or Metal acceleration.
 
-1. **Display Profile Reset:**
-   - Open System Settings → Displays.
-   - Change the color profile from the active profile to **sRGB IEC61966-2.1** or **Generic RGB**.
-   - In most cases, selecting standard sRGB immediately clears the yellow cast.
-2. **Night Shift & True Tone Check:**
-   - Ensure Night Shift is toggled OFF.
-   - On systems reporting false ambient light sensors, disable automated schedule tinting.
-3. **Hardware LUT Injection:**
-   - When using 26x86, enable the display profile fix in `config.json` to inject a calibrated linear identity LUT during boot.
+## Current evidence and hardware coverage
+
+Reviewed for documentation freshness on 2026-09-12. See the
+[portal](../index.md), [progress](../progress.md),
+[compatibility catalog](../compatibility.md) and
+[library](../library.md) for the active evidence boundary. Historical
+receipts in this guide retain their original scope and date.

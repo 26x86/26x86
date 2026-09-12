@@ -1,5 +1,9 @@
 # Developer & Contributor Guide
 
+**Current Status:** Contributor instructions; use current manifests and workflow receipts.
+
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
+
 Contributor guidelines, codebase layout, and universal documentation standards for 26x86.
 
 ---
@@ -10,7 +14,7 @@ Contributor guidelines, codebase layout, and universal documentation standards f
 > **Universal English-Only Rule:**
 > All documentation, architectural specifications, code comments, commit messages, CLI user messages, and PR descriptions across all 26x86 and NextCore repositories MUST be written strictly in **English**.
 > - No bilingual documents, Korean-only documents, or foreign language drafts are permitted in the repository or doc builds.
-> - Pull requests containing non-English text in `docs/` or source comments will fail automated CI checks.
+> - Public documentation is checked by the documentation CI policy; source review must also enforce the English-only rule. Do not assume a documentation test audits every source comment.
 
 ---
 
@@ -44,7 +48,7 @@ python3 -m x86 wizard
 
 ## Cross-Platform Boundaries
 
-Full EFI deployment, live system patching, and LaunchAgent daemon installation require macOS. Windows and Linux environments provide CLI configuration, offline bundle generation, hardware profile inspection, and the HTML wizard GUI.
+The application's live root-patching and macOS service workflows require their supported Darwin host. Windows/Linux support inspection and developer builds within their own contracts; compiling EFI is separate from deploying or physically booting it. Use [Setup](../SETUP.md) and [Module repositories](Nextcore-Modules.md) for current commands.
 
 ## Configuration Defaults
 
@@ -54,4 +58,12 @@ Full EFI deployment, live system patching, and LaunchAgent daemon installation r
 
 ## Licensing & Attribution
 
-All contributions must adhere to clean-room development practices. See [PUBLIC_VS_PRIVATE_BOUNDARY.md](../PUBLIC_VS_PRIVATE_BOUNDARY.md), [CREDITS.md](../../CREDITS.md), and [NOTICE.md](../../NOTICE.md).
+All contributions must adhere to clean-room development practices. See [PUBLIC_VS_PRIVATE_BOUNDARY.md](../PUBLIC_VS_PRIVATE_BOUNDARY.md), [CREDITS.md](https://github.com/26x86/26x86/blob/main/CREDITS.md), and [NOTICE.md](https://github.com/26x86/26x86/blob/main/NOTICE.md).
+
+## Current evidence and hardware coverage
+
+Reviewed for documentation freshness on 2026-09-12. See the
+[portal](../index.md), [progress](../progress.md),
+[compatibility catalog](../compatibility.md) and
+[library](../library.md) for the active evidence boundary. Historical
+receipts in this guide retain their original scope and date.

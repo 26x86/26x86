@@ -1,31 +1,42 @@
 # Public architecture
 
-```text
-NextCore application
-    -> configuration and EFI preparation
-    -> target-specific validation
-    -> physical or emulated acceptance evidence
+**Current Status:** Executable bounded CPU/provider work; sustained physical guest execution incomplete.
 
-NextCore public modules
-    -> configuration and format contracts
-    -> EFI handoff contracts
-    -> runtime and hardware-abstraction experiments
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
+
+The product target is ARM64e macOS execution on an x86_64 machine entered through
+UEFI. The current implementation has executable instruction/provider fixtures
+and bounded original-input diagnostics; a usable physical guest is not complete.
+See [current progress](../progress.md) and [compatibility](../compatibility.md).
+
+```text
+UEFI firmware
+  -> NextCore picker / explicit child EFI loader
+  -> clean-room guest staging and architecture-specific entry
+  -> A64-to-x86 generated execution + checked memory/platform providers
+  -> persistent guest devices and storage
+  -> XNU, userspace, visible display and input
 ```
 
-NextCore is the product name for the application and independent clean-room EFI
-boot engineering. The firmware picker selects explicitly configured EFI
-applications on its current volume. Public kernel-format codecs and HAL/GPU
-modules support the Tahoe and Golden Gate development paths. External OpenCore
-components remain attributed where the integration and reference paths use them;
-they are not renamed as our own implementation.
+The latter transitions remain independent acceptance gates. Normal ARM64e entry
+returns `NOT_READY`; opt-in bounded diagnostics return `ABORTED`. A trace's
+increasing retired-instruction count is not normal startup readiness. The
+[entry contract](../NEXTCORE_ARM64E_ENTRY_CONTRACT.md) distinguishes legacy
+boot arguments from SPTM startup and identifies missing live services.
 
-The current native EFI path reaches Tahoe Recovery and Terminal through the
-original operating-system booter. Direct kernel-collection entry and Golden Gate
-ARM64E execution remain incomplete. Host Vulkan compute has run on the Intel GPU;
-the actual Recovery Metal probe reports no device. Full guest acceleration is a
-separate required result. These observations use local QEMU/OVMF and do not prove
-physical-Mac compatibility.
+GOP/text output is a firmware presentation surface. Persistent guest framebuffer
+mapping and post-firmware display ownership remain incomplete, as do sustained
+storage/platform integration and guest Metal. A host GPU test does not satisfy
+those contracts. Display and input precede acceleration in the active milestone.
 
-The architecture is evidence-first: each layer can report only what it
-actually measured. A successful build or file check cannot promote an
-unverified firmware, kernel, graphics, or physical-hardware claim.
+External OpenCore preparation and original-booter Tahoe Recovery observations
+are separate paths with their own source attribution and evidence. The VSK
+service-cell design and Apple Silicon/VMApple research likewise have their own
+scope; their policies must not silently replace NextCore's current x86 target.
+
+Read [Design](../NEXTCORE_DESIGN.md), [Build plan](../NEXTCORE_BUILD_PLAN.md) and
+[Module repositories](Nextcore-Modules.md) for contracts, phases and source ownership.
+
+SPTM applicability to the selected j274 target is unverified. The diagnostic
+profile name does not establish its normal startup ABI; see the
+[entry contract](../NEXTCORE_ARM64E_ENTRY_CONTRACT.md).

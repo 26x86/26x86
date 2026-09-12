@@ -1,15 +1,22 @@
-# Safari 26 Pre-AVX Instruction Fix
+# Safari on CPUs without required instruction features
 
-Safari 26.6.1 WebContent executes AVX instructions (`vmovaps`) on pre-AVX Intel CPUs, resulting in `EXC_BAD_INSTRUCTION` / `SIGILL` crashes.
+**Current Status:** Build-specific crash diagnosis; a universal instruction workaround is not verified.
 
-## How the Fix Operates
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
 
-- Even when the standard RestrictEvents parameter `revpatch=jsc` masks JavaScriptCore AVX feature flags, Safari 26.6.1 includes probe routines (such as `ctiMasmProbeTrampoline`) that directly issue AVX opcodes without feature checking.
-- The 26x86 RestrictEvents build intercepts this instruction sequence and translates it to the equivalent legacy SSE `movaps` instruction.
-- **No direct modification of the system volume or root filesystem is required.** 26x86 handles this entirely at boot time: it substitutes `RestrictEvents.kext` in the EFI partition and automatically appends `revpatch=jsc` to `boot-args`.
+This page is a diagnostic guide, not a verified fix for every Safari release.
+Earlier text described a specific Safari version and automatic AVX-to-SSE
+translation without an accompanying source-bound runtime receipt. Those claims
+must not be used as the current support contract.
 
-## Verification Steps
+1. Record the actual CPU features, macOS build, Safari/WebKit build and crash log.
+2. Confirm an illegal-instruction exception and identify its instruction family;
+   a browser crash alone does not establish an AVX fault.
+3. Record the exact loaded RestrictEvents version and boot arguments. Consult
+   its public source/documentation before assigning behavior to `revpatch=jsc`.
+4. Reproduce the same workload after an approved, reversible change and verify
+   that the original failure is absent. Check more than application launch.
 
-1. Launch Safari on macOS 26 Tahoe on a MacPro5,1.
-2. Navigate to JavaScript-intensive sites (e.g. WebGL demos, complex web applications).
-3. Confirm in Console.app that `com.apple.WebKit.WebContent` does not crash with `SIGILL (ILL_ILLOPC)`.
+No blanket AVX translation, root-patch-free cure or cross-version compatibility
+is established here. See [CPU capability notes](Pre-AVX-Mac-Pro.md),
+[known issues](Known-Issues.md) and [compatibility](../compatibility.md).

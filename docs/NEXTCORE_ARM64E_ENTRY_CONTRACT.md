@@ -1,16 +1,57 @@
-# BP31 — macOS 27 ARM64e Entry Contract Verification
+# ARM64e startup contract and current diagnostic boundary
 
-Read-only audit: Repositories, modules, source images, and execution configurations were not altered. Re-analyzed preserved IPSW metadata, extracted structures, and public Apple/XNU documentation.
+Current Status: Public startup paths are distinguished; normal target-specific
+entry/platform requirements remain incomplete. SPTM applicability to the selected
+j274 target is UNVERIFIED. Normal ARM64e entry is
+`NOT_READY`; the opt-in original-prefix diagnostic always returns `ABORTED`.
 
-## Scope & Purpose
+Target State: A source-bound, target-specific live entry state that reaches XNU
+initialization with real platform services, followed by sustained guest devices,
+storage, display and userspace. See [progress](progress.md).
 
-This contract defines the entry state expectations for early AArch64 kernel execution in macOS 27:
-- Initial translation regimes and page table setup.
-- Register state upon entry (`X0` pointing to boot argument structures).
-- Exception level expectations (EL1 vs. EL2).
-- Memory attributes and device tree positioning in physical RAM.
+## Legacy entry versus SPTM entry
 
-## Verification Boundaries
+| Entry shape | Register meaning |
+| --- | --- |
+| Legacy ARM64 startup | A boot-argument pointer in x0 applies only to that documented path |
+| Public SPTM cold startup | x0 selects startup mode; x1 carries traditional boot arguments; x2 carries SPTM arguments |
+| Warm/resume/panic startup | Arguments depend on the selected path; do not reuse the cold table blindly |
 
-- Synthetic test fixtures written for `nextcore-ise` validate instruction decoding and memory access semantics.
-- Hardware virtualization on Apple Silicon hosts uses Virtualization.framework directly, distinct from x86 translation harnesses.
+Apple's public [SPTM startup source](https://github.com/apple-oss-distributions/xnu/blob/main/osfmk/arm64/sptm/start_sptm.s)
+saves the cold argument pointers and invokes SPTM during initialization. The
+register distinction is a public interface observation, checked on 2026-09-12;
+it does not establish the exact ABI of a particular unreleased image. A legacy
+boot-argument codec cannot be relabeled a complete SPTM environment.
+
+## Current implementation scope
+
+The bounded trace uses the explicit `unprovisioned-sptm-prefix` profile. This
+name describes a diagnostic assumption, not verified j274 SPTM applicability: x0 is
+zero, x1 refers to the staged legacy boot arguments and x2/x3 are zero. Its boot
+video fields are zero and its DeviceTree platform state is incomplete. This
+profile exists to expose the next architectural requirement; it is not normal
+cold-boot provisioning. The 2026-09-12 manifest-only check found no SPTM/TXM
+roles in the selected j274 build identities. That absence does not independently
+prove either startup ABI; target applicability remains unverified. The existing normal entry retains its provider gate.
+
+Checked memory services and authored stage-1/dynamic-MMU fixtures demonstrate
+their own translated accesses. They do not supply the complete original platform
+or make the legacy v1 memory path support MMU enablement. Keep the exact selected
+runtime mode in every receipt.
+
+## Remaining acceptance requirements
+
+- Target-specific argument layouts backed by authoritative public contracts.
+- Live platform/service dispatch and lifecycle behavior; SPTM-specific fixup
+  completion and services only where the target entry contract requires them.
+- Owned DeviceTree and memory mappings with actual target consumers.
+- Persistent storage and interrupt/device services after firmware transition.
+- Persistent guest framebuffer presentation, input and userspace evidence.
+
+Do not invent missing structures, substitute successful service replies or drop
+unsupported instructions to extend a trace. Public XNU references alone do not
+provide every external SPTM interface or establish that the selected target uses it.
+
+[Design](NEXTCORE_DESIGN.md), [Build plan](NEXTCORE_BUILD_PLAN.md),
+[runtime verification](BOOT_RUNTIME_VERIFICATION.md) and
+[compatibility](compatibility.md) preserve the separate acceptance layers.

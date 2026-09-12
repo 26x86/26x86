@@ -6,6 +6,26 @@ This specification defines the *how* of NextCore — Rust workspace module layou
 
 ## Current Status
 
+The active milestone is BP37: physical x86 macOS 27 display and interaction before
+acceleration. Normal ARM64e entry is still `NOT_READY`; incomplete-prefix traces
+are bounded diagnostics returning `ABORTED`. The seven-module integration has
+native/reference/provider/UEFI coverage, not a verified physical OS desktop.
+
+The 2026-09-12 published checkpoint `8f562` passed 31 CI checks. That is a dated
+source/integration receipt, not OS-boot evidence. The pre-BFM original diagnostic
+stopped after 5,373 retired instructions at BFI; it is historical prefix evidence,
+not a physical run. BFM authored EFI consumption passed. The subsequent same-j274 r8 replay
+retired 16,384 instructions to its budget (status 5), with 16,384 fetches, 2,763
+data requests and provider status 0. No unsupported instruction stopped that
+prefix; loop/progress analysis is pending. This is not OS-progress evidence. [Progress](progress.md) owns the latest result so this
+historical boundary is never mistaken for the current stop.
+
+Persistent guest display/storage and target-specific platform services remain
+open. Use [the entry contract](NEXTCORE_ARM64E_ENTRY_CONTRACT.md) and
+[compatibility](compatibility.md) to distinguish ABI preparation from acceptance.
+
+## Historical baseline: 2026-09-07
+
 - **Workspace Architecture (2026-09-07):** The physical Cargo workspace comprises seven crates: `core`, `efi`, `tool`, `ise`, `gpu`, `hal`, and `apls`. All 103 host unit tests pass cleanly. Dummy implementations (`NXC0`) have been replaced with authentic EFI image verification. NextCore EFI reads volume configuration files under strict buffer bounds and emits diagnostics via serial I/O.
 - The APLS host adapter and CLI orchestrate execution across WSL, QEMU, and ARM firmware fixtures. Execution contracts BP8–BP9 are actively enforced.
 - Core standard library dependencies have been separated into modular `no_std` XML and configuration parsers linked into the EFI target. NextCore implements chainloading of explicit EFI applications residing on the same volume; direct XNU kernel handoff remains under active development.
@@ -24,6 +44,8 @@ This specification defines the *how* of NextCore — Rust workspace module layou
 ## Codified Decisions
 
 ### BP1. Rust Module Structure
+
+The tree below records the initial design decomposition, not the current exhaustive file inventory. The actual seven gitlinks and workspace packages are documented in [Module repositories](wiki/Nextcore-Modules.md).
 
 ```
 nextcore/
@@ -56,6 +78,8 @@ nextcore/
 Architectural Rationale: Maps directly to Design steps 1–4. UEFI-specific bindings are isolated to `nextcore-efi`. All policy, parsing, and data models reside in `nextcore-core` to enable automated host testing. Operator tools reside in `nextcore-tool` to avoid contaminating bare-metal UEFI builds.
 
 ### BP2. Dependencies
+
+This original dependency plan is historical. Current manifests, lockfiles and immutable module revisions determine the actual dependency graph; this table must not be used to install or pin a replacement graph.
 
 | Crate | Dependency | Role & Scope |
 |-------|------------|--------------|
@@ -798,3 +822,46 @@ require corrected unknown-reason IL only at typed unsupported boundaries, bind
 the new runtime71 explicitly, and rerun captured native6 without changing real
 Arm abort observations. Root owns active parent CI/driver selection and the
 current EFI omission-reader expectation. No historical result is rewritten.
+
+
+## BP35 — integrate explicit deep diagnostics
+
+Root connects merged Corebab7, EFI03a and Tool8ea while retaining ISE0d.
+The external CLI and authored gate are promoted byte-for-byte to parent tools.
+Existing/default parser caps remain unchanged; a separate deep-capable feature
+and exact deep-16384 selection are required. Root performs targeted fresh
+recursive workspace/config/actual deep-control checks in addition to the just
+completed BP34 full suite and canonical EFI standalone regression matrix.
+CI retains all existing jobs and adds one actual deep execution with28 preflight
+rejections and x1 corruption rejection. The separately compiled clamp and five
+actual canonical controls retain their own recorded evidence. No repeated
+original run or new unsupported instruction support belongs to this milestone.
+
+
+BP35 validation closure: fresh recursive6bca2907 passes the14-command targeted
+suite with workspace505/Core235+3doctests/Python149, actual integrated4 and
+separately built canonical clamp1,28 CLI rejections and x1 negative. Legacy full
+CI remains and final public bytes/network checkout are independently checked.
+
+## BP37 - Physical macOS 27 display-first continuation
+
+Root owns integration pins, new execution receipts and the build-plan contract.
+The EFI picker agent owns optional presentation fallback and its module-local
+contract/tests. Root will independently review that change before integration.
+Use the published instruction families with the existing deep diagnostic as a
+bounded observation tool, without changing normal-entry or provider gates.
+Verify native semantics and actual EFI consumption before original-input replay.
+Replays must identify their actual input and incomplete startup state; do not
+compare different device kernels as a single execution history. Preserve raw
+original inputs and traces in the ignored isolated directory. The selected
+physical acceptance is external-media installation, reboot and an interactive
+macOS 27 desktop on Samsung 750XHD; GPU acceleration is outside this milestone.
+
+
+### BP37 documentation and evidence maintenance
+
+The existing Design/Build Plan pages are explicitly delegated for this documentation refresh. Preserve historical receipts and immutable captures while updating reader-facing support claims. The portal, compatibility catalog and progress page separate official model eligibility, NextCore evidence and missing implementation. No documentation or CI result can authorize normal entry past an unmet provider contract.
+
+SPTM applicability to the selected j274 target is unverified. The diagnostic
+profile name does not establish its normal startup ABI; see the
+[entry contract](NEXTCORE_ARM64E_ENTRY_CONTRACT.md).
