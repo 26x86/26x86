@@ -127,6 +127,11 @@
       "path": "unscaled-regression/uncached.log",
       "bytes": 2641,
       "sha256": "0be835f877f24f0af245fa92bd26ecc71635a7480200d2d76d62a53d08471d48"
+    },
+    {
+      "path": "pinned-build-comparison.json",
+      "bytes": 4548,
+      "sha256": "7b19b801ac9e71ad2c68c7ab40d688b26dab1fe39acc4747e3d5efb309658f9c"
     }
   ]
 }
