@@ -10,8 +10,9 @@ No physical OS boot is established by this checkpoint.
 - Integrate the existing PR #17 deep diagnostic work without discarding the newer
   English documentation policy; preserve historical BP35 receipts unchanged.
 - Connect published UBFM and new complete extended-register ADD/SUB arithmetic.
-  Add complete CSEL/CSINC/CSINV/CSNEG conditional selection.
-  Core bab7ac4, Tool 8ea73c8, ISE 792abc1 and EFI 0d4303e identify the latest checkpoint.
+  Add complete CSEL/CSINC/CSINV/CSNEG conditional selection and integer scalar
+  register-offset memory operations.
+  Core bab7ac4, Tool 8ea73c8, ISE 08156f4 and EFI c1bdb42 identify the latest checkpoint.
 - Continue text output when optional color/clear fails, preserve an accepted
   choice when confirmation redraw fails, and make diagnostic stdout best effort.
 - In explicit picker mode, acknowledge returned target failures before reopening
@@ -37,6 +38,18 @@ No physical OS boot is established by this checkpoint.
 - `published-clone.json`: a new recursive network checkout of parent 4572ad70
   passes clean module inventories and host/UEFI local Cargo resolution. This is
   source publication verification; runtime evidence is recorded separately.
+- `cold-published-consumer`: the same fresh public checkout also builds and
+  executes the extended-arithmetic EFI fixture successfully.
+- `register-memory-native.json`: 13,312 native family cases, 106,496 existing
+  immediate-memory regression cases, 13,312 reference family cases, 104 preOS
+  tests, 16/14/15 provider tests and four rejected compiled semantic mutants.
+- `register-memory-consumer`: actual EFI scaled loads, negative signed index,
+  signed result, store/readback, exact four data operations and 64 retired
+  instructions pass. The previous binary stops at the first tested load.
+- Active scalar/pair and dynamic readers are under `nextcore/tools`; historical
+  readers and source freezes remain unchanged. Current dynamic replay binds
+  exact ISE 08156f4 and passes six independent Arm/native comparisons plus
+  fourteen comparator regressions. See their versioned validation documents.
 - `picker-fallback`: four OVMF protocol-failure cases invoke production picker
   source; three execute the authored child and initial output failure executes none.
 - `picker-recovery`: production BOOTX64 recovers both missing-image and returned
@@ -61,14 +74,16 @@ correspondence rule; no guard was removed. With UBFM, the trace retires 5,312
 instructions and stops at CMP extended-register. With extended arithmetic it
 retires 5,316 and stops at CSEL. Both runs report 783 completed data operations.
 With conditional selection it retires 5,350 and stops at an integer scalar
-register-offset load, with 787 completed data operations. All report provider
+register-offset load, with 787 completed data operations. With register-offset
+memory support it retires 5,353 and stops at TBNZ, with 788 data operations.
+All report provider
 status zero. Raw original coordinates, instructions, logs and copies
 remain only under ignored `_isolated/`; public summaries contain no such bytes.
 
 This is an incomplete startup-prefix diagnostic: normal SPTM arguments/services,
 complete platform DeviceTree, sustained kernel initialization, userspace,
 installation, desktop, post-boot display and physical boot are not verified.
-The next execution work is standard scalar register-offset memory support,
+The next execution work is standard TBZ/TBNZ test-bit branch support,
 followed by a new authored EFI gate and same-input original replay.
 
 ## Reproduction and provenance

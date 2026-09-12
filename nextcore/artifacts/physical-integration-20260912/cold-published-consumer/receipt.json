@@ -1,0 +1,70 @@
+{
+  "schema": "nextcore.arithmetic-existing-efi-consumer.v1",
+  "instruction_family": "extended",
+  "passed": true,
+  "checks": {
+    "completed": true,
+    "exact_retirement": true,
+    "final_loop_pc": true,
+    "arithmetic_results": true,
+    "boot_argument_preserved": true,
+    "memory_provider": true,
+    "inputs_preserved": true
+  },
+  "commands": [
+    [
+      "clang",
+      "--target=aarch64-none-elf",
+      "-c",
+      "/tmp/nextcore-cold-extended-20260912/probe.S",
+      "-o",
+      "/tmp/nextcore-cold-extended-20260912/probe.o"
+    ],
+    [
+      "llvm-objcopy",
+      "-O",
+      "binary",
+      "--only-section=.text",
+      "/tmp/nextcore-cold-extended-20260912/probe.o",
+      "/tmp/nextcore-cold-extended-20260912/probe.bin"
+    ],
+    [
+      "/usr/bin/python3",
+      "/tmp/nextcore-physical-checkpoint-20260912/nextcore/tools/trace_deep_arm_jit_ovmf.py",
+      "--tools",
+      "/tmp/nextcore-physical-checkpoint-20260912/nextcore/tools",
+      "--efi",
+      "/tmp/nextcore-cold-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi",
+      "--kernel",
+      "/tmp/nextcore-cold-extended-20260912/probe.kc",
+      "--device-tree",
+      "/tmp/nextcore-cold-extended-20260912/diagnostic.dt",
+      "--output",
+      "/tmp/nextcore-cold-extended-20260912/firmware",
+      "--physical-base",
+      "0x40000000",
+      "--virtual-base",
+      "0xfffffe0000000000",
+      "--memory-size",
+      "67108864",
+      "--kernel-physical",
+      "0x42000000",
+      "--instruction-budget",
+      "64",
+      "--platform-profile",
+      "nextcore-irq-compat-v1",
+      "--allow-incomplete-sptm-prefix",
+      "--timeout",
+      "60"
+    ]
+  ],
+  "source_hashes": {
+    "/tmp/nextcore-cold-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi": "4e55d65d58ebac3c1f62bdd734b145f658f14d536044491329eb38de79f618e7",
+    "/tmp/nextcore-physical-checkpoint-20260912/nextcore/tools/verify_ubfm_consumer_ovmf.py": "e887da0179507ca236cf4b7ba532f8e6e1556ccc4f373ab6353cd2fc6419c54a",
+    "/tmp/nextcore-physical-checkpoint-20260912/nextcore/tools/build_arm64_handoff_probe.py": "57ac29fc0558f79152978e6f7660d8ddcb8b0d98a69cc571b13349dc032cf3ee",
+    "/tmp/nextcore-physical-checkpoint-20260912/nextcore/tools/trace_deep_arm_jit_ovmf.py": "ec297530bb91719e7290c34c802ace3a6857b4fa25942480c5a9407ef2ed7113",
+    "/tmp/nextcore-physical-checkpoint-20260912/nextcore/tools/verify_arm_jit_ovmf.py": "29a14a20596e1f68bbb48c77f20ae8565c26f4802567ac83596ada05c4f352a2"
+  },
+  "original_images_used": false,
+  "macos_boot_verified": false
+}

@@ -83,10 +83,10 @@ jobs:
             --output "$RUNNER_TEMP/nextcore-platform-irq-proof"
       - name: Execute integer pair memory and precise faults in x86 EFI
         run: |
-          python3 nextcore/artifacts/arm-pair-memory-20260909/verify_pair_ovmf.py \
+          python3 nextcore/tools/verify_arm_pair_ovmf.py \
             --tools nextcore/tools --efi "$RUNNER_TEMP/NXARMJIT-probe.efi" \
             --output "$RUNNER_TEMP/nextcore-pair-memory-proof"
-          python3 nextcore/artifacts/arm-scalar-memory-20260909/verify_scalar_ovmf.py \
+          python3 nextcore/tools/verify_arm_scalar_ovmf.py \
             --tools nextcore/tools --efi "$RUNNER_TEMP/NXARMJIT-probe.efi" \
             --output "$RUNNER_TEMP/nextcore-scalar-memory-proof"
       - uses: actions/upload-artifact@v4
@@ -196,8 +196,8 @@ jobs:
           cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-dynamic-probe --bin NXDYN
           python3 nextcore/crates/nextcore-efi/tools/verify_dynamic_ovmf.py --efi-probe nextcore/target/x86_64-unknown-uefi/release/NXDYN.efi --output "$RUNNER_TEMP/nextcore-dynamic-proof"
           python3 nextcore/crates/nextcore-efi/tools/check_dynamic_capture.py --report "$RUNNER_TEMP/nextcore-dynamic-proof/report.json" --output "$RUNNER_TEMP/nextcore-dynamic-reader.json"
-          python3 -B nextcore/artifacts/arm-dynamic-comparison-20260909/compare.py --oracle nextcore/artifacts/arm-dynamic-oracle-20260909 --runtime nextcore/crates/nextcore-ise/runtime --output "$RUNNER_TEMP/dynamic-arm-comparison" --rustc "$(command -v rustc)"
-          python3 -B nextcore/artifacts/arm-dynamic-comparison-20260909/test_compare.py --oracle nextcore/artifacts/arm-dynamic-oracle-20260909 --evidence "$RUNNER_TEMP/dynamic-arm-comparison"
+          python3 -B nextcore/tools/dynamic_comparison/compare.py --oracle nextcore/artifacts/arm-dynamic-oracle-20260909 --runtime nextcore/crates/nextcore-ise/runtime --output "$RUNNER_TEMP/dynamic-arm-comparison" --rustc "$(command -v rustc)"
+          python3 -B nextcore/tools/dynamic_comparison/test_compare.py --oracle nextcore/artifacts/arm-dynamic-oracle-20260909 --evidence "$RUNNER_TEMP/dynamic-arm-comparison"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -234,6 +234,7 @@ jobs:
           python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --output "$RUNNER_TEMP/ubfm-efi"
           python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family extended --output "$RUNNER_TEMP/extended-efi"
           python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family select --output "$RUNNER_TEMP/select-efi"
+          python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family register-memory --output "$RUNNER_TEMP/register-memory-efi"
       - name: Execute deep budget and reject malformed selections
         run: |
           python3 nextcore/tools/verify_deep_budget_ovmf.py --tools nextcore/tools --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --default-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --clamped-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --core-source nextcore/crates/nextcore-core --efi-source nextcore/crates/nextcore-efi --recheck-provenance --output "$RUNNER_TEMP/deep-trace"
@@ -249,6 +250,7 @@ jobs:
             ${{ runner.temp }}/ubfm-efi/**/*.json
             ${{ runner.temp }}/extended-efi/**/*.json
             ${{ runner.temp }}/select-efi/**/*.json
+            ${{ runner.temp }}/register-memory-efi/**/*.json
 
   x86-efi-picker-recovery:
     runs-on: ubuntu-24.04
