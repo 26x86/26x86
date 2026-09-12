@@ -150,6 +150,73 @@
       "opened_local": true,
       "generic_current_register_table": false,
       "source_body_published": false
+    },
+    {
+      "url": "https://documentation-service.arm.com/static/5e7e1405b471823cb9de57ae",
+      "authority": "Arm official documentation service",
+      "title": "Arm Cortex-A55 Technical Reference Manual",
+      "document_id": "100442_0100_00_en",
+      "edition": "2016-2017, B2.90 Figure B2-78",
+      "pdf_pages": [
+        412
+      ],
+      "sha256": "b48da6cc513e4d22ab67dcbb062097364099c46fe2b4e208dbe1ecf637e73a53",
+      "bytes": 3056223,
+      "retrieved": true,
+      "opened_local": true,
+      "generic_current_register_table": false,
+      "source_body_published": false
+    },
+    {
+      "url": "https://developer.arm.com/-/cdn-downloads/permalink/Exploration-Tools-OS-Machine-Readable-Data/AARCHMRS_BSD/AARCHMRS_OPENSOURCE_A_profile_FAT-2025-09_ASL0.tar.gz",
+      "authority": "Arm official machine-readable distribution",
+      "title": "AARCHMRS BSD A-profile FAT 2025-09 ASL0",
+      "version": "2025-09_rel, build 415, schema 2.7.1, vFATAp1-A",
+      "date": "2025-09-23",
+      "sha256": "a7f524d82bba68b5cfd718645973d5d4f3bcc28a9e7eab46257ae1324a23ee26",
+      "bytes": 5470510,
+      "retrieved": true,
+      "opened_local": true,
+      "generic_current_register_table": false,
+      "source_body_published": false,
+      "meaning_text_present": false,
+      "scope": "MMFR1 AFP[47:44], nTLBPA[51:48], ECBHB[63:60] enumerate 0000 and 0001; meaning and description values are null. Conditional SCTLR_EL1 fields: TIDCP63/EPAN57/CMOW32 otherwise RES0, SPAN23 otherwise RES1. FPCR NEP2/AH1/FIZ0 conditional on FEAT_AFP, otherwise RES0."
+    },
+    {
+      "url": "https://documentation-service.arm.com/static/6894bc07e7f7ce6150e88fca",
+      "authority": "Arm official documentation service",
+      "title": "Arm Architecture Reference Manual for A-profile architecture Known issues in Issue L.b",
+      "document_id": "102105_L.b_02_en",
+      "edition": "Issue 02",
+      "date": "2025-08-04",
+      "pdf_pages": [
+        82
+      ],
+      "sha256": "e2c726ac28682723376fd05698c46a7484accc1311aedbfd6ff7a5ee7cc40d69",
+      "bytes": 1054451,
+      "retrieved": true,
+      "opened_local": true,
+      "generic_current_register_table": false,
+      "source_body_published": false,
+      "scope": "Correction to D24.2.83 ECBHB: zero is nondisclosure of restrictions around exceptions, not a statement that restrictions are absent."
+    },
+    {
+      "url": "https://documentation-service.arm.com/static/62f4d062e95b0a633aff7ad7",
+      "authority": "Arm official documentation service",
+      "title": "Arm Architecture Reference Manual for A-profile architecture Known issues in Issue H.a",
+      "document_id": "102105_H.a_06_en",
+      "edition": "Issue 06",
+      "pdf_pages": [
+        48,
+        49
+      ],
+      "sha256": "66bebb12577684ff0b2a6eefe6d5b296d470a95d0afcd42993dfc86d3aa22cca",
+      "bytes": 714109,
+      "retrieved": true,
+      "opened_local": true,
+      "generic_current_register_table": false,
+      "source_body_published": false,
+      "scope": "Section2.59 C18798 generic nTLBPA correction: zero permits the possibility of noncoherent physical translation caches; it does not require their presence."
     }
   ],
   "unretrieved_official_urls": [

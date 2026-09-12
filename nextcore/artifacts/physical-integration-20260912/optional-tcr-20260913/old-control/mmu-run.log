@@ -1,0 +1,18 @@
+
+running 1 test
+test mmu::optional_tcr_direct_configuration_is_transactional ... FAILED
+
+failures:
+
+---- mmu::optional_tcr_direct_configuration_is_transactional stdout ----
+
+thread 'mmu::optional_tcr_direct_configuration_is_transactional' (122) panicked at /tmp/nextcore-optional-tcr-old-proof-20260913-r2/mmu/mmu.rs:1389:3:
+assertion failed: !mmu.configure_tcr(step + 0x10000, 0, tcr | (combo << 39), 255)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    mmu::optional_tcr_direct_configuration_is_transactional
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 101 filtered out; finished in 0.00s
+

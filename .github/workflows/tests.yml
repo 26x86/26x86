@@ -181,6 +181,7 @@ jobs:
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_isar2_native.py --output "$RUNNER_TEMP/isar2-native"
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_mmfr0_native.py --output "$RUNNER_TEMP/mmfr0-native"
           python3 nextcore/crates/nextcore-ise/runtime/tests/verify_asid8_native.py --output "$RUNNER_TEMP/asid8-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_optional_tcr.py --output "$RUNNER_TEMP/optional-tcr"
       - name: Compare hierarchical permissions with authored Arm execution
         run: |
           python3 nextcore/crates/nextcore-ise/runtime/tests/hierarchy_oracle/run.py --output "$RUNNER_TEMP/hierarchy-arm"
@@ -245,6 +246,8 @@ jobs:
             ${{ runner.temp }}/mmfr0-native/*.log
             ${{ runner.temp }}/asid8-native/receipt.json
             ${{ runner.temp }}/asid8-native/*.json
+            ${{ runner.temp }}/optional-tcr/receipt.json
+            ${{ runner.temp }}/optional-tcr/*.log
             ${{ runner.temp }}/nextcore-asid8-proof/*.json
             ${{ runner.temp }}/nextcore-asid8-proof/*.log
             ${{ runner.temp }}/hierarchy-arm/**/*.json

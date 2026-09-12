@@ -1,0 +1,143 @@
+[
+  {
+    "argv": [
+      "clang-18",
+      "-std=c11",
+      "-D_GNU_SOURCE",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/source/test_optional_tcr.c",
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/source/arch.c",
+      "-o",
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/bank-c"
+    ],
+    "return_code": 0,
+    "log": "c-build.log",
+    "timed_out": false,
+    "reaped": true,
+    "process_group_exited": true,
+    "elapsed_seconds": 0.470113997999988
+  },
+  {
+    "argv": [
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/bank-c"
+    ],
+    "return_code": 0,
+    "log": "c-run.log",
+    "timed_out": false,
+    "reaped": true,
+    "process_group_exited": true,
+    "elapsed_seconds": 0.0008400940000683477
+  },
+  {
+    "argv": [
+      "rustc",
+      "--edition=2021",
+      "--test",
+      "-Copt-level=2",
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/bank.rs",
+      "-o",
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/rust-bank"
+    ],
+    "return_code": 0,
+    "log": "bank-build.log",
+    "timed_out": false,
+    "reaped": true,
+    "process_group_exited": true,
+    "elapsed_seconds": 3.954521166999939
+  },
+  {
+    "argv": [
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/rust-bank",
+      "--test-threads=1"
+    ],
+    "return_code": 0,
+    "log": "bank-run.log",
+    "timed_out": false,
+    "reaped": true,
+    "process_group_exited": true,
+    "elapsed_seconds": 0.30743978999998944
+  },
+  {
+    "argv": [
+      "rustc",
+      "--edition=2021",
+      "--test",
+      "-Copt-level=2",
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/mmu.rs",
+      "-o",
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/rust-mmu",
+      "--cfg",
+      "optional_tcr_mmu"
+    ],
+    "return_code": 0,
+    "log": "mmu-build.log",
+    "timed_out": false,
+    "reaped": true,
+    "process_group_exited": true,
+    "elapsed_seconds": 3.1057336779999787
+  },
+  {
+    "argv": [
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/rust-mmu",
+      "--test-threads=1"
+    ],
+    "return_code": 0,
+    "log": "mmu-run.log",
+    "timed_out": false,
+    "reaped": true,
+    "process_group_exited": true,
+    "elapsed_seconds": 0.249004283999966
+  },
+  {
+    "argv": [
+      "rustc",
+      "--edition=2021",
+      "--crate-type=rlib",
+      "--crate-name=nextcore_memory_service",
+      "-Copt-level=2",
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/source/memory-service/src/lib.rs",
+      "-o",
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/libservice.rlib"
+    ],
+    "return_code": 0,
+    "log": "service-build.log",
+    "timed_out": false,
+    "reaped": true,
+    "process_group_exited": true,
+    "elapsed_seconds": 0.3033598729999767
+  },
+  {
+    "argv": [
+      "rustc",
+      "--edition=2021",
+      "--test",
+      "--cfg",
+      "optional_tcr_service",
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/source/test_optional_tcr.rs",
+      "--extern",
+      "nextcore_memory_service=/tmp/nextcore-optional-tcr-native-20260913-r2/libservice.rlib",
+      "-o",
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/service"
+    ],
+    "return_code": 0,
+    "log": "service-test-build.log",
+    "timed_out": false,
+    "reaped": true,
+    "process_group_exited": true,
+    "elapsed_seconds": 0.2034260190000623
+  },
+  {
+    "argv": [
+      "/tmp/nextcore-optional-tcr-native-20260913-r2/service"
+    ],
+    "return_code": 0,
+    "log": "service-run.log",
+    "timed_out": false,
+    "reaped": true,
+    "process_group_exited": true,
+    "elapsed_seconds": 0.0012224339999420408
+  }
+]
