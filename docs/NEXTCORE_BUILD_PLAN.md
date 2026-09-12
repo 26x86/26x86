@@ -1181,10 +1181,14 @@ Keep normal macOS readiness and the fixed original-replay binaries unchanged.
 
 ### Scalar immediate writeback
 
-Current Status: Original r23 reaches a post-indexed scalar LDR that the current
-scalar decoder does not admit. Pair transfers already commit base writeback only
-after a successful transaction; the scalar path currently uses offset-only
-addressing. The next change must preserve precise failure behavior.
+Current Status: ISE `fa5fe9e1b78cfce6b3bf0a0da82e68ece0704979` implements the
+thirteen scalar pre/post-indexed forms. It passes 910 native cases with 3,432
+assertions, 78 actual Arm comparisons against C and Rust, and 35 full provider
+tests in each of three cache modes. Ten authored EFI checks pass. The preceding
+unscaled suite also passes after removing its obsolete pre/post rejection
+assertions. Original r23 stopped at post-indexed LDR; replay with the new
+implementation is the next gate. Normal startup and physical boot remain
+unverified.
 
 Target State: Admit pre-indexed and post-indexed forms of the thirteen supported
 integer scalar transfers. Sign-extend the nine-bit byte offset without scaling;

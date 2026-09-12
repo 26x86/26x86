@@ -67,6 +67,25 @@ _start:
     b.mi mapped_failure
     b.cs mapped_failure
     b.vs mapped_failure
+    // Scalar writeback commits after the transfer, with byte-sized offsets.
+    mov x12, sp
+    str x5, [sp, #-16]!
+    ldr x2, [sp], #16
+    cmp x2, x5
+    b.ne mapped_failure
+    mov x13, sp
+    cmp x13, x12
+    b.ne mapped_failure
+    mov x9, x4
+    str x5, [x9], #8
+    add x10, x4, #8
+    cmp x9, x10
+    b.ne mapped_failure
+    ldr x2, [x9, #-8]!
+    cmp x2, x5
+    b.ne mapped_failure
+    cmp x9, x4
+    b.ne mapped_failure
     add x8, x4, #4
 mapped_loop:
     str x5, [x8]

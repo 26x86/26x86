@@ -2,16 +2,12 @@
 
 ## Current Status
 
-The active exact runtime is ISE `fa5fe9e1b78cfce6b3bf0a0da82e68ece0704979`,
-including scalar immediate writeback and matching store-fault classification.
-These six captures retain their original dynamic profile-2 inputs and
-expectations. This replay checks shared runtime regressions; it does not replace
-independent instruction or original-entry tests. See
-`VALIDATION_INDEXED_20260913.md` and `evidence-indexed-20260913`.
-The preceding `617a3d8` selected sources remain under `history/617a3d8`, with
-`evidence-logical-shifted-20260912` unchanged. The preceding unscaled evidence
-and selected sources remain under `evidence-unscaled-20260912` and
-`history/ea0a892`.
+The active exact runtime is ISE `ea0a892c4d55c0c09df35c576931c5a6f65c1426`,
+including integer scalar unscaled transfers and matching store-fault syndrome
+classification. These six captures retain their original dynamic profile-2
+inputs and expectations. This replay checks shared runtime regression behavior;
+it does not replace independent unscaled-instruction or original-entry tests.
+See `VALIDATION_UNSCALED_20260912.md` and `evidence-unscaled-20260912`.
 The preceding `b4f34be` selected source package is preserved byte-for-byte
 under `history/b4f34be`; `evidence-spsel-20260912` remains unchanged.
 The preceding `f102f07` selected source package is preserved byte-for-byte

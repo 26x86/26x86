@@ -1,0 +1,132 @@
+{
+  "schema": "nextcore.scalar-immediate-writeback.v1",
+  "ise_commit": "fa5fe9e1b78cfce6b3bf0a0da82e68ece0704979",
+  "authored_efi_passed": true,
+  "native_passed": true,
+  "contract": "Thirteen scalar forms with pre/post indexing, successful-transaction-only writeback, independent actual Arm comparison and precise faults",
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "original_images_used": false,
+  "files": [
+    {
+      "path": "efi/cached/report.json",
+      "bytes": 17098,
+      "sha256": "353a0c0aacc32cf9eebffe2e258c275d35ab7b7463e757077f2fc8fe570d1fa1"
+    },
+    {
+      "path": "efi/cached/serial.log",
+      "bytes": 11189,
+      "sha256": "58866991ea353b7a338601820e747ceb65991c3987d0b0b79c17361e28e6586f"
+    },
+    {
+      "path": "efi/old/report.json",
+      "bytes": 8289,
+      "sha256": "3d19c545a04177c5cdf83c06a80208e35b2c8de4468fea70317a451ff10ae8c2"
+    },
+    {
+      "path": "efi/old/serial.log",
+      "bytes": 3107,
+      "sha256": "b3b60f7d81aabd1145ba06ff671ec14461b4420a233a28585b7334a26d92c891"
+    },
+    {
+      "path": "efi/receipt.json",
+      "bytes": 39081,
+      "sha256": "4179df4bdf579ea81d5e18221b0f63f81adb2ed467e04eeb03055694084a9235"
+    },
+    {
+      "path": "efi/uncached/report.json",
+      "bytes": 17122,
+      "sha256": "75d6ad61a54b238ffe830b5ec82ff10acce96a9581096452bafade5cd664a897"
+    },
+    {
+      "path": "efi/uncached/serial.log",
+      "bytes": 11195,
+      "sha256": "49f689efb8a5577a03661d0468134162b2bdd87606dfec94201343f117e70d59"
+    },
+    {
+      "path": "efi/unobserved/report.json",
+      "bytes": 8158,
+      "sha256": "0d58e51854789cfa57e9b124cc42b663886e4872a76a9a848514fa55be2417f4"
+    },
+    {
+      "path": "efi/unobserved/serial.log",
+      "bytes": 2617,
+      "sha256": "1f9024c31bf49f37564950264a8ba5319c88bf85a8f4a3b6d37dad6e2efd7d03"
+    },
+    {
+      "path": "native/native.log",
+      "bytes": 46,
+      "sha256": "782a0440d4ca8c5d124c5ed91b353e8796d7b5e432fdab05297461a1a1a926df"
+    },
+    {
+      "path": "native/oracle-results.bin",
+      "bytes": 1872,
+      "sha256": "5366587345f2d201b9b917f670e21dded0d49332fe169f801446ba2bb1631d54"
+    },
+    {
+      "path": "native/oracle.S",
+      "bytes": 23002,
+      "sha256": "bfc1238f1ff0c2827ac5b1b0ab0ce23f419ad4dad01bc89f40dc02d3211d61aa"
+    },
+    {
+      "path": "native/oracle.h",
+      "bytes": 5573,
+      "sha256": "79c3fe72acd04da0b3b5a76df6609296428b81507df48009264a34fb2791dd46"
+    },
+    {
+      "path": "native/provider.log",
+      "bytes": 2748,
+      "sha256": "2c8b924688964d92ba10c306726b048371b3f1c384be3fa53b0ef653b9881c24"
+    },
+    {
+      "path": "native/receipt.json",
+      "bytes": 18315,
+      "sha256": "3d0f86bdd1bb139b258a7d301eda0b46d157aa0988e52d09e4e7cdb323347651"
+    },
+    {
+      "path": "native/reference.log",
+      "bytes": 157,
+      "sha256": "41cef2d57ae98cd0386d45b0a690ed4bf5b7cd03cbc3a067a06db468ce7ac2b2"
+    },
+    {
+      "path": "native/small-slot.log",
+      "bytes": 2748,
+      "sha256": "b30b5819d22563c50980792fb201afe8ee2103bf2744b69d2601fc68b59ea331"
+    },
+    {
+      "path": "native/uncached.log",
+      "bytes": 2748,
+      "sha256": "77cbc951ea2faab05ad8e13878326553b074f41667ca1e1270289ca3045c2950"
+    },
+    {
+      "path": "unscaled-regression/native.log",
+      "bytes": 46,
+      "sha256": "684e21942227dad0f659aeeb6acf0a3d0678817c343d0c30124c6f20f9ead289"
+    },
+    {
+      "path": "unscaled-regression/provider.log",
+      "bytes": 2641,
+      "sha256": "0be835f877f24f0af245fa92bd26ecc71635a7480200d2d76d62a53d08471d48"
+    },
+    {
+      "path": "unscaled-regression/receipt.json",
+      "bytes": 18982,
+      "sha256": "8e352b7b349cd4a6d5b4d50f5b98e10785eb045c5d639eda39328ec5a723cd4c"
+    },
+    {
+      "path": "unscaled-regression/reference.log",
+      "bytes": 158,
+      "sha256": "4faeb4313da38364bfbd310b4d1cf78112885cf1c3f908cbca165e38e9a95048"
+    },
+    {
+      "path": "unscaled-regression/small-slot.log",
+      "bytes": 2641,
+      "sha256": "26711d5ffff30d8f82dea28284faef70d7497affc662e5d8801b973e607ca266"
+    },
+    {
+      "path": "unscaled-regression/uncached.log",
+      "bytes": 2641,
+      "sha256": "0be835f877f24f0af245fa92bd26ecc71635a7480200d2d76d62a53d08471d48"
+    }
+  ]
+}
