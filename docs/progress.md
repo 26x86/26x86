@@ -13,9 +13,9 @@ Each milestone has its own acceptance gate. Passing a firmware test does not est
 <div class="portal-boundary" data-progress-boundary markdown>
 <span class="portal-badge">Current execution boundary</span>
 
-## Original initialization reaches a memory-alignment boundary
+## Mapped prefix: 42,255,998 instructions; ISAR0 feature-register boundary
 
-The unchanged local macOS 27 input stops after 1,542,930 instructions at an ordinary unaligned load under its MMU-off Device profile. A separate Normal-memory unaligned profile now passes authored native and EFI tests. Connecting the original entry mappings and pointer authentication remains required; physical macOS output is unverified.
+r26 completes 6,012,275 data operations and passes ZFR0 before SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64ISAR0_EL1. The provider reports no error. The 1280 by 800 framebuffer remains zero with matching GOP readback; normal startup and physical desktop remain unverified.
 
 [Reviewed original boundary and mapped-profile tests](PREFIX_PROGRESS_VALIDATION.md) · [Acceptance criteria](BOOT_RUNTIME_VERIFICATION.md)
 </div>
@@ -52,7 +52,7 @@ An authored guest reads the encoded boot-video fields and writes its reserved fr
 
 This connects guest memory to firmware output. Persistent presentation, firmware-exit lifetime, normal startup and a physical macOS desktop remain unverified.
 
-The original local kernel prefix also accepts the owned video buffer and reaches an explicitly selected 65,536-instruction budget. Its final store address advances beyond the earlier checkpoint, while its screen hash still matches a zero-filled frame. No kernel-generated visible output has been established.
+The completed r26 original prefix passes the exact ZFR0 read and reaches an ISAR0 feature-register trap after 42,255,998 instructions. Its screen still matches a zero-filled frame. No kernel-generated visible output has been established.
 
 [Bounded memory progress and collection fixes](PREFIX_PROGRESS_VALIDATION.md)
 
@@ -72,7 +72,7 @@ An ordered boot transcript and direct physical display evidence are required for
 ## Latest reviewed updates
 
 <div data-progress-latest markdown>
-Follow the [public validation ledger](https://github.com/26x86/26x86/blob/main/nextcore/VALIDATION.md) for pinned revisions, exact proof scope and replay results. The [repository history](https://github.com/26x86/26x86/commits/main/) records published changes.
+Follow the [public validation ledger](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/VALIDATION.md) for pinned revisions, exact proof scope and replay results. The [repository history](https://github.com/26x86/26x86/commits/main/) records published changes.
 </div>
 
 ## What a completed milestone requires
