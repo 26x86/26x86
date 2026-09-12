@@ -120,8 +120,11 @@ def cargo_target_present():
 
 def build_rust_staticlibs():
     cargo_target_present()
+    # Let libtest emit each successful test's captured stdout as a separate
+    # block. With --nocapture, parallel test status writes can share the ABI
+    # receipt line and violate the strict one-line receipt parser.
     tests = captured([
-        CARGO, "test", "--manifest-path", str(PREOS / "Cargo.toml"), "--", "--nocapture",
+        CARGO, "test", "--manifest-path", str(PREOS / "Cargo.toml"), "--", "--show-output",
     ])
     rust_layout = rust_layout_receipt(tests.stdout + tests.stderr)
     host_target = BUILD / ("cargo-linux" if HOST_RUST_TARGET else "cargo-host")

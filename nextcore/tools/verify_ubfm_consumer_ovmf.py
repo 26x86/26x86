@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Execute authored arithmetic through the existing x86 EFI trace consumer."""
+"""Execute authored instruction families through the existing x86 EFI consumer."""
 import argparse
 import hashlib
 import json
@@ -57,6 +57,23 @@ _start:
 done: b done
 """
 
+REGISTER_MEMORY_ASSEMBLY = """.text
+.global _start
+_start:
+    adr x4, data
+    mov x5, #2
+    ldrh w0, [x4, x5, lsl #1]
+    movn w6, #1
+    add x7, x4, #8
+    ldrsh x2, [x7, w6, sxtw #1]
+    mov x6, #1
+    strh w0, [x4, x6, lsl #1]
+    ldrh w3, [x4, x6, lsl #1]
+done: b done
+.balign 8
+data: .hword 0x1111, 0x2222, 0x80fe, 0x4444
+"""
+
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -70,7 +87,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--efi', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--instruction-family', choices=['ubfm', 'extended', 'select'], default='ubfm')
+    parser.add_argument('--instruction-family', choices=['ubfm', 'extended', 'select', 'register-memory'], default='ubfm')
     args = parser.parse_args()
     efi = args.efi.resolve(strict=True)
     out = args.output.resolve()
@@ -83,7 +100,9 @@ def main():
         'ubfm': (ASSEMBLY, (0x34, 0xf000, 0x23), 32),
         'extended': (EXTENDED_ASSEMBLY, (0, 0x2225, 0x2224), 40),
         'select': (SELECT_ASSEMBLY, (0x23, 0xffffffffffffffee, 0x23), 28),
+        'register-memory': (REGISTER_MEMORY_ASSEMBLY, (0x80fe, 0xffffffffffff80fe, 0x80fe), 36),
     }[args.instruction_family]
+    expected_data = 4 if args.instruction_family == 'register-memory' else 0
     (out / 'probe.S').write_text(assembly)
     commands = [
         ['clang', '--target=aarch64-none-elf', '-c', str(out / 'probe.S'), '-o', str(out / 'probe.o')],
@@ -119,7 +138,8 @@ def main():
         'final_loop_pc': execution.get('pc') == PHYSICAL + ENTRY_OFFSET + loop_offset,
         'arithmetic_results': (registers.get('x0'), registers.get('x2'), registers.get('x3')) == expected_registers,
         'boot_argument_preserved': bool(x1) and registers.get('x1') == int(x1.group(1), 16),
-        'memory_provider': memory.get('provider_status') == 0 and memory.get('fetch_requests') == 64 and memory.get('data_requests') == 0,
+        'memory_provider': memory.get('provider_status') == 0 and memory.get('fetch_requests') == 64
+            and memory.get('data_requests') == expected_data and memory.get('completed_data_operations') == expected_data,
         'inputs_preserved': before == {str(p): sha(p) for p in inputs} and receipt['original_inputs_preserved'] and receipt['esp_copies_preserved'],
     }
     summary = dict(schema='nextcore.arithmetic-existing-efi-consumer.v1', instruction_family=args.instruction_family,
