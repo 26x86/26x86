@@ -7,6 +7,7 @@ Original-image addresses and instruction words belong in a private output path.
 """
 from __future__ import annotations
 import argparse
+import errno
 import hashlib
 import json
 from pathlib import Path
@@ -225,11 +226,24 @@ def main() -> int:
     failure = None
     process = None
     stopped = False
+    serial_observation_retries = 0
+    serial_observation_last_errno = None
+    # Linux/DrvFs concurrent serial reads have returned ENODATA (61). Retry
+    # only these transient observation errors within the original deadline.
+    transient_serial_errnos = {errno.EAGAIN, errno.EINTR, getattr(errno, "ENODATA", 61)}
     try:
         with (output / "stdout.log").open("wb") as stdout, (output / "stderr.log").open("wb") as stderr:
             process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
             while process.poll() is None and time.monotonic() - start < args.timeout:
-                if terminal_error_complete(serial):
+                try:
+                    terminal_complete = terminal_error_complete(serial)
+                except OSError as error:
+                    if error.errno not in transient_serial_errnos:
+                        raise
+                    serial_observation_retries += 1
+                    serial_observation_last_errno = error.errno
+                    terminal_complete = False
+                if terminal_complete:
                     break
                 time.sleep(.1)
     except Exception as error:
@@ -320,6 +334,8 @@ def main() -> int:
         "requested_checks_completed": requested_checks_completed,
         "native_execution_observed": bool(execution and execution["retired"] > 0 and execution["compiled_blocks"] > 0),
         "elapsed_seconds": round(time.monotonic() - start, 3), "failure": failure,
+        "serial_observation_retries": serial_observation_retries,
+        "serial_observation_last_errno": serial_observation_last_errno,
         "qemu_exit_code": process.returncode if process else None,
         "stopped_by_harness": stopped, "macos_boot_verified": False, "metal_verified": False,
     }
