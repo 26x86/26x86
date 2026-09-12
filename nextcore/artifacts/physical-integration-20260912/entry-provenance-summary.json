@@ -1,0 +1,18 @@
+{
+  "schema": "nextcore.entry-provenance.metadata.v1",
+  "input_sha256": "2b1284215823591148d2649c2d8efd318db94b300574d069d3b90d9a324f4a09",
+  "input_preserved": true,
+  "entry_source": "outer fileset ARM LC_UNIXTHREAD",
+  "outer_has_one_thread_entry": true,
+  "kernel_member_found": true,
+  "kernel_member_thread_entry_count": 1,
+  "outer_equals_kernel_member_thread_entry": false,
+  "outer_entry_in_outer_executable_file_segment": true,
+  "outer_entry_in_kernel_member_executable_file_segment": true,
+  "staging_entry_matches_outer_metadata": true,
+  "staging_offset_matches_outer_minus_minimum": true,
+  "public_xnu_start_equivalence_verified": false,
+  "target_entry_abi_verified": false,
+  "instruction_bytes_inspected": false,
+  "normal_startup_verified": false
+}
