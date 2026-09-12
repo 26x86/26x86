@@ -1422,7 +1422,8 @@ can read it even though the ordinary JIT traps. The callback does not read or
 update the C ID field. PACGA is implemented but the advertised GPA field stays
 zero; any change requires an explicit supported-profile decision and proof.
 
-MMFR0 resets to 0x00101122 in C and Rust and has API/reference reads, but lacks
+Before the MMFR0/ASID8 revision below, MMFR0 reset to 0x00101122 and had
+API/reference reads, but lacked
 ordinary native or mapped MRS dispatch. This literal advertises 16-bit ASIDs,
 mixed endianness, security-state distinctions and 64KiB granules beyond the
 immutable provider's accepted contract. The reference walker supports ASID
@@ -1452,5 +1453,291 @@ not affect the fixed PAC MRS value. Both 4KiB/16KiB fetches pass while 64KiB,
 immutable ASIDs and big-endian controls are rejected; the separate reference
 walker accepts its ASID case. Synthetic RAM at selected 39/40/47-bit addresses
 confirms the current IPS-dependent limits through 48 bits. These observations
-confirm the inconsistencies above; no common MMFR0/ISAR1 policy has yet been
-implemented. Receipts are under `pac-address-selection/profile-matrix`.
+confirmed the inconsistencies above. The MMFR0/ASID8 revision below resolves
+its memory feature policy; cross-path ISAR1 policy remains open. Receipts are under `pac-address-selection/profile-matrix`.
+
+### Coherent MMFR0 and fixed eight-bit ASID context
+
+#### Current Status
+
+ISE `feb09b5f1ef5eecce60120ba39e624bb020bd071` implements this contract.
+EFI `5c4509e1ed070b760732f4adbfabb6a137d58d75` pins that runtime. Independent
+ASID/MMFR0 tests and actual authored EFI checks pass; physical macOS output
+remains unverified.
+
+Before this revision, C/Rust MMFR0 value 0x00101122 declared capabilities
+beyond the bounded memory implementation. Ordinary native execution rejected
+its MRS while the API/reference paths returned that value. The underlying
+walker implements stage-1 4 KiB/16 KiB translation and IPS widths through 48 bits.
+Immutable profiles now accept fixed eight-bit tags and A1 selection; AS=1 and
+upper tag bits remain rejected. Dynamic profile 2 has an explicit guard retaining
+its previous admission. Generic model synchronization selects the correct
+A1-dependent eight-bit tag.
+
+No PFR0/PFR1 feature identity is exposed by the native, C, Rust or PAC decoder.
+Generic Rust supports separately tested EL2/EL3 register banks and exception
+states. Those facilities are not a virtualization or secure-memory service and
+must not be removed or relabeled as absent across the entire runtime.
+
+#### Target State and model scope
+
+Define an explicit non-secure EL1 software diagnostic model, with EL0 memory
+requests where already supported. EL2, EL3 security services and stage-2
+translation are absent specifically in this model. Keep immutable control and
+native-cache ownership unchanged. Do not claim complete compliance with a named
+Arm architecture revision or identify this model with the original hardware.
+
+The tested common model value is `0x000000000f100005` for exact MMFR0 reads
+and consistent model reset values:
+
+| Field | Value | Meaning in this model |
+| --- | --- | --- |
+| PARange | 5 | Maximum supported translated physical address width is 48 bits |
+| ASIDBits | 0 | Eight-bit ASID support, implemented and tested; not no-ASID |
+| BigEnd | 0 | Fixed little-endian execution |
+| SNSMem | 0 | No Secure/Non-secure memory distinction; no EL3 in this model |
+| BigEndEL0 | 0 | No EL0 mixed-endian support |
+| TGran16 | 1 | 16 KiB stage-1 granule supported |
+| TGran64 | 15 | 64 KiB stage-1 granule not supported |
+| TGran4 | 0 | 4 KiB stage-1 granule supported |
+| TGran16_2/TGran64_2/TGran4_2 | 0 | Required zero when EL2 is not implemented |
+| ExS | 0 | No configurable non-synchronizing exception-entry/exit extension |
+| FGT/ECV | 0 | No fine-grained trapping or enhanced counter virtualization |
+| Other upper bits | 0 | Reserved under the selected field definition |
+
+The stage-2 fields remain read-only required zero under the EL2-absent condition;
+do not call them RES0 access fields. The ordinary zero-means-inherit interpretation
+does not override the explicit EL2-absent rule. If a future model implements EL2,
+its stage-2 fields require a fresh policy decision and validation.
+
+#### ASID selection and admission
+
+For baseline AS=0, select the active tag as:
+
+`selected_ttbr = TCR.A1 ? TTBR1_EL1 : TTBR0_EL1`
+
+`asid = (selected_ttbr >> 48) & 0xff`
+
+TCR.A1 is bit 22. TCR.AS is bit 36 and stays zero in this bounded eight-bit
+model. Admit TTBR bits 55:48 as the tag; reject bits 63:56 in the bounded control
+contract rather than confusing them with a physical address or silently
+truncating an unsupported configuration. Preserve all existing root alignment,
+physical-width, granule, TnSZ, attribute, endian, wrap and overlap checks.
+
+Immutable profiles 1 and 3 may admit these low-eight-bit tags and A1 selection
+at construction only. Initialize the strict walker with the selected tag instead
+of its current hardcoded zero. The full control snapshot remains immutable and
+is validated on every request and cache hit. A guest cannot change TTBR, A1,
+ASID, epoch or table contents through this change. An ASID-only context change is
+still a rejected changed snapshot. No native-code cache key or CPU/FFI layout
+change is required: fresh fetch/control validation and per-run ownership remain.
+
+Generic Rust Cpu sync_mmu must select the same eight-bit tag from the A1-selected
+TTBR under this model. Validate/reject unsupported AS=1 and high TTBR tag bits
+before committing model control changes. Preserve unrelated generic EL2/EL3
+register-bank tests and the low-level walker's independently scoped utilities;
+an internal u16 tag representation does not itself advertise sixteen-bit support.
+
+Dynamic profile 2 retains its existing admission exactly: ASID=0 in both TTBRs,
+A1=0, AS=0. Add an explicit restriction before it delegates to the broadened
+immutable validator in both C and Rust. Do not widen dynamic prepare/commit,
+TLBI, ISB, epoch, or cache semantics as a side effect of this work.
+
+#### Exact feature-register access
+
+The only new native admission is read-only MRS ID_AA64MMFR0_EL1,
+S3_0_C0_C7_0, Rt-cleared encoding 0xd5380700, C key 0x4038. The same model value
+and live EL1/HCR_EL2=0/SCR_EL3=0 gate must govern C API, native execution and
+Rust reference. Keep XZR behavior, SP/NZCV, exact retirement, fault reporting,
+and memory invariants. Reject writes, other ELs, unsupported live controls and
+unknown neighbors. Do not blanket-zero ID registers or change other ID policies.
+
+Existing public structure fields must retain ABI layout. Whether a model read
+returns an explicit constant or stored value must be one documented choice,
+with reset/API/native/reference equality tests; a stale field must not silently
+produce a second feature identity.
+
+#### Acceptance experiments before publication
+
+1. Independently assemble exact MMFR0 MRS and neighboring/writable controls.
+   Test all 32 Rt destinations; API/native/reference results; EL0/2/3 and low/
+   high nonzero HCR/SCR rejection; same generated block before and after control
+   changes; unchanged ZFR0/ISAR0/ISAR1/ISAR2 behavior.
+2. On both 4 KiB and 16 KiB immutable profiles 1/3, construct distinct TTBR0/TTBR1
+   tags and exercise A1=0/1, tags 0/1/0x7f/0xff, lower and upper VA regions,
+   cold/warm TLB, and distinct authored contexts mapping the same VA differently.
+   Both VA regions use the A1-selected tag, not a tag selected by VA sign.
+3. Directly test generic Rust ASID selection and TLB behavior with conflicting
+   TTBR tags. Reject AS=1/high-eight tag values transactionally. Preserve existing
+   generic EL2/EL3 state tests. Add compiled negative controls that force tag zero,
+   ignore A1, or select the tag by VA region.
+4. Change only ASID/A1 in an immutable request snapshot and prove rejection with
+   no register/RAM/native-code state commit. Verify dynamic profile 2 still
+   rejects every newly admitted immutable configuration and passes its existing
+   six captures/fourteen regressions/negative controls without source-history loss.
+5. Couple PARange/granule assertions to actual transfers at IPS=2/5 boundaries,
+   including bit 40/47 physical addresses, supported pages, and precise rejected
+   output addresses. Retain rejection of 64 KiB, mixed granules, TBI, endian,
+   LPA2/52-bit regimes and unsupported descriptor attributes.
+6. Compare native cached/uncached/forced-small-slot runs, full CPU/RAM and ordered
+   provider requests/replies. Exercise authored actual EFI readback plus memory
+   transfer using the declared profile, then an old-binary negative control.
+   Only after these gates should the unchanged original input be run again.
+
+#### Primary references and provenance
+
+- Arm Cortex-A57 MPCore TRM, **DDI0488H**, sections 4.3.44/4.3.46, tables 4-56
+  and 4-58, printed/PDF pages **153–154**. Actual official PDF was downloaded and
+  read: https://documentation-service.arm.com/static/5e906b9fc8052b1608760b6b
+  It defines A1's choice of TTBR and AS=0 lower eight bits [55:48].
+- Arm Cortex-A55 TRM **100442_0100_00_en**, B2.55, PDF page **359**. Actual
+  official PDF was downloaded and read; its concrete MMFR0 value explains the
+  current over-advertisement: https://documentation-service.arm.com/static/5e7e1405b471823cb9de57ae
+- Arm-authored system register definition, **version 2026.06**, MMFR0 field
+  sections **TGran4_2 [43:40], TGran64_2 [39:36], TGran16_2 [35:32]**. Each
+  explicitly requires zero when EL2 is not implemented. Actual HTML opened:
+  https://arm.jonpalmisc.com/latest_sysreg/AArch64-id_aa64mmfr0_el1
+  This is a community-hosted mirror with an Arm copyright/version footer, not
+  an Arm-hosted endpoint. The older 2024 mirror lacks this explicit clarification;
+  do not attribute the wording to that older edition. The attempted Arm developer
+  endpoint was unavailable, so no successful official-host HTML fetch is claimed.
+
+#### Decision boundary
+
+The non-secure EL1 model and fixed eight-bit ASID contract are implemented.
+MMFR0 passes 964 native assertions, 31 provider tests per cache mode and 34
+reference tests. Thirty-two actual Arm observations check encoding/access;
+their feature value 0x1124 differs from the software model value 0x0f100005.
+ASID r4 directly covers both profiles, with 35 provider tests per mode, 102
+reference tests and three compiled bad-selector controls. The old exact source
+rejects the same new tagged input.
+
+Actual NXASID EFI passes 64 combinations, each with nine retired instructions
+and two completed alias data operations. The same consumer built against the
+old runtime rejects the first tagged context before execution. Actual mapped
+EFI passes ten checks; the preceding EFI reaches the authored MMFR0 read and
+traps after 128 instructions. Pinned rebuilds of mapped and NXASID binaries
+match their tested bytes exactly. Receipts are under
+`nextcore/artifacts/physical-integration-20260912/mmfr0-asid8`.
+
+The 128-file exact Git archive also reproduces six unchanged captures, fourteen
+comparator tests and three negative controls. All 202 prior history/evidence
+files remain unchanged. These checks do not establish dynamic ASID switching,
+normal startup, the original reset ABI or physical macOS desktop output.
+
+### Canonical ASID test correction and release provenance
+
+The first CI correction pins ISE `58e712a5a93448014addd635d6fab9e9e8fcc00c`
+and EFI `13fc35e28454a54a5bdfcde249bc15ea320311af`. CI run 34710249000
+found a stale canonical test that still rejected TCR.A1. The correction changes
+only the test and publication metadata: positive A1 and low-eight-bit tags,
+negative high tag bits and AS=1, and immutable changed-A1 rejection.
+
+The twelve commands in the affected CI step pass locally. The final enhanced
+canonical service probe also passes with all four mutation controls detected.
+Pinned mapped/NXASID EFI rebuilds match the previously executed binaries byte
+for byte. The actual r29 original-input run remains attributed to its original
+f2256f1 source revision; this test-only correction is not a new guest run.
+
+The new 128-file exact freeze reproduces six captures, fourteen comparator
+regressions and three negative controls. All 217 prior history/evidence files
+are preserved. See `nextcore/artifacts/physical-integration-20260912/mmfr0-ci-correction`
+and `nextcore/tools/dynamic_comparison/VALIDATION_MMFR0_CI_20260913.md`.
+
+### Legacy native-test correction and final release pins
+
+The release now pins ISE `50b3da2f172f67b4661336799e36bd19002ce816`
+and EFI `73d84d9c781d8d2979402d4749b4bae946b92c8c`. A separate legacy
+C API test still expected the previous MMFR0 value after resetting EL1 with
+inactive HCR/SCR. Its expected value now matches the accepted `0x0f100005`.
+The change affects only `test_jit.c` and publication metadata.
+
+The direct native suite passes 84 assertions; the C/Rust FFI suite passes 76.
+Exact ABI-layout and W^X checks pass. The local full Sandbox entrypoint stops
+at a QEMU patch digest precondition, so its native functions were exercised
+separately. No full local entrypoint success is claimed. The preceding source
+1dc0340 passes all six GitHub workspace/EFI jobs in run 34711071006.
+
+Final mapped and NXASID rebuilds remain byte-identical to the executed r29
+and authored probe binaries. The final 128-file source freeze reproduces six
+captures, fourteen regressions and three negative controls, preserving all
+232 prior history/evidence files. The original r29 run retains f2256f1 provenance.
+See `nextcore/artifacts/physical-integration-20260912/mmfr0-sandbox-correction`
+and `nextcore/tools/dynamic_comparison/VALIDATION_MMFR0_SANDBOX_20260913.md`.
+
+### Next implementation contract: baseline stage-1 table permissions
+
+Current Status: original bounded execution r29 stops at MMFR1. The strict
+walker rejects APTable/PXNTable/UXNTable and the generic walker does not
+accumulate them. No MMFR1 read policy is implemented by this contract.
+
+Target State: complete baseline hierarchical permissions for the admitted
+non-secure EL0/EL1 4 KiB/16 KiB stage-1 memory model before exposing MMFR1.
+Keep normal startup and physical macOS desktop acceptance outstanding.
+
+#### Input and output contract
+
+Admit descriptor bits 59 (PXNTable), 60 (UXNTable), and 62:61 (APTable) in
+supported table descriptors. OR-accumulate each restriction across all visited
+table levels. Preserve the current rejection of NSTable, unsupported address
+widths, optional attributes, granules, and security/translation regimes.
+No TCR.HPD, HA/HD, stage-2, EL2/EL3 translation, or optional feature admission
+is implied. Preserve separately scoped legacy EL2/EL3 bank behavior.
+
+At the final leaf/block, combine restrictions with leaf permissions before
+checking the requested access. APTable[0] removes EL0 data access;
+APTable[1] removes writes at both EL0 and EL1. APTable alone does not forbid
+EL0 execute-only access. PXNTable and UXNTable separately forbid EL1 and EL0
+execution. The implicit EL1 execute restriction depends on effective EL0 write
+permission after hierarchical restrictions, not the original leaf AP bits.
+
+Do not fault early merely because an ancestor limits permissions. Finish the
+walk and preserve invalid-descriptor, physical-address, table-read and AF fault
+priority. A permission fault identifies the final leaf/block level, descriptor
+and output address. AF=0 still faults without updating any descriptor.
+
+Cache effective permissions independent of the populating access type and EL,
+along with final leaf/block provenance. A data read that populates the cache
+must not bypass later execute restrictions. Keep selected ASID8 and immutable
+control validation unchanged, and preserve transactional pair-store behavior.
+This shared-walker change also needs existing dynamic-profile regressions;
+it must not broaden dynamic control admission or invent table-update semantics.
+
+#### Discriminating evidence
+
+1. On 4 KiB/16 KiB and both immutable profiles, use permissive leaves with
+   one parent restriction at a time, then restrictions split across ancestors.
+   Cover every admitted table level and valid block/page leaf shape.
+2. Compare EL0/EL1 read/write/execute, including EL0 execute-only with APTable
+   no-EL0-data, and implicit EL1 XN lifted by effective read-only/no-EL0 limits
+   while explicit leaf/table PXN still wins.
+3. Compare cold walks and warmed final-translation caches, including a data
+   access warming the entry before a denied execute, and opposite-EL reuse.
+4. Deeper invalid descriptor, out-of-range output and AF=0 must take priority
+   over ancestor permission denial. Check exact fault level, descriptor/output
+   address, ESR/FSC, unmodified RAM/tables and no partial pair store.
+5. Use independent Arm-authored fixtures and a captured Arm execution oracle
+   where its regime is demonstrably equivalent. Compare native provider and
+   reference paths; compiled mutants ignoring hierarchy or using leaf-only
+   implicit-XN input must fail. Do not treat the same shared walker as an oracle.
+6. Build and execute the actual EFI consumer with authored hierarchy cases,
+   preserve an old-runtime negative control, and keep bounded process cleanup.
+   Re-run the nearest ASID and dynamic regression gates after production edits.
+
+Only after this substrate is validated may an exact MMFR1 feature policy be
+accepted from a separate field-by-field contract. Do not blanket-zero unknown
+feature registers or treat an ID-read workaround as full architecture support.
+
+#### Primary evidence inspected
+
+Arm A64 Instruction Set Architecture, DDI0596 ID121321, Armv8.8
+(2021-12), local PDF SHA-256
+756449b122fa43ff55d81be5e889451bc8c7ba8576ad4a877b91c77b8675e349:
+S1HasPermissionsFault (PDF3051/printed3048), S1ApplyTablePerms
+(PDF3071/printed3068), S1Translate (PDF3064/printed3061), and S1Walk
+(PDF3076-3077/printed3073-3074). Independent review read these algorithms.
+The matching official landing is https://developer.arm.com/documentation/ddi0596/2021-12
+(opened, without extractable document text). The original PDF download URL has
+not been recovered in this continuation; do not
+invent a successful current official-host fetch. The PDF stays outside the
+public source and evidence packages.

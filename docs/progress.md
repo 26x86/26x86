@@ -13,9 +13,9 @@ Each milestone has its own acceptance gate. Passing a firmware test does not est
 <div class="portal-boundary" data-progress-boundary markdown>
 <span class="portal-badge">Current execution boundary</span>
 
-## Mapped prefix: 42,256,369 instructions; MMFR0 feature-register boundary
+## Mapped prefix: 42,256,374 instructions; MMFR1 feature-register boundary
 
-r28 completes 6,012,373 data operations and passes ISAR2 before SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64MMFR0_EL1. The provider reports no error. The 1280 by 800 framebuffer remains zero with matching GOP readback; normal startup and physical desktop remain unverified.
+r29 completes 6,012,373 data operations and passes MMFR0 before SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64MMFR1_EL1. The provider reports no error. The 1280 by 800 framebuffer remains zero with matching GOP readback; normal startup and physical desktop remain unverified.
 
 [Reviewed original boundary and mapped-profile tests](PREFIX_PROGRESS_VALIDATION.md) · [Acceptance criteria](BOOT_RUNTIME_VERIFICATION.md)
 </div>
@@ -52,7 +52,7 @@ An authored guest reads the encoded boot-video fields and writes its reserved fr
 
 This connects guest memory to firmware output. Persistent presentation, firmware-exit lifetime, normal startup and a physical macOS desktop remain unverified.
 
-The completed r28 original prefix passes the exact ISAR2 read and reaches an MMFR0 feature-register trap after 42,256,369 instructions. Its screen still matches a zero-filled frame. No kernel-generated visible output has been established.
+The completed r29 original prefix passes the exact MMFR0 read and reaches an MMFR1 feature-register trap after 42,256,374 instructions. Its screen still matches a zero-filled frame. No kernel-generated visible output has been established.
 
 [Bounded memory progress and collection fixes](PREFIX_PROGRESS_VALIDATION.md)
 

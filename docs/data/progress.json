@@ -2,9 +2,9 @@
   "updated_at": "2026-09-13",
   "physical_desktop_verified": false,
   "boundary": {
-    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r28-isar2-summary.json",
-    "label": "Mapped prefix: 42,256,369 instructions; MMFR0 feature-register boundary",
-    "detail": "r28 completes 6,012,373 data operations and passes ISAR2 before SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64MMFR0_EL1. The provider reports no error. The 1280 by 800 framebuffer remains zero with matching GOP readback; normal startup and physical desktop remain unverified."
+    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r29-mmfr0-summary.json",
+    "label": "Mapped prefix: 42,256,374 instructions; MMFR1 feature-register boundary",
+    "detail": "r29 completes 6,012,373 data operations and passes MMFR0 before SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64MMFR1_EL1. The provider reports no error. The 1280 by 800 framebuffer remains zero with matching GOP readback; normal startup and physical desktop remain unverified."
   },
   "headline": "Building the path to a real macOS desktop",
   "milestones": [
@@ -21,7 +21,7 @@
       "id": "execution",
       "layer": "CPU runtime",
       "status": "in-progress",
-      "summary": "r28 retires 42,256,369 instructions and completes 6,012,373 data operations before MMFR0 traps. Exact ISAR2 reads and corrected PAC signing have authored native, provider and separate enabled M0 EFI evidence. Normal startup and physical boot remain unverified.",
+      "summary": "r29 retires 42,256,374 instructions and completes 6,012,373 data operations before MMFR1 traps. MMFR0 and immutable ASID8 have authored native, provider and EFI evidence. Normal startup and physical boot remain unverified.",
       "evidence_url": "https://github.com/26x86/Nextcore-ISE/pull/9"
     },
     {
@@ -61,12 +61,24 @@
       "detail": "31 successful checks on development revision 606d3c4a. Later mapped-profile integration is tracked separately; CI is not physical boot proof."
     },
     {
-      "value": "42,256,369",
+      "value": "42,256,374",
       "label": "Latest bounded prefix",
-      "detail": "Retired instructions before the MMFR0 feature-register read traps in completed r28 mapped OVMF execution."
+      "detail": "Retired instructions before the MMFR1 feature-register read traps in completed r29 mapped OVMF execution."
     }
   ],
   "latest": [
+    {
+      "date": "2026-09-13",
+      "title": "MMFR0 reads reach the MMFR1 feature-register boundary",
+      "summary": "r29 completes 42,256,374 instructions, 42,256,375 fetch requests and 6,012,373 data operations in 151.399 seconds. It adds five retired instructions and no data operations beyond r28, then stops at MRS ID_AA64MMFR1_EL1 with status 13. Provider status is zero; the framebuffer remains zero and matches GOP. This single-run observation is not a benchmark.",
+      "url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r29-mmfr0-summary.json"
+    },
+    {
+      "date": "2026-09-13",
+      "title": "Authored MMFR0 and immutable ASID8 qualification",
+      "summary": "MMFR0 passes 964 native assertions and 31 provider tests in three cache modes; 32 Cortex-A72 access observations deliberately do not equate hardware0x1124 with software0x0f100005. ASID tests cover both immutable profiles with 35 provider tests per mode, 102 reference tests and three rejected mutants. Actual EFI passes64 cases; the old runtime rejects the same tagged fixture before execution. The completed r29 passes MMFR0; physical boot is unverified.",
+      "url": "https://github.com/26x86/Nextcore-ISE/blob/feb09b5f1ef5eecce60120ba39e624bb020bd071/docs/MMFR0_ASID8_PROFILE.md"
+    },
     {
       "date": "2026-09-13",
       "title": "ISAR2 reads reach the MMFR0 feature-register boundary",
