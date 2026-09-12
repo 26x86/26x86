@@ -2,17 +2,6 @@
 
 ## Current Status
 
-The active exact runtime is ISE `a8a06dad15449b15ffb2383934f6a4239a54327f`,
-including TBZ/TBNZ and the inclusive last-word fetch correction. Its fresh
-six-case replay and 14 comparator tests passed; see
-`VALIDATION_TBZ_20260912.md` and `evidence-tbz-20260912`.
-
-The preceding `08156f4` comparator sources, freeze, and documentation are
-preserved byte-for-byte under `history/08156f4`. Their original
-`evidence-20260912` remains in place and is not recursively copied into history.
-Use that history's `compare.py` with archived ISE `08156f4` to reproduce it;
-the active comparator accepts only the new freeze identity.
-
 This is the maintained comparator for the immutable six-case oracle in
 `nextcore/artifacts/arm-dynamic-oracle-20260909`. The original comparator,
 source freeze, manifests, and evidence under
