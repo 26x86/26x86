@@ -1,18 +1,22 @@
-# ⚠️ Hardware Warnings & Operational Notice
+# Hardware and deployment precautions
 
-This document consolidates critical warnings and operational precautions. Review thoroughly before deploying 26x86.
+**Current Status:** Deployment precautions require actual hardware and recovery context.
 
-> [!WARNING]
-> 26x86 is experimental, community-developed software. Always create full data backups on independent storage media before modifying EFI partitions or applying operating system upgrades.
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
 
-## Incompatible Hardware Configurations
+Experimental firmware and OS work needs a known recovery path. Read
+[compatibility](../compatibility.md) and [installation boundaries](Installation-Notes.md)
+for the exact model/build before changing disks or firmware configuration.
 
-1. **Pre-SSE4.2 CPUs:**
-   - Systems lacking SSE4.2 (such as MacPro3,1 with Core 2-based Xeon 5400 series) cannot execute the macOS 26 Tahoe kernel.
-2. **Locked Firmware & T2 Activation:**
-   - Never attempt to bypass firmware passwords or Activation Lock using 26x86. T2 machines must be in an unlocked, administrative state.
+- Save a verified backup on independent storage and preserve the complete working EFI.
+- Identify the actual disk and ESP from current hardware output; sample identifiers are not targets.
+- Test a candidate on external media before replacing internal boot files.
+- Check actual CPU features and the selected runtime's requirements. This page does
+  not certify that every CPU with a named feature can run Tahoe or Golden Gate.
+- Firmware passwords, activation and security policies remain platform requirements.
+  Do not change them or SIP based on a generic compatibility claim.
 
-## Safety Guidelines
-
-- Test new EFI builds using an external USB flash drive before flashing internal disk partitions.
-- Keep a working macOS Recovery USB drive on hand to restore boot configurations if needed.
+A fallback presentation path may keep the EFI picker usable when optional
+protocols fail. It cannot safely skip a missing instruction, storage service or
+SPTM contract. Preserve unsupported/error outcomes and consult
+[troubleshooting](Troubleshooting.md).

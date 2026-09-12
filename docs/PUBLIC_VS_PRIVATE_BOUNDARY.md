@@ -181,3 +181,11 @@ Prohibited: Any reliance on unreleased internal field names, private binary form
 
 #### B7-3. Principle of Concurrent Progress
 Boundary reviews proceed concurrently with implementation. If an asset's classification is pending, hold back only its public ingestion while continuing public ABI review, host testing, EFI execution, and independent backend development.
+
+## Current evidence and hardware coverage
+
+Reviewed for documentation freshness on 2026-09-12. See the
+[portal](index.md), [progress](progress.md),
+[compatibility catalog](compatibility.md) and
+[library](library.md) for the active evidence boundary. Historical
+receipts in this guide retain their original scope and date.

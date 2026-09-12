@@ -1,5 +1,9 @@
 # Upstream Repositories
 
+**Current Status:** Attribution index; a reference does not establish current package use or compatibility.
+
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
+
 **26x86** — Clean-room boot engineering and compatibility tooling for macOS 26 Tahoe on x86-based Mac hardware.
 
 ## Overview
@@ -30,3 +34,11 @@ This document lists all upstream projects and repositories referenced, utilized,
 ## Clean-Room Standards
 
 All original components developed under the 26x86 organization (including the NextCore boot stack: `Nextcore-Core`, `Nextcore-EFI`, `Nextcore-Tool`, `Nextcore-APLS`, `Nextcore-GPU`, `Nextcore-HAL`, and `Nextcore-ISE`) are developed under clean-room procedures without inclusion of proprietary Apple binaries or internal trade secrets.
+
+## Current evidence and hardware coverage
+
+Reviewed for documentation freshness on 2026-09-12. See the
+[portal](../index.md), [progress](../progress.md),
+[compatibility catalog](../compatibility.md) and
+[library](../library.md) for the active evidence boundary. Historical
+receipts in this guide retain their original scope and date.

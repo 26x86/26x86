@@ -1,29 +1,24 @@
-# EFI Optimization Guide for Physical Mac Systems
+# Preparing an EFI candidate for a specific machine
 
-Reference hardware configuration: Fusion Drive (HDD + SSD), flashed MacPro7,1 SMBIOS on physical MacPro5,1 architecture, Dual Intel Xeon X5675 (Pre-AVX), AMD Radeon RX Vega 64.
+**Current Status:** Machine-specific preparation only; no reader disk identity is assumed.
 
-## Disk Architecture
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
 
-- `/dev/disk0`: High-speed PCIe NVMe SSD (APFS container for macOS Tahoe system and applications).
-- `/dev/disk1`: High-capacity SATA HDD (Data and archival storage).
-- `/dev/disk2`: EFI system partition (FAT32, containing OpenCore / NextCore bootloader).
+This guide does not identify the current reader's disks or certify an optimized
+Mac profile. Earlier `/dev/disk0`, `/dev/disk1` and `/dev/disk2` assignments were
+examples and must not be used as deployment targets. Disk numbering can change.
 
-## Backup Paths
+Record the actual physical model, reported SMBIOS, CPU features, GPU, storage
+controllers, ESP and current OS build. A spoofed MacPro7,1 identifier is distinct
+from MacPro5,1 hardware and from a firmware update. Multiple drives alone do not
+establish a Fusion Drive arrangement.
 
-Before applying optimizations, create full block-level backups of:
-- Primary EFI partition: `/Volumes/EFI/EFI/`
-- Current boot configuration: `/Volumes/EFI/EFI/OC/config.plist`
-- NVRAM variable dumps: `nvram -xp`
+Save the complete active EFI tree and configuration, then assemble a separate
+candidate with its referenced drivers and kexts. Validate file contents and
+package versions and review the differences. Use external media for the first
+boot attempt and keep a working recovery route.
 
-## Applied Optimizations
-
-### 1. Flashed Mac Pro Compatibility
-- Enforce clean SMBIOS spoofing (MacPro7,1) to allow macOS Tahoe kernel acceptance without tripping prohibited symbol checks.
-- Prevent circular path traversal during APFS container resolution.
-
-### 2. Pre-AVX CPU Instruction Translation
-- Inject `RestrictEvents.kext` with the WebKit JIT AVX-to-SSE instruction bridge.
-- Set `boot-args` parameter `revpatch=jsc`.
-
-### 3. Vega 64 Color Profile & Framebuffer Alignment
-- Set custom display device property injections in OpenCore `DeviceProperties` to ensure clean framebuffer initialization without tint anomalies.
+No automatic AVX-to-SSE bridge, APFS performance gain, framebuffer fix or tint
+correction is established by this page. Record those as individual runtime
+outcomes if demonstrated. See [compatibility](compatibility.md),
+[configuration](wiki/Configuration.md) and [troubleshooting](wiki/Troubleshooting.md).

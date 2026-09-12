@@ -1,28 +1,29 @@
-# Migrating to 26x86
+# Migrating an existing configuration
 
-This document describes the migration procedure when moving from official OpenCore Legacy Patcher (OCLP) or other community variants to 26x86.
+**Current Status:** Reversible preparation guidance; existing tool/system state must be identified.
 
-> For configuration paths: see [Configuration.md](./Configuration.md).
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
 
-## Architectural Differences
+NextCore's experimental clean-room EFI runtime and the external OpenCore/patcher
+workflow have different execution contracts. Moving configuration directories
+does not turn one into the other or establish macOS compatibility.
 
-| Subsystem | Legacy Patchers | 26x86 |
-|-----------|-----------------|-------|
-| Configuration | `~/Library/Application Support/OpenCore-Legacy-Patcher/` | `~/Library/Application Support/26x86/` |
-| LaunchAgent | `com.dortania.opencore-legacy-patcher.*` | `com.26x86.*` |
-| macOS 26 Support | Limited / Community patches | First-class clean-room boot stack (NextCore) |
-| Pre-AVX Strategy | Static feature masking | Active WebKit JIT instruction translation |
+1. Identify the currently installed tool, version, EFI volume and root-patch state.
+2. Save its complete configuration, referenced files and recovery procedure.
+3. Review the prior tool's supported uninstall/reversal workflow before removing
+   services or changing the system volume. Do not delete LaunchAgent wildcards.
+4. Prepare a separate candidate bundle and compare its proposed file changes.
+5. Validate and test external media before replacing a working internal EFI.
 
-## Migration Steps
+A model identifier, boot argument or profile name is not proof of an active
+WebKit instruction translator or an accepted macOS handoff. See
+[configuration](Configuration.md), [installation boundaries](Installation-Notes.md)
+and [current progress](../progress.md).
 
-1. **Clear Legacy Services:**
-   ```bash
-   launchctl unload ~/Library/LaunchAgents/com.dortania.opencore-legacy-patcher.auto-patch.plist 2>/dev/null
-   rm -f ~/Library/LaunchAgents/com.dortania.opencore-legacy-patcher.*
-   ```
-2. **Deploy 26x86:**
-   - Launch 26x86 via `26x86.command`.
-   - Select **Build and Install OpenCore/NextCore to Target Disk**.
-   - Select the target EFI partition.
-3. **Reboot:**
-   - Hold Option during reboot and select the newly installed EFI Boot option.
+## Current evidence and hardware coverage
+
+Reviewed for documentation freshness on 2026-09-12. See the
+[portal](../index.md), [progress](../progress.md),
+[compatibility catalog](../compatibility.md) and
+[library](../library.md) for the active evidence boundary. Historical
+receipts in this guide retain their original scope and date.

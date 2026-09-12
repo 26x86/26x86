@@ -1,253 +1,93 @@
-# 26x86 Development Environment Setup Guide
+# Development environment setup
 
-This guide describes how to configure, build, and test **26x86**, the clean-room boot engineering and compatibility project for macOS 26 Tahoe and x86 Macintosh hardware.
+**Current Status:** Source, application and firmware setup; no OS installation is performed.
 
-## Directory Structure
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
 
-```
-~/Desktop/26x86/
-├── 26x86/                      # Main patcher and NextCore CLI/GUI
-├── 26x86-MetallibSupportPkg/   # Metal library patching utilities
-├── 26x86-PatcherSupportPkg/    # Universal binaries and patch DMGs
-├── 26x86-OpenCorePkg/          # OpenCore bootloader integration fork
-├── .venv/                      # Python 3.13 virtual environment
-├── scripts/                    # Setup and build automation scripts
-├── docs/                       # Project documentation
-└── vm/                         # UTM / QEMU virtual machine templates
-```
+Use this guide to obtain the source and run read-only checks. It does not install
+macOS or certify a hardware target. Start with [compatibility](compatibility.md)
+and [current progress](progress.md).
 
-## Quick Start (One-Click)
+## Clone the integration and exact modules
 
 ```bash
-cd ~/Desktop/26x86
-bash scripts/setup-dev.sh
+git clone --recurse-submodules https://github.com/26x86/26x86.git
+cd 26x86
+git submodule sync --recursive
+git submodule update --init --recursive
+python3 Tools/verify_nextcore_submodules.py
+```
+
+Keep the submodules at the integration's recorded commits. Separate sibling
+copies of the seven crates do not replace these gitlinks. See
+[Module repositories](wiki/Nextcore-Modules.md) for ownership and publication.
+
+## Python application inspection
+
+Use a supported Python installation for the selected checkout and install its
+platform-marked requirements in a virtual environment. Optional GUI dependencies
+and native packaging tools are distinct from the Rust firmware toolchain.
+
+On macOS or Linux:
+
+```bash
+python3 -m venv .venv
 source .venv/bin/activate
-cd 26x86
-python3 26x86.command
-```
-
-## Manual Installation
-
-### 1. Prerequisites
-
-| Component | Version / Notes |
-|-----------|-----------------|
-| macOS | macOS 15.x (Sequoia) or newer recommended |
-| Python | **3.13+** (python.org or `uv python install 3.13`) |
-| Xcode CLT | `xcode-select --install` |
-| Git | `git --version` |
-| GitHub CLI | GitHub authentication (`gh auth status`, optional) |
-
-> For development environment considerations (Python 3.9 deprecation, VM host limitations, etc.): see [wiki/Installation-Notes.md](./wiki/Installation-Notes.md) and [wiki/Warnings.md](./wiki/Warnings.md).
-
-### 2. Clone Repositories
-
-```bash
-mkdir -p ~/Desktop/26x86 && cd ~/Desktop/26x86
-
-git clone https://github.com/26x86/26x86.git
-git clone https://github.com/26x86/MetallibSupportPkg.git
-git clone https://github.com/26x86/PatcherSupportPkg.git
-git clone https://github.com/26x86/OpenCorePkg.git
-```
-
-### 3. Python Virtual Environment
-
-```bash
-# Using uv (recommended)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-uv python install 3.13
-~/.local/bin/python3.13 -m venv .venv
-source .venv/bin/activate
-
-# Install dependencies (including PyInstaller bootloader rebuild)
-PYINSTALLER_COMPILE_BOOTLOADER=1 pip install --no-binary pyinstaller -r 26x86/requirements.txt
-```
-
-### 4. Verification & Running
-
-```bash
-cd 26x86
-python3 26x86.command --help     # CLI help
-python3 26x86.command            # GUI (Wizard mode)
-python3 26x86.command --detect   # Hardware model detection
-python3 26x86.command --build --model iMac11,2 --verbose
-```
-
-## Running on Windows / Linux (Source)
-
-Full system modifications (**EFI partition deployment, live root patching, LaunchAgent persistence**) are **macOS-only**. On Windows and Linux, the CLI and HTML wizard GUI can be used for configuration inspection, platform detection, validation probes, and offline bundle assembly.
-
-### Cross-Platform Prerequisites
-
-| Item | Windows | Linux |
-|------|---------|-------|
-| Python | **3.13+** | **3.13+** |
-| Virtual Env | `python -m venv .venv` | `python3 -m venv .venv` |
-| Dependencies | `pip install -r 26x86/requirements.txt` | Same |
-| GUI (Recommended) | **Tauri** (WebView2) + Python HTTP bridge | **Tauri** (WebKitGTK) or pywebview |
-| GUI Fallback | pywebview + Edge WebView2 Runtime | pywebview + GTK (`python3-gi`) |
-| GUI (Non-recommended) | `X86_GUI_BACKEND=qt` (Qt WebEngine/Chromium) | Same |
-
-> macOS-specific packages (`pyobjc`, `py_sip_xnu`, etc.) are excluded automatically via platform environment markers in `requirements.txt`.
-
-### Windows
-
-```cmd
-cd 26x86
-python -m venv ..\.venv
-..\.venv\Scriptsctivate
-pip install -r requirements.txt
-
+python -m pip install -r requirements.txt
 python -m x86 --help
-python -m x86 wizard
 python -m x86 detect --json
-python -m x86 status
-
-REM Or use the batch wrapper:
-26x86.bat
-26x86.bat detect --json
 ```
 
-Configuration and logs: `%APPDATA%x86\` (`config.json`, `logs\`).
+On Windows PowerShell:
 
-### Linux
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m x86 --help
+.\.venv\Scripts\python.exe -m x86 detect --json
+```
+
+The explicit Windows interpreter path avoids dependence on shell activation.
+Use `python -m x86 wizard` when the selected GUI backend and its platform runtime
+are installed. A working wizard or detector is application evidence only.
+
+## Rust firmware development
+
+On Windows, use WSL2 for the Linux/x86 native proof tools. A Linux filesystem
+build directory avoids cross-filesystem build overhead. The firmware build uses
+Rust, Clang/LLD and LLVM tools; actual firmware tests additionally use QEMU/OVMF.
+Check the selected module's toolchain and CI rather than assuming a historical
+compiler version is mandatory.
 
 ```bash
-cd 26x86
-python3 -m venv ../.venv
-source ../.venv/bin/activate
-pip install -r requirements.txt
-
-# WebKitGTK bindings (Debian/Ubuntu example)
-sudo apt install python3-gi gir1.2-webkit2-4.1
-
-python3 -m x86 --help
-python3 -m x86 wizard
-python3 -m x86 detect --json
-
-chmod +x 26x86.sh
-./26x86.sh
+rustup target add x86_64-unknown-uefi
+cargo test --manifest-path nextcore/Cargo.toml --workspace
+cargo build --locked --manifest-path nextcore/Cargo.toml -p nextcore-efi   --release --target x86_64-unknown-uefi --features arm-jit --bin NXARMJIT
 ```
 
-Configuration and logs: `~/.config/26x86/config.json`, `~/.local/state/26x86/logs/`.
+`NXARMJIT` normal entry reports missing providers. Authored probe features and
+bounded original-input diagnostics have separate selectors and acceptance
+criteria; do not enable them as a substitute for normal boot readiness.
 
-### Platform Feature Matrix
+## Host and deployment boundaries
 
-| Feature | macOS | Windows / Linux |
-|---------|-------|-----------------|
-| `wizard` (HTML GUI) | ✅ Tauri / pywebview | ✅ Tauri (WebView2/WebKitGTK) or pywebview |
-| `detect --json` | ✅ Mac hardware probe | ✅ Host OS and platform environment info |
-| `status` | ✅ | ✅ Configuration JSON inspection |
-| `build` / `patch` | ✅ | ❌ Offline configuration only (guided notices) |
-| OpenCore EFI build | ✅ | ❌ |
-| LaunchAgent (`com.26x86.*`) | ✅ | ❌ |
+Windows/Linux tools can inspect configuration and build developer artifacts.
+macOS live root-patching and service installation require their actual supported
+host and preflight. Building EFI bytes on a host does not prove that a machine
+can boot them. QEMU/OVMF is a development firmware environment, not physical
+hardware acceptance.
 
-## Build Environment
+Before any disk deployment, identify the current ESP and target disk, preserve
+a complete backup and test external media. Use [installation boundaries](wiki/Installation-Notes.md)
+and [troubleshooting](wiki/Troubleshooting.md). No command above modifies a disk
+partition or performs an OS upgrade.
 
-### OpenCorePkg Build
+## Documentation build
 
 ```bash
-bash scripts/build-opencore.sh
+python -m pip install -r requirements-docs.txt
+python -m mkdocs build --strict
 ```
 
-**Method A — Native (Xcode CLT required):**
-```bash
-cd 26x86-OpenCorePkg
-./build_oc.tool
-```
-
-**Method B — Docker:**
-```bash
-brew install --cask docker   # Install Docker Desktop
-cd 26x86-OpenCorePkg
-docker compose up --build
-```
-
-Place build artifacts (`OpenCore-RELEASE.zip`, `OpenCore-DEBUG.zip`) into `26x86/payloads/OpenCore/` or run:
-
-```bash
-cd 26x86/payloads/OpenCore
-python3 Update-OpenCore.command
-```
-
-### PatcherSupportPkg DMG Creation
-
-```bash
-cd 26x86-PatcherSupportPkg
-python3 ci.py
-# Or run Generate-DMG.command
-```
-
-### MetallibSupportPkg
-
-```bash
-cd 26x86-MetallibSupportPkg
-pip install -r requirements.txt
-python3 metallib.py --help
-```
-
-### App Bundle Build (PyInstaller)
-
-```bash
-source .venv/bin/activate
-cd 26x86
-python3 Build-Project.command
-open ./dist/
-```
-
-## UTM Virtual Machine (Testing)
-
-UTM or QEMU can be used to validate EFI boot configuration without modifying physical Mac hardware.
-
-### UTM Installation
-
-```bash
-brew install --cask utm
-# Or download directly from https://mac.getutm.app
-```
-
-### VM Template Setup
-
-1. Launch UTM → **File → Import**
-2. Select `vm/26x86-test.utm`
-3. Mount the macOS Recovery image or installation ISO
-4. Copy the generated OpenCore EFI layout to the virtual disk's EFI partition
-
-See [wiki/Installation-Notes.md](./wiki/Installation-Notes.md) for virtualization host boundary details.
-
-## Environment Variables
-
-Copy `.env.example` to `.env` to configure localized asset paths:
-
-```bash
-cp .env.example .env
-```
-
-## Repository Relationships
-
-| Repository | Upstream Origin |
-|------------|-----------------|
-| [26x86/26x86](https://github.com/26x86/26x86) | albert-mueller/OpenCore-Legacy-Patcher-T2 |
-| [26x86/OpenCorePkg](https://github.com/26x86/OpenCorePkg) | albert-mueller/OpenCorePkg-add-T2-support |
-| [26x86/PatcherSupportPkg](https://github.com/26x86/PatcherSupportPkg) | hackdoc/PatcherSupportPkg |
-| [26x86/MetallibSupportPkg](https://github.com/26x86/MetallibSupportPkg) | dortania/MetallibSupportPkg |
-
-Acidanthera kexts (Lilu, WhateverGreen, etc.) are fetched from upstream releases via `payloads/Kexts/Update-Kexts.command`.
-
-## Troubleshooting
-
-| Symptom | Resolution |
-|---------|------------|
-| `Python 3.9` error | Recreate `.venv` and verify Python 3.13+ is active |
-| PyInstaller codesign failure | Reinstall with `PYINSTALLER_COMPILE_BOOTLOADER=1` |
-| wxPython import failure | Run `pip install 'wxpython<4.2.5'` |
-| Homebrew permissions issue | Run `sudo chown -R $(whoami) /usr/local/share/man/man8` or use MacPorts |
-| OpenCore build error | Verify Xcode CLT is installed, then check `./build_oc.tool --help` |
-
-## Related Documentation
-
-- [wiki/README.md](./wiki/README.md) — Documentation index and architectural overview
-- [SOURCE.md](../SOURCE.md) — Running from source
-- [DISCLAIMER.md](../DISCLAIMER.md) — Legal and liability disclaimer
-- [wiki/Developer.md](./wiki/Developer.md) — Contributor guide and English-only documentation standard
+A successful site build checks documentation structure, not runtime support.
+See [Build and development](wiki/Build-and-Development.md) for change validation.

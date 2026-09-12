@@ -1,5 +1,9 @@
 # Branching and release policy
 
+**Current Status:** PR/CI policy; current server-side protection must be inspected separately.
+
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
+
 ## Summary
 
 - `main` is the **only** deployable branch.
@@ -31,7 +35,7 @@ feature/xyz ──▶ PR ──▶ main ──▶ GitHub Pages deploy (docs-page
 - Feature and hotfix branches follow `codex/*`, `feature/*`, `fix/*`, `docs/*`, or
   `module/*` naming and target `main`.
 
-## Required status checks (branch protection on `main`)
+## Intended baseline checks and current workflow receipts
 
 | Check | Source | What it verifies |
 | --- | --- | --- |
@@ -39,8 +43,10 @@ feature/xyz ──▶ PR ──▶ main ──▶ GitHub Pages deploy (docs-page
 | `isolated-asset-guard` | `.github/workflows/isolated-asset-guard.yml` | No `_isolated/` path can enter the tree |
 | `workspace-tests` | `.github/workflows/tests.yml` | Rust workspace compiles and tests pass |
 
-Existing non-doc workflows (`cross-platform`, `sandbox`, `venfire-contract`,
-`boot-runtime-contract`, `windows-exe`) continue to run as informational gates.
+Additional firmware, native comparator, integration and application workflows
+have their own required evidence. This baseline table is not the exhaustive
+current job list; inspect the selected commit's workflow and CI receipts. The
+2026-09-12 `8f562` checkpoint passed 31 checks without establishing OS boot.
 
 ## Enforcement
 
@@ -93,3 +99,11 @@ The legacy protection helper's linear-history option must be reviewed before
 applying it to module repositories: rebasing or squashing produces different
 commit IDs. Do not delete the only reference to a dependency commit still used
 by an integration gitlink.
+
+## Current evidence and hardware coverage
+
+Reviewed for documentation freshness on 2026-09-12. See the
+[portal](../index.md), [progress](../progress.md),
+[compatibility catalog](../compatibility.md) and
+[library](../library.md) for the active evidence boundary. Historical
+receipts in this guide retain their original scope and date.

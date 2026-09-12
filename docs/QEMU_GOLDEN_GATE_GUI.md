@@ -1,5 +1,9 @@
 # QEMU GUI Validation Pathways
 
+**Current Status:** Development VM/firmware harnesses; no physical x86 desktop claim.
+
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
+
 This document does NOT claim that macOS 27 Golden Gate has "booted". Rather, the QEMU GUI serves as an empirical harness for verifying two distinct boundary layers:
 
 * **EFI Layer:** An x86_64 OVMF instance executes the 26x86 VSK input verification EFI application.
@@ -7,7 +11,7 @@ This document does NOT claim that macOS 27 Golden Gate has "booted". Rather, the
 
 VMApple's MachineType is locked to `iBoot(AArch64)` and used exclusively for macOS guests. iOS, iPadOS, and other mobile Apple operating systems are strictly out of scope and rejected during policy validation prior to DFU upload. The recovery protocol for this tier is DFU/IPSW for macOS, with a local recovery default filename of `_default.ipsw`.
 
-OVMF test cases always conclude with `macos_boot_verified=false`. VMApple now skips recovery transport when `--boot-selection macos` is specified, monitoring AVPBooter's authentic macOS boot entry directly. However, `macos_boot_verified=true` is asserted ONLY when `Darwin Kernel Version`, `launchd`, `loginwindow`, and `WindowServer` UART evidence markers are all confirmed. Selecting Recovery continues to record only recovery protocol boundary states.
+OVMF test cases always conclude with `macos_boot_verified=false`. VMApple now skips recovery transport when `--boot-selection macos` is specified, monitoring AVPBooter's authentic macOS boot entry directly. However, `macos_boot_verified=true` is asserted ONLY when target-matching XNU and userspace UART evidence meet the selected harness's parser contract. A visible desktop or completed installation needs additional evidence. Selecting Recovery continues to record only recovery protocol boundary states.
 
 ## Apple Silicon Device Profiles Derived from qemu-t8030
 
@@ -103,7 +107,7 @@ python3 -m x86 vmapple provision \
 
 This command rejects Linux/WSL environments, hosts lacking AVPBooter, existing output directories, and invalid disk sizes, writing `provision-report.json` and session logs to the newly initialized directory. Provisioning receipts satisfy direct-run input verification but do not constitute proof of macOS boot; subsequent direct runs via `--vm-json` must independently confirm XNU and userspace UART markers.
 
-Physical execution of macOS 26/27 relies on native Virtualization.framework pathways isolated from QEMU direct entry. Because `macosvm` connects the primary serial console to stdout and instantiates storage clones with `--ephemeral`, 26x86 wraps the process in a bounded worker. PTYs are avoided in automated pipelines because upstream tooling requires carriage returns on standard input prior to connecting.
+The Apple Silicon VM comparison path uses Virtualization.framework separately from QEMU direct entry. This is virtualization on a physical host, not the physical x86 NextCore product boot. Because `macosvm` connects the primary serial console to stdout and instantiates storage clones with `--ephemeral`, 26x86 wraps the process in a bounded worker. PTYs are avoided in automated pipelines because upstream tooling requires carriage returns on standard input prior to connecting.
 
 ```sh
 python3 -m x86 vmapple run-native \
@@ -119,7 +123,7 @@ This command executes solely on Apple Silicon macOS hosts, logging Darwin/XNU an
 
 ```sh
 # Legacy QEMU direct-entry invocation (target 27 is rejected by the runner;
-# use `vmapple run-native` above for genuine macOS 26/27 pathways).
+# use the separately scoped native VM workflow for its own evidence).
 python3 -m x86 vmapple run --target 27 --display auto \
   --qemu /path/to/qemu-system-aarch64 \
   --qemu-img /usr/bin/qemu-img \
@@ -180,7 +184,7 @@ python3 -m x86 vmapple inspect-storage \
 
 The inspector evaluates 512-byte aligned views, bounded zero-content spans, and APFS signatures without modifying files. If `provisioning_status` reports `unprovisioned-zero` or `partially-unprovisioned`, the files are flagged for protocol testing only. Non-zero bytes or `NXSB` headers alone cannot prove `VZMacAuxiliaryStorage` compatibility with Apple Silicon hardware models, APFS installation validity, or signed boot capability, keeping status at `unverified`. This tool does not extract, decrypt, modify, or copy input files.
 
-Empirically verified VMApple GUI scope includes transmitting 173 DFU blocks of authentic 27.0 iBSS (including DFU suffix), `WAIT_RESET`, USB reset acknowledgment, authentic `05ac:1281` re-enumeration with bulk OUT endpoint 4, and LocalPolicy/iBEC transfer with `go` acknowledgment. Apple TSS status `0`, matching nonces, original payload hash retention, and `installer_modified: false` have been established. In selective RPC unavailability experiments, the authentic iBEC Stage2 UART command prompt was captured, followed by transmission of five restore roles matching the BuildManifest. During pre-boot notification, the guest's authentic `0200` STALL was faithfully recorded, followed by receipt of `bootx` acknowledgment before iBoot encountered a kernel panic prior to XNU entry. As a result, `signature_acceptance_verified`, `xnu_executed`, `macos_boot_verified`, and the Golden Gate installation UI are all marked `false`. Due to the absence of Apple Paravirtualized Graphics in Linux QEMU builds, `graphics_device_enabled` is also `false`. Spawning the VMApple window or completing DFU/`go`/`bootx` stages does not constitute Golden Gate boot success. Full session summaries (including Alt-to-Recovery input handling) are codified in [`integration/vmapple-gui-bootpicker-report.json`](../integration/vmapple-gui-bootpicker-report.json), with root `launch.json` logs accessible via `source_report`.
+Empirically verified VMApple GUI scope includes transmitting 173 DFU blocks of authentic 27.0 iBSS (including DFU suffix), `WAIT_RESET`, USB reset acknowledgment, authentic `05ac:1281` re-enumeration with bulk OUT endpoint 4, and LocalPolicy/iBEC transfer with `go` acknowledgment. Apple TSS status `0`, matching nonces, original payload hash retention, and `installer_modified: false` have been established. In selective RPC unavailability experiments, the authentic iBEC Stage2 UART command prompt was captured, followed by transmission of five restore roles matching the BuildManifest. During pre-boot notification, the guest's authentic `0200` STALL was faithfully recorded, followed by receipt of `bootx` acknowledgment before iBoot encountered a kernel panic prior to XNU entry. As a result, `signature_acceptance_verified`, `xnu_executed`, `macos_boot_verified`, and the Golden Gate installation UI are all marked `false`. Due to the absence of Apple Paravirtualized Graphics in Linux QEMU builds, `graphics_device_enabled` is also `false`. Spawning the VMApple window or completing DFU/`go`/`bootx` stages does not constitute Golden Gate boot success. Full session summaries (including Alt-to-Recovery input handling) are codified in [`integration/vmapple-gui-bootpicker-report.json`](https://github.com/26x86/26x86/blob/main/integration/vmapple-gui-bootpicker-report.json), with root `launch.json` logs accessible via `source_report`.
 
 ## Verification Verdicts
 
@@ -192,3 +196,11 @@ QEMU GUI validation ensures reproducible testing of EFI, JIT, and recovery USB l
 4. Independent log verification of macOS 26/27 userspace initialization and GPU/Metal acceleration.
 
 Any report lacking complete verification across these tiers is categorized strictly as EFI self-test or recovery protocol boundary evidence.
+
+## Current evidence and hardware coverage
+
+Reviewed for documentation freshness on 2026-09-12. See the
+[portal](index.md), [progress](progress.md),
+[compatibility catalog](compatibility.md) and
+[library](library.md) for the active evidence boundary. Historical
+receipts in this guide retain their original scope and date.

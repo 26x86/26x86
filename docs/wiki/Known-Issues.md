@@ -1,17 +1,27 @@
-# Known Issues
+# Known issues and unresolved runtime work
 
-## Experimental T2 Support
+**Current Status:** Normal startup, persistent devices and physical guest interaction remain incomplete.
 
-While upstream Dortania OpenCore-Legacy-Patcher does not officially support Apple T2 hardware, 26x86 provides experimental support for macOS 15 Sequoia and macOS 26 Tahoe on T2 Macs.
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
 
-### Current T2 Status
+The current ARM64e macOS 27-on-x86 path has not reached a usable physical desktop.
+[Progress](../progress.md) records the current instruction boundary and dated
+receipts; [compatibility](../compatibility.md) records hardware evidence.
 
-- **Keyboard & Trackpad:** Functioning via internal SPI bridge drivers.
-- **Audio:** Working on selected models; ambient microphone arrays require ongoing verification.
-- **Touch Bar:** Display functioning; custom touch strip events require AppleSilicon bridge stability.
-- **Thermal Management:** Requires verification to prevent fans running at default high rpm.
+| Area | Current gap |
+| --- | --- |
+| Normal startup | Required live startup/platform providers cause `NOT_READY` |
+| Bounded diagnostics | Original prefixes intentionally return `ABORTED` |
+| SPTM applicability | Unverified for selected j274 inputs; conditional service contracts are incomplete |
+| Memory/platform | Checked authored MMU paths do not supply the full original platform |
+| Storage | Persistent guest storage/controller integration remains incomplete |
+| Display/input | Persistent guest screen presentation and physical interaction unverified |
+| Acceleration | Guest Metal is a later, separately measured milestone |
 
-## Pre-AVX CPU Architecture
+T2 keyboard, trackpad, audio, Touch Bar and thermal behavior require per-model
+receipts. This guide does not claim those devices work merely because a fork or
+profile names them. See [T2 notes](T2-Mac-Notes.md).
 
-- **Safari WebKit JIT:** Addressed via 26x86's custom RestrictEvents translation layer.
-- **Third-Party Electron Apps:** Applications bundling modern Chromium binaries compiled with hard AVX requirements may crash on launch unless launched with software rendering flags (`--disable-gpu`).
+For pre-AVX crashes, inspect the actual faulting instruction and loaded binaries.
+A boot argument or `--disable-gpu` cannot establish that every required CPU
+instruction is available. See [CPU notes](Pre-AVX-Mac-Pro.md).

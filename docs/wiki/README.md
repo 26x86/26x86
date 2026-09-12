@@ -1,8 +1,14 @@
 # NextCore documentation
 
-This is the public documentation hub for NextCore. It follows a Dortania-style
-guide structure: start with the installation path, select the target model and
-macOS release, then use the application and troubleshooting references.
+**Current Status:** Public guide index; installation and runtime readiness remain separate.
+
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
+
+This guide index complements the [documentation portal](../index.md). Start with
+[compatibility](../compatibility.md) and [current progress](../progress.md), then
+choose application setup, external OpenCore preparation or experimental NextCore
+firmware development. The [library](../library.md) indexes specifications.
+A documentation target is not a verified installation path.
 
 ## Introduction
 
@@ -13,13 +19,13 @@ macOS release, then use the application and troubleshooting references.
 | Which Macs are covered? | [Supported models](Supported-Models.md) |
 | Frequently asked questions | [Troubleshooting](Troubleshooting.md) |
 
-## How to install
+## Preparation and installation boundaries
 
 | Topic | Document |
 | --- | --- |
 | Prepare an installer and backup | [Getting started](Getting-Started.md) |
 | Build and install the EFI | [OpenCore](OpenCore.md) |
-| Boot OpenCore and macOS | [Installation notes](Installation-Notes.md) |
+| Installation evidence requirements | [Installation notes](Installation-Notes.md) |
 | Configure device-specific options | [Configuration](Configuration.md) |
 
 ## macOS support

@@ -1,8 +1,13 @@
 # OpenCore integration
 
+**Current Status:** External OpenCore integration is separate from the independent NextCore runtime.
+
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
+
 ## Scope
 
-OpenCore is the public boot and configuration surface of 26x86. This project
+OpenCore is the external boot/configuration integration path of 26x86, distinct
+from the independent NextCore EFI/JIT product. This project
 uses OpenCore concepts and public package interfaces for EFI preparation,
 device properties, boot arguments, kext loading, and root-patch planning.
 
@@ -27,3 +32,11 @@ present a static plist result as runtime acceptance.
 
 See [Configuration](Configuration.md), [Warnings](Warnings.md), and the
 [public/private disclosure boundary](Privacy-and-Disclosure.md).
+
+## Current evidence and hardware coverage
+
+Reviewed for documentation freshness on 2026-09-12. See the
+[portal](../index.md), [progress](../progress.md),
+[compatibility catalog](../compatibility.md) and
+[library](../library.md) for the active evidence boundary. Historical
+receipts in this guide retain their original scope and date.
