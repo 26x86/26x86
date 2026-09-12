@@ -1,0 +1,136 @@
+{
+  "sources": [
+    {
+      "url": "https://arm.jonpalmisc.com/latest_sysreg/AArch64-id_aa64mmfr1_el1",
+      "authority": "Arm-authored 2026.06, community mirror",
+      "retrieved": false,
+      "web_tool_opened": true,
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/pexpert/pexpert/arm64/boot.h",
+      "authority": "Apple pinned commit",
+      "sha256": "479a74f100116358a0e425d8deefc62c5bcbee72e49e69721c9e2d9c53465cd3",
+      "bytes": 2805,
+      "retrieved": true,
+      "commit": "ac9718fb1af618d5ce8678d0dc6e8a58f252216f",
+      "version": "xnu-12377.121.6",
+      "date": "2026-06-17",
+      "target_build_verified": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/arm64/start.s",
+      "authority": "Apple pinned commit",
+      "sha256": "a5c1a95b087f62f9e548bed7a0274cf420af1d69bfd656c1481d629093e2b07a",
+      "bytes": 24685,
+      "retrieved": true,
+      "commit": "ac9718fb1af618d5ce8678d0dc6e8a58f252216f",
+      "version": "xnu-12377.121.6",
+      "date": "2026-06-17",
+      "target_build_verified": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/arm64/sptm/start_sptm.s",
+      "authority": "Apple pinned commit",
+      "sha256": "f9c8b8938ae8910ac47e38d43bd7d2ba8caff1303eca6892c348f0076a90e805",
+      "bytes": 9076,
+      "retrieved": true,
+      "commit": "ac9718fb1af618d5ce8678d0dc6e8a58f252216f",
+      "version": "xnu-12377.121.6",
+      "date": "2026-06-17",
+      "target_build_verified": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/pexpert/arm/pe_init.c",
+      "authority": "Apple pinned commit",
+      "sha256": "e8dc60fafb6bcf407ceaf3ec8a6ed6237d5d927d57b87827a09136a67d6482eb",
+      "bytes": 28479,
+      "retrieved": true,
+      "commit": "ac9718fb1af618d5ce8678d0dc6e8a58f252216f",
+      "version": "xnu-12377.121.6",
+      "date": "2026-06-17",
+      "target_build_verified": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/console/video_console.c",
+      "authority": "Apple pinned commit",
+      "sha256": "b61f7b6bd561c5dbb8a6bfcc5f9f8cadc07db5433bc0b89e6d6cd75a38fba4bd",
+      "bytes": 90475,
+      "retrieved": true,
+      "commit": "ac9718fb1af618d5ce8678d0dc6e8a58f252216f",
+      "version": "xnu-12377.121.6",
+      "date": "2026-06-17",
+      "target_build_verified": false
+    },
+    {
+      "url": "https://raw.githubusercontent.com/tianocore/edk2/fbe0805b2091393406952e84724188f8c1941837/MdePkg/Include/Protocol/GraphicsOutput.h",
+      "authority": "TianoCore upstream edk2-stable202502",
+      "sha256": "8056348b5887ef9b8c425eb917b029594a0ad850ea6627c3bb80cc3167847286",
+      "bytes": 10426,
+      "retrieved": true,
+      "commit": "fbe0805b2091393406952e84724188f8c1941837",
+      "tag": "edk2-stable202502",
+      "date": "2025-02-21",
+      "tag_and_commit_bytes_equal": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/tianocore/edk2/fbe0805b2091393406952e84724188f8c1941837/MdePkg/Include/Uefi/UefiSpec.h",
+      "authority": "TianoCore upstream edk2-stable202502",
+      "sha256": "411733fc1da5e084971f6a70c59b3699adee73a060fc5e7067eee3d2fb850db9",
+      "bytes": 97871,
+      "retrieved": true,
+      "commit": "fbe0805b2091393406952e84724188f8c1941837",
+      "tag": "edk2-stable202502",
+      "date": "2025-02-21",
+      "tag_and_commit_bytes_equal": true
+    },
+    {
+      "url": null,
+      "authority": "Arm DDI0596 ID121321; original download URL unknown",
+      "sha256": "756449b122fa43ff55d81be5e889451bc8c7ba8576ad4a877b91c77b8675e349",
+      "bytes": 10247346,
+      "retrieved": false,
+      "opened_local": true,
+      "sections": {
+        "S1HasPermissionsFault": 3051,
+        "S1ApplyTablePerms": 3071,
+        "S1Walk": [
+          3076,
+          3077
+        ]
+      }
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/arm/arm_init.c",
+      "authority": "Apple pinned commit",
+      "sha256": "14006b33b9b508d3579010ec2d3427c3d9255b8d59917cfa8b7826d3b71c60c0",
+      "bytes": 26424,
+      "retrieved": true,
+      "commit": "ac9718fb1af618d5ce8678d0dc6e8a58f252216f",
+      "version": "xnu-12377.121.6",
+      "date": "2026-06-17",
+      "target_build_verified": false
+    },
+    {
+      "url": "https://uefi.org/specifications",
+      "authority": "UEFI Forum",
+      "web_tool_opened": true,
+      "version": "2.11",
+      "released": "December 2024",
+      "normative_chapters_retrieved": false
+    }
+  ],
+  "unretrieved_official_urls": [
+    "https://developer.arm.com/documentation/ddi0601/latest/AArch64-Registers/ID-AA64MMFR1-EL1--AArch64-Memory-Model-Feature-Register-1",
+    "https://uefi.org/sites/default/files/resources/UEFI_Spec_Final_2.11.pdf",
+    "https://uefi.org/specs/UEFI/2.11/12_Protocols_Console_Support.html",
+    "https://uefi.org/specs/UEFI/2.11/07_Services_Boot_Services.html",
+    "https://uefi.org/specs/UEFI/2.11/04_EFI_System_Table.html"
+  ],
+  "production_changed": false,
+  "schema": "nextcore.boot-primary-source-index.v1",
+  "audit_date": "2026-09-13",
+  "content_policy": "Metadata and paraphrase only; source bodies and PDFs are not redistributed.",
+  "physical_boot_verified": false,
+  "macos_boot_verified": false
+}

@@ -1,0 +1,100 @@
+{
+  "schema": "nextcore.authored-hierarchy-efi.v1",
+  "passed": true,
+  "cases": [
+    {
+      "id": 0,
+      "granule": 4096,
+      "profile": 1,
+      "ap": 1,
+      "parent": 2,
+      "xn": 0,
+      "el": 1,
+      "warm": "false",
+      "op": 1,
+      "upper": "false",
+      "allowed": "true",
+      "status": 4,
+      "retired": 0,
+      "fetch": 1,
+      "data": 0,
+      "completed": 0,
+      "provider": 1,
+      "reply": 2,
+      "level": 0,
+      "context": 2,
+      "esr": 0,
+      "pass": "false"
+    }
+  ],
+  "markers": [
+    "NXPERM: ENTRY host=x86_64 authored=true profile=immutable-hierarchy",
+    "NXPERM: ENTRY host=x86_64 authored=true profile=immutable-hierarchy",
+    "NXPERM: CASE id=0 granule=4096 profile=1 ap=1 parent=2 xn=0 el=1 warm=false op=1 upper=false allowed=true status=4 retired=0 fetch=1 data=0 completed=0 provider=1 reply=2 level=0 context=2 esr=0x0 pass=false",
+    "NXPERM: FAIL completed=0 status=COMPROMISED_DATA"
+  ],
+  "expect_old_rejection": true,
+  "input_paths": {
+    "efi": "/tmp/nextcore-hierarchy-efi-old-20260913.efi",
+    "runner": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-efi/tools/verify_hierarchy_ovmf.py",
+    "source": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-efi/src/hierarchy_probe.rs",
+    "assembly": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-efi/docs/fixtures/hierarchy_scalar.S",
+    "ovmf_code": "/usr/share/OVMF/OVMF_CODE_4M.fd",
+    "ovmf_vars": "/usr/share/OVMF/OVMF_VARS_4M.fd"
+  },
+  "input_sha256_before": {
+    "efi": "e04014dd42c308e1ca25e83048122737e61472e26f113e320d673f56a01ad3e8",
+    "runner": "e7c1fa02aa43f1ef572b8be6f87b2e13f8187a213b068e23f2e851c18d768068",
+    "source": "c2c2ec63492134fca605d87c739c75462dfba261bd96debb76fecc8f7a8ce100",
+    "assembly": "195af7201a437057beaeb08c82b318110f6bd04d116616e0c128495da19a20c9",
+    "ovmf_code": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "ovmf_vars": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "input_sha256_after": {
+    "efi": "e04014dd42c308e1ca25e83048122737e61472e26f113e320d673f56a01ad3e8",
+    "runner": "e7c1fa02aa43f1ef572b8be6f87b2e13f8187a213b068e23f2e851c18d768068",
+    "source": "c2c2ec63492134fca605d87c739c75462dfba261bd96debb76fecc8f7a8ce100",
+    "assembly": "195af7201a437057beaeb08c82b318110f6bd04d116616e0c128495da19a20c9",
+    "ovmf_code": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "ovmf_vars": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "assembly_matches": true,
+  "commands": [
+    {
+      "argv": [
+        "clang-18",
+        "--target=aarch64-none-elf",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-efi/docs/fixtures/hierarchy_scalar.S",
+        "-o",
+        "/tmp/nextcore-hierarchy-efi-old-20260913-r1/probe.o"
+      ],
+      "return_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "llvm-objcopy-18",
+        "-O",
+        "binary",
+        "--only-section=.text",
+        "/tmp/nextcore-hierarchy-efi-old-20260913-r1/probe.o",
+        "/tmp/nextcore-hierarchy-efi-old-20260913-r1/probe.bin"
+      ],
+      "return_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "elapsed_seconds": 2.328,
+  "qemu_exit_code": 0,
+  "process_reaped": true,
+  "process_group_exited": true,
+  "stopped_by_harness": true,
+  "host_failure": null,
+  "original_inputs_used": false,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "scope": "Actual native load/store/fetch under hierarchy, both ELs/granules/immutable profiles and cold/warm service. VA halves and table levels are distributed, not a complete Cartesian product. Leaf/block and fault-priority breadth is separately qualified by native and Arm tests."
+}

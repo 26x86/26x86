@@ -1,0 +1,678 @@
+{
+  "schema": "nextcore.authored-hierarchy-evidence.v1",
+  "layers": {
+    "native_provider_tests_per_mode": 34,
+    "native_cache_modes": 3,
+    "reference_tests": 104,
+    "semantic_mutants_rejected": 2,
+    "arm_qemu_cases": 306,
+    "direct_arm_service_joins": 258,
+    "ovmf_cases": 961
+  },
+  "original_r6_preservation_gate": "failed; no original receipt emitted; separate qualified evidence retained",
+  "original_inputs_used": false,
+  "physical_hardware_verified": false,
+  "macos_boot_verified": false,
+  "payload_files": 109,
+  "payload_bytes": 2307322,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 3539,
+      "sha256": "43efd2d04ab2ab2b1d00e9bb1c9b680a138216ab8303f51cdabd41b97b67cd5f",
+      "source": "Authored package annotation"
+    },
+    {
+      "path": "arm-r10/16384/build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/16384/build.log"
+    },
+    {
+      "path": "arm-r10/16384/observations.json",
+      "bytes": 121015,
+      "sha256": "60982a741e4f9b5067500e6c26c0e60303cc09939bb8b8e6108665875a530fc4",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/16384/observations.json"
+    },
+    {
+      "path": "arm-r10/16384/process.json",
+      "bytes": 571,
+      "sha256": "6df3057ce8fb51f57c477f236cc26fd7a57f609cdf3094ed7b1abf261f3278b5",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/16384/process.json"
+    },
+    {
+      "path": "arm-r10/16384/qemu.log",
+      "bytes": 70,
+      "sha256": "2940d1fc2c255a3198579e0ec56fbe6a1b0d890c1ad62a202791a03a6cf888dd",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/16384/qemu.log"
+    },
+    {
+      "path": "arm-r10/4096/build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/4096/build.log"
+    },
+    {
+      "path": "arm-r10/4096/observations.json",
+      "bytes": 126698,
+      "sha256": "d03bbca160d497fa6775614a93e8125ba6cecbef1d92565b2facfc3b625d3f9c",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/4096/observations.json"
+    },
+    {
+      "path": "arm-r10/4096/process.json",
+      "bytes": 569,
+      "sha256": "020da6600150618553a9511b94bb283647e991c9972efe21b6a446f6c0e35e0d",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/4096/process.json"
+    },
+    {
+      "path": "arm-r10/4096/qemu.log",
+      "bytes": 70,
+      "sha256": "2940d1fc2c255a3198579e0ec56fbe6a1b0d890c1ad62a202791a03a6cf888dd",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/4096/qemu.log"
+    },
+    {
+      "path": "arm-r10/receipt.json",
+      "bytes": 288514,
+      "sha256": "df35f063a60d16ab1ae811fcdd64257ea43d5c457f81c6594f256f59de3907e6",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/receipt.json"
+    },
+    {
+      "path": "arm-r10/source/CONTRACT.md",
+      "bytes": 4764,
+      "sha256": "566845a62ce33c7afbb9a839bcd5d44ef18d52026cf8161603d63069ab903d43",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/source/CONTRACT.md"
+    },
+    {
+      "path": "arm-r10/source/link.ld",
+      "bytes": 211,
+      "sha256": "0dc12aec3a4ccf212987b1d02d9cb3b81aa2ec2e80378a2d3c41fa430406ce0e",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/source/link.ld"
+    },
+    {
+      "path": "arm-r10/source/oracle.c",
+      "bytes": 6726,
+      "sha256": "06ac23f70af5fd68e18ffe76cebcde5542af77870ecd44fccccf8337707c7214",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/source/oracle.c"
+    },
+    {
+      "path": "arm-r10/source/run.py",
+      "bytes": 11659,
+      "sha256": "e69f45fe7af090473276f67f0ee083f22ed0bd15840b8701f698fddf75a4f298",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/source/run.py"
+    },
+    {
+      "path": "arm-r10/source/start.S",
+      "bytes": 1787,
+      "sha256": "833b727ff75e4933bb3afec3321b40fe677d4b8b7e79cce868da3cc093e0228d",
+      "source": "/tmp/nextcore-hierarchy-arm-20260913-r10/source/start.S"
+    },
+    {
+      "path": "efi/current-r2/command.json",
+      "bytes": 588,
+      "sha256": "579b4af58fc1c6d3d69ccb9b7db9cca76b6d16daaadfa4d93f881a6e237cb722",
+      "source": "/tmp/nextcore-hierarchy-efi-current-20260913-r2/command.json"
+    },
+    {
+      "path": "efi/current-r2/probe.S",
+      "bytes": 274,
+      "sha256": "195af7201a437057beaeb08c82b318110f6bd04d116616e0c128495da19a20c9",
+      "source": "/tmp/nextcore-hierarchy-efi-current-20260913-r2/probe.S"
+    },
+    {
+      "path": "efi/current-r2/receipt.json",
+      "bytes": 644893,
+      "sha256": "8a552717c7c18d36bec419cede59a7660f0ddba5423cf5281ed7d80e47cfe51d",
+      "source": "/tmp/nextcore-hierarchy-efi-current-20260913-r2/receipt.json"
+    },
+    {
+      "path": "efi/current-r2/serial.log",
+      "bytes": 210479,
+      "sha256": "e749704be7ba22ee13d621a1fb610500a5f821e91893aa6189a94ce57fd94a50",
+      "source": "/tmp/nextcore-hierarchy-efi-current-20260913-r2/serial.log"
+    },
+    {
+      "path": "efi/current-r2/stderr.log",
+      "bytes": 67,
+      "sha256": "f9a0bd6d5e1d808b008398c3908f7520738cd303199c37449c2a026b41129015",
+      "source": "/tmp/nextcore-hierarchy-efi-current-20260913-r2/stderr.log"
+    },
+    {
+      "path": "efi/current-r2/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-efi-current-20260913-r2/stdout.log"
+    },
+    {
+      "path": "efi/old-r1/command.json",
+      "bytes": 576,
+      "sha256": "be5603adb39a09e59d805e5515f8611b57eb6ceab30e3232e6f55e8a9e53b404",
+      "source": "/tmp/nextcore-hierarchy-efi-old-20260913-r1/command.json"
+    },
+    {
+      "path": "efi/old-r1/probe.S",
+      "bytes": 274,
+      "sha256": "195af7201a437057beaeb08c82b318110f6bd04d116616e0c128495da19a20c9",
+      "source": "/tmp/nextcore-hierarchy-efi-old-20260913-r1/probe.S"
+    },
+    {
+      "path": "efi/old-r1/receipt.json",
+      "bytes": 3943,
+      "sha256": "65ca4b41fd8e411b35084f567c9096aff7716a663d0e1d4d6b0e2882c839eccc",
+      "source": "/tmp/nextcore-hierarchy-efi-old-20260913-r1/receipt.json"
+    },
+    {
+      "path": "efi/old-r1/serial.log",
+      "bytes": 703,
+      "sha256": "dfe7b4242bc4e3efd359e7ad1c78a0d7640ba90a21b3038b31ae6fa142336878",
+      "source": "/tmp/nextcore-hierarchy-efi-old-20260913-r1/serial.log"
+    },
+    {
+      "path": "efi/old-r1/stderr.log",
+      "bytes": 67,
+      "sha256": "a526b2886a61b32841772ac43abdff44cf7832959ab36f988e7a8503c15d58d0",
+      "source": "/tmp/nextcore-hierarchy-efi-old-20260913-r1/stderr.log"
+    },
+    {
+      "path": "efi/old-r1/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-efi-old-20260913-r1/stdout.log"
+    },
+    {
+      "path": "efi/paired-build/commands.json",
+      "bytes": 7057,
+      "sha256": "efb7c28342d4f9b43c66d818c547ac1bf71058f7457a4e7e210748804d7bf471",
+      "source": "/tmp/nextcore-hierarchy-efi-build-20260913-r1/commands.json"
+    },
+    {
+      "path": "efi/paired-build/current-build.log",
+      "bytes": 2915,
+      "sha256": "da57b79cd5db7b59082f9434e68e4188f0f0931d87dd2f23d0b2aa0703022c41",
+      "source": "/tmp/nextcore-hierarchy-efi-build-20260913-r1/current-build.log"
+    },
+    {
+      "path": "efi/paired-build/old-build.log",
+      "bytes": 2895,
+      "sha256": "76499a9810ab4d38c07797b9268f350bf1f78770dac6c245eb81cebbc228312c",
+      "source": "/tmp/nextcore-hierarchy-efi-build-20260913-r1/old-build.log"
+    },
+    {
+      "path": "efi/paired-build/receipt.json",
+      "bytes": 22654,
+      "sha256": "cbe6b6382bd870fd1ee55623eef1921135995ef295b62bda12e44b33779f6fa1",
+      "source": "/tmp/nextcore-hierarchy-efi-build-20260913-r1/receipt.json"
+    },
+    {
+      "path": "native/authored-source/test_hierarchy_provider.rs",
+      "bytes": 11264,
+      "sha256": "6c73377e0265af6bfecda8ffa1afc06d22545ca0407d31d67652acabae818077",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/source/test_hierarchy_provider.rs"
+    },
+    {
+      "path": "native/authored-source/test_hierarchy_reference.rs",
+      "bytes": 4361,
+      "sha256": "87346676876badfa620bfa6fd2f905af2244a79a0b19defda75e28aa29964d06",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/source/test_hierarchy_reference.rs"
+    },
+    {
+      "path": "native/authored-source/tests/verify_hierarchy_native.py",
+      "bytes": 6975,
+      "sha256": "ce62f779694b61cceec3d7ef662f340e3d1079b8a62dd6741bb6a4f22f81960f",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/source/tests/verify_hierarchy_native.py"
+    },
+    {
+      "path": "native/old-r5/arch.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-old-native-20260913-r5/arch.log"
+    },
+    {
+      "path": "native/old-r5/boot_jit.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-old-native-20260913-r5/boot_jit.log"
+    },
+    {
+      "path": "native/old-r5/cached-build.log",
+      "bytes": 2221,
+      "sha256": "dfdefd40e9029b5852d131a4d325362621bfd5edbe1869242ac9413e2244d49f",
+      "source": "/tmp/nextcore-hierarchy-old-native-20260913-r5/cached-build.log"
+    },
+    {
+      "path": "native/old-r5/cached.log",
+      "bytes": 694,
+      "sha256": "6919f856f660175f765cbc3b614a99e92168a629abfe658fcee44288225d502a",
+      "source": "/tmp/nextcore-hierarchy-old-native-20260913-r5/cached.log"
+    },
+    {
+      "path": "native/old-r5/jit.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-old-native-20260913-r5/jit.log"
+    },
+    {
+      "path": "native/old-r5/memory_boot.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-old-native-20260913-r5/memory_boot.log"
+    },
+    {
+      "path": "native/old-r5/memory_boot_v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-old-native-20260913-r5/memory_boot_v2.log"
+    },
+    {
+      "path": "native/old-r5/memory_layout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-old-native-20260913-r5/memory_layout.log"
+    },
+    {
+      "path": "native/old-r5/memory_layout_v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-old-native-20260913-r5/memory_layout_v2.log"
+    },
+    {
+      "path": "native/old-r5/receipt.json",
+      "bytes": 15860,
+      "sha256": "e00b93e4c2d312458dbbe301034571c821f362c67ecfc5a506238ec31fb91dcd",
+      "source": "/tmp/nextcore-hierarchy-old-native-20260913-r5/receipt.json"
+    },
+    {
+      "path": "native/old-r5/service.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-old-native-20260913-r5/service.log"
+    },
+    {
+      "path": "native/qualification/arm-comparison.json",
+      "bytes": 34363,
+      "sha256": "4a84785621f3e0dea572266467ed62acb4b10e961401f2b60cbdd14b202ed21a",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-final-qualification/arm-comparison.json"
+    },
+    {
+      "path": "native/qualification/arm-receipt.json",
+      "bytes": 288514,
+      "sha256": "df35f063a60d16ab1ae811fcdd64257ea43d5c457f81c6594f256f59de3907e6",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-final-qualification/arm-receipt.json"
+    },
+    {
+      "path": "native/qualification/receipt.json",
+      "bytes": 4778,
+      "sha256": "d24c0dd151a76409a4418966e76ff49a88c2f0e95ff4e4fed59cbec165faf93a",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-final-qualification/receipt.json"
+    },
+    {
+      "path": "native/qualification/source-audit.json",
+      "bytes": 29929,
+      "sha256": "32b9132eb128b1fdf2763521146416a233b7b9e105bf3c55e7a54ba531c626a2",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-final-qualification/source-audit.json"
+    },
+    {
+      "path": "native/r6/arch.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/arch.log"
+    },
+    {
+      "path": "native/r6/boot_jit.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/boot_jit.log"
+    },
+    {
+      "path": "native/r6/cached-build.log",
+      "bytes": 2189,
+      "sha256": "d4597a1a6806483dda7f893f07dd1a445566a788063c7e7799663b6422245963",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/cached-build.log"
+    },
+    {
+      "path": "native/r6/cached.log",
+      "bytes": 2684,
+      "sha256": "b38accfb96d2f1c87370cd20521964b9ee3b57a7116151d1db4f35d44e3fc17b",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/cached.log"
+    },
+    {
+      "path": "native/r6/canonical-replies.csv",
+      "bytes": 327168,
+      "sha256": "4cd1d616dba4d336f9b0c04a85312aab1958383e8d8e186ea13df2c34004c901",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/cached.snapshot.matrix"
+    },
+    {
+      "path": "native/r6/failure-observation.json",
+      "bytes": 358,
+      "sha256": "75578edee0d3cfdac80df9db127ec35677cab3289cadcee2b6a3540c234e3ecd",
+      "source": "Authored package annotation"
+    },
+    {
+      "path": "native/r6/ignored-hierarchy-build.log",
+      "bytes": 2189,
+      "sha256": "d4597a1a6806483dda7f893f07dd1a445566a788063c7e7799663b6422245963",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/ignored-hierarchy-build.log"
+    },
+    {
+      "path": "native/r6/ignored-hierarchy-service.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/ignored-hierarchy-service.log"
+    },
+    {
+      "path": "native/r6/ignored-hierarchy.log",
+      "bytes": 691,
+      "sha256": "74dc4369ab209774443ec2485ea4c537286706d18bc3223993428c6d4daa5afe",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/ignored-hierarchy.log"
+    },
+    {
+      "path": "native/r6/jit.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/jit.log"
+    },
+    {
+      "path": "native/r6/leaf-only-implicit-xn-build.log",
+      "bytes": 2189,
+      "sha256": "d4597a1a6806483dda7f893f07dd1a445566a788063c7e7799663b6422245963",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/leaf-only-implicit-xn-build.log"
+    },
+    {
+      "path": "native/r6/leaf-only-implicit-xn-service.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/leaf-only-implicit-xn-service.log"
+    },
+    {
+      "path": "native/r6/leaf-only-implicit-xn.log",
+      "bytes": 691,
+      "sha256": "94652812727643ad08764596a841c38068f9cd7fca67f5b79a821a0959ccf75a",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/leaf-only-implicit-xn.log"
+    },
+    {
+      "path": "native/r6/memory_boot.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/memory_boot.log"
+    },
+    {
+      "path": "native/r6/memory_boot_v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/memory_boot_v2.log"
+    },
+    {
+      "path": "native/r6/memory_layout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/memory_layout.log"
+    },
+    {
+      "path": "native/r6/memory_layout_v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/memory_layout_v2.log"
+    },
+    {
+      "path": "native/r6/mutants.json",
+      "bytes": 143,
+      "sha256": "8da575d318f9a0458c343d132e100decf6a2eb524a8dd5d2dc01bad69860a127",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/mutants.json"
+    },
+    {
+      "path": "native/r6/reference-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/reference-build.log"
+    },
+    {
+      "path": "native/r6/reference.log",
+      "bytes": 8471,
+      "sha256": "4371f564a70db026e6705742e1fa0bb817bc5eb4f50b7aa9c8f46d075ff7948a",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/reference.log"
+    },
+    {
+      "path": "native/r6/service.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/service.log"
+    },
+    {
+      "path": "native/r6/small-slot-build.log",
+      "bytes": 2189,
+      "sha256": "d4597a1a6806483dda7f893f07dd1a445566a788063c7e7799663b6422245963",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/small-slot-build.log"
+    },
+    {
+      "path": "native/r6/small-slot-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/small-slot-compile.log"
+    },
+    {
+      "path": "native/r6/small-slot.log",
+      "bytes": 2684,
+      "sha256": "f34d65480cf68dcc535b0ebeec434977c0fa51c89543baa8790a4ed1241aff6d",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/small-slot.log"
+    },
+    {
+      "path": "native/r6/uncached-build.log",
+      "bytes": 2189,
+      "sha256": "d4597a1a6806483dda7f893f07dd1a445566a788063c7e7799663b6422245963",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/uncached-build.log"
+    },
+    {
+      "path": "native/r6/uncached-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/uncached-compile.log"
+    },
+    {
+      "path": "native/r6/uncached.log",
+      "bytes": 2684,
+      "sha256": "b1be82064ad67792bd2cef9d7ddfbe6d7992cbf240a1320d22a3bb5f794cee36",
+      "source": "/tmp/nextcore-hierarchy-native-20260913-r6/uncached.log"
+    },
+    {
+      "path": "publication/pinned-rebuild.json",
+      "bytes": 623,
+      "sha256": "ec0f47f6bdfa73948b4d63b2acf8a481dbe37a500856b81f30641c65a4c97c40",
+      "source": "/tmp/nextcore-hierarchy-pinned-rebuild-20260913/receipt.json"
+    },
+    {
+      "path": "publication/pinned-rebuild.log",
+      "bytes": 1537,
+      "sha256": "54997e54ca89e70e162c6c77da431d6bd4f0c3440bbb973d55086a408eebd046",
+      "source": "/tmp/nextcore-hierarchy-pinned-rebuild-20260913/build.log"
+    },
+    {
+      "path": "regression/asid8/arch.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/arch.log"
+    },
+    {
+      "path": "regression/asid8/boot_jit.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/boot_jit.log"
+    },
+    {
+      "path": "regression/asid8/cached-build.log",
+      "bytes": 2245,
+      "sha256": "013c7638afd736a84282a2784cb5c715b047274fa5a49c35c5482e98e2c195ef",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/cached-build.log"
+    },
+    {
+      "path": "regression/asid8/cached.log",
+      "bytes": 2741,
+      "sha256": "7a412b32b5d002a2442ded5521bb032fbec991bc2a73c656f705f32ccdfa7eec",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/cached.log"
+    },
+    {
+      "path": "regression/asid8/forced-zero-build.log",
+      "bytes": 2245,
+      "sha256": "013c7638afd736a84282a2784cb5c715b047274fa5a49c35c5482e98e2c195ef",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/forced-zero-build.log"
+    },
+    {
+      "path": "regression/asid8/forced-zero-service.log",
+      "bytes": 439,
+      "sha256": "222b1697f213f105638001cd7ffe2093a1b7fc27e018f2cbc5b87fec80437722",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/forced-zero-service.log"
+    },
+    {
+      "path": "regression/asid8/forced-zero.log",
+      "bytes": 655,
+      "sha256": "45168bbcf1b8031599079c1d9b32bba41b8cc9af991bfddda8bd56e29f629eb9",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/forced-zero.log"
+    },
+    {
+      "path": "regression/asid8/ignored-a1-build.log",
+      "bytes": 2245,
+      "sha256": "013c7638afd736a84282a2784cb5c715b047274fa5a49c35c5482e98e2c195ef",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/ignored-a1-build.log"
+    },
+    {
+      "path": "regression/asid8/ignored-a1-service.log",
+      "bytes": 439,
+      "sha256": "222b1697f213f105638001cd7ffe2093a1b7fc27e018f2cbc5b87fec80437722",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/ignored-a1-service.log"
+    },
+    {
+      "path": "regression/asid8/ignored-a1.log",
+      "bytes": 657,
+      "sha256": "4c5fcc38263c0bc290fd34c2f50f52d74de4413329adb2947ecf71825e947130",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/ignored-a1.log"
+    },
+    {
+      "path": "regression/asid8/jit.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/jit.log"
+    },
+    {
+      "path": "regression/asid8/memory_boot.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/memory_boot.log"
+    },
+    {
+      "path": "regression/asid8/memory_boot_v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/memory_boot_v2.log"
+    },
+    {
+      "path": "regression/asid8/memory_layout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/memory_layout.log"
+    },
+    {
+      "path": "regression/asid8/memory_layout_v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/memory_layout_v2.log"
+    },
+    {
+      "path": "regression/asid8/mutants.json",
+      "bytes": 189,
+      "sha256": "7810d7a372dd5e4efb6ca3831a3e8621783086c5a0f759db09f2aab305ae4293",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/mutants.json"
+    },
+    {
+      "path": "regression/asid8/receipt.json",
+      "bytes": 24835,
+      "sha256": "28ce6feedb6e5f4788f460069296530e8362e40ec876dfb710fad76d6c758ae7",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/receipt.json"
+    },
+    {
+      "path": "regression/asid8/reference-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/reference-build.log"
+    },
+    {
+      "path": "regression/asid8/reference.log",
+      "bytes": 8349,
+      "sha256": "c10b6d1e34205c8c8999e060fb0d6471169ddbc0f6dfef5265bf2e4027e955ee",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/reference.log"
+    },
+    {
+      "path": "regression/asid8/service.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/service.log"
+    },
+    {
+      "path": "regression/asid8/small-slot-build.log",
+      "bytes": 2245,
+      "sha256": "013c7638afd736a84282a2784cb5c715b047274fa5a49c35c5482e98e2c195ef",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/small-slot-build.log"
+    },
+    {
+      "path": "regression/asid8/small-slot-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/small-slot-compile.log"
+    },
+    {
+      "path": "regression/asid8/small-slot.log",
+      "bytes": 2741,
+      "sha256": "861a7b66326cb8c4a2e2d5d67cf0ff10cd0da266517908cdf2bea414d0573f15",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/small-slot.log"
+    },
+    {
+      "path": "regression/asid8/test_asid8_validator.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/test_asid8_validator.log"
+    },
+    {
+      "path": "regression/asid8/uncached-build.log",
+      "bytes": 2245,
+      "sha256": "013c7638afd736a84282a2784cb5c715b047274fa5a49c35c5482e98e2c195ef",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/uncached-build.log"
+    },
+    {
+      "path": "regression/asid8/uncached-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/uncached-compile.log"
+    },
+    {
+      "path": "regression/asid8/uncached.log",
+      "bytes": 2741,
+      "sha256": "cc7bdf94579a37a44a20efafc3ec84a5e132d3704f84041949223c5f18b2118e",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/uncached.log"
+    },
+    {
+      "path": "regression/asid8/va-based-tag-build.log",
+      "bytes": 2245,
+      "sha256": "013c7638afd736a84282a2784cb5c715b047274fa5a49c35c5482e98e2c195ef",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/va-based-tag-build.log"
+    },
+    {
+      "path": "regression/asid8/va-based-tag-service.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/va-based-tag-service.log"
+    },
+    {
+      "path": "regression/asid8/va-based-tag.log",
+      "bytes": 658,
+      "sha256": "b3307e7d2f3ff2f2f8ab1c8cdc8c9c69e373dedcb258dd193c5d10222944525a",
+      "source": "/tmp/nextcore-hierarchy-asid8-regression-20260913/va-based-tag.log"
+    },
+    {
+      "path": "regression/stage1.json",
+      "bytes": 28192,
+      "sha256": "0d8890d5955639ace765cf194244b82682d2ce501082f82263577630eba0d0de",
+      "source": "/tmp/nextcore-hierarchy-stage1-regression-20260913.json"
+    }
+  ],
+  "module_pins": {
+    "ise": "778473fd9c43d7ba3a4721852f838be996fed45d",
+    "efi": "df2c15b8c83664042c33daa274f550158308a752"
+  }
+}

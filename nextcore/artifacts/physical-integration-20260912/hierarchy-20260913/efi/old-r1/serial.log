@@ -1,0 +1,6 @@
+[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01HBdsDxe: loading Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+BdsDxe: starting Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+NXPERM: ENTRY host=x86_64 authored=true profile=immutable-hierarchy
+NXPERM: ENTRY host=x86_64 authored=true profile=immutable-hierarchy
+NXPERM: CASE id=0 granule=4096 profile=1 ap=1 parent=2 xn=0 el=1 warm=false op=1 upper=false allowed=true status=4 retired=0 fetch=1 data=0 completed=0 provider=1 reply=2 level=0 context=2 esr=0x0 pass=false
+NXPERM: FAIL completed=0 status=COMPROMISED_DATA

@@ -1,0 +1,69 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling version_check v0.9.5
+   Compiling typenum v1.20.1
+   Compiling thiserror v2.0.20
+   Compiling log v0.4.34
+   Compiling bitflags v2.13.1
+   Compiling cfg-if v1.0.4
+   Compiling cpufeatures v0.2.17
+   Compiling memchr v2.8.3
+   Compiling bit_field v0.10.3
+   Compiling uguid v2.2.1
+   Compiling nextcore-memory-service v0.1.0 (/tmp/nextcore-hierarchy-efi-build-20260913-r1/workspace/nextcore/crates/nextcore-ise/runtime/memory-service)
+   Compiling ucs2 v0.3.3
+   Compiling uefi-raw v0.16.0
+   Compiling generic-array v0.14.7
+   Compiling roxmltree v0.21.1
+   Compiling syn v3.0.5
+   Compiling syn v2.0.119
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling nextcore-core v0.1.0 (/tmp/nextcore-hierarchy-efi-build-20260913-r1/workspace/nextcore/crates/nextcore-core)
+   Compiling thiserror-impl v2.0.20
+   Compiling ptr_meta_derive v0.3.2
+   Compiling uefi-macros v0.19.0
+   Compiling ptr_meta v0.3.2
+   Compiling uefi v0.40.0
+   Compiling nextcore-ise v0.1.0 (/tmp/nextcore-hierarchy-efi-build-20260913-r1/workspace/nextcore/crates/nextcore-ise)
+warning: unused variable: `rex_b`
+   --> crates/nextcore-ise/src/decoder.rs:126:13
+    |
+126 |         let rex_b = (rex & 0x01) != 0;
+    |             ^^^^^ help: if this is intentional, prefix it with an underscore: `_rex_b`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `rex_r`
+   --> crates/nextcore-ise/src/decoder.rs:127:13
+    |
+127 |         let rex_r = (rex & 0x04) != 0;
+    |             ^^^^^ help: if this is intentional, prefix it with an underscore: `_rex_r`
+
+warning: value assigned to `v` is never read
+   --> crates/nextcore-ise/src/decoder.rs:245:29
+    |
+245 |                 let mut v = 0u64;
+    |                             ^^^^ this value is reassigned later and never used
+...
+248 |                     v = data[ip] as u64 & 0x3F;
+    |                     -------------------------- `v` is overwritten here before the previous value is read
+    |
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+   --> crates/nextcore-ise/src/decoder.rs:461:17
+    |
+461 |             let mut bs = (sib & 7) as u32;
+    |                 ----^^
+    |                 |
+    |                 help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `nextcore-ise` (lib) generated 4 warnings (run `cargo fix --lib -p nextcore-ise` to apply 3 suggestions)
+   Compiling nextcore-efi v0.1.0 (/tmp/nextcore-hierarchy-efi-build-20260913-r1/workspace/nextcore/crates/nextcore-efi)
+    Finished `release` profile [optimized] target(s) in 7.74s

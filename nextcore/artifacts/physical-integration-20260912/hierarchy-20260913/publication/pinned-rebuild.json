@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "pins": {
+    "ise": "778473fd9c43d7ba3a4721852f838be996fed45d",
+    "efi": "df2c15b8c83664042c33daa274f550158308a752"
+  },
+  "command": [
+    "cargo",
+    "build",
+    "--locked",
+    "-p",
+    "nextcore-efi",
+    "--bin",
+    "NXPERM",
+    "--release",
+    "--target",
+    "x86_64-unknown-uefi",
+    "--features",
+    "arm-jit-stage1-probe"
+  ],
+  "return_code": 0,
+  "rebuilt_sha256": "538a38b1f87255af31575cb1abb8bb1db3088104ebea1c6416aba9f6307170bb",
+  "tested_sha256": "538a38b1f87255af31575cb1abb8bb1db3088104ebea1c6416aba9f6307170bb",
+  "byte_equal": true,
+  "physical_boot_verified": false
+}

@@ -1,0 +1,54 @@
+warning: struct `Recorder` is never constructed
+  --> /tmp/nextcore-hierarchy-native-20260913-r6/source/test_mapped_provider.rs:70:8
+   |
+70 | struct Recorder<'a>{service:MemoryServiceV2<'a>,events:Vec<u8>,fetches:u64,failure:bool}
+   |        ^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `recorded` is never used
+  --> /tmp/nextcore-hierarchy-native-20260913-r6/source/test_mapped_provider.rs:71:22
+   |
+71 | unsafe extern "C" fn recorded(owner:*mut c_void,q:*const Request,r:*mut Reply)->i32 {
+   |                      ^^^^^^^^
+
+warning: struct `Permissions` is never constructed
+  --> /tmp/nextcore-hierarchy-native-20260913-r6/source/test_mapped_provider.rs:80:8
+   |
+80 | struct Permissions {calls:u64,fail:u64}
+   |        ^^^^^^^^^^^
+
+warning: function `counted` is never used
+  --> /tmp/nextcore-hierarchy-native-20260913-r6/source/test_mapped_provider.rs:81:22
+   |
+81 | unsafe extern "C" fn counted(p:*mut c_void,n:usize,x:i32,owner:*mut c_void)->i32 {
+   |                      ^^^^^^^
+
+warning: function `test_mapped_cpu_size` is never used
+  --> /tmp/nextcore-hierarchy-native-20260913-r6/source/test_mapped_provider.rs:13:8
+   |
+13 |     fn test_mapped_cpu_size()->usize;
+   |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `test_mapped_stack_state` is never used
+  --> /tmp/nextcore-hierarchy-native-20260913-r6/source/test_mapped_provider.rs:14:8
+   |
+14 |     fn test_mapped_stack_state(snapshot:*const u8,c:*const Controls)->i32;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `test_mapped_snapshot` is never used
+  --> /tmp/nextcore-hierarchy-native-20260913-r6/source/test_mapped_provider.rs:15:8
+   |
+15 |     fn test_mapped_snapshot(c:*const Controls,code:*mut u8,capacity:usize,budget:u64,
+   |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: associated function `new` is never used
+   --> /tmp/nextcore-hierarchy-native-20260913-r6/source/preos/src/pauth.rs:183:19
+    |
+182 | impl PauthContext {
+    | ----------------- associated function in this implementation
+183 |     pub(crate) fn new(x: [u64; 31], sp: u64, pc: u64, sctlr: u64, tcr: u64,
+    |                   ^^^
+
+warning: 8 warnings emitted
+

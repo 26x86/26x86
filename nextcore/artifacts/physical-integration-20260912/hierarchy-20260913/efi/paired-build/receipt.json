@@ -1,8 +1,63 @@
 {
-  "schema": "nextcore-runtime-source-freeze-v1",
-  "base": "778473fd9c43d7ba3a4721852f838be996fed45d",
-  "provenance": "git archive of immutable Nextcore-ISE commit; every archive file SHA-256 independently matched to git show commit:path bytes; no working-tree source",
-  "files": {
+  "passed": true,
+  "pins": {
+    "workspace": {
+      "commit": "5577747ee93699fa70cd05d78c20204a4b08bc47",
+      "tar_sha256": "709f2cca9ede351a966fb85494b276a7bae7d694b373c58374e326afacfd1916",
+      "file_count": 2
+    },
+    "core": {
+      "commit": "4ae6e9aff31be93cf570b56975b711902f3fb7e7",
+      "tar_sha256": "80e2c63817172fbe76ff86b937e966ca77f8759107f661164e280cf1e97469c6",
+      "file_count": 81
+    },
+    "efi": {
+      "commit": "73d84d9c781d8d2979402d4749b4bae946b92c8c",
+      "tar_sha256": "2b13ff8bccd3b5355a9266846e2362dbc50a31a4f4350b4ae59436ff6bdf986b",
+      "file_count": 77
+    },
+    "tool": {
+      "commit": "9e6222a69d2f62490139c477d6e217a28e3af323",
+      "tar_sha256": "8e01b916331420c4dd1d8a74685559a7117f37a10c4d293ee3f63277ce8a70df",
+      "file_count": 14
+    },
+    "ise": {
+      "commit": "50b3da2f172f67b4661336799e36bd19002ce816",
+      "tar_sha256": "0b30c2dd5d291f7b923a06f18e24a87a7c74e13d558908e8d51fdb201a218b14",
+      "file_count": 212
+    },
+    "gpu": {
+      "commit": "eaab9fcfded3a8ee298453397790f13edace5694",
+      "tar_sha256": "21e93f6dac55051e89f2e3104f34bb004f543be107819e27c821b39b08d5b420",
+      "file_count": 71
+    },
+    "hal": {
+      "commit": "9c1cd8dfff33478e32668c5cd181dd094ec2881b",
+      "tar_sha256": "f8d67fa2702db231c75ec951bc2e87079370a50f836480ce49a3bd5a3912bea3",
+      "file_count": 19
+    },
+    "apls": {
+      "commit": "9b6ccaa421f668fdb212ccd14969002f6196a18f",
+      "tar_sha256": "681d4bea86d5a272624c43bad5dcd94022591a221dabb180ebc07235546be965",
+      "file_count": 32
+    }
+  },
+  "efi_overlays": {
+    "Cargo.toml": "ecb0856a7fbc263c4a49218a1a1e525e9b11cb669dc059dda89c410f515ae717",
+    "src/hierarchy_probe.rs": "c2c2ec63492134fca605d87c739c75462dfba261bd96debb76fecc8f7a8ce100",
+    "docs/fixtures/hierarchy_scalar.S": "195af7201a437057beaeb08c82b318110f6bd04d116616e0c128495da19a20c9"
+  },
+  "binaries": {
+    "current": {
+      "path": "/tmp/nextcore-hierarchy-efi-current-20260913.efi",
+      "sha256": "538a38b1f87255af31575cb1abb8bb1db3088104ebea1c6416aba9f6307170bb"
+    },
+    "old": {
+      "path": "/tmp/nextcore-hierarchy-efi-old-20260913.efi",
+      "sha256": "e04014dd42c308e1ca25e83048122737e61472e26f113e320d673f56a01ad3e8"
+    }
+  },
+  "current_runtime_sha256": {
     "abi_layout.c": "03b71dd9958a85655a50c30387c83d542ae51c808b1913f6a349b531d69f7617",
     "arch.c": "25287b593ee7a27e56a417c255c0a2357e46275697153b2ec288db9551d0f2e7",
     "bfm_cases.rs": "932ed7ff507235bd6e8485725e3a30cd65c499ad077be4a4dbe18f311252d308",
@@ -70,8 +125,6 @@
     "test_extended_arithmetic_jit.c": "2d38b4b8eb53d845ae2c208673c56b4a886df136185b066152d0fbae891fec73",
     "test_flags_jit.c": "5c8c5bd854fd73577b72b81e0d8fd50d02ea601ecae27d1343ab98df59f3a777",
     "test_gop_scanout.c": "def9a5efe836e14d972d083527464b69eb2be1268c3427b3bb16b6c2955b01c4",
-    "test_hierarchy_provider.rs": "6c73377e0265af6bfecda8ffa1afc06d22545ca0407d31d67652acabae818077",
-    "test_hierarchy_reference.rs": "87346676876badfa620bfa6fd2f905af2244a79a0b19defda75e28aa29964d06",
     "test_indexed_jit.c": "1e0884ef88751e8b5f6da81d5c2ce7aa788b018ecda91acdee73d3ebc91f70c7",
     "test_indexed_provider.rs": "fb85033d6a115558f439133a798388aa68269526388c653361064558bebbf8fa",
     "test_indexed_reference.rs": "55fa03587143424bbb8c5c3205a24784a48dda1f1c8cb0679ef93401b1010384",
@@ -117,15 +170,9 @@
     "test_zfr0_provider.rs": "8a4a1d59489a7c403844c19994f156eb41118665551e5b2932bb7514d88f9dda",
     "test_zfr0_reference.rs": "1254421367428ac993c15b6a273b874655d1036a8e78f822662a8c213a66c1e1",
     "tests/capture_pauth_width_oracle.py": "5e7c614149e6676c545d6fa27651a6cbca756d36ae9de882ba0a1477000a3fa7",
-    "tests/hierarchy_oracle/CONTRACT.md": "566845a62ce33c7afbb9a839bcd5d44ef18d52026cf8161603d63069ab903d43",
-    "tests/hierarchy_oracle/link.ld": "0dc12aec3a4ccf212987b1d02d9cb3b81aa2ec2e80378a2d3c41fa430406ce0e",
-    "tests/hierarchy_oracle/oracle.c": "06ac23f70af5fd68e18ffe76cebcde5542af77870ecd44fccccf8337707c7214",
-    "tests/hierarchy_oracle/run.py": "e69f45fe7af090473276f67f0ee083f22ed0bd15840b8701f698fddf75a4f298",
-    "tests/hierarchy_oracle/start.S": "833b727ff75e4933bb3afec3321b40fe677d4b8b7e79cce868da3cc093e0228d",
     "tests/pauth_width_oracle.h": "d7b8de8dc9222ba49a2a12ccd3cbc15ef0fa6f11b7057693f55cd5c2214542ce",
     "tests/pauth_width_oracle.json": "9e86e33434f4c18504754fa5ac4dc08f50b0b85b8c95f8befaa526562b5b35a4",
     "tests/verify_asid8_native.py": "e47d52325fb8895a39d3d96a2bd1dd0026c8c8ba24d1ee5453f965d15d7a11be",
-    "tests/verify_hierarchy_native.py": "ce62f779694b61cceec3d7ef662f340e3d1079b8a62dd6741bb6a4f22f81960f",
     "tests/verify_indexed_native.py": "1e68ab9e98c2d4a68059e520c3145e2dd18f0e22409276e54737822484494f45",
     "tests/verify_isar0_native.py": "a810ca83595606d0674f08c86950415afd36ac1e76d06d8a212528a01d781926",
     "tests/verify_isar2_native.py": "c81aa580cb11ecda31ef8918645bab047ed26136870ebca1e35551b052553baf",
@@ -139,5 +186,289 @@
     "tests/verify_zfr0_native.py": "114a101f8da857ebe6953ef781e793d523c7a8e46020023f8f670bf214898dfd",
     "ubfm_provider_cases.rs": "9b96ab3801696fb970e99ad3b2d0ab7cc0c1aa0dd202c49899be9b6cd542118a",
     "uefi.h": "ad65b75ad72ddca190093a8df01ec2e89622fadaaee0b1e149a704e80106e32b"
-  }
+  },
+  "source_preserved": true,
+  "compiler": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+  "rust": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86",
+      "returncode": 0,
+      "elapsed_seconds": 0.03984260999982325,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "ls-tree",
+        "-r",
+        "--name-only",
+        "5577747ee93699fa70cd05d78c20204a4b08bc47",
+        "nextcore/Cargo.toml",
+        "nextcore/Cargo.lock",
+        "nextcore/.cargo"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86",
+      "returncode": 0,
+      "elapsed_seconds": 0.07185696800002006,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "archive",
+        "--format=tar",
+        "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/workspace-config.tar",
+        "5577747ee93699fa70cd05d78c20204a4b08bc47",
+        "nextcore/Cargo.lock",
+        "nextcore/Cargo.toml"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86",
+      "returncode": 0,
+      "elapsed_seconds": 0.8281991950000247,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-core",
+      "returncode": 0,
+      "elapsed_seconds": 0.08805740100001458,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "archive",
+        "--format=tar",
+        "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/core.tar",
+        "4ae6e9aff31be93cf570b56975b711902f3fb7e7"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-core",
+      "returncode": 0,
+      "elapsed_seconds": 0.2709976060000372,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-efi",
+      "returncode": 0,
+      "elapsed_seconds": 0.09827163599993582,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "archive",
+        "--format=tar",
+        "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/efi.tar",
+        "73d84d9c781d8d2979402d4749b4bae946b92c8c"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-efi",
+      "returncode": 0,
+      "elapsed_seconds": 0.2548915979998583,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-tool",
+      "returncode": 0,
+      "elapsed_seconds": 0.08785130199999003,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "archive",
+        "--format=tar",
+        "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/tool.tar",
+        "9e6222a69d2f62490139c477d6e217a28e3af323"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-tool",
+      "returncode": 0,
+      "elapsed_seconds": 0.1511394530000416,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "archive",
+        "--format=tar",
+        "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/ise.tar",
+        "50b3da2f172f67b4661336799e36bd19002ce816"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise",
+      "returncode": 0,
+      "elapsed_seconds": 0.6870065069999782,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-gpu",
+      "returncode": 0,
+      "elapsed_seconds": 0.07224960200005626,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "archive",
+        "--format=tar",
+        "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/gpu.tar",
+        "eaab9fcfded3a8ee298453397790f13edace5694"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-gpu",
+      "returncode": 0,
+      "elapsed_seconds": 0.12420035499985715,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-hal",
+      "returncode": 0,
+      "elapsed_seconds": 0.07509883500006254,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "archive",
+        "--format=tar",
+        "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/hal.tar",
+        "9c1cd8dfff33478e32668c5cd181dd094ec2881b"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-hal",
+      "returncode": 0,
+      "elapsed_seconds": 0.11779099900013534,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-apls",
+      "returncode": 0,
+      "elapsed_seconds": 0.07333926599994811,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "archive",
+        "--format=tar",
+        "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/apls.tar",
+        "9b6ccaa421f668fdb212ccd14969002f6196a18f"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-apls",
+      "returncode": 0,
+      "elapsed_seconds": 0.12450063100004627,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "ls-files"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime",
+      "returncode": 0,
+      "elapsed_seconds": 0.059197017000087726,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "cargo",
+        "build",
+        "-p",
+        "nextcore-efi",
+        "--bin",
+        "NXPERM",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-stage1-probe"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore",
+      "returncode": 0,
+      "elapsed_seconds": 9.07798634300002,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "cargo",
+        "build",
+        "-p",
+        "nextcore-efi",
+        "--bin",
+        "NXPERM",
+        "--release",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--features",
+        "arm-jit-stage1-probe"
+      ],
+      "cwd": "/tmp/nextcore-hierarchy-efi-build-20260913-r1/workspace/nextcore",
+      "returncode": 0,
+      "elapsed_seconds": 7.755280204999963,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "git",
+        "ls-files"
+      ],
+      "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime",
+      "returncode": 0,
+      "elapsed_seconds": 0.053482560000020385,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "clang-18",
+        "--version"
+      ],
+      "cwd": "None",
+      "returncode": 0,
+      "elapsed_seconds": 0.013477029000114271,
+      "reaped": true
+    },
+    {
+      "argv": [
+        "/home/developer/.cargo/bin/rustc",
+        "--version"
+      ],
+      "cwd": "None",
+      "returncode": 0,
+      "elapsed_seconds": 0.013652197000055821,
+      "reaped": true
+    }
+  ],
+  "original_inputs_used": false,
+  "old_fixture_expected_rejection": "First authored target fetch: parent APTable read-only at L0 with leaf AP01; expected provider unsupported before execution, not an architectural permission fault."
 }

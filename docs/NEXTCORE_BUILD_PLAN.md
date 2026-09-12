@@ -1665,11 +1665,11 @@ captures, fourteen regressions and three negative controls, preserving all
 See `nextcore/artifacts/physical-integration-20260912/mmfr0-sandbox-correction`
 and `nextcore/tools/dynamic_comparison/VALIDATION_MMFR0_SANDBOX_20260913.md`.
 
-### Next implementation contract: baseline stage-1 table permissions
+### Baseline stage-1 table permissions: contract and qualified implementation
 
-Current Status: original bounded execution r29 stops at MMFR1. The strict
-walker rejects APTable/PXNTable/UXNTable and the generic walker does not
-accumulate them. No MMFR1 read policy is implemented by this contract.
+Current Status: original bounded execution r29 still stops at MMFR1. The
+qualified hierarchy implementation now accumulates APTable/PXNTable/UXNTable
+for the admitted EL0/EL1 regime. No MMFR1 read policy is implemented here.
 
 Target State: complete baseline hierarchical permissions for the admitted
 non-secure EL0/EL1 4 KiB/16 KiB stage-1 memory model before exposing MMFR1.
@@ -1741,3 +1741,40 @@ The matching official landing is https://developer.arm.com/documentation/ddi0596
 not been recovered in this continuation; do not
 invent a successful current official-host fetch. The PDF stays outside the
 public source and evidence packages.
+
+
+#### Qualified hierarchy increment — 2026-09-13
+
+ISE `778473fd9c43d7ba3a4721852f838be996fed45d` and EFI `df2c15b8c83664042c33daa274f550158308a752` publish the implementation and authored
+tests. The final pinned NXPERM rebuild is byte-identical to the executed current
+probe: `538a38b1f87255af31575cb1abb8bb1db3088104ebea1c6416aba9f6307170bb`. Normal startup remains NOT_READY.
+
+Independent native tests pass 34 cases in each of three cache modes and 104
+reference cases, rejecting two compiled semantic mutants. The original r6
+broad preservation assertion failed while an uncompiled Arm host runner changed;
+its failure remains recorded. A separate exact source audit qualifies unchanged
+consumed native inputs and directly joins 258 recorded service replies to the
+final 306-case Arm QEMU TCG run. The other 48 Arm cases have separate tests;
+they are not claimed as direct joins. No physical Arm test is implied.
+
+Actual x86 OVMF NXPERM execution passes 961 ordered cases and preserves the
+old-runtime first-case rejection. Both immutable profiles, granules, ELs and
+cold/warm service behavior execute; VA halves and ancestor positions are
+distributed, not a complete Cartesian product. The Arm oracle separately
+covers cold profile-3 TTBR0 level-3 pages. Native/reference checks cover blocks,
+upper addresses, fault priority, cross-EL cache reuse and transactional pairs.
+
+Nearest stage-1 and ASID regressions pass. The immutable 136-file dynamic freeze
+passes six captures, fourteen regressions and three negatives while preserving
+247 older history/evidence files. See
+`nextcore/artifacts/physical-integration-20260912/hierarchy-20260913` and
+`nextcore/tools/dynamic_comparison/VALIDATION_HIERARCHY_20260913.md`.
+
+The [public source audit](BOOT_PRIMARY_SOURCE_AUDIT_20260913.md) binds acquired
+Apple/TianoCore files to immutable commits and records missing official Arm/UEFI
+document bodies. Its source-to-implementation table prioritizes exact target
+entry, guest-owned MMU transitions, kernel framebuffer writes and persistence,
+then storage/userspace/input. A feature-register read alone establishes none
+of those milestones. The latest original evidence remains r29, not a new replay.
+
+OPEN_QUESTION: Build Plan: Accept a separate field-by-field MMFR1 policy and negative optional-control tests before exposing that exact register; preserve the source-audit target-entry and display gates.

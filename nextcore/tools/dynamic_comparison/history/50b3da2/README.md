@@ -2,16 +2,13 @@
 
 ## Current Status
 
-The active exact runtime is ISE `778473fd9c43d7ba3a4721852f838be996fed45d`,
-including baseline hierarchical table permissions, coherent MMFR0 reads and
-fixed eight-bit ASID contexts, alongside
+The active exact runtime is ISE `50b3da2f172f67b4661336799e36bd19002ce816`,
+including coherent MMFR0 reads and fixed eight-bit ASID contexts, alongside
 the preceding exact scalar ID reads and corrected APA1 signing.
 These six captures retain their original dynamic profile-2 inputs and
 expectations. This replay checks shared runtime regressions; it does not replace
 independent instruction or original-entry tests. See
-`VALIDATION_HIERARCHY_20260913.md` and `evidence-hierarchy-20260913`.
-The preceding final MMFR0 sources remain under `history/50b3da2`,
-with `evidence-mmfr0-sandbox-20260913` unchanged.
+`VALIDATION_MMFR0_SANDBOX_20260913.md` and `evidence-mmfr0-sandbox-20260913`.
 The preceding canonical-test correction sources remain under `history/58e712a`,
 with `evidence-mmfr0-ci-20260913` unchanged.
 The preceding MMFR0 sources remain under `history/feb09b5`, with

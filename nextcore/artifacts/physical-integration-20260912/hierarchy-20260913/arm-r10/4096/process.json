@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/usr/bin/qemu-system-aarch64",
+    "-machine",
+    "virt,virtualization=off,secure=off",
+    "-cpu",
+    "max",
+    "-m",
+    "128",
+    "-display",
+    "none",
+    "-serial",
+    "none",
+    "-monitor",
+    "none",
+    "-nic",
+    "none",
+    "-qmp",
+    "unix:/tmp/nextcore-hierarchy-arm-20260913-r10/4096/qmp.sock,server=on,wait=off",
+    "-kernel",
+    "/tmp/nextcore-hierarchy-arm-20260913-r10/4096/oracle.elf"
+  ],
+  "completed": true,
+  "reaped": true,
+  "returncode": 0,
+  "elapsed_seconds": 0.05740885699992759,
+  "timeout_seconds": 30
+}
