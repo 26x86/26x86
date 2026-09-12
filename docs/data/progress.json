@@ -2,9 +2,9 @@
   "updated_at": "2026-09-12",
   "physical_desktop_verified": false,
   "boundary": {
-    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r18-initialization-summary.json",
-    "label": "Kernel prefix: 1,542,930 instructions; alignment boundary",
-    "detail": "The unchanged original input reaches a 64-bit load at a four-byte-aligned chained-fixup node. The selected MMU-off Device profile raises a guest alignment fault. Correct entry memory setup, normal startup and physical display remain unverified."
+    "evidence_url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r20-spsel-summary.json",
+    "label": "Mapped prefix: 42,252,448 instructions; unscaled-load boundary",
+    "detail": "The r20 mapped diagnostic completes 6,010,803 data operations and stops at an unsupported scalar unscaled load. The framebuffer remains zero with matching 1280 by 800 GOP readback. Reset entry ABI, normal startup and physical desktop remain unverified."
   },
   "headline": "Building the path to a real macOS desktop",
   "milestones": [
@@ -21,7 +21,7 @@
       "id": "execution",
       "layer": "CPU runtime",
       "status": "in-progress",
-      "summary": "Original r18 remains the strongest M=0 progress evidence at 1,542,930 instructions. The separate r19 mapped attempt stops after 13 instructions at SPSel with zero completed data operations. Authored mapped tests pass; normal startup and physical boot remain unverified.",
+      "summary": "The r20 mapped diagnostic retires 42,252,448 instructions and completes 6,010,803 data operations before an unsupported scalar unscaled load. Immutable stack selection passes 32 native tests in each of three modes. This is not normal startup or physical boot.",
       "evidence_url": "https://github.com/26x86/Nextcore-ISE/pull/9"
     },
     {
@@ -61,16 +61,22 @@
       "detail": "31 successful checks on development revision 606d3c4a. Later mapped-profile integration is tracked separately; CI is not physical boot proof."
     },
     {
-      "value": "1,542,930",
+      "value": "42,252,448",
       "label": "Latest bounded prefix",
-      "detail": "Retired instructions before a guest data-alignment fault in isolated OVMF."
+      "detail": "Retired instructions before an unsupported scalar unscaled load in the explicit mapped OVMF diagnostic."
     }
   ],
   "latest": [
     {
       "date": "2026-09-12",
+      "title": "Mapped original prefix reaches an unscaled-load boundary",
+      "summary": "r20 retires 42,252,448 instructions and completes 6,010,803 data operations after verified stack selection. It stops at an unsupported scalar unscaled load; the 1280 by 800 framebuffer remains zero. Native stack-selection tests pass 32 cases in each of three modes. Normal startup remains unverified.",
+      "url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r20-spsel-summary.json"
+    },
+    {
+      "date": "2026-09-12",
       "title": "First original mapped attempt stops at SPSel",
-      "summary": "The separate r19 mapping regime retires 13 instructions, completes zero data operations and stops with SYSTEM_REGISTER_TRAP at SPSel. Its zero framebuffer matches 1280 by 800 GOP readback. It did not advance beyond r18; the different regimes are not a direct progress comparison. SPSel implementation is not yet verified.",
+      "summary": "The separate r19 mapping regime retires 13 instructions, completes zero data operations and stops with SYSTEM_REGISTER_TRAP at SPSel. Its zero framebuffer matches 1280 by 800 GOP readback. It did not advance beyond r18; the different regimes are not a direct progress comparison. This historical stop is superseded by the r20 mapped run with verified stack selection.",
       "url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r19-mapped-summary.json"
     },
     {

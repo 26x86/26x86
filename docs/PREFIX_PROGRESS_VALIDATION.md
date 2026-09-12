@@ -2,7 +2,25 @@
 
 ## Current Status
 
-The unchanged local macOS 27.0 / 26A5425a input now stops after 1,542,930
+The r20 mapped diagnostic retires **42,252,448 instructions** and completes
+**6,010,803 data operations** before UNSUPPORTED_INSTRUCTION at a scalar unscaled
+64-bit load with a negative offset. The provider reports no error. The original
+input is preserved. The owned framebuffer remains zero and matches GOP readback
+at 1280 by 800; no macOS screen has been established.
+
+The selected software-defined Normal-NC profile, high virtual alias, canonical
+PAC callback and immutable stack selection are explicit diagnostic conditions.
+They do not establish the target's reset entry ABI, SPTM services, complete
+platform DeviceTree, kernel initialization, userspace or physical boot. This
+mapped run is distinct from the historical M=0 alignment profile below.
+
+[Latest r20 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r20-spsel-summary.json)
+records the stop without publishing original instruction words or addresses.
+The next bounded implementation boundary is scalar unscaled memory addressing.
+
+## Historical M=0 boundary
+
+The r18 macOS 27.0 / 26A5425a input stopped after 1,542,930
 retired instructions with a guest data-alignment fault, before the explicitly
 selected initialization budget of 67,108,864. It completes 208,610 data
 operations; the memory provider itself reports no error.
@@ -19,7 +37,7 @@ entry memory regime and supply a supported, validated profile. Normal startup,
 complete fixup traversal and userspace remain unverified. The owned framebuffer
 still matches an all-zero frame.
 
-[Latest original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r18-initialization-summary.json)
+[Historical r18 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r18-initialization-summary.json)
 and [fault membership](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-chain-fault-membership-summary.json)
 retain the distinction between a completed diagnostic and a booted OS.
 
@@ -64,11 +82,11 @@ r19 mapped attempt retires 13 instructions and stops with SYSTEM_REGISTER_TRAP
 at SPSel, with zero completed data operations. Its owned framebuffer remains
 zero and matches GOP readback at 1280 by 800. This new mapping regime did not
 advance beyond r18; its retirement count is not a same-regime regression or
-progress comparison. SPSel support is being implemented and is not yet verified.
+progress comparison. The subsequent r20 run above includes verified immutable stack selection.
 The [r19 mapped receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r19-mapped-summary.json)
 records this boundary without original instruction words or addresses.
 
-The independent native proof passes 31 tests in each of three separately compiled
+The initial independent native proof passes 31 tests in each of three separately compiled
 modes: cached, uncached and 64-byte cache slots. Nine scenarios compare complete
 CPU state, execution results, all RAM and ordered canonical Rust memory-service
 requests/replies. Only the process-dependent callback pointer is normalized.
@@ -101,6 +119,15 @@ installation or a physical desktop. Normal startup remains NOT_READY.
 [final authored EFI receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/mapped-normal-profile/efi/receipt.json), and
 [independent native receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/mapped-normal-profile/native/receipt.json)
 record these results separately from the original r18 boundary.
+
+## Immutable stack selection
+
+The follow-on native suite passes **32 tests in each of three modes**, preserving
+the full-state cache comparisons and existing M=0 rejection gates. Immediate EL1
+stack-bank selection preserves the live SP on same-bank writes and validates
+subsequent stack accesses. Authored EFI cached/uncached checks pass and the old
+runtime rejects the new operation. [Stack-selection evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/immutable-stack-selection/summary.json)
+separates those authored checks from the r20 original-input result.
 
 ## Observations and Controls
 
@@ -182,5 +209,6 @@ initialization tier, budget and named profile. Twenty-four Core tests, fourteen
 host tests and no_std UEFI compilation pass. An authored BFM loop executes the
 full 67,108,864 steps in the final EFI and preserves expected state and inputs;
 the old build rejects the new selector before guest entry. The unchanged
-600-second timeout remains a hard limit. The original input stops earlier at the
-reported alignment fault; the requested maximum is not its retirement count.
+600-second timeout remains a hard limit. Historical r18 stopped at the alignment
+fault; the later mapped r20 run stops at an unsupported unscaled load. Neither
+run reaches the requested maximum, which is not its actual retirement count.
