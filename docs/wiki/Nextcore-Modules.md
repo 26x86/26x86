@@ -37,8 +37,13 @@ display, input and storage remain acceptance gaps; guest Metal is separate.
 
 ## Clone and build
 
+The latest startup evidence on this site describes development PR #19, not a
+released bootable system. Select that integration branch explicitly to reproduce
+its instruction and EFI changes. The default `main` branch can contain older
+runtime pins even when the documentation site has been refreshed.
+
 ```bash
-git clone --recurse-submodules https://github.com/26x86/26x86.git
+git clone --branch codex/physical-golden-gate-20260912 --recurse-submodules https://github.com/26x86/26x86.git
 cd 26x86
 # Also run after switching integration branches or pulling new gitlinks:
 git submodule sync --recursive
