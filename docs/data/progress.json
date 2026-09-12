@@ -57,8 +57,8 @@
     },
     {
       "value": "6 / 6",
-      "label": "Completed workspace CI checkpoint",
-      "detail": "All six workspace and EFI jobs passed on earlier source3d3a434d; the separate Sandbox workflow passed. Newer optional-control integration has separate evidence. CI is not physical boot proof."
+      "label": "Latest workspace CI",
+      "detail": "All six workspace and EFI jobs pass on source revision b18e6d64. The separate Sandbox and documentation workflows also pass. CI is not physical boot proof."
     },
     {
       "value": "42,256,374",
@@ -67,6 +67,12 @@
     }
   ],
   "latest": [
+    {
+      "date": "2026-09-13",
+      "title": "Optional-control integration passes public CI",
+      "summary": "All six workspace and EFI jobs, the separate Sandbox workflow and documentation checks pass on immutable source b18e6d64. The published EFI package uses that same source. This validates the bounded implementation and packaging; original r29 and physical boot status remain unchanged.",
+      "url": "https://github.com/26x86/26x86/actions/runs/34715223879"
+    },
     {
       "date": "2026-09-13",
       "title": "Unsupported table-management controls now reject without changing state",
