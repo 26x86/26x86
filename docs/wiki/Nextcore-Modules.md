@@ -1,5 +1,9 @@
 # NextCore module repositories
 
+**Current Status:** Seven independent module repositories with immutable integration identities.
+
+**Target State:** Reproducible module, native, firmware and physical acceptance for each claimed capability.
+
 NextCore uses seven Git submodules. Each module owns its source and history;
 the integration repository records exact commits and the workspace build.
 
@@ -12,6 +16,24 @@ the integration repository records exact commits and the workspace build.
 | nextcore-gpu | [GPU](https://github.com/26x86/Nextcore-GPU) | GPU command dispatch, rendering and Vulkan compute |
 | nextcore-hal | [HAL](https://github.com/26x86/Nextcore-HAL) | Platform table and device translation |
 | nextcore-apls | [APLS](https://github.com/26x86/Nextcore-APLS) | ARM recovery execution and guest ABI |
+
+## Current runtime boundary
+
+Normal ARM64e entry remains `NOT_READY`/`PROVIDERS_PENDING`. Explicit bounded
+original-prefix diagnostics return `ABORTED`, even when supported instructions
+retire successfully. The public instruction increments include extended integer
+arithmetic, conditional selection, register-offset memory, test-bit branches,
+ordinary multiply-add/subtract and destination-merging bitfields, each with its
+own immutable proof. They do not provide a complete CPU/platform or OS boot.
+
+The direct and legacy v1 paths retain their MMU restrictions. Separate immutable
+stage-1 and one-way dynamic-MMU provider fixtures execute generated x86 using
+actual Rust callbacks. Those bounded paths do not establish unrestricted live
+page-table updates, complete target-specific platform services or persistent guest devices.
+
+Use [progress](../progress.md) for current integration/replay receipts and
+[compatibility](../compatibility.md) for per-machine evidence. Persistent guest
+display, input and storage remain acceptance gaps; guest Metal is separate.
 
 ## Clone and build
 
@@ -92,18 +114,19 @@ The target is ARM64e macOS 27 code running on an x86_64 machine entered through
 EFI. The macOS-focused JIT/HAL is the product runtime; an outer QEMU/OVMF x86
 machine supplies reproducible development firmware. WSL is the build host.
 
-AMD, NVIDIA and Intel integrated GPUs are implementation targets. Current host
-Vulkan readback evidence comes from an AMD RX6800XT. Neither vendor enumeration
-nor that host result establishes NVIDIA/Intel hardware execution, an EFI GPU
-driver or guest Metal support. Original-prefix diagnostics are also separate
+AMD, NVIDIA and Intel integrated GPUs are implementation targets. Dated host
+Vulkan receipts name their exact adapter (including RX6800XT in the recorded
+backend work). Neither vendor enumeration nor a result for one adapter establishes
+other hardware execution, a persistent EFI GPU driver or guest Metal support. Original-prefix diagnostics are also separate
 from a usable macOS boot. Keep these outcomes explicit in milestone receipts.
 
 ## Scalar and MMU development checks
 
 The ISE module implements the 13 unsigned-offset integer width/sign forms. Its
 reference walker preserves exact stage-1 fault levels and typed backing failures.
-The native JIT still rejects SCTLR.M; this interface is preparation for a checked
-memory provider, not native MMU completion. Reproduce the authored CPU checks:
+The direct and legacy v1 JIT entry paths reject SCTLR.M. Separate immutable
+stage-1 and one-way dynamic provider paths are described below; this is not
+unrestricted native MMU completion. Reproduce the authored CPU checks:
 
 ```bash
 cargo test --manifest-path nextcore/crates/nextcore-ise/runtime/preos/Cargo.toml
@@ -139,7 +162,7 @@ python3 Tools/verify_nextcore_submodules.py --cargo --require-clean
 ```
 
 This diagnostic feature routes fetch and integer memory through the Rust service;
-it still rejects native SCTLR.M. Add `arm-jit-tiered-trace` only for explicit bounded
+this legacy v1 diagnostic still rejects SCTLR.M. Add `arm-jit-tiered-trace` only for explicit bounded
 256/1024/4096 diagnostics and pass `--tiered-diagnostic` to the trace tool. The
 ordinary trace keeps its 64/8 limits. The current integrated firmware runner is
 `nextcore/tools/verify_arm_memory_provider_ovmf.py`; it checks actual callback
@@ -150,9 +173,9 @@ and runtime-device-tree contracts described in
 [the entry audit](../NEXTCORE_ARM64E_ENTRY_CONTRACT.md). These remain incomplete.
 
 
-### BP33 owned guest staging
+### Historical BP33 owned guest staging (2026-09-09)
 
-Core147f4c4 retains exclusive guest backing, bounded purpose reservations and
+The recorded BP33 Core147f4c4 checkpoint retains exclusive guest backing, bounded purpose reservations and
 source-bound DeviceTree commit. EFI7e7a08b supplies the opt-in NXDT consumer,
 with actual nonidentity ARM loads/stores executed as x86 code. Tool4bb09da selects
 the same Core source. These remain separate Git repositories and immutable
@@ -194,3 +217,7 @@ authored arithmetic and strict selector rejection. Its `--recheck-provenance`
 mode executes only the deep case plus CLI and x1 controls; it does not exercise
 the default/clamped inputs despite retaining those required provenance arguments.
 The full five-case mode requires actual separate tiered-only and clamped binaries.
+
+SPTM applicability to the selected j274 target is unverified. The diagnostic
+profile name does not establish its normal startup ABI; see the
+[entry contract](../NEXTCORE_ARM64E_ENTRY_CONTRACT.md).

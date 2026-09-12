@@ -1,51 +1,28 @@
-# Pre-AVX Mac Pro (MacPro5,1 / 6,1)
+# Older Mac Pro CPU capability notes
 
-**26x86 Phase 1** — Mac Pro 5,1 / 6,1 Pre-AVX detection, Metal branch hints, and automated Safari 26 Pre-AVX RestrictEvents application.
+**Current Status:** CPU capability diagnosis; no universal pre-AVX execution claim.
 
-> [!IMPORTANT]
-> Safari `SIGILL` (AVX opcode crash) and WindowServer display tint (yellow/orange tint) stem from **completely separate root causes and require different remediations.** This document addresses the Safari and AVX instruction pathway. For compositor tint, refer to [Mac-Pro-Tahoe-Yellow-Screen.md](./Mac-Pro-Tahoe-Yellow-Screen.md).
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
 
-## Quick Verification
-
-Run detection to inspect pre-AVX CPU flags:
+A model name does not replace CPU feature detection. MacPro5,1-class Westmere
+systems are a pre-AVX context; do not classify every MacPro6,1 as pre-AVX or
+pre-AVX2 based on a shared profile name. Record the actual processor and usable
+instruction features for the configured operating system.
 
 ```bash
 python3 -m x86 detect --json
 ```
 
-Output includes the following fields:
+Detection and generated boot arguments are preparation evidence. They do not
+prove that Safari, WindowServer, the kernel or third-party applications run on
+the selected build. Check [compatibility](../compatibility.md) and capture the
+actual crash context before choosing a CPU workaround.
 
-| Field | Description |
-|-------|-------------|
-| `cpu_model` | CPU model string (e.g. `Intel(R) Xeon(R) CPU X5675 @ 3.07GHz`) |
-| `has_avx` | AVX instruction support (`false` on MacPro5,1 Westmere/Nehalem) |
-| `is_pre_avx_macpro` | Mac Pro 5,1/6,1 without AVX support |
-| `auto_pre_avx_patch` | Automatic pre-AVX fix status (`true` by default) |
-| `recommended_boot_args` | Recommended boot-args (`revpatch=jsc` added automatically) |
+`revpatch=jsc` and any selected RestrictEvents build must be evaluated against
+that build's public documentation and source. Do not describe them as a general
+AVX-to-SSE translator or a universal Safari fix without a matching runtime test.
+See [Safari diagnostics](Safari-PreAVX-Fix.md).
 
-## Safari 26 Pre-AVX Fix
-
-- **Problem:** Safari 26.6.1 WebContent executes AVX instructions (`vmovaps`) in WebKit JIT on CPUs without AVX, resulting in `EXC_BAD_INSTRUCTION` (`SIGILL`).
-- **Solution:** 26x86 automatically replaces `RestrictEvents.kext` with the pre-AVX instruction patch build and injects `revpatch=jsc` into NVRAM `boot-args`.
-- **Target Systems:** MacPro5,1 (and early MacPro6,1 configurations without AVX).
-- **Details:** See [Safari-PreAVX-Fix.md](./Safari-PreAVX-Fix.md).
-
-## Configuration Options
-
-In `config.json` or `com.26x86.plist`:
-
-```json
-{
-  "General": {
-    "AutoPreAVXPatch": true
-  }
-}
-```
-
-When set to `false`, automated RestrictEvents substitution and `revpatch=jsc` injection are disabled.
-
-## Validation Checklist
-
-1. Verify `has_avx: false` via `python3 -m x86 detect --json`.
-2. Build EFI: verify `RestrictEvents.kext` is injected and `boot-args` contains `revpatch=jsc`.
-3. Boot macOS 26 Tahoe: launch Safari, open complex websites, and verify WebContent does not trigger `SIGILL`.
+A colored display and an illegal-instruction exception are distinct symptoms.
+Diagnose each independently; [display tint notes](Mac-Pro-Tahoe-Yellow-Screen.md)
+do not establish the cause of a CPU exception.

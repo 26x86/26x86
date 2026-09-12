@@ -6,13 +6,21 @@ This specification defines the *what* and *why* of NextCore. Implementation deta
 
 ## Current Status
 
-- **Host Architecture Policy (2026-09-08):** The physical execution target is always x86. macOS 27 ARM64e builds execute on top of a macOS-dedicated JIT/HAL compatibility layer hosted within the x86 EFI environment. WSL2 serves as an offline development environment; host-OS QEMU and ARM Macs are not runtime execution prerequisites. Ownership of physical memory, exceptions, and hardware devices following EFI transition must be maintained by this compatibility layer.
-- **Product Identity:** The official brand is **NextCore**. Support for macOS 27 GoldenGate, AMD64↔Apple Silicon HAL translation, and accelerated Metal graphics remain foundational milestones. External OpenCore origins, file compatibility layouts, and legacy test identifiers retain their original technical names.
-- **D1 (Identity):** Codified — Clean-room definition, non-goals, and architectural rationale established.
-- **D2/D3/D4:** Codified — 5-stage boot flow, iBoot role replacement matrix, and OpenCore idea inheritance boundaries defined.
-- **D5–D8:** Codified — Internal handoff abstractions, public XNU ABI adapters, dynamic version discovery, and clean-room knowledge transfer rules defined.
-- **D9–D12:** Objectives agreed — Instruction Set Emulation (ISE), GPU Virtualization & Abstraction Layer, Hardware Abstraction Layer (HAL), and Apple Silicon Sandbox (APLS) integration.
-- **D13/D14 (Picker & Visual Identity):** Codified — Unified NextCore branding and standalone UEFI Boot Services graphical boot picker implemented and validated in Q35/TCG OVMF.
+As of the 2026-09-12 documentation review, the x86 EFI product executes authored
+A64 fixtures and bounded original-input prefixes. Normal ARM64e entry remains
+`NOT_READY`; explicit incomplete-prefix diagnostics remain `ABORTED`. Passing
+native/provider/UEFI tests does not establish physical macOS boot.
+
+Seven independent module repositories supply the implementation. Native integer
+execution, checked memory providers, immutable stage-1 and one-way dynamic MMU
+fixtures are implemented within their documented bounds. Target-specific platform
+services, persistent storage and guest display/input remain incomplete.
+
+The active physical target is Samsung 750XHD. Its acceptance is external-media
+installation, reboot and an interactive macOS 27 desktop; acceleration follows.
+Hardware coverage is documented in [compatibility](compatibility.md), while
+[current progress](progress.md) owns moving execution and publication receipts.
+The 2026-09-08 picker result is Q35/TCG OVMF evidence, not physical acceptance.
 
 ## Target State
 
@@ -32,12 +40,12 @@ This specification defines the *what* and *why* of NextCore. Implementation deta
 
 NextCore is an open, clean-room bootloader designed to initialize and boot macOS within standard UEFI firmware environments:
 
-1. **Fulfills the functional role of iBoot using clean-room methods:** NextCore provides external interfaces required by macOS post-firmware (DeviceTree representations, physical memory maps, boot arguments, kext catalogs, and handoff structures) without utilizing Apple proprietary binaries, decryption keys, signature blobs, or internal symbols. *Functional equivalence through independent implementation.*
+1. **Targets the functional role of early boot using clean-room methods:** NextCore develops external interfaces required by macOS post-firmware (DeviceTree representations, physical memory maps, boot arguments, kext catalogs, and handoff structures) without utilizing Apple proprietary binaries, decryption keys, signature blobs, or internal symbols. *Functional equivalence through independent implementation.*
 2. **Inherits architectural principles from OpenCore:** Employs a declarative, `config.plist`-driven configuration model, directory layout compatibility with `EFI/OC/`, and interface compatibility across ACPI, DeviceProperties, boot-args, and kext registries. Source code dependency remains strictly zero.
 
 **Execution Scope:** The bootloader core runs under UEFI firmware. Sustained execution post-`ExitBootServices()` relies on companion HAL, JIT, and driver virtualization layers (D9–D11). An individual EFI binary does not presume indefinite ownership of all hardware interrupts without these supporting subsystems.
 
-Written in Rust, NextCore delegates cryptographic trust decisions (e.g. Bootability Manifest, secure boot signatures) to platform policy. It is not an exploit payload or signature bypass utility.
+Implemented in Rust with an independently authored native C JIT/runtime, NextCore delegates cryptographic trust decisions (e.g. Bootability Manifest, secure boot signatures) to platform policy. It is not an exploit payload or signature bypass utility.
 
 Non-Goals:
 - Reproduction or decompilation of proprietary Apple binaries (AGENTS.md §0).
@@ -104,7 +112,7 @@ The target execution path comprises five distinct verification tiers:
 - Kext catalog declarations.
 
 **Intentionally Discarded:**
-- C codebase dependencies (implemented 100% in clean-room Rust).
+- OpenCore source dependencies (the independent implementation includes Rust and native C).
 - Build system sharing (uses native Cargo workspace).
 - Trademarks and proprietary branding.
 - Embedded private keys, certificates, and binary blobs.
@@ -120,6 +128,8 @@ The public header [pexpert/i386/boot.h](https://github.com/apple-oss-distributio
 - **x86 Entry Protocol:** Early kernel entry on x86 expects 32-bit protected mode with paging disabled, flat memory addressing, and boot argument pointer in `EAX` ([osfmk/x86_64/start.s](https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/x86_64/start.s)). Standard 64-bit EFI function calls cannot jump directly to this entry without an architectural mode transition.
 - **Consumption Pipeline:** `vstart` consumes memory maps, kernelcache descriptors, and DeviceTree structures ([osfmk/i386/i386_init.c](https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/i386/i386_init.c)).
 - **ARM64 Isolation:** AArch64 handoff utilizes distinct physical memory layouts ([pexpert/arm64/boot.h](https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/pexpert/pexpert/arm64/boot.h)) and must not be conflated with x86 structures.
+
+The [ARM64e entry contract](NEXTCORE_ARM64E_ENTRY_CONTRACT.md) distinguishes legacy x0 boot arguments from SPTM cold-entry x1/x2 arguments. Target-specific provisioning and live services remain open.
 
 #### D5-B. Abstract Representation & Wire Encoders
 NextCore maintains an internal strongly-typed representation of physical memory maps, kernel positioning, video descriptors, and DeviceTree nodes, translating these to external wire formats via dedicated adapters prior to kernel invocation. Host pointers and data structures are never cast directly into guest memory.
@@ -138,9 +148,9 @@ Knowledge derived from isolated analysis is restricted to single-sentence natura
 
 ### D9. Instruction Set Emulation (ISE)
 
-- **Objective:** Enable execution of missing CPU instruction sets (AVX, AVX2, FMA, SSE4.1/4.2, XSAVE, POPCNT) on older x86 processors (such as MacPro1,1 and MacPro5,1).
+- **Current objective:** Translate the required ARM64e macOS instruction behavior into generated x86 code with a separate Rust reference and checked memory/provider contracts. Legacy x86 missing-instruction work is a distinct scope.
 - **Execution Architecture:** Sustained emulation following boot handoff requires dedicated hypervisor or kernel exception trapping. Traps must distinguish `#UD` (invalid opcode) from `#GP` (general protection faults), decoding instruction lengths and register contexts cleanly.
-- **Implementation Status:** `nextcore-ise` provides pure-function instruction decoders and register models. Full bare-metal IDT/exception routing requires companion hypervisor layers.
+- **Implementation Status:** `nextcore-ise` executes supported A64 integer families as generated x86 and verifies them against independent reference/provider fixtures. Unsupported operations remain gated; this is not a complete A64 CPU or physical platform.
 
 ### D10. GPU Abstraction & Graphics Acceleration
 
@@ -171,3 +181,9 @@ NextCore features a native graphical boot picker operating entirely within UEFI 
 - Renders via standard UEFI GOP `Blt` interfaces with automatic fallback to Simple Text Output on headless or unsupported displays.
 - Selecting an entry launches the designated EFI application via standard `LoadImage` and `StartImage` services without terminating Boot Services prematurely.
 - Fully decoupled from proprietary visual bootloader assets.
+
+OPEN_QUESTION: Design:Complete persistent guest display, storage and platform ownership after firmware transition before claiming physical macOS startup.
+
+SPTM applicability to the selected j274 target is unverified. The diagnostic
+profile name does not establish its normal startup ABI; see the
+[entry contract](NEXTCORE_ARM64E_ENTRY_CONTRACT.md).

@@ -1,9 +1,22 @@
 # 26x86 VSK implementation
 
+**Current Status:** Historical VF-SPEC-001 policy/ABI work; no bootable isolated VSK kernel.
+
+**Target State:** Accurate, reproducible guidance tied to the specific source, hardware and execution layer.
+
 The adopted design is the user-supplied **VF-SPEC-001 v0.1**, dated 2026-09-06.
 The public product name is 26x86. `VSK`, `vf_*` and the legacy `venfire` namespace
 are retained internally. The reference ZIP mentioned by the document was not
 provided; the implementation here is original code, not a copy of that package.
+
+## Relationship to NextCore
+
+This is the separate VF-SPEC-001 design adopted on 2026-09-06. Its admission
+policy and service-cell requirements are not a claim that the current NextCore
+x86 EFI runtime is a completed VSK kernel. Use [Design](NEXTCORE_DESIGN.md),
+[progress](progress.md) and [compatibility](compatibility.md) for the active
+physical product target and evidence. The historical VSK restrictions below
+remain scoped to that design.
 
 ## Current implementation boundary
 
