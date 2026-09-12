@@ -1238,3 +1238,78 @@ Primary execution reference:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/translate-a64.c#L7869-L7879
 Width-specific shift and zero-extension reference:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/translate-a64.c#L6954-L6995
+
+### Exact ZFR0 read in the bounded scalar profile
+
+Current Status: ISE `401619acb1232a366af776bc1ecbfd04eb01631f` and EFI
+`e7b90180d47383a34fbb43247b26809cd38f94f6` implement this exact read. Independent
+validation passes 912 native assertions, 32 actual Cortex-A72 destination
+vectors against C and Rust, 31 provider tests in each of three cache modes,
+and ten authored EFI checks. The pinned EFI rebuild is byte-identical to the
+tested candidate. The 110-file immutable runtime freeze passes six captured
+cases, fourteen regressions and three negative controls. Original r26 passes
+ZFR0 and retires 42,255,998 instructions with 6,012,275 data operations before
+status 13 at MRS ID_AA64ISAR0_EL1. It completes in 122.167 seconds with unchanged
+inputs and binaries. Its 1280 by 800 framebuffer hash matches zero RGB and GOP
+readback. Physical macOS display remains unverified. The next gate is to
+reconcile ISAR0 access and feature fields with the implemented scalar profile;
+r25 stopped because native and Rust dispatch did not recognize ZFR0.
+PFR0/PFR1 remain absent; no existing PFR read has
+advertised a contradictory SVE value. Authored EL1 reads on QEMU 8.2.2 cortex-a72
+return ZFR0=0. The same fixture on max,sve=off,sme=off returns nonzero ZFR0 despite
+cleared PFR SVE/SME fields: that model initializes ZFR0 independently. Preserve
+both observations; disabling QEMU options is not a universal zero-return oracle.
+
+Target State: Define this runtime's bounded scalar profile as providing neither
+SVE nor SME, and implement only the exact read-only ZFR0 MRS as zero at EL1
+with its existing inactive HCR/SCR control contract. Preserve rejection of
+nonzero unsupported controls, EL0, MSR writes and neighboring unsupported IDs.
+Do not blanket-zero unknown system registers, invent PFR0/PFR1 values, advertise
+vector execution, change CPU layout or ABI, or relax normal startup readiness.
+Success follows XZR destination semantics, advances PC/retirement once and
+preserves SP/NZCV and memory. Native direct execution, Rust reference and the
+canonical provider must agree, including cached, uncached and small-slot paths.
+Test exact instruction decoding, every destination, repeated reads, zero data
+requests, rejected access/control cases and unchanged state on rejection. Add
+authored EFI consumption before an unchanged-original replay. EL0 rejection is
+the runtime's bounded policy, not proof of every FEAT_IDST trap configuration.
+
+Arm DDI0616 B.a page 983 defines the encoding and separates EL1 reads from
+applicable EL2 TID3 traps; literal HCR=0 in this software runtime is not an
+assertion of the original hardware reset ABI. The two authored oracle runs use
+EL2-absent machines and do not write HCR_EL2.
+Primary access reference: https://documentation-service.arm.com/static/6526e1bd9e189a266cef8412
+Version-matched model references:
+https://github.com/qemu/qemu/blob/v8.2.2/target/arm/cpu64.c#L264-L275
+https://github.com/qemu/qemu/blob/v8.2.2/target/arm/tcg/cpu64.c#L1141-L1151
+
+### Exact ISAR0 read in the bounded scalar profile
+
+Current Status: Original r26 stops at ID_AA64ISAR0_EL1. The native JIT, C
+register API and Rust reference do not currently recognize this register.
+The runtime does not implement the extensions described by its AES, SHA1,
+SHA2, CRC32, Atomic, TME, RDM, SHA3, SM3, SM4, DP, FHM, TS, TLB or RNDR fields.
+Baseline exclusives are not LSE; baseline TLBI is not the outer-shareable or
+range extension; software CRC calculation is not guest CRC32 instruction
+support. Existing ISAR1 reset values differ between C and Rust and remain a
+separate issue; they are not the cause of this missing ISAR0 dispatch.
+
+Target State: Add only exact read-only MRS ID_AA64ISAR0_EL1, S3_0_C0_C6_0.
+Define each extension field as absent and the reserved low nibble as zero in
+the explicit bounded software profile. Permit EL1 with live inactive HCR/SCR
+controls; retain rejection of writes, other ELs, unsupported controls and
+neighboring unknown registers. This policy does not claim full Arm-version
+conformance or reproduce the original hardware's feature register. Preserve
+XZR, SP/NZCV, memory and exact retirement semantics without changing CPU layout,
+cache keys, PFR values or readiness. Independently test every destination,
+live control changes after translation, rejected accesses and representative
+unimplemented extensions in native, reference and all provider cache modes.
+Authored EFI consumption must precede another unchanged-original execution.
+
+Primary field reference: Arm Cortex-A520 Cryptographic Extension TRM section
+2.2, table 2-2: https://documentation-service.arm.com/static/672e536f27eda361ad4da11a
+Version-pinned field and feature predicates:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/cpu.h
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/cpu-features.h
+Read-only registration and access policy:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/helper.c
