@@ -1161,7 +1161,7 @@ configuration and child-return picker paths remain separate and usable.
 
 Target State: Show the exact configuration path and actual failure reason with
 explicit Enter-to-retry and Escape-to-return actions. Retry only the same
-`\\EFI\\OC\\config.plist` on the current loaded-image file system and perform all
+`\EFI\OC\config.plist` on the current loaded-image file system and perform all
 size and parse checks again. Do not search other volumes, choose an arbitrary
 child, write files or NVRAM, or automatically retry/boot. A failed display write
 or unavailable key-input service must return its actual error rather than
