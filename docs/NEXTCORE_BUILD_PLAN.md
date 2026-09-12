@@ -998,6 +998,162 @@ authentication to the immutable v2 runner, construct kernel page tables or enabl
 normal startup. Those require separate explicit contracts and runtime evidence.
 Root owns integration and this Build Plan section; delegated runtime implementation
 and independent tests have disjoint source ownership.
+
+### Explicit mapped original-entry diagnostic
+
+Current Status: The explicit mapped NXARMJIT path passes authored EFI acceptance
+with the final published module revisions. Three native cache variants pass 31
+tests each and nine complete-state comparisons; the existing M=0 suite passes
+20 regressions. The first original profile-3 attempt stops at immediate stack
+selection after 13 retired instructions; it does not exceed the M0 result.
+
+Target State: Add a separately built and explicitly selected mapped diagnostic.
+Use 16 KiB Normal-NC profile 3 (T0SZ=T1SZ=17, IPS=48), an immutable caller-owned
+table image, and identity plus VirtualBase aliases for the validated RAM span.
+The entry PC is the staged entry's corresponding VirtualBase alias. Keep the
+existing declared x0=0/x1=physical boot args/x2=x3=0 and physical stack through
+the identity alias. This is software-defined diagnostic setup, not a proven
+original reset ABI. Tables occupy a disjoint physical range immediately after
+RAM. Reject overflow, noncanonical aliases, overlap, alignment and capacity
+errors before guest execution. Page tables are immutable and normal readiness
+remains NOT_READY.
+
+A distinct vf_boot_run_memory_pauth_v2 entry adds the canonical PAC callback
+immediately after initial_x0_x3 in the existing v2 signature. The old v2 entry
+continues without PAC. The new path must refuse callback changes to immutable
+controls/current EL before committing any context. Extend the existing bounded
+PAC address profile from 48 to 47 bits only with public-contract and independent
+oracle evidence; do not change QARMA, key defaults or PAC enable semantics.
+Profile 3 keeps its fixed enable bits, so disabled PAC instructions retain their
+architecturally disabled behavior. XPAC and generic authentication instructions
+must use their actual supported semantics, never instruction skipping.
+
+Reuse native entries in the immutable v2 loop only after its existing per-step
+control checks and fresh validated fetch. Match PC, word and EL, preserve all
+fault/interrupt/data/retirement behavior and protection failure handling, and
+retain a compiled uncached comparison. Dynamic execution remains unchanged.
+
+Core owns a checked 16 KiB alias-table planner and a mapped-only trace parser:
+parse_arm64_trace_configuration_with_mapped_tier, admitting the existing budgets
+plus exact MemoryProfile=mapped-normal-nc-v1. Existing parser APIs must reject
+that field instead of silently ignoring it. EFI requires arm-jit-mapped-trace
+and emits build/selection/mapping/provider acknowledgements. The host requires
+those acknowledgements before accepting --mapped-diagnostic. Authored mapped
+execution, old-build rejection and cached/uncached equality precede the original
+replay. Original assets and raw coordinates stay isolated.
+
+Acceptance scope: the independent Arm oracle advertises APA5 while the runtime
+implements APA1. Sixteen enabled lower-range sign/auth vectors and all 24
+XPAC/disabled vectors compare directly. Eight upper-range enabled vectors are
+not verified against a same-feature CPU. The selected mapped profile keeps
+address signing disabled and does not widen that contract.
+
+### Immutable mapped stack selection
+
+Current Status: The first original mapped replay stopped after 13 retired
+instructions at immediate SPSel selection. A dedicated immutable v2 handler now
+passes 32 native tests in each of three modes and ten authored EFI checks.
+Distinct banks, stale saved-bank values, following stack accesses and existing
+EL0/reserved-encoding failures are verified. The unchanged original mapped replay
+now retires 42,252,448 instructions and completes 6,010,803 data operations before
+an unsupported scalar unscaled load. Its framebuffer remains zero. This proves
+progress in the explicit diagnostic regime, not normal or physical macOS boot.
+
+Target State: Implement the two architected immediate SPSel selections at EL1
+in the immutable v2 runner. Save the active stack bank, set only PSTATE.SP,
+then load the selected SP_EL0 or SP_EL1 bank. Preserve NZCV, DAIF, current EL,
+all memory controls, PAC keys and unrelated registers. Retire exactly once,
+advance PC once and retain the normal next-step control and fetch validation.
+EL0 and reserved immediate encodings must retain their existing failure paths.
+Do not open DAIF, TLBI, ERET or arbitrary system writes through this helper.
+The existing M0 and dynamic implementations remain unchanged. Authored bank
+switch, same-bank selection, following stack use and negative tests precede
+another original replay. Arm's public PSTATE synchronization contract requires
+subsequent instructions to observe the new stack without an added barrier:
+https://community.arm.com/forums/f/architectures-and-processors-forum/8141/is-any-synchronization-barrier-instruction-necessary-after-writing-spsel-to-switch-to-sp0-on-armv8
+
+### Scalar unscaled memory transfers
+
+Current Status: The signed immediate unscaled class now passes 546 native cases,
+39 actual Arm vectors compared against both C and Rust execution, and 33
+canonical-memory tests in each of three cache modes. Final authored EFI passes
+ten checks. An independent failure exposed missing store-fault WnR classification;
+the corrected exception encoder passes exact-syndrome regressions. The previous
+original run stopped at this class after 42,252,448 instructions; replay with the
+verified implementation first ended without a terminal record after about 334
+seconds. After the separately verified watchdog ownership change, unchanged-input
+r22 completes after 413.518 seconds with 42,252,452 retired instructions and
+6,010,805 completed data operations. It stops at an unsupported shifted-register
+ORR. The 1280x800 framebuffer remains zero; normal and physical startup are unverified.
+
+Target State: Support the thirteen integer unscaled forms: byte/halfword/word/
+doubleword stores and zero-extending loads, signed byte/halfword loads to W/X,
+and signed word loads to X. Decode only the unscaled mode with its signed nine-bit
+byte displacement (-256 through 255), no scaling and no base writeback. Rn=31
+uses SP and Rt=31 uses ZR. Preserve flags, precise data/stack alignment and
+translation faults, destination width/sign extension, provider request semantics
+and nonretirement on failure. SIMD, prefetch, reserved encodings, unprivileged
+and pre/post-index variants remain outside this addition. Update all native
+classification/direct/provider paths and the Rust reference consistently.
+Independent authored cases must cover all forms, displacement endpoints, SP/ZR,
+signed results, preserved base, cross-page Normal accesses, permission failures
+and rejected adjacent encodings before original replay. Public encoding source:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/a64.decode
+
+### Firmware watchdog ownership
+
+Current Status: Original r21 exits QEMU after about 334 seconds without a terminal
+execution record. The input and EFI remain unchanged, but no instruction count
+or desktop result can be inferred. The baseline picker and NXARMJIT now request
+watchdog disable immediately after service initialization and report the actual
+result. An authored OVMF pair passes fifteen checks: a real two-second timer
+is disabled before a three-second stall, while the armed control exits naturally
+before completion. An injected DEVICE_ERROR is preserved exactly. UEFI requires
+the boot manager to arm a five-minute watchdog before starting a boot image;
+expiry remains a hypothesis for r21, not a confirmed cause. With the helper,
+unchanged-input r22 produces a complete execution record after 413.518 seconds,
+beyond the previous stop. Its next unsupported instruction is shifted-register
+ORR. Duplicate success rows reflect console and serial output, not API call count. See
+[watchdog validation](FIRMWARE_WATCHDOG_VALIDATION.md).
+
+Target State: Request watchdog disable immediately after service initialization
+in the baseline picker and NXARMJIT, before waiting for input or running a long
+guest. Report success or the actual unsupported/error status; a failure must
+not prevent otherwise usable firmware operation. Keep the host diagnostic time
+limit and instruction budget intact. Use one shared helper and test it in actual
+EFI by arming a short watchdog: the armed control must reset before its delayed
+completion marker, while the helper path must reach that marker. Also exercise
+the reported failure path without pretending that a failed disable succeeded.
+No disk, NVRAM, guest instruction or memory-regime changes are part of this fix.
+Public contract: https://uefi.org/specs/UEFI/2.11/03_Boot_Manager.html#load-option-processing
+
+### Logical shifted-register execution
+
+Current Status: Original r22 stops at shifted-register ORR after 42,252,452
+retired instructions. The formerly missing general class is now implemented in
+the native translator and Rust reference. Independent tests pass 64,512 native
+cases, 768 actual Arm comparisons and 31 complete canonical regressions in each
+of three cache modes. The immutable 98-file runtime also reproduces all six
+captured Arm cases. Final EFI passes ten checks. Unchanged-original r23 then
+retires 42,255,830 instructions and completes 6,012,249 data operations before
+an unsupported scalar post-indexed LDR; its framebuffer remains zero.
+
+Target State: Implement AND/BIC, ORR/ORN, EOR/EON and ANDS/BICS at both W and X
+widths, with LSL, LSR, ASR and ROR applied to the second operand before optional
+inversion. Register 31 means ZR in every operand position, never SP. W results
+zero-extend; only ANDS/BICS update N/Z and clear C/V. Reject a W instruction with
+imm6 bit 5 set before changing registers, flags, PC or retirement. Preserve
+existing MOV alias behavior, all unrelated CPU state, fetch accounting and
+precise rejection. Implement native execution and the Rust reference consistently.
+Independent authored tests must cover eight operations, two widths, four shifts,
+shift endpoints, sign bits, aliases/ZR, flags and reserved encodings. Compare
+actual Arm results, native and reference state, then exercise all canonical
+cache modes and final EFI before another unchanged-original replay. Original
+instruction words and addresses remain private.
+
+Primary encoding and execution reference:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/translate-a64.c#L7011-L7095
+
 ### Visible configuration recovery
 
 Current Status: EFI `06b767498ba9af6d119b3600ce4a6aa44d0f81ee` displays a recovery
@@ -1025,10 +1181,14 @@ Keep normal macOS readiness and the fixed original-replay binaries unchanged.
 
 ### Scalar immediate writeback
 
-Current Status: Original r23 reaches a post-indexed scalar LDR that the current
-scalar decoder does not admit. Pair transfers already commit base writeback only
-after a successful transaction; the scalar path currently uses offset-only
-addressing. The next change must preserve precise failure behavior.
+Current Status: ISE `fa5fe9e1b78cfce6b3bf0a0da82e68ece0704979` implements the
+thirteen scalar pre/post-indexed forms. It passes 910 native cases with 3,432
+assertions, 78 actual Arm comparisons against C and Rust, and 35 full provider
+tests in each of three cache modes. Ten authored EFI checks pass. The preceding
+unscaled suite also passes after removing its obsolete pre/post rejection
+assertions. Original r23 stopped at post-indexed LDR; replay with the new
+implementation is the next gate. Normal startup and physical boot remain
+unverified.
 
 Target State: Admit pre-indexed and post-indexed forms of the thirteen supported
 integer scalar transfers. Sign-extend the nine-bit byte offset without scaling;
@@ -1048,3 +1208,12 @@ Primary encoding reference:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/a64.decode#L345-L390
 Primary transaction/writeback ordering reference:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/translate-a64.c#L3079-L3138
+
+Completed r24 original replay passes the earlier post-indexed LDR boundary and
+retires 42,255,878 instructions, with 42,255,879 fetches and 6,012,259 completed
+data operations. It stops at unsupported variable-register logical left shift
+(LSLV/LSL alias), with provider status zero. The 110.822-second observation is
+not a benchmark. Input, EFI, host tools and ESP copies remain unchanged; the
+process is reaped and the 1280 by 800 zero framebuffer matches GOP readback.
+Normal startup and physical boot remain unverified. The next instruction-family
+boundary is variable-register shifting, separately specified before implementation.
