@@ -2,22 +2,29 @@
 
 ## Current Status
 
-The r28 mapped diagnostic retires 42,256,369 instructions, issues 42,256,370
-fetch requests and completes 6,012,373 data operations in 104.333 seconds.
-It stops with SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64MMFR0_EL1,
+The r29 mapped diagnostic retires 42,256,374 instructions, issues 42,256,375
+fetch requests and completes 6,012,373 data operations in 151.399 seconds.
+It stops with SYSTEM_REGISTER_TRAP (status 13) at MRS ID_AA64MMFR1_EL1,
 a memory-model feature-identification register read. The provider reports no
-error. Original input, EFI, host tools and ESP copies are preserved; the process
-is reaped. The owned 1280 by 800 framebuffer remains zero and matches GOP.
-An independent calculation over its 3,072,000 zero RGB bytes matches the recorded
-hash dff2e40b0a1ba325. No macOS screen has been established.
+error. Original input, EFI, host tools and ESP copies are preserved; QEMU exits
+with code zero and is reaped. The owned 1280 by 800 framebuffer remains zero
+and matches GOP. An independent calculation over its 3,072,000 zero RGB bytes
+matches the recorded hash dff2e40b0a1ba325. No macOS screen has been established.
 
-This completed run passes ISAR2 and adds nine retired instructions with no new
-data operations relative to r27. The elapsed time is a single-run observation,
-not a benchmark. MMFR0 feature-policy coherence is the next implementation
-boundary. The software-defined Normal-NC profile, high virtual alias, canonical
-PAC callback and immutable stack selection remain explicit diagnostic conditions.
-They do not establish the target reset entry ABI, SPTM services, complete platform
-DeviceTree, kernel initialization, userspace or physical boot.
+The original r29 receipt remains attributed to runtime `f2256f173ffae32924f1519ece7b1f0e4b251d6a`
+and its recorded module revisions. The website package instead pins
+`558865245830c4940d172b1e61f7e236ed769f86`, whose module updates correct obsolete
+test-only ASID rejection and legacy MMFR0 reset-value expectations. Final NXARMJIT and NXASID rebuilds match
+the previously tested binary bytes; this does not reattribute or rerun r29.
+
+
+This completed run passes MMFR0 and adds five retired instructions with no new
+data operations relative to r28. The elapsed time is a single-run observation,
+not a benchmark. MMFR1 feature-policy qualification is the next boundary.
+The software-defined Normal-NC profile, high virtual alias, canonical PAC callback
+and immutable stack selection remain explicit diagnostic conditions. They do not
+establish the target reset entry ABI, SPTM services, complete platform DeviceTree,
+kernel initialization, userspace or physical boot.
 
 The watchdog success marker appears twice because reporting writes to both
 ConOut and Serial. The summary records the observation count and success presence
@@ -26,9 +33,10 @@ The source contains one watchdog-disable call at this entry point. The authored
 timer control below establishes the helper behavior. r22 completes beyond the
 prior r21 termination time, but that does not by itself prove r21's cause.
 
-[Latest r28 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r28-isar2-summary.json)
+[Latest r29 original-input receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r29-mmfr0-summary.json)
 records this boundary without publishing original instruction words or addresses.
-Historical r27 completed 42,256,360 instructions and 6,012,373 data operations
+Historical r28 completed 42,256,369 instructions and 6,012,373 data operations
+before the MMFR0 read. Historical r27 completed 42,256,360 instructions and 6,012,373 data operations
 before the ISAR2 read. Historical r26 completed 42,255,998 instructions and 6,012,275 data operations
 before the ISAR0 read. Historical r25 completed 42,255,990 instructions and 6,012,273 data operations
 before the ZFR0 read. Historical r24 completed 42,255,878 instructions and 6,012,259 data operations
@@ -36,6 +44,55 @@ before LSLV. Historical r23 completed 42,255,830 instructions and 6,012,249 data
 before post-indexed LDR. Historical r22 completed 42,252,452 instructions and 6,010,805 data operations
 before register ORR. Historical r20 completed 42,252,448 instructions and 6,010,803 data operations
 before an unscaled-load boundary. r21 supplied no terminal execution record.
+
+## Authored MMFR0 and immutable ASID8 validation
+
+The explicit MMFR0 policy is `0x0f100005`, describing this bounded EL1 memory
+model: 48-bit maximum physical addresses, eight-bit ASIDs, little-endian execution
+and 4 KiB/16 KiB stage-1 pages. It does not advertise 64 KiB pages, EL2/stage-2
+or a secure-memory service. C API, native and reference reads use the same
+constant and live EL1/HCR/SCR gate; mutation of retained storage does not create
+a second feature identity.
+
+MMFR0 tests pass 964 native assertions, 31 provider tests in each of three cache
+modes and 34 reference tests. All 32 destination-register observations on actual
+QEMU Cortex-A72 verify encoding/access/XZR/NZCV only: its `0x1124` differs from
+this software policy. EL0 writes retain the existing known-register privilege
+fault, while exact unsupported read conditions retain their bounded trap policy.
+ISAR2 and ISAR0 regressions pass. These observations do not identify a physical
+CPU or establish complete architecture conformance.
+
+Both immutable profiles 1/3 admit lower-eight-bit TTBR tags with A1 selecting
+the active tag for both VA regions. High tag bits and AS=1 remain rejected;
+dynamic profile 2 retains ASID=0/A1=0. Independent ASID tests pass 35 provider
+tests in each of three cache modes and 102 reference tests, including both
+profiles, granules, lower/upper addresses, conflicting TTBR tags, cold/warm
+access, context isolation and transactional rejection. Three compiled mutants
+that force tag zero, ignore A1 or choose by VA region are rejected. The same
+final fixture rejects the preceding fixed source. The raw generic reference
+configuration API remains outside this new immutable admission claim.
+
+A separate actual NXASID EFI probe passes 64 cases. Each performs a lower-to-upper
+alias store/load, then reads MMFR0 and controls, completing nine instructions
+and two data operations with full RAM/table comparisons. The preceding runtime
+with the identical authored probe rejects the first tagged configuration before
+guest execution. EFI readback does not itself prove internal TLB-tag selection;
+the independent native getter and mutants supply that discrimination.
+
+Ten mapped EFI checks and eight preceding-EFI controls pass; the old EFI traps
+at MMFR0 after 128 retired instructions on the authored mapped input. Rebuilding
+the pinned mapped and NXASID images reproduces their tested bytes. Independent
+website packages have their own recorded hashes. The dynamic comparator freezes
+128 runtime files and passes six captures, fourteen regressions and three
+negative controls while preserving 217 prior evidence files. Normal startup,
+physical display and macOS boot remain unverified. The completed r29 replay
+passes MMFR0 and reaches the MMFR1 trap described above.
+
+[Public MMFR0/ASID8 native and EFI evidence](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/mmfr0-asid8/summary.json)
+contains the final 93-file evidence inventory and exact source identities.
+
+[Published MMFR0/ASID8 contract](https://github.com/26x86/Nextcore-ISE/blob/feb09b5f1ef5eecce60120ba39e624bb020bd071/docs/MMFR0_ASID8_PROFILE.md)
+records the model, unsupported controls and primary sources.
 
 ## Authored exact ISAR2 and PAC address-selection validation
 
@@ -84,8 +141,8 @@ from the disabled mapped profile. The fixture omits ISB after a preserved earlie
 run trapped on that instruction; it tests synchronous M0 callback controls and
 does not establish architectural barrier execution.
 
-Normal startup and physical desktop remain unverified. The completed r28 original-input replay passes ISAR2 and reaches the MMFR0
-trap described above.
+Normal startup and physical desktop remain unverified. The historical r28 original-input replay passed ISAR2 and reached MMFR0;
+r29 now passes that read.
 
 Ten authored mapped EFI checks pass, with eight preceding-EFI control checks
 separately identifying the old ISAR2 trap. The register profile does not infer
