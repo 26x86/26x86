@@ -59,6 +59,6 @@
   "additional_retired_instructions": 9,
   "additional_completed_data_operations": 0,
   "framebuffer_rgb_hash": "dff2e40b0a1ba325",
-  "framebuffer_matches_zero_rgb": null,
-  "framebuffer_zero_verification": "Not asserted by this finalizer; requires a geometry-matched independent zero-buffer hash comparison."
+  "framebuffer_matches_zero_rgb": true,
+  "framebuffer_zero_verification": "Independent FNV-1a zero RGB calculation over 3072000 bytes for the reported geometry matches both guest and GOP readback hash."
 }
