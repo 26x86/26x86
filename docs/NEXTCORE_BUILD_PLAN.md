@@ -1186,9 +1186,10 @@ thirteen scalar pre/post-indexed forms. It passes 910 native cases with 3,432
 assertions, 78 actual Arm comparisons against C and Rust, and 35 full provider
 tests in each of three cache modes. Ten authored EFI checks pass. The preceding
 unscaled suite also passes after removing its obsolete pre/post rejection
-assertions. Original r23 stopped at post-indexed LDR; replay with the new
-implementation is the next gate. Normal startup and physical boot remain
-unverified.
+assertions. Original r24 passes the post-indexed LDR boundary and retires
+42,255,878 instructions with 6,012,259 completed data operations before an
+unsupported variable-register logical left shift. Its framebuffer still matches
+zero RGB. Normal startup and physical boot remain unverified.
 
 Target State: Admit pre-indexed and post-indexed forms of the thirteen supported
 integer scalar transfers. Sign-extend the nine-bit byte offset without scaling;
@@ -1208,3 +1209,26 @@ Primary encoding reference:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/a64.decode#L345-L390
 Primary transaction/writeback ordering reference:
 https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/translate-a64.c#L3079-L3138
+
+### Variable-register shifts
+
+Current Status: Original r24 reaches an unsupported LSLV (LSL alias). Immediate
+shifts and shifted logical operands do not implement this separate register
+shift family. No variable-register shift support is claimed by r24.
+
+Target State: Implement LSLV, LSRV, ASRV and RORV for W and X registers. Use the
+low five or six count bits respectively, including zero and counts above the
+operand width. Rn, Rm and Rd use ZR semantics for register 31; W results clear
+the upper half. Preserve SP and NZCV. Handle aliases by reading both operands
+before writing the destination. Reject adjacent and reserved encodings without
+retirement. Do not alter memory requests, CPU layout, readiness or cache keys.
+The x86 emitter must preserve the CPU-pointer register if it uses CL for the
+shift count. Validate every count, signed ASR and rotate boundaries, high count
+bits, ZR and overlapping registers with independent actual Arm, native and Rust
+reference execution. Compare canonical cached, uncached and small-slot results,
+then consume the operations in authored EFI before an unchanged-original replay.
+
+Primary execution reference:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/translate-a64.c#L7869-L7879
+Width-specific shift and zero-extension reference:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/translate-a64.c#L6954-L6995
