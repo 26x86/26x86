@@ -41,7 +41,9 @@ jobs:
         run: cargo clippy --workspace --exclude nextcore-efi --all-targets
         working-directory: nextcore
       - name: Clippy (firmware on its actual UEFI target)
-        run: cargo clippy -p nextcore-efi --target x86_64-unknown-uefi --all-features
+        run: |
+          cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features test-child --bin NXTEST
+          NEXTCORE_PICKER_CHILD="$GITHUB_WORKSPACE/nextcore/target/x86_64-unknown-uefi/release/NXTEST.efi" cargo clippy -p nextcore-efi --target x86_64-unknown-uefi --all-features
         working-directory: nextcore
 
   x86-efi-arm-jit:
@@ -231,6 +233,7 @@ jobs:
         run: |
           python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --output "$RUNNER_TEMP/ubfm-efi"
           python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family extended --output "$RUNNER_TEMP/extended-efi"
+          python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family select --output "$RUNNER_TEMP/select-efi"
       - name: Execute deep budget and reject malformed selections
         run: |
           python3 nextcore/tools/verify_deep_budget_ovmf.py --tools nextcore/tools --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --default-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --clamped-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --core-source nextcore/crates/nextcore-core --efi-source nextcore/crates/nextcore-efi --recheck-provenance --output "$RUNNER_TEMP/deep-trace"
@@ -245,6 +248,7 @@ jobs:
             ${{ runner.temp }}/deep-trace/deep16384/*.log
             ${{ runner.temp }}/ubfm-efi/**/*.json
             ${{ runner.temp }}/extended-efi/**/*.json
+            ${{ runner.temp }}/select-efi/**/*.json
 
   x86-efi-picker-recovery:
     runs-on: ubuntu-24.04
