@@ -57,8 +57,8 @@
     },
     {
       "value": "6 / 6",
-      "label": "Latest workspace CI",
-      "detail": "All six workspace and EFI jobs pass on source revision 3d3a434d; the separate Sandbox workflow also passes. CI is not physical boot proof."
+      "label": "Completed workspace CI checkpoint",
+      "detail": "All six workspace and EFI jobs passed on earlier source3d3a434d; the separate Sandbox workflow passed. Newer optional-control integration has separate evidence. CI is not physical boot proof."
     },
     {
       "value": "42,256,374",
@@ -67,6 +67,12 @@
     }
   ],
   "latest": [
+    {
+      "date": "2026-09-13",
+      "title": "Unsupported table-management controls now reject without changing state",
+      "summary": "All 15 nonzero HA/HD/HPD0/HPD1 combinations are rejected before mutation. Independent C checks pass 160 assertions; Rust register-bank and direct-MMU suites pass 102 tests each. Existing immutable and dynamic admission remains closed. The same fixture exposes the old acceptance bug. This is a bounded software policy, not architectural write-ignore emulation or an MMFR1 feature declaration. No new original replay was run; r29 and normal NOT_READY status are unchanged.",
+      "url": "https://26x86.github.io/26x86/BOOT_PRIMARY_SOURCE_AUDIT_20260913/#optional-translation-controls-and-generic-mmfr1-evidence"
+    },
     {
       "date": "2026-09-13",
       "title": "Hierarchical permissions qualified; original boundary unchanged",

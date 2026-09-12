@@ -1778,3 +1778,54 @@ then storage/userspace/input. A feature-register read alone establishes none
 of those milestones. The latest original evidence remains r29, not a new replay.
 
 OPEN_QUESTION: Build Plan: Accept a separate field-by-field MMFR1 policy and negative optional-control tests before exposing that exact register; preserve the source-audit target-entry and display gates.
+
+### MMFR1 prerequisite: reject unsupported table-management controls
+
+Current Status: ISE `3a0ed3dd39f78fc3c55415f898d7faa8f34699c2` rejects all fifteen
+nonzero combinations of HA, HD, HPD0 and HPD1 before mutation in the generic C
+register API, reference register API and direct MMU configuration. EFI
+`1dc49ce712b35cf37cd58571130972dfae7b28e5` pins that implementation. Identical tests
+against immutable ISE `778473fd9c43d7ba3a4721852f838be996fed45d` reproduce the old
+acceptance defect. MMFR1 remains unsupported.
+
+The final independent comparison passes 160 C assertions. The Rust register-bank
+and direct-MMU runs each pass 102 tests; these suites overlap and are not 204
+unique tests. Rejected changes preserve prior registers, CPU observations,
+translation configuration and warm caches. Existing immutable profiles 1/3 and
+dynamic profile 2 continue rejecting these options for 4 KiB and 16 KiB granules.
+Separate service and reference suites pass 44 and 115 tests, and the real UEFI
+target compiles. That target check does not establish EFI execution.
+
+The immutable 139-file freeze passes six captures, fourteen regressions and
+three negative controls, preserving all 262 prior history/evidence files. See
+`nextcore/artifacts/physical-integration-20260912/optional-tcr-20260913` and
+`nextcore/tools/dynamic_comparison/VALIDATION_OPTIONAL_TCR_20260913.md`.
+Generic SCTLR optional controls and complete field-by-field MMFR1 semantics
+remain separate prerequisites. Latest original-input execution remains r29.
+
+Target State: reject nonzero TCR_EL1 HA, HD, HPD0 and HPD1 requests consistently
+before state changes in the C register API, reference register API and MMU
+configuration entry point. This is a bounded unsupported-control policy, not
+a claim of complete architectural RES0/write-ignore or trapping emulation.
+
+The four controls occupy bits 39 through 42. No combination of these controls
+is implemented: descriptor AF remains software-owned, dirty updates are absent,
+and baseline hierarchical permissions cannot be disabled. Reject all fifteen
+nonzero combinations, whether the reference MMU is currently enabled or disabled.
+Preserve the prior register value, CPU state, translation configuration and warm
+cache on rejection. A zero-feature baseline configuration must remain accepted.
+Keep other register policies, public ABI layouts and MMFR1 reads unchanged.
+
+Discriminating evidence must first record acceptance by the previous runtime,
+then show rejection with the same input, exact unchanged C CPU bytes and reference
+register/MMU observations. Exercise direct walker configuration and both
+immutable service profiles; check dynamic-profile admission separately. Keep
+normal startup, target entry and physical display readiness outstanding.
+
+Primary field positions were checked in the official Cortex-A55 TRM,
+100442_0100_00_en, B2.90 Figure B2-78, PDF page 412:
+[Arm document](https://documentation-service.arm.com/static/5e7e1405b471823cb9de57ae).
+The Cortex-X925 TRM 102807_0001_05_en, page 421 independently identifies
+HPD0/HPD1 as hierarchy-disabling controls. These core-specific manuals establish
+field identity; their implemented optional features are not copied into this
+software model.

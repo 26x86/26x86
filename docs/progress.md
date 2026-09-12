@@ -22,6 +22,14 @@ r29 completes 6,012,373 data operations and passes MMFR0 before SYSTEM_REGISTER_
 
 <div class="portal-metrics" data-progress-metrics></div>
 
+## Optional table-management controls
+
+The latest correction rejects all 15 nonzero combinations of unsupported HA, HD, HPD0 and HPD1 controls before changing state. Independent checks pass 160 C assertions and two Rust suites of 102 tests each, including preserved register state and warm translation caches. The same test fixture detects the earlier acceptance bug; immutable and dynamic service admission remains unchanged.
+
+This is a bounded unsupported-input policy. It does not implement MMFR1 advertisement, architectural write-ignore behavior or a new original boot run. The r29 MMFR1 boundary and normal `NOT_READY` status remain unchanged.
+
+[Reviewed control contract and source audit](BOOT_PRIMARY_SOURCE_AUDIT_20260913.md#optional-translation-controls-and-generic-mmfr1-evidence)
+
 ## New authored hierarchy qualification
 
 The latest increment qualifies hierarchical memory permissions with 961 OVMF EFI cases, 306 Arm QEMU TCG observations and 258 direct service comparisons. Native provider suites pass 34 tests in each of three cache modes, with 104 reference tests and two detected semantic mutants. This does not advance the original-input boundary: r29 remains unchanged at the MMFR1 trap.
