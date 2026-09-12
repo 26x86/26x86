@@ -2,14 +2,11 @@
 
 ## Current Status
 
-The active exact runtime is ISE `bd3a8195385106ce9bdeb09160a3f1bfb447ea11`,
-including the explicit immutable Normal-NC unaligned profile 3. These six captures
-continue using dynamic profile 2 with its original alignment contract. This
-replay checks that the shared reply validator and service changes preserve that
-behavior; it does not exercise or approve an original-image profile-3 entry.
-See `VALIDATION_UNALIGNED_20260912.md` and `evidence-unaligned-20260912`.
-The preceding `f387224b` selected source package is preserved byte-for-byte
-under `history/f387224b`; `evidence-cache-20260912` remains unchanged.
+The active exact runtime is ISE `f387224baf43fc309436d2f27a5ca4677c8b2008`,
+including run-local native reuse in the v1 physical-memory provider. The dynamic
+provider used by these six captures does not use that cache; this replay checks
+that its existing behavior remains unchanged. See `VALIDATION_CACHE_20260912.md`
+and `evidence-cache-20260912` for the fresh replay and comparator regressions.
 The preceding `002d2ef` selected source package is preserved byte-for-byte
 under `history/002d2ef`; its `evidence-bfm-20260912` remains unchanged.
 The preceding `7cd9ac0` selected source package is preserved byte-for-byte

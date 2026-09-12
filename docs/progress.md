@@ -13,11 +13,11 @@ Each milestone has its own acceptance gate. Passing a firmware test does not est
 <div class="portal-boundary" data-progress-boundary markdown>
 <span class="portal-badge">Current execution boundary</span>
 
-## 16,384-instruction diagnostic budget reached
+## Original initialization reaches a memory-alignment boundary
 
-The bounded local macOS 27 kernel prefix reached its diagnostic budget after BFM support. No unsupported instruction stopped this run. Budget exhaustion does not establish forward boot progress or normal startup. The next check must distinguish a repeated loop from meaningful advancement.
+The unchanged local macOS 27 input stops after 1,542,930 instructions at an ordinary unaligned load under its MMU-off Device profile. A separate Normal-memory unaligned profile now passes authored native and EFI tests. Connecting the original entry mappings and pointer authentication remains required; physical macOS output is unverified.
 
-[Reviewed r8 summary](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r8-summary.json) · [Acceptance criteria](BOOT_RUNTIME_VERIFICATION.md)
+[Reviewed original boundary and mapped-profile tests](PREFIX_PROGRESS_VALIDATION.md) · [Acceptance criteria](BOOT_RUNTIME_VERIFICATION.md)
 </div>
 
 <div class="portal-metrics" data-progress-metrics></div>
