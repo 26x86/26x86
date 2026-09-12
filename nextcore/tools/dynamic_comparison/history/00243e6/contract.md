@@ -7,9 +7,9 @@ the historical missing-IL undefined syndrome. Native unsupported A64 HVC uses
 exact ESR `0x02000000`; all other state and effect comparisons stay exact.
 Historical source and evidence remain under the original artifact directory.
 
-The admitted ZFR0 revision extends native and reference execution.
+The admitted variable-shift revision extends native and reference execution.
 Dynamic service and transaction sources are unchanged. This captured-Arm replay
-is a regression gate; independent ZFR0 tests own the new semantics.
+is a regression gate; independent variable-shift tests own the new semantics.
 
 ## Target State
 

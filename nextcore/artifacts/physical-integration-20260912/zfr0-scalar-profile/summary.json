@@ -1,0 +1,163 @@
+{
+  "schema": "nextcore.zfr0-scalar-profile.v1",
+  "ise_commit": "401619acb1232a366af776bc1ecbfd04eb01631f",
+  "authored_efi_passed": true,
+  "native_passed": true,
+  "contract": "Exact read-only ZFR0 in the bounded scalar profile, live EL and control checks, independent cortex-a72 observations with separately preserved max-model counterexample",
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "original_images_used": false,
+  "files": [
+    {
+      "path": "efi/cached/report.json",
+      "bytes": 17082,
+      "sha256": "7c66086753aaa651f187b90674d85efd2fb45bcdc704299841729435726c763e"
+    },
+    {
+      "path": "efi/cached/serial.log",
+      "bytes": 11191,
+      "sha256": "dd43cc42d78fbeedef02ad26bad435bdb4a90135f32ff95330aa6e8a35245c8c"
+    },
+    {
+      "path": "efi/old/report.json",
+      "bytes": 8277,
+      "sha256": "d32f523cb65264f34facded95e3f843d14387901da763efffbbafae85b0f417a"
+    },
+    {
+      "path": "efi/old/serial.log",
+      "bytes": 3107,
+      "sha256": "b3b60f7d81aabd1145ba06ff671ec14461b4420a233a28585b7334a26d92c891"
+    },
+    {
+      "path": "efi/receipt.json",
+      "bytes": 39067,
+      "sha256": "90f98aa06b5eae5613065bcf20ef9c298de3b6ebc8ba82313b4fe86ee0f682ec"
+    },
+    {
+      "path": "efi/uncached/report.json",
+      "bytes": 17105,
+      "sha256": "10e264fecd9b66bc30439eddaaa565c4bcc0e56fa3bd7bcb8d00901c48c8439b"
+    },
+    {
+      "path": "efi/uncached/serial.log",
+      "bytes": 11195,
+      "sha256": "1737916cf294470ed6484bcd38cf6f0e75ce69dee72f395920a47ab1d583629e"
+    },
+    {
+      "path": "efi/unobserved/report.json",
+      "bytes": 8142,
+      "sha256": "f6c05f772349c33284646d889d84ab805793c06e58ad2af0ad612ac6cb235b6e"
+    },
+    {
+      "path": "efi/unobserved/serial.log",
+      "bytes": 2619,
+      "sha256": "b92a17eed2e03e77b165a3a254ea89c8d91adb73ec439ea7a961db0f96c519d7"
+    },
+    {
+      "path": "model-observations/cortex-a72/build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "model-observations/cortex-a72/oracle-results.bin",
+      "bytes": 160,
+      "sha256": "57e721805cdfd5ea0f92185622272e894610ee499264055bde1a278e60ec8f5e"
+    },
+    {
+      "path": "model-observations/cortex-a72/probe.S",
+      "bytes": 1202,
+      "sha256": "61718d61cb7bdee469004b96a00005178be2c24d159f057c9df76fd7837217d4"
+    },
+    {
+      "path": "model-observations/cortex-a72/qemu.log",
+      "bytes": 68,
+      "sha256": "4c4d763b9c044c33d7fb07c3e0f7397b4ef97ea3d967f30e96078d02c2488786"
+    },
+    {
+      "path": "model-observations/cortex-a72/receipt.json",
+      "bytes": 2194,
+      "sha256": "9f155f92a4433c771ce35411e5b37d814ba05efd9671126cf07d89e30d2ce919"
+    },
+    {
+      "path": "model-observations/cortex-a72/run.py",
+      "bytes": 3264,
+      "sha256": "e78545ac5d09bfbd34511269cb1036a50f65201b3d48d20fa80f98451aff72e8"
+    },
+    {
+      "path": "model-observations/max-disabled/build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "model-observations/max-disabled/oracle-results.bin",
+      "bytes": 160,
+      "sha256": "414abdde9c40d5a8e9d72cfc4acdea778c88560cf2a9cc24ac984f954930f7ba"
+    },
+    {
+      "path": "model-observations/max-disabled/probe.S",
+      "bytes": 1202,
+      "sha256": "61718d61cb7bdee469004b96a00005178be2c24d159f057c9df76fd7837217d4"
+    },
+    {
+      "path": "model-observations/max-disabled/qemu.log",
+      "bytes": 68,
+      "sha256": "6603831d4c0796b5d1b582e2287e1cbce51472a169656e54e1f48393c1560333"
+    },
+    {
+      "path": "model-observations/max-disabled/receipt.json",
+      "bytes": 2242,
+      "sha256": "ca86102323be548dd248d846676af6122f09f7af90f66a386f5c0eb62b81ee0a"
+    },
+    {
+      "path": "model-observations/max-disabled/run.py",
+      "bytes": 3282,
+      "sha256": "d28892c7bc0285875fd53ddec23fd704a19610e09d01e2abea6ad5bc03c4623c"
+    },
+    {
+      "path": "native/native.log",
+      "bytes": 33,
+      "sha256": "c50568e656dd50343236303a3e603ff1d78f558171824097a922bfab3705c7d1"
+    },
+    {
+      "path": "native/oracle-results.bin",
+      "bytes": 512,
+      "sha256": "0e97841b10b6841456da1108e1b45f1a5b505274445d96da3380e1b94fcd7b0e"
+    },
+    {
+      "path": "native/oracle.S",
+      "bytes": 7658,
+      "sha256": "fd7852852cd00a23d702272320fae4a1d911f6ea6b8617cec67513c733f7391c"
+    },
+    {
+      "path": "native/oracle.h",
+      "bytes": 1715,
+      "sha256": "1c847b55dbe2619b80ac3d59bb0583d1792d1e3c417735679d9cff7a9fe0a781"
+    },
+    {
+      "path": "native/provider.log",
+      "bytes": 2496,
+      "sha256": "0b7953d2f72d40ab4e7552325c82e25a452fcad03927d32f90a153eb560510af"
+    },
+    {
+      "path": "native/receipt.json",
+      "bytes": 18954,
+      "sha256": "ab1e7c73f6d9282f75062fbbe34e994be52cacd3ef258c63ba56fcee2669d3bc"
+    },
+    {
+      "path": "native/reference.log",
+      "bytes": 2692,
+      "sha256": "70016106f81c6d8ce8088e178bedd48cba78a06b83d8a3827482a6c8b2de66a5"
+    },
+    {
+      "path": "native/small-slot.log",
+      "bytes": 2496,
+      "sha256": "ab782b014e85988af3e124740d6f62fcc491ebca7b6a97bc16ca48a6db7766dd"
+    },
+    {
+      "path": "native/uncached.log",
+      "bytes": 2496,
+      "sha256": "b6ff2543e132d99cd24d2fd66d2de1f7f7409b0bceb8fce55ada2492b3d20ed5"
+    }
+  ],
+  "model_observation_scope": "Two QEMU 8.2.2 models with identical authored input differ in ZFR0; neither observation establishes the original reset ABI or a universal zero rule."
+}

@@ -115,6 +115,15 @@ _start:
     add x13, x11, #1
     cmp x13, x12
     b.ne mapped_failure
+    // The bounded scalar profile exposes no SVE/SME feature bits in ZFR0.
+    cmp x5, x5
+    mrs x11, S3_0_C0_C4_4 // ID_AA64ZFR0_EL1, Arm DDI0616 B.a page 983.
+    b.ne mapped_failure
+    b.cc mapped_failure
+    cbnz x11, mapped_failure
+    mrs xzr, S3_0_C0_C4_4
+    b.ne mapped_failure
+    b.cc mapped_failure
     add x8, x4, #4
 mapped_loop:
     str x5, [x8]

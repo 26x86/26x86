@@ -1,0 +1,83 @@
+{
+  "passed": true,
+  "initial_currentel": "0x4",
+  "initial_sctlr_el1": "0xc50838",
+  "records": [
+    {
+      "register": "ID_AA64PFR0_EL1",
+      "value": "0x22",
+      "esr": "0x0",
+      "elr": "0x0",
+      "trapped": false
+    },
+    {
+      "register": "ID_AA64PFR1_EL1",
+      "value": "0x0",
+      "esr": "0x0",
+      "elr": "0x0",
+      "trapped": false
+    },
+    {
+      "register": "ID_AA64ZFR0_EL1",
+      "value": "0x0",
+      "esr": "0x0",
+      "elr": "0x0",
+      "trapped": false
+    },
+    {
+      "register": "NEGATIVE_UDF",
+      "value": "0xdead",
+      "esr": "0x2000000",
+      "elr": "0x40080084",
+      "trapped": true
+    }
+  ],
+  "cpu": "cortex-a72",
+  "machine": "virt,virtualization=off,secure=off",
+  "accelerator": "TCG",
+  "el2_absent": true,
+  "hcr_el2_written": false,
+  "hcr_scope": "EL2 absent; no accessible EL2 control register was written.",
+  "qemu_version": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+  "qemu_sha256": "b511b60cc31479b71dfdd589e6c981ae37b20ef0e75adc5a57bb0d6737e9b30c",
+  "commands": [
+    [
+      "clang-18",
+      "--target=aarch64-none-elf",
+      "-march=armv8-a+sve",
+      "-nostdlib",
+      "-Wl,-Ttext=0x40080000",
+      "-Wl,-e,_start",
+      "/tmp/nextcore-nonsve-id-oracle-20260913-r2/probe.S",
+      "-o",
+      "/tmp/nextcore-nonsve-id-oracle-20260913-r2/probe.elf"
+    ],
+    [
+      "/usr/bin/qemu-system-aarch64",
+      "-machine",
+      "virt,virtualization=off,secure=off",
+      "-cpu",
+      "cortex-a72",
+      "-m",
+      "128",
+      "-display",
+      "none",
+      "-serial",
+      "none",
+      "-monitor",
+      "none",
+      "-nic",
+      "none",
+      "-qmp",
+      "unix:/tmp/nextcore-nonsve-id-oracle-20260913-r2/qmp.sock,server=on,wait=off",
+      "-kernel",
+      "/tmp/nextcore-nonsve-id-oracle-20260913-r2/probe.elf"
+    ]
+  ],
+  "process_reaped": true,
+  "source_sha256": "61718d61cb7bdee469004b96a00005178be2c24d159f057c9df76fd7837217d4",
+  "elf_sha256": "063e90c725d4aa766ef6bb1a752a7d7d65b9c2aa4f70efc9dd262a2c447e4a3a",
+  "result_sha256": "57e721805cdfd5ea0f92185622272e894610ee499264055bde1a278e60ec8f5e",
+  "original_inputs_used": false,
+  "physical_boot_verified": false
+}

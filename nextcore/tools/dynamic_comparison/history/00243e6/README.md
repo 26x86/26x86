@@ -2,14 +2,12 @@
 
 ## Current Status
 
-The active exact runtime is ISE `401619acb1232a366af776bc1ecbfd04eb01631f`,
-including the exact ZFR0 read in the bounded scalar profile.
+The active exact runtime is ISE `00243e65b934abb79c87719cd4ef06860c8489f2`,
+including all four variable-register shifts at both widths.
 These six captures retain their original dynamic profile-2 inputs and
 expectations. This replay checks shared runtime regressions; it does not replace
 independent instruction or original-entry tests. See
-`VALIDATION_ZFR0_20260913.md` and `evidence-zfr0-20260913`.
-The preceding variable-shift sources remain under `history/00243e6`, with
-`evidence-variable-shift-20260913` unchanged.
+`VALIDATION_VARIABLE_SHIFT_20260913.md` and `evidence-variable-shift-20260913`.
 The preceding indexed sources remain under `history/fa5fe9e`, with
 `evidence-indexed-20260913` unchanged.
 The preceding `617a3d8` selected sources remain under `history/617a3d8`, with
