@@ -74,6 +74,40 @@ done: b done
 data: .hword 0x1111, 0x2222, 0x80fe, 0x4444
 """
 
+TEST_BIT_ASSEMBLY = """.text
+.global _start
+_start:
+    mov x0, #0
+    mov x2, #0
+    mov x3, #0
+    mov x4, #1
+    tbz x4, #0, failure
+    tbnz x4, #0, one
+    b failure
+one:
+    mov x0, #0x11
+    mov x4, #0x8000000000000000
+    tbz x4, #63, failure
+    tbnz x4, #63, high
+    b failure
+high:
+    mov x2, #0x22
+    tbz xzr, #63, zero
+    b failure
+zero:
+    mov x3, #0x33
+    mov x5, #2
+loop:
+    sub x5, x5, #1
+    tbnz x5, #0, loop
+    tbz x5, #0, done
+    b failure
+done: b done
+failure:
+    mov x0, #0xff
+    b done
+"""
+
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -87,7 +121,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--efi', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--instruction-family', choices=['ubfm', 'extended', 'select', 'register-memory'], default='ubfm')
+    parser.add_argument('--instruction-family', choices=['ubfm', 'extended', 'select', 'register-memory', 'test-bit'], default='ubfm')
     args = parser.parse_args()
     efi = args.efi.resolve(strict=True)
     out = args.output.resolve()
@@ -101,6 +135,7 @@ def main():
         'extended': (EXTENDED_ASSEMBLY, (0, 0x2225, 0x2224), 40),
         'select': (SELECT_ASSEMBLY, (0x23, 0xffffffffffffffee, 0x23), 28),
         'register-memory': (REGISTER_MEMORY_ASSEMBLY, (0x80fe, 0xffffffffffff80fe, 0x80fe), 36),
+        'test-bit': (TEST_BIT_ASSEMBLY, (0x11, 0x22, 0x33), 84),
     }[args.instruction_family]
     expected_data = 4 if args.instruction_family == 'register-memory' else 0
     (out / 'probe.S').write_text(assembly)

@@ -10,11 +10,12 @@ the historical original-input diagnostic stopped after 5311 retired instructions
 at UBFM. Those receipts do not establish normal startup or macOS boot.
 
 The 2026-09-12 integration preserves those historical results and connects ISE
-08156f4 (UBFM, undefined-syndrome correction, extended-register arithmetic,
-conditional selection and scalar register-offset memory) with EFI c1bdb42.
+a8a06da (UBFM, undefined-syndrome correction, extended-register arithmetic,
+conditional selection, scalar register-offset memory and test-bit branches)
+with EFI d3b7788.
 Authored native/EFI execution and production picker recovery
 pass; receipts are in `nextcore/artifacts/physical-integration-20260912`.
-The local original-prefix diagnostic retires 5353 instructions before TBNZ,
+The local original-prefix diagnostic retires 5358 instructions before MADD,
 with normal startup prerequisites still incomplete. The physical target is Samsung 750XHD with Intel
 Core Ultra 7 255U and Intel Graphics 8086:7D41. Acceptance requires external-media
 installation and an interactive macOS 27 desktop after reboot. Optional firmware

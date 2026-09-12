@@ -11,8 +11,8 @@ No physical OS boot is established by this checkpoint.
   English documentation policy; preserve historical BP35 receipts unchanged.
 - Connect published UBFM and new complete extended-register ADD/SUB arithmetic.
   Add complete CSEL/CSINC/CSINV/CSNEG conditional selection and integer scalar
-  register-offset memory operations.
-  Core bab7ac4, Tool 8ea73c8, ISE 08156f4 and EFI c1bdb42 identify the latest checkpoint.
+  register-offset memory operations and TBZ/TBNZ bit-test branches.
+  Core bab7ac4, Tool 8ea73c8, ISE a8a06da and EFI d3b7788 identify the latest checkpoint.
 - Continue text output when optional color/clear fails, preserve an accepted
   choice when confirmation redraw fails, and make diagnostic stdout best effort.
 - In explicit picker mode, acknowledge returned target failures before reopening
@@ -46,10 +46,20 @@ No physical OS boot is established by this checkpoint.
 - `register-memory-consumer`: actual EFI scaled loads, negative signed index,
   signed result, store/readback, exact four data operations and 64 retired
   instructions pass. The previous binary stops at the first tested load.
+- `test-bit-native.json`: 441,344 native cases and 5,296,146 assertions,
+  441,344 reference cases within 106 preOS tests, 17/15/16 provider tests,
+  five compiled semantic mutants rejected and UEFI compilation.
+- `test-bit-consumer`: actual EFI forward and backward bit-test branches,
+  low/high bit selection, ZR and exact registers/PC/retirement pass. The previous
+  binary fails the authored gate. Last-complete-word direct fetch is also fixed
+  and separately covered by native/reference/provider evidence.
 - Active scalar/pair and dynamic readers are under `nextcore/tools`; historical
   readers and source freezes remain unchanged. Current dynamic replay binds
   exact ISE 08156f4 and passes six independent Arm/native comparisons plus
   fourteen comparator regressions. See their versioned validation documents.
+- `github-ci-d6104e70.json`: all 31 GitHub checks succeeded for the exact
+  integrated parent commit d6104e70. This includes the current native ABI,
+  scalar/pair/provider, stage-1/dynamic and authored EFI instruction gates.
 - `picker-fallback`: four OVMF protocol-failure cases invoke production picker
   source; three execute the authored child and initial output failure executes none.
 - `picker-recovery`: production BOOTX64 recovers both missing-image and returned
@@ -76,6 +86,7 @@ retires 5,316 and stops at CSEL. Both runs report 783 completed data operations.
 With conditional selection it retires 5,350 and stops at an integer scalar
 register-offset load, with 787 completed data operations. With register-offset
 memory support it retires 5,353 and stops at TBNZ, with 788 data operations.
+With test-bit branches it retires 5,358 and stops at MADD, with 790 data operations.
 All report provider
 status zero. Raw original coordinates, instructions, logs and copies
 remain only under ignored `_isolated/`; public summaries contain no such bytes.
@@ -83,7 +94,7 @@ remain only under ignored `_isolated/`; public summaries contain no such bytes.
 This is an incomplete startup-prefix diagnostic: normal SPTM arguments/services,
 complete platform DeviceTree, sustained kernel initialization, userspace,
 installation, desktop, post-boot display and physical boot are not verified.
-The next execution work is standard TBZ/TBNZ test-bit branch support,
+The next execution work is standard MADD/MSUB multiply-accumulate support,
 followed by a new authored EFI gate and same-input original replay.
 
 ## Reproduction and provenance
