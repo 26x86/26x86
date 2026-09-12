@@ -154,6 +154,7 @@ nav:
       - Build and development: wiki/Build-and-Development.md
       - NextCore design: NEXTCORE_DESIGN.md
       - NextCore build plan: NEXTCORE_BUILD_PLAN.md
+      - Boot source audit: BOOT_PRIMARY_SOURCE_AUDIT_20260913.md
       - Boot runtime verification: BOOT_RUNTIME_VERIFICATION.md
       - Boot picker recovery: BOOT_PICKER_RECOVERY.md
       - Boot framebuffer validation: BOOT_FRAMEBUFFER_VALIDATION.md
