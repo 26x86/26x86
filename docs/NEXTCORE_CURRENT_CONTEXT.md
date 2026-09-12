@@ -10,17 +10,20 @@ the historical original-input diagnostic stopped after 5311 retired instructions
 at UBFM. Those receipts do not establish normal startup or macOS boot.
 
 The 2026-09-12 integration preserves those historical results and connects ISE
-a8a06da (UBFM, undefined-syndrome correction, extended-register arithmetic,
-conditional selection, scalar register-offset memory and test-bit branches)
-with EFI d3b7788.
+7cd9ac0 (UBFM, undefined-syndrome correction, extended-register arithmetic,
+conditional selection, scalar register-offset memory, test-bit branches,
+ordinary multiply-accumulate and reference branch corrections) with EFI bed9d78.
 Authored native/EFI execution and production picker recovery
 pass; receipts are in `nextcore/artifacts/physical-integration-20260912`.
-The local original-prefix diagnostic retires 5358 instructions before MADD,
+The local original-prefix diagnostic retires 5373 instructions before BFI,
 with normal startup prerequisites still incomplete. The physical target is Samsung 750XHD with Intel
 Core Ultra 7 255U and Intel Graphics 8086:7D41. Acceptance requires external-media
 installation and an interactive macOS 27 desktop after reboot. Optional firmware
 presentation failures must degrade gracefully. Graphics acceleration is deferred.
 SPTM services, complete platform providers and physical OS boot remain unverified.
+The next instruction boundary belongs to BFM bitfield insertion. Remaining
+basic-family and reference parity gaps are listed in
+`docs/A64_STARTUP_COVERAGE_20260912.md`; original-input coordinates remain private.
 
 ## BP34 Development Status
 

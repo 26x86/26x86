@@ -1,0 +1,226 @@
+{
+  "passed": true,
+  "base_commit": "a8a06dad15449b15ffb2383934f6a4239a54327f",
+  "records": [
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference-branch-fix-a8a06d/runtime/jit.c",
+        "-o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/jit.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference-branch-fix-a8a06d/runtime/arch.c",
+        "-o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/arch.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference-branch-fix-a8a06d/runtime/boot_jit.c",
+        "-o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/boot_jit.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference-branch-fix-a8a06d/runtime/memory_boot.c",
+        "-o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/memory_boot.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference-branch-fix-a8a06d/runtime/memory_boot_v2.c",
+        "-o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/memory_boot_v2.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference-branch-fix-a8a06d/runtime/memory_dynamic.c",
+        "-o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/memory_dynamic.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference-branch-fix-a8a06d/runtime/memory_layout.c",
+        "-o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/memory_layout.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference-branch-fix-a8a06d/runtime/memory_layout_v2.c",
+        "-o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/memory_layout_v2.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference-branch-fix-a8a06d/runtime/memory_dynamic_layout.c",
+        "-o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/memory_dynamic_layout.o"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "clang",
+        "-std=c11",
+        "-D_GNU_SOURCE",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-I",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference-branch-fix-a8a06d/runtime",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference_branch_native_compare.c",
+        "/tmp/nextcore-reference-branch-native-a8a06d/jit.o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/arch.o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/boot_jit.o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/memory_boot.o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/memory_boot_v2.o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/memory_dynamic.o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/memory_layout.o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/memory_layout_v2.o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/memory_dynamic_layout.o",
+        "-o",
+        "/tmp/nextcore-reference-branch-native-a8a06d/native"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/nextcore-reference-branch-native-a8a06d/native"
+      ],
+      "returncode": 0,
+      "stdout": "{\"passed\":true,\"native_generated_x86\":true,\"checks\":287,\"rn31_is_profile_restriction\":true}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/developer/.cargo/bin/cargo",
+        "build",
+        "--offline",
+        "--release",
+        "--manifest-path",
+        "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference-branch-fix-a8a06d/runtime/preos/Cargo.toml",
+        "--target",
+        "x86_64-unknown-uefi",
+        "--target-dir",
+        "/tmp/nextcore-reference-branch-native-a8a06d/uefi-target"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "   Compiling venfire-preos v0.1.0 (/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/reference-branch-fix-a8a06d/runtime/preos)\n    Finished `release` profile [optimized] target(s) in 0.87s\n"
+    }
+  ],
+  "patch_sha256": "00bd767e7187d42615a837b7abec095aa80e9e928c1416922c3fc23d0633f1c3",
+  "runtime_arch_sha256": "dd8a7bd30af10311719d4d8d780cf7e37be7fc1a2b0f4f6a8270218597203285",
+  "native_source_modified": false,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false
+}

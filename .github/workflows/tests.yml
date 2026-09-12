@@ -236,6 +236,7 @@ jobs:
           python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family select --output "$RUNNER_TEMP/select-efi"
           python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family register-memory --output "$RUNNER_TEMP/register-memory-efi"
           python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family test-bit --output "$RUNNER_TEMP/test-bit-efi"
+          python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family multiply --output "$RUNNER_TEMP/multiply-efi"
       - name: Execute deep budget and reject malformed selections
         run: |
           python3 nextcore/tools/verify_deep_budget_ovmf.py --tools nextcore/tools --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --default-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --clamped-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --core-source nextcore/crates/nextcore-core --efi-source nextcore/crates/nextcore-efi --recheck-provenance --output "$RUNNER_TEMP/deep-trace"
@@ -253,6 +254,7 @@ jobs:
             ${{ runner.temp }}/select-efi/**/*.json
             ${{ runner.temp }}/register-memory-efi/**/*.json
             ${{ runner.temp }}/test-bit-efi/**/*.json
+            ${{ runner.temp }}/multiply-efi/**/*.json
 
   x86-efi-picker-recovery:
     runs-on: ubuntu-24.04

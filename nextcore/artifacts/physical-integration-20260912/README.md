@@ -11,8 +11,9 @@ No physical OS boot is established by this checkpoint.
   English documentation policy; preserve historical BP35 receipts unchanged.
 - Connect published UBFM and new complete extended-register ADD/SUB arithmetic.
   Add complete CSEL/CSINC/CSINV/CSNEG conditional selection and integer scalar
-  register-offset memory operations and TBZ/TBNZ bit-test branches.
-  Core bab7ac4, Tool 8ea73c8, ISE a8a06da and EFI d3b7788 identify the latest checkpoint.
+  register-offset memory operations, TBZ/TBNZ branches and ordinary MADD/MSUB.
+  Correct reference compare width and exact register-branch profile handling.
+  Core bab7ac4, Tool 8ea73c8, ISE 7cd9ac0 and EFI bed9d78 identify the latest checkpoint.
 - Continue text output when optional color/clear fails, preserve an accepted
   choice when confirmation redraw fails, and make diagnostic stdout best effort.
 - In explicit picker mode, acknowledge returned target failures before reopening
@@ -53,13 +54,27 @@ No physical OS boot is established by this checkpoint.
   low/high bit selection, ZR and exact registers/PC/retirement pass. The previous
   binary fails the authored gate. Last-complete-word direct fetch is also fixed
   and separately covered by native/reference/provider evidence.
+- `multiply-native.json`: 393,216 native cases and 4,718,842 assertions,
+  393,216 reference cases within 108 preOS tests, 18/16/17 provider tests,
+  124 neighboring encodings rejected, four compiled mutants and UEFI compilation.
+- `multiply-consumer`: actual EFI 32/64-bit MADD/MSUB, MUL/MNEG aliases,
+  overflow, overlap, flags and exact register/PC/retirement outcomes pass.
+- `reference-branch`: isolated four-test failure reproduction followed by 111
+  passing preOS tests, and 23 unchanged-native cases with 287 assertions. The
+  integrated reference fix plus multiply passes 113 tests and a UEFI build.
+- `final-runtime-provenance.json`: final pinned EFI and native C bytes exactly
+  match original replay r7. The subsequent reference-only fix therefore did not
+  change the executable used by that replay; no second original run is claimed.
 - Active scalar/pair and dynamic readers are under `nextcore/tools`; historical
-  readers and source freezes remain unchanged. Current dynamic replay binds
-  exact ISE 08156f4 and passes six independent Arm/native comparisons plus
-  fourteen comparator regressions. See their versioned validation documents.
+  readers and source freezes remain unchanged. Each current dynamic replay
+  binds an explicit published ISE snapshot and requires six independent
+  Arm/native comparisons plus fourteen comparator regressions. The active
+  freeze and versioned validation documents identify the exact revision.
 - `github-ci-d6104e70.json`: all 31 GitHub checks succeeded for the exact
   integrated parent commit d6104e70. This includes the current native ABI,
   scalar/pair/provider, stage-1/dynamic and authored EFI instruction gates.
+- `github-ci-7aff75e0.json`: all 31 checks also succeeded after test-bit branches.
+  Later revisions require their own live CI result.
 - `picker-fallback`: four OVMF protocol-failure cases invoke production picker
   source; three execute the authored child and initial output failure executes none.
 - `picker-recovery`: production BOOTX64 recovers both missing-image and returned
@@ -87,6 +102,7 @@ With conditional selection it retires 5,350 and stops at an integer scalar
 register-offset load, with 787 completed data operations. With register-offset
 memory support it retires 5,353 and stops at TBNZ, with 788 data operations.
 With test-bit branches it retires 5,358 and stops at MADD, with 790 data operations.
+With multiply-accumulate it retires 5,373 and stops at BFI, with 793 data operations.
 All report provider
 status zero. Raw original coordinates, instructions, logs and copies
 remain only under ignored `_isolated/`; public summaries contain no such bytes.
@@ -94,7 +110,7 @@ remain only under ignored `_isolated/`; public summaries contain no such bytes.
 This is an incomplete startup-prefix diagnostic: normal SPTM arguments/services,
 complete platform DeviceTree, sustained kernel initialization, userspace,
 installation, desktop, post-boot display and physical boot are not verified.
-The next execution work is standard MADD/MSUB multiply-accumulate support,
+The next execution work is standard BFM bitfield insertion support,
 followed by a new authored EFI gate and same-input original replay.
 
 ## Reproduction and provenance

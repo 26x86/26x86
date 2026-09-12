@@ -108,6 +108,25 @@ failure:
     b done
 """
 
+MULTIPLY_ASSEMBLY = """.text
+.global _start
+_start:
+    mov x4, #0xffff
+    mov x5, #1
+    movk x5, #1, lsl #16
+    mov x6, #2
+    cmp x6, x6
+    madd x0, x4, x5, x6
+    msub w2, w4, w5, w6
+    mul x3, x4, x5
+    mneg w3, w3, w6
+    b.ne failure
+done: b done
+failure:
+    mov x0, #0
+    b done
+"""
+
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -121,7 +140,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--efi', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--instruction-family', choices=['ubfm', 'extended', 'select', 'register-memory', 'test-bit'], default='ubfm')
+    parser.add_argument('--instruction-family', choices=['ubfm', 'extended', 'select', 'register-memory', 'test-bit', 'multiply'], default='ubfm')
     args = parser.parse_args()
     efi = args.efi.resolve(strict=True)
     out = args.output.resolve()
@@ -136,6 +155,7 @@ def main():
         'select': (SELECT_ASSEMBLY, (0x23, 0xffffffffffffffee, 0x23), 28),
         'register-memory': (REGISTER_MEMORY_ASSEMBLY, (0x80fe, 0xffffffffffff80fe, 0x80fe), 36),
         'test-bit': (TEST_BIT_ASSEMBLY, (0x11, 0x22, 0x33), 84),
+        'multiply': (MULTIPLY_ASSEMBLY, (0x100000001, 3, 2), 40),
     }[args.instruction_family]
     expected_data = 4 if args.instruction_family == 'register-memory' else 0
     (out / 'probe.S').write_text(assembly)

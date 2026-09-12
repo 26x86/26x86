@@ -1,0 +1,17 @@
+{
+  "schema": "nextcore.final-runtime-provenance.v1",
+  "passed": true,
+  "ise_commit": "7cd9ac04016cbe436b3090fbf84e7cae67c6e8dc",
+  "efi_commit": "bed9d78d0320e30318bf319c179e2a7cbc11f127",
+  "efi_sha256": "6aebed1ee4379642c41ad402825062819a3c5d7fbb160563278d8a8cda294af7",
+  "native_sources": {
+    "jit.c": "03b5c5b031055fbf184bc2bf3ecde8610624d00f82a662bb71c26d47603bd4db",
+    "arch.c": "1184d86c6cfdd3c2cff50ac93483bd0d09040d0b6af34c8971ecc633db20337a",
+    "memory_stage1.inc": "8f683a886b08314a8aac1b887c00e78cfbfdd1323e7ee72d14aaec20603ddf38"
+  },
+  "original_replay": "original-prefix-r7-summary.json",
+  "native_and_efi_byte_identical_to_replay": true,
+  "reference_only_followup": "Five branch regressions; combined 113 preOS tests and UEFI release build passed.",
+  "macos_boot_verified": false,
+  "physical_hardware_verified": false
+}
