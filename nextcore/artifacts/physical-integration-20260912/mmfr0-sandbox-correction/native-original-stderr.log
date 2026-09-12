@@ -1,0 +1,1 @@
+FAIL line 83: vf_cpu_read_sysreg(&s,VF_SYSREG_KEY_ID_AA64MMFR0_EL1,&sysreg_value)==VF_SYSREG_OK && sysreg_value==UINT64_C(0x00101122)

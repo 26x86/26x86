@@ -2,15 +2,13 @@
 
 ## Current Status
 
-The active exact runtime is ISE `50b3da2f172f67b4661336799e36bd19002ce816`,
+The active exact runtime is ISE `58e712a5a93448014addd635d6fab9e9e8fcc00c`,
 including coherent MMFR0 reads and fixed eight-bit ASID contexts, alongside
 the preceding exact scalar ID reads and corrected APA1 signing.
 These six captures retain their original dynamic profile-2 inputs and
 expectations. This replay checks shared runtime regressions; it does not replace
 independent instruction or original-entry tests. See
-`VALIDATION_MMFR0_SANDBOX_20260913.md` and `evidence-mmfr0-sandbox-20260913`.
-The preceding canonical-test correction sources remain under `history/58e712a`,
-with `evidence-mmfr0-ci-20260913` unchanged.
+`VALIDATION_MMFR0_CI_20260913.md` and `evidence-mmfr0-ci-20260913`.
 The preceding MMFR0 sources remain under `history/feb09b5`, with
 `evidence-mmfr0-20260913` unchanged.
 The preceding ISAR2/PAC sources remain under `history/5cd1e44`, with

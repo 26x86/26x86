@@ -1,6 +1,6 @@
 {
   "schema": "nextcore-runtime-source-freeze-v1",
-  "base": "50b3da2f172f67b4661336799e36bd19002ce816",
+  "base": "58e712a5a93448014addd635d6fab9e9e8fcc00c",
   "provenance": "git archive of immutable Nextcore-ISE commit; every archive file SHA-256 independently matched to git show commit:path bytes; no working-tree source",
   "files": {
     "abi_layout.c": "03b71dd9958a85655a50c30387c83d542ae51c808b1913f6a349b531d69f7617",
@@ -80,7 +80,7 @@
     "test_isar2_jit.c": "a2097b673e466d94eb2963b4afa3d676425c548c99bc12e80781593b0a66260f",
     "test_isar2_provider.rs": "e6b1ce1d90715fae381c409f1ccc61579d84807ca0823796a57c11f8cac872bd",
     "test_isar2_reference.rs": "1e490bc807ebe7ac0924b385aca7a6f9a3975e51a28f6c2682a353d22bb71f78",
-    "test_jit.c": "a216d96076607fbe6bc9f40b89f00b16dd215c7380185dfac76ca3857fd2209a",
+    "test_jit.c": "dffedb72d4d3706d0dfd4b975be279db3f140a7d821eff16b7a2172fabe7c726",
     "test_logical_jit.c": "2f53c9c225b08ecd7a9122b42398c624a8ac6b39357c5d2e5dc308d1bc509766",
     "test_logical_shifted_jit.c": "94302594872572c68a362874a13e1efd0b1bb7e8f421a2f5cfa2214a532d3981",
     "test_logical_shifted_provider.rs": "f6a03db8c2a298123300294aac9629b134a499adee818eeba329c32f44803779",

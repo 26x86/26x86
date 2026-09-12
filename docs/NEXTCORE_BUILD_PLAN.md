@@ -1627,7 +1627,7 @@ normal startup, the original reset ABI or physical macOS desktop output.
 
 ### Canonical ASID test correction and release provenance
 
-The final release pins ISE `58e712a5a93448014addd635d6fab9e9e8fcc00c`
+The first CI correction pins ISE `58e712a5a93448014addd635d6fab9e9e8fcc00c`
 and EFI `13fc35e28454a54a5bdfcde249bc15ea320311af`. CI run 34710249000
 found a stale canonical test that still rejected TCR.A1. The correction changes
 only the test and publication metadata: positive A1 and low-eight-bit tags,
@@ -1643,6 +1643,27 @@ The new 128-file exact freeze reproduces six captures, fourteen comparator
 regressions and three negative controls. All 217 prior history/evidence files
 are preserved. See `nextcore/artifacts/physical-integration-20260912/mmfr0-ci-correction`
 and `nextcore/tools/dynamic_comparison/VALIDATION_MMFR0_CI_20260913.md`.
+
+### Legacy native-test correction and final release pins
+
+The release now pins ISE `50b3da2f172f67b4661336799e36bd19002ce816`
+and EFI `73d84d9c781d8d2979402d4749b4bae946b92c8c`. A separate legacy
+C API test still expected the previous MMFR0 value after resetting EL1 with
+inactive HCR/SCR. Its expected value now matches the accepted `0x0f100005`.
+The change affects only `test_jit.c` and publication metadata.
+
+The direct native suite passes 84 assertions; the C/Rust FFI suite passes 76.
+Exact ABI-layout and W^X checks pass. The local full Sandbox entrypoint stops
+at a QEMU patch digest precondition, so its native functions were exercised
+separately. No full local entrypoint success is claimed. The preceding source
+1dc0340 passes all six GitHub workspace/EFI jobs in run 34711071006.
+
+Final mapped and NXASID rebuilds remain byte-identical to the executed r29
+and authored probe binaries. The final 128-file source freeze reproduces six
+captures, fourteen regressions and three negative controls, preserving all
+232 prior history/evidence files. The original r29 run retains f2256f1 provenance.
+See `nextcore/artifacts/physical-integration-20260912/mmfr0-sandbox-correction`
+and `nextcore/tools/dynamic_comparison/VALIDATION_MMFR0_SANDBOX_20260913.md`.
 
 ### Next implementation contract: baseline stage-1 table permissions
 

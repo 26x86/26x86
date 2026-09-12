@@ -1,0 +1,57 @@
+{
+  "schema": "nextcore-mmfr0-sandbox-correction-v1",
+  "passed": true,
+  "ise_commit": "50b3da2f172f67b4661336799e36bd19002ce816",
+  "efi_commit": "73d84d9c781d8d2979402d4749b4bae946b92c8c",
+  "runtime_delta": [
+    "test_jit.c"
+  ],
+  "production_semantics_changed": false,
+  "failed_ci": {
+    "run": 34711067122,
+    "job": 103599843188,
+    "step": "Compile production EFI and execute generated code"
+  },
+  "correction": "Legacy EL1/HCR0/SCR0 C API test expected MMFR0 0x00101122; the accepted explicit model returns 0x0f100005. Only the expected test value changed.",
+  "validation": "84 native assertions, 76 C/Rust FFI assertions, exact ABI layout and W^X checks pass. The local full entrypoint stopped at a QEMU patch digest precondition; its native build functions were exercised separately. No local whole-entrypoint success is claimed.",
+  "previous_workspace_ci": {
+    "run": 34711071006,
+    "source_commit": "1dc0340ca2b0ed5fd5f3b9f004a9447134d6e4a6",
+    "jobs_passed": 6
+  },
+  "original_execution": "r29 remains the actual execution of f2256f173ffae32924f1519ece7b1f0e4b251d6a. Final pinned NXARMJIT and NXASID rebuilds match the already tested bytes. This test-only correction is not a new original-input run.",
+  "dynamic_freeze": "nextcore/tools/dynamic_comparison/evidence-mmfr0-sandbox-20260913",
+  "normal_startup": "NOT_READY",
+  "physical_macOS_boot_verified": false,
+  "desktop_verified": false,
+  "files": {
+    "layered-native.json": {
+      "bytes": 1543,
+      "sha256": "4f4505d1c763a980c121b9b80c7ba1ff930b9ffe10f4c5b403891f3ad6e7605e"
+    },
+    "layered-native.log": {
+      "bytes": 1583,
+      "sha256": "be5a667e3b50eab3a2da09b75b7e805e87c0db1ffaabfb010dde29337a962c6e"
+    },
+    "local-entry-precondition.log": {
+      "bytes": 1185,
+      "sha256": "6d882026637e21176a7f216f9089c7e01824a4eef886756383061c9ddcb7234a"
+    },
+    "module-publication.json": {
+      "bytes": 632,
+      "sha256": "63d3f5004725141274421d177b6f43d145ec66775f637125b6b54db1a2fc8e13"
+    },
+    "native-fixed-stdout.log": {
+      "bytes": 78,
+      "sha256": "3265891b66ef4d678ce00afc460efcdab7f506ac7924e63e95915b7de488bac4"
+    },
+    "native-original-stderr.log": {
+      "bytes": 134,
+      "sha256": "985e47fe38941e16b9e7e55870341810e1a7f633512f7f7a0b9db45d9927db25"
+    },
+    "pinned-binary-rebuild.json": {
+      "bytes": 1307,
+      "sha256": "ef0d12b2bf92940f8a5e2fa7fb9472519f0401b0be975e2cee40642c38b44eee"
+    }
+  }
+}
