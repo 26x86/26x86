@@ -118,6 +118,38 @@
       "version": "2.11",
       "released": "December 2024",
       "normative_chapters_retrieved": false
+    },
+    {
+      "url": "https://documentation-service.arm.com/static/665741bb876c8d213b78610b",
+      "bytes": 9259768,
+      "sha256": "2c9164eb78cac5098e23576490a638ba3c91eb2f76c21a967fb25a2c863d2aa0",
+      "retrieved": true,
+      "authority": "Arm official documentation service",
+      "title": "Arm Cortex-X925 Core Technical Reference Manual",
+      "document_id": "102807_0001_05_en",
+      "edition": "Issue 05, r0p1",
+      "pdf_pages": [
+        419,
+        420,
+        421
+      ],
+      "opened_local": true,
+      "generic_current_register_table": false,
+      "source_body_published": false
+    },
+    {
+      "url": "https://documentation-service.arm.com/static/68da4ea586b96e39e38c215c?token=",
+      "bytes": 111051,
+      "sha256": "0225d31136eb414c1a370fbaa390836ce8e3ed56fcd29adbb14c13606c54e6fe",
+      "retrieved": true,
+      "authority": "Arm official documentation service",
+      "title": "Arm Architecture Registers Release Note for FAT A-profile architecture",
+      "document_id": "111109_2025-09_01_en",
+      "edition": "Issue 01, 2025-09",
+      "pdf_pages": [],
+      "opened_local": true,
+      "generic_current_register_table": false,
+      "source_body_published": false
     }
   ],
   "unretrieved_official_urls": [
