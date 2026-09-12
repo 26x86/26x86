@@ -21,7 +21,7 @@
       "id": "execution",
       "layer": "CPU runtime",
       "status": "in-progress",
-      "summary": "The original prefix remains at r18: 1,542,930 instructions and an alignment fault. A separate mapped diagnostic passes native differential tests and authored EFI checks with PAC address signing disabled. Original mapped replay and physical boot remain unverified.",
+      "summary": "Original r18 remains the strongest M=0 progress evidence at 1,542,930 instructions. The separate r19 mapped attempt stops after 13 instructions at SPSel with zero completed data operations. Authored mapped tests pass; normal startup and physical boot remain unverified.",
       "evidence_url": "https://github.com/26x86/Nextcore-ISE/pull/9"
     },
     {
@@ -67,6 +67,12 @@
     }
   ],
   "latest": [
+    {
+      "date": "2026-09-12",
+      "title": "First original mapped attempt stops at SPSel",
+      "summary": "The separate r19 mapping regime retires 13 instructions, completes zero data operations and stops with SYSTEM_REGISTER_TRAP at SPSel. Its zero framebuffer matches 1280 by 800 GOP readback. It did not advance beyond r18; the different regimes are not a direct progress comparison. SPSel implementation is not yet verified.",
+      "url": "https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r19-mapped-summary.json"
+    },
     {
       "date": "2026-09-12",
       "title": "Authored mapped execution preserves state across native reuse",

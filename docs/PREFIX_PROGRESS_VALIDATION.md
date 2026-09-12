@@ -58,9 +58,15 @@ and physical macOS output remain unverified.
 A separately selected diagnostic now connects explicit Normal-NC mappings to
 the canonical PAC callback and run-local native reuse. Profile 3 keeps address
 PAC disabled; XPAC, PACGA and disabled PAC instructions are covered. This is an
-authored execution capability, not evidence that the original kernel has run
-under the new mapping. **r18 remains the strongest original-input receipt;
-r19 has not been executed for this documentation update.**
+authored execution capability, not evidence of original kernel initialization
+or a correct reset entry ABI. **r18 remains the strongest original-input M=0 progress receipt.** The separate
+r19 mapped attempt retires 13 instructions and stops with SYSTEM_REGISTER_TRAP
+at SPSel, with zero completed data operations. Its owned framebuffer remains
+zero and matches GOP readback at 1280 by 800. This new mapping regime did not
+advance beyond r18; its retirement count is not a same-regime regression or
+progress comparison. SPSel support is being implemented and is not yet verified.
+The [r19 mapped receipt](https://github.com/26x86/26x86/blob/codex/physical-golden-gate-20260912/nextcore/artifacts/physical-integration-20260912/original-prefix-r19-mapped-summary.json)
+records this boundary without original instruction words or addresses.
 
 The independent native proof passes 31 tests in each of three separately compiled
 modes: cached, uncached and 64-byte cache slots. Nine scenarios compare complete

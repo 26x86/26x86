@@ -187,3 +187,34 @@ OPEN_QUESTION: Design:Complete persistent guest display, storage and platform ow
 SPTM applicability to the selected j274 target is unverified. The diagnostic
 profile name does not establish its normal startup ABI; see the
 [entry contract](NEXTCORE_ARM64E_ENTRY_CONTRACT.md).
+
+## Mandatory website EFI package
+
+Current Status: Website deployment requires a verified `prebuiltefi.zip` built
+from the immutable public source commit recorded in `docs/data/prebuilt.json`.
+Normal macOS startup remains NOT_READY and physical desktop boot is unverified.
+
+Target State: Every published website includes a downloadable, source-bound EFI
+archive. The docs branch is not the runtime source: CI checks out the exact
+manifest commit recursively into a separate directory and verifies its Git and
+submodule identities before compiling release x86_64 UEFI binaries. The baseline
+`EFI/BOOT/BOOTX64.EFI` uses the normal build with no diagnostic feature selection.
+The mapped diagnostic remains `diagnostics/NXARMJIT.efi`; it must never replace
+or impersonate the baseline boot entry. No Apple payload is included.
+
+The archive contains an explicit, empty public configuration at
+`EFI/OC/config.plist`, the firmware's existing configuration path. It selects no
+external loader, displays "No enabled boot entries" and returns NOT_FOUND to
+firmware. It does not guess a target computer's disk, kernel or settings.
+README instructions explain isolated removable-media use and separate diagnostic
+configuration. Source revision, submodule revisions, build commands, tool versions
+and per-file SHA-256/size records are included in the archive manifest.
+
+The packaging gate validates PE32+ AMD64 EFI application headers, nonempty mapped
+sections and entry points, then reopens the ZIP and verifies its exact path set,
+CRC, sizes and hashes. Missing binaries, changed source identity, extra entries,
+invalid PE or digest mismatch fail the job before Pages artifact upload. A public
+JSON sidecar contains the archive SHA-256. Source pin updates are explicit reviewed
+manifest changes. Unit negative controls cover rejected binaries and altered ZIPs;
+an actual build validates the positive boundary. This package proves distribution
+integrity and compilation, not macOS installation or physical boot.
