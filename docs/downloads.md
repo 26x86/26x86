@@ -38,3 +38,23 @@ The reviewed build selection is recorded in [the source manifest](data/prebuilt.
 The downloadable archive sidecar records the hash of this deployment's ZIP;
 verify it before using the files. A source-pin update changes this manifest
 explicitly and rebuilds both binaries.
+
+## Configuration recovery checked in actual firmware
+
+Missing, empty, malformed or no-entry configuration now produces a recovery
+screen. Enter rereads `\EFI\OC\config.plist`; Escape returns the original
+error. No alternate disk or guest is selected automatically. Required text/input
+errors remain failures; an optional screen-clear failure is recoverable when
+text can still be shown.
+
+Ten authored OVMF cases pass, together with three existing picker regressions.
+The previous baseline fails the recovery control. The screenshot below is from
+actual OVMF execution, not a mockup or a physical computer. Normal macOS startup
+and physical desktop boot remain unverified.
+
+![Actual OVMF configuration recovery screen](https://raw.githubusercontent.com/26x86/26x86/f8bd9f38661d416ae34a3d0ea877f50ae5fcb05f/nextcore/artifacts/physical-integration-20260912/configuration-recovery/recovery-screen.png)
+
+[Inspect configuration recovery evidence](https://github.com/26x86/26x86/blob/f8bd9f38661d416ae34a3d0ea877f50ae5fcb05f/nextcore/artifacts/physical-integration-20260912/configuration-recovery/summary.json).
+The package is rebuilt from pinned public sources. PE timestamps/debug identifiers
+can differ from local tested images; source agreement does not imply identical
+binary bytes across build environments. Download hashes describe this actual ZIP.

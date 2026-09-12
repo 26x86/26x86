@@ -13,7 +13,7 @@
       "id": "efi",
       "layer": "Firmware",
       "status": "validated-in-ovmf",
-      "summary": "Picker display failures and child-return recovery have authored OVMF evidence. Physical firmware coverage is pending.",
+      "summary": "Configuration recovery passes ten actual OVMF cases: Enter rereads the same file and Escape returns the original error. Three picker regressions pass; physical firmware coverage remains pending.",
       "evidence_url": "https://github.com/26x86/Nextcore-EFI/pull/10"
     },
     {
@@ -67,6 +67,12 @@
     }
   ],
   "latest": [
+    {
+      "date": "2026-09-13",
+      "title": "EFI configuration recovery is available in the prebuilt package",
+      "summary": "Missing, empty, malformed and no-entry configurations show recovery with Enter retry and Escape return. Ten authored OVMF cases, three picker regressions and an old-binary negative control pass. Actual OVMF screenshot is available; physical boot remains unverified.",
+      "url": "https://26x86.github.io/26x86/downloads/"
+    },
     {
       "date": "2026-09-13",
       "title": "Logical shifted-register execution reaches post-indexed LDR",

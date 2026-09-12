@@ -204,8 +204,10 @@ or impersonate the baseline boot entry. No Apple payload is included.
 
 The archive contains an explicit, empty public configuration at
 `EFI/OC/config.plist`, the firmware's existing configuration path. It selects no
-external loader, displays "No enabled boot entries" and returns NOT_FOUND to
-firmware. It does not guess a target computer's disk, kernel or settings.
+external loader and displays configuration recovery. Enter rereads the same
+file; Escape returns the original error. Required display/input failures retain
+their actual error, while an optional clear failure permits readable recovery.
+It does not guess a target computer's disk, kernel or settings.
 README instructions explain isolated removable-media use and separate diagnostic
 configuration. Source revision, submodule revisions, build commands, tool versions
 and per-file SHA-256/size records are included in the archive manifest.
