@@ -1071,3 +1071,23 @@ switch, same-bank selection, following stack use and negative tests precede
 another original replay. Arm's public PSTATE synchronization contract requires
 subsequent instructions to observe the new stack without an added barrier:
 https://community.arm.com/forums/f/architectures-and-processors-forum/8141/is-any-synchronization-barrier-instruction-necessary-after-writing-spsel-to-switch-to-sp0-on-armv8
+
+### Scalar unscaled memory transfers
+
+Current Status: Original mapped execution reaches an unsupported scalar unscaled
+load after 42,252,448 instructions. The native decoder and Rust reference both
+exclude the signed immediate unscaled addressing class.
+
+Target State: Support the thirteen integer unscaled forms: byte/halfword/word/
+doubleword stores and zero-extending loads, signed byte/halfword loads to W/X,
+and signed word loads to X. Decode only the unscaled mode with its signed nine-bit
+byte displacement (-256 through 255), no scaling and no base writeback. Rn=31
+uses SP and Rt=31 uses ZR. Preserve flags, precise data/stack alignment and
+translation faults, destination width/sign extension, provider request semantics
+and nonretirement on failure. SIMD, prefetch, reserved encodings, unprivileged
+and pre/post-index variants remain outside this addition. Update all native
+classification/direct/provider paths and the Rust reference consistently.
+Independent authored cases must cover all forms, displacement endpoints, SP/ZR,
+signed results, preserved base, cross-page Normal accesses, permission failures
+and rejected adjacent encodings before original replay. Public encoding source:
+https://github.com/qemu/qemu/blob/ae35f033b874c627d81d51070187fbf55f0bf1a7/target/arm/tcg/a64.decode
