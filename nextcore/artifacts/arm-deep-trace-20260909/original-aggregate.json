@@ -1,0 +1,41 @@
+{
+  "schema": "nextcore.bp35-original-deep-aggregate.v1",
+  "approved_instruction_budget": 16384,
+  "actual_runs": 1,
+  "previous_checkpoint": {
+    "instruction_budget": 4096,
+    "retired": 4096,
+    "termination": "budget"
+  },
+  "current": {
+    "retired": 5311,
+    "compiled_blocks": 5312,
+    "fetch_requests": 5312,
+    "data_requests": 783,
+    "completed_data_operations": 783,
+    "provider_status": 0,
+    "status": 8,
+    "elapsed_seconds": 33.543,
+    "termination": "unsupported_instruction",
+    "public_isa_family": "A64 LSL (immediate), 64-bit alias of UBFM"
+  },
+  "extra_retired_before_boundary": 1215,
+  "source_word_independently_matches_saved_fault": true,
+  "unique_original_segment_mapping": true,
+  "input_entry_placement_profile_preserved": true,
+  "original_inputs_preserved": true,
+  "esp_copies_preserved": true,
+  "frozen_sources_preserved": true,
+  "binary_sha256": "67796134e6ac0333a57af684ae996a61a19061b8728e02ea7d781429a0252d13",
+  "cli_sha256": "ec297530bb91719e7290c34c802ace3a6857b4fa25942480c5a9407ef2ed7113",
+  "diagnostic_profile": "unprovisioned-sptm-prefix",
+  "memory_profile": "memory-v1-m0-only",
+  "normal_sptm_args_provided": false,
+  "sptm_services_provided": false,
+  "platform_device_tree_provided": false,
+  "further_budget_growth_authorized": false,
+  "macos_boot_verified": false,
+  "metal_verified": false,
+  "comparison_limit": "Prior and current firmware use different runtime revisions and memory dispatch; native block counts are not directly comparable performance or path proofs.",
+  "public_isa_reference": "https://documentation-service.arm.com/static/5f3fa899428f7a6b3328fd44"
+}

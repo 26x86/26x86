@@ -1,0 +1,95 @@
+{
+  "schema": "nextcore.firmware-watchdog-mapped-regression.v1",
+  "passed": true,
+  "source_commit": "7256b830eeefe5c22b38f87f3aad9ab9ac9d4b19",
+  "efi_commit": "3f2154b0d99633bf7fbba34ce95a5e3917703812",
+  "checks": {
+    "both_authored_runs_pass": true,
+    "full_reported_execution_and_window_equal": true,
+    "uncached_exact_protection": true,
+    "cached_fewer_real_transitions": true,
+    "cached_balanced_restore": true,
+    "old_build_not_accepted": true,
+    "sources_and_binaries_preserved": true,
+    "authored_inputs_preserved": true,
+    "observer_preserves_execution": true,
+    "observer_preserves_protection": true
+  },
+  "binary_sha256": {
+    "nextcore-watchdog-mapped-final-20260912.efi": "8e9e728895959b1ca4a867bdcc1f10427bee3915d919917f8fe79cec0e719dec",
+    "nextcore-watchdog-mapped-uncached-final-20260912.efi": "3dba60b0f665049bca2c970fdecb5873786f46b57d81361db965a42d114da853",
+    "nextcore-initialization-old-20260912.efi": "02fe7a8185b7ee57a6f8311f440b12a166bce5b68548b605fb91f11263c25801",
+    "nextcore-watchdog-mapped-unobserved-final-20260912.efi": "edcd84c4cc1dd7d7ca48a5a127fc753eb9f6c5347a21c6ef75290e7c0abc2edb"
+  },
+  "original_images_used": false,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "normal_startup_ready": false,
+  "files": [
+    {
+      "path": "receipt.json",
+      "bytes": 39087,
+      "sha256": "573cb350e5d65c8ad3e3ac3147822d4f556683fae63a455f240b6d170a27873a"
+    },
+    {
+      "path": "cached/report.json",
+      "bytes": 17105,
+      "sha256": "f66c4d9af4557ea5122f46dcb69dd4c739596aa468b8b5442643a5fcff3b89bc"
+    },
+    {
+      "path": "cached/serial.log",
+      "bytes": 11189,
+      "sha256": "776761bc2430ca5404d3c675a52e2e12bf30fc8f130174bb02f9958d37fd9730"
+    },
+    {
+      "path": "cached/command.json",
+      "bytes": 615,
+      "sha256": "f200c9ce9fc2ce1270bb7d1afeccc878b5f28ec63df619a4cdfc71522a80c53d"
+    },
+    {
+      "path": "uncached/report.json",
+      "bytes": 17130,
+      "sha256": "ba8903ca2ca1a99c84616e385d0e1f54d56c8d2a947e4a8b9a8c7614176846b7"
+    },
+    {
+      "path": "uncached/serial.log",
+      "bytes": 11195,
+      "sha256": "dd07bc8c05d91c39714c1e82ad6c42897a6043d8836ac1759ba16a18e785abaa"
+    },
+    {
+      "path": "uncached/command.json",
+      "bytes": 621,
+      "sha256": "ca335025605012af069918db73f90d5159b6551f9513ea28676c60dbea40c6ec"
+    },
+    {
+      "path": "old/report.json",
+      "bytes": 8294,
+      "sha256": "a649cd44c57e35a084b65970494cc6866829d1df43e048d7b80f226644663bc9"
+    },
+    {
+      "path": "old/serial.log",
+      "bytes": 3107,
+      "sha256": "b3b60f7d81aabd1145ba06ff671ec14461b4420a233a28585b7334a26d92c891"
+    },
+    {
+      "path": "old/command.json",
+      "bytes": 606,
+      "sha256": "4eb4146829c9203b97c7f044f412a72639550abe62a110796e087620278c275b"
+    },
+    {
+      "path": "unobserved/report.json",
+      "bytes": 8165,
+      "sha256": "7918d3132149751cac08dd56b17c418a3378433be4f2ae835429bf1df1371a33"
+    },
+    {
+      "path": "unobserved/serial.log",
+      "bytes": 2617,
+      "sha256": "9813749828acfdaccc645131ed12a9089428bbfbd146df2039cbdacf0df05d3b"
+    },
+    {
+      "path": "unobserved/command.json",
+      "bytes": 627,
+      "sha256": "9162b3b301a0e0049ca9bfdc3688a0f65a7cefcb0d5bcf0c88206481ab9e27eb"
+    }
+  ]
+}

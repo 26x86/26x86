@@ -1,0 +1,279 @@
+[
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86",
+    "returncode": 0,
+    "elapsed_seconds": 0.03984260999982325,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "ls-tree",
+      "-r",
+      "--name-only",
+      "5577747ee93699fa70cd05d78c20204a4b08bc47",
+      "nextcore/Cargo.toml",
+      "nextcore/Cargo.lock",
+      "nextcore/.cargo"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86",
+    "returncode": 0,
+    "elapsed_seconds": 0.07185696800002006,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/workspace-config.tar",
+      "5577747ee93699fa70cd05d78c20204a4b08bc47",
+      "nextcore/Cargo.lock",
+      "nextcore/Cargo.toml"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86",
+    "returncode": 0,
+    "elapsed_seconds": 0.8281991950000247,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-core",
+    "returncode": 0,
+    "elapsed_seconds": 0.08805740100001458,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/core.tar",
+      "4ae6e9aff31be93cf570b56975b711902f3fb7e7"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-core",
+    "returncode": 0,
+    "elapsed_seconds": 0.2709976060000372,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-efi",
+    "returncode": 0,
+    "elapsed_seconds": 0.09827163599993582,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/efi.tar",
+      "73d84d9c781d8d2979402d4749b4bae946b92c8c"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-efi",
+    "returncode": 0,
+    "elapsed_seconds": 0.2548915979998583,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-tool",
+    "returncode": 0,
+    "elapsed_seconds": 0.08785130199999003,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/tool.tar",
+      "9e6222a69d2f62490139c477d6e217a28e3af323"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-tool",
+    "returncode": 0,
+    "elapsed_seconds": 0.1511394530000416,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/ise.tar",
+      "50b3da2f172f67b4661336799e36bd19002ce816"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise",
+    "returncode": 0,
+    "elapsed_seconds": 0.6870065069999782,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-gpu",
+    "returncode": 0,
+    "elapsed_seconds": 0.07224960200005626,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/gpu.tar",
+      "eaab9fcfded3a8ee298453397790f13edace5694"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-gpu",
+    "returncode": 0,
+    "elapsed_seconds": 0.12420035499985715,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-hal",
+    "returncode": 0,
+    "elapsed_seconds": 0.07509883500006254,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/hal.tar",
+      "9c1cd8dfff33478e32668c5cd181dd094ec2881b"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-hal",
+    "returncode": 0,
+    "elapsed_seconds": 0.11779099900013534,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-apls",
+    "returncode": 0,
+    "elapsed_seconds": 0.07333926599994811,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-hierarchy-efi-build-20260913-r1/apls.tar",
+      "9b6ccaa421f668fdb212ccd14969002f6196a18f"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-apls",
+    "returncode": 0,
+    "elapsed_seconds": 0.12450063100004627,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "ls-files"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime",
+    "returncode": 0,
+    "elapsed_seconds": 0.059197017000087726,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "cargo",
+      "build",
+      "-p",
+      "nextcore-efi",
+      "--bin",
+      "NXPERM",
+      "--release",
+      "--target",
+      "x86_64-unknown-uefi",
+      "--features",
+      "arm-jit-stage1-probe"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore",
+    "returncode": 0,
+    "elapsed_seconds": 9.07798634300002,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "cargo",
+      "build",
+      "-p",
+      "nextcore-efi",
+      "--bin",
+      "NXPERM",
+      "--release",
+      "--target",
+      "x86_64-unknown-uefi",
+      "--features",
+      "arm-jit-stage1-probe"
+    ],
+    "cwd": "/tmp/nextcore-hierarchy-efi-build-20260913-r1/workspace/nextcore",
+    "returncode": 0,
+    "elapsed_seconds": 7.755280204999963,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "ls-files"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime",
+    "returncode": 0,
+    "elapsed_seconds": 0.053482560000020385,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "clang-18",
+      "--version"
+    ],
+    "cwd": "None",
+    "returncode": 0,
+    "elapsed_seconds": 0.013477029000114271,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "/home/developer/.cargo/bin/rustc",
+      "--version"
+    ],
+    "cwd": "None",
+    "returncode": 0,
+    "elapsed_seconds": 0.013652197000055821,
+    "reaped": true
+  }
+]

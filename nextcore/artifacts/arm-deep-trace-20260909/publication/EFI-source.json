@@ -1,0 +1,8 @@
+{
+  "commit": "03a376d6652fdaabe8b567c047dad9d41926dc84",
+  "authored_source_commit": "c4e987ed1742e48ab43114aa7fdfb8f9c4b119f2",
+  "authored_freeze": "/home/sharh/work/bp35-deep-trace/source-freeze-r2.json",
+  "core": "bab7ac453a0f8ceab558eca1ad069bcfaf139776",
+  "ise": "0d722886753268ec366f068823c37ea10132fb43",
+  "bp34_efi_base": "ed9ba25598a52fdf1ba55badfee0d953afdbc20e"
+}

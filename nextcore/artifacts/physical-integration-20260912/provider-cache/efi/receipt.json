@@ -1,0 +1,98 @@
+{
+  "schema": "nextcore.provider-cache-efi-comparison.v1",
+  "passed": true,
+  "cases": {
+    "framebuffer": {
+      "checks": {
+        "authored_acceptance": true,
+        "same_observed_execution_and_requests": true,
+        "uncached_exact_calls": true,
+        "balanced_transitions_and_restore": true,
+        "fewer_real_permission_calls": true
+      },
+      "protection": {
+        "cached": {
+          "writable": 31,
+          "executable": 30,
+          "failures": 0
+        },
+        "uncached": {
+          "writable": 65,
+          "executable": 64,
+          "failures": 0
+        }
+      }
+    },
+    "long-bfm": {
+      "checks": {
+        "authored_acceptance": true,
+        "same_observed_execution_and_requests": true,
+        "uncached_exact_calls": true,
+        "balanced_transitions_and_restore": true,
+        "fewer_real_permission_calls": true
+      },
+      "protection": {
+        "cached": {
+          "writable": 14,
+          "executable": 13,
+          "failures": 0
+        },
+        "uncached": {
+          "writable": 65537,
+          "executable": 65536,
+          "failures": 0
+        }
+      }
+    }
+  },
+  "efi_sha256": {
+    "cached": "02fe7a8185b7ee57a6f8311f440b12a166bce5b68548b605fb91f11263c25801",
+    "uncached": "b8a4b43155f0a3a172f752fc54e1dbb1b0a4c24119707c4f2c61c9dcb60b169d"
+  },
+  "binaries_preserved": true,
+  "commands": [
+    [
+      "/usr/bin/python3",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_boot_framebuffer_ovmf.py",
+      "--efi",
+      "/tmp/nextcore-cache-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi",
+      "--output",
+      "/tmp/nextcore-cache-efi-20260912-r3/framebuffer/cached",
+      "--memory-observation"
+    ],
+    [
+      "/usr/bin/python3",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_boot_framebuffer_ovmf.py",
+      "--efi",
+      "/tmp/nextcore-uncached-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi",
+      "--output",
+      "/tmp/nextcore-cache-efi-20260912-r3/framebuffer/uncached",
+      "--memory-observation"
+    ],
+    [
+      "/usr/bin/python3",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_ubfm_consumer_ovmf.py",
+      "--efi",
+      "/tmp/nextcore-cache-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi",
+      "--output",
+      "/tmp/nextcore-cache-efi-20260912-r3/long-bfm/cached",
+      "--instruction-family",
+      "bitfield-merge",
+      "--long-diagnostic"
+    ],
+    [
+      "/usr/bin/python3",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_ubfm_consumer_ovmf.py",
+      "--efi",
+      "/tmp/nextcore-uncached-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi",
+      "--output",
+      "/tmp/nextcore-cache-efi-20260912-r3/long-bfm/uncached",
+      "--instruction-family",
+      "bitfield-merge",
+      "--long-diagnostic"
+    ]
+  ],
+  "original_images_used": false,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false
+}

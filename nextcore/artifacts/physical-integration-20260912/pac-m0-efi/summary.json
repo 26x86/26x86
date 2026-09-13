@@ -1,0 +1,178 @@
+{
+  "schema": "nextcore.pac-m0-efi-evidence.v1",
+  "passed": true,
+  "selected_run": "r2",
+  "historical_run": "r1",
+  "historical_result": "Both binaries trapped at retired 19, before data or numeric comparisons; this run did not validate signing.",
+  "final_result": "48 vectors and 288 numeric comparisons pass in current EFI; prior EFI reaches the distinct signing assertion. Both runs complete the 65536 diagnostic budget.",
+  "oracle_scope": "Adapted-control APA1 QEMU expected values; EFI uses the authored asymmetric TCR. This does not establish cipher conformance or the original entry ABI.",
+  "efi_commit": "18be73b632934fba4a901addb3f66d055934cf3a",
+  "binary_sha256": "b581e7bb7ec54421e1a91ea23e8c5a7cbae4ad3cbcbd9c7af85ea65d49283583",
+  "source_boundary": "Authored metadata, source fragments, results and logs only; EFI, ELF, firmware variable images and kernel containers excluded.",
+  "original_images_used": false,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "inventory_scope": "Every published payload file; summary.json is excluded to avoid a self-referential hash.",
+  "files": [
+    {
+      "path": "r1/commands.json",
+      "bytes": 4104,
+      "sha256": "4e5f57f6b62d39f8de80ef0d9167441a47f88aaca7d5a2c9d75eca1171ddb65f"
+    },
+    {
+      "path": "r1/current/command.json",
+      "bytes": 588,
+      "sha256": "1d0b36104ba08c624c010da538abbb417ca3766551b3b9ba702f189af47c0222"
+    },
+    {
+      "path": "r1/current/report.json",
+      "bytes": 9545,
+      "sha256": "3e2beadd6a9888545fec05fe289f82fb2d521b67a25d857c56dd1d34af2e880a"
+    },
+    {
+      "path": "r1/current/serial.log",
+      "bytes": 4387,
+      "sha256": "1a36dfb698d23403f5e89db9517979442360be13c31524af88d2384d50471d31"
+    },
+    {
+      "path": "r1/current/stderr.log",
+      "bytes": 76,
+      "sha256": "50c96fd63283c3043d52517a4d571bb0bbe2e72468e7ad30512157368a3000ae"
+    },
+    {
+      "path": "r1/current/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r1/old/command.json",
+      "bytes": 576,
+      "sha256": "1cd45550604dfcf16eb04df9217af8ca41ef02cdd09a517b58f683911a9cd420"
+    },
+    {
+      "path": "r1/old/report.json",
+      "bytes": 9545,
+      "sha256": "ad9afab213cc731eae963763ef638ad11b0e2f3a91b788d779f8142adeda8f4c"
+    },
+    {
+      "path": "r1/old/serial.log",
+      "bytes": 4387,
+      "sha256": "1a36dfb698d23403f5e89db9517979442360be13c31524af88d2384d50471d31"
+    },
+    {
+      "path": "r1/old/stderr.log",
+      "bytes": 76,
+      "sha256": "a5337e93255729a7160b32befb6cd6c005f782952b41bad009273a2e2bbc73d0"
+    },
+    {
+      "path": "r1/old/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r1/oracle-manifest.json",
+      "bytes": 7631,
+      "sha256": "fd5e1cd8ba6c7474be8b77a62350473be045d11fddb906d75c37db36c3bd6ab7"
+    },
+    {
+      "path": "r1/oracle-receipt.json",
+      "bytes": 5450,
+      "sha256": "df706dade042d2e91ecc494ba029425030c1f7399d0433cf8fe4f87301f096b4"
+    },
+    {
+      "path": "r1/oracle-results.bin",
+      "bytes": 7328,
+      "sha256": "89385554ea4e4d09ddb25d9a617240113b8a717f0c93219eb5b2b55cc7e70f81"
+    },
+    {
+      "path": "r1/pac_m0_vectors.inc",
+      "bytes": 7287,
+      "sha256": "8cfdf33e3e70763a441f4c98c2a44554bac80554d3e7fb2db4729a55d7f10796"
+    },
+    {
+      "path": "r1/receipt.json",
+      "bytes": 5133,
+      "sha256": "c3938fd9b5a9a1bcefdddb227f2d22f1c0897d7e6f8c8d962764ae9e3fd406e5"
+    },
+    {
+      "path": "r2/commands.json",
+      "bytes": 4107,
+      "sha256": "d2e808734a5b6f551faf528f7015dc9d1c8c48e62a639ff05eb32833b48a2262"
+    },
+    {
+      "path": "r2/current/command.json",
+      "bytes": 588,
+      "sha256": "e02af0eda587512f62713dda820a2013e00f1df79d646e425bac0ec22e583104"
+    },
+    {
+      "path": "r2/current/report.json",
+      "bytes": 15018,
+      "sha256": "c05ebc6488351d08b5815c3559205600bda87499b4c2e12cb43d094acf9cde16"
+    },
+    {
+      "path": "r2/current/serial.log",
+      "bytes": 9606,
+      "sha256": "76365295682bcf5db489d46377332e432a6cbbd3cbcb5d359683228dce8b2339"
+    },
+    {
+      "path": "r2/current/stderr.log",
+      "bytes": 77,
+      "sha256": "c88c20d57468c3f949faf177ec3c98ae40479448ba1596f3cf7cc0362a83ff1d"
+    },
+    {
+      "path": "r2/current/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r2/old/command.json",
+      "bytes": 576,
+      "sha256": "7c92018e711e6910eb869b8742bd79661f20e4631a509173906f914d75240079"
+    },
+    {
+      "path": "r2/old/report.json",
+      "bytes": 15033,
+      "sha256": "587d6b08a9651c873b8429b41d6646935288fcf9ce20f432180080eef39aacc1"
+    },
+    {
+      "path": "r2/old/serial.log",
+      "bytes": 9611,
+      "sha256": "ba696d97e1f3e408e044c60f83b170e17e18dd7ec3cd53608143f281a0a25126"
+    },
+    {
+      "path": "r2/old/stderr.log",
+      "bytes": 77,
+      "sha256": "aa42aa60ad28a2cb74ae7fd6ed426c56a91bf0b8f6b262ea6b4a8d0c3c7f8808"
+    },
+    {
+      "path": "r2/old/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r2/oracle-manifest.json",
+      "bytes": 7631,
+      "sha256": "fd5e1cd8ba6c7474be8b77a62350473be045d11fddb906d75c37db36c3bd6ab7"
+    },
+    {
+      "path": "r2/oracle-receipt.json",
+      "bytes": 5450,
+      "sha256": "df706dade042d2e91ecc494ba029425030c1f7399d0433cf8fe4f87301f096b4"
+    },
+    {
+      "path": "r2/oracle-results.bin",
+      "bytes": 7328,
+      "sha256": "89385554ea4e4d09ddb25d9a617240113b8a717f0c93219eb5b2b55cc7e70f81"
+    },
+    {
+      "path": "r2/pac_m0_vectors.inc",
+      "bytes": 7287,
+      "sha256": "8cfdf33e3e70763a441f4c98c2a44554bac80554d3e7fb2db4729a55d7f10796"
+    },
+    {
+      "path": "r2/receipt.json",
+      "bytes": 5110,
+      "sha256": "bc281492dbd7718a9babec346bfbe310b362e3643b70ac565d28e0cf814e6858"
+    }
+  ]
+}

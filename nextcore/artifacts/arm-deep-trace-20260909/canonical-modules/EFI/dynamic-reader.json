@@ -1,0 +1,164 @@
+{
+  "passed": true,
+  "actual_validation": {
+    "passed": true,
+    "cases": 6,
+    "data_events": 58,
+    "control_events": 40,
+    "serial_sha256": "5acbd6bddd01924ea5b6f2287eec26d009685b443046bb5d6d901e94cdddfc6e"
+  },
+  "negative_cases": [
+    {
+      "name": "false_envelope",
+      "rejected": true,
+      "error": "failed or foreign envelope"
+    },
+    {
+      "name": "missing_envelope",
+      "rejected": true,
+      "error": "invalid report envelope"
+    },
+    {
+      "name": "nan_elapsed",
+      "rejected": true,
+      "error": "invalid elapsed time"
+    },
+    {
+      "name": "boolean_process_status",
+      "rejected": true,
+      "error": "invalid process status"
+    },
+    {
+      "name": "missing_case",
+      "rejected": true,
+      "error": "marker/row disagreement"
+    },
+    {
+      "name": "duplicate_case",
+      "rejected": true,
+      "error": "marker/row disagreement"
+    },
+    {
+      "name": "reordered_cases",
+      "rejected": true,
+      "error": "marker/row disagreement"
+    },
+    {
+      "name": "conflicting_terminal",
+      "rejected": true,
+      "error": "missing/conflicting terminal marker"
+    },
+    {
+      "name": "parse_error",
+      "rejected": true,
+      "error": "parse errors"
+    },
+    {
+      "name": "missing_hash_role",
+      "rejected": true,
+      "error": "missing input roles"
+    },
+    {
+      "name": "changed_input_hash",
+      "rejected": true,
+      "error": "input mutation"
+    },
+    {
+      "name": "wrong_scope",
+      "rejected": true,
+      "error": "wrong scope"
+    },
+    {
+      "name": "forged_host_validation",
+      "rejected": true,
+      "error": "forged/stale host validation"
+    },
+    {
+      "name": "missing_data_event",
+      "rejected": true,
+      "error": "marker/row disagreement"
+    },
+    {
+      "name": "missing_control_event",
+      "rejected": true,
+      "error": "marker/row disagreement"
+    },
+    {
+      "name": "forged_serial_digest",
+      "rejected": true,
+      "error": "raw serial digest mismatch"
+    },
+    {
+      "name": "missing_raw_serial",
+      "rejected": true,
+      "error": "missing raw serial file"
+    },
+    {
+      "name": "changed_raw_serial",
+      "rejected": true,
+      "error": "raw serial digest mismatch"
+    },
+    {
+      "name": "digest_rebound_wrong_markers",
+      "rejected": true,
+      "error": "raw serial marker mismatch"
+    },
+    {
+      "name": "bad_retirement",
+      "rejected": true,
+      "error": "retired: actual 16 expected 15"
+    },
+    {
+      "name": "bad_esr",
+      "rejected": true,
+      "error": "esr: actual 1 expected 0"
+    },
+    {
+      "name": "bad_ram_digest",
+      "rejected": true,
+      "error": "complete RAM/guard mismatch"
+    },
+    {
+      "name": "bad_table_digest",
+      "rejected": true,
+      "error": "immutable table changed"
+    },
+    {
+      "name": "u64_host_overflow",
+      "rejected": true,
+      "error": "integer outside u64"
+    },
+    {
+      "name": "host_span_wrap",
+      "rejected": true,
+      "error": "invalid host span"
+    },
+    {
+      "name": "wrong_post_isb_epoch",
+      "rejected": true,
+      "error": "data event 3 mismatch"
+    },
+    {
+      "name": "fabricated_next_fetch",
+      "rejected": true,
+      "error": "data event 3 mismatch"
+    },
+    {
+      "name": "invalid_control_token",
+      "rejected": true,
+      "error": "invalid/reused proposal token"
+    },
+    {
+      "name": "wrong_isb_effective",
+      "rejected": true,
+      "error": "control event 2 mismatch"
+    },
+    {
+      "name": "wrong_commit_revision",
+      "rejected": true,
+      "error": "control event 3 mismatch"
+    }
+  ],
+  "input_report": "/home/sharh/work/module-validation-bp35-efi-20260909/dynamic-firmware/report.json",
+  "input_serial": "/home/sharh/work/module-validation-bp35-efi-20260909/dynamic-firmware/serial.log"
+}

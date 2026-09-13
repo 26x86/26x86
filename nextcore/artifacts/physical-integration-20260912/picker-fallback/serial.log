@@ -1,0 +1,29 @@
+[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01HBdsDxe: loading Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+BdsDxe: starting Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+NEXTCORE: PICKER_BEGIN entries=1
+NEXTCORE: PICKER_DISPLAY_WARNING operation=color status=UNSUPPORTED
+NEXTCORE: PICKER_READY renderer=TEXT selected=0
+NEXTCORE: PICKER_DISPLAY_WARNING operation=color status=UNSUPPORTED
+NEXTCORE: PICKER_BOOT index=0
+NXTEST: EFI_ENTRY
+NXTEST: OPTIONS_EMPTY
+NXPICKER: CASE id=1 injected=28 gop=1 keys=1 writes=0 child=true passed=true
+NEXTCORE: PICKER_BEGIN entries=1
+NEXTCORE: PICKER_DISPLAY_WARNING operation=clear status=DEVICE_ERROR
+NEXTCORE: PICKER_READY renderer=TEXT selected=0
+NEXTCORE: PICKER_DISPLAY_WARNING operation=clear status=DEVICE_ERROR
+NEXTCORE: PICKER_BOOT index=0
+NXTEST: EFI_ENTRY
+NXTEST: OPTIONS_EMPTY
+NXPICKER: CASE id=2 injected=2 gop=1 keys=1 writes=0 child=true passed=true
+NEXTCORE: PICKER_BEGIN entries=1
+NEXTCORE: PICKER_READY renderer=TEXT selected=0
+NEXTCORE: PICKER_DISPLAY_WARNING operation=confirmation status=DEVICE_ERROR
+NEXTCORE: PICKER_BOOT index=0
+NXTEST: EFI_ENTRY
+NXTEST: OPTIONS_EMPTY
+NXPICKER: CASE id=3 injected=1 gop=1 keys=1 writes=14 child=true passed=true
+NEXTCORE: PICKER_BEGIN entries=1
+NXPICKER: CASE id=4 injected=1 gop=1 keys=0 writes=1 child=false passed=true
+NXPICKER: PASS cases=4 physical_boot_verified=false
+[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H

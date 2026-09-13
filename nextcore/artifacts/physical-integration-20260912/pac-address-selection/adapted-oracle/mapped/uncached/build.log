@@ -1,0 +1,12 @@
+warning: associated function `new` is never used
+   --> /mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise/runtime/preos/src/pauth.rs:183:19
+    |
+182 | impl PauthContext {
+    | ----------------- associated function in this implementation
+183 |     pub(crate) fn new(x: [u64; 31], sp: u64, pc: u64, sctlr: u64, tcr: u64,
+    |                   ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+

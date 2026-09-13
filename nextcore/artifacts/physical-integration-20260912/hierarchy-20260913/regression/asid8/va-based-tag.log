@@ -1,0 +1,20 @@
+
+running 1 test
+test asid8_actual_selected_tag_cold_warm_and_native_execution ... FAILED
+
+failures:
+
+---- asid8_actual_selected_tag_cold_warm_and_native_execution stdout ----
+
+thread 'asid8_actual_selected_tag_cold_warm_and_native_execution' (1827) panicked at /tmp/nextcore-hierarchy-asid8-regression-20260913/source/test_stage1_provider.rs:384:174:
+assertion `left == right` failed
+  left: 255
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    asid8_actual_selected_tag_cold_warm_and_native_execution
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 34 filtered out; finished in 0.00s
+

@@ -1,0 +1,103 @@
+{
+  "schema": "nextcore.x86-efi-arm-deep-trace.v1",
+  "host_architecture": "x86_64",
+  "handoff_abi": "unprovisioned-sptm-prefix",
+  "sptm_args_provided": false,
+  "platform_profile": "nextcore-irq-compat-v1",
+  "profile_reset_origin": "software_defined",
+  "sptm_services_provided": false,
+  "platform_device_tree_provided": false,
+  "config": {
+    "Nextcore": {
+      "Kernel": {
+        "Profile": "x86-efi-arm64-trace",
+        "Path": "\\EFI\\NEXTCORE\\kernel.kc",
+        "Arguments": "-v",
+        "Trace": {
+          "HandoffAbi": "unprovisioned-sptm-prefix",
+          "PhysicalBase": 1073741824,
+          "VirtualBase": 18446741874686296064,
+          "MemorySize": 67108864,
+          "ActualMemorySize": 67108864,
+          "KernelPhysical": 1107296256,
+          "InstructionBudget": 67108864,
+          "DeviceTreePath": "\\EFI\\NEXTCORE\\diagnostic.dt",
+          "DiagnosticTier": "initialization-67108864",
+          "PlatformProfile": "nextcore-irq-compat-v1"
+        }
+      }
+    }
+  },
+  "execution": null,
+  "deep_diagnostic_requested": false,
+  "deep_diagnostic_build_observed": true,
+  "deep_diagnostic_selected_observed": false,
+  "long_diagnostic_requested": false,
+  "long_diagnostic_build_observed": true,
+  "long_diagnostic_selected_observed": false,
+  "initialization_diagnostic_requested": true,
+  "initialization_diagnostic_build_observed": false,
+  "initialization_diagnostic_selected_observed": false,
+  "tool_source_sha256_before": {
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py": "a3567948a84f21ec90cab935f66a7e93141113f8ab76aacbcf92944a3c352d67",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "549914a7980ee519afcccaa97e952a0125d1d257c8fb66f97b5c311a1c5a52de"
+  },
+  "tool_source_sha256_after": {
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py": "a3567948a84f21ec90cab935f66a7e93141113f8ab76aacbcf92944a3c352d67",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "549914a7980ee519afcccaa97e952a0125d1d257c8fb66f97b5c311a1c5a52de"
+  },
+  "tool_sources_preserved": true,
+  "tiered_diagnostic_requested": false,
+  "tiered_diagnostic_build_observed": true,
+  "markers": [
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64",
+    "NXARMJIT: CONFIG_PARSED",
+    "NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152",
+    "NXARMJIT: TRACE_TIERED_DIAGNOSTIC maximum=4096",
+    "NXARMJIT: TRACE_DEEP_DIAGNOSTIC_BUILD maximum=16384",
+    "NXARMJIT: TRACE_LONG_DIAGNOSTIC_BUILD maximum=65536",
+    "NXARMJIT: TRACE_CONFIG_INVALID reason=INVALID_ARM64_TRACE_CONFIGURATION",
+    "NXARMJIT: ERROR status=INVALID_PARAMETER"
+  ],
+  "input_sha256_before": {
+    "/tmp/nextcore-initialization-old-20260912.efi": "02fe7a8185b7ee57a6f8311f440b12a166bce5b68548b605fb91f11263c25801",
+    "/tmp/nextcore-initialization-old-negative-20260912/probe.kc": "371a23ed8fb8bd5a255fdd8619bc5d0cb5da4bbc517e430a1bfc78498c4fb485",
+    "/tmp/nextcore-initialization-old-negative-20260912/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "input_sha256_after": {
+    "/tmp/nextcore-initialization-old-20260912.efi": "02fe7a8185b7ee57a6f8311f440b12a166bce5b68548b605fb91f11263c25801",
+    "/tmp/nextcore-initialization-old-negative-20260912/probe.kc": "371a23ed8fb8bd5a255fdd8619bc5d0cb5da4bbc517e430a1bfc78498c4fb485",
+    "/tmp/nextcore-initialization-old-negative-20260912/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/usr/share/OVMF/OVMF_CODE_4M.fd": "949bfa5389c4c48582737481e7d24f46b3a16b276ef44c4089a56858c6a0a446",
+    "/usr/share/OVMF/OVMF_VARS_4M.fd": "5d2ac383371b408398accee7ec27c8c09ea5b74a0de0ceea6513388b15be5d1e"
+  },
+  "original_inputs_preserved": true,
+  "esp_copies_preserved": true,
+  "diagnostic_completed": false,
+  "video_requested": false,
+  "video": {
+    "requested": false,
+    "ready_observed": false,
+    "configuration_validated": false,
+    "geometry": null,
+    "unavailable_markers": [],
+    "presented": false,
+    "validated": false,
+    "status": "not-requested",
+    "physical_display_verified": false,
+    "macos_desktop_verified": false
+  },
+  "requested_checks_completed": false,
+  "native_execution_observed": false,
+  "elapsed_seconds": 6.102,
+  "failure": null,
+  "serial_observation_retries": 0,
+  "serial_observation_last_errno": null,
+  "qemu_exit_code": 0,
+  "stopped_by_harness": true,
+  "macos_boot_verified": false,
+  "metal_verified": false
+}

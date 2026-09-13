@@ -1,0 +1,1418 @@
+{
+  "schema": "nextcore.authored-mapped-trace-efi.v1",
+  "passed": true,
+  "checks": {
+    "both_authored_runs_pass": true,
+    "full_reported_execution_and_window_equal": true,
+    "uncached_exact_protection": true,
+    "cached_fewer_real_transitions": true,
+    "cached_balanced_restore": true,
+    "old_build_not_accepted": true,
+    "sources_and_binaries_preserved": true,
+    "authored_inputs_preserved": true,
+    "observer_preserves_execution": true,
+    "observer_preserves_protection": true
+  },
+  "runs": {
+    "cached": {
+      "checks": {
+        "actual_mapped_diagnostic": true,
+        "exact_retirement_and_pc": true,
+        "guest_assertions": true,
+        "canonical_provider": true,
+        "complete_chronological_window": true,
+        "high_alias_unaligned_data_observed": true,
+        "request_success": true,
+        "inputs_preserved": true
+      },
+      "execution": {
+        "status": 5,
+        "retired": 65536,
+        "pc": 18446741874719868048,
+        "compiled_blocks": 65536,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 131074,
+          "x1": 18446741874719868064,
+          "x2": 1234605616436508552,
+          "x3": 18446741874719868064
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        },
+        "memory": {
+          "abi": 2,
+          "provider_status": 0,
+          "guest_far": 0,
+          "last_address": 18446741874719868044,
+          "fetch_requests": 65536,
+          "data_requests": 26205,
+          "completed_data_operations": 26205
+        }
+      },
+      "observation": {
+        "summary": [
+          91741,
+          64
+        ],
+        "requests": [
+          {
+            "sequence": 91678,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91679,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91680,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91681,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91682,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91683,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91684,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91685,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91686,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91687,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91688,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91689,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91690,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91691,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91692,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91693,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91694,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91695,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91696,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91697,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91698,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91699,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91700,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91701,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91702,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91703,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91704,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91705,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91706,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91707,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91708,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91709,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91710,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91711,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91712,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91713,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91714,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91715,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91716,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91717,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91718,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91719,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91720,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91721,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91722,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91723,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91724,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91725,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91726,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91727,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91728,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91729,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91730,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91731,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91732,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91733,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91734,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91735,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91736,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91737,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91738,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91739,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91740,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91741,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          }
+        ]
+      },
+      "protection": {
+        "writable": 38,
+        "executable": 37,
+        "failures": 0
+      }
+    },
+    "uncached": {
+      "checks": {
+        "actual_mapped_diagnostic": true,
+        "exact_retirement_and_pc": true,
+        "guest_assertions": true,
+        "canonical_provider": true,
+        "complete_chronological_window": true,
+        "high_alias_unaligned_data_observed": true,
+        "request_success": true,
+        "inputs_preserved": true
+      },
+      "execution": {
+        "status": 5,
+        "retired": 65536,
+        "pc": 18446741874719868048,
+        "compiled_blocks": 65536,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 131074,
+          "x1": 18446741874719868064,
+          "x2": 1234605616436508552,
+          "x3": 18446741874719868064
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        },
+        "memory": {
+          "abi": 2,
+          "provider_status": 0,
+          "guest_far": 0,
+          "last_address": 18446741874719868044,
+          "fetch_requests": 65536,
+          "data_requests": 26205,
+          "completed_data_operations": 26205
+        }
+      },
+      "observation": {
+        "summary": [
+          91741,
+          64
+        ],
+        "requests": [
+          {
+            "sequence": 91678,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91679,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91680,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91681,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91682,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91683,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91684,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91685,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91686,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91687,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91688,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91689,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91690,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91691,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91692,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91693,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91694,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91695,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91696,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91697,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91698,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91699,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91700,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91701,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91702,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91703,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91704,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91705,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91706,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91707,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91708,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91709,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91710,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91711,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91712,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91713,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91714,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91715,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91716,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91717,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91718,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91719,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91720,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91721,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91722,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91723,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91724,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91725,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91726,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91727,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91728,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91729,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91730,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91731,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91732,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91733,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91734,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91735,
+            "operation": 1,
+            "pc": 18446741874719868048,
+            "address": 18446741874719868048,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91736,
+            "operation": 1,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868032,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91737,
+            "operation": 3,
+            "pc": 18446741874719868032,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91738,
+            "operation": 1,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868036,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91739,
+            "operation": 2,
+            "pc": 18446741874719868036,
+            "address": 18446741874719868068,
+            "width": 8,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91740,
+            "operation": 1,
+            "pc": 18446741874719868040,
+            "address": 18446741874719868040,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          },
+          {
+            "sequence": 91741,
+            "operation": 1,
+            "pc": 18446741874719868044,
+            "address": 18446741874719868044,
+            "width": 4,
+            "count": 1,
+            "result": 0
+          }
+        ]
+      },
+      "protection": {
+        "writable": 65537,
+        "executable": 65536,
+        "failures": 0
+      }
+    },
+    "old": {
+      "rejected": true,
+      "efi_parse_error_markers": [],
+      "classification": "required-mapped-acknowledgements-not-satisfied",
+      "execution": {
+        "status": 8,
+        "retired": 8,
+        "pc": 1107313696,
+        "compiled_blocks": 9,
+        "fault_instruction": 3670098918,
+        "registers": {
+          "x0": 131074,
+          "x1": 1107345408,
+          "x2": 0,
+          "x3": 0
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 1107313696,
+          "spsr": 1610613701,
+          "vector": 0,
+          "esr": 33554432
+        },
+        "memory": {
+          "abi": 1,
+          "provider_status": 0,
+          "guest_far": 0,
+          "last_address": 1107313696,
+          "fetch_requests": 9,
+          "data_requests": 1,
+          "completed_data_operations": 1
+        }
+      },
+      "mapped_profile": {
+        "requested": true,
+        "validated": false,
+        "mapping": null,
+        "build_observed": false,
+        "selected_observed": false,
+        "original_entry_abi_verified": false
+      }
+    },
+    "unobserved": {
+      "checks": {
+        "actual_mapped_diagnostic": true,
+        "exact_retirement_and_pc": true,
+        "guest_assertions": true,
+        "canonical_provider": true,
+        "inputs_preserved": true,
+        "observation_absent": true
+      },
+      "execution": {
+        "status": 5,
+        "retired": 65536,
+        "pc": 18446741874719868048,
+        "compiled_blocks": 65536,
+        "fault_instruction": 0,
+        "registers": {
+          "x0": 131074,
+          "x1": 18446741874719868064,
+          "x2": 1234605616436508552,
+          "x3": 18446741874719868064
+        },
+        "platform": {
+          "profile": 1,
+          "override": 0,
+          "pending": 0,
+          "pstate": 1610613701,
+          "sp": 1107443712
+        },
+        "exception": {
+          "elr": 0,
+          "spsr": 0,
+          "vector": 0,
+          "esr": 0
+        },
+        "memory": {
+          "abi": 2,
+          "provider_status": 0,
+          "guest_far": 0,
+          "last_address": 18446741874719868044,
+          "fetch_requests": 65536,
+          "data_requests": 26205,
+          "completed_data_operations": 26205
+        }
+      },
+      "observation": {
+        "summary": null,
+        "requests": []
+      },
+      "protection": {
+        "writable": 38,
+        "executable": 37,
+        "failures": 0
+      }
+    }
+  },
+  "source_sha256": {
+    "/tmp/nextcore-spsel-cached-20260912.efi": "3172cc0d8a68268e6594a29468a30946f6c682ba4fbeea5060c7a6004ae22b4b",
+    "/tmp/nextcore-spsel-uncached-20260912.efi": "e9ef3d7df8175601e02e77711bbff7ff34589e75dc2c85e3949f0b9164bee799",
+    "/tmp/nextcore-initialization-old-20260912.efi": "02fe7a8185b7ee57a6f8311f440b12a166bce5b68548b605fb91f11263c25801",
+    "/tmp/nextcore-spsel-unobserved-20260912.efi": "90ee89a97d1130b95a1ea919c49a9bbc6825e03066dfa1f5b0a105e7ad32e656",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/mapped_trace_probe.S": "1142a21f0a0946e6afab944c4f1cf5e39f186c42b0b26e9f03598ec551590b76",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_mapped_trace_ovmf.py": "146475834483ee455f4218a92ee47fd5c2b4a4a80e259e5ca67c49f439f4ae4f",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/build_arm64_handoff_probe.py": "2013476485d750c74e11a092b15566cb8a9f571ddd61dab5000d691d4d41dc6b",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py": "212834cea0242dcaa25c6e2ac40261c23bd3254b5e9791ec4c47899557a228cd",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "549914a7980ee519afcccaa97e952a0125d1d257c8fb66f97b5c311a1c5a52de"
+  },
+  "authored_sha256": {
+    "/tmp/nextcore-spsel-efi-20260912-r1/probe.kc": "4331be8b4a1825206428de05cd343ece4fbda954d6f1aa9b90d245728642f09e",
+    "/tmp/nextcore-spsel-efi-20260912-r1/diagnostic.dt": "2c32c52787fefa79c2f8ba63298c2b8326ff3ddd9964e14df8e34eec1dffb9cd",
+    "/tmp/nextcore-spsel-efi-20260912-r1/probe.bin": "69c51bccdc6ee5a5fb6dabbc2ee999779948234b089568a8d64bb683ca72b167"
+  },
+  "expected": {
+    "budget": 65536,
+    "pc": 18446741874719868048,
+    "data_va": 18446741874719868064,
+    "boot_args_word": 131074
+  },
+  "original_images_used": false,
+  "original_entry_abi_verified": false,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false
+}

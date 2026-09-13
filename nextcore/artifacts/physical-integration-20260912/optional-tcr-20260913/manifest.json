@@ -1,0 +1,312 @@
+{
+  "schema": "nextcore.optional-tcr-evidence-manifest.v1",
+  "copied_files_verified": 30,
+  "copies": [
+    {
+      "path": "current/bank-build.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-native-20260913-r2\\bank-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "current/bank-run.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-native-20260913-r2\\bank-run.log",
+      "bytes": 8357,
+      "sha256": "4643405b7584080226af88d301df028556a910764f8525e59ecf1505c1fb3d81"
+    },
+    {
+      "path": "current/c-build.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-native-20260913-r2\\c-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "current/c-run.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-native-20260913-r2\\c-run.log",
+      "bytes": 73,
+      "sha256": "c4b4b491ee37bfdb947c9e9f31870f6598f67fb0c4f86ebd465c3ba490d1a333"
+    },
+    {
+      "path": "current/commands.json",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-native-20260913-r2\\commands.json",
+      "bytes": 3609,
+      "sha256": "48fe137299b22b71f0fca942e68ecffa1bc00949452f93e979eb8d941c163203"
+    },
+    {
+      "path": "current/mmu-build.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-native-20260913-r2\\mmu-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "current/mmu-run.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-native-20260913-r2\\mmu-run.log",
+      "bytes": 8348,
+      "sha256": "affb63de6904980ca1af38a0529000d8d5d31f6dacd2517358de28a6025b8b45"
+    },
+    {
+      "path": "current/receipt.json",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-native-20260913-r2\\receipt.json",
+      "bytes": 12435,
+      "sha256": "62968da78598ebb8d41c7aa02942d756987e47da45dbade505d61030fc2d96dc"
+    },
+    {
+      "path": "current/service-build.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-native-20260913-r2\\service-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "current/service-run.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-native-20260913-r2\\service-run.log",
+      "bytes": 182,
+      "sha256": "02169dd6dfbfe3d55dd686a966b59e3cb46424f288e4f5fce11711c73a227c52"
+    },
+    {
+      "path": "current/service-test-build.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-native-20260913-r2\\service-test-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "old-control/bank-build.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-old-proof-20260913-r2\\bank-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "old-control/bank-run.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-old-proof-20260913-r2\\bank-run.log",
+      "bytes": 688,
+      "sha256": "c85caf67461411e6cd50700404923dd5dc67682d610497e3149aaf47371cb4d2"
+    },
+    {
+      "path": "old-control/c-build.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-old-proof-20260913-r2\\c-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "old-control/c-run.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-old-proof-20260913-r2\\c-run.log",
+      "bytes": 2654,
+      "sha256": "841076dbb39df7723a3fa4acd3d0886f0297056c2f4907a23d950f066f282ae1"
+    },
+    {
+      "path": "old-control/commands.json",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-old-proof-20260913-r2\\commands.json",
+      "bytes": 3717,
+      "sha256": "f2551906241bbebf98ad67339bb5c07f6e7d88f6ba64e9b11fdc54ee971d08b5"
+    },
+    {
+      "path": "old-control/mmu-build.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-old-proof-20260913-r2\\mmu-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "old-control/mmu-run.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-old-proof-20260913-r2\\mmu-run.log",
+      "bytes": 659,
+      "sha256": "7f5a11b9fdc691eee1a113f5dba626ab944150dd21d638a213c1d8bf7ec73a14"
+    },
+    {
+      "path": "old-control/receipt.json",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-old-proof-20260913-r2\\receipt.json",
+      "bytes": 12504,
+      "sha256": "d49c8565e58528e4788e8f9b5e0ff83ee5d6c9071b9e407edc461d64751afa9c"
+    },
+    {
+      "path": "old-control/service-build.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-old-proof-20260913-r2\\service-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "old-control/service-run.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-old-proof-20260913-r2\\service-run.log",
+      "bytes": 182,
+      "sha256": "02169dd6dfbfe3d55dd686a966b59e3cb46424f288e4f5fce11711c73a227c52"
+    },
+    {
+      "path": "old-control/service-test-build.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-old-proof-20260913-r2\\service-test-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "independent-old-api/c-build.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-mmfr1-old-tcr-20260913-r1\\c-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "independent-old-api/c-run.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-mmfr1-old-tcr-20260913-r1\\c-run.log",
+      "bytes": 296,
+      "sha256": "41cd5b45b839e6053f362f0fd7552e701751a1d0ffbfcd611a41c461c24566ef"
+    },
+    {
+      "path": "independent-old-api/receipt.json",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-mmfr1-old-tcr-20260913-r1\\receipt.json",
+      "bytes": 1247,
+      "sha256": "56053b425456f8045757e72d89e6eba7b4911602a746ba8bf9b6231f99f98f12"
+    },
+    {
+      "path": "independent-old-api/rust-build.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-mmfr1-old-tcr-20260913-r1\\rust-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "independent-old-api/rust-run.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-mmfr1-old-tcr-20260913-r1\\rust-run.log",
+      "bytes": 490,
+      "sha256": "80d8214a134ef4bd4fe83d0c059f1380f167e8937d5516a5d6499f22a63ecfa0"
+    },
+    {
+      "path": "regression/service-direct.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-service-direct-20260913.log",
+      "bytes": 3660,
+      "sha256": "f7bea3d3df9265192c1223693bcbcc27356c77b73ae08f603a98a176a5a3cda8"
+    },
+    {
+      "path": "regression/preos-direct.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-preos-direct-20260913.log",
+      "bytes": 9156,
+      "sha256": "e6feb682eb092aaef2ede16bdc67ae86d2cd9f244d23ce66070dbadf25d71e92"
+    },
+    {
+      "path": "regression/uefi-check.log",
+      "source": "\\\\wsl.localhost\\Ubuntu-24.04\\tmp\\nextcore-optional-tcr-uefi-check-20260913.log",
+      "bytes": 2925,
+      "sha256": "5344f8bfecae84ad753387a3aab62e0326f5a08ca935af4668c179ce2b08650c"
+    }
+  ],
+  "files": {
+    "current/bank-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "current/bank-run.log": {
+      "bytes": 8357,
+      "sha256": "4643405b7584080226af88d301df028556a910764f8525e59ecf1505c1fb3d81"
+    },
+    "current/c-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "current/c-run.log": {
+      "bytes": 73,
+      "sha256": "c4b4b491ee37bfdb947c9e9f31870f6598f67fb0c4f86ebd465c3ba490d1a333"
+    },
+    "current/commands.json": {
+      "bytes": 3609,
+      "sha256": "48fe137299b22b71f0fca942e68ecffa1bc00949452f93e979eb8d941c163203"
+    },
+    "current/mmu-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "current/mmu-run.log": {
+      "bytes": 8348,
+      "sha256": "affb63de6904980ca1af38a0529000d8d5d31f6dacd2517358de28a6025b8b45"
+    },
+    "current/receipt.json": {
+      "bytes": 12435,
+      "sha256": "62968da78598ebb8d41c7aa02942d756987e47da45dbade505d61030fc2d96dc"
+    },
+    "current/service-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "current/service-run.log": {
+      "bytes": 182,
+      "sha256": "02169dd6dfbfe3d55dd686a966b59e3cb46424f288e4f5fce11711c73a227c52"
+    },
+    "current/service-test-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "independent-old-api/c-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "independent-old-api/c-run.log": {
+      "bytes": 296,
+      "sha256": "41cd5b45b839e6053f362f0fd7552e701751a1d0ffbfcd611a41c461c24566ef"
+    },
+    "independent-old-api/receipt.json": {
+      "bytes": 1247,
+      "sha256": "56053b425456f8045757e72d89e6eba7b4911602a746ba8bf9b6231f99f98f12"
+    },
+    "independent-old-api/rust-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "independent-old-api/rust-run.log": {
+      "bytes": 490,
+      "sha256": "80d8214a134ef4bd4fe83d0c059f1380f167e8937d5516a5d6499f22a63ecfa0"
+    },
+    "old-control/bank-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "old-control/bank-run.log": {
+      "bytes": 688,
+      "sha256": "c85caf67461411e6cd50700404923dd5dc67682d610497e3149aaf47371cb4d2"
+    },
+    "old-control/c-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "old-control/c-run.log": {
+      "bytes": 2654,
+      "sha256": "841076dbb39df7723a3fa4acd3d0886f0297056c2f4907a23d950f066f282ae1"
+    },
+    "old-control/commands.json": {
+      "bytes": 3717,
+      "sha256": "f2551906241bbebf98ad67339bb5c07f6e7d88f6ba64e9b11fdc54ee971d08b5"
+    },
+    "old-control/mmu-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "old-control/mmu-run.log": {
+      "bytes": 659,
+      "sha256": "7f5a11b9fdc691eee1a113f5dba626ab944150dd21d638a213c1d8bf7ec73a14"
+    },
+    "old-control/receipt.json": {
+      "bytes": 12504,
+      "sha256": "d49c8565e58528e4788e8f9b5e0ff83ee5d6c9071b9e407edc461d64751afa9c"
+    },
+    "old-control/service-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "old-control/service-run.log": {
+      "bytes": 182,
+      "sha256": "02169dd6dfbfe3d55dd686a966b59e3cb46424f288e4f5fce11711c73a227c52"
+    },
+    "old-control/service-test-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "README.md": {
+      "bytes": 3215,
+      "sha256": "3bd5ca0bfe4b9c9f79f0a05d8233c68f8f7d014028692f948b99fcfad23679e7"
+    },
+    "regression/preos-direct.log": {
+      "bytes": 9156,
+      "sha256": "e6feb682eb092aaef2ede16bdc67ae86d2cd9f244d23ce66070dbadf25d71e92"
+    },
+    "regression/service-direct.log": {
+      "bytes": 3660,
+      "sha256": "f7bea3d3df9265192c1223693bcbcc27356c77b73ae08f603a98a176a5a3cda8"
+    },
+    "regression/uefi-check.log": {
+      "bytes": 2925,
+      "sha256": "5344f8bfecae84ad753387a3aab62e0326f5a08ca935af4668c179ce2b08650c"
+    }
+  }
+}

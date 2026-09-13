@@ -1,0 +1,362 @@
+{
+  "scope": "test-model APA1; PAC-only equal-size TCR adaptation; original controls restored before AUT/XPAC",
+  "rows": [
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549659664,
+      "pointer": 304,
+      "modifier": 39030,
+      "key": 0
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549659664,
+      "pointer": 140737488355632,
+      "modifier": 39030,
+      "key": 0
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549725201,
+      "pointer": 18446603336221196592,
+      "modifier": 39030,
+      "key": 0
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549725201,
+      "pointer": 18446462598732841264,
+      "modifier": 39030,
+      "key": 0
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549659664,
+      "pointer": 36028797018964272,
+      "modifier": 39030,
+      "key": 0
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549725201,
+      "pointer": 18410574539202232624,
+      "modifier": 39030,
+      "key": 0
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549659664,
+      "pointer": 304,
+      "modifier": 39030,
+      "key": 1
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549659664,
+      "pointer": 140737488355632,
+      "modifier": 39030,
+      "key": 1
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549725201,
+      "pointer": 18446603336221196592,
+      "modifier": 39030,
+      "key": 1
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549725201,
+      "pointer": 18446462598732841264,
+      "modifier": 39030,
+      "key": 1
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549659664,
+      "pointer": 36028797018964272,
+      "modifier": 39030,
+      "key": 1
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549725201,
+      "pointer": 18410574539202232624,
+      "modifier": 39030,
+      "key": 1
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549659664,
+      "pointer": 304,
+      "modifier": 39030,
+      "key": 2
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549659664,
+      "pointer": 140737488355632,
+      "modifier": 39030,
+      "key": 2
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549725201,
+      "pointer": 18446603336221196592,
+      "modifier": 39030,
+      "key": 2
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549725201,
+      "pointer": 18446462598732841264,
+      "modifier": 39030,
+      "key": 2
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549659664,
+      "pointer": 36028797018964272,
+      "modifier": 39030,
+      "key": 2
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549725201,
+      "pointer": 18410574539202232624,
+      "modifier": 39030,
+      "key": 2
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549659664,
+      "pointer": 304,
+      "modifier": 39030,
+      "key": 3
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549659664,
+      "pointer": 140737488355632,
+      "modifier": 39030,
+      "key": 3
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549725201,
+      "pointer": 18446603336221196592,
+      "modifier": 39030,
+      "key": 3
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549725201,
+      "pointer": 18446462598732841264,
+      "modifier": 39030,
+      "key": 3
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549659664,
+      "pointer": 36028797018964272,
+      "modifier": 39030,
+      "key": 3
+    },
+    {
+      "tcr": 22549725200,
+      "adapted_tcr": 22549725201,
+      "pointer": 18410574539202232624,
+      "modifier": 39030,
+      "key": 3
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549725201,
+      "pointer": 304,
+      "modifier": 39030,
+      "key": 0
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549725201,
+      "pointer": 140737488355632,
+      "modifier": 39030,
+      "key": 0
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549659664,
+      "pointer": 18446603336221196592,
+      "modifier": 39030,
+      "key": 0
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549659664,
+      "pointer": 18446462598732841264,
+      "modifier": 39030,
+      "key": 0
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549725201,
+      "pointer": 36028797018964272,
+      "modifier": 39030,
+      "key": 0
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549659664,
+      "pointer": 18410574539202232624,
+      "modifier": 39030,
+      "key": 0
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549725201,
+      "pointer": 304,
+      "modifier": 39030,
+      "key": 1
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549725201,
+      "pointer": 140737488355632,
+      "modifier": 39030,
+      "key": 1
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549659664,
+      "pointer": 18446603336221196592,
+      "modifier": 39030,
+      "key": 1
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549659664,
+      "pointer": 18446462598732841264,
+      "modifier": 39030,
+      "key": 1
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549725201,
+      "pointer": 36028797018964272,
+      "modifier": 39030,
+      "key": 1
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549659664,
+      "pointer": 18410574539202232624,
+      "modifier": 39030,
+      "key": 1
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549725201,
+      "pointer": 304,
+      "modifier": 39030,
+      "key": 2
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549725201,
+      "pointer": 140737488355632,
+      "modifier": 39030,
+      "key": 2
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549659664,
+      "pointer": 18446603336221196592,
+      "modifier": 39030,
+      "key": 2
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549659664,
+      "pointer": 18446462598732841264,
+      "modifier": 39030,
+      "key": 2
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549725201,
+      "pointer": 36028797018964272,
+      "modifier": 39030,
+      "key": 2
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549659664,
+      "pointer": 18410574539202232624,
+      "modifier": 39030,
+      "key": 2
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549725201,
+      "pointer": 304,
+      "modifier": 39030,
+      "key": 3
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549725201,
+      "pointer": 140737488355632,
+      "modifier": 39030,
+      "key": 3
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549659664,
+      "pointer": 18446603336221196592,
+      "modifier": 39030,
+      "key": 3
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549659664,
+      "pointer": 18446462598732841264,
+      "modifier": 39030,
+      "key": 3
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549725201,
+      "pointer": 36028797018964272,
+      "modifier": 39030,
+      "key": 3
+    },
+    {
+      "tcr": 22549659665,
+      "adapted_tcr": 22549659664,
+      "pointer": 18410574539202232624,
+      "modifier": 39030,
+      "key": 3
+    }
+  ],
+  "record": [
+    "original_tcr",
+    "during_tcr",
+    "during_sctlr",
+    "pointer_before",
+    "modifier_before",
+    "key_lo_before",
+    "key_hi_before",
+    "restored_tcr",
+    "restored_sctlr",
+    "pointer_after",
+    "modifier_after",
+    "key_lo_after",
+    "key_hi_after",
+    "signed",
+    "authenticated",
+    "xpac_original",
+    "xpac_signed",
+    "auth_corrupt54",
+    "auth_original"
+  ]
+}

@@ -80,6 +80,7 @@ def main() -> int:
               tools / "trace_arm_jit_ovmf.py", tools / "verify_arm_jit_ovmf.py",
               tools / "build_arm64_handoff_probe.py"]
     inputs += list(fixtures.glob("*.py")) + list(fixtures.glob("*.S"))
+    inputs += [tools / "verify_arm_scalar_ovmf.py", tools / "verify_arm_pair_ovmf.py"]
     inputs += [tiers / "verify_tiered_budget_ovmf.py", tiers / "tiered_budget_probe.S"]
     before = {str(p): digest(p) for p in inputs}
     records = []
@@ -97,7 +98,7 @@ def main() -> int:
     passed = False
     try:
         for kind in ("scalar", "pair"):
-            run(kind, [sys.executable, str(fixtures / f"verify_{kind}_ovmf.py"),
+            run(kind, [sys.executable, str(tools / f"verify_arm_{kind}_ovmf.py"),
                        "--efi", str(provider), "--tools", str(tools),
                        "--output", str(output / kind)])
         run("observations", [sys.executable, str(fixtures / "verify_provider_results.py"),

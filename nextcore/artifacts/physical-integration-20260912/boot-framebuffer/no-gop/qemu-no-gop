@@ -1,0 +1,11 @@
+#!/usr/bin/python3
+import json, os, sys
+from pathlib import Path
+original = sys.argv[1:]
+actual = list(original)
+indices = [i for i, v in enumerate(actual[:-1]) if v == '-vga' and actual[i+1] == 'std']
+assert len(indices) == 1
+actual[indices[0]+1] = 'none'
+record = {'original_arguments': original, 'actual_arguments': ['/usr/bin/qemu-system-x86_64', *actual], 'changed_argument_index': indices[0]+1}
+Path(__file__).with_name('wrapper-invocation.json').write_text(json.dumps(record, indent=2)+'\n')
+os.execv('/usr/bin/qemu-system-x86_64', ['/usr/bin/qemu-system-x86_64', *actual])

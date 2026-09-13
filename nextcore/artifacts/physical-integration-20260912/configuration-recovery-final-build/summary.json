@@ -1,0 +1,152 @@
+{
+  "schema": "nextcore.configuration-recovery-final-build.v1",
+  "passed": true,
+  "change": "Read complete serial rows by physical LF bytes before text decoding.",
+  "efi_commit": "06b767498ba9af6d119b3600ce4a6aa44d0f81ee",
+  "authored_cases": 10,
+  "old_default_rejected": true,
+  "physical_hardware_verified": false,
+  "macos_boot_verified": false,
+  "files": [
+    {
+      "path": "current/case-0/command.json",
+      "sha256": "b4b057e65a7340d3d615565dcf4f1847f3500b7c231d5d8166931be467425c58"
+    },
+    {
+      "path": "current/case-0/qemu.log",
+      "sha256": "83c6bc42bb05575ed7ad8599b937bd5851dd0403275e94af5bbdc372bd6b628b"
+    },
+    {
+      "path": "current/case-0/serial.log",
+      "sha256": "529bd3ea73bbaf0ab23355993fff65a4541d904bfd93dbf4bb41352ea9a1e022"
+    },
+    {
+      "path": "current/case-1/command.json",
+      "sha256": "4925a84811677b0e070b0d0b2a7373f88161e38eb1ee12cf82f44019b584ecd9"
+    },
+    {
+      "path": "current/case-1/qemu.log",
+      "sha256": "83c6bc42bb05575ed7ad8599b937bd5851dd0403275e94af5bbdc372bd6b628b"
+    },
+    {
+      "path": "current/case-1/serial.log",
+      "sha256": "cdd43326523a32d7874bacdb5e353da3f9caad20e74136a0a1d29737333616ee"
+    },
+    {
+      "path": "current/case-2/command.json",
+      "sha256": "38b78681a9f257c46363e411563a7ce72213b48bdf60d86d42e31d7ceced0dee"
+    },
+    {
+      "path": "current/case-2/qemu.log",
+      "sha256": "83c6bc42bb05575ed7ad8599b937bd5851dd0403275e94af5bbdc372bd6b628b"
+    },
+    {
+      "path": "current/case-2/serial.log",
+      "sha256": "f77526323902c6cc628d890cd8c7864baa41d8a8df18e91a12c0c4914c6d2091"
+    },
+    {
+      "path": "current/case-3/command.json",
+      "sha256": "d64b79c8eae2c1538aa7e34824b9636fe7c895e378eb7c40ca65282073d39f30"
+    },
+    {
+      "path": "current/case-3/qemu.log",
+      "sha256": "83c6bc42bb05575ed7ad8599b937bd5851dd0403275e94af5bbdc372bd6b628b"
+    },
+    {
+      "path": "current/case-3/serial.log",
+      "sha256": "a8a148cf9602e308fc02f16ed0ec9de6e9dc5ec69530f1713e35dd5fa190d554"
+    },
+    {
+      "path": "current/case-4/command.json",
+      "sha256": "ab2059a6ddabd6804ae121ba1b868449e94fa333cdc7685a776e4768dcd4897a"
+    },
+    {
+      "path": "current/case-4/qemu.log",
+      "sha256": "83c6bc42bb05575ed7ad8599b937bd5851dd0403275e94af5bbdc372bd6b628b"
+    },
+    {
+      "path": "current/case-4/serial.log",
+      "sha256": "63e74d7775488fa9f31337005658225ebf4be33dd53362f9a5ff51a1b78741f6"
+    },
+    {
+      "path": "current/case-5/command.json",
+      "sha256": "f54702621adb2e379b68618df3ae5f6e644aa483330ccd34aae5c2c03ba414a8"
+    },
+    {
+      "path": "current/case-5/qemu.log",
+      "sha256": "83c6bc42bb05575ed7ad8599b937bd5851dd0403275e94af5bbdc372bd6b628b"
+    },
+    {
+      "path": "current/case-5/serial.log",
+      "sha256": "35b85b1745263dbd18fea156a0276b910ada32153161d0aa9d7335dee24d89e6"
+    },
+    {
+      "path": "current/case-6/command.json",
+      "sha256": "87cda0c5b42a5fd9c299a1d6afacdb8366072a0c430346db710f0478ef230014"
+    },
+    {
+      "path": "current/case-6/qemu.log",
+      "sha256": "83c6bc42bb05575ed7ad8599b937bd5851dd0403275e94af5bbdc372bd6b628b"
+    },
+    {
+      "path": "current/case-6/serial.log",
+      "sha256": "27f6aa2ca50df33e678f9ce96d52c283fd1e31e478583e998e7d563b80ee998a"
+    },
+    {
+      "path": "current/case-7/command.json",
+      "sha256": "b231cfaab5b4e71937a805b3a7240b8ea823c46c220d9aa076f322e47ddb42dd"
+    },
+    {
+      "path": "current/case-7/qemu.log",
+      "sha256": "83c6bc42bb05575ed7ad8599b937bd5851dd0403275e94af5bbdc372bd6b628b"
+    },
+    {
+      "path": "current/case-7/serial.log",
+      "sha256": "1aa4c964df4eb48279073dcfd85c727976216a8b35d08acfc4a3b85af02b09c9"
+    },
+    {
+      "path": "current/case-8/command.json",
+      "sha256": "1026e91ce6e620b04591d3d66092640ed30a6f81a8b836cdd020e3e45b04cce5"
+    },
+    {
+      "path": "current/case-8/qemu.log",
+      "sha256": "83c6bc42bb05575ed7ad8599b937bd5851dd0403275e94af5bbdc372bd6b628b"
+    },
+    {
+      "path": "current/case-8/serial.log",
+      "sha256": "1fcb1f7bf2710d75229596756031c03afcc03e6b94822f614621a73d418641cc"
+    },
+    {
+      "path": "current/case-9/command.json",
+      "sha256": "abe48508edae0af6c25d04a7b86087d926c567479764c67a4fee40caee1f6ecb"
+    },
+    {
+      "path": "current/case-9/qemu.log",
+      "sha256": "83c6bc42bb05575ed7ad8599b937bd5851dd0403275e94af5bbdc372bd6b628b"
+    },
+    {
+      "path": "current/case-9/serial.log",
+      "sha256": "1ffc201956c0711622bfb52832d7111ba55fbb4f4818d3c2c9e347290040d13e"
+    },
+    {
+      "path": "current/report.json",
+      "sha256": "223ac120c68861e993ae6814cdc8dbeb6b930691128fc3dd72c68002279222c4"
+    },
+    {
+      "path": "old-negative/case-1/command.json",
+      "sha256": "4d7f2fd85b7b1e4451bb4849ebb8d5d50647332efd47b12960a431ecb4c987b5"
+    },
+    {
+      "path": "old-negative/case-1/qemu.log",
+      "sha256": "4236da17484eb03f25afedf7fcad02e3c2da7bbfd21be232ab94988547a0d3b4"
+    },
+    {
+      "path": "old-negative/case-1/serial.log",
+      "sha256": "45590dae5b8711b76fe231d1960730538db5db2385987b57dccd808e9ca0e2bb"
+    },
+    {
+      "path": "old-negative/report.json",
+      "sha256": "6fd0fa44aa9f582a896702ff27e05a3a777e93cfd6c16c346f0983a1cc5bcd50"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+
+running 34 tests
+test arch::variable_shift_actual_arm_oracle ... ok
+test mmu::tests::detailed_access_flags_and_reserved_blocks_keep_their_level ... ok
+test mmu::tests::detailed_epd_and_root_address_errors_use_aarch64_level_zero ... ok
+test mmu::tests::detailed_input_errors_never_invent_a_leaf_or_table_read ... ok
+test mmu::tests::detailed_invalid_descriptors_preserve_level_and_read_address ... ok
+test mmu::tests::detailed_leaf_and_cached_permission_failures_agree ... ok
+test mmu::tests::detailed_output_address_errors_keep_descriptor_level ... ok
+test mmu::tests::detailed_table_failures_are_not_invalid_descriptors ... ok
+test mmu::tests::disabled_is_identity_and_instruction_alignment_is_four_bytes ... ok
+test mmu::tests::disabled_translation_accepts_full_guest_address_width ... ok
+test mmu::tests::disabled_walk_is_translation_fault_without_reading_descriptors ... ok
+test mmu::tests::dynamic_start_level_supports_t0sz_25_four_kib_blocks ... ok
+test mmu::tests::el0_execute_only_tlb_fill_preserves_later_el1_write_permission ... ok
+test mmu::tests::execution_permission_matrix_matches_arm_table_in_cold_and_cached_walks ... ok
+test mmu::tests::page_walk_and_asid_tlb_hit ... ok
+test mmu::tests::partial_initial_tables_exclude_upper_canonical_bits ... ok
+test mmu::tests::permission_and_access_flag_faults_are_distinct ... ok
+test mmu::tests::physical_output_width_bounds_roots_tables_and_leaf_pages ... ok
+test mmu::tests::rejected_tcr_preserves_previous_configuration_and_cached_mapping ... ok
+test mmu::tests::sixteen_kib_l1_blocks_require_unsupported_lpa2 ... ok
+test mmu::tests::sixteen_kib_tcr_selects_l2_block_and_preserves_fault_class ... ok
+test mmu::tests::sixteen_kib_upper_page_uses_distinct_tg1_encoding ... ok
+test mmu::tests::strict_profile_rejects_unmodeled_attributes_and_preserves_legacy_mode ... ok
+test mmu::tests::strict_profile_validates_table_hierarchy_and_block_output_bits ... ok
+test mmu::tests::tlb_does_not_bypass_el0_access_permission ... ok
+test mmu::tests::tlb_keeps_el0_uxn_and_privileged_pxn_permissions_distinct ... ok
+test mmu::tests::unsupported_physical_regime_preserves_cached_configuration ... ok
+test mmu::tests::upper_canonical_addresses_use_ttbr1_and_asid_tlb ... ok
+test mmu::tests::virtual_range_gaps_are_translation_faults_without_reading_tables ... ok
+test pauth::tests::authentication_failure_and_unsupported_modes ... ok
+test pauth::tests::layer_inverses_and_involutory_matrix ... ok
+test pauth::tests::qemu_executed_generic_mac_vectors ... ok
+test pauth::tests::qemu_executed_pacia_vector ... ok
+test platform::tests::platform_abi_receipt ... ok
+
+test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

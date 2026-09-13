@@ -1,0 +1,41 @@
+{
+  "schema": "nextcore.hierarchy-ci.v1",
+  "passed": true,
+  "source_commit": "3d3a434dfc9f84dcc1c34a2257f8cf7ceaafd99c",
+  "run": 34713439375,
+  "job": 103606247045,
+  "artifact": 10304091704,
+  "source_url": "https://github.com/26x86/26x86/actions/runs/34713439375",
+  "files": [
+    {
+      "path": "hierarchy-arm/receipt.json",
+      "bytes": 288311,
+      "sha256": "1a810112440df198b5b06d0c8f96e4790473a405822607226f390096104db76f"
+    },
+    {
+      "path": "hierarchy-native/receipt.json",
+      "bytes": 22155,
+      "sha256": "f65588532783864873942970fe2d24322e5e54d1d6b66438d68132d922f5fea4"
+    },
+    {
+      "path": "hierarchy-native/arm-comparison.json",
+      "bytes": 41429,
+      "sha256": "258a7ad57d563fef243ff1f17af69682fe11246155a8195c61094d32ff165ba0"
+    },
+    {
+      "path": "hierarchy-native/mutants.json",
+      "bytes": 143,
+      "sha256": "8da575d318f9a0458c343d132e100decf6a2eb524a8dd5d2dc01bad69860a127"
+    },
+    {
+      "path": "nextcore-hierarchy-proof/receipt.json",
+      "bytes": 644808,
+      "sha256": "406a08d69f5c2f5fc2107d1098744e25ad77fec5a5b2dc023cdb06e3f84853d8"
+    }
+  ],
+  "clean_ci_source_preservation": true,
+  "earlier_r6_failure_preserved": true,
+  "original_inputs_used": false,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false
+}

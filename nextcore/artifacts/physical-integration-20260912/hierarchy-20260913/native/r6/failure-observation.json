@@ -1,0 +1,8 @@
+{
+  "kind": "post-run-observation",
+  "original_receipt_emitted": false,
+  "exit_code": 1,
+  "failed_assertion": "assert before=={str(p.relative_to(root)):sha(p) for p in files}",
+  "source": "Observed terminal result from the original r6 run; separately qualified, not a replacement execution receipt.",
+  "qualification": "../qualification/receipt.json"
+}

@@ -1,0 +1,230 @@
+{
+  "schema": "nextcore.configuration-recovery.v1",
+  "efi_commit": "06b767498ba9af6d119b3600ce4a6aa44d0f81ee",
+  "passed": true,
+  "authored_cases": 10,
+  "old_default_rejected": true,
+  "existing_picker_cases": 3,
+  "required_display_input_errors_preserved": true,
+  "optional_clear_failure_recoverable": true,
+  "source_images_used": false,
+  "physical_hardware_verified": false,
+  "macos_boot_verified": false,
+  "files": [
+    {
+      "path": "current/case-0/command.json",
+      "bytes": 647,
+      "sha256": "5ef3eca04be2fad24d4f1cdd945509c6f28eae0805c5077061b1d44976bb1195"
+    },
+    {
+      "path": "current/case-0/qemu.log",
+      "bytes": 68,
+      "sha256": "d04f55f88465b52c80e24cafb3323f70e804565b4017dac0a1ebddd9b399f585"
+    },
+    {
+      "path": "current/case-0/serial.log",
+      "bytes": 773,
+      "sha256": "57328705a53c1fd0f9c44153bd9da46836de56699eecbcea0e676daf0df8010b"
+    },
+    {
+      "path": "current/case-1/command.json",
+      "bytes": 647,
+      "sha256": "7a34f4aaed6d4cebe172d7449fa33f816f03da1c82900b87137922fd8d659159"
+    },
+    {
+      "path": "current/case-1/qemu.log",
+      "bytes": 68,
+      "sha256": "d04f55f88465b52c80e24cafb3323f70e804565b4017dac0a1ebddd9b399f585"
+    },
+    {
+      "path": "current/case-1/serial.log",
+      "bytes": 1159,
+      "sha256": "cdd43326523a32d7874bacdb5e353da3f9caad20e74136a0a1d29737333616ee"
+    },
+    {
+      "path": "current/case-2/command.json",
+      "bytes": 647,
+      "sha256": "138653306f7e90573d241abe3e60bbc5a969adb5955aa01eda26ec8d8d536161"
+    },
+    {
+      "path": "current/case-2/qemu.log",
+      "bytes": 68,
+      "sha256": "d04f55f88465b52c80e24cafb3323f70e804565b4017dac0a1ebddd9b399f585"
+    },
+    {
+      "path": "current/case-2/serial.log",
+      "bytes": 1048,
+      "sha256": "f77526323902c6cc628d890cd8c7864baa41d8a8df18e91a12c0c4914c6d2091"
+    },
+    {
+      "path": "current/case-3/command.json",
+      "bytes": 647,
+      "sha256": "128daa63d25f75617ad7f80792886b2d5c6b00d20ed9cd4b0987264b1801ce2d"
+    },
+    {
+      "path": "current/case-3/qemu.log",
+      "bytes": 68,
+      "sha256": "d04f55f88465b52c80e24cafb3323f70e804565b4017dac0a1ebddd9b399f585"
+    },
+    {
+      "path": "current/case-3/serial.log",
+      "bytes": 1072,
+      "sha256": "a8a148cf9602e308fc02f16ed0ec9de6e9dc5ec69530f1713e35dd5fa190d554"
+    },
+    {
+      "path": "current/case-4/command.json",
+      "bytes": 647,
+      "sha256": "25676a53f7748d31a355ee3ad323ff73a17151a8454f8dd363d702abfc754ce7"
+    },
+    {
+      "path": "current/case-4/qemu.log",
+      "bytes": 68,
+      "sha256": "d04f55f88465b52c80e24cafb3323f70e804565b4017dac0a1ebddd9b399f585"
+    },
+    {
+      "path": "current/case-4/serial.log",
+      "bytes": 1114,
+      "sha256": "63e74d7775488fa9f31337005658225ebf4be33dd53362f9a5ff51a1b78741f6"
+    },
+    {
+      "path": "current/case-5/command.json",
+      "bytes": 647,
+      "sha256": "8058147194185d18119077ca4e566677dff41b2722eb790b255bf4abb246597d"
+    },
+    {
+      "path": "current/case-5/qemu.log",
+      "bytes": 68,
+      "sha256": "d04f55f88465b52c80e24cafb3323f70e804565b4017dac0a1ebddd9b399f585"
+    },
+    {
+      "path": "current/case-5/serial.log",
+      "bytes": 1098,
+      "sha256": "35b85b1745263dbd18fea156a0276b910ada32153161d0aa9d7335dee24d89e6"
+    },
+    {
+      "path": "current/case-6/command.json",
+      "bytes": 647,
+      "sha256": "eab8028ed0e27a339f52b6a1f51aedf02cb7433f5236f7ec1574e5ab9f7ed17c"
+    },
+    {
+      "path": "current/case-6/qemu.log",
+      "bytes": 68,
+      "sha256": "d04f55f88465b52c80e24cafb3323f70e804565b4017dac0a1ebddd9b399f585"
+    },
+    {
+      "path": "current/case-6/serial.log",
+      "bytes": 733,
+      "sha256": "27f6aa2ca50df33e678f9ce96d52c283fd1e31e478583e998e7d563b80ee998a"
+    },
+    {
+      "path": "current/case-7/command.json",
+      "bytes": 647,
+      "sha256": "80c17816dee21be0543e9de409946691c611fa25bdf027af61d16e6acea2c320"
+    },
+    {
+      "path": "current/case-7/qemu.log",
+      "bytes": 68,
+      "sha256": "d04f55f88465b52c80e24cafb3323f70e804565b4017dac0a1ebddd9b399f585"
+    },
+    {
+      "path": "current/case-7/serial.log",
+      "bytes": 766,
+      "sha256": "1aa4c964df4eb48279073dcfd85c727976216a8b35d08acfc4a3b85af02b09c9"
+    },
+    {
+      "path": "current/case-8/command.json",
+      "bytes": 647,
+      "sha256": "fded0e0247a6ebc9f3a386da0a0e61a3e5735d2d268760c6e65bac2267f7640b"
+    },
+    {
+      "path": "current/case-8/qemu.log",
+      "bytes": 68,
+      "sha256": "d04f55f88465b52c80e24cafb3323f70e804565b4017dac0a1ebddd9b399f585"
+    },
+    {
+      "path": "current/case-8/serial.log",
+      "bytes": 764,
+      "sha256": "1fcb1f7bf2710d75229596756031c03afcc03e6b94822f614621a73d418641cc"
+    },
+    {
+      "path": "current/case-9/command.json",
+      "bytes": 647,
+      "sha256": "62e13eaa1def3ac37a0299e2e8bd1b76ea43f8d8ea46588bfb366e54bf5b2c69"
+    },
+    {
+      "path": "current/case-9/qemu.log",
+      "bytes": 68,
+      "sha256": "d04f55f88465b52c80e24cafb3323f70e804565b4017dac0a1ebddd9b399f585"
+    },
+    {
+      "path": "current/case-9/serial.log",
+      "bytes": 1238,
+      "sha256": "1ffc201956c0711622bfb52832d7111ba55fbb4f4818d3c2c9e347290040d13e"
+    },
+    {
+      "path": "current/report.json",
+      "bytes": 8214,
+      "sha256": "be14f146d32871b7ae341e042f6431716703f34401ca286de232faef8787a363"
+    },
+    {
+      "path": "old-negative/case-1/command.json",
+      "bytes": 679,
+      "sha256": "31d0b4ada7daeaa7b9fcac15566f9829652de2b14f1fda7bbe6583541ec87203"
+    },
+    {
+      "path": "old-negative/case-1/qemu.log",
+      "bytes": 68,
+      "sha256": "342cbb3a65a6c0767878c5a369dfaca6f06f5ad935b37a8ada6113b3d14e9590"
+    },
+    {
+      "path": "old-negative/case-1/serial.log",
+      "bytes": 569,
+      "sha256": "45590dae5b8711b76fe231d1960730538db5db2385987b57dccd808e9ca0e2bb"
+    },
+    {
+      "path": "old-negative/report.json",
+      "bytes": 1794,
+      "sha256": "d01eb9046331f69507d2ce9ac8aa2928389b9d1111c9648a9196af5211d9717b"
+    },
+    {
+      "path": "picker-regression/child-error/command.json",
+      "bytes": 719,
+      "sha256": "5f6dc2d4573bd875bd04c52564bccd888ba6e8b08b874923796053d8af25f33c"
+    },
+    {
+      "path": "picker-regression/child-error/serial.log",
+      "bytes": 1228,
+      "sha256": "6b587137bc2449eb3f591ac11090ae1c272808eba850360748a81189c3a6ef90"
+    },
+    {
+      "path": "picker-regression/direct-error/command.json",
+      "bytes": 723,
+      "sha256": "2b827dce05a5ebcb29abdbc943baab63ace3ade0073003b9fe643fe70f2b7561"
+    },
+    {
+      "path": "picker-regression/direct-error/serial.log",
+      "bytes": 639,
+      "sha256": "71a79093d1f9986989c3cd4d7553550ea6c7e04bcae1cdfa35d7c664e6f3582b"
+    },
+    {
+      "path": "picker-regression/load-error/command.json",
+      "bytes": 715,
+      "sha256": "e8f9469e2563d03525f2cbb4032d1e88fa3b06a72f0e4a64405ca92ff9d7fe35"
+    },
+    {
+      "path": "picker-regression/load-error/serial.log",
+      "bytes": 1117,
+      "sha256": "bebfd6a1e9869139d5af1e5de095010e22022d3bf65e6087a334c7ebcde3d261"
+    },
+    {
+      "path": "picker-regression/report.json",
+      "bytes": 1182,
+      "sha256": "bd698f319a1575099dcb31abdbd02a7c9540d7cb8669036f98396792ee914671"
+    },
+    {
+      "path": "recovery-screen.png",
+      "bytes": 5781,
+      "sha256": "9e43def4725c6bee57bb3766fc53a371a9e9310fba2a9ec2b5dab5e41b7d1905"
+    }
+  ]
+}

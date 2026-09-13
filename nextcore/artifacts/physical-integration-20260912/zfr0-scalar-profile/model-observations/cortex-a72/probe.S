@@ -1,0 +1,84 @@
+.text
+.global _start
+_start:
+ mov x18,#0x40100000
+ mrs x1,CurrentEL
+ str x1,[x18]
+ msr daifset,#15
+ adr x1,vectors
+ msr vbar_el1,x1
+ isb
+ mov x1,#0x40120000
+ mov sp,x1
+ mrs x1,sctlr_el1
+ str x1,[x18,#8]
+ add x20,x18,#32
+ stp xzr,xzr,[x20]
+ stp xzr,xzr,[x20,#16]
+ mov x5,#0xdead
+ mrs x5,ID_AA64PFR0_EL1
+ str x5,[x20]
+ add x20,x18,#64
+ stp xzr,xzr,[x20]
+ stp xzr,xzr,[x20,#16]
+ mov x5,#0xdead
+ mrs x5,ID_AA64PFR1_EL1
+ str x5,[x20]
+ add x20,x18,#96
+ stp xzr,xzr,[x20]
+ stp xzr,xzr,[x20,#16]
+ mov x5,#0xdead
+ mrs x5,ID_AA64ZFR0_EL1
+ str x5,[x20]
+ add x20,x18,#128
+ stp xzr,xzr,[x20]
+ stp xzr,xzr,[x20,#16]
+ mov x5,#0xdead
+ udf #0
+ str x5,[x20]
+ mov x0,#0x64e
+1:b 1b
+.balign 2048
+vectors:
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+ b handler
+ .space 124
+handler:
+ mrs x10,esr_el1
+ str x10,[x20,#8]
+ mrs x11,elr_el1
+ str x11,[x20,#16]
+ mov x10,#1
+ str x10,[x20,#24]
+ add x11,x11,#4
+ msr elr_el1,x11
+ eret

@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/sandbox/efi/build.py", line 513, in <module>
+    main()
+  File "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/sandbox/efi/build.py", line 362, in main
+    vmapple_tcg_contract = validate_vmapple_tcg_contract()
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/sandbox/efi/build.py", line 157, in validate_vmapple_tcg_contract
+    return json_output([
+           ^^^^^^^^^^^^^
+  File "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/sandbox/efi/build.py", line 93, in json_output
+    completed = subprocess.run(command, check=True, capture_output=True, text=True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/bin/python3', '/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/sandbox/efi/verify_vmapple_tcg_contract.py', '--compact']' returned non-zero exit status 2.

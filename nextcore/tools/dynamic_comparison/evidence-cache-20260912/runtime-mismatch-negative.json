@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "expected_error": "canonical runtime differs from freeze",
+  "return_code": 1,
+  "compilation_started": false,
+  "change": "Append authored comment to isolated archived jit.c; active archive unchanged"
+}

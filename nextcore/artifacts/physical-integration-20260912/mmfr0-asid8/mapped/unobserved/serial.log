@@ -1,0 +1,30 @@
+[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01HBdsDxe: loading Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+BdsDxe: starting Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+NXARMJIT: WATCHDOG_DISABLED
+NXARMJIT: WATCHDOG_DISABLED
+NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64
+NXARMJIT: CONFIG_PARSED
+NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152
+NXARMJIT: TRACE_TIERED_DIAGNOSTIC maximum=4096
+NXARMJIT: TRACE_DEEP_DIAGNOSTIC_BUILD maximum=16384
+NXARMJIT: TRACE_LONG_DIAGNOSTIC_BUILD maximum=65536
+NXARMJIT: TRACE_INITIALIZATION_DIAGNOSTIC_BUILD maximum=67108864
+NXARMJIT: TRACE_MAPPED_DIAGNOSTIC_BUILD profile=mapped-normal-nc-v1
+NXARMJIT: TRACE_MAPPED_DIAGNOSTIC_SELECTED profile=mapped-normal-nc-v1
+NXARMJIT: TRACE_LONG_DIAGNOSTIC_SELECTED tier=65536
+NXARMJIT: TRACE_DT_CHECKED templates=0 platform_complete=false
+NXARMJIT: TRACE_STAGING_VERIFIED source_unchanged=true
+NXARMJIT: TRACE_HANDOFF_UNPROVISIONED abi=unprovisioned-sptm-prefix sptm_args=false sptm_services=false platform_device_tree=false
+NXARMJIT: TRACE_PLATFORM_PROFILE name=nextcore-irq-compat-v1 reset_origin=software_defined initial_override=0x0 initial_pstate=0x3c5 irq=0 fiq=0
+NXARMJIT: TRACE_ENTER entry=0xfffffe0002004400 x0=0 x1=0x4200c000 x2=0 x3=0 budget=65536
+NXARMJIT: TRACE_MAPPINGS_READY granule=16384 profile=3 physical_base=0x40000000 virtual_base=0xfffffe0000000000 memory_size=67108864 table_base=0x44000000 table_bytes=131072 ttbr0=0x44000000 ttbr1=0x44004000 tcr=0x540118011 sctlr=0x30d00801 entry=0xfffffe0002004400
+NXARMJIT: TRACE_MEMORY_PROVIDER abi=2 mode=mapped-normal-nc-v1
+NXARMJIT: TRACE_MAPPED_REPLY result=0 fault=0 address=0x0 output_pa=0x0 descriptor_pa=0x0 level=4294967295 context=0 metadata_flags=0 esr=0x0
+NXARMJIT: TRACE_PROTECTION_CALLS writable=145 executable=144 failures=0 includes_restore=true
+NXARMJIT: TRACE_RETURN status=5 retired=65536 pc=0xfffffe0002004634 blocks=65536 instruction=0x0
+NXARMJIT: TRACE_REGISTERS x0=0x20002 x1=0xfffffe0002004648 x2=0x1122334455667788 x3=0xfffffe0002004648
+NXARMJIT: TRACE_PLATFORM_STATE profile=1 override=0x0 pending=0 pstate=0x600003c5 sp=0x42024000
+NXARMJIT: TRACE_EXCEPTION_STATE elr=0x0 spsr=0x0 vector=0x0 esr=0x0 handler_executed=false
+NXARMJIT: TRACE_MEMORY_RESULT abi=2 provider_status=0 guest_far=0x0 last_address=0xfffffe000200464c fetch_requests=65536 data_requests=26169 completed_data_operations=26169
+NXARMJIT: TRACE_ONLY macos_boot_verified=false metal_verified=false
+NXARMJIT: ERROR status=ABORTED

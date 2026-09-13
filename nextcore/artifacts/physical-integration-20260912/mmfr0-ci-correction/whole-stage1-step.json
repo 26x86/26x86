@@ -1,0 +1,77 @@
+{
+  "passed": true,
+  "steps": [
+    {
+      "command": "python3 -m unittest discover -s nextcore/crates/nextcore-efi/tools -p test_stage1_reader.py -v",
+      "returncode": 0,
+      "elapsed_seconds": 0.216035027,
+      "reaped": true
+    },
+    {
+      "command": "python3 nextcore/crates/nextcore-ise/tools/probe_efi_stage1_provider.py --work-dir \"$RUNNER_TEMP/native-stage1\" --output \"$RUNNER_TEMP/native-stage1.json\"",
+      "returncode": 0,
+      "elapsed_seconds": 12.70874445,
+      "reaped": true
+    },
+    {
+      "command": "python3 nextcore/crates/nextcore-ise/runtime/tests/verify_mapped_native.py --output \"$RUNNER_TEMP/mapped-native\"",
+      "returncode": 0,
+      "elapsed_seconds": 13.962387051000002,
+      "reaped": true
+    },
+    {
+      "command": "python3 nextcore/crates/nextcore-ise/runtime/tests/verify_unscaled_native.py --output \"$RUNNER_TEMP/unscaled-native\"",
+      "returncode": 0,
+      "elapsed_seconds": 13.962436635999996,
+      "reaped": true
+    },
+    {
+      "command": "python3 nextcore/crates/nextcore-ise/runtime/tests/verify_logical_shifted_native.py --output \"$RUNNER_TEMP/logical-shifted-native\"",
+      "returncode": 0,
+      "elapsed_seconds": 9.899051349000004,
+      "reaped": true
+    },
+    {
+      "command": "python3 nextcore/crates/nextcore-ise/runtime/tests/verify_indexed_native.py --output \"$RUNNER_TEMP/indexed-native\"",
+      "returncode": 0,
+      "elapsed_seconds": 18.128177891999997,
+      "reaped": true
+    },
+    {
+      "command": "python3 nextcore/crates/nextcore-ise/runtime/tests/verify_variable_shift_native.py --output \"$RUNNER_TEMP/variable-shift-native\"",
+      "returncode": 0,
+      "elapsed_seconds": 18.528290131000006,
+      "reaped": true
+    },
+    {
+      "command": "python3 nextcore/crates/nextcore-ise/runtime/tests/verify_zfr0_native.py --output \"$RUNNER_TEMP/zfr0-native\"",
+      "returncode": 0,
+      "elapsed_seconds": 16.622297536000005,
+      "reaped": true
+    },
+    {
+      "command": "python3 nextcore/crates/nextcore-ise/runtime/tests/verify_isar0_native.py --output \"$RUNNER_TEMP/isar0-native\"",
+      "returncode": 0,
+      "elapsed_seconds": 15.166323609000003,
+      "reaped": true
+    },
+    {
+      "command": "python3 nextcore/crates/nextcore-ise/runtime/tests/verify_isar2_native.py --output \"$RUNNER_TEMP/isar2-native\"",
+      "returncode": 0,
+      "elapsed_seconds": 15.466816355999995,
+      "reaped": true
+    },
+    {
+      "command": "python3 nextcore/crates/nextcore-ise/runtime/tests/verify_mmfr0_native.py --output \"$RUNNER_TEMP/mmfr0-native\"",
+      "returncode": 0,
+      "elapsed_seconds": 14.66462455200002,
+      "reaped": true
+    },
+    {
+      "command": "python3 nextcore/crates/nextcore-ise/runtime/tests/verify_asid8_native.py --output \"$RUNNER_TEMP/asid8-native\"",
+      "returncode": 0,
+      "elapsed_seconds": 19.68179175200001,
+      "reaped": true
+    }
+  ]
+}

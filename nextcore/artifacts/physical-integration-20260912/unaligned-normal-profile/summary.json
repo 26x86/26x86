@@ -1,0 +1,57 @@
+{
+  "schema": "nextcore.authored-unaligned-normal-profile.v1",
+  "passed": true,
+  "profile": 3,
+  "sctlr": "0x30d00801 with optional SA/SA0",
+  "source_commits": {
+    "ise": "bd3a8195385106ce9bdeb09160a3f1bfb447ea11",
+    "efi": "195a9bbbe2a919bf163700cf9ac2556d43499a51"
+  },
+  "source_inventory_matches_git_blobs": true,
+  "efi_cases": 152,
+  "new_efi_cases": 44,
+  "native_stage1_tests": 23,
+  "native_m0_tests": 20,
+  "compiled_mutations_rejected": 3,
+  "original_input_replayed": false,
+  "physical_boot_verified": false,
+  "normal_startup_ready": false,
+  "remaining": [
+    "Original entry mapping and ABI",
+    "Mapped pointer authentication",
+    "Persistent platform, storage, input and display",
+    "Physical external-media install and reboot"
+  ],
+  "files": [
+    {
+      "path": "ovmf-report.json",
+      "sha256": "67626791732b83c6b726c60a2305fb732ea7d573ab7918fc96503fe2b181f3b7",
+      "bytes": 165286
+    },
+    {
+      "path": "ovmf-serial.log",
+      "sha256": "3f4e891475cc088b9fd4865fbc5856e157b6d518a250e21dca17b7c2dabd53a3",
+      "bytes": 26454
+    },
+    {
+      "path": "native-stage1.log",
+      "sha256": "47a9884c12ae31bce767ce5a91590d42470e277ce22acdbbfbdb24c504ac2b43",
+      "bytes": 1816
+    },
+    {
+      "path": "native-m0.log",
+      "sha256": "442dcb5729d7326c21cca5c59db32cc2e0f4d5797e0d3f3ee8f16949f93388b4",
+      "bytes": 1542
+    },
+    {
+      "path": "native-commands.json",
+      "sha256": "6bff480e5546490c13700fe286c30ce7268fda081d722a732a273b0575564b2e",
+      "bytes": 4669
+    },
+    {
+      "path": "negative-controls.json",
+      "sha256": "160d6118d902d42c88251e136605a1fa2707a7e952357dddb0b8228e976059ff",
+      "bytes": 17344
+    }
+  ]
+}

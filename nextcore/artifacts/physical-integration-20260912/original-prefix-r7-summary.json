@@ -1,0 +1,33 @@
+{
+  "schema": "nextcore.local-original-prefix.v1",
+  "input_product_version": "27.0",
+  "input_build": "26A5425a",
+  "input_role": "j274 boot-ready KernelCache",
+  "input_bytes": 121864192,
+  "input_sha256": "2b1284215823591148d2649c2d8efd318db94b300574d069d3b90d9a324f4a09",
+  "input_preserved": true,
+  "efi_sha256": "6aebed1ee4379642c41ad402825062819a3c5d7fbb160563278d8a8cda294af7",
+  "efi_preserved": true,
+  "runtime_commit": "0409a3d626a8b33d0248bd567a5698ccb7c597f7",
+  "native_runtime_source_sha256": {
+    "jit.c": "03b5c5b031055fbf184bc2bf3ecde8610624d00f82a662bb71c26d47603bd4db",
+    "arch.c": "1184d86c6cfdd3c2cff50ac93483bd0d09040d0b6af34c8971ecc633db20337a",
+    "memory_stage1.inc": "8f683a886b08314a8aac1b887c00e78cfbfdd1323e7ee72d14aaec20603ddf38"
+  },
+  "instruction_budget": 16384,
+  "return_code": 0,
+  "diagnostic_completed": true,
+  "retired": 5373,
+  "execution_status": 8,
+  "fetch_requests": 5374,
+  "completed_data_operations": 793,
+  "provider_status": 0,
+  "elapsed_seconds": 23.32,
+  "profile": "software-defined RAM and IRQ, incomplete SPTM prefix",
+  "sptm_services_provided": false,
+  "complete_platform_dt": false,
+  "normal_startup_verified": false,
+  "macos_boot_verified": false,
+  "physical_hardware_verified": false,
+  "comparison": "Independent local input and profile; historical 5311-instruction run is not assumed equivalent."
+}

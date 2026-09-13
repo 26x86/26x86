@@ -1,6 +1,33 @@
 # NextCore Current Context and Resumption Standards
 
-Updated: 2026-09-09. The latest BP summaries take precedence over legacy historical logs. This document provides an objective baseline summary so future agents and contributors can resume development without overstating completion states. Detailed specifications reside in `docs/NEXTCORE_BUILD_PLAN.md`, and verification records are maintained in `nextcore/VALIDATION.md`.
+Updated: 2026-09-12. The latest BP summaries take precedence over legacy historical logs. This document provides an objective baseline summary so future agents and contributors can resume development without overstating completion states. Detailed specifications reside in `docs/NEXTCORE_BUILD_PLAN.md`, and verification records are maintained in `nextcore/VALIDATION.md`.
+
+## BP35 Integration and Physical Boot Work
+
+PR #17 adds explicit deep diagnostics with Core bab7ac4, EFI 03a376d and Tool
+8ea73c8. Historical authored firmware gates reached the selected 16384 budget;
+the historical original-input diagnostic stopped after 5311 retired instructions
+at UBFM. Those receipts do not establish normal startup or macOS boot.
+
+The 2026-09-12 integration preserves those historical results and connects ISE
+002d2ef (BFM, UBFM, undefined-syndrome correction, extended-register arithmetic,
+conditional selection, scalar register-offset memory, test-bit branches,
+ordinary multiply-accumulate and reference branch corrections) with EFI 91a7577.
+Authored native/EFI execution and production picker recovery
+pass; receipts are in `nextcore/artifacts/physical-integration-20260912`.
+The local original-prefix diagnostic reaches its 16384-instruction budget,
+with normal startup prerequisites still incomplete. The physical target is Samsung 750XHD with Intel
+Core Ultra 7 255U and Intel Graphics 8086:7D41. Acceptance requires external-media
+installation and an interactive macOS 27 desktop after reboot. Optional firmware
+presentation failures must degrade gracefully. Graphics acceleration is deferred.
+SPTM services, complete platform providers and physical OS boot remain unverified.
+Budget exhaustion is not evidence of forward boot progress. No unsupported
+instruction stopped this run. The selected j274 manifest has no SPTM/TXM
+component roles; its exact entry-profile applicability remains unverified.
+The trace harness uses an incomplete SPTM-labelled diagnostic profile, which
+must not be treated as proof that the selected image requires SPTM. Remaining
+basic-family and reference parity gaps are listed in
+`docs/A64_STARTUP_COVERAGE_20260912.md`; original-input coordinates remain private.
 
 ## BP34 Development Status
 

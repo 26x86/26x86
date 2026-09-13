@@ -1,0 +1,70 @@
+{
+  "schema": "nextcore.arithmetic-existing-efi-consumer.v1",
+  "instruction_family": "extended",
+  "passed": false,
+  "checks": {
+    "completed": true,
+    "exact_retirement": false,
+    "final_loop_pc": false,
+    "arithmetic_results": false,
+    "boot_argument_preserved": true,
+    "memory_provider": false,
+    "inputs_preserved": true
+  },
+  "commands": [
+    [
+      "clang",
+      "--target=aarch64-none-elf",
+      "-c",
+      "/tmp/nextcore-physical-extended-negative-20260912/probe.S",
+      "-o",
+      "/tmp/nextcore-physical-extended-negative-20260912/probe.o"
+    ],
+    [
+      "llvm-objcopy",
+      "-O",
+      "binary",
+      "--only-section=.text",
+      "/tmp/nextcore-physical-extended-negative-20260912/probe.o",
+      "/tmp/nextcore-physical-extended-negative-20260912/probe.bin"
+    ],
+    [
+      "/usr/bin/python3",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py",
+      "--tools",
+      "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools",
+      "--efi",
+      "/tmp/nextcore-physical-runtime-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi",
+      "--kernel",
+      "/tmp/nextcore-physical-extended-negative-20260912/probe.kc",
+      "--device-tree",
+      "/tmp/nextcore-physical-extended-negative-20260912/diagnostic.dt",
+      "--output",
+      "/tmp/nextcore-physical-extended-negative-20260912/firmware",
+      "--physical-base",
+      "0x40000000",
+      "--virtual-base",
+      "0xfffffe0000000000",
+      "--memory-size",
+      "67108864",
+      "--kernel-physical",
+      "0x42000000",
+      "--instruction-budget",
+      "64",
+      "--platform-profile",
+      "nextcore-irq-compat-v1",
+      "--allow-incomplete-sptm-prefix",
+      "--timeout",
+      "60"
+    ]
+  ],
+  "source_hashes": {
+    "/tmp/nextcore-physical-runtime-target-20260912/x86_64-unknown-uefi/release/NXARMJIT.efi": "c8fa9a5a958c4530f8b81e1638b2e770022e2cd2316200613d6bb273bf9b5a67",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_ubfm_consumer_ovmf.py": "2a86373b59eb01d1f5e33ca6289011da9575a4d81a92f450d5c87dbdd8af89ff",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/build_arm64_handoff_probe.py": "2013476485d750c74e11a092b15566cb8a9f571ddd61dab5000d691d4d41dc6b",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/trace_deep_arm_jit_ovmf.py": "0fddad2396e905a6241c08aef6a64220fc3b79d9ab7e639612d0a324342d5741",
+    "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/tools/verify_arm_jit_ovmf.py": "549914a7980ee519afcccaa97e952a0125d1d257c8fb66f97b5c311a1c5a52de"
+  },
+  "original_images_used": false,
+  "macos_boot_verified": false
+}

@@ -1,0 +1,44 @@
+{
+  "passed": false,
+  "cases": [
+    {
+      "case": 1,
+      "passed": false,
+      "checks": {
+        "observed": false,
+        "terminal": false,
+        "child_policy": false,
+        "original_images_preserved": true,
+        "no_setup_error": true,
+        "first_injected": true,
+        "retried": false,
+        "read_after_input": false,
+        "exact_path_reason": false,
+        "process_reaped": true
+      },
+      "error": "firmware returned before required recovery observation",
+      "serial_sha256": "45590dae5b8711b76fe231d1960730538db5db2385987b57dccd808e9ca0e2bb",
+      "elapsed_seconds": 2.9482180799999895,
+      "exit_code": 0,
+      "stopped_by_host": true,
+      "process_reaped": true,
+      "child_observed": false,
+      "screenshot_sha256": null
+    }
+  ],
+  "input_sha256": {
+    "efi": "a07654d00b834217078e7b85f1302d8b9babe7b0d983c6279be52f233737899d",
+    "probe": "4198b5157855ccc34a5ab4acc29efdde69ff9fe0d07638e4300920a0cdb26032",
+    "child": "5c047b8e8d38afeddeb9119edcc8fbac78b373e94d56488f1d83dc6b3e60e996"
+  },
+  "physical_hardware_verified": false,
+  "macos_boot_verified": false,
+  "source_sha256": {
+    "Tools/verify_config_recovery_ovmf.py": "66e3d2f112282ffb3a25a9030d5b36596caca073459a7e570100fa5538e634bd",
+    "nextcore/crates/nextcore-efi/src/config_recovery_probe.rs": "eca57f103d68b88ecd32b6e40ae2c7e6b242e9bd212ba12cf24fd2932d085409",
+    "nextcore/crates/nextcore-efi/src/main.rs": "aaa9ac636dac16645d7c163701af05f1457dc6f00b7418539dfc00a8c5fb1516",
+    "nextcore/crates/nextcore-efi/src/configuration_recovery.rs": "f1f89491256a72c5e000ac484677088a48cd5fa4fe1718f4a959450b90baa41c",
+    "nextcore/crates/nextcore-efi/Cargo.toml": "adf682badd1fa07f1beaef392c7f800e5264f4d7261a23f7d81d7d55af0b49da"
+  },
+  "sources_preserved": true
+}

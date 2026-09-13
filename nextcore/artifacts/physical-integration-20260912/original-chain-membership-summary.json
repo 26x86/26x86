@@ -1,0 +1,26 @@
+{
+  "schema": "nextcore.original-chain-membership.v1",
+  "input_sha256": "2b1284215823591148d2649c2d8efd318db94b300574d069d3b90d9a324f4a09",
+  "input_preserved": true,
+  "chain_nodes": 1010443,
+  "pages_with_fixups": 657,
+  "chains": 657,
+  "pointer_formats": {
+    "8": 1010443
+  },
+  "authenticated_nodes": 899149,
+  "observed_stores": 2,
+  "all_observed_stores_are_chain_nodes": true,
+  "observed_node_ordinals": [
+    2722,
+    2723
+  ],
+  "observed_successor_relation": true,
+  "scope": "Static input-chain membership of observed stores; does not prove stored values, full traversal, startup ABI or physical boot.",
+  "macos_boot_verified": false,
+  "format_source": "https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/EXTERNAL_HEADERS/mach-o/fixup-chains.h",
+  "loop_source": "https://github.com/apple-oss-distributions/xnu/blob/ac9718fb1af618d5ce8678d0dc6e8a58f252216f/osfmk/mach/dyld_kernel_fixups.h",
+  "function_identity_verified": false,
+  "complete_original_fixup_traversal_verified": false,
+  "original_store_values_verified": false
+}

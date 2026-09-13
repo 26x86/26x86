@@ -1,0 +1,68 @@
+{
+  "upstream": "https://github.com/qemu/qemu.git",
+  "base_commit": "11aa0b1ff115b86160c4d37e7c37e6a6b13b77ea",
+  "source_before": {
+    "target/arm/tcg/cpu64.c": "4f90c0088cef58fb09bcfc05fd78f133a0a4a9ce6b2d45cf90ff56b328409944",
+    "target/arm/tcg/pauth_helper.c": "6359019622866d3520455269d142bd635acc76d08d602e01f7939eb8661358eb",
+    "target/arm/cpu-features.h": "604fbc7f30e0085ee51a2c8bbe1e18ccc80d6e9e99fc47997d77e14dca6e777a",
+    "target/arm/helper.c": "eae500f11e597644e231ed871e46698768530ead9096d007ba8f215e68a6fa86",
+    "target/arm/cpu64.c": "8c12b4cfb2a9db711da9b4ccfa2d25d6b422d9a12f61488d13085e5837e04fdd"
+  },
+  "runs": [
+    {
+      "label": "baseline",
+      "argv": [
+        "ninja",
+        "-j8",
+        "qemu-system-aarch64"
+      ],
+      "cwd": "/tmp/nextcore-qemu-apa1-20260913/build-nextcore",
+      "return_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 102.16213599800017,
+      "process_reaped": true
+    },
+    {
+      "label": "apa1",
+      "argv": [
+        "ninja",
+        "-j8",
+        "qemu-system-aarch64"
+      ],
+      "cwd": "/tmp/nextcore-qemu-apa1-20260913/build-nextcore",
+      "return_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 2.170983076000084,
+      "process_reaped": true
+    }
+  ],
+  "production_runtime_changed": false,
+  "physical_hardware_verified": false,
+  "baseline": {
+    "path": "/tmp/nextcore-qemu-apa3-8.2.2-20260913",
+    "sha256": "d8d5bf47f66d4abd9376a44c59066721cf24bbc252ea4a60032bdd59973c863a",
+    "bytes": 94732752,
+    "version": "QEMU emulator version 8.2.2 (v8.2.2)"
+  },
+  "test_model": {
+    "path": "/tmp/nextcore-qemu-apa1-8.2.2-20260913",
+    "sha256": "cfdfe408911c7c2ac797fc7e54c3f510e6c682b67e50ce025e25b7846ac8705a",
+    "bytes": 94732768,
+    "version": "QEMU emulator version 8.2.2 (v8.2.2-dirty)"
+  },
+  "source_after": {
+    "target/arm/tcg/cpu64.c": "a3e7ee809730fc9ea885ebc703fab2528d2501bba915989687702858db29d392",
+    "target/arm/tcg/pauth_helper.c": "6359019622866d3520455269d142bd635acc76d08d602e01f7939eb8661358eb",
+    "target/arm/cpu-features.h": "604fbc7f30e0085ee51a2c8bbe1e18ccc80d6e9e99fc47997d77e14dca6e777a",
+    "target/arm/helper.c": "eae500f11e597644e231ed871e46698768530ead9096d007ba8f215e68a6fa86",
+    "target/arm/cpu64.c": "8c12b4cfb2a9db711da9b4ccfa2d25d6b422d9a12f61488d13085e5837e04fdd"
+  },
+  "patch_sha256": "58ddc667c0a17792a87ae3bf0c919dec13887caf57846190054b35d0a12f6ce0",
+  "only_apa_field_changed": true,
+  "passed": true,
+  "subprojects": {
+    "keycodemapdb": "f5772a62ec52591ff6870b7e8ef32482371f22c6",
+    "berkeley-softfloat-3": "b64af41c3276f97f0e181920400ee056b9c88037",
+    "berkeley-testfloat-3": "e7af9751d9f9fd3b47911f51a5cfd08af256a9ab"
+  }
+}

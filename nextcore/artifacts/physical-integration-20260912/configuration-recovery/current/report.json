@@ -1,0 +1,252 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": 0,
+      "passed": true,
+      "checks": {
+        "observed": true,
+        "terminal": true,
+        "child_policy": true,
+        "original_images_preserved": true,
+        "no_setup_error": true,
+        "no_recovery": true,
+        "process_reaped": true
+      },
+      "error": null,
+      "serial_sha256": "57328705a53c1fd0f9c44153bd9da46836de56699eecbcea0e676daf0df8010b",
+      "elapsed_seconds": 3.400266467999998,
+      "exit_code": 0,
+      "stopped_by_host": true,
+      "process_reaped": true,
+      "child_observed": true,
+      "screenshot_sha256": null
+    },
+    {
+      "case": 1,
+      "passed": true,
+      "checks": {
+        "observed": true,
+        "terminal": true,
+        "child_policy": true,
+        "original_images_preserved": true,
+        "no_setup_error": true,
+        "first_injected": true,
+        "retried": true,
+        "read_after_input": true,
+        "exact_path_reason": true,
+        "process_reaped": true
+      },
+      "error": null,
+      "serial_sha256": "cdd43326523a32d7874bacdb5e353da3f9caad20e74136a0a1d29737333616ee",
+      "elapsed_seconds": 3.0332476170000007,
+      "exit_code": 0,
+      "stopped_by_host": true,
+      "process_reaped": true,
+      "child_observed": true,
+      "screenshot_sha256": "f930665bfeff7cc1d65a4400e26e452a79e5176252e815613bbda4ed0f1378ad"
+    },
+    {
+      "case": 2,
+      "passed": true,
+      "checks": {
+        "observed": true,
+        "terminal": true,
+        "child_policy": true,
+        "original_images_preserved": true,
+        "no_setup_error": true,
+        "retry_then_escape": true,
+        "exact_rereads": true,
+        "exact_path_reason": true,
+        "process_reaped": true
+      },
+      "error": null,
+      "serial_sha256": "f77526323902c6cc628d890cd8c7864baa41d8a8df18e91a12c0c4914c6d2091",
+      "elapsed_seconds": 3.184726915000006,
+      "exit_code": 0,
+      "stopped_by_host": true,
+      "process_reaped": true,
+      "child_observed": false,
+      "screenshot_sha256": "f930665bfeff7cc1d65a4400e26e452a79e5176252e815613bbda4ed0f1378ad"
+    },
+    {
+      "case": 3,
+      "passed": true,
+      "checks": {
+        "observed": true,
+        "terminal": true,
+        "child_policy": true,
+        "original_images_preserved": true,
+        "no_setup_error": true,
+        "retry_then_escape": true,
+        "exact_rereads": true,
+        "exact_path_reason": true,
+        "empty_reason": true,
+        "process_reaped": true
+      },
+      "error": null,
+      "serial_sha256": "a8a148cf9602e308fc02f16ed0ec9de6e9dc5ec69530f1713e35dd5fa190d554",
+      "elapsed_seconds": 3.2854399939999936,
+      "exit_code": 0,
+      "stopped_by_host": true,
+      "process_reaped": true,
+      "child_observed": false,
+      "screenshot_sha256": "b9672b2224600de8581e760569fe41df10056375ca1ed7a01402ebf35d518257"
+    },
+    {
+      "case": 4,
+      "passed": true,
+      "checks": {
+        "observed": true,
+        "terminal": true,
+        "child_policy": true,
+        "original_images_preserved": true,
+        "no_setup_error": true,
+        "retry_then_escape": true,
+        "exact_rereads": true,
+        "exact_path_reason": true,
+        "parse_repeated": true,
+        "process_reaped": true
+      },
+      "error": null,
+      "serial_sha256": "63e74d7775488fa9f31337005658225ebf4be33dd53362f9a5ff51a1b78741f6",
+      "elapsed_seconds": 3.1331037980000005,
+      "exit_code": 0,
+      "stopped_by_host": true,
+      "process_reaped": true,
+      "child_observed": false,
+      "screenshot_sha256": "6fb02b4d2896cf7144fcef3e6634a44777c91aa79d455b5ce9d9c7e0ad7a465a"
+    },
+    {
+      "case": 5,
+      "passed": true,
+      "checks": {
+        "observed": true,
+        "terminal": true,
+        "child_policy": true,
+        "original_images_preserved": true,
+        "no_setup_error": true,
+        "retry_then_escape": true,
+        "exact_rereads": true,
+        "exact_path_reason": true,
+        "no_entry_reason": true,
+        "process_reaped": true
+      },
+      "error": null,
+      "serial_sha256": "35b85b1745263dbd18fea156a0276b910ada32153161d0aa9d7335dee24d89e6",
+      "elapsed_seconds": 3.3365285799999995,
+      "exit_code": 0,
+      "stopped_by_host": true,
+      "process_reaped": true,
+      "child_observed": false,
+      "screenshot_sha256": "212760da418ec89b9e232d366aa6d9c19c6d52a171099b5211b9d4d4d8640d3f"
+    },
+    {
+      "case": 6,
+      "passed": true,
+      "checks": {
+        "observed": true,
+        "terminal": true,
+        "child_policy": true,
+        "original_images_preserved": true,
+        "no_setup_error": true,
+        "no_false_screen": true,
+        "actual_error": true,
+        "exact_path_reason": true,
+        "process_reaped": true
+      },
+      "error": null,
+      "serial_sha256": "27f6aa2ca50df33e678f9ce96d52c283fd1e31e478583e998e7d563b80ee998a",
+      "elapsed_seconds": 3.1354146819999897,
+      "exit_code": 0,
+      "stopped_by_host": true,
+      "process_reaped": true,
+      "child_observed": false,
+      "screenshot_sha256": null
+    },
+    {
+      "case": 7,
+      "passed": true,
+      "checks": {
+        "observed": true,
+        "terminal": true,
+        "child_policy": true,
+        "original_images_preserved": true,
+        "no_setup_error": true,
+        "actual_error": true,
+        "exact_path_reason": true,
+        "process_reaped": true
+      },
+      "error": null,
+      "serial_sha256": "1aa4c964df4eb48279073dcfd85c727976216a8b35d08acfc4a3b85af02b09c9",
+      "elapsed_seconds": 3.4360875859999993,
+      "exit_code": 0,
+      "stopped_by_host": true,
+      "process_reaped": true,
+      "child_observed": false,
+      "screenshot_sha256": "f930665bfeff7cc1d65a4400e26e452a79e5176252e815613bbda4ed0f1378ad"
+    },
+    {
+      "case": 8,
+      "passed": true,
+      "checks": {
+        "observed": true,
+        "terminal": true,
+        "child_policy": true,
+        "original_images_preserved": true,
+        "no_setup_error": true,
+        "actual_error": true,
+        "exact_path_reason": true,
+        "process_reaped": true
+      },
+      "error": null,
+      "serial_sha256": "1fcb1f7bf2710d75229596756031c03afcc03e6b94822f614621a73d418641cc",
+      "elapsed_seconds": 2.830924996999997,
+      "exit_code": 0,
+      "stopped_by_host": true,
+      "process_reaped": true,
+      "child_observed": false,
+      "screenshot_sha256": null
+    },
+    {
+      "case": 9,
+      "passed": true,
+      "checks": {
+        "observed": true,
+        "terminal": true,
+        "child_policy": true,
+        "original_images_preserved": true,
+        "no_setup_error": true,
+        "first_injected": true,
+        "retried": true,
+        "read_after_input": true,
+        "clear_failure_continues": true,
+        "exact_path_reason": true,
+        "process_reaped": true
+      },
+      "error": null,
+      "serial_sha256": "1ffc201956c0711622bfb52832d7111ba55fbb4f4818d3c2c9e347290040d13e",
+      "elapsed_seconds": 2.831140098000006,
+      "exit_code": 0,
+      "stopped_by_host": true,
+      "process_reaped": true,
+      "child_observed": true,
+      "screenshot_sha256": "8e8d6291ae0e47eb9413b3e639dd604df7cd64ee32136c769b312c3eaad52478"
+    }
+  ],
+  "input_sha256": {
+    "efi": "39bb2ab9b07c1d8149921e9630cf127dfb690602031df0d41553ac86d60da395",
+    "probe": "4198b5157855ccc34a5ab4acc29efdde69ff9fe0d07638e4300920a0cdb26032",
+    "child": "bc33cb0501692d6b853c805207917d83939596ee01a4cd56388f442520763d0c"
+  },
+  "physical_hardware_verified": false,
+  "macos_boot_verified": false,
+  "source_sha256": {
+    "Tools/verify_config_recovery_ovmf.py": "b481a83885b9358da07a5e9b7a329cb24cf722369da005b0dd4b47850b9a811d",
+    "nextcore/crates/nextcore-efi/src/config_recovery_probe.rs": "eca57f103d68b88ecd32b6e40ae2c7e6b242e9bd212ba12cf24fd2932d085409",
+    "nextcore/crates/nextcore-efi/src/main.rs": "aaa9ac636dac16645d7c163701af05f1457dc6f00b7418539dfc00a8c5fb1516",
+    "nextcore/crates/nextcore-efi/src/configuration_recovery.rs": "f1f89491256a72c5e000ac484677088a48cd5fa4fe1718f4a959450b90baa41c",
+    "nextcore/crates/nextcore-efi/Cargo.toml": "adf682badd1fa07f1beaef392c7f800e5264f4d7261a23f7d81d7d55af0b49da"
+  },
+  "sources_preserved": true
+}

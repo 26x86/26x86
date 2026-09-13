@@ -1,0 +1,13 @@
+{
+  "schema": "nextcore.efi-pinned-build-comparison.v1",
+  "efi_commit": "18be73b632934fba4a901addb3f66d055934cf3a",
+  "ise_commit": "5cd1e44413958450875392d8a431dba15bb76f2e",
+  "fixed_binary": "/tmp/nextcore-isar2-mapped-final-20260913.efi",
+  "fixed_sha256": "b581e7bb7ec54421e1a91ea23e8c5a7cbae4ad3cbcbd9c7af85ea65d49283583",
+  "rebuilt_binary": "/tmp/nextcore-isar2-cached-target-20260913/x86_64-unknown-uefi/release/NXARMJIT.efi",
+  "rebuilt_sha256": "b581e7bb7ec54421e1a91ea23e8c5a7cbae4ad3cbcbd9c7af85ea65d49283583",
+  "byte_identical": true,
+  "fixed_preserved": true,
+  "production_efi_code_changed": false,
+  "build_log": "/tmp/nextcore-isar2-pinned-build-20260913.log"
+}

@@ -1,0 +1,249 @@
+{
+  "scope": "Address selection only; shared QARMA5 primitive. Not independent cipher oracle.",
+  "primary": "Arm DDI0596 ID121321; physical PDF pages2944/2950/2955/2964",
+  "vectors": 48,
+  "sign_mismatch_count": 16,
+  "mismatches": [
+    {
+      "index": 4,
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 0,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xff36800000000130",
+      "arm_address_reference_signed": "0xff36000000000130",
+      "current_auth_signed": "0x2000800000000130",
+      "arm_auth_signed": "0x2000000000000130"
+    },
+    {
+      "index": 5,
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 0,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xbfde800000000130",
+      "arm_address_reference_signed": "0xbfde000000000130",
+      "current_auth_signed": "0xbfff800000000130",
+      "arm_auth_signed": "0xbfff800000000130"
+    },
+    {
+      "index": 10,
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 1,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xff36800000000130",
+      "arm_address_reference_signed": "0xff36000000000130",
+      "current_auth_signed": "0x4000800000000130",
+      "arm_auth_signed": "0x4000000000000130"
+    },
+    {
+      "index": 11,
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 1,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xbfde800000000130",
+      "arm_address_reference_signed": "0xbfde000000000130",
+      "current_auth_signed": "0xdfff800000000130",
+      "arm_auth_signed": "0xdfff800000000130"
+    },
+    {
+      "index": 16,
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 2,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xff36800000000130",
+      "arm_address_reference_signed": "0xff36000000000130",
+      "current_auth_signed": "0x2000800000000130",
+      "arm_auth_signed": "0x2000000000000130"
+    },
+    {
+      "index": 17,
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 2,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xbfde800000000130",
+      "arm_address_reference_signed": "0xbfde000000000130",
+      "current_auth_signed": "0xbfff800000000130",
+      "arm_auth_signed": "0xbfff800000000130"
+    },
+    {
+      "index": 22,
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 3,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xff36800000000130",
+      "arm_address_reference_signed": "0xff36000000000130",
+      "current_auth_signed": "0x4000800000000130",
+      "arm_auth_signed": "0x4000000000000130"
+    },
+    {
+      "index": 23,
+      "input": {
+        "t0sz": 16,
+        "t1sz": 17,
+        "tcr": "0x540118010",
+        "key": 3,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xbfde800000000130",
+      "arm_address_reference_signed": "0xbfde000000000130",
+      "current_auth_signed": "0xdfff800000000130",
+      "arm_auth_signed": "0xdfff800000000130"
+    },
+    {
+      "index": 28,
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 0,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xff36000000000130",
+      "arm_address_reference_signed": "0xff36800000000130",
+      "current_auth_signed": "0x2000000000000130",
+      "arm_auth_signed": "0x2000000000000130"
+    },
+    {
+      "index": 29,
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 0,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xbfde000000000130",
+      "arm_address_reference_signed": "0xbfde800000000130",
+      "current_auth_signed": "0xbfff000000000130",
+      "arm_auth_signed": "0xbfff800000000130"
+    },
+    {
+      "index": 34,
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 1,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xff36000000000130",
+      "arm_address_reference_signed": "0xff36800000000130",
+      "current_auth_signed": "0x4000000000000130",
+      "arm_auth_signed": "0x4000000000000130"
+    },
+    {
+      "index": 35,
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 1,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xbfde000000000130",
+      "arm_address_reference_signed": "0xbfde800000000130",
+      "current_auth_signed": "0xdfff000000000130",
+      "arm_auth_signed": "0xdfff800000000130"
+    },
+    {
+      "index": 40,
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 2,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xff36000000000130",
+      "arm_address_reference_signed": "0xff36800000000130",
+      "current_auth_signed": "0x2000000000000130",
+      "arm_auth_signed": "0x2000000000000130"
+    },
+    {
+      "index": 41,
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 2,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xbfde000000000130",
+      "arm_address_reference_signed": "0xbfde800000000130",
+      "current_auth_signed": "0xbfff000000000130",
+      "arm_auth_signed": "0xbfff800000000130"
+    },
+    {
+      "index": 46,
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 3,
+        "pointer": "0x80000000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xff36000000000130",
+      "arm_address_reference_signed": "0xff36800000000130",
+      "current_auth_signed": "0x4000000000000130",
+      "arm_auth_signed": "0x4000000000000130"
+    },
+    {
+      "index": 47,
+      "input": {
+        "t0sz": 17,
+        "t1sz": 16,
+        "tcr": "0x540108011",
+        "key": 3,
+        "pointer": "0xff7f800000000130",
+        "modifier": "0x9876"
+      },
+      "current_signed": "0xbfde000000000130",
+      "arm_address_reference_signed": "0xbfde800000000130",
+      "current_auth_signed": "0xdfff000000000130",
+      "arm_auth_signed": "0xdfff800000000130"
+    }
+  ],
+  "production_changed": false
+}

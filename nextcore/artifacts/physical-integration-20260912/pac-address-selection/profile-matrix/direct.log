@@ -1,0 +1,4 @@
+id=ISAR1 sentinel=0 api_status=0 api_value=0 native_status=13 x0=feed pc=0 retired=0 sp=800 pstate=f00003c5
+id=ISAR1 sentinel=1 api_status=0 api_value=123456789abcdef0 native_status=13 x0=feed pc=0 retired=0 sp=800 pstate=f00003c5
+id=MMFR0 sentinel=0 api_status=0 api_value=101122 native_status=13 x0=feed pc=0 retired=0 sp=800 pstate=f00003c5
+id=MMFR0 sentinel=1 api_status=0 api_value=101122 native_status=13 x0=feed pc=0 retired=0 sp=800 pstate=f00003c5

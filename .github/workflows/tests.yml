@@ -41,7 +41,9 @@ jobs:
         run: cargo clippy --workspace --exclude nextcore-efi --all-targets
         working-directory: nextcore
       - name: Clippy (firmware on its actual UEFI target)
-        run: cargo clippy -p nextcore-efi --target x86_64-unknown-uefi --all-features
+        run: |
+          cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features test-child --bin NXTEST
+          NEXTCORE_PICKER_CHILD="$GITHUB_WORKSPACE/nextcore/target/x86_64-unknown-uefi/release/NXTEST.efi" cargo clippy -p nextcore-efi --target x86_64-unknown-uefi --all-features
         working-directory: nextcore
 
   x86-efi-arm-jit:
@@ -81,10 +83,10 @@ jobs:
             --output "$RUNNER_TEMP/nextcore-platform-irq-proof"
       - name: Execute integer pair memory and precise faults in x86 EFI
         run: |
-          python3 nextcore/artifacts/arm-pair-memory-20260909/verify_pair_ovmf.py \
+          python3 nextcore/tools/verify_arm_pair_ovmf.py \
             --tools nextcore/tools --efi "$RUNNER_TEMP/NXARMJIT-probe.efi" \
             --output "$RUNNER_TEMP/nextcore-pair-memory-proof"
-          python3 nextcore/artifacts/arm-scalar-memory-20260909/verify_scalar_ovmf.py \
+          python3 nextcore/tools/verify_arm_scalar_ovmf.py \
             --tools nextcore/tools --efi "$RUNNER_TEMP/NXARMJIT-probe.efi" \
             --output "$RUNNER_TEMP/nextcore-scalar-memory-proof"
       - uses: actions/upload-artifact@v4
@@ -118,6 +120,8 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y clang lld llvm qemu-system-x86 ovmf
       - name: Check memory proof failure detection
         run: python3 tests/test_arm_memory_provider_runner.py -v
+      - name: Compare cached and uncached native execution with real W^X
+        run: python3 nextcore/crates/nextcore-ise/runtime/tests/verify_provider_cache.py --output "$RUNNER_TEMP/provider-cache-native"
       - name: Build direct, provider and combined bounded-tier firmware
         working-directory: nextcore
         run: |
@@ -162,19 +166,40 @@ jobs:
         with:
           targets: x86_64-unknown-uefi
       - name: Install native translated-memory firmware tools
-        run: sudo apt-get update && sudo apt-get install -y clang lld llvm qemu-system-x86 ovmf
+        run: sudo apt-get update && sudo apt-get install -y clang lld llvm qemu-system-x86 qemu-system-arm ovmf
       - name: Check stage-1 receipt rejection and native callback semantics
         run: |
           python3 -m unittest discover -s nextcore/crates/nextcore-efi/tools -p test_stage1_reader.py -v
           python3 nextcore/crates/nextcore-ise/tools/probe_efi_stage1_provider.py --work-dir "$RUNNER_TEMP/native-stage1" --output "$RUNNER_TEMP/native-stage1.json"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_mapped_native.py --output "$RUNNER_TEMP/mapped-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_unscaled_native.py --output "$RUNNER_TEMP/unscaled-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_logical_shifted_native.py --output "$RUNNER_TEMP/logical-shifted-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_indexed_native.py --output "$RUNNER_TEMP/indexed-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_variable_shift_native.py --output "$RUNNER_TEMP/variable-shift-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_zfr0_native.py --output "$RUNNER_TEMP/zfr0-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_isar0_native.py --output "$RUNNER_TEMP/isar0-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_isar2_native.py --output "$RUNNER_TEMP/isar2-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_mmfr0_native.py --output "$RUNNER_TEMP/mmfr0-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_asid8_native.py --output "$RUNNER_TEMP/asid8-native"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_optional_tcr.py --output "$RUNNER_TEMP/optional-tcr"
+      - name: Compare hierarchical permissions with authored Arm execution
+        run: |
+          python3 nextcore/crates/nextcore-ise/runtime/tests/hierarchy_oracle/run.py --output "$RUNNER_TEMP/hierarchy-arm"
+          python3 nextcore/crates/nextcore-ise/runtime/tests/verify_hierarchy_native.py --output "$RUNNER_TEMP/hierarchy-native" --arm-receipt "$RUNNER_TEMP/hierarchy-arm/receipt.json"
       - name: Build the authored stage-1 EFI consumer
         working-directory: nextcore
-        run: cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-stage1-probe --bin NXMMU
+        run: cargo build --locked --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-stage1-probe --bin NXMMU --bin NXASID --bin NXPERM
       - name: Execute translated fetch and memory on the x86 EFI computer
         run: |
           python3 nextcore/crates/nextcore-efi/tools/verify_stage1_ovmf.py \
             --efi-probe nextcore/target/x86_64-unknown-uefi/release/NXMMU.efi \
             --output "$RUNNER_TEMP/nextcore-stage1-proof"
+          python3 nextcore/crates/nextcore-efi/tools/verify_asid_ovmf.py \
+            --efi-probe nextcore/target/x86_64-unknown-uefi/release/NXASID.efi \
+            --output "$RUNNER_TEMP/nextcore-asid8-proof"
+          python3 nextcore/crates/nextcore-efi/tools/verify_hierarchy_ovmf.py \
+            --efi-probe nextcore/target/x86_64-unknown-uefi/release/NXPERM.efi \
+            --output "$RUNNER_TEMP/nextcore-hierarchy-proof"
       - name: Check owned backing and lifetime gates
         working-directory: nextcore
         run: |
@@ -194,14 +219,45 @@ jobs:
           cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-dynamic-probe --bin NXDYN
           python3 nextcore/crates/nextcore-efi/tools/verify_dynamic_ovmf.py --efi-probe nextcore/target/x86_64-unknown-uefi/release/NXDYN.efi --output "$RUNNER_TEMP/nextcore-dynamic-proof"
           python3 nextcore/crates/nextcore-efi/tools/check_dynamic_capture.py --report "$RUNNER_TEMP/nextcore-dynamic-proof/report.json" --output "$RUNNER_TEMP/nextcore-dynamic-reader.json"
-          python3 -B nextcore/artifacts/arm-dynamic-comparison-20260909/compare.py --oracle nextcore/artifacts/arm-dynamic-oracle-20260909 --runtime nextcore/crates/nextcore-ise/runtime --output "$RUNNER_TEMP/dynamic-arm-comparison" --rustc "$(command -v rustc)"
-          python3 -B nextcore/artifacts/arm-dynamic-comparison-20260909/test_compare.py --oracle nextcore/artifacts/arm-dynamic-oracle-20260909 --evidence "$RUNNER_TEMP/dynamic-arm-comparison"
+          python3 -B nextcore/tools/dynamic_comparison/compare.py --oracle nextcore/artifacts/arm-dynamic-oracle-20260909 --runtime nextcore/crates/nextcore-ise/runtime --output "$RUNNER_TEMP/dynamic-arm-comparison" --rustc "$(command -v rustc)"
+          python3 -B nextcore/tools/dynamic_comparison/test_compare.py --oracle nextcore/artifacts/arm-dynamic-oracle-20260909 --evidence "$RUNNER_TEMP/dynamic-arm-comparison"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: nextcore-x86-efi-stage1
           path: |
             ${{ runner.temp }}/native-stage1.json
+            ${{ runner.temp }}/mapped-native/receipt.json
+            ${{ runner.temp }}/unscaled-native/receipt.json
+            ${{ runner.temp }}/unscaled-native/*.log
+            ${{ runner.temp }}/logical-shifted-native/receipt.json
+            ${{ runner.temp }}/logical-shifted-native/*.log
+            ${{ runner.temp }}/indexed-native/receipt.json
+            ${{ runner.temp }}/indexed-native/*.log
+            ${{ runner.temp }}/variable-shift-native/receipt.json
+            ${{ runner.temp }}/variable-shift-native/*.log
+            ${{ runner.temp }}/zfr0-native/receipt.json
+            ${{ runner.temp }}/zfr0-native/*.log
+            ${{ runner.temp }}/isar0-native/receipt.json
+            ${{ runner.temp }}/isar0-native/*.log
+            ${{ runner.temp }}/isar2-native/receipt.json
+            ${{ runner.temp }}/isar2-native/*.log
+            ${{ runner.temp }}/mmfr0-native/receipt.json
+            ${{ runner.temp }}/mmfr0-native/*.log
+            ${{ runner.temp }}/asid8-native/receipt.json
+            ${{ runner.temp }}/asid8-native/*.json
+            ${{ runner.temp }}/optional-tcr/receipt.json
+            ${{ runner.temp }}/optional-tcr/*.log
+            ${{ runner.temp }}/nextcore-asid8-proof/*.json
+            ${{ runner.temp }}/nextcore-asid8-proof/*.log
+            ${{ runner.temp }}/hierarchy-arm/**/*.json
+            ${{ runner.temp }}/hierarchy-arm/**/*.log
+            ${{ runner.temp }}/hierarchy-arm/**/raw.bin
+            ${{ runner.temp }}/hierarchy-native/*.json
+            ${{ runner.temp }}/hierarchy-native/*.log
+            ${{ runner.temp }}/hierarchy-native/*.snapshot*
+            ${{ runner.temp }}/nextcore-hierarchy-proof/*.json
+            ${{ runner.temp }}/nextcore-hierarchy-proof/*.log
             ${{ runner.temp }}/nextcore-stage1-proof/*.json
             ${{ runner.temp }}/nextcore-stage1-proof/*.log
             ${{ runner.temp }}/nextcore-dt-proof/*.json
@@ -212,3 +268,134 @@ jobs:
             ${{ runner.temp }}/nextcore-dynamic-proof/*.log
             ${{ runner.temp }}/nextcore-dynamic-reader.json
             ${{ runner.temp }}/dynamic-arm-comparison/receipt.json
+
+  x86-efi-deep-trace:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-uefi
+      - name: Install authored firmware tools
+        run: sudo apt-get update && sudo apt-get install -y clang lld llvm qemu-system-x86 ovmf
+      - name: Check trace selection and fragmented UART collection
+        run: python3 -m unittest discover -s nextcore/tools -p 'test_trace_*.py'
+      - name: Build explicitly selected deep diagnostics
+        run: cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-deep-trace --bin NXARMJIT
+      - name: Execute arithmetic through the production trace consumer
+        run: |
+          python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --output "$RUNNER_TEMP/ubfm-efi"
+          python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family extended --output "$RUNNER_TEMP/extended-efi"
+          python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family select --output "$RUNNER_TEMP/select-efi"
+          python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family register-memory --output "$RUNNER_TEMP/register-memory-efi"
+          python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family test-bit --output "$RUNNER_TEMP/test-bit-efi"
+          python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family multiply --output "$RUNNER_TEMP/multiply-efi"
+      - name: Execute deep budget and reject malformed selections
+        run: |
+          python3 nextcore/tools/verify_deep_budget_ovmf.py --tools nextcore/tools --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --default-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --clamped-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --core-source nextcore/crates/nextcore-core --efi-source nextcore/crates/nextcore-efi --recheck-provenance --output "$RUNNER_TEMP/deep-trace"
+      - name: Build explicit long trace with observed framebuffer
+        run: |
+          cp nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/deep-only.efi"
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-long-trace,arm-jit-video-readback,arm-jit-memory-observation,arm-jit-protection-observation --bin NXARMJIT
+          cp nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/cached-long.efi"
+      - name: Execute owned framebuffer and long budget contracts
+        run: |
+          python3 nextcore/tools/verify_boot_framebuffer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --memory-observation --output "$RUNNER_TEMP/observed-framebuffer"
+          python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family bitfield-merge --long-diagnostic --output "$RUNNER_TEMP/long-bfm"
+          if python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi "$RUNNER_TEMP/deep-only.efi" --instruction-family bitfield-merge --long-diagnostic --output "$RUNNER_TEMP/long-old-negative"; then
+            exit 1
+          fi
+          python3 -c 'import json,os; from pathlib import Path; p=Path(os.environ["RUNNER_TEMP"])/"long-old-negative"; r=json.loads((p/"receipt.json").read_text()); f=json.loads((p/"firmware/report.json").read_text()); assert not r["passed"] and r["checks"]["inputs_preserved"] and any(m.startswith("NXARMJIT: TRACE_CONFIG_INVALID") for m in f["markers"])'
+      - name: Compare final cached and uncached EFI permission transitions
+        run: |
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-long-trace,arm-jit-video-readback,arm-jit-memory-observation,arm-jit-protection-observation,arm-jit-provider-uncached --bin NXARMJIT
+          python3 nextcore/tools/verify_provider_cache_ovmf.py --cached-efi "$RUNNER_TEMP/cached-long.efi" --uncached-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --output "$RUNNER_TEMP/provider-cache-efi"
+      - name: Execute explicit initialization bound and reject the old build
+        run: |
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-initialization-trace,arm-jit-protection-observation --bin NXARMJIT
+          python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --instruction-family bitfield-merge --initialization-diagnostic --output "$RUNNER_TEMP/initialization-bfm"
+          if python3 nextcore/tools/verify_ubfm_consumer_ovmf.py --efi "$RUNNER_TEMP/cached-long.efi" --instruction-family bitfield-merge --initialization-diagnostic --output "$RUNNER_TEMP/initialization-old-negative"; then
+            exit 1
+          fi
+          python3 -c 'import json,os; from pathlib import Path; p=Path(os.environ["RUNNER_TEMP"])/"initialization-old-negative"; r=json.loads((p/"receipt.json").read_text()); f=json.loads((p/"firmware/report.json").read_text()); assert not r["passed"] and r["checks"]["inputs_preserved"] and any(m.startswith("NXARMJIT: TRACE_CONFIG_INVALID") for m in f["markers"])'
+      - name: Execute explicit mapped entry with cached, uncached and unobserved controls
+        run: |
+          python3 -m unittest discover -s nextcore/tools -p test_trace_mapped.py -v
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-mapped-trace,arm-jit-video-readback,arm-jit-memory-observation,arm-jit-protection-observation --bin NXARMJIT
+          cp nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/mapped-cached.efi"
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-mapped-trace,arm-jit-video-readback,arm-jit-memory-observation,arm-jit-protection-observation,arm-jit-provider-uncached --bin NXARMJIT
+          cp nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi "$RUNNER_TEMP/mapped-uncached.efi"
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features arm-jit-mapped-trace,arm-jit-video-readback,arm-jit-protection-observation --bin NXARMJIT
+          python3 nextcore/tools/verify_mapped_trace_ovmf.py --cached-efi "$RUNNER_TEMP/mapped-cached.efi" --uncached-efi "$RUNNER_TEMP/mapped-uncached.efi" --unobserved-efi nextcore/target/x86_64-unknown-uefi/release/NXARMJIT.efi --old-efi "$RUNNER_TEMP/cached-long.efi" --output "$RUNNER_TEMP/mapped-efi"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nextcore-deep-trace
+          path: |
+            ${{ runner.temp }}/mapped-efi/**/*.json
+            ${{ runner.temp }}/mapped-efi/**/*.log
+            ${{ runner.temp }}/deep-trace/report.json
+            ${{ runner.temp }}/deep-trace/*.log
+            ${{ runner.temp }}/deep-trace/deep16384/*.json
+            ${{ runner.temp }}/deep-trace/deep16384/*.log
+            ${{ runner.temp }}/ubfm-efi/**/*.json
+            ${{ runner.temp }}/extended-efi/**/*.json
+            ${{ runner.temp }}/select-efi/**/*.json
+            ${{ runner.temp }}/register-memory-efi/**/*.json
+            ${{ runner.temp }}/test-bit-efi/**/*.json
+            ${{ runner.temp }}/multiply-efi/**/*.json
+            ${{ runner.temp }}/observed-framebuffer/**/*.json
+            ${{ runner.temp }}/observed-framebuffer/**/*.log
+            ${{ runner.temp }}/long-bfm/**/*.json
+            ${{ runner.temp }}/long-bfm/**/*.log
+            ${{ runner.temp }}/long-old-negative/**/*.json
+            ${{ runner.temp }}/long-old-negative/**/*.log
+            ${{ runner.temp }}/provider-cache-efi/**/*.json
+            ${{ runner.temp }}/provider-cache-efi/**/*.log
+            ${{ runner.temp }}/initialization-bfm/**/*.json
+            ${{ runner.temp }}/initialization-bfm/**/*.log
+            ${{ runner.temp }}/initialization-old-negative/**/*.json
+            ${{ runner.temp }}/initialization-old-negative/**/*.log
+
+  x86-efi-picker-recovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-uefi
+      - run: sudo apt-get update && sudo apt-get install -y qemu-system-x86 ovmf
+      - name: Build production picker and authored child
+        run: cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features test-child --bin BOOTX64 --bin NXTEST
+      - name: Recover failed targets through the production picker
+        run: python3 nextcore/tools/verify_picker_recovery_ovmf.py --efi nextcore/target/x86_64-unknown-uefi/release/BOOTX64.efi --child nextcore/target/x86_64-unknown-uefi/release/NXTEST.efi --output "$RUNNER_TEMP/picker-recovery"
+      - name: Recover unusable configuration through actual firmware input
+        run: |
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --bin BOOTX64
+          cp nextcore/target/x86_64-unknown-uefi/release/BOOTX64.efi "$RUNNER_TEMP/config-baseline.efi"
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features config-recovery-probe --bin NXCONFIG
+          python3 Tools/verify_config_recovery_ovmf.py --efi "$RUNNER_TEMP/config-baseline.efi" --probe nextcore/target/x86_64-unknown-uefi/release/NXCONFIG.efi --child nextcore/target/x86_64-unknown-uefi/release/NXTEST.efi --output "$RUNNER_TEMP/config-recovery"
+      - name: Verify firmware watchdog ownership against an armed control
+        run: |
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features watchdog-probe --bin NXWATCHDOG
+          cp nextcore/target/x86_64-unknown-uefi/release/NXWATCHDOG.efi "$RUNNER_TEMP/watchdog-disabled.efi"
+          cargo build --locked --manifest-path nextcore/Cargo.toml --release -p nextcore-efi --target x86_64-unknown-uefi --features watchdog-probe-armed --bin NXWATCHDOG
+          python3 nextcore/tools/verify_watchdog_ovmf.py --disabled-efi "$RUNNER_TEMP/watchdog-disabled.efi" --armed-efi nextcore/target/x86_64-unknown-uefi/release/NXWATCHDOG.efi --timeout 60 --output "$RUNNER_TEMP/watchdog-proof"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nextcore-picker-recovery
+          path: |
+            ${{ runner.temp }}/picker-recovery/**/*.json
+            ${{ runner.temp }}/picker-recovery/**/*.log
+            ${{ runner.temp }}/watchdog-proof/**/*.json
+            ${{ runner.temp }}/watchdog-proof/**/*.log
+            ${{ runner.temp }}/config-recovery/**/*.json
+            ${{ runner.temp }}/config-recovery/**/*.log
+            ${{ runner.temp }}/config-recovery/**/*.ppm

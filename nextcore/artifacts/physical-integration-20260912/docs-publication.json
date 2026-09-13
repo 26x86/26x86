@@ -1,0 +1,43 @@
+{
+  "deployment_success": true,
+  "schema": "nextcore.docs-publication.v1",
+  "catalog_records": 396,
+  "url": "https://26x86.github.io/26x86/",
+  "published_main": "55066097f7af6f4c48c0277c83fc44a144b3611d",
+  "deployment_run": "https://github.com/26x86/26x86/actions/runs/34689308730",
+  "published_documents": 47,
+  "catalog_families": 20,
+  "missing_relative_article_links": 0,
+  "relative_article_links_checked": 258,
+  "physical_boot_verified": false,
+  "layout": [
+    {
+      "progress_heading_px": 40,
+      "width": 390,
+      "height": 844,
+      "horizontal_overflow": false,
+      "boundary_top_px": 715.96875
+    },
+    {
+      "progress_heading_px": 64,
+      "width": 1440,
+      "height": 1000,
+      "horizontal_overflow": false,
+      "boundary_top_px": 595.21875
+    }
+  ],
+  "catalog_identifiers": 175,
+  "browser_checks": {
+    "keyboard_detail_focus": true,
+    "empty_results": true,
+    "public_model_query": true,
+    "filter_reset": true,
+    "shared_release_variants": true,
+    "no_javascript_reference_fallback": true,
+    "architecture_filter": true,
+    "versioned_assets": true,
+    "fresh_browser_base_url": true,
+    "library_search": true,
+    "model_deep_link": true
+  }
+}

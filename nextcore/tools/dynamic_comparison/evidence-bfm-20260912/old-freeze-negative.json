@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "source_freeze": "history/7cd9ac0/source-freeze.json",
+  "expected_error": "owner runtime freeze identity",
+  "return_code": 1,
+  "compilation_started": false
+}

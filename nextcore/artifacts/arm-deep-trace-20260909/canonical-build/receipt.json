@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "canonical_efi_commit": "03a376d6652fdaabe8b567c047dad9d41926dc84",
+  "command": [
+    "python3",
+    "/home/sharh/work/bp35-deep-trace/verify_deep_budget_ovmf.py",
+    "--tools",
+    "/home/sharh/work/bp34-integration/nextcore/tools",
+    "--efi",
+    "/home/sharh/work/module-validation-bp35-efi-20260909/NXARMJIT-deep.efi",
+    "--default-efi",
+    "/home/sharh/work/module-validation-bp35-efi-20260909/NXARMJIT-combined.efi",
+    "--clamped-efi",
+    "/home/sharh/work/bp35-canonical-deep-proof/clamped-efi/target/x86_64-unknown-uefi/release/NXARMJIT.efi",
+    "--output",
+    "/home/sharh/work/bp35-canonical-deep-proof/authored-r2",
+    "--core-source",
+    "/home/sharh/work/bp35-core-deep-trace",
+    "--efi-source",
+    "/home/sharh/work/module-validation-bp35-efi-20260909/EFI"
+  ],
+  "exit_code": 0,
+  "seconds": 41.75,
+  "actual_firmware_cases": 5,
+  "cli_rejections": 28,
+  "receipt_only_negative": 1,
+  "authored_report_sha256": "9117237f4016792e7b9df15da3aa7d2bace24b9fb4f205505f32578f004004cd",
+  "initial_failed_control_receipt_preserved": true,
+  "original_inputs_used": false
+}

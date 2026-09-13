@@ -1,0 +1,35 @@
+{
+  "schema": "nextcore.ci-essential-receipts-manifest.v1",
+  "source_parent": "b18e6d648874a8f4179498c4f3639e75f1bdc593",
+  "copied_json_count": 6,
+  "files": {
+    "hierarchy-arm/receipt.json": {
+      "bytes": 288310,
+      "sha256": "c5f25e9a9b70e9ec5b4600f2e5e876d7a6085943897e533845f31836904c0efa"
+    },
+    "hierarchy-efi/receipt.json": {
+      "bytes": 644808,
+      "sha256": "71a9b599072472f23e25b5647c7f6c1a321ce8e018675e8769169b012992c9e6"
+    },
+    "hierarchy-native/arm-comparison.json": {
+      "bytes": 41429,
+      "sha256": "e17c30c4ac89d184f8ba23be098ef5cb5334bde3014c9bd4e8e191e9f66b6965"
+    },
+    "hierarchy-native/receipt.json": {
+      "bytes": 22450,
+      "sha256": "09f2ad78eabd463df378b8cfffa365e71d9e95b721ae7cf3bb83f12d388d96de"
+    },
+    "optional-tcr/receipt.json": {
+      "bytes": 12296,
+      "sha256": "2243468736cafdb41746cfa3f5e2a1d7c15d22c06610ffa920fbe7605caf2f5b"
+    },
+    "README.md": {
+      "bytes": 2851,
+      "sha256": "247c791224532aabe73e331b4725dccee172b02a7def6f9700785c42a94a571c"
+    },
+    "verification.json": {
+      "bytes": 12652,
+      "sha256": "c961a38b30dc448420f6dff38c9556bc29d83685029ebf0495599200d412e6b3"
+    }
+  }
+}

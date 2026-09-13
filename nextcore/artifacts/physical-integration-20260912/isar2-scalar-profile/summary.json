@@ -1,0 +1,312 @@
+{
+  "schema": "nextcore.isar2-scalar-profile.v1",
+  "passed": true,
+  "ise_commit": "5cd1e44413958450875392d8a431dba15bb76f2e",
+  "efi_commit": "18be73b632934fba4a901addb3f66d055934cf3a",
+  "native_assertions": 918,
+  "mapped_checks": 10,
+  "prior_efi_checks": 8,
+  "contract": "Exact read-only ISAR2 zero in the bounded scalar profile; live EL and HCR/SCR gates. All 32 destinations, native API, reference and three provider cache modes checked.",
+  "limitation": "Cortex-A72 ISAR2 zero is an observed model value, not full extension or PAC conformance. Mapped PAC remains disabled. Authored budget exhaustion is not operating-system boot.",
+  "original_images_used": false,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "inventory_scope": "Every published payload file; summary.json is excluded to avoid a self-referential hash.",
+  "files": [
+    {
+      "path": "build-receipt.json",
+      "bytes": 21978,
+      "sha256": "43d2d6c0ea6ad5cbc0e878c6585fe2d08b6c67ecb9267718d9437c943b310983"
+    },
+    {
+      "path": "efi/cached/command.json",
+      "bytes": 606,
+      "sha256": "30a9c4f4885459651e52dc9c4e5b1a2723910c608892efa85608a98b3f22b02a"
+    },
+    {
+      "path": "efi/cached/report.json",
+      "bytes": 17087,
+      "sha256": "714b13d7a8cbdfb1ee6ab086e0cfc3c0c764cd63bd0f97c27bb05889e31ff8d1"
+    },
+    {
+      "path": "efi/cached/serial.log",
+      "bytes": 11191,
+      "sha256": "223a18430b154d04d0b089dd54525882ae2ee8a4a3c90f44a92f05b5aa0e40cd"
+    },
+    {
+      "path": "efi/cached/stderr.log",
+      "bytes": 78,
+      "sha256": "6adb87629c0caf8b5186f731142e117e5b4a34241244b6be4779248f81a1b47a"
+    },
+    {
+      "path": "efi/cached/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "efi/commands.json",
+      "bytes": 6205,
+      "sha256": "a66e4de8842205262493816bb1b56c93cd32f75f6d40dc5df080a451c6b81ed1"
+    },
+    {
+      "path": "efi/old/command.json",
+      "bytes": 597,
+      "sha256": "e96f80bfb435aa0eb0978f3bcb002e579611d1cb4a7c71867108c49342e6b7cb"
+    },
+    {
+      "path": "efi/old/report.json",
+      "bytes": 8281,
+      "sha256": "1d30b142e9404e3a0eccd83438ca0f7ad73271ddb4566eaefeac5600772bd469"
+    },
+    {
+      "path": "efi/old/serial.log",
+      "bytes": 3107,
+      "sha256": "b3b60f7d81aabd1145ba06ff671ec14461b4420a233a28585b7334a26d92c891"
+    },
+    {
+      "path": "efi/old/stderr.log",
+      "bytes": 78,
+      "sha256": "b59a48980dc43ad489ed3714b015fbd7b1f6b4d41f45c2cf85f1d64d637aed8d"
+    },
+    {
+      "path": "efi/old/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "efi/receipt.json",
+      "bytes": 39073,
+      "sha256": "79764aada6832843ab311e6399ea5f5b9377dfddc38552423d5256e236e2cde2"
+    },
+    {
+      "path": "efi/uncached/command.json",
+      "bytes": 612,
+      "sha256": "21930ad65568923c692d6273209cd7e9c37b669283aef8efce974f29a4e8ad1f"
+    },
+    {
+      "path": "efi/uncached/report.json",
+      "bytes": 17111,
+      "sha256": "1a20ebe5926c512e9fc0f0dfea54942a8f5d2c2bd47078f881a6d8894bbf76c5"
+    },
+    {
+      "path": "efi/uncached/serial.log",
+      "bytes": 11195,
+      "sha256": "7b78d438b2b45b50db0500077d111fe5d3937e049ebbc54d5457c91fd7cdff56"
+    },
+    {
+      "path": "efi/uncached/stderr.log",
+      "bytes": 78,
+      "sha256": "0a6d455e1cd7a3dea96156b3eac814061f005ac2037aadceff97e305b93d47ae"
+    },
+    {
+      "path": "efi/uncached/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "efi/unobserved/command.json",
+      "bytes": 618,
+      "sha256": "202e31a9397aadf438ed1d3433b784e6092e656905e189298365db87bf7de3ae"
+    },
+    {
+      "path": "efi/unobserved/report.json",
+      "bytes": 8148,
+      "sha256": "78e46298e22656684ac6b3d6ba8cf9b07937a37b2af0117e22658d1d976fc0b7"
+    },
+    {
+      "path": "efi/unobserved/serial.log",
+      "bytes": 2619,
+      "sha256": "b9ace96a40a59a0891b195d719e184892a3fc1b5f73ff7a6e4bf908412b3ba87"
+    },
+    {
+      "path": "efi/unobserved/stderr.log",
+      "bytes": 78,
+      "sha256": "1382be8b59731c141d77effff9fe6d5468009b2f730c4f1d3235a2dab334be9c"
+    },
+    {
+      "path": "efi/unobserved/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "efi-pin-inventory.json",
+      "bytes": 190,
+      "sha256": "a5c4a50b5a13a762e1325b4d1546e3d52a26ed91accb827452207f117d066f9a"
+    },
+    {
+      "path": "isar0-regression/native.log",
+      "bytes": 33,
+      "sha256": "2484be0778c136ee5017886d2b9f07c0aae6beb605d6c4c4cb7241e970d4af1b"
+    },
+    {
+      "path": "isar0-regression/oracle-results.bin",
+      "bytes": 512,
+      "sha256": "709055b5609aba0964216429cd275ef5323a8c8b813dac59e2ac1a2a0e0e3a79"
+    },
+    {
+      "path": "isar0-regression/oracle.S",
+      "bytes": 7690,
+      "sha256": "01e7ba7a32603ef28dd35d9d96895ced0d6036a3ff431685af8273a31556b82a"
+    },
+    {
+      "path": "isar0-regression/oracle.h",
+      "bytes": 1933,
+      "sha256": "3b270c19519ddda12d1a9c1ed4b436015f6a1340339572c5ac996d90ddf9405f"
+    },
+    {
+      "path": "isar0-regression/provider.log",
+      "bytes": 2549,
+      "sha256": "98d19a2eb1cc3413f2993ac755ee4163d261570986ddbf57447a602bd08b8413"
+    },
+    {
+      "path": "isar0-regression/receipt.json",
+      "bytes": 21826,
+      "sha256": "7abd08572591dcb554b7cf9b0cbe4df825af85d0f08a7ad290ba93658be2ce4b"
+    },
+    {
+      "path": "isar0-regression/reference.log",
+      "bytes": 2742,
+      "sha256": "b3c36dae4f44d5931a3115f90efa8e279da66c5039ae8faef0c36913684bacd3"
+    },
+    {
+      "path": "isar0-regression/small-slot.log",
+      "bytes": 2549,
+      "sha256": "568efac64b7b684d828a4fc0d8012d65f863ac60d5bce51f97f7db27cb949bcd"
+    },
+    {
+      "path": "isar0-regression/uncached.log",
+      "bytes": 2549,
+      "sha256": "df802c1f5450831141f97046edb0d7acc425c741233564e19898be3005368a0d"
+    },
+    {
+      "path": "native/native.log",
+      "bytes": 33,
+      "sha256": "5da6dca5fe5404f5e0318286fda4091d2a02e0814c7204574063706acf7dfbdc"
+    },
+    {
+      "path": "native/oracle-results.bin",
+      "bytes": 512,
+      "sha256": "0e97841b10b6841456da1108e1b45f1a5b505274445d96da3380e1b94fcd7b0e"
+    },
+    {
+      "path": "native/oracle.S",
+      "bytes": 7690,
+      "sha256": "68030fcc7c2fa12e9861d2ef0b61419f5f85f7505a9c3ce12469a962c5ada1cb"
+    },
+    {
+      "path": "native/oracle.h",
+      "bytes": 1824,
+      "sha256": "2e3cbb2ecd4bdc5d8ad96af8cbbf3b61f0871f8ca7f14f53642f71fd5b315953"
+    },
+    {
+      "path": "native/provider.log",
+      "bytes": 2549,
+      "sha256": "b40366f28137b6263a9f00d3d7d64fbed4de438a3529e74cd3fa5ad909b8c9ee"
+    },
+    {
+      "path": "native/receipt.json",
+      "bytes": 20859,
+      "sha256": "9ebe6a343fe9b8bf0760fc3fe9545b36af08b49e14de37173429c4234efe78f9"
+    },
+    {
+      "path": "native/reference.log",
+      "bytes": 2742,
+      "sha256": "137d483096f03c7c7a495a6d7c72fb5da6ce349e8467793de532cc5e1ac0f1d0"
+    },
+    {
+      "path": "native/small-slot.log",
+      "bytes": 2549,
+      "sha256": "eb508098aa0fc9f47a155fba5a3348d086d1401ea7bf587709f2d37753005d44"
+    },
+    {
+      "path": "native/uncached.log",
+      "bytes": 2549,
+      "sha256": "4fd7a0381d9498c1f376c388b5ea76478178bb5f24e402070b5a87a64b57ffcd"
+    },
+    {
+      "path": "pinned-build-comparison.json",
+      "bytes": 683,
+      "sha256": "b94054eab983a528854fbbb64d10b4878ed956b6c5ff80b7dcd3a2a6f8382fdb"
+    },
+    {
+      "path": "prior-isar0-efi/receipt.json",
+      "bytes": 2301,
+      "sha256": "1470206163814bc021c9a818178141f2efde1ae411cfc2f58879e598a243f754"
+    },
+    {
+      "path": "prior-isar0-efi/run/command.json",
+      "bytes": 591,
+      "sha256": "5cbcfdc56a9d99ec60a647c28df41ec26f82b868a8c41ec64e8f5f3685846f94"
+    },
+    {
+      "path": "prior-isar0-efi/run/report.json",
+      "bytes": 16966,
+      "sha256": "1bbf5b5633776d56836c28289d30f2125b15a36f4ae5ea7a77cc5be5e7329392"
+    },
+    {
+      "path": "prior-isar0-efi/run/serial.log",
+      "bytes": 11036,
+      "sha256": "4b160f4b0e5aba1573c70325e628fb2669df362c0a2ac02c38d62742f4609dd9"
+    },
+    {
+      "path": "prior-isar0-efi/run/stderr.log",
+      "bytes": 76,
+      "sha256": "22c2870b852cecd81ebb818573443851adf30597b5dbbb484d960ee3769689aa"
+    },
+    {
+      "path": "prior-isar0-efi/run/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "prior-isar0-efi/run.log",
+      "bytes": 216,
+      "sha256": "ca4019f7d4acfe24429c1c32eabedcb7fbd8a5ec0876a6dca0c22cb8aaa58160"
+    },
+    {
+      "path": "zfr0-regression/native.log",
+      "bytes": 33,
+      "sha256": "c50568e656dd50343236303a3e603ff1d78f558171824097a922bfab3705c7d1"
+    },
+    {
+      "path": "zfr0-regression/oracle-results.bin",
+      "bytes": 512,
+      "sha256": "0e97841b10b6841456da1108e1b45f1a5b505274445d96da3380e1b94fcd7b0e"
+    },
+    {
+      "path": "zfr0-regression/oracle.S",
+      "bytes": 7658,
+      "sha256": "fd7852852cd00a23d702272320fae4a1d911f6ea6b8617cec67513c733f7391c"
+    },
+    {
+      "path": "zfr0-regression/oracle.h",
+      "bytes": 1715,
+      "sha256": "1c847b55dbe2619b80ac3d59bb0583d1792d1e3c417735679d9cff7a9fe0a781"
+    },
+    {
+      "path": "zfr0-regression/provider.log",
+      "bytes": 2496,
+      "sha256": "e4b63d31f9d3832ef9a138319cf1182ed622599f7b92293bfb47d6baf26a6a19"
+    },
+    {
+      "path": "zfr0-regression/receipt.json",
+      "bytes": 20360,
+      "sha256": "2d8a658fb5d2f21283855c394ded39c3e34421ff2410a7e8b973eb5032d466e2"
+    },
+    {
+      "path": "zfr0-regression/reference.log",
+      "bytes": 2692,
+      "sha256": "869e636e7d4415fd8b0f0985b48c86e6bb791bfc693ce73a7d5148f00af8e957"
+    },
+    {
+      "path": "zfr0-regression/small-slot.log",
+      "bytes": 2496,
+      "sha256": "b3bbf1791a13eddf51d40acbf4669c31ff51dfef5d0542b3525ed9ebadb13c7d"
+    },
+    {
+      "path": "zfr0-regression/uncached.log",
+      "bytes": 2496,
+      "sha256": "23c19a0a554e1d820dc1ce88e23e7c0789945fc2a3dd53b971575f8664a431a8"
+    }
+  ]
+}

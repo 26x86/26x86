@@ -1,0 +1,95 @@
+[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01HBdsDxe: loading Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+BdsDxe: starting Boot0001 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+NXARMJIT: WATCHDOG_DISABLED
+NXARMJIT: WATCHDOG_DISABLED
+NXARMJIT: EFI_ENTRY host=x86_64 guest=arm64
+NXARMJIT: CONFIG_PARSED
+NXARMJIT: KC_VALIDATED subtype=0x0 arena=49152
+NXARMJIT: TRACE_TIERED_DIAGNOSTIC maximum=4096
+NXARMJIT: TRACE_DEEP_DIAGNOSTIC_BUILD maximum=16384
+NXARMJIT: TRACE_LONG_DIAGNOSTIC_BUILD maximum=65536
+NXARMJIT: TRACE_INITIALIZATION_DIAGNOSTIC_BUILD maximum=67108864
+NXARMJIT: TRACE_MAPPED_DIAGNOSTIC_BUILD profile=mapped-normal-nc-v1
+NXARMJIT: TRACE_MAPPED_DIAGNOSTIC_SELECTED profile=mapped-normal-nc-v1
+NXARMJIT: TRACE_LONG_DIAGNOSTIC_SELECTED tier=65536
+NXARMJIT: TRACE_DT_CHECKED templates=0 platform_complete=false
+NXARMJIT: TRACE_STAGING_VERIFIED source_unchanged=true
+NXARMJIT: TRACE_HANDOFF_UNPROVISIONED abi=unprovisioned-sptm-prefix sptm_args=false sptm_services=false platform_device_tree=false
+NXARMJIT: TRACE_PLATFORM_PROFILE name=nextcore-irq-compat-v1 reset_origin=software_defined initial_override=0x0 initial_pstate=0x3c5 irq=0 fiq=0
+NXARMJIT: TRACE_ENTER entry=0xfffffe0002004400 x0=0 x1=0x4200c000 x2=0 x3=0 budget=65536
+NXARMJIT: TRACE_MAPPINGS_READY granule=16384 profile=3 physical_base=0x40000000 virtual_base=0xfffffe0000000000 memory_size=67108864 table_base=0x44000000 table_bytes=131072 ttbr0=0x44000000 ttbr1=0x44004000 tcr=0x540118011 sctlr=0x30d00801 entry=0xfffffe0002004400
+NXARMJIT: TRACE_MEMORY_PROVIDER abi=2 mode=mapped-normal-nc-v1
+NXARMJIT: TRACE_MEMORY_OBSERVATION total=131 retained=64
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=68 operation=3 pc=0xfffffe00020044f4 address=0x42023ff0 width=8 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=69 operation=1 pc=0xfffffe00020044f8 address=0xfffffe00020044f8 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=70 operation=2 pc=0xfffffe00020044f8 address=0x42023ff0 width=8 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=71 operation=1 pc=0xfffffe00020044fc address=0xfffffe00020044fc width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=72 operation=1 pc=0xfffffe0002004500 address=0xfffffe0002004500 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=73 operation=1 pc=0xfffffe0002004504 address=0xfffffe0002004504 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=74 operation=1 pc=0xfffffe0002004508 address=0xfffffe0002004508 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=75 operation=1 pc=0xfffffe000200450c address=0xfffffe000200450c width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=76 operation=1 pc=0xfffffe0002004510 address=0xfffffe0002004510 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=77 operation=1 pc=0xfffffe0002004514 address=0xfffffe0002004514 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=78 operation=3 pc=0xfffffe0002004514 address=0xfffffe0002004620 width=8 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=79 operation=1 pc=0xfffffe0002004518 address=0xfffffe0002004518 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=80 operation=1 pc=0xfffffe000200451c address=0xfffffe000200451c width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=81 operation=1 pc=0xfffffe0002004520 address=0xfffffe0002004520 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=82 operation=1 pc=0xfffffe0002004524 address=0xfffffe0002004524 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=83 operation=2 pc=0xfffffe0002004524 address=0xfffffe0002004620 width=8 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=84 operation=1 pc=0xfffffe0002004528 address=0xfffffe0002004528 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=85 operation=1 pc=0xfffffe000200452c address=0xfffffe000200452c width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=86 operation=1 pc=0xfffffe0002004530 address=0xfffffe0002004530 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=87 operation=1 pc=0xfffffe0002004534 address=0xfffffe0002004534 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=88 operation=1 pc=0xfffffe0002004538 address=0xfffffe0002004538 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=89 operation=1 pc=0xfffffe000200453c address=0xfffffe000200453c width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=90 operation=1 pc=0xfffffe0002004540 address=0xfffffe0002004540 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=91 operation=1 pc=0xfffffe0002004544 address=0xfffffe0002004544 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=92 operation=1 pc=0xfffffe0002004548 address=0xfffffe0002004548 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=93 operation=1 pc=0xfffffe000200454c address=0xfffffe000200454c width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=94 operation=1 pc=0xfffffe0002004550 address=0xfffffe0002004550 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=95 operation=1 pc=0xfffffe0002004554 address=0xfffffe0002004554 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=96 operation=1 pc=0xfffffe0002004558 address=0xfffffe0002004558 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=97 operation=1 pc=0xfffffe000200455c address=0xfffffe000200455c width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=98 operation=1 pc=0xfffffe0002004560 address=0xfffffe0002004560 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=99 operation=1 pc=0xfffffe0002004564 address=0xfffffe0002004564 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=100 operation=1 pc=0xfffffe0002004568 address=0xfffffe0002004568 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=101 operation=1 pc=0xfffffe000200456c address=0xfffffe000200456c width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=102 operation=1 pc=0xfffffe0002004570 address=0xfffffe0002004570 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=103 operation=1 pc=0xfffffe0002004574 address=0xfffffe0002004574 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=104 operation=1 pc=0xfffffe0002004578 address=0xfffffe0002004578 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=105 operation=1 pc=0xfffffe000200457c address=0xfffffe000200457c width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=106 operation=1 pc=0xfffffe0002004580 address=0xfffffe0002004580 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=107 operation=1 pc=0xfffffe0002004584 address=0xfffffe0002004584 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=108 operation=1 pc=0xfffffe0002004588 address=0xfffffe0002004588 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=109 operation=1 pc=0xfffffe000200458c address=0xfffffe000200458c width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=110 operation=1 pc=0xfffffe0002004590 address=0xfffffe0002004590 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=111 operation=1 pc=0xfffffe0002004594 address=0xfffffe0002004594 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=112 operation=1 pc=0xfffffe0002004598 address=0xfffffe0002004598 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=113 operation=1 pc=0xfffffe000200459c address=0xfffffe000200459c width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=114 operation=1 pc=0xfffffe00020045a0 address=0xfffffe00020045a0 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=115 operation=1 pc=0xfffffe00020045a4 address=0xfffffe00020045a4 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=116 operation=1 pc=0xfffffe00020045a8 address=0xfffffe00020045a8 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=117 operation=1 pc=0xfffffe00020045ac address=0xfffffe00020045ac width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=118 operation=1 pc=0xfffffe00020045b0 address=0xfffffe00020045b0 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=119 operation=1 pc=0xfffffe00020045b4 address=0xfffffe00020045b4 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=120 operation=1 pc=0xfffffe00020045b8 address=0xfffffe00020045b8 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=121 operation=1 pc=0xfffffe00020045bc address=0xfffffe00020045bc width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=122 operation=1 pc=0xfffffe00020045c0 address=0xfffffe00020045c0 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=123 operation=1 pc=0xfffffe00020045c4 address=0xfffffe00020045c4 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=124 operation=1 pc=0xfffffe00020045c8 address=0xfffffe00020045c8 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=125 operation=1 pc=0xfffffe00020045cc address=0xfffffe00020045cc width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=126 operation=1 pc=0xfffffe00020045d0 address=0xfffffe00020045d0 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=127 operation=1 pc=0xfffffe00020045d4 address=0xfffffe00020045d4 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=128 operation=1 pc=0xfffffe00020045d8 address=0xfffffe00020045d8 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=129 operation=1 pc=0xfffffe00020045dc address=0xfffffe00020045dc width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=130 operation=1 pc=0xfffffe00020045e0 address=0xfffffe00020045e0 width=4 count=1 result=0
+NXARMJIT: TRACE_MEMORY_REQUEST sequence=131 operation=1 pc=0xfffffe00020045e4 address=0xfffffe00020045e4 width=4 count=1 result=0
+NXARMJIT: TRACE_MAPPED_REPLY result=0 fault=0 address=0x0 output_pa=0x0 descriptor_pa=0x0 level=4294967295 context=0 metadata_flags=0 esr=0x0
+NXARMJIT: TRACE_PROTECTION_CALLS writable=123 executable=122 failures=0 includes_restore=true
+NXARMJIT: TRACE_RETURN status=13 retired=121 pc=0xfffffe00020045e4 blocks=122 instruction=0xd538064b
+NXARMJIT: TRACE_REGISTERS x0=0x20002 x1=0xfffffe0002004620 x2=0x1122334455667788 x3=0xfffffe0002004620
+NXARMJIT: TRACE_PLATFORM_STATE profile=1 override=0x0 pending=0 pstate=0x600003c5 sp=0x42024000
+NXARMJIT: TRACE_EXCEPTION_STATE elr=0xfffffe00020045e4 spsr=0x600003c5 vector=0x0 esr=0x6138064b handler_executed=false
+NXARMJIT: TRACE_MEMORY_RESULT abi=2 provider_status=0 guest_far=0x0 last_address=0xfffffe00020045e4 fetch_requests=122 data_requests=9 completed_data_operations=9
+NXARMJIT: TRACE_ONLY macos_boot_verified=false metal_verified=false
+NXARMJIT: ERROR status=ABORTED

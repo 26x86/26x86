@@ -1,0 +1,26 @@
+{
+  "schema": "nextcore.original-chain-membership.v1",
+  "input_sha256": "2b1284215823591148d2649c2d8efd318db94b300574d069d3b90d9a324f4a09",
+  "input_preserved": true,
+  "chain_nodes": 1010443,
+  "pages_with_fixups": 657,
+  "chains": 657,
+  "pointer_formats": {
+    "8": 1010443
+  },
+  "authenticated_nodes": 899149,
+  "observed_stores": 2,
+  "all_observed_stores_are_chain_nodes": true,
+  "observed_node_ordinals": [
+    51887,
+    51888
+  ],
+  "observed_successor_relation": true,
+  "scope": "Static input-chain membership of observed stores; does not prove stored values, full traversal, startup ABI or physical boot.",
+  "macos_boot_verified": false,
+  "fault_is_encoded_chain_node": true,
+  "fault_node_ordinal": 51889,
+  "fault_address_modulo_8": 4,
+  "fault_execution_status": 12,
+  "faulting_instruction_retired": false
+}

@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "tests_run": 14,
+  "failures": 0,
+  "errors": 0,
+  "oracle": "nextcore/artifacts/arm-dynamic-oracle-20260909",
+  "scope": "Existing comparator unittest suite on fresh six-case replay"
+}

@@ -1,0 +1,254 @@
+{
+  "schema": "nextcore.authored-mapped-normal-profile.v1",
+  "passed": true,
+  "latest_efi_run": "r5",
+  "historical_efi_run": "r4",
+  "native_run": "r4",
+  "source_commits": {
+    "ise": "f102f0769fcae98597478f6738ee1a69247e5207",
+    "efi": "e1fa1f3018ff5950e9aa05fc692eed52b9dc6364",
+    "core": "4ae6e9aff31be93cf570b56975b711902f3fb7e7",
+    "tool": "9e6222a69d2f62490139c477d6e217a28e3af323"
+  },
+  "native_source_files_checked": 90,
+  "native_sources_match_working_and_git_blobs": true,
+  "efi_checks": {
+    "both_authored_runs_pass": true,
+    "full_reported_execution_and_window_equal": true,
+    "uncached_exact_protection": true,
+    "cached_fewer_real_transitions": true,
+    "cached_balanced_restore": true,
+    "old_build_not_accepted": true,
+    "sources_and_binaries_preserved": true,
+    "authored_inputs_preserved": true,
+    "observer_preserves_execution": true,
+    "observer_preserves_protection": true
+  },
+  "efi_mapped_modes": [
+    "cached",
+    "uncached",
+    "unobserved"
+  ],
+  "retired_per_mapped_mode": 65536,
+  "data_operations_per_mapped_mode": 26207,
+  "termination": "status 5: diagnostic instruction budget exhausted",
+  "protection": {
+    "cached": {
+      "writable": 28,
+      "executable": 27
+    },
+    "uncached": {
+      "writable": 65537,
+      "executable": 65536
+    },
+    "unobserved": {
+      "writable": 28,
+      "executable": 27
+    }
+  },
+  "native_cases": 9,
+  "native_modes": [
+    "cached",
+    "uncached",
+    "small-slot"
+  ],
+  "native_m0_regression_tests": 20,
+  "pauth": {
+    "passed": true,
+    "assertions": 125,
+    "native_jit_executed": true,
+    "software_qarma5": true,
+    "wx_enforced": true
+  },
+  "oracle": {
+    "feature_level": "APA5",
+    "runtime_profile": "APA1 software QARMA5",
+    "vectors": 24,
+    "enabled_sign_auth_compared": 16,
+    "xpac_disabled_compared": 24,
+    "upper_enabled_unverified": 8
+  },
+  "old_efi_rejection": "Missing required mapped acknowledgements; the old EFI executes an M0 trace. This is not an EFI configuration parser rejection.",
+  "original_images_used": false,
+  "original_entry_abi_verified": false,
+  "physical_boot_verified": false,
+  "macos_boot_verified": false,
+  "normal_startup_ready": false,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2872,
+      "sha256": "9053817fe56e2925876fa1de4780ed90e2ab9a74ee6909a11f549ccb2cd353da"
+    },
+    {
+      "path": "efi/cached/command.json",
+      "bytes": 585,
+      "sha256": "46a179bc866984687ba81b46e28988d034750982fa1a2ef9aa6b139b1efbeb43"
+    },
+    {
+      "path": "efi/cached/report.json",
+      "bytes": 17041,
+      "sha256": "d9e1c3a2c67b94d924b8e30bb579067685f80fa082c20df8018499cf912a0a4d"
+    },
+    {
+      "path": "efi/cached/serial.log",
+      "bytes": 11176,
+      "sha256": "aa0b2f67e44e791fd45fa789d4833904a1282bc91b0d05ec4132dd26464bd327"
+    },
+    {
+      "path": "efi/old/command.json",
+      "bytes": 576,
+      "sha256": "aecf2ae7371c0f3ed470cb5f6bda7833bb518f14ab43dd384b290ade2a9bdee8"
+    },
+    {
+      "path": "efi/old/report.json",
+      "bytes": 8253,
+      "sha256": "3b7f8acf37ac0b3450c50625f9e02b0e56e57e50cc4ed5fd146431d29a9b3401"
+    },
+    {
+      "path": "efi/old/serial.log",
+      "bytes": 3107,
+      "sha256": "b3b60f7d81aabd1145ba06ff671ec14461b4420a233a28585b7334a26d92c891"
+    },
+    {
+      "path": "efi/receipt.json",
+      "bytes": 39037,
+      "sha256": "42c17285f6f51df8d25b53a2a85600f759d586a790d3d6a0187d5cd377b6295d"
+    },
+    {
+      "path": "efi/uncached/command.json",
+      "bytes": 591,
+      "sha256": "4ca73394a3853b866aa67486ef2b5a503f9ad0d94b4777b6d5d8e7584de9d784"
+    },
+    {
+      "path": "efi/uncached/report.json",
+      "bytes": 17052,
+      "sha256": "1415bdccbd77de96aef6b0639a0d8160ccc05bb74178e1d2fd6f02ab0dc187b3"
+    },
+    {
+      "path": "efi/uncached/serial.log",
+      "bytes": 11182,
+      "sha256": "4f9e26c1aae149a864e50b4473d0579cff7953a6661e06ad3997a640dc629ab0"
+    },
+    {
+      "path": "efi/unobserved/command.json",
+      "bytes": 597,
+      "sha256": "cec08a0f5cfc6a9562b1927299617a9321645406d79cf90fdbf4c5d6d1ac6b16"
+    },
+    {
+      "path": "efi/unobserved/report.json",
+      "bytes": 8087,
+      "sha256": "3aacfe2da64ebe884f3fc8ec2f773258a37eecc034064126a8fe93d86f2368d8"
+    },
+    {
+      "path": "efi/unobserved/serial.log",
+      "bytes": 2604,
+      "sha256": "a4b6ee264a61da8823d8f7e041ecb612ace70d5b44d6ca1a81b94f624a42e2c2"
+    },
+    {
+      "path": "efi-r4/cached/command.json",
+      "bytes": 585,
+      "sha256": "b17dbb8409df08b8050a0f448c1b5e5752314b762e5ad94d8e856327b63d91b6"
+    },
+    {
+      "path": "efi-r4/cached/report.json",
+      "bytes": 17029,
+      "sha256": "f9abc4139e3999f75fbaf2eb241a7215b89b2ce75af7b241b95d1ed28497b08b"
+    },
+    {
+      "path": "efi-r4/cached/serial.log",
+      "bytes": 11176,
+      "sha256": "aa0b2f67e44e791fd45fa789d4833904a1282bc91b0d05ec4132dd26464bd327"
+    },
+    {
+      "path": "efi-r4/old/command.json",
+      "bytes": 576,
+      "sha256": "83d24ed95e105efe3903676b1109fc1fe35795eb251c7d6fc1e264dbe5bd937d"
+    },
+    {
+      "path": "efi-r4/old/report.json",
+      "bytes": 8253,
+      "sha256": "4529896b233a330f1e19a1f6d3376c18f439e05efd6c19e41c9aab7ff60a4125"
+    },
+    {
+      "path": "efi-r4/old/serial.log",
+      "bytes": 3107,
+      "sha256": "b3b60f7d81aabd1145ba06ff671ec14461b4420a233a28585b7334a26d92c891"
+    },
+    {
+      "path": "efi-r4/receipt.json",
+      "bytes": 39019,
+      "sha256": "86aa90d88ef9ef940705d22421597bbd2a3797e1f840504c35d53593c66a26e9"
+    },
+    {
+      "path": "efi-r4/uncached/command.json",
+      "bytes": 591,
+      "sha256": "df5f34f197463fcb5c6e2ffd3d07dd98eb826b726a85b29a0d601c56184670db"
+    },
+    {
+      "path": "efi-r4/uncached/report.json",
+      "bytes": 17039,
+      "sha256": "635b650530d42aad8e1415ab0aa4e7ca21a951ad55724680a2bb19dc5a02a939"
+    },
+    {
+      "path": "efi-r4/uncached/serial.log",
+      "bytes": 11182,
+      "sha256": "4f9e26c1aae149a864e50b4473d0579cff7953a6661e06ad3997a640dc629ab0"
+    },
+    {
+      "path": "efi-r4/unobserved/command.json",
+      "bytes": 597,
+      "sha256": "b5ed0e10ac7201c3a142632b9c3fe72ddf1480434224303ae4eaa1fb818acf32"
+    },
+    {
+      "path": "efi-r4/unobserved/report.json",
+      "bytes": 8075,
+      "sha256": "eeb32759ba14b3345d316e3e2c70bdd04d25f3f19d9aa40b6b3f9a5b133a0f33"
+    },
+    {
+      "path": "efi-r4/unobserved/serial.log",
+      "bytes": 2604,
+      "sha256": "a4b6ee264a61da8823d8f7e041ecb612ace70d5b44d6ca1a81b94f624a42e2c2"
+    },
+    {
+      "path": "native/binary-hashes.json",
+      "bytes": 781,
+      "sha256": "aa45388c387680cdab639888c90f0dc800b90fcadfa33eabb3842b1ed387dd74"
+    },
+    {
+      "path": "native/cached/tests.log",
+      "bytes": 2515,
+      "sha256": "592fbcddacb05237e377245c11e275c0bd1d42ed5c62f2c029b74dcab3d3fce4"
+    },
+    {
+      "path": "native/m0-tests.log",
+      "bytes": 1542,
+      "sha256": "ed0ccd467171a28b60454160ea20c0369eaae0375e9ec63215205aa901e11da7"
+    },
+    {
+      "path": "native/pauth-test.log",
+      "bytes": 102,
+      "sha256": "65370bce6c9854c0bfd2021ed5f59d02ce43c337f87c37f2c0461fbc99abb231"
+    },
+    {
+      "path": "native/receipt.json",
+      "bytes": 25118,
+      "sha256": "fa0887770b9b6723b7b50c7be51ec6e7d0958e0fd755fb809eb482205f130736"
+    },
+    {
+      "path": "native/small-slot/tests.log",
+      "bytes": 2515,
+      "sha256": "cc7fd78d5c652ee47db0b63b74f6c666a130cbe8aa92a2edd95078d6c62016a1"
+    },
+    {
+      "path": "native/source-verification.json",
+      "bytes": 18413,
+      "sha256": "3382d577d4d5af7ed07f146bbac1d0e99518b092f63e6445701cf6e5b4648b6c"
+    },
+    {
+      "path": "native/uncached/tests.log",
+      "bytes": 2515,
+      "sha256": "592fbcddacb05237e377245c11e275c0bd1d42ed5c62f2c029b74dcab3d3fce4"
+    }
+  ]
+}

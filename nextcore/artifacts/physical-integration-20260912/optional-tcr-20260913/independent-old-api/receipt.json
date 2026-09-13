@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "baseline": "778473fd9c43d7ba3a4721852f838be996fed45d",
+  "archive_sha256": "193691f053a7bf1204c6e4faf09d42329e7c5a9c747ff5d76a522c8aa4c927c3",
+  "commands": [
+    {
+      "command": [
+        "clang-18",
+        "-std=c11",
+        "-O2",
+        "-I",
+        "/tmp/nextcore-mmfr1-old-tcr-20260913-r1/runtime",
+        "/tmp/nextcore-mmfr1-old-tcr-20260913-r1/probe.c",
+        "/tmp/nextcore-mmfr1-old-tcr-20260913-r1/runtime/arch.c",
+        "-o",
+        "/tmp/nextcore-mmfr1-old-tcr-20260913-r1/c-probe"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "/tmp/nextcore-mmfr1-old-tcr-20260913-r1/c-probe"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "/tmp/nextcore-mmfr1-old-tcr-20260913-r1/reference.rs",
+        "-o",
+        "/tmp/nextcore-mmfr1-old-tcr-20260913-r1/reference"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "/tmp/nextcore-mmfr1-old-tcr-20260913-r1/reference",
+        "old_tcr_optional_readback",
+        "--nocapture"
+      ],
+      "exit": 0
+    }
+  ],
+  "scope": "authored direct API readback, not native instruction or memory behavioral execution",
+  "live_source_changed": false
+}

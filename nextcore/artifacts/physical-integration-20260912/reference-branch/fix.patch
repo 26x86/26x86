@@ -1,0 +1,150 @@
+--- a/runtime/preos/src/arch.rs
++++ b/runtime/preos/src/arch.rs
+@@ -1872,11 +1872,23 @@
+         }
+ 
+         // Unconditional branch (register): BR, BLR, RET.
+-        if (word & 0xFE1F_FC00) == 0xD61F_0000 {
+-            let rn_val = (word >> 5) & 31;
+-            let target = self.read_reg(rn_val, true);
+-            // BLR (opc=001) saves return address in X30.
+-            if word & 0x0020_0000 != 0 {
++        let branch_register = word & 0xffff_fc1f;
++        if matches!(branch_register, 0xd61f_0000 | 0xd63f_0000 | 0xd65f_0000) {
++            // Match the native profile's Rn31 rejection. Architecturally XZR
++            // is the source here, never SP; this is a supported-profile limit.
++            if rn == 31 {
++                self.raise(GuestException {
++                    kind: ExceptionKind::UndefinedInstruction,
++                    instruction: word,
++                    syndrome: word as u64,
++                    far: pc,
++                    pc,
++                });
++                return StepResult::Exception(ExceptionKind::UndefinedInstruction);
++            }
++            let target = self.read_reg(rn, false);
++            // Capture the target before BLR writes X30, including BLR X30.
++            if branch_register == 0xd63f_0000 {
+                 self.x[30] = pc.wrapping_add(4);
+             }
+             self.pc = target;
+@@ -1894,6 +1906,7 @@
+ 
+         if word & 0x7e000000 == 0x34000000 {
+             let value = self.read_reg(rd, false);
++            let value = if wide { value } else { u64::from(value as u32) };
+             let nonzero = word & (1 << 24) != 0;
+             let offset = sign_extend(u64::from((word >> 5) & 0x7ffff), 19) << 2;
+             let take = if nonzero { value != 0 } else { value == 0 };
+@@ -2701,6 +2714,110 @@
+             let mut bytes=word.to_le_bytes();
+             assert_eq!(cpu.execute_one(&mut RamBus::new(&mut bytes)),StepResult::Exception(ExceptionKind::UndefinedInstruction));
+             assert_eq!(cpu.x[0],u64::MAX);assert_eq!(cpu.pc,0);
++        }
++    }
++
++    #[test]
++    fn reference_compare_branch_obeys_width_and_signed_displacement() {
++        let values = [0u64, 1, 1 << 32, 1 << 63, 0xffff_ffff_0000_0000, u64::MAX];
++        for wide in [false, true] { for nonzero in [false, true] { for rt in [0u32, 31] {
++            for value in values { for pc in [0u64, 0x4000_0000, u64::MAX - 3] {
++                for immediate in [-262144i32, -1, 0, 1, 262143] {
++                    let word = 0x3400_0000 | (u32::from(wide) << 31)
++                        | (u32::from(nonzero) << 24) | ((immediate as u32 & 0x7ffff) << 5) | rt;
++                    let tested = if rt == 31 { 0 } else if wide { value } else { value % (1u64 << 32) };
++                    let take = (tested != 0) == nonzero;
++                    let expected_pc = (i128::from(pc) + if take { i128::from(immediate) * 4 } else { 4 }) as u64;
++                    let mut cpu = GuestCpuState::reset(0);
++                    cpu.pc = pc; cpu.x[0] = value; cpu.sp = 0x9870; cpu.pstate = 0xa000_03c5;
++                    let registers = cpu.x;
++                    let mut code = word.to_le_bytes();
++                    assert_eq!(cpu.execute_one(&mut RamBus { ram: &mut code, base: pc }), StepResult::Continue);
++                    assert_eq!((cpu.pc, cpu.x, cpu.sp, cpu.pstate), (expected_pc, registers, 0x9870, 0xa000_03c5), "word={word:08x} source={value:016x}");
++                    assert!(cpu.pending_exception.is_none());
++                    assert_eq!(code, word.to_le_bytes());
++                }
++            }}
++        }}}
++    }
++
++    #[test]
++    fn reference_register_branch_exact_forms_capture_target_before_link() {
++        for opcode in [0xd61f_0000u32, 0xd63f_0000, 0xd65f_0000] {
++            for rn in [0u32, 16, 30] { for target in [0u64, 4, 0x4000, 1, u64::MAX] {
++                for pc in [0u64, 0x4000_0000, u64::MAX - 3] {
++                    let mut cpu = GuestCpuState::reset(0);
++                    cpu.pc = pc; cpu.x[30] = 0x1234; cpu.x[rn as usize] = target;
++                    cpu.sp = 0x9870; cpu.pstate = 0xb000_03c5;
++                    let mut expected = cpu.x;
++                    if opcode == 0xd63f_0000 { expected[30] = pc.wrapping_add(4); }
++                    let mut code = (opcode | (rn << 5)).to_le_bytes();
++                    let before = code;
++                    assert_eq!(cpu.execute_one(&mut RamBus { ram: &mut code, base: pc }), StepResult::Continue);
++                    assert_eq!((cpu.pc, cpu.x, cpu.sp, cpu.pstate), (target, expected, 0x9870, 0xb000_03c5));
++                    assert!(cpu.pending_exception.is_none());
++                    assert_eq!(code, before);
++                }
++            }}
++        }
++    }
++
++    #[test]
++    fn reference_register_branch_rejects_reserved_fixed_fields() {
++        // These are not authenticated-branch encodings handled by the PAC path.
++        for word in [0xd61f_0001u32, 0xd63f_0010, 0xd65f_001f, 0xd67f_0000, 0xd6bf_0000, 0xd71f_0000] {
++            let mut cpu = GuestCpuState::reset(0);
++            cpu.x[0] = 32; cpu.x[30] = 0x1234; cpu.sp = 0x9870; cpu.pstate = 0xb000_03c5;
++            let registers = cpu.x;
++            let mut ram = [0xa5u8; 8];
++            let result = cpu.run_bounded(&word.to_le_bytes(), &mut ram, 1);
++            assert_eq!((result.status, result.retired, result.pc), (ArchRunStatus::Exception, 0, 0), "word={word:08x}");
++            assert_eq!(result.exception.unwrap().kind, ExceptionKind::UndefinedInstruction);
++            assert_eq!((cpu.x, cpu.sp, cpu.pstate, cpu.sys.esr_el1), (registers, 0x9870, 0xb000_03c5, 1 << 25));
++        }
++    }
++
++    #[test]
++    fn reference_register_branch_rn31_matches_restricted_native_profile() {
++        // The ISA reads XZR here. The current native profile rejects Rn31;
++        // matching that restriction must never substitute SP as the target.
++        for opcode in [0xd61f_0000u32, 0xd63f_0000, 0xd65f_0000] {
++            let word = opcode | (31 << 5);
++            let mut cpu = GuestCpuState::reset(0);
++            cpu.x[30] = 0x1234; cpu.sp = 0x9870; cpu.pstate = 0xb000_03c5;
++            let registers = cpu.x;
++            let mut ram = [0xa5u8; 8];
++            let result = cpu.run_bounded(&word.to_le_bytes(), &mut ram, 1);
++            assert_eq!((result.status, result.retired, result.pc), (ArchRunStatus::Exception, 0, 0));
++            assert_eq!(result.exception.unwrap().kind, ExceptionKind::UndefinedInstruction);
++            assert_eq!((cpu.x, cpu.sp, cpu.pstate, cpu.sys.esr_el1), (registers, 0x9870, 0xb000_03c5, 1 << 25));
++        }
++    }
++
++    #[test]
++    fn reference_branch_commits_before_target_fetch_and_respects_budget() {
++        for wide in [false, true] { for nonzero in [false, true] {
++            let word = 0x3400_0040u32 | (u32::from(wide) << 31) | (u32::from(nonzero) << 24);
++            let mut program = [0u8; 12]; program[..4].copy_from_slice(&word.to_le_bytes());
++            program[8..12].copy_from_slice(&0xd440_0000u32.to_le_bytes());
++            let take = wide == nonzero;
++            let mut cpu = GuestCpuState::reset(0); cpu.x[0] = 1 << 32;
++            let mut ram = [0u8; 12];
++            let result = cpu.run_bounded(&program, &mut ram, 1);
++            assert_eq!((result.status, result.retired, result.pc), (ArchRunStatus::Budget, 1, if take { 8 } else { 4 }));
++            let result = cpu.run_bounded(&program, &mut ram, 3);
++            assert_eq!((result.status, result.retired, result.pc), if take { (ArchRunStatus::Halt, 2, 12) } else { (ArchRunStatus::Exception, 1, 4) });
++        }}
++        for opcode in [0xd61f_0000u32, 0xd63f_0000, 0xd65f_0000] {
++            let mut cpu = GuestCpuState::reset(0); cpu.x[0] = 32; cpu.x[30] = 0x1234;
++            let mut ram = [0u8; 8];
++            let result = cpu.run_bounded(&opcode.to_le_bytes(), &mut ram, 1);
++            assert_eq!((result.status, result.retired, result.pc), (ArchRunStatus::Budget, 1, 32));
++            assert_eq!(cpu.x[30], if opcode == 0xd63f_0000 { 4 } else { 0x1234 });
++            let result = cpu.run_bounded(&opcode.to_le_bytes(), &mut ram, 2);
++            assert_eq!((result.status, result.retired, result.pc), (ArchRunStatus::Exception, 1, 32));
++            assert_eq!(result.exception.unwrap().kind, ExceptionKind::InstructionAbort);
++            assert_eq!(cpu.sys.far_el1, 32);
+         }
+     }
+ 

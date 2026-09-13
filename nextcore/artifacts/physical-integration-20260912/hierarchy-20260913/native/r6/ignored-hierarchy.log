@@ -1,0 +1,20 @@
+
+running 1 test
+test hierarchy_complete_permissions_cold_warm_both_regimes ... FAILED
+
+failures:
+
+---- hierarchy_complete_permissions_cold_warm_both_regimes stdout ----
+
+thread 'hierarchy_complete_permissions_cold_warm_both_regimes' (2197) panicked at /tmp/nextcore-hierarchy-native-20260913-r6/source/test_stage1_provider.rs:401:2:
+assertion `left == right` failed: 16kfalse profile1 L1 ancestor0 ap0 parent0 xn4 EL1 op1
+  left: 0
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    hierarchy_complete_permissions_cold_warm_both_regimes
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 33 filtered out; finished in 0.00s
+

@@ -1,0 +1,54 @@
+{
+  "schema": "nextcore.memory-observation-evidence.v1",
+  "module_commits": {
+    "core": "cead709d8dc4894296b093f3f71859a54d05c65f",
+    "efi": "e5b21ef6c77333dada426dbc36da688766851778",
+    "tool": "4010fe24f14dfa3c8bd062f0cc2b932d2be81d9f",
+    "ise": "002d2eff8b262e728224b9b039b9ffe168ed4586"
+  },
+  "files": [
+    {
+      "path": "observed-gop/receipt.json",
+      "bytes": 3409,
+      "sha256": "65c88bb3e1ae3dc830461111a914a9a38ac5244b0a030d70134be32dc68e85e7"
+    },
+    {
+      "path": "observed-gop/firmware/report.json",
+      "bytes": 14458,
+      "sha256": "2db8833a9c9469ff009b99139495169a8a9c9f209bd4f56b3e59007aeb900a17"
+    },
+    {
+      "path": "observed-gop/firmware/serial.log",
+      "bytes": 9337,
+      "sha256": "fc149d65870dc33c2679c5167c43fa7733479b642d9231a257a9a1526706cfc1"
+    },
+    {
+      "path": "observed-gop/probe.S",
+      "bytes": 656,
+      "sha256": "00b2014385f9c8517068fdcb3acb0c273c0c2a0c5f5a576d059cc1a5c754611a"
+    },
+    {
+      "path": "missing-observer-negative/receipt.json",
+      "bytes": 3467,
+      "sha256": "a25d60d7c9cc3c9f3270b1e8df022bb5fc918f15532f363013c1d2cf576779ce"
+    },
+    {
+      "path": "missing-observer-negative/firmware/report.json",
+      "bytes": 6747,
+      "sha256": "6b23dcb62893612d6589b76daa0161b3e469affd534e3b230bf0c9da7732fed3"
+    },
+    {
+      "path": "missing-observer-negative/firmware/serial.log",
+      "bytes": 1984,
+      "sha256": "417eb6e9236e018b8c3bbf520fd179911153de0c64fe66fc8076c025c641465c"
+    },
+    {
+      "path": "missing-observer-negative/probe.S",
+      "bytes": 656,
+      "sha256": "00b2014385f9c8517068fdcb3acb0c273c0c2a0c5f5a576d059cc1a5c754611a"
+    }
+  ],
+  "original_images_used": false,
+  "physical_display_verified": false,
+  "macos_boot_verified": false
+}

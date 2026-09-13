@@ -1,0 +1,259 @@
+[
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86",
+    "returncode": 0,
+    "elapsed_seconds": 0.04756728200004545,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "ls-tree",
+      "-r",
+      "--name-only",
+      "495cbe87e9346bc699771e8a05e2dadc3e947f19",
+      "nextcore/Cargo.toml",
+      "nextcore/Cargo.lock",
+      "nextcore/.cargo"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86",
+    "returncode": 0,
+    "elapsed_seconds": 0.06872896599998057,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-asid-efi-build-20260913-r1/workspace-config.tar",
+      "495cbe87e9346bc699771e8a05e2dadc3e947f19",
+      "nextcore/Cargo.lock",
+      "nextcore/Cargo.toml"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86",
+    "returncode": 0,
+    "elapsed_seconds": 0.3245373390000168,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-core",
+    "returncode": 0,
+    "elapsed_seconds": 0.09876764000000549,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-asid-efi-build-20260913-r1/core.tar",
+      "4ae6e9aff31be93cf570b56975b711902f3fb7e7"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-core",
+    "returncode": 0,
+    "elapsed_seconds": 0.2723411690000148,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-efi",
+    "returncode": 0,
+    "elapsed_seconds": 0.11635746000001745,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-asid-efi-build-20260913-r1/efi.tar",
+      "18be73b632934fba4a901addb3f66d055934cf3a"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-efi",
+    "returncode": 0,
+    "elapsed_seconds": 0.24892324799998278,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-tool",
+    "returncode": 0,
+    "elapsed_seconds": 0.10108566799999608,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-asid-efi-build-20260913-r1/tool.tar",
+      "9e6222a69d2f62490139c477d6e217a28e3af323"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-tool",
+    "returncode": 0,
+    "elapsed_seconds": 0.18682170900001438,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-asid-efi-build-20260913-r1/ise.tar",
+      "5cd1e44413958450875392d8a431dba15bb76f2e"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-ise",
+    "returncode": 0,
+    "elapsed_seconds": 0.7572191129999055,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-gpu",
+    "returncode": 0,
+    "elapsed_seconds": 0.09514944699992611,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-asid-efi-build-20260913-r1/gpu.tar",
+      "eaab9fcfded3a8ee298453397790f13edace5694"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-gpu",
+    "returncode": 0,
+    "elapsed_seconds": 0.15533638700003394,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-hal",
+    "returncode": 0,
+    "elapsed_seconds": 0.08951532799994766,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-asid-efi-build-20260913-r1/hal.tar",
+      "9c1cd8dfff33478e32668c5cd181dd094ec2881b"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-hal",
+    "returncode": 0,
+    "elapsed_seconds": 0.13398021000000426,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-apls",
+    "returncode": 0,
+    "elapsed_seconds": 0.0856710140000132,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "git",
+      "archive",
+      "--format=tar",
+      "--output=/tmp/nextcore-asid-efi-build-20260913-r1/apls.tar",
+      "9b6ccaa421f668fdb212ccd14969002f6196a18f"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore/crates/nextcore-apls",
+    "returncode": 0,
+    "elapsed_seconds": 0.12949062999996386,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "cargo",
+      "build",
+      "-p",
+      "nextcore-efi",
+      "--bin",
+      "NXASID",
+      "--release",
+      "--target",
+      "x86_64-unknown-uefi",
+      "--features",
+      "arm-jit-stage1-probe"
+    ],
+    "cwd": "/mnt/c/Users/Admin/Documents/Codex/2026-09-12/git/work/26x86/nextcore",
+    "returncode": 0,
+    "elapsed_seconds": 12.119017476000067,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "cargo",
+      "build",
+      "-p",
+      "nextcore-efi",
+      "--bin",
+      "NXASID",
+      "--release",
+      "--target",
+      "x86_64-unknown-uefi",
+      "--features",
+      "arm-jit-stage1-probe"
+    ],
+    "cwd": "/tmp/nextcore-asid-efi-build-20260913-r1/workspace/nextcore",
+    "returncode": 0,
+    "elapsed_seconds": 9.851255995999963,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "clang-18",
+      "--version"
+    ],
+    "cwd": "None",
+    "returncode": 0,
+    "elapsed_seconds": 0.01604299899997841,
+    "reaped": true
+  },
+  {
+    "argv": [
+      "/home/developer/.cargo/bin/rustc",
+      "--version"
+    ],
+    "cwd": "None",
+    "returncode": 0,
+    "elapsed_seconds": 0.015789563999987877,
+    "reaped": true
+  }
+]

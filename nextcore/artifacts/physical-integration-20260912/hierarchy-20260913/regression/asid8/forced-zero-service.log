@@ -1,0 +1,10 @@
+warning: unused variable: `selected`
+   --> /tmp/nextcore-hierarchy-asid8-regression-20260913/source/memory-service/src/../../preos/src/mmu.rs:335:13
+    |
+335 |         let selected=if tcr&(1<<22)!=0 {ttbr1} else {ttbr0};
+    |             ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_selected`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+

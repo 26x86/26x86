@@ -1,0 +1,147 @@
+{
+  "schema": "nextcore.efi-pinned-build-comparison.v1",
+  "efi_commit": "111825d9d24e4a493eff95109a2ebcca9240bd89",
+  "ise_commit": "fa5fe9e1b78cfce6b3bf0a0da82e68ece0704979",
+  "fixed_tested_binary": "/tmp/nextcore-indexed-mapped-final-20260913.efi",
+  "rebuilt_binary": "/tmp/nextcore-indexed-cached-target-20260913/x86_64-unknown-uefi/release/NXARMJIT.efi",
+  "fixed_sha256": "1161352de4aacb05e2b8e747a4ce002219b89c23fc37319d6e693ebc41a9b981",
+  "rebuilt_sha256": "b5a3f79c503cfdb1e154639dee826631568dd5f796073f7caca8c2f960eeff30",
+  "fixed_bytes": 309248,
+  "rebuilt_bytes": 309248,
+  "exact_equal": false,
+  "timestamp_checksum_normalized_equal": false,
+  "sections_equal": false,
+  "fixed_pe": {
+    "pe_offset": 120,
+    "timestamp": 1789226882,
+    "checksum": 0,
+    "entry_rva": 9696,
+    "sections": [
+      {
+        "name": ".text",
+        "virtual_size": 276087,
+        "rva": 4096,
+        "raw_size": 276480,
+        "raw_offset": 1024,
+        "flags": 1610612768,
+        "sha256": "59a593a182c240810b5a95ea7c158680a308060f1a1ea0ea29e4e2f8ea270fbe"
+      },
+      {
+        "name": ".rdata",
+        "virtual_size": 29326,
+        "rva": 282624,
+        "raw_size": 29696,
+        "raw_offset": 277504,
+        "flags": 1073741888,
+        "sha256": "c56522b0c91e1ea5016d5b56faf384e24c6ca8beaf2511b5609e04912058b13a"
+      },
+      {
+        "name": ".data",
+        "virtual_size": 168,
+        "rva": 315392,
+        "raw_size": 512,
+        "raw_offset": 307200,
+        "flags": 3221225536,
+        "sha256": "ae6987589aa63f6c75fe0408887c3b3a4564804434d072fae8d241c71679185c"
+      },
+      {
+        "name": ".eh_fram",
+        "virtual_size": 64,
+        "rva": 319488,
+        "raw_size": 512,
+        "raw_offset": 307712,
+        "flags": 1073741888,
+        "sha256": "2b1a77bc57e3feebc17568163abd00c08ed7eb0a81c4a913474d7c6e019ce642"
+      },
+      {
+        "name": ".reloc",
+        "virtual_size": 680,
+        "rva": 323584,
+        "raw_size": 1024,
+        "raw_offset": 308224,
+        "flags": 1107296320,
+        "sha256": "298961a2500cda8daf4cdb19dd18d58d58f781412bbea179eef82315d45feccd"
+      }
+    ]
+  },
+  "rebuilt_pe": {
+    "pe_offset": 120,
+    "timestamp": 1789227233,
+    "checksum": 0,
+    "entry_rva": 9696,
+    "sections": [
+      {
+        "name": ".text",
+        "virtual_size": 276087,
+        "rva": 4096,
+        "raw_size": 276480,
+        "raw_offset": 1024,
+        "flags": 1610612768,
+        "sha256": "59a593a182c240810b5a95ea7c158680a308060f1a1ea0ea29e4e2f8ea270fbe"
+      },
+      {
+        "name": ".rdata",
+        "virtual_size": 29326,
+        "rva": 282624,
+        "raw_size": 29696,
+        "raw_offset": 277504,
+        "flags": 1073741888,
+        "sha256": "3502a72ee834c4e185476d71a8aa55c7806fe9f2f438944fe1212c6fea0351e9"
+      },
+      {
+        "name": ".data",
+        "virtual_size": 168,
+        "rva": 315392,
+        "raw_size": 512,
+        "raw_offset": 307200,
+        "flags": 3221225536,
+        "sha256": "ae6987589aa63f6c75fe0408887c3b3a4564804434d072fae8d241c71679185c"
+      },
+      {
+        "name": ".eh_fram",
+        "virtual_size": 64,
+        "rva": 319488,
+        "raw_size": 512,
+        "raw_offset": 307712,
+        "flags": 1073741888,
+        "sha256": "2b1a77bc57e3feebc17568163abd00c08ed7eb0a81c4a913474d7c6e019ce642"
+      },
+      {
+        "name": ".reloc",
+        "virtual_size": 680,
+        "rva": 323584,
+        "raw_size": 1024,
+        "raw_offset": 308224,
+        "flags": 1107296320,
+        "sha256": "298961a2500cda8daf4cdb19dd18d58d58f781412bbea179eef82315d45feccd"
+      }
+    ]
+  },
+  "inventory_entries_verified": 72,
+  "inventory_head_and_working_equal": true,
+  "production_sources_changed": false,
+  "fixed_tested_binary_preserved": true,
+  "original_inputs_used": false,
+  "physical_boot_verified": false,
+  "pe_debug_metadata_fields": [
+    {
+      "offset": 128,
+      "bytes": 4,
+      "meaning": "COFF timestamp"
+    },
+    {
+      "offset": 306752,
+      "bytes": 4,
+      "meaning": "debug directory timestamp"
+    },
+    {
+      "offset": 306780,
+      "bytes": 16,
+      "meaning": "CodeView RSDS GUID"
+    }
+  ],
+  "normalized_pe_debug_metadata_equal": true,
+  "executable_sections_equal": true,
+  "byte_difference_count": 12,
+  "comparison_scope": "Exact file identity fails. All differences are confined to parsed COFF/debug timestamps and CodeView GUID; after masking only those fields all remaining bytes are identical. The fixed authored-tested binary is preserved for the original diagnostic."
+}

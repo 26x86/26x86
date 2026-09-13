@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "load-error",
+      "passed": true,
+      "checks": {
+        "no_observation_error": true,
+        "real_child": true,
+        "input_copies": true,
+        "retry": true,
+        "selected_next": true,
+        "success": true,
+        "original_failure": true
+      },
+      "error": null
+    },
+    {
+      "case": "child-error",
+      "passed": true,
+      "checks": {
+        "no_observation_error": true,
+        "real_child": true,
+        "input_copies": true,
+        "retry": true,
+        "selected_next": true,
+        "success": true,
+        "original_failure": true
+      },
+      "error": null
+    },
+    {
+      "case": "direct-error",
+      "passed": true,
+      "checks": {
+        "no_observation_error": true,
+        "real_child": true,
+        "input_copies": true,
+        "no_retry": true,
+        "original_status": true
+      },
+      "error": null
+    }
+  ],
+  "efi_sha256": "d03b1d15b46a9139ebc9a0cf9cda9e142c1e0d3acf3a20dc8c2a8966adc19967",
+  "child_sha256": "8910f14dcd1eefbb28b6d8342f1506e266b32ea52bb63ef2b4a2f68fa5aa6169",
+  "macos_boot_verified": false,
+  "physical_hardware_verified": false
+}

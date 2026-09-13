@@ -1,0 +1,545 @@
+{
+  "ise_commit": "f102f0769fcae98597478f6738ee1a69247e5207",
+  "files": [
+    {
+      "path": "runtime/abi_layout.c",
+      "sha256": "03b71dd9958a85655a50c30387c83d542ae51c808b1913f6a349b531d69f7617",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/arch.c",
+      "sha256": "1184d86c6cfdd3c2cff50ac93483bd0d09040d0b6af34c8971ecc633db20337a",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/bfm_cases.rs",
+      "sha256": "932ed7ff507235bd6e8485725e3a30cd65c499ad077be4a4dbe18f311252d308",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/boot_jit.c",
+      "sha256": "4885d29d7f6d7954a816b00d55600acf47992cf8ada469175b2d6130af62c8de",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/boot_jit.h",
+      "sha256": "def7ee05c4051107257407f3f4eed6ab6551ba04b61f7178e051f4e95126af81",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/gop_scanout.c",
+      "sha256": "85e9a454846614e8a17420d628f806f93e6925a4c39a5b1b648e6b691895a912",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/gop_scanout.h",
+      "sha256": "5025bcf913b70baf13888792091efd67b4bf42f2fa34c5b4bb52163cfacde5b6",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/handoff.h",
+      "sha256": "82d91868045b55e5d79b931d9a29acb10d11d02f0f164d7578012515919b68a2",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/jit.c",
+      "sha256": "f23a9381c05969b0677681eab53640b77860acbe2c3c8c51ac4ba6fdacdb206d",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/jit.h",
+      "sha256": "82ec08a23294a0d02dc95de0b98cc3c6b0d29f2de0656cbdcc4801f7c3161ce9",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/jit_protection.c",
+      "sha256": "aaaae4ed9d644e91d4da26e745c336ce767dfdd60e8e1a9a2a9287c0ed60ddc7",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/main.c",
+      "sha256": "e60b0a038268582c5612858fbcbdb5cd6d47d42740b43fcb386333a369421ede",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_abi.h",
+      "sha256": "0ef6a89d512ef2d1fd0f92d0a25018536fa9c45106372e6c27f749b427b1f515",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_abi_v2.h",
+      "sha256": "2a85803179635696b5d8e72704734ca67d0fed462b0b5fd75c414b327ba12b95",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_boot.c",
+      "sha256": "df874fc52f1a43ba71f137ebf45cf165b724d3435de9a2fa74a393adeca03dac",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_boot.h",
+      "sha256": "d2972ffc34487e5c328ebdd51e8333d82282df9e7305b6c60426aea3c4fd11f8",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_boot.rs",
+      "sha256": "5031838160f1d9490f03d15ca479bcd3076ce2a0758129c121cace74781ea658",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_boot_v2.c",
+      "sha256": "9c84f287e8f89d05777806f2c0c6b117add7ccc875ab6cf9f0e605c73d1a41d4",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_boot_v2.h",
+      "sha256": "fae6514d32a5104400f912c03570ec18e90a5ff483d77fd84e2a8050e0cb3cad",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_boot_v2.rs",
+      "sha256": "a6e2401432c419ca24d5e21d2e5f51a8b0b7b08dad89fa218645ffc866b6f1e0",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_dynamic.c",
+      "sha256": "e45b3475c83d20f00f903052a89496644f2059c6196d85ca81519a57e997e1b2",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_dynamic.h",
+      "sha256": "75c964df1d079840a7919cc52bb55bb7857f22c9d39995417d36fb69c2d4b295",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_dynamic.inc",
+      "sha256": "c6c4c9af889e33919da59246532bf8cc0168259109c834f786ae54a9bb094615",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_dynamic.rs",
+      "sha256": "90dd3ccfadf0fc345cf8ba89fb353fd1902686664516237fb8b144bd700f72b5",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_dynamic_layout.c",
+      "sha256": "454fc5e1a94a38f0b9cfc4a5823e13797d015c33cca61da57a663142dc9cb71a",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_layout.c",
+      "sha256": "df5dda0e88b0a37c3d656e45a2dc807a569831e7c223b474479fcd03a565ec65",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_layout_v2.c",
+      "sha256": "5060ac83ae504815f6935f3518197a4f37d627f97eb4e1a110ce5b744d205c57",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory_stage1.inc",
+      "sha256": "4ee1b1f2051617dab15d59095c720071d3ef8d5b3aa82992998c3e91f5f0f73b",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/multiply_add_cases.rs",
+      "sha256": "4e3cc5fec4ef7b237fb3ef585ca7ef4afa6dd33161e887aa9aaa0aecac9949cb",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/platform_abi.h",
+      "sha256": "e0c19055be84de172df89495c822a18deae24d04315e4350cc42cba07fc90eba",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/platform_layout.c",
+      "sha256": "70ce0c588e602f06c3be49982c9060b736f08ee118a32039ff9df918d46f9d0d",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos_abi.h",
+      "sha256": "f355c3ab92457c569c3a4833b91ec8ad51ccdef6d0e8142d3ba236db5f37d5dc",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos_bridge.c",
+      "sha256": "7f03662ef58fd4969c4d34c006a3ba69454c81b64f3753a6612caaf95f0c050c",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos_bridge.h",
+      "sha256": "97a63e5667b5dadaa1cf9ee6f1ae66e4595cfd8c86c21281043529e79392a112",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos_host_test.c",
+      "sha256": "53e3c0ef55887f1a0458fb75ba90c1a013d4abfc3148c8cb3dbe20692ba05afa",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/register_offset_provider_cases.rs",
+      "sha256": "581618f2e5f3c18fdf4caade097b05210d403d5c4272d8e65ccfefdf14ad584a",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_bfm_jit.c",
+      "sha256": "dbdc3cec05721f16e26272b1d11c278ab172b79c462fd903bd183994b4ca1a4a",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_boot_jit.c",
+      "sha256": "eb0d2c371567d6998e35592a550016b2e12ae6ab5e752cdbc4fe7be4eaf6258a",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_conditional_jit.c",
+      "sha256": "5c5df85816dae3730812587c73a3914b95a64a5bd6228ce3c1226e8cfa47eac4",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_conditional_select_jit.c",
+      "sha256": "3c23244aea1b8004baeaea2c4c75833d4d5d38d80f2f874c0eecc5eeed3d1bd3",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_dynamic_provider.rs",
+      "sha256": "37d505c79a01c7b98132213f455f31477cab21ad495b87b41e0be9c4fdbf0938",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_extended_arithmetic_jit.c",
+      "sha256": "2d38b4b8eb53d845ae2c208673c56b4a886df136185b066152d0fbae891fec73",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_flags_jit.c",
+      "sha256": "5c8c5bd854fd73577b72b81e0d8fd50d02ea601ecae27d1343ab98df59f3a777",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_gop_scanout.c",
+      "sha256": "def9a5efe836e14d972d083527464b69eb2be1268c3427b3bb16b6c2955b01c4",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_irq_jit.c",
+      "sha256": "0b129c5403c17a650fe280572fa86c75afbb1a6f78d39420c7e2c0ce985cc3d5",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_jit.c",
+      "sha256": "dffedb72d4d3706d0dfd4b975be279db3f140a7d821eff16b7a2172fabe7c726",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_logical_jit.c",
+      "sha256": "2f53c9c225b08ecd7a9122b42398c624a8ac6b39357c5d2e5dc308d1bc509766",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_mapped_provider.rs",
+      "sha256": "b7229310cdb9f0b6a53da36aae6a3e7de0ad39299621d283e84000626ec90417",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_mapped_snapshot.c",
+      "sha256": "d75695be0e5d4bfe4ccfced30e91498536da843aa881265e6c36584aef7ff653",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_memory_provider.rs",
+      "sha256": "76b1a9baf5ff2ad082f29d5c48cd85981a083a990c6067f07702fd14a6757249",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_multiply_add_jit.c",
+      "sha256": "55fd66b62c0fa8b9d1a9d85081699996c752a30385409d09a3217cfe1c16ea32",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_pair_jit.c",
+      "sha256": "e73afb379232d6cc02765a0f5d040b4e22a6a817b90493eeec412b665dc4a70a",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_pauth_jit.c",
+      "sha256": "a045ed6b2eaa44d33c3b500f71b7a5007035e2c219c5a2f115e7d8d4316051ef",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_provider_cache.c",
+      "sha256": "9692bc5e8792737f896ec17b6745e6c1060409ee4ddf84f93aa8cb58dcd86ae5",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_register_offset_jit.c",
+      "sha256": "028fa176fed6cc1342fa81de502fe9da099c396d5cfdbde1077f5ff78dfea1a1",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_scalar_jit.c",
+      "sha256": "4c53adbbc951b4087c9ccfad7adff3872ae446fe5cc515fed1f89a94110a56ec",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_shift_jit.c",
+      "sha256": "cc44fa1d2e599e99bd2038b6bd78c2a29fa662f5274a2a8afb6754bc7fae6760",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_stage1_provider.rs",
+      "sha256": "e71ce27f0afe570766b03698c22af0add0da252a1591e293638330a1e281a22c",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_test_bit_branch_jit.c",
+      "sha256": "8ac0422d02b6e0c99d7da80385d6b70b10299d73feacb0eeb2a5d75b1d5a3e28",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_thread_jit.c",
+      "sha256": "935a1f5e41e14001a23d900e41fdafc3e40ea2ce6c23efe00254ab90e7cb6fc1",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_ubfm_jit.c",
+      "sha256": "85cacd1a5b944c8cc2bbd04f51d50408a73d7b08153d9dcefdec2ab5bfe97bf3",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_unaligned_profile.rs",
+      "sha256": "76cc1608692785352e4cd68db8b8cc19ae3513cfbe12d9fe60422d829bf912f3",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/test_wx.c",
+      "sha256": "afa4209e70d3c566493865b49c315295503ed0787f0e64dfb1338e713b23c6e4",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/ubfm_provider_cases.rs",
+      "sha256": "9b96ab3801696fb970e99ad3b2d0ab7cc0c1aa0dd202c49899be9b6cd542118a",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/uefi.h",
+      "sha256": "ad65b75ad72ddca190093a8df01ec2e89622fadaaee0b1e149a704e80106e32b",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory-service/Cargo.toml",
+      "sha256": "de0adfb9b7194d455b380c5eb787db4c95318700bedec00687ee6b2e523d8f67",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos/Cargo.lock",
+      "sha256": "e0b8566b2229be151981d2c2b0f4419cc5eb49285ae88c73594a78aed5993231",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos/Cargo.toml",
+      "sha256": "37636ea1746d9cb5ff56d6f2ba02ba1d009a8ca2b686e8684cc601cc86cb5fe9",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/tests/capture_pauth_width_oracle.py",
+      "sha256": "5e7c614149e6676c545d6fa27651a6cbca756d36ae9de882ba0a1477000a3fa7",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/tests/pauth_width_oracle.h",
+      "sha256": "d7b8de8dc9222ba49a2a12ccd3cbc15ef0fa6f11b7057693f55cd5c2214542ce",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/tests/pauth_width_oracle.json",
+      "sha256": "9e86e33434f4c18504754fa5ac4dc08f50b0b85b8c95f8befaa526562b5b35a4",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/tests/verify_mapped_native.py",
+      "sha256": "856fb1eb8653051e87c54ff398a028d1d517c322452d8a2a11a7d180cf420a30",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/tests/verify_provider_cache.py",
+      "sha256": "6b9e7d98e480ecf66621e142591f81c36300c0f932f2b93566bfc6cda6e240ec",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory-service/src/abi.rs",
+      "sha256": "66b794a18316deaa7f566b8584a258ea077a6305ef8abe18cb648aa30dd07415",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory-service/src/abi_v2.rs",
+      "sha256": "d70aeeaf79bae69ba8185de33431d10dfef2003e61a7f46deb2fd82f2fc938e4",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory-service/src/dynamic.rs",
+      "sha256": "d6b28fe91aff31fe0d70e11794e1375f356118a30465c92c1dcc14ed3688271c",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory-service/src/dynamic_abi.rs",
+      "sha256": "91edc87b8068fd64884cb9bb3dfe41d2ffd29455ecf08b1b46dd622ede5393f9",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory-service/src/dynamic_tests.rs",
+      "sha256": "89a5b219d28193332e8cb92d6bfcca3f0561da8e4c33083bbc226791622a6bbc",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory-service/src/lib.rs",
+      "sha256": "352f935fa0ef7c585a7eaf605ffb68061fde62e5387b85115e1a70a86e936aef",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory-service/src/stage1.rs",
+      "sha256": "c0555b695d0c1d6e9d5bce82690ce10e12e126f4236952accbba468d68839f3d",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/memory-service/src/stage1_tests.rs",
+      "sha256": "956ba369c32d1340b9be9c441fdff29c4e6d2da52deb25940bcf0fcd3c3a516e",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos/src/arch.rs",
+      "sha256": "6706a38fd20eb5337263558a67df4cf7e7619e4485539547e10c90f5ea7fd9a5",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos/src/exception_level.rs",
+      "sha256": "254bbee46dfeab1015ad98e3953f51b4ca07f5527e26340f2746aed374c58ed7",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos/src/lib.rs",
+      "sha256": "3f9c2461eed6330d753b8035c7c61cdbbaf49ea53bea1a56913d3352a8912331",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos/src/m1.rs",
+      "sha256": "cada02dd5bc459683ebebf3e28d0436933dba8097ba274ed0404a95010cd19f9",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos/src/machine.rs",
+      "sha256": "57c0ead54a9757281acc3abc00412355326e4aa9407692f085b76bfed5245592",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos/src/mmu.rs",
+      "sha256": "c17c6d3332ee88697eb412e867befbb1c2b87263c50b027b7b68d6c1e0502955",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos/src/pauth.rs",
+      "sha256": "dc0379c365cf6c1fca77d1c4c344c2a5c82daabb480c30e7c681a646197990ee",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos/src/platform.rs",
+      "sha256": "8034a1b63c14ef6dc420f2a61adbcce21cc6d990dc777962cc7fe063c8205769",
+      "working_matches": true,
+      "git_blob_matches": true
+    },
+    {
+      "path": "runtime/preos/src/vmapple.rs",
+      "sha256": "bb4967dcd409c1679eb4acafe5d0bfe51a47a57768c86f45deb9b5abbc308c98",
+      "working_matches": true,
+      "git_blob_matches": true
+    }
+  ]
+}
